@@ -98,7 +98,104 @@ const generatedIngredients: Record<MenuStyle, Record<MealSlot, Ingredient[]>> = 
   paleo: { breakfast: [i("egg", "Яйца", 2, "шт.", "Молочное"), i("turkey", "Филе индейки", 90, "г", "Мясо и рыба"), i("spinach", "Шпинат", 70, "г", "Овощи и фрукты")], lunch: [i("chicken", "Куриное филе", 190, "г", "Мясо и рыба"), i("sweet-potato", "Батат", 170, "г", "Овощи и фрукты"), i("broccoli", "Брокколи", 140, "г", "Овощи и фрукты")], dinner: [i("beef", "Постная говядина", 180, "г", "Мясо и рыба"), i("pumpkin", "Тыква", 180, "г", "Овощи и фрукты"), i("zucchini", "Кабачок", 140, "г", "Овощи и фрукты")], snack1: [i("turkey", "Филе индейки", 100, "г", "Мясо и рыба"), i("apple", "Яблоко", 0.5, "шт.", "Овощи и фрукты"), i("almond", "Миндаль", 18, "г", "Бакалея")], snack2: [i("tuna", "Тунец", 100, "г", "Мясо и рыба"), i("egg", "Яйца", 1, "шт.", "Молочное"), i("greens", "Зелень", 30, "г", "Овощи и фрукты")] },
   keto: { breakfast: [i("egg", "Яйца", 3, "шт.", "Молочное"), i("cheese", "Твёрдый сыр", 45, "г", "Молочное"), i("spinach", "Шпинат", 70, "г", "Овощи и фрукты")], lunch: [i("salmon", "Филе лосося", 170, "г", "Мясо и рыба"), i("cauliflower", "Цветная капуста", 190, "г", "Овощи и фрукты"), i("avocado", "Авокадо", 0.5, "шт.", "Овощи и фрукты")], dinner: [i("chicken-thigh", "Куриные бёдра", 200, "г", "Мясо и рыба"), i("broccoli", "Брокколи", 170, "г", "Овощи и фрукты"), i("olive-oil", "Оливковое масло", 15, "мл", "Бакалея")], snack1: [i("egg", "Яйца", 2, "шт.", "Молочное"), i("cheese", "Твёрдый сыр", 40, "г", "Молочное"), i("almond", "Миндаль", 15, "г", "Бакалея")], snack2: [i("turkey", "Филе индейки", 100, "г", "Мясо и рыба"), i("cream-cheese", "Творожный сыр", 35, "г", "Молочное"), i("spinach", "Шпинат", 40, "г", "Овощи и фрукты")] },
 };
-for (const style of Object.keys(generatedTitles) as MenuStyle[]) for (const slot of Object.keys(mealMeta) as MealSlot[]) generatedTitles[style][slot].forEach((title, index) => recipes.push(r(`gen-${style}-${slot}-${index}`, slot, title, mealMeta[slot].icon, 18 + index * 3, scaleMacros(generatedMacros[style][slot], 0.94 + index * 0.03), slot.startsWith("snack") ? 240 : 410, style === "budget" ? 105 + index * 9 : 175 + index * 18, [style], generatedIngredients[style][slot], commonSteps, 4, true)));
+const titleIngredientRules: { pattern: RegExp; kind: "protein" | "base" | "extra"; ingredient: Ingredient }[] = [
+  { pattern: /курин.*б[её]др/, kind: "protein", ingredient: i("chicken-thigh", "Куриные бёдра", 190, "г", "Мясо и рыба") },
+  { pattern: /куриц|курин/, kind: "protein", ingredient: i("chicken", "Куриное филе", 180, "г", "Мясо и рыба") },
+  { pattern: /индейк/, kind: "protein", ingredient: i("turkey", "Филе индейки", 180, "г", "Мясо и рыба") },
+  { pattern: /лосос/, kind: "protein", ingredient: i("salmon", "Филе лосося", 170, "г", "Мясо и рыба") },
+  { pattern: /туне?ц|тунц/, kind: "protein", ingredient: i("tuna", "Тунец", 140, "г", "Мясо и рыба") },
+  { pattern: /говядин|говяж|стейк/, kind: "protein", ingredient: i("beef", "Постная говядина", 180, "г", "Мясо и рыба") },
+  { pattern: /треск|белая рыба|рыбн/, kind: "protein", ingredient: i("cod", "Филе белой рыбы", 190, "г", "Мясо и рыба") },
+  { pattern: /яйц|яич|омлет|фриттат/, kind: "protein", ingredient: i("egg", "Яйца", 3, "шт.", "Молочное") },
+  { pattern: /творож|сырник/, kind: "protein", ingredient: i("cottage", "Творог 5%", 180, "г", "Молочное") },
+  { pattern: /протеин|белков/, kind: "protein", ingredient: i("protein-powder", "Сывороточный протеин", 30, "г", "Бакалея") },
+  { pattern: /бекон/, kind: "protein", ingredient: i("bacon", "Бекон", 70, "г", "Мясо и рыба") },
+  { pattern: /хумус/, kind: "protein", ingredient: i("hummus", "Хумус", 60, "г", "Бакалея") },
+  { pattern: /чечевиц/, kind: "base", ingredient: i("lentils", "Чечевица", 70, "г", "Крупы") },
+  { pattern: /фасол/, kind: "base", ingredient: i("white-beans", "Фасоль", 120, "г", "Бакалея") },
+  { pattern: /греч/, kind: "base", ingredient: i("buckwheat", "Гречка", 60, "г", "Крупы") },
+  { pattern: /рис|плов/, kind: "base", ingredient: i("rice", "Рис", 60, "г", "Крупы") },
+  { pattern: /булгур/, kind: "base", ingredient: i("bulgur", "Булгур", 60, "г", "Крупы") },
+  { pattern: /паст/, kind: "base", ingredient: i("pasta", "Паста", 65, "г", "Крупы") },
+  { pattern: /киноа/, kind: "base", ingredient: i("quinoa", "Киноа", 55, "г", "Крупы") },
+  { pattern: /овсян/, kind: "base", ingredient: i("oats", "Овсяные хлопья", 55, "г", "Крупы") },
+  { pattern: /батат/, kind: "base", ingredient: i("sweet-potato", "Батат", 170, "г", "Овощи и фрукты") },
+  { pattern: /картоф/, kind: "base", ingredient: i("potato", "Картофель", 180, "г", "Овощи и фрукты") },
+  { pattern: /леп[её]ш/, kind: "base", ingredient: i("flatbread", "Цельнозерновая лепёшка", 60, "г", "Хлеб") },
+  { pattern: /зел[её]н.*фасол|стручков.*фасол/, kind: "extra", ingredient: i("green-beans", "Стручковая фасоль", 140, "г", "Овощи и фрукты") },
+  { pattern: /брокк/, kind: "extra", ingredient: i("broccoli", "Брокколи", 150, "г", "Овощи и фрукты") },
+  { pattern: /цветн.*капуст/, kind: "extra", ingredient: i("cauliflower", "Цветная капуста", 170, "г", "Овощи и фрукты") },
+  { pattern: /капуст/, kind: "extra", ingredient: i("cabbage", "Капуста", 160, "г", "Овощи и фрукты") },
+  { pattern: /кабач/, kind: "extra", ingredient: i("zucchini", "Кабачок", 150, "г", "Овощи и фрукты") },
+  { pattern: /тыкв/, kind: "extra", ingredient: i("pumpkin", "Тыква", 170, "г", "Овощи и фрукты") },
+  { pattern: /шпинат/, kind: "extra", ingredient: i("spinach", "Шпинат", 70, "г", "Овощи и фрукты") },
+  { pattern: /морков/, kind: "extra", ingredient: i("carrot", "Морковь", 1, "шт.", "Овощи и фрукты") },
+  { pattern: /яблоч|яблок/, kind: "extra", ingredient: i("apple", "Яблоко", 1, "шт.", "Овощи и фрукты") },
+  { pattern: /ягод/, kind: "extra", ingredient: i("berries", "Ягоды", 70, "г", "Овощи и фрукты") },
+  { pattern: /авокад/, kind: "extra", ingredient: i("avocado", "Авокадо", 0.5, "шт.", "Овощи и фрукты") },
+  { pattern: /томат/, kind: "extra", ingredient: i("tomato", "Томаты", 1, "шт.", "Овощи и фрукты") },
+  { pattern: /огур/, kind: "extra", ingredient: i("cucumber", "Огурец", 0.5, "шт.", "Овощи и фрукты") },
+  { pattern: /корнеплод/, kind: "extra", ingredient: i("root-veg", "Корнеплоды", 170, "г", "Овощи и фрукты") },
+  { pattern: /овощ/, kind: "extra", ingredient: i("mixed-veg", "Овощная смесь", 160, "г", "Овощи и фрукты") },
+  { pattern: /зеленью|трав/, kind: "extra", ingredient: i("greens", "Зелень", 25, "г", "Овощи и фрукты") },
+  { pattern: /сливочн/, kind: "extra", ingredient: i("cream", "Сливки 20%", 70, "мл", "Молочное") },
+  { pattern: /кокос/, kind: "extra", ingredient: i("coconut-flakes", "Кокосовая стружка", 25, "г", "Бакалея") },
+  { pattern: /орех/, kind: "extra", ingredient: i("almond", "Миндаль", 22, "г", "Бакалея") },
+  { pattern: /какао|брауни|шоколад/, kind: "extra", ingredient: i("cocoa", "Какао", 12, "г", "Бакалея") },
+  { pattern: /сыр(?!ник)/, kind: "extra", ingredient: i("cheese", "Твёрдый сыр", 45, "г", "Молочное") },
+];
+function ingredientsForTitle(title: string, base: Ingredient[], style: MenuStyle) {
+  const normalized = title.toLowerCase();
+  let matched = titleIngredientRules.filter((rule) => rule.pattern.test(normalized));
+  if (/курин.*б[её]др/.test(normalized)) matched = matched.filter((rule) => rule.ingredient.id !== "chicken");
+  if (/зел[её]н.*фасол|стручков.*фасол/.test(normalized)) matched = matched.filter((rule) => rule.ingredient.id !== "white-beans");
+  if (/цветн.*капуст/.test(normalized)) matched = matched.filter((rule) => rule.ingredient.id !== "cabbage");
+
+  const merged = new Map<string, Ingredient>();
+  const add = (ingredient: Ingredient) => merged.set(`${ingredient.id}:${ingredient.unit}`, ingredient);
+  matched.forEach((rule) => add(rule.ingredient));
+
+  const animalProteinIds = new Set(["chicken", "chicken-thigh", "turkey", "turkey-mince", "beef", "salmon", "cod", "tuna", "bacon"]);
+  const proteinIds = new Set([...animalProteinIds, "egg", "cottage", "tofu", "protein-powder", "hummus"]);
+  const baseIds = new Set(["oats", "buckwheat", "rice", "brown-rice", "quinoa", "lentils", "white-beans", "potato", "sweet-potato", "bulgur", "pasta", "flatbread"]);
+  const sweet = /творожн.*(?:запеканк|маффин)|сырник|панкейк|конфет|печень|брауни|батончик|овсян.*(?:запеканк|квадратик)|яблоч.*олад|(?:кокосов|орехов|протеинов).*шарик|жир-бомб/.test(normalized);
+  const formed = /тефтел|котлет|голубц/.test(normalized);
+  const baked = /маффин|запеканк|панкейк|сырник|печень|брауни|олад|суфле|тефтел|котлет|голубц|крекер|квадратик/.test(normalized);
+  const needsFlour = /маффин|панкейк|сырник|печень|брауни|олад|крекер|квадратик|творожн.*запеканк/.test(normalized);
+
+  if (formed && ![...merged.values()].some((ingredient) => animalProteinIds.has(ingredient.id))) add(i("turkey-mince", "Фарш индейки", 170, "г", "Мясо и рыба"));
+  if (/голубц/.test(normalized) && !merged.has("rice:г")) add(i("rice", "Рис", 45, "г", "Крупы"));
+  if (baked && !merged.has("egg:шт.")) add(i("egg", "Яйца", 1, "шт.", "Молочное"));
+  if (needsFlour && ![...merged.values()].some((ingredient) => baseIds.has(ingredient.id))) {
+    add(style === "keto" || style === "paleo" ? i("almond-flour", "Миндальная мука", 35, "г", "Бакалея") : i("oats", "Овсяные хлопья", 35, "г", "Крупы"));
+  }
+  if (/терияки/.test(normalized)) add(i("soy", "Соевый соус", 20, "мл", "Бакалея"));
+  if (/рулл|ролл|рулет/.test(normalized) && !sweet) {
+    add(style === "paleo" ? i("avocado", "Авокадо", 0.5, "шт.", "Овощи и фрукты") : i("cream-cheese", "Творожный сыр", 35, "г", "Молочное"));
+    if (!merged.has("cucumber:шт.")) add(i("cucumber", "Огурец", 0.5, "шт.", "Овощи и фрукты"));
+  }
+  if (/конфет|шарик|батончик|жир-бомб/.test(normalized)) {
+    if (!merged.has("almond:г")) add(i("almond", "Миндаль", 22, "г", "Бакалея"));
+    add(style === "keto" || style === "paleo" || /жир-бомб/.test(normalized) ? i("coconut-oil", "Кокосовое масло", 15, "мл", "Бакалея") : i("peanut-butter", "Арахисовая паста", 20, "г", "Бакалея"));
+  }
+  if ((/яйц|яич/.test(normalized)) && /маффин|запеканк/.test(normalized) && merged.size < 2) add(i("mixed-veg", "Овощная смесь", 120, "г", "Овощи и фрукты"));
+
+  if (merged.size < 2) {
+    const hasProtein = [...merged.values()].some((ingredient) => proteinIds.has(ingredient.id));
+    const hasBase = [...merged.values()].some((ingredient) => baseIds.has(ingredient.id));
+    for (const ingredient of base) {
+      if (hasProtein && proteinIds.has(ingredient.id)) continue;
+      if (hasBase && baseIds.has(ingredient.id)) continue;
+      if (sweet && animalProteinIds.has(ingredient.id)) continue;
+      if (style === "keto" && baseIds.has(ingredient.id)) continue;
+      if (style === "paleo" && (baseIds.has(ingredient.id) || ["cottage", "cheese", "cream-cheese"].includes(ingredient.id))) continue;
+      add(ingredient);
+      if (merged.size >= 2) break;
+    }
+  }
+  return [...merged.values()];
+}
+for (const style of Object.keys(generatedTitles) as MenuStyle[]) for (const slot of Object.keys(mealMeta) as MealSlot[]) generatedTitles[style][slot].forEach((title, index) => recipes.push(r(`gen-${style}-${slot}-${index}`, slot, title, mealMeta[slot].icon, 18 + index * 3, scaleMacros(generatedMacros[style][slot], 0.94 + index * 0.03), slot.startsWith("snack") ? 240 : 410, style === "budget" ? 105 + index * 9 : 175 + index * 18, [style], ingredientsForTitle(title, generatedIngredients[style][slot], style), commonSteps, 4, true)));
 
 const recipesById = Object.fromEntries(recipes.map((recipe) => [recipe.id, recipe])) as Record<string, Recipe>;
 function clientId() { const key = "mise-client-id"; const saved = localStorage.getItem(key); if (saved) return saved; const created = crypto.randomUUID(); localStorage.setItem(key, created); return created; }
