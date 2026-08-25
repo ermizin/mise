@@ -1,0 +1,5853 @@
+{
+  "importedAt": "2026-08-25T12:08:58.524Z",
+  "source": "The Meal Prep Manual",
+  "candidates": [
+    {
+      "id": "tmpm-28584",
+      "title": "Broccoli Cheddar Rice",
+      "sourceTitle": "Broccoli Cheddar Rice",
+      "sourceUrl": "https://mealprepmanual.com/broccoli-cheddar-rice/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/07/Broccoli-Cheddar-Rice.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 25,
+        "cookMinutes": 30,
+        "totalMinutes": 55
+      },
+      "servings": 9.5,
+      "macros": {
+        "kcal": 282,
+        "protein": 10.3,
+        "fat": 10,
+        "carbs": 37.8
+      },
+      "ingredients": [
+        {
+          "name": "rice",
+          "amountMetric": "350",
+          "unitMetric": "g",
+          "original": "1.75   cups ( 350 g )   rice   uncooked"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 28 g )   butter"
+        },
+        {
+          "name": "flour",
+          "amountMetric": "24",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 24 g )   flour   gluten free if needed"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "2   cups ( 480 g )   2% milk"
+        },
+        {
+          "name": "chicken broth",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "1   cup ( 240 g )   chicken broth"
+        },
+        {
+          "name": "cheddar cheese",
+          "amountMetric": "170",
+          "unitMetric": "g",
+          "original": "1.5   cups ( 170 g )   cheddar cheese"
+        },
+        {
+          "name": "dijon mustard",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "1   tsp ( 5 g )   dijon mustard"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 1.5 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 1.5 g )   onion powder"
+        },
+        {
+          "name": "broccoli",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   broccoli"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28572",
+      "title": "Veggie Rice",
+      "sourceTitle": "Veggie Rice",
+      "sourceUrl": "https://mealprepmanual.com/veggie-rice/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/07/Veggie-Rice.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 40,
+        "totalMinutes": 55
+      },
+      "servings": 7,
+      "macros": {
+        "kcal": 287,
+        "protein": 4.9,
+        "fat": 9.6,
+        "carbs": 45.4
+      },
+      "ingredients": [
+        {
+          "name": "basmati rice",
+          "amountMetric": "350",
+          "unitMetric": "g",
+          "original": "2   cups ( 350 g )   basmati rice   uncooked"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "3   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 40 g )   butter"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "water",
+          "amountMetric": "525",
+          "unitMetric": "g",
+          "original": "2.25   cups ( 525 g )   water"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   olive oil"
+        },
+        {
+          "name": "chopped kale",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1.5   cups ( 100 g )   chopped kale"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "2   medium ( 100 g )   carrots"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   small ( 150 g )   onion"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   soy sauce   gluten free if needed"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28533",
+      "title": "Creamy Cilantro Lime Chicken Bowls",
+      "sourceTitle": "Creamy Cilantro Lime Chicken Bowls",
+      "sourceUrl": "https://mealprepmanual.com/creamy-cilantro-lime-chicken-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/05/Creamy-Cilantro-Chicken-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 60,
+        "totalMinutes": 80
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 490,
+        "protein": 43,
+        "fat": 15,
+        "carbs": 46
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "smoked paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   smoked paprika"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "chili powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   chili powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "9",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 9 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   lime juice"
+        },
+        {
+          "name": "water",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   water"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "sweet potato",
+          "amountMetric": "340",
+          "unitMetric": "g",
+          "original": "1   medium ( 340 g )   sweet potato"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "450",
+          "unitMetric": "g",
+          "original": "3   cups ( 450 g )   cooked rice"
+        },
+        {
+          "name": "broccoli",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "0.5   lb ( 227 g )   broccoli"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "cilantro",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "0.5   bunch ( 20 g )   cilantro"
+        },
+        {
+          "name": "green onions",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "3   stalks ( 20 g )   green onions"
+        },
+        {
+          "name": "jalapeño",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "1   small ( 20 g )   jalapeño"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "0.25   tsp ( 1 g )   cumin"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "0.25   tsp ( 1 g )   salt"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "2% plain Greek yogurt",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "0.5   cups ( 120 g )   2% plain Greek yogurt"
+        },
+        {
+          "name": "water",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   water"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28513",
+      "title": "Chipotle Chicken for Burrito Bowls",
+      "sourceTitle": "Chipotle Chicken for Burrito Bowls",
+      "sourceUrl": "https://mealprepmanual.com/chipotle-chicken-for-burrito-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/04/Chipotle-Chicken.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 30,
+        "totalMinutes": 220
+      },
+      "servings": 10,
+      "macros": {
+        "kcal": 309,
+        "protein": 44,
+        "fat": 13,
+        "carbs": 3.4
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "2270",
+          "unitMetric": "g",
+          "original": "5   lbs ( 2270 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "0.5   medium ( 100 g )   onion"
+        },
+        {
+          "name": "chipotle peppers in adobo sauce",
+          "amountMetric": "90",
+          "unitMetric": "g",
+          "original": "0.33   cup ( 90 g )   chipotle peppers in adobo sauce"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   soy sauce"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "37",
+          "unitMetric": "g",
+          "original": "2.5   tbsp ( 37 g )   oil"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   paprika"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "18",
+          "unitMetric": "g",
+          "original": "3   tsp ( 18 g )   salt"
+        },
+        {
+          "name": "dried oregano",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 2 g )   dried oregano"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28504",
+      "title": "Chipotle Cilantro Lime Rice",
+      "sourceTitle": "Chipotle Cilantro Lime Rice",
+      "sourceUrl": "https://mealprepmanual.com/chipotle-cilantro-lime-rice/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/04/Chipotle-Cilantro-Lime-Rice.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 25,
+        "totalMinutes": 35
+      },
+      "servings": 10,
+      "macros": {
+        "kcal": 249,
+        "protein": 4.7,
+        "fat": 2.7,
+        "carbs": 51.5
+      },
+      "ingredients": [
+        {
+          "name": "jasmine rice",
+          "amountMetric": "640",
+          "unitMetric": "g",
+          "original": "3.5   cups ( 640 g )   jasmine rice"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 28 g )   butter"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "2   tsp ( 12 g )   salt"
+        },
+        {
+          "name": "chopped cilantro",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": ".25   cups ( 30 g )   chopped cilantro"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28499",
+      "title": "Chipotle Black Beans",
+      "sourceTitle": "Chipotle Black Beans",
+      "sourceUrl": "https://mealprepmanual.com/chipotle-black-beans/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/04/Chipotle-Black-Beans-2.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 90,
+        "totalMinutes": 585
+      },
+      "servings": 10,
+      "macros": {
+        "kcal": 180,
+        "protein": 10,
+        "fat": 2.2,
+        "carbs": 30
+      },
+      "ingredients": [
+        {
+          "name": "dried black beans",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   dried black beans"
+        },
+        {
+          "name": "water",
+          "amountMetric": "1440",
+          "unitMetric": "g",
+          "original": "6   cups ( 1440 g )   water"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "0.5   medium ( 100 g )   onion"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "4   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cumin"
+        },
+        {
+          "name": "dried oregano",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   dried oregano"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "bay leaves",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "2   ( 2 g )   bay leaves"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28492",
+      "title": "Chipotle Fajita Vegetables",
+      "sourceTitle": "Chipotle Fajita Vegetables",
+      "sourceUrl": "https://mealprepmanual.com/chipotle-fajita-vegetables/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/04/Chipotle-Fajita-Vegetables.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 5,
+        "cookMinutes": 15,
+        "totalMinutes": 20
+      },
+      "servings": 10,
+      "macros": {
+        "kcal": 59,
+        "protein": 1,
+        "fat": 3.2,
+        "carbs": 6.5
+      },
+      "ingredients": [
+        {
+          "name": "poblano peppers",
+          "amountMetric": "500",
+          "unitMetric": "g",
+          "original": "4   medium ( 500 g )   poblano peppers"
+        },
+        {
+          "name": "red pepper",
+          "amountMetric": "250",
+          "unitMetric": "g",
+          "original": "1   large ( 250 g )   red pepper"
+        },
+        {
+          "name": "yellow onion",
+          "amountMetric": "250",
+          "unitMetric": "g",
+          "original": "1   large ( 250 g )   yellow onion"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28302",
+      "title": "Crispy Chili Beef Noodles",
+      "sourceTitle": "Crispy Chili Beef Noodles",
+      "sourceUrl": "https://mealprepmanual.com/crispy-chili-beef-noodles/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/02/Crispy-Chili-Beef-Noodles.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 30,
+        "totalMinutes": 35
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 617,
+        "protein": 47,
+        "fat": 23,
+        "carbs": 55
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (93/7)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef (93/7)"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "113",
+          "unitMetric": "g",
+          "original": "0.25   lb ( 113 g )   carrots"
+        },
+        {
+          "name": "green onions",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   bunch ( 100 g )   green onions"
+        },
+        {
+          "name": "baby broccoli",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "0.5   lbs ( 227 g )   baby broccoli   regular broccoli is fine"
+        },
+        {
+          "name": "shredded cabbage",
+          "amountMetric": "180",
+          "unitMetric": "g",
+          "original": "2   cups ( 180 g )   shredded cabbage   coleslaw mix for a shortcut"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "4   cloves ( 20 g )   garlic"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   olive oil"
+        },
+        {
+          "name": "white pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   white pepper"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   paprika"
+        },
+        {
+          "name": "lo mein noodles",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   lo mein noodles   rice noodles for gluten free"
+        },
+        {
+          "name": "lemon wedges",
+          "original": "5   lemon wedges   optional for garnish"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "42",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 42 g )   honey"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   soy sauce   gluten free if needed"
+        },
+        {
+          "name": "gochujang",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   gochujang"
+        },
+        {
+          "name": "oyster sauce",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   oyster sauce"
+        },
+        {
+          "name": "hot water",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "0.5   cups ( 120 g )   hot water"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28247",
+      "title": "Sheet Pan Teriyaki Chicken and Vegetables",
+      "sourceTitle": "Sheet Pan Teriyaki Chicken and Vegetables",
+      "sourceUrl": "https://mealprepmanual.com/sheet-pan-teriyaki-chicken-and-vegetables/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/02/Sheet-Pan-Teriyaki-Chicken.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 40,
+        "totalMinutes": 60
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 550,
+        "protein": 44,
+        "fat": 14,
+        "carbs": 62
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   soy sauce   low sodium, gluten free if needed"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "white pepper",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 1.5 g )   white pepper   optional but nice"
+        },
+        {
+          "name": "broccoli florets",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   broccoli florets"
+        },
+        {
+          "name": "sweet potato",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "1   medium ( 300 g )   sweet potato"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "563",
+          "unitMetric": "g",
+          "original": "3.75   cups ( 563 g )   cooked rice"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": ".25   cups ( 60 g )   soy sauce   low sodium, gluten free if needed"
+        },
+        {
+          "name": "mirin",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": ".25   cups ( 60 g )   mirin"
+        },
+        {
+          "name": "water",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   water"
+        },
+        {
+          "name": "white vinegar",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   white vinegar"
+        },
+        {
+          "name": "brown sugar",
+          "amountMetric": "24",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 24 g )   brown sugar"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   cloves ( 10 g )   garlic"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-28083",
+      "title": "Taco Mac",
+      "sourceTitle": "Taco Mac",
+      "sourceUrl": "https://mealprepmanual.com/taco-mac/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2026/01/Taco-Mac.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 25,
+        "totalMinutes": 35
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 674,
+        "protein": 54,
+        "fat": 24,
+        "carbs": 61
+      },
+      "ingredients": [
+        {
+          "name": "ground beef",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef   93/7"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "macaroni",
+          "amountMetric": "283",
+          "unitMetric": "g",
+          "original": "10   oz ( 283 g )   macaroni"
+        },
+        {
+          "name": "red bell pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red bell pepper"
+        },
+        {
+          "name": "green bell pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   green bell pepper"
+        },
+        {
+          "name": "green onions",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   bunch ( 100 g )   green onions"
+        },
+        {
+          "name": "crushed tomatoes",
+          "amountMetric": "420",
+          "unitMetric": "g",
+          "original": "1   can ( 420 g )   crushed tomatoes"
+        },
+        {
+          "name": "broth",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "2   cups ( 480 g )   broth"
+        },
+        {
+          "name": "milk",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "1   cup ( 240 g )   milk"
+        },
+        {
+          "name": "chili powder",
+          "amountMetric": "18",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 18 g )   chili powder"
+        },
+        {
+          "name": "ground cumin",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   ground cumin"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   paprika"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "shredded cheese",
+          "amountMetric": "84",
+          "unitMetric": "g",
+          "original": "0.75   cup ( 84 g )   shredded cheese"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27802",
+      "title": "Mediterranean Chicken Wraps",
+      "sourceTitle": "Mediterranean Chicken Wraps",
+      "sourceUrl": "https://mealprepmanual.com/mediterranean-chicken-wraps/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/04/mediterranean-chicken-wraps-3-e1617688079573.png",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 45,
+        "cookMinutes": 20,
+        "totalMinutes": 60
+      },
+      "servings": 6,
+      "macros": {
+        "kcal": 494,
+        "protein": 34,
+        "fat": 19,
+        "carbs": 47
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "ginger",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   ginger"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cumin"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "1   tsp ( 4 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tsp ( 2 g )   pepper"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tsp ( 1 g )   oregano"
+        },
+        {
+          "name": "cayenne pepper",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "¼   tsp ( 1 g )   cayenne pepper"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "30",
+          "unitMetric": "ml",
+          "original": "2   tbsp ( 30 ml )   lemon juice"
+        },
+        {
+          "name": "cucumber",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   cucumber"
+        },
+        {
+          "name": "Roma tomatoes",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "4   ( 240 g )   Roma tomatoes"
+        },
+        {
+          "name": "red onion",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   red onion"
+        },
+        {
+          "name": "vinegar",
+          "amountMetric": "15",
+          "unitMetric": "ml",
+          "original": "1   tbsp ( 15 ml )   vinegar"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "7",
+          "unitMetric": "ml",
+          "original": "½   tbsp ( 7 ml )   olive oil"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "romaine lettuce",
+          "amountMetric": "340",
+          "unitMetric": "g",
+          "original": "2   heads ( 340 g )   romaine lettuce"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "7",
+          "unitMetric": "g",
+          "original": "½   tbsp ( 7 g )   olive oil"
+        },
+        {
+          "name": "vinegar",
+          "amountMetric": "15",
+          "unitMetric": "ml",
+          "original": "1   tbsp ( 15 ml )   vinegar"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "tortillas",
+          "amountMetric": "420",
+          "unitMetric": "g",
+          "original": "6   12 inch ( 420 g )   tortillas   gluten free if needed"
+        },
+        {
+          "name": "hummus",
+          "amountMetric": "96",
+          "unitMetric": "g",
+          "original": "6   tbsp ( 96 g )   hummus   store bought is fine"
+        },
+        {
+          "name": "feta cheese",
+          "amountMetric": "42",
+          "unitMetric": "g",
+          "original": "6   tbsp ( 42 g )   feta cheese"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27343",
+      "title": "Chipotle Steak and Pepper Bowls",
+      "sourceTitle": "Chipotle Steak and Pepper Bowls",
+      "sourceUrl": "https://mealprepmanual.com/chipotle-steak-and-pepper-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/11/Chipotle-Steak-Peppers.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 30,
+        "totalMinutes": 45
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 497,
+        "protein": 38,
+        "fat": 13,
+        "carbs": 57
+      },
+      "ingredients": [
+        {
+          "name": "top round steak",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1.5   lbs ( 681 g )   top round steak   london broil"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   soy sauce"
+        },
+        {
+          "name": "chili powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   chili powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "baking soda",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 2 g )   baking soda"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil   to cook beef"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "600",
+          "unitMetric": "g",
+          "original": "4   cups ( 600 g )   cooked rice"
+        },
+        {
+          "name": "chipotle peppers in adobo sauce",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   chipotle peppers in adobo sauce"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   soy sauce"
+        },
+        {
+          "name": "green pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   green pepper"
+        },
+        {
+          "name": "red pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red pepper"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   small ( 100 g )   onion"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   cloves ( 10 g )   garlic"
+        },
+        {
+          "name": "frozen corn",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   cup ( 150 g )   frozen corn"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   oil"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   lime juice"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27328",
+      "title": "Easy Dump and Bake Creamy Chicken Pasta",
+      "sourceTitle": "Easy Dump and Bake Creamy Chicken Pasta",
+      "sourceUrl": "https://mealprepmanual.com/easy-dump-and-bake-creamy-chicken-pasta/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/10/One-Dish-Baked-Pasta.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 45,
+        "totalMinutes": 60
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 557,
+        "protein": 47,
+        "fat": 16,
+        "carbs": 56
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1.5   lbs ( 681 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "spaghetti",
+          "amountMetric": "280",
+          "unitMetric": "g",
+          "original": "10   oz ( 280 g )   spaghetti   gluten free if needed"
+        },
+        {
+          "name": "frozen cauliflower",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": ".5   lb ( 227 g )   frozen cauliflower"
+        },
+        {
+          "name": "frozen butternut squash",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": ".5   lb ( 227 g )   frozen butternut squash"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   lemon juice"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "1   cup ( 227 g )   cottage cheese"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "22.5",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 22.5 g )   oil"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "360",
+          "unitMetric": "g",
+          "original": "1.5   cups ( 360 g )   2% milk"
+        },
+        {
+          "name": "water",
+          "amountMetric": "360",
+          "unitMetric": "g",
+          "original": "1.5   cups ( 360 g )   water"
+        },
+        {
+          "name": "chicken boullion",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   chicken boullion   optional but recommneded"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "Italian seasoning",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 1 g )   Italian seasoning"
+        },
+        {
+          "name": "parmesan cheese",
+          "amountMetric": "56",
+          "unitMetric": "g",
+          "original": ".5   cups ( 56 g )   parmesan cheese"
+        },
+        {
+          "name": "chopped parsley",
+          "original": "5   tbsp   chopped parsley   optional for garnish"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27306",
+      "title": "One Pot Sausage and Pepper Pasta",
+      "sourceTitle": "One Pot Sausage and Pepper Pasta",
+      "sourceUrl": "https://mealprepmanual.com/one-pot-sausage-and-pepper-pasta/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/09/One-Pot-Sausage-and-Pepper-Pasta.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 40,
+        "totalMinutes": 50
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 681,
+        "protein": 51,
+        "fat": 29,
+        "carbs": 55
+      },
+      "ingredients": [
+        {
+          "name": "90/10 ground pork",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   90/10 ground pork   turkey or chicken if you can't eat pork"
+        },
+        {
+          "name": "fennel seeds",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "2   tsp ( 4 g )   fennel seeds"
+        },
+        {
+          "name": "smoked paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   smoked paprika"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "4.5",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 4.5 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "4.5",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 4.5 g )   onion powder"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tsp ( 1 g )   oregano"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "red pepper flakes",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tsp ( 2 g )   red pepper flakes"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   tomato paste"
+        },
+        {
+          "name": "crushed tomatoes",
+          "amountMetric": "420",
+          "unitMetric": "g",
+          "original": "15   oz ( 420 g )   crushed tomatoes"
+        },
+        {
+          "name": "pasta",
+          "amountMetric": "280",
+          "unitMetric": "g",
+          "original": "10   oz ( 280 g )   pasta"
+        },
+        {
+          "name": "water",
+          "amountMetric": "720",
+          "unitMetric": "g",
+          "original": "2.5   cups ( 720 g )   water"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "3   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "spinach",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "3   oz ( 100 g )   spinach"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   onion"
+        },
+        {
+          "name": "red bell pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red bell pepper"
+        },
+        {
+          "name": "parmesan cheese",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "0.5   cups ( 40 g )   parmesan cheese"
+        },
+        {
+          "name": "half and half",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "0.25   cups ( 60 g )   half and half"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27287",
+      "title": "BBQ Cheddar Burger Bowls",
+      "sourceTitle": "BBQ Cheddar Burger Bowls",
+      "sourceUrl": "https://mealprepmanual.com/bbq-cheddar-burger-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/08/BBQ-Cheddar-Burger-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 30,
+        "totalMinutes": 45
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 663,
+        "protein": 49,
+        "fat": 30,
+        "carbs": 49
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (93/7)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef (93/7)"
+        },
+        {
+          "name": "kale",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   bunch ( 150 g )   kale"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "22.5",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 22.5 g )   oil"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "russet potatoes",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   russet potatoes"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "22.5",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 22.5 g )   oil"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "Roma tomato",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   large ( 100 g )   Roma tomato"
+        },
+        {
+          "name": "dill pickle slices",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "5   oz ( 150 g )   dill pickle slices"
+        },
+        {
+          "name": "cheddar cheese",
+          "amountMetric": "85",
+          "unitMetric": "g",
+          "original": "4   oz ( 85 g )   cheddar cheese"
+        },
+        {
+          "name": "barbecue sauce",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "10   tbsp ( 150 g )   barbecue sauce"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27270",
+      "title": "Honey Lime Steak Burrito Bowls",
+      "sourceTitle": "Honey Lime Steak Burrito Bowls",
+      "sourceUrl": "https://mealprepmanual.com/honey-lime-steak-burrito-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/08/Honey-Lime-Steak-Burrito-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 30,
+        "totalMinutes": 60
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 605,
+        "protein": 41,
+        "fat": 17,
+        "carbs": 73
+      },
+      "ingredients": [
+        {
+          "name": "top sirloin steak",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1.5   lbs ( 681 g )   top sirloin steak"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   soy sauce"
+        },
+        {
+          "name": "chili powder",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 12 g )   chili powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "baking soda",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 2 g )   baking soda"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "21",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 21 g )   honey"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil   to cook beef"
+        },
+        {
+          "name": "rice",
+          "amountMetric": "270",
+          "unitMetric": "g",
+          "original": "1.5   cups ( 270 g )   rice"
+        },
+        {
+          "name": "cilantro",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": ".25   bunch ( 30 g )   cilantro"
+        },
+        {
+          "name": "scallions",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "2   medium ( 20 g )   scallions"
+        },
+        {
+          "name": "jalapeño",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "1   small ( 20 g )   jalapeño"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "green pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   green pepper"
+        },
+        {
+          "name": "frozen corn",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   cup ( 100 g )   frozen corn"
+        },
+        {
+          "name": "canned black beans",
+          "amountMetric": "420",
+          "unitMetric": "g",
+          "original": "14.5   oz ( 420 g )   canned black beans"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "7.5",
+          "unitMetric": "g",
+          "original": "0.5   tbsp ( 7.5 g )   oil"
+        },
+        {
+          "name": "salsa",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "10   tbsp ( 120 g )   salsa"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-27230",
+      "title": "Halal Cart Style Chicken Buffet Prep",
+      "sourceTitle": "Halal Cart Style Chicken Buffet Prep",
+      "sourceUrl": "https://mealprepmanual.com/halal-cart-style-chicken-buffet-prep/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/05/Halal-Cart-Chicken.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 45,
+        "totalMinutes": 75
+      },
+      "servings": 6,
+      "macros": {
+        "kcal": 773,
+        "protein": 53,
+        "fat": 36,
+        "carbs": 60
+      },
+      "ingredients": [
+        {
+          "name": "dry basmati rice",
+          "amountMetric": "360",
+          "unitMetric": "g",
+          "original": "2   cups ( 360 g )   dry basmati rice"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 28 g )   butter"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 1.5 g )   cumin"
+        },
+        {
+          "name": "turmeric",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "0.25   tsp ( 1 g )   turmeric"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "1362",
+          "unitMetric": "g",
+          "original": "3   lbs ( 1362 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "37.5",
+          "unitMetric": "g",
+          "original": "2.5   tbsp ( 37.5 g )   oil"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lemon juice"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   cumin"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   onion powder"
+        },
+        {
+          "name": "smoked paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "2   tsp ( 3 g )   smoked paprika"
+        },
+        {
+          "name": "cinnamon",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cinnamon"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "9",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 9 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tsp ( 2 g )   pepper"
+        },
+        {
+          "name": "small red onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   ( 100 g )   small red onion"
+        },
+        {
+          "name": "english cucumber",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "1   ( 300 g )   english cucumber"
+        },
+        {
+          "name": "Roma tomatoes",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "3   ( 300 g )   Roma tomatoes"
+        },
+        {
+          "name": "lettuce",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   lettuce"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   olive oil"
+        },
+        {
+          "name": "vinegar",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   vinegar"
+        },
+        {
+          "name": "mayo",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "0.5   cup ( 100 g )   mayo"
+        },
+        {
+          "name": "plain non fat greek yogurt",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "0.67   cup ( 150 g )   plain non fat greek yogurt"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "1   tsp ( 5 g )   lemon juice"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "water to consistency",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "  ( 30 g )   water to consistency"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26996",
+      "title": "Chile Lime Chicken with Golden Rice",
+      "sourceTitle": "Chile Lime Chicken with Golden Rice",
+      "sourceUrl": "https://mealprepmanual.com/chile-lime-chicken-with-golden-rice/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/03/Untitled-design-10.png",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 25,
+        "cookMinutes": 40,
+        "totalMinutes": 65
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 537,
+        "protein": 46,
+        "fat": 17,
+        "carbs": 50
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "22.5",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 22.5 g )   oil"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "chili powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   chili powder"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   g ( 1 g )   oregano"
+        },
+        {
+          "name": "water",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "¼   cup ( 60 g )   water"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 28 g )   butter"
+        },
+        {
+          "name": "spaghetti",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "3.3   oz ( 100 g )   spaghetti   fideo or orzo will also work. gluten free if needed."
+        },
+        {
+          "name": "dry rice",
+          "amountMetric": "180",
+          "unitMetric": "g",
+          "original": "1   cup ( 180 g )   dry rice"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "turmeric",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "¼   tsp ( 1 g )   turmeric   optional for color"
+        },
+        {
+          "name": "bone broth",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "2   cups ( 480 g )   bone broth   regular broth is fine, just less protein"
+        },
+        {
+          "name": "water",
+          "amountMetric": "80",
+          "unitMetric": "g",
+          "original": "⅔   cups ( 80 g )   water"
+        },
+        {
+          "name": "msg",
+          "original": "1   sprinkle   msg   optional for flavor"
+        },
+        {
+          "name": "baby broccoli",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "½   lb ( 227 g )   baby broccoli"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   lemon juice"
+        },
+        {
+          "name": "water",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   water"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26965",
+      "title": "Chicken Nuggets for Snack City",
+      "sourceTitle": "Chicken Nuggets for Snack City",
+      "sourceUrl": "https://mealprepmanual.com/chicken-nuggets-for-snack-city/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/03/Untitled-design-9.png",
+      "imageUse": "source-preview-only",
+      "slot": "snack1",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 30,
+        "totalMinutes": 60
+      },
+      "servings": 60,
+      "macros": {
+        "kcal": 29.7,
+        "protein": 3.4,
+        "fat": 0.8,
+        "carbs": 2.3
+      },
+      "ingredients": [
+        {
+          "name": "ground chicken",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground chicken   dark meat"
+        },
+        {
+          "name": "sweet potato",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "1   large ( 480 g )   sweet potato"
+        },
+        {
+          "name": "eggs",
+          "amountMetric": "140",
+          "unitMetric": "g",
+          "original": "2   ( 140 g )   eggs"
+        },
+        {
+          "name": "green onion",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "3   stalks ( 30 g )   green onion"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   onion powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "9",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 9 g )   salt"
+        },
+        {
+          "name": "oat flour",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "⅓   cup ( 40 g )   oat flour   wheat flour is fine as well"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26920",
+      "title": "Cheesy Potato and Sausage Breakfast Taquitos",
+      "sourceTitle": "Cheesy Potato and Sausage Breakfast Taquitos",
+      "sourceUrl": "https://mealprepmanual.com/cheesy-potato-and-sausage-breakfast-taquitos/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/02/Untitled-design-8.png",
+      "imageUse": "source-preview-only",
+      "slot": "breakfast",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 60,
+        "cookMinutes": 30,
+        "totalMinutes": 90
+      },
+      "servings": 40,
+      "macros": {
+        "kcal": 149,
+        "protein": 8.9,
+        "fat": 5.1,
+        "carbs": 15.9
+      },
+      "ingredients": [
+        {
+          "name": "ground pork 90/10",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground pork 90/10"
+        },
+        {
+          "name": "brown sugar",
+          "amountMetric": "24",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 24 g )   brown sugar"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "2   tsp ( 12 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   pepper"
+        },
+        {
+          "name": "smoked paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   smoked paprika"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "2   tsp ( 2 g )   oregano"
+        },
+        {
+          "name": "rubbed sage",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "3   tsp ( 4 g )   rubbed sage"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "russet potatoes",
+          "amountMetric": "600",
+          "unitMetric": "g",
+          "original": "3   medium ( 600 g )   russet potatoes"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "1.33   cups ( 300 g )   cottage cheese"
+        },
+        {
+          "name": "shredded cheese",
+          "amountMetric": "112",
+          "unitMetric": "g",
+          "original": "1   cup ( 112 g )   shredded cheese"
+        },
+        {
+          "name": "red pepper",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   small ( 100 g )   red pepper"
+        },
+        {
+          "name": "eggs",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "6   ( 300 g )   eggs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "corn tortillas",
+          "original": "40   corn tortillas   5 inch"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26895",
+      "title": "Broccoli Cheddar Tots",
+      "sourceTitle": "Broccoli Cheddar Tots",
+      "sourceUrl": "https://mealprepmanual.com/broccoli-cheddar-tots/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/01/Broccoli-Cheddar-Tots-e1738221627272.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 30,
+        "totalMinutes": 60
+      },
+      "servings": 139,
+      "macros": {
+        "kcal": 53,
+        "protein": 3.4,
+        "fat": 2.1,
+        "carbs": 5.1
+      },
+      "ingredients": [
+        {
+          "name": "oat flour",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "3⅓   cup ( 400 g )   oat flour"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "8",
+          "unitMetric": "g",
+          "original": "2   tsp ( 8 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "8",
+          "unitMetric": "g",
+          "original": "2   tsp ( 8 g )   garlic powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "9",
+          "unitMetric": "g",
+          "original": "1.5   tsp ( 9 g )   salt"
+        },
+        {
+          "name": "baking soda",
+          "amountMetric": "8",
+          "unitMetric": "g",
+          "original": "2   tsp ( 8 g )   baking soda"
+        },
+        {
+          "name": "eggs",
+          "original": "4   eggs"
+        },
+        {
+          "name": "cheddar cheese",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "2   cups ( 227 g )   cheddar cheese"
+        },
+        {
+          "name": "plain nonfat Greek yogurt",
+          "amountMetric": "600",
+          "unitMetric": "g",
+          "original": "2⅔   cups ( 600 g )   plain nonfat Greek yogurt"
+        },
+        {
+          "name": "frozen broccoli",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   frozen broccoli"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26872",
+      "title": "Lemon Herb Chicken",
+      "sourceTitle": "Lemon Herb Chicken",
+      "sourceUrl": "https://mealprepmanual.com/lemon-herb-chicken/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2025/01/Lemon-Herb-Chicken.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 40,
+        "totalMinutes": 70
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 642,
+        "protein": 42,
+        "fat": 31,
+        "carbs": 50
+      },
+      "ingredients": [
+        {
+          "name": "boneless Skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless Skinless chicken thighs"
+        },
+        {
+          "name": "Dijon mustard",
+          "amountMetric": "23",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 23 g )   Dijon mustard"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "23",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 23 g )   olive oil   for the marinade"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "23",
+          "unitMetric": "g",
+          "original": "1.5   tbsp ( 23 g )   lemon juice"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   onion powder"
+        },
+        {
+          "name": "dried oregano",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 2 g )   dried oregano"
+        },
+        {
+          "name": "dried basil",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 1 g )   dried basil"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil   for cooking the chicken"
+        },
+        {
+          "name": "yellow potatoes",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   yellow potatoes"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "4   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "butter",
+          "original": "5   tbsp ( 70 )   butter"
+        },
+        {
+          "name": "milk",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "0.5   cups ( 120 g )   milk"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1.5   lbs ( 681 g )   carrots"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "chopped parsley",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "0.25   cups ( 20 g )   chopped parsley   optional"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26746",
+      "title": "Roasted Red Pepper Chicken Dip",
+      "sourceTitle": "Roasted Red Pepper Chicken Dip",
+      "sourceUrl": "https://mealprepmanual.com/roasted-red-pepper-chicken-dip/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/12/Roasted-Red-Pepper-Chicken-Dip.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 40,
+        "totalMinutes": 50
+      },
+      "servings": 10,
+      "macros": {
+        "kcal": 109,
+        "protein": 14.6,
+        "fat": 4.6,
+        "carbs": 2.4
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken breast",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   boneless skinless chicken breast"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "1   cup ( 240 g )   cottage cheese"
+        },
+        {
+          "name": "roasted red peppers",
+          "amountMetric": "175",
+          "unitMetric": "g",
+          "original": "0.75   cup ( 175 g )   roasted red peppers"
+        },
+        {
+          "name": "milk",
+          "amountMetric": "90",
+          "unitMetric": "g",
+          "original": "6   tbsp ( 90 g )   milk"
+        },
+        {
+          "name": "cream cheese",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "2   oz ( 60 g )   cream cheese"
+        },
+        {
+          "name": "parmesan cheese",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "6   tbsp ( 30 g )   parmesan cheese"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "hot sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   hot sauce"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "0.25   tsp ( 1 g )   salt"
+        }
+      ],
+      "localization": {
+        "fit": "niche",
+        "availability": "common",
+        "excludeSuggested": true,
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26720",
+      "title": "Slow Cooker Big Boy Beef Stroganoff",
+      "sourceTitle": "Slow Cooker Big Boy Beef Stroganoff",
+      "sourceUrl": "https://mealprepmanual.com/slow-cooker-big-boy-beef-stroganoff/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/12/Big-Boy-Beef-Stroganoff-.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 240,
+        "totalMinutes": 260
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 1013,
+        "protein": 80,
+        "fat": 22,
+        "carbs": 125
+      },
+      "ingredients": [
+        {
+          "name": "top round roast",
+          "amountMetric": "1135",
+          "unitMetric": "g",
+          "original": "2½   lbs ( 1135 g )   top round roast"
+        },
+        {
+          "name": "cream cheese",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "½   cup ( 150 g )   cream cheese"
+        },
+        {
+          "name": "beef broth",
+          "amountMetric": "600",
+          "unitMetric": "g",
+          "original": "2   cups ( 600 g )   beef broth"
+        },
+        {
+          "name": "Worcestershire sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   Worcestershire sauce"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   paprika"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   onion"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   carrots"
+        },
+        {
+          "name": "mushrooms",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "½   lb ( 227 g )   mushrooms"
+        },
+        {
+          "name": "pasta",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1½   lbs ( 681 g )   pasta   I used fusilli"
+        },
+        {
+          "name": "starch",
+          "amountMetric": "24",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 24 g )   starch   tapioca or cornstarch"
+        },
+        {
+          "name": "water",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "¼   cup ( 60 g )   water"
+        },
+        {
+          "name": "plain greek yogurt",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "½   cup ( 150 g )   plain greek yogurt"
+        },
+        {
+          "name": "dijon mustard",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   dijon mustard"
+        },
+        {
+          "name": "chopped parsley for garnish",
+          "original": "¼   cup   chopped parsley for garnish   optional"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26689",
+      "title": "Sheet Pan Protein Pancakes",
+      "sourceTitle": "Sheet Pan Protein Pancakes",
+      "sourceUrl": "https://mealprepmanual.com/sheet-pan-protein-pancakes/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/11/Sheet-Pan-Protein-Pancakes-Berry.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "breakfast",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 20,
+        "totalMinutes": 35
+      },
+      "servings": 12,
+      "macros": {
+        "kcal": 138,
+        "protein": 10.5,
+        "fat": 2,
+        "carbs": 19.6
+      },
+      "ingredients": [
+        {
+          "name": "oat flour",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "3   cups ( 240 g )   oat flour"
+        },
+        {
+          "name": "milk",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "1   cup ( 240 g )   milk"
+        },
+        {
+          "name": "nonfat powdered milk",
+          "amountMetric": "46",
+          "unitMetric": "g",
+          "original": ".25   cup ( 46 g )   nonfat powdered milk"
+        },
+        {
+          "name": "applesauce",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": ".25   cup ( 60 g )   applesauce"
+        },
+        {
+          "name": "egg whites",
+          "amountMetric": "270",
+          "unitMetric": "g",
+          "original": "1.125   cups ( 270 g )   egg whites"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 2 g )   salt"
+        },
+        {
+          "name": "maple syrup",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   maple syrup"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "1.25   cups ( 300 g )   cottage cheese"
+        },
+        {
+          "name": "baking powder",
+          "amountMetric": "8",
+          "unitMetric": "g",
+          "original": "2   tsp ( 8 g )   baking powder"
+        },
+        {
+          "name": "baking soda",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 2 g )   baking soda"
+        },
+        {
+          "name": "vanilla",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "0.5   tsp ( 2 g )   vanilla"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26676",
+      "title": "Curried Chicken Fried Rice",
+      "sourceTitle": "Curried Chicken Fried Rice",
+      "sourceUrl": "https://mealprepmanual.com/curried-chicken-fried-rice/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/11/Curried-Chicken-Fried-Rice.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 30,
+        "totalMinutes": 50
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 491,
+        "protein": 40,
+        "fat": 20,
+        "carbs": 37
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   lemon juice"
+        },
+        {
+          "name": "plain Greek yogurt",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   plain Greek yogurt"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "curry powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   curry powder"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "coriander",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   coriander"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cumin"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "450",
+          "unitMetric": "g",
+          "original": "3   cups ( 450 g )   cooked rice   day old rice is best"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   onion"
+        },
+        {
+          "name": "red pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red pepper"
+        },
+        {
+          "name": "zucchini",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   zucchini"
+        },
+        {
+          "name": "minced garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   minced garlic"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   tomato paste"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "cilantro",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "¼   cup ( 20 g )   cilantro   optional for garnish"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26660",
+      "title": "Slow Cooker Enchilada Chicken",
+      "sourceTitle": "Slow Cooker Enchilada Chicken",
+      "sourceUrl": "https://mealprepmanual.com/slow-cooker-enchilada-chicken/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/10/Slow-Cooker-Enchilada-Chicken.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 360,
+        "totalMinutes": 375
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 599,
+        "protein": 59,
+        "fat": 15,
+        "carbs": 57
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken breast",
+          "amountMetric": "1135",
+          "unitMetric": "g",
+          "original": "2½   lbs ( 1135 g )   boneless skinless chicken breast"
+        },
+        {
+          "name": "fire roasted tomatoes",
+          "amountMetric": "822",
+          "unitMetric": "g",
+          "original": "28   oz ( 822 g )   fire roasted tomatoes"
+        },
+        {
+          "name": "frozen cauliflower",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "½   lb ( 227 g )   frozen cauliflower"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   tomato paste"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   small ( 100 g )   onion"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "chipotle peppers in adobo sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   chipotle peppers in adobo sauce"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "cooked basmati rice",
+          "amountMetric": "750",
+          "unitMetric": "g",
+          "original": "5   cups ( 750 g )   cooked basmati rice"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 28 g )   butter"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "monterrey jack cheese",
+          "amountMetric": "70",
+          "unitMetric": "g",
+          "original": "10   tbsp ( 70 g )   monterrey jack cheese"
+        },
+        {
+          "name": "cilantro",
+          "amountMetric": "25",
+          "unitMetric": "g",
+          "original": "5   tbsp ( 25 g )   cilantro   optional"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26647",
+      "title": "Pumpkin Pie Baked Oatmeal",
+      "sourceTitle": "Pumpkin Pie Baked Oatmeal",
+      "sourceUrl": "https://mealprepmanual.com/pumpkin-pie-baked-oatmeal/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/10/Pumpkin-Pie-Baked-Oatmeal.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "breakfast",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 30,
+        "totalMinutes": 45
+      },
+      "servings": 6,
+      "macros": {
+        "kcal": 440,
+        "protein": 24,
+        "fat": 13,
+        "carbs": 57
+      },
+      "ingredients": [
+        {
+          "name": "old fashioned oats",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "3   cups ( 240 g )   old fashioned oats"
+        },
+        {
+          "name": "vanilla protein powder",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "2   scoops ( 60 g )   vanilla protein powder"
+        },
+        {
+          "name": "baking powder",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "1   tsp ( 4 g )   baking powder"
+        },
+        {
+          "name": "pumpkin",
+          "amountMetric": "425",
+          "unitMetric": "g",
+          "original": "1   can ( 425 g )   pumpkin"
+        },
+        {
+          "name": "syrup",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "8   tbsp ( 120 g )   syrup"
+        },
+        {
+          "name": "eggs",
+          "original": "3   eggs"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "1   cup ( 240 g )   2% milk"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "1   cup ( 227 g )   cottage cheese"
+        },
+        {
+          "name": "pumpkin pie spice",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "1   tsp ( 4 g )   pumpkin pie spice"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "cream cheese",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "½   cup ( 100 g )   cream cheese"
+        },
+        {
+          "name": "plain nonfat Greek yogurt",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "½   cup ( 100 g )   plain nonfat Greek yogurt"
+        },
+        {
+          "name": "maple syrup",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   maple syrup"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26617",
+      "title": "Sriracha Lime Chicken Bowls",
+      "sourceTitle": "Sriracha Lime Chicken Bowls",
+      "sourceUrl": "https://mealprepmanual.com/sriracha-lime-chicken-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/09/Sriracha-Lime-Chicken-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 40,
+        "totalMinutes": 60
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 498,
+        "protein": 41,
+        "fat": 14,
+        "carbs": 52
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "broccoli",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   broccoli   I use frozen"
+        },
+        {
+          "name": "japanese sweet potato",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "1   large ( 400 g )   japanese sweet potato   any kind is fine"
+        },
+        {
+          "name": "green onions",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "5   stalks ( 75 g )   green onions"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "300",
+          "unitMetric": "g",
+          "original": "2   cups ( 300 g )   cooked rice"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        },
+        {
+          "name": "sriracha",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   sriracha"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   lime juice"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "53",
+          "unitMetric": "g",
+          "original": "2½   tbsp ( 53 g )   honey"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26583",
+      "title": "Big Boy Cheesesteak Sloppy Joe Bowls",
+      "sourceTitle": "Big Boy Cheesesteak Sloppy Joe Bowls",
+      "sourceUrl": "https://mealprepmanual.com/big-boy-cheesesteak-sloppy-joe-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/08/Big-Boy-Cheesesteak-Sloppy-Joe-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 35,
+        "totalMinutes": 55
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 1026,
+        "protein": 59,
+        "fat": 43,
+        "carbs": 102
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (90/10)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef (90/10)"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "½   medium ( 100 g )   onion"
+        },
+        {
+          "name": "bell peppers",
+          "amountMetric": "250",
+          "unitMetric": "g",
+          "original": "2   small ( 250 g )   bell peppers"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "3   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "dijon mustard",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   dijon mustard"
+        },
+        {
+          "name": "Worcestershire sauce",
+          "amountMetric": "23",
+          "unitMetric": "g",
+          "original": "1 ½   tbsp ( 23 g )   Worcestershire sauce"
+        },
+        {
+          "name": "ketchup",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "¼   cup ( 60 g )   ketchup"
+        },
+        {
+          "name": "beef broth",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "1   cup ( 240 g )   beef broth"
+        },
+        {
+          "name": "cornstarch",
+          "amountMetric": "8",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 8 g )   cornstarch"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   olive oil"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "450",
+          "unitMetric": "g",
+          "original": "3   cups ( 450 g )   cooked rice"
+        },
+        {
+          "name": "Salt and pepper to taste",
+          "original": "  Salt and pepper to taste"
+        },
+        {
+          "name": "provolone cheese",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "10   slices ( 227 g )   provolone cheese"
+        },
+        {
+          "name": "russet potatoes",
+          "amountMetric": "1500",
+          "unitMetric": "g",
+          "original": "3⅓   lbs ( 1500 g )   russet potatoes"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   Tbsp ( 30 g )   olive oil"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   pepper"
+        },
+        {
+          "name": "ketchup",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "10   tbsp ( 150 g )   ketchup"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26566",
+      "title": "Sausage Egg and Cheese Savory Baked Oatmeal",
+      "sourceTitle": "Sausage Egg and Cheese Savory Baked Oatmeal",
+      "sourceUrl": "https://mealprepmanual.com/sausage-egg-and-cheese-savory-baked-oatmeal/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/08/Sausage-and-Egg-Savory-Baked-Oatmeal.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "breakfast",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 60,
+        "totalMinutes": 75
+      },
+      "servings": 1,
+      "macros": {
+        "kcal": 569,
+        "protein": 36,
+        "fat": 27,
+        "carbs": 46
+      },
+      "ingredients": [
+        {
+          "name": "ground pork 90/10",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   ground pork 90/10   any ground meat is okay"
+        },
+        {
+          "name": "brown sugar",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 12 g )   brown sugar"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   pepper"
+        },
+        {
+          "name": "cayenne pepper",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cayenne pepper   optional for spice"
+        },
+        {
+          "name": "smoked paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   smoked paprika"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tsp ( 1 g )   oregano"
+        },
+        {
+          "name": "rubbed sage",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1½   tsp ( 2 g )   rubbed sage"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "old fashioned oats",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "original": "3   cups ( 240 g )   old fashioned oats"
+        },
+        {
+          "name": "oat flour",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "½   cup ( 60 g )   oat flour   any flour is fine"
+        },
+        {
+          "name": "eggs",
+          "original": "2   eggs"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "2   cups ( 480 g )   2% milk"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "1   cup ( 227 g )   cottage cheese"
+        },
+        {
+          "name": "shredded cheddar cheese",
+          "amountMetric": "112",
+          "unitMetric": "g",
+          "original": "1   cup ( 112 g )   shredded cheddar cheese"
+        },
+        {
+          "name": "baking powder",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "1   tsp ( 4 g )   baking powder"
+        },
+        {
+          "name": "salt",
+          "original": "½   tsp   salt"
+        },
+        {
+          "name": "green pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   green pepper"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   small ( 100 g )   onion"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        }
+      ],
+      "localization": {
+        "fit": "niche",
+        "availability": "common",
+        "excludeSuggested": true,
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26528",
+      "title": "Beefy Queso Loaded Potatoes",
+      "sourceTitle": "Beefy Queso Loaded Potatoes",
+      "sourceUrl": "https://mealprepmanual.com/beefy-queso-loaded-potatoes/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/07/Beefy-Queso-Loaded-Potatoes.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 45,
+        "totalMinutes": 60
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 667,
+        "protein": 48,
+        "fat": 33,
+        "carbs": 45
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (90/10)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef (90/10)"
+        },
+        {
+          "name": "tomato sauce",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "1   cup ( 227 g )   tomato sauce"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cumin"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "zucchini",
+          "amountMetric": "125",
+          "unitMetric": "g",
+          "original": "1   small ( 125 g )   zucchini"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   small ( 150 g )   onion"
+        },
+        {
+          "name": "poblano pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "2   medium ( 150 g )   poblano pepper"
+        },
+        {
+          "name": "mushrooms",
+          "amountMetric": "113",
+          "unitMetric": "g",
+          "original": "4   oz ( 113 g )   mushrooms"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "Yukon gold potatoes",
+          "amountMetric": "1000",
+          "unitMetric": "g",
+          "original": "2.2   lbs ( 1000 g )   Yukon gold potatoes"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   olive oil"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "cottage cheese",
+          "amountMetric": "113",
+          "unitMetric": "g",
+          "original": "½   cup ( 113 g )   cottage cheese"
+        },
+        {
+          "name": "cheddar cheese",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "¼   cup ( 28 g )   cheddar cheese"
+        },
+        {
+          "name": "pepper jack cheese",
+          "amountMetric": "28",
+          "unitMetric": "g",
+          "original": "¼   cup ( 28 g )   pepper jack cheese"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   2% milk"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "chipotle peppers in adobo sauce",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   chipotle peppers in adobo sauce"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26514",
+      "title": "Buffalo Chicken Biscuits",
+      "sourceTitle": "Buffalo Chicken Biscuits",
+      "sourceUrl": "https://mealprepmanual.com/buffalo-chicken-biscuits/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/06/Untitled-design-4.png",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 45,
+        "totalMinutes": 75
+      },
+      "servings": 80,
+      "macros": {
+        "kcal": 43,
+        "protein": 3.8,
+        "fat": 1.6,
+        "carbs": 3.3
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken breasts",
+          "amountMetric": "568",
+          "unitMetric": "g",
+          "original": "1¼   lb ( 568 g )   boneless skinless chicken breasts"
+        },
+        {
+          "name": "oat flour",
+          "amountMetric": "320",
+          "unitMetric": "g",
+          "original": "2 ⅔   cup ( 320 g )   oat flour"
+        },
+        {
+          "name": "dried parsley",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "4   tbsp ( 4 g )   dried parsley"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "18",
+          "unitMetric": "g",
+          "original": "1½   tbsp ( 18 g )   garlic powder"
+        },
+        {
+          "name": "baking soda",
+          "amountMetric": "8",
+          "unitMetric": "g",
+          "original": "2   tsp ( 8 g )   baking soda"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "green onions",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   bunch ( 100 g )   green onions"
+        },
+        {
+          "name": "eggs",
+          "original": "4   eggs"
+        },
+        {
+          "name": "shredded cheese",
+          "amountMetric": "226",
+          "unitMetric": "g",
+          "original": "2   cups ( 226 g )   shredded cheese"
+        },
+        {
+          "name": "2% cottage cheese",
+          "amountMetric": "600",
+          "unitMetric": "g",
+          "original": "2 ⅔   cups ( 600 g )   2% cottage cheese"
+        },
+        {
+          "name": "buffalo sauce",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "½   cup ( 120 g )   buffalo sauce"
+        }
+      ],
+      "localization": {
+        "fit": "niche",
+        "availability": "common",
+        "excludeSuggested": true,
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26489",
+      "title": "Mediterranean Chicken Pasta Salad",
+      "sourceTitle": "Mediterranean Chicken Pasta Salad",
+      "sourceUrl": "https://mealprepmanual.com/mediterranean-chicken-pasta-salad/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/05/Mediterranean-Pasta-Salad.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 35,
+        "totalMinutes": 65
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 605,
+        "protein": 45,
+        "fat": 32,
+        "carbs": 35
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken breast",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1.5   lbs ( 681 g )   boneless skinless chicken breast"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   oil"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "1⅓   tbsp ( 20 g )   lemon juice"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "½   tsp ( 2 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "½   tsp ( 2 g )   garlic powder"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "½   tsp ( 2 g )   cumin"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "dried oregano",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tsp ( 1 g )   dried oregano"
+        },
+        {
+          "name": "chickpea pasta",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   chickpea pasta   dry weight, any pasta works if you don't want to use chickpea"
+        },
+        {
+          "name": "cucumber",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   cucumber"
+        },
+        {
+          "name": "spinach",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "5   oz ( 150 g )   spinach"
+        },
+        {
+          "name": "cherry tomatoes",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   cherry tomatoes"
+        },
+        {
+          "name": "red onion",
+          "amountMetric": "125",
+          "unitMetric": "g",
+          "original": "1   small ( 125 g )   red onion"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "90",
+          "unitMetric": "g",
+          "original": "6   tbsp ( 90 g )   olive oil"
+        },
+        {
+          "name": "red wine vinegar",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "¼   cup ( 60 g )   red wine vinegar"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   lemon juice"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   cloves ( 10 g )   garlic"
+        },
+        {
+          "name": "dried oregano",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "2   tsp ( 2 g )   dried oregano"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "⅓   tsp ( 2 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "½   tsp ( 2 g )   pepper"
+        },
+        {
+          "name": "crumbled feta cheese",
+          "amountMetric": "112",
+          "unitMetric": "g",
+          "original": "1   cup ( 112 g )   crumbled feta cheese"
+        }
+      ],
+      "localization": {
+        "fit": "niche",
+        "availability": "common",
+        "excludeSuggested": true,
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26441",
+      "title": "Peanut Turkey Stir Fry",
+      "sourceTitle": "Peanut Turkey Stir Fry",
+      "sourceUrl": "https://mealprepmanual.com/peanut-turkey-stir-fry/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/04/Peanut-Turkey-Stir-Fry.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 5,
+        "cookMinutes": 25,
+        "totalMinutes": 30
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 632,
+        "protein": 42,
+        "fat": 26,
+        "carbs": 57
+      },
+      "ingredients": [
+        {
+          "name": "ground turkey (93/7)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground turkey (93/7)"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "frozen stir fry vegetables",
+          "amountMetric": "681",
+          "unitMetric": "g",
+          "original": "1.5   lbs ( 681 g )   frozen stir fry vegetables"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "563",
+          "unitMetric": "g",
+          "original": "3.75   cups ( 563 g )   cooked rice"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   soy sauce   gluten free if needed"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "84",
+          "unitMetric": "g",
+          "original": "¼   cup ( 84 g )   honey"
+        },
+        {
+          "name": "peanut butter",
+          "amountMetric": "56",
+          "unitMetric": "g",
+          "original": "¼   cup ( 56 g )   peanut butter"
+        },
+        {
+          "name": "Chinese cooking wine",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   Chinese cooking wine   or rice vinegar"
+        },
+        {
+          "name": "sesame oil",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   sesame oil"
+        },
+        {
+          "name": "red pepper flakes",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   red pepper flakes"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26429",
+      "title": "Poblano Chicken Harvest Bowls",
+      "sourceTitle": "Poblano Chicken Harvest Bowls",
+      "sourceUrl": "https://mealprepmanual.com/poblano-chicken-harvest-bowls/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/04/Poblano-Chicken-Harvest-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 35,
+        "totalMinutes": 65
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 655,
+        "protein": 48,
+        "fat": 26,
+        "carbs": 58
+      },
+      "ingredients": [
+        {
+          "name": "cooked rice",
+          "amountMetric": "375",
+          "unitMetric": "g",
+          "original": "2½   cups ( 375 g )   cooked rice   I used 150g dry rice"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   lime juice"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "poblano peppers",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "2   medium ( 200 g )   poblano peppers"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   small ( 100 g )   onion"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "4   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "plain nonfat greek yogurt",
+          "amountMetric": "113",
+          "unitMetric": "g",
+          "original": "¼   cup ( 113 g )   plain nonfat greek yogurt"
+        },
+        {
+          "name": "cilantro",
+          "amountMetric": "7",
+          "unitMetric": "g",
+          "original": "6   sprigs ( 7 g )   cilantro"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   lime juice"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "sweet potatoes",
+          "amountMetric": "600",
+          "unitMetric": "g",
+          "original": "2   medium ( 600 g )   sweet potatoes"
+        },
+        {
+          "name": "broccoli",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "½   lb ( 227 g )   broccoli"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "23",
+          "unitMetric": "g",
+          "original": "1½   tbsp ( 23 g )   oil"
+        },
+        {
+          "name": "salt to taste",
+          "original": "  salt to taste"
+        },
+        {
+          "name": "ground chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground chicken thighs"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "dried oregano",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   dried oregano"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "roasted pumpkin seeds",
+          "amountMetric": "50",
+          "unitMetric": "g",
+          "original": "5   tbsp ( 50 g )   roasted pumpkin seeds"
+        },
+        {
+          "name": "feta cheese",
+          "amountMetric": "50",
+          "unitMetric": "g",
+          "original": "5   tbsp ( 50 g )   feta cheese"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26414",
+      "title": "Cinnamon Protein Waffle French Toast",
+      "sourceTitle": "Cinnamon Protein Waffle French Toast",
+      "sourceUrl": "https://mealprepmanual.com/cinnamon-protein-waffle-french-toast/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/03/Cinnamon-Protein-Waffle-French-Toast.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "breakfast",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 10,
+        "totalMinutes": 25
+      },
+      "servings": 1,
+      "macros": {
+        "kcal": 435,
+        "protein": 46,
+        "fat": 3,
+        "carbs": 56
+      },
+      "ingredients": [
+        {
+          "name": "protein pancake mix",
+          "amountMetric": "56",
+          "unitMetric": "g",
+          "original": "½   cup ( 56 g )   protein pancake mix"
+        },
+        {
+          "name": "liquid egg whites⁣⁣",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "¼   cup ( 60 g )   liquid egg whites⁣⁣"
+        },
+        {
+          "name": "plain nonfat Greek yogurt ⁣⁣",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "⅓   cup ( 75 g )   plain nonfat Greek yogurt ⁣⁣"
+        },
+        {
+          "name": "water ⁣⁣",
+          "amountMetric": "25",
+          "unitMetric": "g",
+          "original": "1-2   tbsp ( 25 g )   water ⁣⁣"
+        },
+        {
+          "name": "egg whites",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "5   tbsp ( 75 g )   egg whites   or a whole egg"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   2% milk"
+        },
+        {
+          "name": "vanilla extract",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "½   tsp ( 2 g )   vanilla extract"
+        },
+        {
+          "name": "cinnamon",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "½   tsp ( 2 g )   cinnamon"
+        },
+        {
+          "name": "strawberries",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "1   cup ( 100 g )   strawberries   frozen is fine"
+        },
+        {
+          "name": "maple syrup",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   maple syrup"
+        },
+        {
+          "name": "fat free whipped cream",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 5 g )   fat free whipped cream"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26358",
+      "title": "Japanese Ground Beef Curry",
+      "sourceTitle": "Japanese Ground Beef Curry",
+      "sourceUrl": "https://mealprepmanual.com/japanese-ground-beef-curry/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/02/Japanese-Ground-Beef-Curry.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 40,
+        "totalMinutes": 60
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 719,
+        "protein": 46,
+        "fat": 31,
+        "carbs": 65
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (85/15)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef (85/15)"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "7.5",
+          "unitMetric": "g",
+          "original": "½   tbsp ( 7.5 g )   oil"
+        },
+        {
+          "name": "flour",
+          "amountMetric": "37",
+          "unitMetric": "g",
+          "original": "¼   cup ( 37 g )   flour   gluten free if needed"
+        },
+        {
+          "name": "curry powder",
+          "amountMetric": "24",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 24 g )   curry powder"
+        },
+        {
+          "name": "garam masala",
+          "amountMetric": "16",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 16 g )   garam masala"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "125",
+          "unitMetric": "g",
+          "original": "1   small ( 125 g )   onion"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "2   medium ( 150 g )   carrots"
+        },
+        {
+          "name": "russet potatoes",
+          "amountMetric": "250",
+          "unitMetric": "g",
+          "original": "1   large ( 250 g )   russet potatoes"
+        },
+        {
+          "name": "minced garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   minced garlic"
+        },
+        {
+          "name": "ginger",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   ginger"
+        },
+        {
+          "name": "beef broth",
+          "amountMetric": "960",
+          "unitMetric": "g",
+          "original": "4   cups ( 960 g )   beef broth"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   soy sauce   gluten free if needed"
+        },
+        {
+          "name": "Worcestershire sauce",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   Worcestershire sauce"
+        },
+        {
+          "name": "frozen peas",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   frozen peas"
+        },
+        {
+          "name": "Salt and pepper to taste",
+          "original": "  Salt and pepper to taste"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "562.5",
+          "unitMetric": "g",
+          "original": "3¾   cups ( 562.5 g )   cooked rice"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26232",
+      "title": "Big Boy Mac & Cheese",
+      "sourceTitle": "Big Boy Mac & Cheese",
+      "sourceUrl": "https://mealprepmanual.com/big-boy-mac-cheese/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/01/Big-Boy-Mac-Cheese-1.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 25,
+        "cookMinutes": 40,
+        "totalMinutes": 65
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 1008,
+        "protein": 73,
+        "fat": 39,
+        "carbs": 91
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "½   tsp ( 1.5 g )   pepper"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "frozen cauliflower",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   frozen cauliflower"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "125",
+          "unitMetric": "g",
+          "original": "1   small ( 125 g )   onion"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "3   cloves ( 15 g )   garlic"
+        },
+        {
+          "name": "red bell pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red bell pepper"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   large ( 150 g )   carrots"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   onion powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "macaroni noodles",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   macaroni noodles   gluten free if needed"
+        },
+        {
+          "name": "cheddar cheese",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   cheddar cheese   block is best"
+        },
+        {
+          "name": "4% cottage cheese",
+          "amountMetric": "454",
+          "unitMetric": "g",
+          "original": "1   lb ( 454 g )   4% cottage cheese"
+        },
+        {
+          "name": "pasta water",
+          "amountMetric": "360",
+          "unitMetric": "g",
+          "original": "1½   cups ( 360 g )   pasta water"
+        },
+        {
+          "name": "2% milk",
+          "amountMetric": "360",
+          "unitMetric": "g",
+          "original": "1½   cups ( 360 g )   2% milk"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "chopped parsley",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "¼   cup ( 10 g )   chopped parsley   optional"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-26138",
+      "title": "Gochujang Glazed Beef & Vegetables",
+      "sourceTitle": "Gochujang Glazed Beef & Vegetables",
+      "sourceUrl": "https://mealprepmanual.com/gochujang-glazed-beef-vegetables/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2024/01/High-Volume-Korean-Beef-Bowls.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 30,
+        "totalMinutes": 50
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 572,
+        "protein": 42,
+        "fat": 22,
+        "carbs": 52
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (90/10)",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef (90/10)"
+        },
+        {
+          "name": "green pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   green pepper"
+        },
+        {
+          "name": "yellow onion",
+          "amountMetric": "125",
+          "unitMetric": "g",
+          "original": "1   small ( 125 g )   yellow onion"
+        },
+        {
+          "name": "cabbage",
+          "amountMetric": "227",
+          "unitMetric": "g",
+          "original": "8   oz ( 227 g )   cabbage   a whole head or pre-shredded in a bag"
+        },
+        {
+          "name": "carrots",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "2   medium ( 150 g )   carrots"
+        },
+        {
+          "name": "oil",
+          "original": "1   tbsp   oil"
+        },
+        {
+          "name": "green onion",
+          "original": "3   stalks   green onion   optional"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   soy sauce   gluten free if needed"
+        },
+        {
+          "name": "gochujang",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   gochujang"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "42",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 42 g )   honey"
+        },
+        {
+          "name": "water",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   water"
+        },
+        {
+          "name": "minced garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   minced garlic"
+        },
+        {
+          "name": "minced ginger",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   minced ginger"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "563",
+          "unitMetric": "g",
+          "original": "3¾   cups ( 563 g )   cooked rice"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25475",
+      "title": "Tikka Masala Meatballs",
+      "sourceTitle": "Tikka Masala Meatballs",
+      "sourceUrl": "https://mealprepmanual.com/tikka-masala-meatballs/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/11/Tikka-Masala-Meatballs.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 2,
+        "totalMinutes": 2
+      },
+      "servings": 2,
+      "macros": {
+        "kcal": 540,
+        "protein": 38,
+        "fat": 16,
+        "carbs": 61
+      },
+      "ingredients": [
+        {
+          "name": "high protein beef meatballs",
+          "original": "10   high protein beef meatballs"
+        },
+        {
+          "name": "frozen rice",
+          "original": "2   cups   frozen rice   or precooked"
+        },
+        {
+          "name": "frozen broccoli",
+          "original": "2   cups   frozen broccoli"
+        },
+        {
+          "name": "tikka masala sauce",
+          "original": "¼   cup   tikka masala sauce"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25463",
+      "title": "Teriyaki Beef Meatballs",
+      "sourceTitle": "Teriyaki Beef Meatballs",
+      "sourceUrl": "https://mealprepmanual.com/teriyaki-beef-meatballs/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/11/Teriyaki-Beef-Meatballs.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 2,
+        "totalMinutes": 2
+      },
+      "servings": 2,
+      "macros": {
+        "kcal": 491,
+        "protein": 37,
+        "fat": 11,
+        "carbs": 61
+      },
+      "ingredients": [
+        {
+          "name": "high protein beef meatballs",
+          "original": "10   high protein beef meatballs"
+        },
+        {
+          "name": "frozen rice",
+          "original": "2   cups   frozen rice   or precooked"
+        },
+        {
+          "name": "frozen stir fry blend vegetables",
+          "original": "2   cups   frozen stir fry blend vegetables"
+        },
+        {
+          "name": "teriyaki sauce",
+          "original": "¼   cup   teriyaki sauce"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25461",
+      "title": "Meatball Sub",
+      "sourceTitle": "Meatball Sub",
+      "sourceUrl": "https://mealprepmanual.com/meatball-sub/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/11/Meatball-Sub.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 5,
+        "cookMinutes": 5,
+        "totalMinutes": 10
+      },
+      "servings": 1,
+      "macros": {
+        "kcal": 488,
+        "protein": 33,
+        "fat": 28,
+        "carbs": 26
+      },
+      "ingredients": [
+        {
+          "name": "bread",
+          "amountMetric": "33",
+          "unitMetric": "g",
+          "original": "1   slice ( 33 g )   bread   gluten free if needed"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "2   tsp ( 10 g )   butter"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "½   tsp ( 1.5 g )   garlic powder"
+        },
+        {
+          "name": "marinara sauce",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "¼   cup ( 60 g )   marinara sauce"
+        },
+        {
+          "name": "high protein beef meatballs",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "5   ( 100 g )   high protein beef meatballs"
+        },
+        {
+          "name": "provolone cheese",
+          "amountMetric": "23",
+          "unitMetric": "g",
+          "original": "1   slice ( 23 g )   provolone cheese"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25453",
+      "title": "High Protein Beef Meatballs",
+      "sourceTitle": "High Protein Beef Meatballs",
+      "sourceUrl": "https://mealprepmanual.com/high-protein-beef-meatballs/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/11/Beef-Meatballs.png",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 30,
+        "cookMinutes": 40,
+        "totalMinutes": 70
+      },
+      "servings": 1,
+      "macros": {
+        "kcal": 46,
+        "protein": 5.8,
+        "fat": 2.1,
+        "carbs": 0.9
+      },
+      "ingredients": [
+        {
+          "name": "ground beef (93/7)",
+          "amountMetric": "2270",
+          "unitMetric": "g",
+          "original": "5   lbs ( 2270 g )   ground beef (93/7)"
+        },
+        {
+          "name": "oat flour",
+          "amountMetric": "80",
+          "unitMetric": "g",
+          "original": "¾   cup ( 80 g )   oat flour"
+        },
+        {
+          "name": "eggs",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "2   ( 100 g )   eggs   beaten"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "1½   tbsp ( 12 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "1½   tbsp ( 12 g )   onion powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "2   tsp ( 12 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   pepper"
+        },
+        {
+          "name": "oil spray",
+          "original": "  oil spray"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25304",
+      "title": "Batch Prepped Chicken Breast for the Freezer",
+      "sourceTitle": "Batch Prepped Chicken Breast for the Freezer",
+      "sourceUrl": "https://mealprepmanual.com/freezer-chicken-breast/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/10/Freezer-Chicken.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 15,
+        "cookMinutes": 8,
+        "totalMinutes": 23
+      },
+      "servings": 12,
+      "macros": {
+        "kcal": 177,
+        "protein": 35,
+        "fat": 4
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken breast",
+          "amountMetric": "1362",
+          "unitMetric": "g",
+          "original": "3   lbs ( 1362 g )   boneless skinless chicken breast"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "2   tsp ( 12 g )   salt"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "1⅓   tbsp ( 12 g )   garlic powder"
+        },
+        {
+          "name": "onion powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   onion powder"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   paprika"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "2   tsp ( 2 g )   oregano"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25290",
+      "title": "Big Boy Baked Oatmeal",
+      "sourceTitle": "Big Boy Baked Oatmeal",
+      "sourceUrl": "https://mealprepmanual.com/big-boy-baked-oatmeal/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/10/Big-Boy-Baked-Oatmeal.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "breakfast",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 60,
+        "totalMinutes": 70
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 980,
+        "protein": 42,
+        "fat": 44,
+        "carbs": 103
+      },
+      "ingredients": [
+        {
+          "name": "old fashioned oats",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "5   cups ( 400 g )   old fashioned oats"
+        },
+        {
+          "name": "vanilla protein powder",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "4   scoops ( 120 g )   vanilla protein powder"
+        },
+        {
+          "name": "baking powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1½   tsp ( 6 g )   baking powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "bananas",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "4   medium ( 400 g )   bananas   ripe"
+        },
+        {
+          "name": "maple syrup",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   maple syrup"
+        },
+        {
+          "name": "eggs",
+          "original": "4   eggs"
+        },
+        {
+          "name": "whole milk",
+          "amountMetric": "840",
+          "unitMetric": "g",
+          "original": "3½   cups ( 840 g )   whole milk"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "56",
+          "unitMetric": "g",
+          "original": "¼   cup ( 56 g )   butter"
+        },
+        {
+          "name": "walnuts",
+          "amountMetric": "112",
+          "unitMetric": "g",
+          "original": "1   cup ( 112 g )   walnuts"
+        },
+        {
+          "name": "maple syrup",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   maple syrup"
+        },
+        {
+          "name": "peanut butter",
+          "amountMetric": "48",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 48 g )   peanut butter"
+        },
+        {
+          "name": "cinnamon",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   cinnamon"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25244",
+      "title": "Chicken Fajita Fried Rice",
+      "sourceTitle": "Chicken Fajita Fried Rice",
+      "sourceUrl": "https://mealprepmanual.com/chicken-fajita-fried-rice/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/10/Chicken-Fajita-Fried-Rice.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 30,
+        "totalMinutes": 50
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 481,
+        "protein": 40,
+        "fat": 18,
+        "carbs": 41
+      },
+      "ingredients": [
+        {
+          "name": "boneless skinless chicken thighs",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   boneless skinless chicken thighs"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   oil"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   lime juice"
+        },
+        {
+          "name": "garlic powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   garlic powder"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "1",
+          "unitMetric": "g",
+          "original": "1   tsp ( 1 g )   oregano"
+        },
+        {
+          "name": "coriander",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   coriander"
+        },
+        {
+          "name": "cumin",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   cumin"
+        },
+        {
+          "name": "paprika",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "1   tsp ( 3 g )   paprika"
+        },
+        {
+          "name": "chili powder",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "2   tsp ( 6 g )   chili powder"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "1   tsp ( 6 g )   salt"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tsp ( 2 g )   pepper"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "450",
+          "unitMetric": "g",
+          "original": "3   cups ( 450 g )   cooked rice"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   onion"
+        },
+        {
+          "name": "red pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red pepper"
+        },
+        {
+          "name": "green pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   green pepper   or poblano"
+        },
+        {
+          "name": "minced garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   minced garlic"
+        },
+        {
+          "name": "lime juice",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   lime juice"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "cilantro",
+          "original": "¼   cup   cilantro   optional for garnish"
+        },
+        {
+          "name": "lime",
+          "original": "1   lime   optional for garnish"
+        }
+      ],
+      "localization": {
+        "fit": "adapted",
+        "availability": "specialty",
+        "excludeSuggested": false,
+        "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25175",
+      "title": "Hot Honey Pork Stir Fry",
+      "sourceTitle": "Hot Honey Pork Stir Fry",
+      "sourceUrl": "https://mealprepmanual.com/hot-honey-pork-stir-fry/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/09/Hot-Honey-Pork-Stir-Fry.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 10,
+        "cookMinutes": 25,
+        "totalMinutes": 35
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 616,
+        "protein": 43,
+        "fat": 25,
+        "carbs": 55
+      },
+      "ingredients": [
+        {
+          "name": "ground pork 90/10",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground pork 90/10"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "red bell pepper",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "1   medium ( 150 g )   red bell pepper"
+        },
+        {
+          "name": "green onions",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "6   stalks ( 75 g )   green onions"
+        },
+        {
+          "name": "green beans",
+          "amountMetric": "340",
+          "unitMetric": "g",
+          "original": "12   oz ( 340 g )   green beans"
+        },
+        {
+          "name": "cooked rice",
+          "amountMetric": "563",
+          "unitMetric": "g",
+          "original": "3¾   cups ( 563 g )   cooked rice"
+        },
+        {
+          "name": "crunchy chili garlic oil",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "2   tbsp ( 30 g )   crunchy chili garlic oil"
+        },
+        {
+          "name": "soy sauce",
+          "amountMetric": "45",
+          "unitMetric": "g",
+          "original": "3   tbsp ( 45 g )   soy sauce   gluten free if needed"
+        },
+        {
+          "name": "rice vinegar",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   rice vinegar"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "84",
+          "unitMetric": "g",
+          "original": "¼   cup ( 84 g )   honey"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25159",
+      "title": "Big Boy Baked Penne",
+      "sourceTitle": "Big Boy Baked Penne",
+      "sourceUrl": "https://mealprepmanual.com/big-boy-baked-penne/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/09/Big-Boy-Baked-Penne.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "dinner",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 20,
+        "cookMinutes": 50,
+        "totalMinutes": 70
+      },
+      "servings": 5,
+      "macros": {
+        "kcal": 1040,
+        "protein": 68,
+        "fat": 47,
+        "carbs": 86
+      },
+      "ingredients": [
+        {
+          "name": "penne pasta noodles",
+          "amountMetric": "340",
+          "unitMetric": "g",
+          "original": "12   oz ( 340 g )   penne pasta noodles   uncooked, gluten free if needed"
+        },
+        {
+          "name": "ground beef",
+          "amountMetric": "908",
+          "unitMetric": "g",
+          "original": "2   lbs ( 908 g )   ground beef   85/15"
+        },
+        {
+          "name": "petite diced tomatoes",
+          "amountMetric": "794",
+          "unitMetric": "g",
+          "original": "28   oz ( 794 g )   petite diced tomatoes"
+        },
+        {
+          "name": "crushed tomatoes",
+          "amountMetric": "794",
+          "unitMetric": "g",
+          "original": "28   oz ( 794 g )   crushed tomatoes"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "1   medium ( 200 g )   onion"
+        },
+        {
+          "name": "minced garlic",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   minced garlic"
+        },
+        {
+          "name": "oregano",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 2 g )   oregano   dried"
+        },
+        {
+          "name": "basil",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 2 g )   basil   dried"
+        },
+        {
+          "name": "low fat ricotta cheese",
+          "amountMetric": "425",
+          "unitMetric": "g",
+          "original": "15   oz ( 425 g )   low fat ricotta cheese"
+        },
+        {
+          "name": "mozzarella cheese",
+          "amountMetric": "112",
+          "unitMetric": "g",
+          "original": "1   cup ( 112 g )   mozzarella cheese   shredded"
+        },
+        {
+          "name": "parmesan cheese",
+          "amountMetric": "50",
+          "unitMetric": "g",
+          "original": "½   cup ( 50 g )   parmesan cheese   shredded"
+        },
+        {
+          "name": "spinach",
+          "amountMetric": "283",
+          "unitMetric": "g",
+          "original": "10   oz ( 283 g )   spinach"
+        },
+        {
+          "name": "oil",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "1   tbsp ( 15 g )   oil"
+        },
+        {
+          "name": "salt and pepper to taste",
+          "original": "  salt and pepper to taste"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    },
+    {
+      "id": "tmpm-25126",
+      "title": "Cinnamon Raisin Granola",
+      "sourceTitle": "Cinnamon Raisin Granola",
+      "sourceUrl": "https://mealprepmanual.com/cinnamon-raisin-granola/",
+      "sourceQuery": "mealprep recipes",
+      "imageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/08/Cinnamon-Raisin-Granola.jpg",
+      "imageUse": "source-preview-only",
+      "slot": "lunch",
+      "course": "Course:",
+      "time": {
+        "prepMinutes": 7,
+        "cookMinutes": 20,
+        "totalMinutes": 27
+      },
+      "servings": 10,
+      "macros": {
+        "kcal": 280,
+        "protein": 7.5,
+        "fat": 8.9,
+        "carbs": 42.5
+      },
+      "ingredients": [
+        {
+          "name": "oats",
+          "amountMetric": "320",
+          "unitMetric": "g",
+          "original": "4   cups ( 320 g )   oats"
+        },
+        {
+          "name": "peanut butter",
+          "amountMetric": "132",
+          "unitMetric": "g",
+          "original": "½   cup ( 132 g )   peanut butter"
+        },
+        {
+          "name": "maple syrup",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "½   cup ( 120 g )   maple syrup"
+        },
+        {
+          "name": "vanilla extract",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "1   tsp ( 4 g )   vanilla extract"
+        },
+        {
+          "name": "cinnamon",
+          "amountMetric": "4",
+          "unitMetric": "g",
+          "original": "1   tsp ( 4 g )   cinnamon"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "3",
+          "unitMetric": "g",
+          "original": "½   tsp ( 3 g )   salt"
+        },
+        {
+          "name": "raisins",
+          "amountMetric": "96",
+          "unitMetric": "g",
+          "original": "¾   cup ( 96 g )   raisins"
+        }
+      ],
+      "localization": {
+        "fit": "familiar",
+        "availability": "common",
+        "excludeSuggested": false,
+        "reviewNote": "Проверить перевод, хранение и КБЖУ."
+      },
+      "editorialStatus": "pending"
+    }
+  ]
+}
