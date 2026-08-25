@@ -5,7 +5,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://mise-meal-prep-ermizin.solar-hinny-0376.chatgpt.site"),
   title: "Mise — милпреп без суеты",
   description: "Персональный план питания, расчёт порций и единый список покупок на несколько дней.",
-  icons: { icon: "/favicon.svg" },
+  manifest: "/manifest.webmanifest",
+  icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
   openGraph: {
     title: "Mise — милпреп без суеты",
     description: "План питания, индивидуальные порции и покупки в одном понятном сценарии.",

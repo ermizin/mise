@@ -42,6 +42,9 @@ const worker = {
 
     return handler.fetch(request, env, ctx);
   },
+  async scheduled(_controller: ScheduledController, _env: Env, ctx: ExecutionContext) {
+    ctx.waitUntil(import("../lib/push-server").then(({ processDueNotifications }) => processDueNotifications()));
+  },
 };
 
 export default worker;

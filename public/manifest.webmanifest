@@ -1,0 +1,19 @@
+{
+  "id": "/",
+  "name": "Mise — милпреп без суеты",
+  "short_name": "Mise",
+  "description": "Меню, покупки и готовые порции на несколько дней.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f2e9",
+  "theme_color": "#f6f2e9",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

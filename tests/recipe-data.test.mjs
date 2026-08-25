@@ -108,6 +108,7 @@ test("editorial promotion fixes unit-sized macros and obvious slot mistakes", ()
   assert.equal(nuggets.macros.protein, 20.4);
   assert.equal(rolls.macros.kcal, 447);
   assert.equal(granola.slot, "snack2");
+  assert.match(granola.storage.ambient, /сухой герметичной банке/i);
   assert.equal(massOats.macros.kcal, 490);
   assert.ok([nuggets, rolls, granola, massOats].every((item) => item.provenance.kind === "parsed" && item.provenance.adaptation));
 });
