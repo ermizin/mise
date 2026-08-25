@@ -48,6 +48,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
   assert.match(page, /mise-onboarding-v2/);
+  assert.match(page, /mise-install-offer-v1/);
   assert.match(page, /mise-prep-guide-offer-v1/);
   assert.match(page, /Питаться легко,/);
   assert.match(page, /Один план · три результата/);
@@ -55,6 +56,8 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Нужна инструкция/);
   for (const topic of ["Подготовьте контейнеры", "Готовьте партиями", "Охладите и разложите", "Подпишите и уберите"]) assert.match(page, new RegExp(topic));
   assert.match(page, /Инструкция по милпрепу/);
+  assert.match(page, /Добавьте Mise на экран Домой/);
+  assert.match(page, /Настроить напоминания/);
   assert.match(page, /КБЖУ и сроки хранения — полезные ориентиры/);
   assert.match(page, /Как работает Mise/);
   assert.match(page, /function editDayMenu\(batchId: string\)/);
