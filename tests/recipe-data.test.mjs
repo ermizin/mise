@@ -124,12 +124,44 @@ test("every recipe has bounded flexibility, effort and storage guidance", () => 
     assert.ok(item.effort.activeActions >= 1);
     assert.ok(item.effort.activeMinutes > 0 && item.effort.activeMinutes <= item.time);
     assert.ok(item.storage.refrigerator.length > 0);
+    assert.ok(item.storage.freezer.length > 0);
+    assert.ok(item.storage.freezeParts.length > 0);
+    assert.ok(item.storage.thaw.length > 0);
     if (item.freezable) {
       assert.ok(item.storage.freezerDays > 0);
-      assert.ok(item.storage.freezer.length > 0);
-      assert.ok(item.storage.thaw.length > 0);
+    } else {
+      assert.match(item.storage.freezer, /не замораживать/i);
+      assert.match(item.storage.thaw, /не предусмотрена/i);
     }
   }
+});
+
+test("every active recipe has complete actionable instructions and container guidance", () => {
+  assert.ok(recipes.length >= 150, "the complete active catalog is checked");
+  assert.equal(new Set(recipes.map((item) => item.id)).size, recipes.length, "recipe ids stay unique");
+
+  for (const item of recipes) {
+    assert.ok(item.ingredients.length >= 2, `${item.title} has ingredients`);
+    assert.ok(item.ingredients.every((ingredient) => ingredient.quantity > 0 && ingredient.unit.length > 0), `${item.title} has ingredient amounts`);
+    assert.ok(item.steps.length >= 3, `${item.title} has a usable sequence`);
+    assert.match(item.steps[0], /на одну базовую порцию отмерьте/i, `${item.title} starts with measured ingredients`);
+    for (const ingredient of item.ingredients) {
+      assert.ok(item.steps[0].includes(ingredient.name), `${item.title} instruction names ${ingredient.name}`);
+      assert.ok(item.steps[0].includes(String(ingredient.quantity)), `${item.title} instruction gives an amount for ${ingredient.name}`);
+    }
+    assert.ok(item.steps.every((step) => step.length >= 20), `${item.title} steps are explanatory`);
+    assert.ok(item.packing.portion.length >= 40, `${item.title} explains the practical container layout`);
+    assert.ok(item.packing.label.includes(item.title) && /дата/i.test(item.packing.label), `${item.title} has a useful label template`);
+  }
+});
+
+test("template cooking copy is no longer used by active recipes", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  for (const phrase of [
+    "Подготовьте и нарежьте все ингредиенты.",
+    "Приготовьте основу и белковую часть до готовности.",
+    "Соедините блюдо, попробуйте и скорректируйте специи.",
+  ]) assert.ok(!source.includes(phrase), `removed template phrase: ${phrase}`);
 });
 
 test("flex controls clamp values and scale ingredient groups independently", () => {
