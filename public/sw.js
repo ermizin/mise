@@ -1,5 +1,5 @@
-const CACHE_NAME = "mise-shell-v1";
-const SHELL = ["/", "/favicon.svg"];
+const CACHE_NAME = "mise-shell-v2";
+const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)).catch(() => undefined));
@@ -30,8 +30,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(payload.title || "Mise", {
       body: payload.body || "Пора вернуться к плану.",
-      icon: "/favicon.svg",
-      badge: "/favicon.svg",
+      icon: "/icon-192.png",
+      badge: "/icon-192.png",
       tag: payload.kind ? `mise-${payload.kind}` : "mise-reminder",
       renotify: false,
       data: { url: payload.url || "/" },

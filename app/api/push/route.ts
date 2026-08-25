@@ -68,7 +68,7 @@ export async function POST(request: Request) {
   const identity = ids(request);
   if (!identity) return Response.json({ error: "client and device ids are required" }, { status: 400 });
   const body = (await request.json()) as {
-    action?: "enable" | "disable";
+    action?: "enable" | "disable" | "test";
     planId?: string;
     subscription?: PushSubscriptionInput;
     preferences?: unknown;
@@ -91,6 +91,30 @@ export async function POST(request: Request) {
       isNull(pushJobs.sentAt),
     ));
     return Response.json({ enabled: false });
+  }
+
+  if (body.action === "test") {
+    const [preference] = await db.select().from(pushPreferences).where(and(
+      eq(pushPreferences.subscriptionId, identity.subscriptionId),
+      eq(pushPreferences.planId, body.planId),
+      eq(pushPreferences.enabled, true),
+    )).limit(1);
+    if (!preference) return Response.json({ error: "notifications are not enabled" }, { status: 409 });
+    const testId = crypto.randomUUID();
+    await db.insert(pushJobs).values({
+      id: testId,
+      subscriptionId: identity.subscriptionId,
+      planId: body.planId,
+      kind: "diagnostic",
+      title: "Тест Mise",
+      body: "Уведомления работают на этом устройстве.",
+      url: "/",
+      dueAt: now,
+      createdAt: now,
+    });
+    await processDueNotifications(now);
+    const [testJob] = await db.select().from(pushJobs).where(eq(pushJobs.id, testId)).limit(1);
+    return Response.json({ testDelivered: Boolean(testJob?.sentAt), error: testJob?.lastError ?? null });
   }
 
   if (body.action !== "enable" || !validSubscription(body.subscription) || !Array.isArray(body.jobs) || body.jobs.length > 150) {

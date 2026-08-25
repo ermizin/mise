@@ -9,7 +9,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {};
@@ -17,7 +17,7 @@ async function loadRecipeCatalog() {
   return sandbox.__catalog;
 }
 
-const { recipes, portionFor, ingredientScaleFor, shareFor, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, portionFor, ingredientScaleFor, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -168,7 +168,7 @@ test("template cooking copy is no longer used by active recipes", async () => {
 test("flex controls clamp values and scale ingredient groups independently", () => {
   const item = recipes.find((candidate) => candidate.id === "src-chicken-buckwheat");
   assert.ok(item);
-  const person = { id: "test", name: "Тест", daily: { kcal: 2100, protein: 150, fat: 70, carbs: 210 }, mealsPerDay: 3, includedSlots: ["breakfast", "lunch", "dinner"] };
+  const person = { id: "test", name: "Тест", daily: { kcal: 2100, protein: 150, fat: 70, carbs: 210 }, includedSlots: ["breakfast", "lunch", "dinner"] };
   const portion = portionFor(person, "lunch", item, { protein: 9, fat: 0.01, carbs: 9 });
   assert.equal(portion.ratios.protein, item.flex.protein[1]);
   assert.equal(portion.ratios.fat, item.flex.fat[0]);
@@ -177,14 +177,28 @@ test("flex controls clamp values and scale ingredient groups independently", () 
   assert.equal(ingredientScaleFor(item.ingredients.find((ingredient) => ingredient.id === "buckwheat"), portion), portion.factor * portion.ratios.carbs);
 });
 
-test("one planned meal keeps a bounded share of the daily target", () => {
+test("planned positions keep fixed shares and expose the daily remainder", () => {
   const daily = { kcal: 2100, protein: 150, fat: 70, carbs: 210 };
   for (const [slot, expected] of [["breakfast", 0.25], ["lunch", 0.35], ["dinner", 0.4], ["snack1", 0.1]]) {
-    const person = { id: "single", name: "Тест", daily, mealsPerDay: 1, includedSlots: [slot] };
+    const person = { id: "single", name: "Тест", daily, includedSlots: [slot] };
     assert.equal(shareFor(person, slot), expected);
   }
-  const breakfastOnly = { id: "partial", name: "Тест", daily, mealsPerDay: 2, includedSlots: ["breakfast"] };
+  const breakfastOnly = { id: "partial", name: "Тест", daily, includedSlots: ["breakfast"] };
   assert.equal(shareFor(breakfastOnly, "breakfast"), 0.25);
+
+  const fullDay = { id: "full", name: "Тест", daily, includedSlots: ["breakfast", "lunch", "dinner"] };
+  const fullDayTargets = plannedTargetsFor(fullDay);
+  for (const key of ["kcal", "protein", "fat", "carbs"]) assert.equal(fullDayTargets[key], daily[key]);
+
+  const partialDay = { id: "partial-day", name: "Тест", daily: { kcal: 2000, protein: 140, fat: 70, carbs: 210 }, includedSlots: ["lunch", "dinner"] };
+  assert.equal(macroDifference(partialDay.daily, plannedTargetsFor(partialDay)).kcal, 500);
+
+  const allPositions = { ...fullDay, includedSlots: ["breakfast", "lunch", "dinner", "snack1", "snack2"] };
+  assert.equal(plannedTargetsFor(allPositions).kcal, 2520);
+  assert.equal(macroDifference(daily, plannedTargetsFor(allPositions)).kcal, -420);
+
+  const duplicateLunch = { ...partialDay, includedSlots: ["lunch", "lunch"] };
+  assert.equal(plannedTargetsFor(duplicateLunch).kcal, 700);
 });
 
 test("keeps the approved ingredients and excludes pasta salads from the first pool", () => {

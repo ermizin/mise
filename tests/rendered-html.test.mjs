@@ -32,12 +32,13 @@ test("server-renders the Russian Mise shell and navigation", async () => {
 });
 
 test("includes the complete plan-builder and private persistence model", async () => {
-  const [page, route, schema, layout, css] = await Promise.all([
+  const [page, route, schema, layout, css, manifestText] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/plans/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../db/schema.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../public/manifest.webmanifest", import.meta.url), "utf8"),
   ]);
 
   for (const step of ["Период", "Приёмы пищи", "Вид меню", "Люди и цели", "Готовка", "Выбор меню", "Проверка"]) assert.match(page, new RegExp(step));
@@ -72,11 +73,22 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /При изменении калорий БЖУ обновятся сами/);
   assert.match(page, /recalculateDailyMacros/);
   assert.match(page, /macroPreset: "custom"/);
+  assert.doesNotMatch(page, /mealsPerDay|Приёмов пищи в день/);
+  assert.match(page, /Можно съесть ещё/);
+  assert.match(page, /никто не выбрал/);
+  assert.match(page, /current\.filter\(\(slot\) => !unassignedSlots\.includes\(slot\)\)/);
 
   assert.match(route, /where\(eq\(mealPlans\.clientId, clientId\)\)/);
   assert.match(route, /id: `\$\{clientId\}:\$\{body\.plan\.id\}`/);
   assert.match(schema, /clientId: text\("client_id"\)\.notNull\(\)/);
   assert.match(layout, /images: \[\{ url: "\/og\.png"/);
+  assert.match(layout, /applicationName: "Mise"/);
+  assert.match(layout, /apple-touch-icon\.png/);
+  assert.match(layout, /https:\/\/mise\.ermizinm\.ru/);
+  const manifest = JSON.parse(manifestText);
+  assert.equal(manifest.name, "Mise");
+  assert.equal(manifest.short_name, "Mise");
+  assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /backdrop-filter: blur\(26px\)/);
   assert.match(css, /\.onboarding-shell/);

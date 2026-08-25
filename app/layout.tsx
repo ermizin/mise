@@ -2,11 +2,17 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://mise-meal-prep-ermizin.solar-hinny-0376.chatgpt.site"),
+  metadataBase: new URL("https://mise.ermizinm.ru"),
+  applicationName: "Mise",
   title: "Mise — милпреп без суеты",
   description: "Персональный план питания, расчёт порций и единый список покупок на несколько дней.",
   manifest: "/manifest.webmanifest",
-  icons: { icon: "/favicon.svg", apple: "/favicon.svg" },
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: {
     title: "Mise — милпреп без суеты",
     description: "План питания, индивидуальные порции и покупки в одном понятном сценарии.",

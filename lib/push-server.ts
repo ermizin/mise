@@ -108,7 +108,7 @@ async function sendWebPush(subscription: SubscriptionRow, payload: object) {
     subscription.endpoint,
     publicKey,
     decodeBase64Url(configuration.VAPID_PRIVATE_KEY),
-    configuration.VAPID_SUBJECT ?? "https://mise-meal-prep-ermizin.solar-hinny-0376.chatgpt.site",
+    configuration.VAPID_SUBJECT ?? "https://mise.ermizinm.ru",
   );
   return fetch(subscription.endpoint, {
     method: "POST",

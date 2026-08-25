@@ -102,6 +102,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
   const [thawTime, setThawTime] = useState("21:00");
   const [enabled, setEnabled] = useState(false);
   const [testDelivered, setTestDelivered] = useState(false);
+  const [testState, setTestState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "error" | "unavailable" | "denied">("idle");
 
   useEffect(() => {
@@ -157,6 +158,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       const result = await response.json() as { testDelivered?: boolean };
       setEnabled(true);
       setTestDelivered(Boolean(result.testDelivered));
+      setTestState(result.testDelivered ? "success" : "error");
       setStatus("success");
     } catch {
       setStatus("error");
@@ -173,11 +175,36 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       });
       if (!response.ok) throw new Error("disable failed");
       setEnabled(false);
+      setTestState("idle");
       setStatus("idle");
     } catch {
       setStatus("error");
     }
   }
+
+  async function sendTest() {
+    setTestState("sending");
+    try {
+      const response = await fetch("/api/push", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Mise-Client": clientId, "X-Mise-Device": deviceId },
+        body: JSON.stringify({ action: "test", planId: plan.id }),
+      });
+      const result = await response.json() as { testDelivered?: boolean };
+      if (!response.ok || !result.testDelivered) throw new Error("test failed");
+      setTestDelivered(true);
+      setTestState("success");
+    } catch {
+      setTestDelivered(false);
+      setTestState("error");
+    }
+  }
+
+  const testControl = enabled ? <div className="notification-test-control">
+    <button className="secondary-button notification-test-button" disabled={testState === "sending" || status === "saving"} onClick={sendTest}>{testState === "sending" ? "Отправляем тест…" : "Отправить тестовое уведомление"}</button>
+    {testState === "success" && <small role="status">✓ Тест отправлен на это устройство.</small>}
+    {testState === "error" && <small className="test-error" role="alert">Тест не доставлен. Проверьте системные настройки.</small>}
+  </div> : null;
 
   return <section className="notification-setup" aria-labelledby="notifications-title">
     <div className="notification-heading"><span>🔔</span><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
@@ -190,11 +217,12 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       <ReminderToggle active={toggles["next-plan"]} title="Составить следующий план" note={`За 2 дня до окончания · ${cookTimes[plan.batches[0]?.id] ?? "18:00"}`} onClick={() => toggle("next-plan")} />
     </div>
     <p className="schedule-summary">Будет запланировано: <b>{jobs.length}</b>. Напоминания относятся только к этому плану и этому устройству.</p>
-    {status === "success" ? <><div className="notification-success" role="status">✓ {testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</div><button className="primary-button" onClick={onDone}>Открыть план <span>→</span></button></> : <>
+    {status === "success" ? <><div className="notification-success" role="status">✓ {testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</div>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <span>→</span></button></> : <>
       {status === "unavailable" && <p className="notification-error" role="alert">На этом устройстве Web Push недоступен. На iPhone откройте Mise с экрана Домой.</p>}
       {status === "denied" && <p className="notification-error" role="alert">Разрешение не выдано. План продолжит работать без уведомлений.</p>}
       {status === "error" && <p className="notification-error" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</p>}
       <button className="primary-button" disabled={status === "saving" || jobs.length === 0} onClick={enable}>{status === "saving" ? "Включаем…" : enabled ? "Обновить расписание" : "Включить напоминания"}</button>
+      {testControl}
       {enabled && <button className="secondary-button" disabled={status === "saving"} onClick={disable}>Выключить для этого плана</button>}
       <button className="text-button" onClick={onCancel}>{enabled ? "Закрыть" : "Продолжить без них"}</button>
     </>}
