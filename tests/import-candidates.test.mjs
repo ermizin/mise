@@ -12,6 +12,11 @@ test("Meal Prep Manual import contains 50 auditable candidates", () => {
   assert.ok(candidates.every((item) => item.imageUse === "source-preview-only"));
 });
 
+test("editorial queue keeps promoted and pending candidates separate", () => {
+  assert.equal(candidates.filter((item) => item.editorialStatus === "promoted").length, 17);
+  assert.equal(candidates.filter((item) => item.editorialStatus === "pending").length, 33);
+});
+
 test("imported candidates have macros, time and ingredient facts without copied instructions", () => {
   for (const item of candidates) {
     assert.ok(Object.values(item.macros).every(Number.isFinite), `${item.title} has macros`);

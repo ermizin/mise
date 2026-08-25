@@ -1,9 +1,16 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
 const args = new Map(process.argv.slice(2).map((value, index, all) => value.startsWith("--") ? [value, all[index + 1]] : ["", ""]));
 const limit = Math.min(100, Math.max(1, Number(args.get("--limit") ?? 50)));
 const output = resolve(args.get("--output") ?? "data/mealprepmanual-candidates.json");
+const previousStatuses = new Map();
+try {
+  const previous = JSON.parse(await readFile(output, "utf8"));
+  for (const item of previous.candidates ?? []) previousStatuses.set(item.id, item.editorialStatus);
+} catch {
+  // Первый импорт начинается без редакционных статусов.
+}
 const endpoint = new URL("https://mealprepmanual.com/wp-json/wp/v2/posts");
 endpoint.searchParams.set("per_page", String(limit));
 endpoint.searchParams.set("_fields", "id,link,title,content");
@@ -90,7 +97,7 @@ const candidates = posts.map((post) => {
     },
     ingredients,
     localization: localizationFor(title, ingredients),
-    editorialStatus: "pending",
+    editorialStatus: previousStatuses.get(`tmpm-${post.id}`) ?? "pending",
   };
 }).filter((item) => item.title && item.ingredients.length > 0);
 

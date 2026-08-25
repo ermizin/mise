@@ -61,6 +61,10 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /setBuilderEntry\(\{ step: 3, returnTab: "profile" \}\)/);
   assert.match(page, /aria-label="Настроить людей и цели" onClick=\{onConfigure\}/);
   assert.match(page, /navigate\(builderEntry\.returnTab \?\? "week"\)/);
+  for (const preset of ["Сбалансировано", "Больше белка", "Больше углеводов", "Больше жиров"]) assert.match(page, new RegExp(preset));
+  assert.match(page, /При изменении калорий БЖУ обновятся сами/);
+  assert.match(page, /recalculateDailyMacros/);
+  assert.match(page, /macroPreset: "custom"/);
 
   assert.match(route, /where\(eq\(mealPlans\.clientId, clientId\)\)/);
   assert.match(route, /id: `\$\{clientId\}:\$\{body\.plan\.id\}`/);
