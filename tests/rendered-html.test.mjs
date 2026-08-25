@@ -47,16 +47,20 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Подпишите имя, приём пищи и даты/);
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
-  assert.match(page, /mise-onboarding-v1/);
+  assert.match(page, /mise-onboarding-v2/);
   assert.match(page, /Питаться легко,/);
   assert.match(page, /Один план · три результата/);
   for (const result of ["План недели", "Общие покупки", "Готовка и контейнеры"]) assert.match(page, new RegExp(result));
   assert.match(page, /КБЖУ и сроки хранения — полезные ориентиры/);
   assert.match(page, /Как работает Mise/);
   assert.match(page, /function editDayMenu\(batchId: string\)/);
-  assert.match(page, /setBuilderEntry\(\{ step: 5, batchId \}\)/);
+  assert.match(page, /setBuilderEntry\(\{ step: 5, batchId, returnTab: "week" \}\)/);
   assert.match(page, /onClick=\{\(\) => onEditMenu\(batch\.id\)\}/);
   assert.match(page, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
+  assert.match(page, /function editPeople\(\)/);
+  assert.match(page, /setBuilderEntry\(\{ step: 3, returnTab: "profile" \}\)/);
+  assert.match(page, /aria-label="Настроить людей и цели" onClick=\{onConfigure\}/);
+  assert.match(page, /navigate\(builderEntry\.returnTab \?\? "week"\)/);
 
   assert.match(route, /where\(eq\(mealPlans\.clientId, clientId\)\)/);
   assert.match(route, /id: `\$\{clientId\}:\$\{body\.plan\.id\}`/);
