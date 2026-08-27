@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +24,14 @@ export const metadata: Metadata = {
     description: "План питания, индивидуальные порции и покупки в одном понятном сценарии.",
     images: ["/og.png"],
   },
-  appleWebApp: { capable: true, title: "Mise", statusBarStyle: "black-translucent" },
+  appleWebApp: { capable: true, title: "Mise", statusBarStyle: "default" },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#e5ece7" },
+    { media: "(prefers-color-scheme: dark)", color: "#131a18" },
+  ],
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

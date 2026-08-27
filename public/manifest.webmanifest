@@ -5,8 +5,8 @@
   "description": "Меню, покупки и готовые порции на несколько дней.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6f2e9",
-  "theme_color": "#f6f2e9",
+  "background_color": "#e5ece7",
+  "theme_color": "#e5ece7",
   "lang": "ru",
   "icons": [
     {
