@@ -49,7 +49,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
   assert.match(page, /mise-onboarding-v2/);
-  assert.match(page, /mise-install-offer-v1/);
+  assert.match(page, /mise-builder-draft-v\d/);
   assert.match(page, /mise-prep-guide-offer-v1/);
   assert.match(page, /Питаться легко,/);
   assert.match(page, /Один план · три результата/);
@@ -57,7 +57,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Нужна инструкция/);
   for (const topic of ["Подготовьте контейнеры", "Готовьте партиями", "Охладите и разложите", "Подпишите и уберите"]) assert.match(page, new RegExp(topic));
   assert.match(page, /Инструкция по милпрепу/);
-  assert.match(page, /Добавьте Mise на экран Домой/);
+  assert.match(page, /Добавить Mise на экран Домой/);
   assert.match(page, /Настроить напоминания/);
   assert.match(page, /КБЖУ и сроки хранения — полезные ориентиры/);
   assert.match(page, /Как работает Mise/);
@@ -90,7 +90,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.equal(manifest.short_name, "Mise");
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
-  assert.match(css, /backdrop-filter: blur\(26px\)/);
+  assert.match(css, /backdrop-filter: blur\(18px\)/);
   assert.match(css, /\.onboarding-shell/);
   assert.match(css, /\.prep-offer/);
   assert.match(css, /\.prep-checklist/);
