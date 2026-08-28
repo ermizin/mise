@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 
 const args = new Map(process.argv.slice(2).map((value, index, all) => value.startsWith("--") ? [value, all[index + 1]] : ["", ""]));
-const limit = Math.min(100, Math.max(1, Number(args.get("--limit") ?? 50)));
+const limit = Math.min(500, Math.max(1, Number(args.get("--limit") ?? 250)));
 const output = resolve(args.get("--output") ?? "data/mealprepmanual-candidates.json");
 const previousStatuses = new Map();
 try {
@@ -12,7 +12,8 @@ try {
   // Первый импорт начинается без редакционных статусов.
 }
 const endpoint = new URL("https://mealprepmanual.com/wp-json/wp/v2/posts");
-endpoint.searchParams.set("per_page", String(limit));
+const perPage = Math.min(100, limit);
+endpoint.searchParams.set("per_page", String(perPage));
 endpoint.searchParams.set("_fields", "id,link,title,content");
 
 const decode = (value = "") => value
@@ -64,10 +65,18 @@ function slotFor(course, title, id) {
   return id % 2 ? "dinner" : "lunch";
 }
 
-const response = await fetch(endpoint, { headers: { "User-Agent": "Mise recipe research/1.0" } });
-if (!response.ok) throw new Error(`Meal Prep Manual returned ${response.status}`);
-const posts = await response.json();
-const candidates = posts.map((post) => {
+const posts = [];
+let page = 1;
+let totalPages = 1;
+while (posts.length < limit && page <= totalPages) {
+  endpoint.searchParams.set("page", String(page));
+  const response = await fetch(endpoint, { headers: { "User-Agent": "Mise recipe research/1.0" } });
+  if (!response.ok) throw new Error(`Meal Prep Manual returned ${response.status} on page ${page}`);
+  totalPages = Number(response.headers.get("x-wp-totalpages") ?? totalPages);
+  posts.push(...await response.json());
+  page += 1;
+}
+const candidates = posts.slice(0, limit).map((post) => {
   const html = post.content?.rendered ?? "";
   const title = text(post.title?.rendered ?? "");
   const ingredients = ingredientFacts(html);

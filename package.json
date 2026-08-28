@@ -11,7 +11,8 @@
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
     "test": "pnpm run build && node --test tests/*.test.mjs",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "recipes:import:tmpm": "node scripts/import-mealprepmanual.mjs --limit 50 --output data/mealprepmanual-candidates.json",
+    "recipes:import:tmpm": "node scripts/import-mealprepmanual.mjs --limit 500 --output data/mealprepmanual-candidates.json",
+    "recipes:import:goodfood": "node scripts/import-goodfood.mjs --limit 100 --output data/goodfood-candidates.json",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
