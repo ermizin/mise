@@ -3,16 +3,27 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
+import { loadTypeScriptModule } from "./typescript-module.mjs";
 
 async function loadRecipeCatalog() {
+  const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
-  const sandbox = {};
+  const sandbox = {
+    ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
+    MEAL_SLOT_SHARES: nutrition.MEAL_SLOT_SHARES,
+    calculateMealPlanTargets: nutrition.calculateMealPlanTargets,
+    capMacrosAtCalories: nutrition.capMacrosAtCalories,
+    nutritionMacroCalories: nutrition.macroCalories,
+    nutritionMacrosForCalories: nutrition.macrosForCalories,
+    nutritionRecalculateDailyMacros: nutrition.recalculateDailyMacros,
+    nutritionShareForSlots: nutrition.shareForSlots,
+  };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
 }
@@ -48,7 +59,7 @@ test("manual macro proportions scale when calories change", () => {
   assert.equal(result.kcal, 2500);
   assert.equal(result.protein, 156);
   assert.equal(result.fat, 125);
-  assert.equal(result.carbs, 188);
+  assert.equal(result.carbs, 187);
   assert.ok(Math.abs(macroCalories(result) - result.kcal) <= 5);
 });
 
@@ -179,26 +190,28 @@ test("flex controls clamp values and scale ingredient groups independently", () 
 
 test("planned positions keep fixed shares and expose the daily remainder", () => {
   const daily = { kcal: 2100, protein: 150, fat: 70, carbs: 210 };
-  for (const [slot, expected] of [["breakfast", 0.25], ["lunch", 0.35], ["dinner", 0.4], ["snack1", 0.1]]) {
+  for (const [slot, expected] of [["breakfast", 0.25], ["lunch", 0.3], ["dinner", 0.25], ["snack1", 0.1], ["snack2", 0.1]]) {
     const person = { id: "single", name: "Тест", daily, includedSlots: [slot] };
     assert.equal(shareFor(person, slot), expected);
   }
   const breakfastOnly = { id: "partial", name: "Тест", daily, includedSlots: ["breakfast"] };
   assert.equal(shareFor(breakfastOnly, "breakfast"), 0.25);
 
-  const fullDay = { id: "full", name: "Тест", daily, includedSlots: ["breakfast", "lunch", "dinner"] };
+  const fullDay = { id: "full", name: "Тест", daily, includedSlots: ["breakfast", "snack1", "lunch", "snack2", "dinner"] };
   const fullDayTargets = plannedTargetsFor(fullDay);
-  for (const key of ["kcal", "protein", "fat", "carbs"]) assert.equal(fullDayTargets[key], daily[key]);
+  assert.equal(fullDayTargets.kcal, daily.kcal);
+  assert.ok(macroCalories(fullDayTargets) <= daily.kcal);
+  for (const key of ["protein", "fat", "carbs"]) assert.ok(Math.abs(fullDayTargets[key] - daily[key]) <= 5, `${key} stays within rounding tolerance`);
 
-  const partialDay = { id: "partial-day", name: "Тест", daily: { kcal: 2000, protein: 140, fat: 70, carbs: 210 }, includedSlots: ["lunch", "dinner"] };
-  assert.equal(macroDifference(partialDay.daily, plannedTargetsFor(partialDay)).kcal, 500);
+  const partialDay = { id: "partial-day", name: "Тест", daily: { kcal: 2000, protein: 140, fat: 70, carbs: 210 }, includedSlots: ["breakfast", "dinner"] };
+  assert.equal(macroDifference(partialDay.daily, plannedTargetsFor(partialDay)).kcal, 1000);
 
   const allPositions = { ...fullDay, includedSlots: ["breakfast", "lunch", "dinner", "snack1", "snack2"] };
-  assert.equal(plannedTargetsFor(allPositions).kcal, 2520);
-  assert.equal(macroDifference(daily, plannedTargetsFor(allPositions)).kcal, -420);
+  assert.equal(plannedTargetsFor(allPositions).kcal, 2100);
+  assert.equal(macroDifference(daily, plannedTargetsFor(allPositions)).kcal, 0);
 
   const duplicateLunch = { ...partialDay, includedSlots: ["lunch", "lunch"] };
-  assert.equal(plannedTargetsFor(duplicateLunch).kcal, 700);
+  assert.equal(plannedTargetsFor(duplicateLunch).kcal, 600);
 });
 
 test("keeps the approved ingredients and excludes pasta salads from the first pool", () => {

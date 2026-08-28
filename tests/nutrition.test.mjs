@@ -1,0 +1,89 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { loadTypeScriptModule } from "./typescript-module.mjs";
+
+const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
+const daily = { kcal: 2000, protein: 150, fat: 65, carbs: 204 };
+
+test("a complete five-slot plan never exceeds the calorie target", () => {
+  const result = nutrition.calculateMealPlanTargets(daily, ["breakfast", "snack1", "lunch", "snack2", "dinner"]);
+  assert.equal(result.planned.kcal, 2000);
+  assert.equal(result.remaining.kcal, 0);
+  assert.ok(Object.values(result.slots).every((slot) => nutrition.macroCalories(slot) <= slot.kcal));
+});
+
+test("selected breakfast and dinner keep their fixed shares and expose the remainder", () => {
+  const result = nutrition.calculateMealPlanTargets(daily, ["breakfast", "dinner"]);
+  assert.equal(result.slots.breakfast.kcal, 500);
+  assert.equal(result.slots.dinner.kcal, 500);
+  assert.equal(result.planned.kcal, 1000);
+  assert.equal(result.remaining.kcal, 1000);
+  assert.ok(result.chocolateEquivalent.grams > 0);
+  assert.ok(result.chocolateEquivalent.bars > 0);
+});
+
+test("integer rounding is compensated without crossing the hard cap", () => {
+  for (let target = 1200; target <= 4000; target += 7) {
+    const result = nutrition.calculateMealPlanTargets({ ...daily, kcal: target }, ["breakfast", "snack1", "lunch", "snack2", "dinner"]);
+    assert.equal(result.planned.kcal, target);
+    assert.ok(nutrition.macroCalories(result.planned) <= target);
+  }
+});
+
+const baseWizard = {
+  sex: "male",
+  age: 30,
+  height: 178,
+  weight: 78,
+  activity: "medium",
+  musclePriority: false,
+  goal: "maintenance",
+  monthlyWeightChangeKg: 0,
+};
+
+test("wizard calculates maintenance, loss and gain from Mifflin-St Jeor and kg per month", () => {
+  const maintenance = nutrition.calculateNutritionTarget(baseWizard);
+  const loss = nutrition.calculateNutritionTarget({ ...baseWizard, goal: "loss", monthlyWeightChangeKg: 1 });
+  const gain = nutrition.calculateNutritionTarget({ ...baseWizard, goal: "gain", monthlyWeightChangeKg: 1 });
+  assert.ok("target" in maintenance && "target" in loss && "target" in gain);
+  assert.ok(loss.target.kcal < maintenance.target.kcal);
+  assert.ok(gain.target.kcal > maintenance.target.kcal);
+  assert.ok(Math.abs(loss.dailyEnergyDelta - 7700 / 30.4) < 1);
+});
+
+test("activity factor changes TDEE", () => {
+  const inactive = nutrition.calculateNutritionTarget({ ...baseWizard, activity: "low" });
+  const active = nutrition.calculateNutritionTarget({ ...baseWizard, activity: "high" });
+  assert.ok("target" in inactive && "target" in active);
+  assert.ok(active.tdee > inactive.tdee);
+});
+
+test("muscle priority primarily raises protein while keeping calories capped", () => {
+  const general = nutrition.calculateNutritionTarget(baseWizard);
+  const muscle = nutrition.calculateNutritionTarget({ ...baseWizard, musclePriority: true });
+  assert.ok("target" in general && "target" in muscle);
+  assert.ok(muscle.target.protein > general.target.protein);
+  assert.ok(nutrition.macroCalories(muscle.target) <= muscle.target.kcal);
+  assert.ok(muscle.target.kcal - nutrition.macroCalories(muscle.target) <= 3);
+});
+
+test("macro presets and custom recalculation never exceed target calories", () => {
+  for (const preset of ["balanced", "protein", "carbs", "fat"]) {
+    const result = nutrition.macrosForCalories(2001, preset);
+    assert.ok(nutrition.macroCalories(result) <= result.kcal);
+    assert.ok(result.kcal - nutrition.macroCalories(result) <= 3);
+  }
+  const custom = nutrition.recalculateDailyMacros(1733, { kcal: 2000, protein: 180, fat: 80, carbs: 200 }, "custom");
+  assert.ok(nutrition.macroCalories(custom) <= custom.kcal);
+});
+
+test("invalid and extreme wizard values are explicit", () => {
+  const invalid = nutrition.calculateNutritionTarget({ ...baseWizard, age: 12 });
+  assert.ok(!("target" in invalid));
+  assert.ok(invalid.issues.some((issue) => issue.code === "invalid_age" && issue.severity === "error"));
+
+  const extreme = nutrition.calculateNutritionTarget({ ...baseWizard, goal: "loss", monthlyWeightChangeKg: 8 });
+  assert.ok("target" in extreme);
+  assert.ok(extreme.issues.some((issue) => issue.severity === "warning"));
+  assert.ok(nutrition.macroCalories(extreme.target) <= extreme.target.kcal);
+});

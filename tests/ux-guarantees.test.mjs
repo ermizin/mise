@@ -11,6 +11,10 @@ test("the wizard keeps the user's work", async () => {
   assert.match(page, /localStorage\.getItem\(builderDraftKey/, "the draft is restored on the next open");
   assert.doesNotMatch(page, /setSelections\(\{\}\)/, "editing a plan never wipes every menu pick");
   assert.match(page, /const validSelections =/, "picks are pruned to what still fits");
+  assert.ok(
+    page.indexOf("const validSelections =") < page.indexOf("const allSelected ="),
+    "selection validity is initialized before the wizard reads it",
+  );
 });
 
 test("the hardware back button stays inside the app", async () => {
@@ -38,11 +42,12 @@ test("a failed shopping tick is visible", async () => {
 });
 
 test("goals can be estimated as well as typed", async () => {
-  const page = await read("app/page.tsx");
-  assert.match(page, /function estimateCalories/, "the calculator exists");
-  assert.match(page, /10 \* estimate\.weight \+ 6\.25 \* estimate\.height - 5 \* estimate\.age/, "Mifflin-St Jeor");
-  assert.match(page, /Помогите рассчитать/, "the second path is offered");
-  assert.match(page, /Ориентир, а не медицинская рекомендация/, "the estimate is framed as an orientation");
+  const [page, nutrition] = await Promise.all([read("app/page.tsx"), read("domain/nutrition.ts")]);
+  assert.match(nutrition, /function calculateNutritionTarget/, "the calculator exists");
+  assert.match(nutrition, /10\s*\*\s*input\.weight\s*\+\s*6\.25\s*\*\s*input\.height\s*-\s*5\s*\*\s*input\.age/, "Mifflin-St Jeor");
+  assert.match(nutrition, /energyPerKgWeightChange: 7_700/, "monthly weight change uses an explicit energy conversion");
+  assert.match(page, /Рассчитать мою норму/, "the second path is offered");
+  assert.match(page, /Ориентир|Ориентировочный/, "the estimate is framed as an orientation");
 });
 
 test("the interface stays legible", async () => {
@@ -50,7 +55,7 @@ test("the interface stays legible", async () => {
   const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 11);
   assert.deepEqual(tiny, [], "nothing is smaller than 11px");
   assert.match(css, /--accent-grad-a: #c2410c/, "the primary button passes contrast");
-  assert.match(css, /\.primary-button \{[^}]*var\(--accent-grad-a\), var\(--accent-grad-b\)/);
+  assert.match(css, /\.primary-button \{[\s\S]*?var\(--accent-grad-a\),\s*var\(--accent-grad-b\)/);
   assert.match(css, /@media \(prefers-color-scheme: dark\)/, "a dark theme exists");
   assert.match(layout, /statusBarStyle: "default"/, "the iOS status bar stays readable");
   assert.doesNotMatch(page, /aria-pressed=\{origin === "parsed"\}/, "radio groups expose radios");

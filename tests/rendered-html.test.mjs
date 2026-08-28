@@ -25,7 +25,7 @@ test("server-renders the Russian Mise shell and navigation", async () => {
   assert.match(html, /План на неделю/);
   assert.match(html, /Ищем сохранённый план/);
 
-  const labels = ["План на неделю", "Рецепты", "Составить план", "Покупки", "Профиль"];
+  const labels = ["Составить план", "План на неделю", "Рецепты", "Покупки", "Профиль"];
   const positions = labels.map((label) => html.indexOf(`aria-label="${label}"`));
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
@@ -45,7 +45,8 @@ test("includes the complete plan-builder and private persistence model", async (
   for (const style of ["Высокобелковое", "Бюджетное", "Палео", "Кето"]) assert.match(page, new RegExp(style));
   assert.match(page, /Приготовить остаток отдельно/);
   assert.match(page, /Выберите один из пяти вариантов/);
-  assert.match(page, /Подпишите имя, приём пищи и даты/);
+  assert.match(page, /Сначала взвесьте готовую еду/);
+  assert.match(page, /Фактический вес готового блюда/);
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
   assert.match(page, /mise-onboarding-v2/);
@@ -62,19 +63,19 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /КБЖУ и сроки хранения — полезные ориентиры/);
   assert.match(page, /Как работает Mise/);
   assert.match(page, /function editDayMenu\(batchId: string\)/);
-  assert.match(page, /setBuilderEntry\(\{ step: 5, batchId, returnTab: "week" \}\)/);
+  assert.match(page, /setBuilderEntry\(\{[\s\S]*?step: 5,[\s\S]*?batchId,[\s\S]*?returnTab: "week"/);
   assert.match(page, /onClick=\{\(\) => onEditMenu\(batch\.id\)\}/);
   assert.match(page, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
   assert.match(page, /function editPeople\(\)/);
-  assert.match(page, /setBuilderEntry\(\{ step: 3, returnTab: "profile" \}\)/);
-  assert.match(page, /aria-label="Настроить людей и цели" onClick=\{onConfigure\}/);
+  assert.match(page, /setBuilderEntry\(\{[\s\S]*?step: 3,[\s\S]*?returnTab: "profile"/);
+  assert.match(page, /aria-label="Настроить людей и цели"\s+onClick=\{onConfigure\}/);
   assert.match(page, /navigate\(builderEntry\.returnTab \?\? "week"\)/);
   for (const preset of ["Сбалансировано", "Больше белка", "Больше углеводов", "Больше жиров"]) assert.match(page, new RegExp(preset));
-  assert.match(page, /При изменении калорий БЖУ обновятся сами/);
+  assert.match(page, /Автоматическое распределение/);
   assert.match(page, /recalculateDailyMacros/);
   assert.match(page, /macroPreset: "custom"/);
   assert.doesNotMatch(page, /mealsPerDay|Приёмов пищи в день/);
-  assert.match(page, /Можно съесть ещё/);
+  assert.match(page, /Ещё можно съесть/);
   assert.match(page, /никто не выбрал/);
   assert.match(page, /current\.filter\(\(slot\) => !unassignedSlots\.includes\(slot\)\)/);
 
