@@ -160,8 +160,10 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       setTestDelivered(Boolean(result.testDelivered));
       setTestState(result.testDelivered ? "success" : "error");
       setStatus("success");
+      window.dispatchEvent(new Event("mise:reminders-enabled"));
     } catch {
       setStatus("error");
+      window.dispatchEvent(new Event("mise:reminder-enable-error"));
     }
   }
 

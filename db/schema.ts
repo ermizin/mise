@@ -52,3 +52,20 @@ export const pushJobs = sqliteTable("push_jobs", {
   index("idx_push_jobs_due_at").on(table.dueAt),
   index("idx_push_jobs_subscription_plan").on(table.subscriptionId, table.planId),
 ]);
+
+export const analyticsEvents = sqliteTable("analytics_events", {
+  eventId: text("event_id").primaryKey(),
+  actorId: text("actor_id").notNull(),
+  actorKind: text("actor_kind").notNull(),
+  eventName: text("event_name").notNull(),
+  flowId: text("flow_id"),
+  durationMs: integer("duration_ms"),
+  errorCode: text("error_code"),
+  pilotEligible: integer("pilot_eligible", { mode: "boolean" }),
+  occurredAt: integer("occurred_at").notNull(),
+  recordedAt: integer("recorded_at").notNull(),
+}, (table) => [
+  index("idx_analytics_events_actor_name_time").on(table.actorId, table.eventName, table.occurredAt),
+  index("idx_analytics_events_name_time").on(table.eventName, table.occurredAt),
+  index("idx_analytics_events_flow").on(table.flowId),
+]);

@@ -161,6 +161,9 @@ type BuilderEntry = {
   returnTab?: Exclude<Tab, "builder">;
   repeat?: boolean;
   mode?: BuilderMode;
+  flowId?: string;
+  startedAt?: number;
+  isNextPlan?: boolean;
 };
 type BuilderDraft = {
   planId: string | null;
@@ -182,10 +185,34 @@ type OnboardingStep =
   | "prep-offer"
   | "prep-guide"
   | "done";
+type ClientAnalyticsEvent =
+  | "first_open"
+  | "onboarding_completed"
+  | "plan_create_started"
+  | "plan_created"
+  | "blocking_error"
+  | "shopping_opened"
+  | "shopping_item_checked"
+  | "cooking_instructions_opened"
+  | "cooking_confirmed"
+  | "reminders_enabled"
+  | "saved_plan_reopened"
+  | "next_plan_created";
+type ClientAnalyticsFields = {
+  flowId?: string;
+  durationMs?: number;
+  errorCode?:
+    | "plan_load"
+    | "plan_save"
+    | "shopping_save"
+    | "reminder_enable";
+  pilotEligible?: boolean;
+};
 
 const onboardingStorageKey = "mise-onboarding-v2";
 const prepGuideStorageKey = "mise-prep-guide-offer-v1";
 const builderDraftKey = "mise-builder-draft-v3";
+const analyticsStoragePrefix = "mise-analytics-v1";
 
 const mealMeta: Record<
   MealSlot,
@@ -3647,6 +3674,45 @@ function clientId() {
   localStorage.setItem(key, created);
   return created;
 }
+function analyticsKey(kind: "id" | "sent", dedupeKey: string) {
+  return `${analyticsStoragePrefix}:${kind}:${dedupeKey}`;
+}
+function analyticsWasSent(dedupeKey: string) {
+  return localStorage.getItem(analyticsKey("sent", dedupeKey)) === "1";
+}
+async function trackAnalytics(
+  eventName: ClientAnalyticsEvent,
+  fields: ClientAnalyticsFields = {},
+  dedupeKey?: string,
+) {
+  try {
+    if (dedupeKey && analyticsWasSent(dedupeKey)) return true;
+    const idKey = dedupeKey ? analyticsKey("id", dedupeKey) : null;
+    const storedId = idKey ? localStorage.getItem(idKey) : null;
+    const eventId = storedId ?? crypto.randomUUID();
+    if (idKey && !storedId) localStorage.setItem(idKey, eventId);
+    const response = await fetch("/api/analytics", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Mise-Client": clientId(),
+      },
+      body: JSON.stringify({
+        eventId,
+        eventName,
+        ...fields,
+        occurredAt: Date.now(),
+      }),
+      keepalive: true,
+    });
+    if (!response.ok) return false;
+    if (dedupeKey)
+      localStorage.setItem(analyticsKey("sent", dedupeKey), "1");
+    return true;
+  } catch {
+    return false;
+  }
+}
 function deviceId() {
   const key = "mise-device-id";
   const saved = localStorage.getItem(key);
@@ -4193,6 +4259,32 @@ export default function Home() {
   const [loadError, setLoadError] = useState(false);
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
   const persistQueue = useRef<Promise<void>>(Promise.resolve());
+  useEffect(() => {
+    void trackAnalytics("first_open", {}, "first-open");
+    const onRemindersEnabled = () => {
+      void trackAnalytics("reminders_enabled");
+    };
+    const onReminderEnableError = () => {
+      void trackAnalytics("blocking_error", {
+        errorCode: "reminder_enable",
+      });
+    };
+    window.addEventListener("mise:reminders-enabled", onRemindersEnabled);
+    window.addEventListener(
+      "mise:reminder-enable-error",
+      onReminderEnableError,
+    );
+    return () => {
+      window.removeEventListener(
+        "mise:reminders-enabled",
+        onRemindersEnabled,
+      );
+      window.removeEventListener(
+        "mise:reminder-enable-error",
+        onReminderEnableError,
+      );
+    };
+  }, []);
   /* eslint-disable react-hooks/set-state-in-effect -- bootstraps onboarding state and the stored plan on mount */
   useEffect(() => {
     let mounted = true;
@@ -4205,16 +4297,31 @@ export default function Home() {
     const params = new URLSearchParams(location.search);
     if (params.get("tab") === "shopping") setTab("shopping");
     if (params.get("new-plan") === "1") {
-      setBuilderEntry({ step: 0 });
+      const flowId = crypto.randomUUID();
+      setBuilderEntry({
+        step: 0,
+        repeat: true,
+        mode: "onboarding",
+        flowId,
+        startedAt: Date.now(),
+        isNextPlan: true,
+      });
       setTab("builder");
+      void trackAnalytics("plan_create_started", { flowId });
     }
     fetch("/api/plans", { headers: { "X-Mise-Client": clientId() } })
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data: { plan?: ActivePlan | null }) => {
-        if (mounted && data.plan) setActivePlan(normalizePlan(data.plan));
+        if (mounted && data.plan) {
+          setActivePlan(normalizePlan(data.plan));
+          void trackAnalytics("saved_plan_reopened");
+        }
       })
       .catch(() => {
-        if (mounted) setLoadError(true);
+        if (mounted) {
+          setLoadError(true);
+          void trackAnalytics("blocking_error", { errorCode: "plan_load" });
+        }
       })
       .finally(() => {
         if (mounted) setLoadingPlan(false);
@@ -4242,15 +4349,30 @@ export default function Home() {
     await persistQueue.current;
     setActivePlan(plan);
   }
+  function startPlanFlow(repeat: boolean) {
+    const flowId = crypto.randomUUID();
+    setRecipeContext(null);
+    setBuilderEntry({
+      step: 0,
+      repeat,
+      mode: "onboarding",
+      flowId,
+      startedAt: Date.now(),
+      isNextPlan: Boolean(activePlan),
+    });
+    setTab("builder");
+    void trackAnalytics("plan_create_started", { flowId });
+  }
   function navigate(next: Tab) {
     setRecipeContext(null);
-    if (next === "builder") setBuilderEntry({ step: 0, mode: "onboarding" });
+    if (next === "builder") {
+      startPlanFlow(false);
+      return;
+    }
     setTab(next);
   }
   function repeatPlan() {
-    setRecipeContext(null);
-    setBuilderEntry({ step: 0, repeat: true, mode: "onboarding" });
-    setTab("builder");
+    startPlanFlow(true);
   }
   function editPeriod() {
     setRecipeContext(null);
@@ -4274,6 +4396,11 @@ export default function Home() {
   }
   function completeCoreOnboarding() {
     localStorage.setItem(onboardingStorageKey, "complete");
+    void trackAnalytics(
+      "onboarding_completed",
+      {},
+      "onboarding-completed",
+    );
     setOnboardingStep("prep-offer");
   }
   function finishOnboarding() {
@@ -4326,6 +4453,9 @@ export default function Home() {
         initialBatchId={builderEntry.batchId}
         repeat={builderEntry.repeat}
         mode={builderEntry.mode ?? "onboarding"}
+        flowId={builderEntry.flowId}
+        startedAt={builderEntry.startedAt}
+        isNextPlan={builderEntry.isNextPlan}
         onClose={() => navigate(builderEntry.returnTab ?? "week")}
         onSaved={(plan, destination) => {
           setActivePlan(plan);
@@ -4384,6 +4514,7 @@ export default function Home() {
       )}
       {tab === "shopping" && (
         <ShoppingScreen
+          key={activePlan?.id ?? "empty"}
           plan={activePlan}
           onBuild={() => navigate("builder")}
           onChange={async (next) => {
@@ -4991,6 +5122,16 @@ function WeekScreen({
     plan ? clampDate(today, plan.start, plan.end) : today,
   );
   const [personId, setPersonId] = useState(plan?.people[0]?.id ?? "");
+  const [confirmedBatchIds, setConfirmedBatchIds] = useState<string[]>(() =>
+    typeof window === "undefined" || !plan
+      ? []
+      : plan.batches
+          .filter((item) =>
+            analyticsWasSent(`cooking-confirmed:${plan.id}:${item.id}`),
+          )
+          .map((item) => item.id),
+  );
+  const [cookingConfirmError, setCookingConfirmError] = useState(false);
   const stripRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     stripRef.current
@@ -5094,6 +5235,14 @@ function WeekScreen({
               activePlan.selections[selectionKey(batchFor(today), slot)]
             ],
         ).length;
+  async function confirmBatch() {
+    if (confirmedBatchIds.includes(batch.id)) return;
+    setCookingConfirmError(false);
+    const dedupeKey = `cooking-confirmed:${plan.id}:${batch.id}`;
+    if (await trackAnalytics("cooking_confirmed", {}, dedupeKey)) {
+      setConfirmedBatchIds((current) => [...current, batch.id]);
+    } else setCookingConfirmError(true);
+  }
   return (
     <section className="screen week-screen">
       {planEnded ? (
@@ -5258,6 +5407,29 @@ function WeekScreen({
             </p>
           </div>
         </section>
+      )}
+      <button
+        className={`cooking-confirm-button glass-card ${confirmedBatchIds.includes(batch.id) ? "confirmed" : ""}`}
+        disabled={confirmedBatchIds.includes(batch.id)}
+        onClick={() => void confirmBatch()}
+      >
+        <span>{confirmedBatchIds.includes(batch.id) ? "✓" : "♨"}</span>
+        <div>
+          <b>
+            {confirmedBatchIds.includes(batch.id)
+              ? "Партия отмечена приготовленной"
+              : "Отметить, что партия приготовлена"}
+          </b>
+          <small>
+            Только это подтверждение засчитывается как реальная готовка
+          </small>
+        </div>
+      </button>
+      {cookingConfirmError && (
+        <p className="inline-warning" role="alert">
+          Не удалось сохранить отметку о готовке. Проверьте соединение и
+          попробуйте ещё раз.
+        </p>
       )}
       <div className="section-heading">
         <div>
@@ -5472,6 +5644,10 @@ function ShoppingScreen({
 }) {
   const [failed, setFailed] = useState(false);
   const [undoItems, setUndoItems] = useState<ShoppingItem[] | null>(null);
+  const shoppingPlanId = plan?.id;
+  useEffect(() => {
+    if (shoppingPlanId) void trackAnalytics("shopping_opened");
+  }, [shoppingPlanId]);
   if (!plan)
     return (
       <section className="screen">
@@ -5492,14 +5668,20 @@ function ShoppingScreen({
     const ok = await onChange({ ...currentPlan, shopping });
     setFailed(!ok);
     setUndoItems(ok ? undoTo : null);
+    return ok;
   }
-  function toggle(key: string) {
-    void apply(
+  async function toggle(key: string) {
+    const previous = currentPlan.shopping.find((item) => item.key === key);
+    const ok = await apply(
       currentPlan.shopping.map((item) =>
         item.key === key ? { ...item, checked: !item.checked } : item,
       ),
       null,
     );
+    if (ok && previous && !previous.checked)
+      void trackAnalytics("shopping_item_checked");
+    if (!ok)
+      void trackAnalytics("blocking_error", { errorCode: "shopping_save" });
   }
   function clearChecks() {
     void apply(
@@ -5572,7 +5754,7 @@ function ShoppingScreen({
               className={`grocery-row ${item.checked ? "checked" : ""}`}
               key={item.key}
               aria-pressed={item.checked}
-              onClick={() => toggle(item.key)}
+              onClick={() => void toggle(item.key)}
             >
               <span className="checkmark">
                 {item.checked && <Icon name="check" />}
@@ -5719,6 +5901,9 @@ function PlanBuilder({
   initialBatchId,
   repeat = false,
   mode = "onboarding",
+  flowId,
+  startedAt,
+  isNextPlan = false,
   onClose,
   onSaved,
   persistPlan,
@@ -5728,10 +5913,15 @@ function PlanBuilder({
   initialBatchId?: string;
   repeat?: boolean;
   mode?: BuilderMode;
+  flowId?: string;
+  startedAt?: number;
+  isNextPlan?: boolean;
   onClose: () => void;
   onSaved: (plan: ActivePlan, destination: Tab) => void;
   persistPlan: (plan: ActivePlan) => Promise<void>;
 }) {
+  const flowIdRef = useRef(flowId);
+  const [builderStartedAt] = useState(() => startedAt ?? Date.now());
   const initialChoiceIndex =
     initialPlan && initialBatchId
       ? Math.max(
@@ -6128,12 +6318,31 @@ function PlanBuilder({
     setSaveMessage("");
     try {
       await persistPlan(plan);
+      if (flowIdRef.current) {
+        const analyticsFields = {
+          flowId: flowIdRef.current,
+          durationMs: Math.max(0, Date.now() - builderStartedAt),
+          pilotEligible: plan.periodDays >= 3 && plan.periodDays <= 7,
+        };
+        void trackAnalytics(
+          "plan_created",
+          analyticsFields,
+          `plan-created:${flowIdRef.current}`,
+        );
+        if (isNextPlan)
+          void trackAnalytics(
+            "next_plan_created",
+            { flowId: flowIdRef.current },
+            `next-plan-created:${flowIdRef.current}`,
+          );
+      }
       setSaveState("idle");
       clearDraft();
       if (mode === "settings")
         onSaved(plan, initialStep === 3 ? "profile" : "week");
       else setSuccessPlan(plan);
     } catch {
+      void trackAnalytics("blocking_error", { errorCode: "plan_save" });
       setSaveState("error");
       setSaveMessage(
         "Не получилось сохранить. Проверьте соединение и попробуйте ещё раз.",
@@ -7534,6 +7743,10 @@ function RecipeView({
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+  useEffect(() => {
+    if (section === "steps" && plan && batch)
+      void trackAnalytics("cooking_instructions_opened");
+  }, [batch, plan, section]);
   const preview =
     person && slot ? portionFor(person, slot, recipe, draft) : null;
   const displayMacros: Macros = preview?.actual ?? {

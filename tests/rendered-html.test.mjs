@@ -87,10 +87,22 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Ещё можно съесть/);
   assert.match(page, /никто не выбрал/);
   assert.match(page, /current\.filter\(\(slot\) => !unassignedSlots\.includes\(slot\)\)/);
+  for (const event of [
+    "first_open",
+    "plan_create_started",
+    "plan_created",
+    "shopping_item_checked",
+    "cooking_instructions_opened",
+    "cooking_confirmed",
+    "saved_plan_reopened",
+    "next_plan_created",
+  ]) assert.match(page, new RegExp(event));
+  assert.match(page, /Отметить, что партия приготовлена/);
 
   assert.match(route, /where\(eq\(mealPlans\.clientId, clientId\)\)/);
   assert.match(route, /id: `\$\{clientId\}:\$\{body\.plan\.id\}`/);
   assert.match(schema, /clientId: text\("client_id"\)\.notNull\(\)/);
+  assert.match(schema, /analyticsEvents = sqliteTable\("analytics_events"/);
   assert.match(layout, /images: \[\{ url: "\/og\.png"/);
   assert.match(layout, /applicationName: "Mise"/);
   assert.match(layout, /apple-touch-icon\.png/);
