@@ -7,6 +7,7 @@ import {
   type NotificationPlan,
 } from "./notification-setup";
 import { Icon, type IconName } from "./ui/icon";
+import { Note } from "./ui/note";
 import { plural, withPlural, FORMS } from "@/lib/plural";
 import { MacroNumberInput } from "@/components/macro-number-input";
 import {
@@ -4698,16 +4699,14 @@ function OnboardingScreen({
               </div>
             </article>
           </div>
-          <aside className="estimate-note">
-            <span>i</span>
-            <p>
-              <b>Без ложной точности</b>
-              <small>
-                КБЖУ и сроки хранения — полезные ориентиры, а не медицинская или
-                лабораторная гарантия.
-              </small>
-            </p>
-          </aside>
+          <Note
+            tone="warn"
+            icon={<Icon name="info" />}
+            label="Без ложной точности"
+          >
+            КБЖУ и сроки хранения — полезные ориентиры, а не медицинская или
+            лабораторная гарантия.
+          </Note>
           <div className="onboarding-actions">
             <button className="primary-button" onClick={onFinish}>
               {hasPlan ? "Вернуться к плану" : "Составить первый план"}{" "}
@@ -4912,16 +4911,14 @@ function MealPrepGuide({
             </article>
           ))}
         </div>
-        <aside className="estimate-note prep-storage-note">
-          <span>i</span>
-          <p>
-            <b>Для каждого блюда — свои условия</b>
-            <small>
-              Проверьте срок, способ хранения и разморозку в карточке
-              конкретного рецепта.
-            </small>
-          </p>
-        </aside>
+        <Note
+          tone="warn"
+          icon={<Icon name="info" />}
+          label="Для каждого блюда — свои условия"
+        >
+          Проверьте срок, способ хранения и разморозку в карточке конкретного
+          рецепта.
+        </Note>
         <div className="onboarding-actions">
           <button className="primary-button" onClick={onFinish}>
             {hasPlan ? "Вернуться к плану" : "Составить первый план"}{" "}
@@ -5023,26 +5020,16 @@ function DailyBalance({
     1,
   );
   return (
-    <aside
-      className={`daily-balance ${remainingKcal > 0 ? "remaining" : "complete"}`}
+    <Note
+      tone="mint"
       role="status"
+      label={`План MISE: ${plannedKcal.toLocaleString("ru-RU")} ккал`}
     >
-      <span>{context}</span>
-      <b>План MISE: {plannedKcal.toLocaleString("ru-RU")} ккал</b>
-      {remainingKcal > 0 ? (
-        <>
-          <strong>
-            Ещё можно съесть: {remainingKcal.toLocaleString("ru-RU")} ккал
-          </strong>
-          <small>
-            Это примерно {chocolate.toLocaleString("ru-RU")} плитки шоколада —
-            просто понятный ориентир.
-          </small>
-        </>
-      ) : (
-        <small>Дневной бюджет распределён между выбранными позициями.</small>
-      )}
-    </aside>
+      {context}.{" "}
+      {remainingKcal > 0
+        ? `Ещё можно съесть: ${remainingKcal.toLocaleString("ru-RU")} ккал — примерно ${chocolate.toLocaleString("ru-RU")} плитки шоколада, просто понятный ориентир.`
+        : "Дневной бюджет распределён между выбранными позициями."}
+    </Note>
   );
 }
 
@@ -5293,7 +5280,7 @@ function WeekScreen({
           );
         })}
       </div>
-      <section className="macro-hero glass-card">
+      <section className="glass-card">
         <div className="macro-top">
           <div>
             <p className="kicker">Блюда из Mise на этот день</p>
@@ -5386,10 +5373,10 @@ function WeekScreen({
         </div>
       </button>
       {cookingConfirmError && (
-        <p className="inline-warning" role="alert">
+        <Note tone="warn" role="alert">
           Не удалось сохранить отметку о готовке. Проверьте соединение и
           попробуйте ещё раз.
-        </p>
+        </Note>
       )}
       <div className="section-heading">
         <div>
@@ -5683,9 +5670,9 @@ function ShoppingScreen({
         </div>
       </section>
       {failed && (
-        <div className="save-error inline-error" role="alert">
+        <Note tone="warn" role="alert" className="note-toast">
           Отметка не сохранилась — проверьте связь и нажмите ещё раз.
-        </div>
+        </Note>
       )}
       {undoItems && (
         <div className="undo-bar" role="status">
@@ -6348,11 +6335,6 @@ function PlanBuilder({
           )}
           <h1>{steps[step]}</h1>
         </div>
-        {mode === "onboarding" && (
-          <span className="step-count">
-            {Math.round(((step + 1) / steps.length) * 100)}%
-          </span>
-        )}
       </header>
       {mode === "onboarding" && (
         <div className="progress-track">
@@ -6361,19 +6343,24 @@ function PlanBuilder({
       )}
       <section className="builder-content">
         {draftRestored && (
-          <div className="inline-note draft-note" role="status">
-            <p>Продолжаем незаконченный черновик плана.</p>
-            <button className="text-button" onClick={discardDraft}>
-              Начать заново
-            </button>
-          </div>
+          <Note
+            tone="mint"
+            role="status"
+            action={
+              <button className="text-button" onClick={discardDraft}>
+                Начать заново
+              </button>
+            }
+          >
+            Продолжаем незаконченный черновик плана.
+          </Note>
         )}
         {staleCount > 0 && (
-          <p className="inline-note" role="status">
+          <Note tone="mint" role="status">
             {staleCount === 1
               ? "Одно блюдо не подходит под новые настройки — выберите его заново на шаге «Выбор меню»."
               : `${staleCount} блюда не подходят под новые настройки — выберите их заново на шаге «Выбор меню».`}
-          </p>
+          </Note>
         )}
         {step === 0 && (
           <PeriodStep
@@ -6434,14 +6421,14 @@ function PlanBuilder({
           />
         )}
         {step === 3 && unassignedSlots.length > 0 && (
-          <p className="inline-note" role="status">
+          <Note tone="mint" role="status">
             {unassignedSlots.map((slot) => mealMeta[slot].label).join(", ")}{" "}
             никто не выбрал —{" "}
             {unassignedSlots.length === 1
               ? "эта позиция не войдёт"
               : "эти позиции не войдут"}{" "}
             в план.
-          </p>
+          </Note>
         )}
         {step === 4 && (
           <CookingStep
@@ -6525,10 +6512,10 @@ function PlanBuilder({
         )}
       </footer>
       {saveState === "error" && (
-        <div className="save-error" role="alert">
+        <Note tone="warn" role="alert" className="note-toast">
           {saveMessage ||
             "Не получилось сохранить. Проверьте соединение и попробуйте ещё раз."}
-        </div>
+        </Note>
       )}
       {successPlan && (
         <SuccessSheet
@@ -6589,7 +6576,7 @@ function PeriodStep({
         title="Выберите период"
         text="До 14 дней — так проще сохранить свежесть и разнообразие."
       />
-      <section className="glass-card form-card">
+      <section className="glass-card">
         <div className="date-fields">
           <label>
             Начало
@@ -6623,19 +6610,15 @@ function PeriodStep({
           ))}
         </div>
         {valid ? (
-          <div className="result-line">
-            <Icon name="check" />
-            <p>
-              <b>
-                {formatDate(start)} — {formatDate(end)}
-              </b>
-              <small>{rawDays} дней в плане</small>
-            </p>
-          </div>
+          <Note
+            tone="mint"
+            icon={<Icon name="check" />}
+            label={`${formatDate(start)} — ${formatDate(end)}`}
+          >
+            {rawDays} дней в плане
+          </Note>
         ) : (
-          <div className="warning-line">
-            Период должен быть от 1 до 14 дней.
-          </div>
+          <Note tone="warn">Период должен быть от 1 до 14 дней.</Note>
         )}
       </section>
     </>
@@ -6689,18 +6672,14 @@ function MealStep({
           );
         })}
       </div>
-      <section className="calculation-note glass-card">
-        <Icon name="scale" />
-        <p>
-          <b>
-            {selected.length} {positionLabel} меню на день
-          </b>
-          <small>
-            {selected.length * periodDays} порций на человека за период, если он
-            ест все выбранные блюда
-          </small>
-        </p>
-      </section>
+      <Note
+        tone="mint"
+        icon={<Icon name="scale" />}
+        label={`${selected.length} ${positionLabel} меню на день`}
+      >
+        {selected.length * periodDays} порций на человека за период, если он ест
+        все выбранные блюда
+      </Note>
     </>
   );
 }
@@ -6866,7 +6845,7 @@ function PeopleStep({
                   </label>
                 ))}
               </div>
-              <div className="macro-presets">
+              <div className="macro-presets glass-3">
                 <div className="macro-preset-heading">
                   <p>
                     <b>Автоматическое распределение</b>
@@ -6903,10 +6882,10 @@ function PeopleStep({
               </div>
             </details>
             {mismatch && (
-              <p className="inline-warning">
+              <Note tone="warn">
                 Калории и БЖУ отличаются больше чем на 10% — выберите профиль
                 ещё раз или проверьте ручные значения.
-              </p>
+              </Note>
             )}
             <div className="person-slots">
               <p id={`person-slots-${person.id}`}>
@@ -7251,9 +7230,9 @@ function GoalEstimator({
         </button>
       </div>
       {calculation.issues.map((issue) => (
-        <p className="inline-warning" key={issue.code}>
+        <Note tone="warn" key={issue.code}>
           {issue.message}
-        </p>
+        </Note>
       ))}
     </div>
   );
@@ -7289,7 +7268,7 @@ function CookingStep({
         title="На сколько дней готовим за раз?"
         text="Выберите размер одной партии. Мы учтём хранение и заморозку."
       />
-      <section className="glass-card cooking-card">
+      <section className="glass-card">
         <div className="day-scale" role="radiogroup" aria-label="Дней на партию">
           {[1, 2, 3, 4, 5, 6, 7].map((days) => (
             <button
@@ -7457,10 +7436,10 @@ function MenuStep({
         })}
       </div>
       {allAllowed.length === 0 && (
-        <p className="inline-warning" role="alert">
+        <Note tone="warn" role="alert">
           Для этой позиции нет блюда без указанных жёстких исключений. Измените
           направление меню, состав позиций или ограничения.
-        </p>
+        </Note>
       )}
       {hiddenDisliked > 0 && (
         <button
@@ -8142,9 +8121,9 @@ function RecipeView({
           </p>
         )}
         {saveStatus === "error" && (
-          <p className="tuner-error" role="alert">
+          <Note tone="warn" role="alert">
             Не удалось сохранить. Изменения не попали в план.
-          </p>
+          </Note>
         )}
       </section>
       <section className="recipe-info-grid">
@@ -8199,17 +8178,17 @@ function RecipeView({
         </div>
         {section === "ingredients" && (
           <div className="detail-list">
-            <div className="detail-note">
-              <Icon name="scale" />
-              <p>
-                <b>
-                  {batch
-                    ? `На ${batch.days} дн. · ${eaters.length} чел.`
-                    : "На одну базовую порцию"}
-                </b>
-                <small>Количество меняется вместе с рычагами КБЖУ</small>
-              </p>
-            </div>
+            <Note
+              tone="mint"
+              icon={<Icon name="scale" />}
+              label={
+                batch
+                  ? `На ${batch.days} дн. · ${eaters.length} чел.`
+                  : "На одну базовую порцию"
+              }
+            >
+              Количество меняется вместе с рычагами КБЖУ
+            </Note>
             {recipe.ingredients.map((ingredient) => {
               const totalScale = totalIngredientScale(ingredient);
               return (
@@ -8254,51 +8233,46 @@ function RecipeView({
           <div className="portion-section">
             {batch && slot && plan ? (
               <>
-                <div className="weigh-intro detail-note">
-                  <span>1</span>
-                  <p><b>Сначала взвесьте готовую еду</b><small>Затем введите фактический вес — Mise сам рассчитает раскладку. После расчёта подпишите имя, приём пищи и даты.</small></p>
-                </div>
+                <Note tone="mint" icon={<Icon name="scale" />} label="Сначала взвесьте готовую еду">Затем введите фактический вес — Mise сам рассчитает раскладку. После расчёта подпишите имя, приём пищи и даты.</Note>
                 {components.length === 0 ? (
                   <label className="cooked-weight-field"><span>Взвесьте всё готовое блюдо</span><span className="weight-control"><input aria-label="Фактический вес готового блюда" type="number" inputMode="numeric" min="1" value={cookedWeights.total || ""} onChange={(event) => setCookedWeights({ total: Number(event.target.value) })} /><small>г</small></span></label>
                 ) : (
                   <div className="component-weight-fields"><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label className="cooked-weight-field" key={component.id}><span>{component.label}</span><span className="weight-control"><input aria-label={`Фактический вес: ${component.label}`} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) }))} /><small>г</small></span></label>)}</div>
                 )}
                 {!mixedAllocation && !componentAllocation && <p className="allocation-prompt" role="status">Введите {components.length ? "вес каждого компонента" : "вес блюда"}, чтобы увидеть точную раскладку.</p>}
-                {mixedAllocation && <div className="allocation-results"><div className="detail-note"><span>2</span><p><b>Теперь разложите по контейнерам</b><small>Граммы рассчитаны из фактического веса всей готовой партии.</small></p></div>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p><small>В каждый контейнер</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
-                {componentAllocation && <div className="allocation-results"><div className="detail-note"><span>2</span><p><b>Теперь разложите компоненты</b><small>Никаких процентов — только граммы в каждый контейнер.</small></p></div>{eaters.map((eater, index) => <article className="portion-card component-portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return <p key={component.componentId}><span>{component.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>; })}<small>В каждый из {batch.days} контейнеров</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
-                <section className="storage-card">
-                  <span>
-                    {freezeDays > 0 ? (
+                {mixedAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите по контейнерам">Граммы рассчитаны из фактического веса всей готовой партии.</Note>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p><small>В каждый контейнер</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
+                {componentAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите компоненты">Никаких процентов — только граммы в каждый контейнер.</Note>{eaters.map((eater, index) => <article className="portion-card component-portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return <p key={component.componentId}><span>{component.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>; })}<small>В каждый из {batch.days} контейнеров</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
+                <Note
+                  tone="mint"
+                  icon={
+                    freezeDays > 0 ? (
                       <Icon name="snowflake" />
                     ) : (
                       <Icon name="check" />
-                    )}
-                  </span>
-                  <div>
-                    <h3>
-                      {freezeDays > 0
-                        ? "Часть порций заморозить"
-                        : recipe.storage.ambient
-                          ? "Хранить в сухой банке"
-                          : "Хранить в холодильнике"}
-                    </h3>
-                    <p>
-                      {freezeDays > 0
-                        ? `Оставьте на ${recipe.storageDays} дня в холодильнике, ещё ${freezeDays} порц. каждого человека заморозьте.`
-                        : (recipe.storage.ambient ??
-                          `Ориентир для холодильника — до ${recipe.storageDays} дней.`)}
-                    </p>
-                  </div>
-                </section>
+                    )
+                  }
+                  label={
+                    freezeDays > 0
+                      ? "Часть порций заморозить"
+                      : recipe.storage.ambient
+                        ? "Хранить в сухой банке"
+                        : "Хранить в холодильнике"
+                  }
+                >
+                  {freezeDays > 0
+                    ? `Оставьте на ${recipe.storageDays} дня в холодильнике, ещё ${freezeDays} порц. каждого человека заморозьте.`
+                    : (recipe.storage.ambient ??
+                      `Ориентир для холодильника — до ${recipe.storageDays} дней.`)}
+                </Note>
               </>
             ) : (
-              <section className="detail-note">
-                <Icon name="info" />
-                <p>
-                  <b>Точная раскладка появится в плане</b>
-                  <small>Мы учтём КБЖУ и цели каждого человека.</small>
-                </p>
-              </section>
+              <Note
+                tone="mint"
+                icon={<Icon name="info" />}
+                label="Точная раскладка появится в плане"
+              >
+                Мы учтём КБЖУ и цели каждого человека.
+              </Note>
             )}
           </div>
         )}

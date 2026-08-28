@@ -112,8 +112,50 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.equal(manifest.short_name, "Mise");
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
-  assert.match(css, /backdrop-filter: blur\(18px\)/);
   assert.match(css, /\.onboarding-shell/);
   assert.match(css, /\.prep-offer/);
   assert.match(css, /\.prep-checklist/);
+
+  // Стекло описано токенами, а не литералами: блюр приходит из --glass-*-blur.
+  assert.match(css, /--glass-2-blur: blur\(28px\) saturate\(180%\)/);
+  assert.match(css, /backdrop-filter: var\(--glass-2-blur\)/);
+
+  // Шкалы. Ни одного литерального кегля и веса ниже слоя токенов;
+  // радиус-литерал допустим ровно один — квадрат отметки в списке покупок.
+  assert.equal(css.match(/font-size: *[0-9]/g), null, "кегль задаётся только токеном");
+  assert.equal(
+    (css.match(/font-weight: *[0-9]/g) ?? []).length,
+    2,
+    "числовой вес остаётся только в @font-face",
+  );
+  assert.equal(
+    (css.match(/border-radius: *[0-9]+(\.[0-9]+)?px/g) ?? []).length,
+    1,
+    "радиус задаётся только токеном",
+  );
+  for (const [, size] of css.matchAll(/--(?:text|glyph)-[a-z0-9]+: *([0-9.]+)px/g)) {
+    assert.ok(Number(size) >= 12, `кегль ${size}px ниже пола системы в 12px`);
+  }
+
+  // Поверхность одна: .glass / .glass-card — тот же L2, что и .glass-2.
+  assert.match(css, /\.glass-2,\n\.glass,\n\.glass-card \{/);
+  assert.doesNotMatch(css, /backdrop-filter: blur\(18px\) saturate\(150%\)/);
+
+  // Note — один компонент вместо четырнадцати частных классов.
+  assert.match(css, /\n\.note \{/);
+  for (const dead of [
+    "estimate-note", "inline-note", "inline-warning", "warning-line",
+    "result-line", "calculation-note", "detail-note", "storage-card",
+    "daily-balance", "schedule-summary", "notification-success",
+    "notification-error", "tuner-error", "save-error",
+  ]) {
+    assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} должен уйти в Note`);
+    assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} должен уйти в Note`);
+  }
+
+  // Число теней не растёт: стекло описано уровнями, а не по месту.
+  assert.ok(
+    (css.match(/box-shadow:/g) ?? []).length <= 44,
+    "тени задаются уровнями стекла, а не по месту",
+  );
 });

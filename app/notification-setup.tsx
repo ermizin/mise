@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Icon } from "./ui/icon";
+import { Note } from "./ui/note";
 
 export type NotificationPlan = {
   id: string;
@@ -219,11 +220,11 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       {toggles.thaw && plan.frozenUseDates.length > 0 && <label className="single-time"><span>Накануне использования</span><input type="time" value={thawTime} onChange={(event) => setThawTime(event.target.value)} /></label>}
       <ReminderToggle active={toggles["next-plan"]} title="Составить следующий план" note={`За 2 дня до окончания · ${cookTimes[plan.batches[0]?.id] ?? "18:00"}`} onClick={() => toggle("next-plan")} />
     </div>
-    <p className="schedule-summary">Будет запланировано: <b>{jobs.length}</b>. Напоминания относятся только к этому плану и этому устройству.</p>
-    {status === "success" ? <><div className="notification-success" role="status"><Icon name="check" size={12} /> {testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</div>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <Icon name="chevron" size={16} /></button></> : <>
-      {status === "unavailable" && <p className="notification-error" role="alert">На этом устройстве Web Push недоступен. На iPhone откройте Mise с экрана Домой.</p>}
-      {status === "denied" && <p className="notification-error" role="alert">Разрешение не выдано. План продолжит работать без уведомлений.</p>}
-      {status === "error" && <p className="notification-error" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</p>}
+    <p className="t-min schedule-note">Будет запланировано: <b>{jobs.length}</b>. Напоминания относятся только к этому плану и этому устройству.</p>
+    {status === "success" ? <><Note tone="mint" role="status" icon={<Icon name="check" size={16} />}>{testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</Note>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <Icon name="chevron" size={16} /></button></> : <>
+      {status === "unavailable" && <Note tone="warn" role="alert">На этом устройстве Web Push недоступен. На iPhone откройте Mise с экрана Домой.</Note>}
+      {status === "denied" && <Note tone="warn" role="alert">Разрешение не выдано. План продолжит работать без уведомлений.</Note>}
+      {status === "error" && <Note tone="warn" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</Note>}
       <button className="primary-button" disabled={status === "saving" || jobs.length === 0} onClick={enable}>{status === "saving" ? "Включаем…" : enabled ? "Обновить расписание" : "Включить напоминания"}</button>
       {testControl}
       {enabled && <button className="secondary-button" disabled={status === "saving"} onClick={disable}>Выключить для этого плана</button>}
