@@ -7320,7 +7320,7 @@ function CookingStep({
         </div>
       </section>
       {remainder > 0 && (
-        <section
+        <div
           className="remainder-sheet glass-card"
           role="radiogroup"
           aria-label="Как поступить с остатком"
@@ -7383,7 +7383,7 @@ function CookingStep({
             </div>
             <i>{decision === "shorten" ? <Icon name="check" /> : ""}</i>
           </button>
-        </section>
+        </div>
       )}
     </>
   );
@@ -7716,6 +7716,11 @@ function Sheet({
   }, [onClose]);
 
   return createPortal(
+    // The backdrop's click-to-dismiss is a mouse-only convenience layered on
+    // top of a fully keyboard-accessible dialog — Escape (handled above) is
+    // the keyboard equivalent for the same action, so the backdrop itself
+    // intentionally stays out of the tab order.
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className="modal-backdrop"
       ref={backdropRef}
