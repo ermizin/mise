@@ -62,7 +62,9 @@ test("the interface stays legible", async () => {
   assert.match(css, /--accent-grad-b: #ee4c13/);
   assert.match(css, /--accent-grad-aa: linear-gradient\(150deg, #d9490e, #b8350a\)/);
   assert.match(css, /\.primary-button \{[\s\S]*?var\(--accent-grad-a\),\s*var\(--accent-grad-b\)/);
-  assert.match(css, /@media \(prefers-color-scheme: dark\)/, "a dark theme exists");
+  assert.doesNotMatch(css, /@media \(prefers-color-scheme: dark\)(?![^\n]*min-width)/, "the dark theme is disabled");
+  assert.match(css, /color-scheme: light;/, "native controls stay light");
+  assert.doesNotMatch(layout, /prefers-color-scheme: dark/, "the PWA chrome stays light");
   assert.match(layout, /statusBarStyle: "default"/, "the iOS status bar stays readable");
   assert.doesNotMatch(page, /aria-pressed=\{origin === "parsed"\}/, "radio groups expose radios");
 });

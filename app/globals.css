@@ -34,6 +34,8 @@
 }
 
 :root {
+  color-scheme: light;
+
   /* ---------- Семейства ---------- */
   --font-ui: -apple-system, system-ui, "Instrument Sans", "Segoe UI", sans-serif;
   --font-num: "SF Mono", ui-monospace, "IBM Plex Mono", Menlo, monospace;
@@ -3774,7 +3776,7 @@ p {
   line-height: 1.4;
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (min-width: 100000px) {
   :root {
     --ink: #eef4f1;
     --ink-soft: #c6d3ce;
@@ -4075,7 +4077,7 @@ p {
   }
 }
 
-@media (prefers-color-scheme: dark) and (prefers-reduced-transparency: reduce) {
+@media (prefers-color-scheme: dark) and (prefers-reduced-transparency: reduce) and (min-width: 100000px) {
   .glass,
   .glass-card {
     background: rgba(20, 28, 26, 0.97);
@@ -4129,7 +4131,7 @@ p {
 .component-portion-card p { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); }
 .component-portion-card p span { color: var(--ink-soft); }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) and (min-width: 100000px) {
   .period-summary-button, .macro-advanced, .muscle-priority, .cooked-weight-field, .allocation-prompt { border-color: var(--stroke); background: rgba(24,33,31,.72); }
   .weight-control input { border-color: var(--stroke); background: rgba(24,33,31,.9); }
   .muscle-priority.selected { background: rgba(63,168,138,.2); }
