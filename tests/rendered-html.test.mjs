@@ -45,7 +45,8 @@ test("includes the complete plan-builder and private persistence model", async (
   for (const style of ["Высокобелковое", "Бюджетное", "Палео", "Кето"]) assert.match(page, new RegExp(style));
   assert.match(page, /Приготовить остаток отдельно/);
   assert.match(page, /Выберите один из пяти вариантов/);
-  assert.match(page, /Подпишите имя, приём пищи и даты/);
+  assert.match(page, /Один раз взвесьте готовую партию/);
+  assert.match(page, /Фактический вес готового блюда/);
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
   assert.match(page, /mise-onboarding-v2/);
@@ -74,7 +75,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /recalculateDailyMacros/);
   assert.match(page, /macroPreset: "custom"/);
   assert.doesNotMatch(page, /mealsPerDay|Приёмов пищи в день/);
-  assert.match(page, /Можно съесть ещё/);
+  assert.match(page, /Ещё можно съесть/);
   assert.match(page, /никто не выбрал/);
   assert.match(page, /current\.filter\(\(slot\) => !unassignedSlots\.includes\(slot\)\)/);
 

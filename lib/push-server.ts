@@ -39,8 +39,8 @@ function joinBytes(...parts: Uint8Array[]) {
 }
 
 async function hmac(key: Uint8Array, value: Uint8Array) {
-  const cryptoKey = await crypto.subtle.importKey("raw", key, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  return new Uint8Array(await crypto.subtle.sign("HMAC", cryptoKey, value));
+  const cryptoKey = await crypto.subtle.importKey("raw", key as unknown as BufferSource, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return new Uint8Array(await crypto.subtle.sign("HMAC", cryptoKey, value as unknown as BufferSource));
 }
 
 async function hkdfExtract(salt: Uint8Array, input: Uint8Array) {
@@ -76,7 +76,7 @@ async function vapidToken(endpoint: string, publicKey: Uint8Array, privateKey: U
 async function encryptPayload(payload: string, userPublicKey: Uint8Array, authSecret: Uint8Array) {
   const applicationServerKeys = await crypto.subtle.generateKey({ name: "ECDH", namedCurve: "P-256" }, true, ["deriveBits"]);
   const applicationServerPublicKey = new Uint8Array(await crypto.subtle.exportKey("raw", applicationServerKeys.publicKey));
-  const userKey = await crypto.subtle.importKey("raw", userPublicKey, { name: "ECDH", namedCurve: "P-256" }, false, []);
+  const userKey = await crypto.subtle.importKey("raw", userPublicKey as unknown as BufferSource, { name: "ECDH", namedCurve: "P-256" }, false, []);
   const sharedSecret = new Uint8Array(await crypto.subtle.deriveBits({ name: "ECDH", public: userKey }, applicationServerKeys.privateKey, 256));
 
   const authPrk = await hkdfExtract(authSecret, sharedSecret);

@@ -3,15 +3,32 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NotificationSetupPanel, type NotificationPlan } from "./notification-setup";
 import { countRu } from "./format";
+import { MacroNumberInput } from "@/components/macro-number-input";
+import { allocateComponentDish, allocateMixedDish, type PersonAllocation } from "@/domain/portion-allocation";
+import {
+  ACTIVITY_FACTORS,
+  NUTRITION_CONFIG,
+  calculateMealPlanTargets,
+  calculateNutritionTarget,
+  capMacrosAtCalories,
+  macroCalories as nutritionMacroCalories,
+  macrosForCalories as nutritionMacrosForCalories,
+  recalculateDailyMacros as nutritionRecalculateDailyMacros,
+  type ActivityKey,
+  type MacroKey,
+  type MacroPreset,
+  type MacroPresetOption,
+  type Macros,
+  type MealSlot,
+  type NutritionCalculation,
+  type NutritionGoal,
+  type NutritionWizardInput,
+  type Sex,
+} from "../lib/nutrition-engine-v2";
 
 type Tab = "week" | "recipes" | "builder" | "shopping" | "profile";
-type MealSlot = "breakfast" | "lunch" | "dinner" | "snack1" | "snack2";
 type MenuStyle = "protein" | "budget" | "paleo" | "keto";
 type RecipeOrigin = "parsed" | "generated";
-type MacroKey = "kcal" | "protein" | "fat" | "carbs";
-type Macros = Record<MacroKey, number>;
-type MacroPreset = "balanced" | "protein" | "carbs" | "fat" | "custom";
-type MacroPresetOption = Exclude<MacroPreset, "custom">;
 
 type Ingredient = { id: string; name: string; quantity: number; unit: "г" | "мл" | "шт."; group: string };
 type RecipeProvenance = { kind: "parsed"; sourceTitle: string; sourceUrl: string; sourceQuery: string; adaptation?: string; imageUrl?: string; imageAlt?: string } | { kind: "generated"; basedOn?: string[] };
@@ -22,7 +39,7 @@ type RecipeLocalization = { fit: "familiar" | "adapted" | "niche"; availability:
 type RecipePacking = { portion: string; separate?: string; label: string };
 type Recipe = { id: string; slot: MealSlot; title: string; emoji: string; time: number; macros: Macros; servingWeight: number; cost: number; tags: MenuStyle[]; ingredients: Ingredient[]; steps: string[]; storageDays: number; freezable: boolean; provenance: RecipeProvenance; storage: RecipeStorage; packing: RecipePacking; flex: RecipeFlex; effort: RecipeEffort; localization: RecipeLocalization };
 type RecipeTuning = { protein: number; fat: number; carbs: number };
-type Person = { id: string; name: string; daily: Macros; macroPreset?: MacroPreset; includedSlots: MealSlot[] };
+type Person = { id: string; name: string; daily: Macros; macroPreset?: MacroPreset; includedSlots: MealSlot[]; estimate?: NutritionWizardInput };
 type Batch = { id: string; index: number; start: string; end: string; days: number };
 type ShoppingItem = Ingredient & { key: string; checked: boolean };
 type ActivePlan = { id: string; createdAt: string; start: string; end: string; periodDays: number; cookEveryDays: number; menuStyle: MenuStyle; mealSlots: MealSlot[]; people: Person[]; batches: Batch[]; selections: Record<string, string>; tuning?: Record<string, RecipeTuning>; shopping: ShoppingItem[] };
@@ -48,6 +65,18 @@ const macroPresetMeta: Record<MacroPresetOption, { label: string; description: s
   fat: { label: "Больше жиров", description: "Б 30% · Ж 40% · У 30%", protein: 0.3, fat: 0.4, carbs: 0.3 },
 };
 const defaultMacros: Macros = { kcal: 2100, protein: 158, fat: 70, carbs: 210 };
+const activityMeta: Record<ActivityKey, { label: string; factor: number }> = {
+  low: { label: "Сидячий образ жизни", factor: ACTIVITY_FACTORS.low },
+  light: { label: "1–2 тренировки в неделю", factor: ACTIVITY_FACTORS.light },
+  medium: { label: "3–4 тренировки в неделю", factor: ACTIVITY_FACTORS.medium },
+  high: { label: "5–6 тренировок в неделю", factor: ACTIVITY_FACTORS.high },
+  athlete: { label: "Ежедневные нагрузки или физический труд", factor: ACTIVITY_FACTORS.athlete },
+};
+const goalMeta: Record<NutritionGoal, { label: string }> = {
+  loss: { label: "Снижение веса" },
+  maintenance: { label: "Поддержание веса" },
+  gain: { label: "Набор массы" },
+};
 const i = (id: string, name: string, quantity: number, unit: Ingredient["unit"], group: string): Ingredient => ({ id, name, quantity, unit, group });
 const noKnifeIngredientIds = new Set(["oats", "buckwheat", "rice", "brown-rice", "quinoa", "lentils", "white-beans", "red-beans", "pasta", "bulgur", "chia", "seeds", "cocoa", "milk", "kefir", "yogurt", "cottage", "cream", "egg", "oil", "olive-oil", "coconut-oil", "soy", "tomato-passata", "coconut-milk", "protein-powder"]);
 function estimateEffort(title: string, time: number, ingredients: Ingredient[], steps: string[]): RecipeEffort {
@@ -556,29 +585,41 @@ function daysInclusive(start: string, end: string) { return Math.floor((parseDat
 function formatDate(value: string, withWeekday = false) { return new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short", ...(withWeekday ? { weekday: "short" } : {}) }).format(parseDate(value)).replace(".", ""); }
 function round(value: number, digits = 0) { const factor = 10 ** digits; return Math.round(value * factor) / factor; }
 function clamp(value: number, min: number, max: number) { return Math.min(max, Math.max(min, value)); }
-function macroCalories(macros: Pick<Macros, "protein" | "fat" | "carbs">) { return macros.protein * 4 + macros.fat * 9 + macros.carbs * 4; }
-function macrosForCalories(kcal: number, preset: MacroPresetOption): Macros { const safeKcal = Math.max(0, round(kcal)); const shares = macroPresetMeta[preset]; return { kcal: safeKcal, protein: round((safeKcal * shares.protein) / 4), fat: round((safeKcal * shares.fat) / 9), carbs: round((safeKcal * shares.carbs) / 4) }; }
-function recalculateDailyMacros(kcal: number, current: Macros, preset: MacroPreset): Macros { const safeKcal = Math.max(0, round(kcal)); if (preset !== "custom") return macrosForCalories(safeKcal, preset); const currentKcal = macroCalories(current); if (currentKcal <= 0) return macrosForCalories(safeKcal, "balanced"); const factor = safeKcal / currentKcal; return { kcal: safeKcal, protein: round(current.protein * factor), fat: round(current.fat * factor), carbs: round(current.carbs * factor) }; }
+function macroCalories(macros: Pick<Macros, "protein" | "fat" | "carbs">) { return nutritionMacroCalories(macros); }
+function macrosForCalories(kcal: number, preset: MacroPresetOption): Macros { return nutritionMacrosForCalories(kcal, preset); }
+function recalculateDailyMacros(kcal: number, current: Macros, preset: MacroPreset): Macros { return nutritionRecalculateDailyMacros(kcal, current, preset); }
 function scaleMacros(macros: Macros, factor: number): Macros { return { kcal: round(macros.kcal * factor), protein: round(macros.protein * factor), fat: round(macros.fat * factor), carbs: round(macros.carbs * factor) }; }
 function addMacros(values: Macros[]): Macros { return values.reduce<Macros>((sum, item) => ({ kcal: sum.kcal + item.kcal, protein: sum.protein + item.protein, fat: sum.fat + item.fat, carbs: sum.carbs + item.carbs }), { kcal: 0, protein: 0, fat: 0, carbs: 0 }); }
-const singleMealShares: Record<MealSlot, number> = { breakfast: 0.25, lunch: 0.35, dinner: 0.4, snack1: 0.1, snack2: 0.1 };
-function shareFor(person: Person, slot: MealSlot) { return person.includedSlots.includes(slot) ? singleMealShares[slot] : 0; }
-function targetFor(person: Person, slot: MealSlot): Macros { return scaleMacros(person.daily, shareFor(person, slot)); }
-function plannedTargetsFor(person: Person): Macros { const share = [...new Set(person.includedSlots)].reduce((sum, slot) => sum + singleMealShares[slot], 0); return scaleMacros(person.daily, share); }
+function targetFor(person: Person, slot: MealSlot): Macros { return person.includedSlots.includes(slot) ? calculateMealPlanTargets(person.daily, person.includedSlots).slots[slot] : { kcal: 0, protein: 0, fat: 0, carbs: 0 }; }
+function plannedTargetsFor(person: Person): Macros { return calculateMealPlanTargets(person.daily, person.includedSlots).planned; }
 function macroDifference(goal: Macros, planned: Macros): Macros { return { kcal: round(goal.kcal - planned.kcal), protein: round(goal.protein - planned.protein), fat: round(goal.fat - planned.fat), carbs: round(goal.carbs - planned.carbs) }; }
 const proteinIngredientIds = new Set(["chicken", "chicken-thigh", "chicken-mince", "turkey", "turkey-mince", "turkey-slices", "beef", "beef-mince", "pork-mince", "salmon", "cod", "tuna", "egg", "cottage", "yogurt", "kefir", "tofu", "hummus", "protein-powder"]);
 const carbIngredientIds = new Set(["oats", "buckwheat", "rice", "brown-rice", "quinoa", "lentils", "white-beans", "red-beans", "potato", "sweet-potato", "bulgur", "pasta", "flatbread", "tortilla", "bread"]);
 const fatIngredientIds = new Set(["oil", "olive-oil", "coconut-oil", "peanut-butter", "almond-paste", "almond", "walnut", "seeds", "chia", "avocado", "cheese", "feta", "mozzarella", "cream-cheese", "cream", "butter", "coconut-milk", "mayonnaise"]);
+type PortionComponent = { id: "protein" | "carbs" | "vegetables"; label: string; ingredients: Ingredient[] };
+function portionComponents(recipe: Recipe): PortionComponent[] {
+  const mixed = /паста|макарон|лапш|карри|плов|похл[её]б|туш[её]н|чечевиц|фасол|запеканк|смузи|пудинг|омлет|фриттат|маффин/.test(recipe.title.toLowerCase());
+  if (mixed) return [];
+  const protein = recipe.ingredients.filter((ingredient) => proteinIngredientIds.has(ingredient.id));
+  const carbs = recipe.ingredients.filter((ingredient) => carbIngredientIds.has(ingredient.id));
+  const vegetables = recipe.ingredients.filter((ingredient) => ingredient.group === "Овощи и фрукты" && !proteinIngredientIds.has(ingredient.id) && !carbIngredientIds.has(ingredient.id));
+  const components: PortionComponent[] = [];
+  if (protein.length) components.push({ id: "protein", label: protein[0].name, ingredients: protein });
+  if (carbs.length) components.push({ id: "carbs", label: carbs[0].name, ingredients: carbs });
+  if (vegetables.length) components.push({ id: "vegetables", label: "Овощи", ingredients: vegetables });
+  return components.length >= 2 ? components : [];
+}
 function portionFor(person: Person, slot: MealSlot, recipe: Recipe, tuning?: RecipeTuning) {
   const target = targetFor(person, slot); const factor = target.kcal > 0 ? target.kcal / recipe.macros.kcal : 0; const proportional = scaleMacros(recipe.macros, factor);
   const automatic = { protein: proportional.protein ? clamp(target.protein / proportional.protein, ...recipe.flex.protein) : 1, fat: proportional.fat ? clamp(target.fat / proportional.fat, ...recipe.flex.fat) : 1, carbs: proportional.carbs ? clamp(target.carbs / proportional.carbs, ...recipe.flex.carbs) : 1 };
   const ratios = tuning ? { protein: clamp(tuning.protein, ...recipe.flex.protein), fat: clamp(tuning.fat, ...recipe.flex.fat), carbs: clamp(tuning.carbs, ...recipe.flex.carbs) } : automatic;
-  const protein = round(proportional.protein * ratios.protein);
-  const fat = round(proportional.fat * ratios.fat);
-  const carbs = round(proportional.carbs * ratios.carbs);
-  const actual = { kcal: round(protein * 4 + fat * 9 + carbs * 4), protein, fat, carbs };
-  const gramsFactor = factor * (ratios.protein * 0.35 + ratios.fat * 0.2 + ratios.carbs * 0.45);
-  return { target, factor, actual, ratios, grams: round(recipe.servingWeight * gramsFactor) };
+  const desired = { protein: proportional.protein * ratios.protein, fat: proportional.fat * ratios.fat, carbs: proportional.carbs * ratios.carbs };
+  const desiredCalories = macroCalories(desired);
+  const hardCapFactor = desiredCalories > target.kcal && desiredCalories > 0 ? target.kcal / desiredCalories : 1;
+  const actual = capMacrosAtCalories(target.kcal, desired);
+  const effectiveFactor = factor * hardCapFactor;
+  const gramsFactor = effectiveFactor * (ratios.protein * 0.35 + ratios.fat * 0.2 + ratios.carbs * 0.45);
+  return { target, factor: effectiveFactor, actual, ratios, grams: round(recipe.servingWeight * gramsFactor) };
 }
 function ingredientRatioFor(ingredient: Ingredient, ratios: RecipeTuning) {
   if (proteinIngredientIds.has(ingredient.id)) return ratios.protein;
@@ -712,16 +753,13 @@ function BottomNav({ tab, onNavigate }: { tab: Tab; onNavigate: (tab: Tab) => vo
 function EmptyState({ onBuild, title, text }: { onBuild: () => void; title: string; text: string }) { return <section className="empty-state glass-card"><div className="empty-orbit"><span>✦</span></div><p className="kicker">Персональный милпреп</p><h2>{title}</h2><p>{text}</p><button className="primary-button" onClick={onBuild}>Составить план <span>→</span></button></section>; }
 
 function DailyBalance({ goal, planned, context = "После блюд из Mise" }: { goal: Macros; planned: Macros; context?: string }) {
-  const difference = macroDifference(goal, planned);
-  const closeToGoal = Math.abs(difference.kcal) <= 50 && Math.abs(difference.protein) <= 5 && Math.abs(difference.fat) <= 3 && Math.abs(difference.carbs) <= 10;
-  const underGoal = difference.kcal > 50;
-  const overGoal = difference.kcal < -50;
-  const macroKeys: Exclude<MacroKey, "kcal">[] = ["protein", "fat", "carbs"];
-  const macroText = macroKeys.map((key) => difference[key] >= 0 ? `${difference[key]} ${macroLabels[key]} добрать` : `${Math.abs(difference[key])} ${macroLabels[key]} сверх`).join(" · ");
-  return <aside className={`daily-balance ${overGoal ? "over" : closeToGoal ? "complete" : underGoal ? "remaining" : "mixed"}`} role="status">
-    <span>{overGoal ? "Выше дневной цели" : closeToGoal ? "Дневная цель" : underGoal ? "Останется на день" : "Калории близки к цели"}</span>
-    <b>{overGoal ? `Примерно на ${Math.abs(difference.kcal)} ккал больше` : closeToGoal ? "Примерно закрыта" : underGoal ? `Можно съесть ещё ≈ ${difference.kcal} ккал` : "Проверьте разницу по БЖУ"}</b>
-    <small>{closeToGoal ? `${context}: ${planned.kcal} из ${goal.kcal} ккал.` : `${macroText}.${overGoal ? " Можно уменьшить порцию или убрать одну позицию." : ""}`}</small>
+  const plannedKcal = Math.min(Math.max(0, round(planned.kcal)), Math.max(0, round(goal.kcal)));
+  const remainingKcal = Math.max(0, goal.kcal - plannedKcal);
+  const chocolate = round(remainingKcal / NUTRITION_CONFIG.kcalPer100gChocolate, 1);
+  return <aside className={`daily-balance ${remainingKcal > 0 ? "remaining" : "complete"}`} role="status">
+    <span>{context}</span>
+    <b>План MISE: {plannedKcal.toLocaleString("ru-RU")} ккал</b>
+    {remainingKcal > 0 ? <><strong>Ещё можно съесть: {remainingKcal.toLocaleString("ru-RU")} ккал</strong><small>Это примерно {chocolate.toLocaleString("ru-RU")} плитки шоколада — просто понятный ориентир.</small></> : <small>Дневной бюджет распределён между выбранными позициями.</small>}
   </aside>;
 }
 
@@ -747,6 +785,7 @@ function WeekScreen({ plan, loading, loadError, onBuild, onEditMenu, onOpenRecip
 
 function RecipesScreen({ onOpenRecipe }: { onOpenRecipe: (recipe: Recipe) => void }) {
   const [style, setStyle] = useState<MenuStyle>("protein"); const [slot, setSlot] = useState<MealSlot>("lunch"); const [origin, setOrigin] = useState<RecipeOrigin>("parsed"); const [effort, setEffort] = useState<"all" | "low" | "high">("all"); const [time, setTime] = useState<"all" | "quick" | "medium" | "long">("all"); const visible = candidateRecipes(slot, style, [], 1, { origin, effort: effort === "all" ? undefined : effort, time: time === "all" ? undefined : time, limit: "all" });
+  // eslint-disable-next-line @next/next/no-img-element -- source previews are remote editorial provenance images
   return <section className="screen recipes-screen"><div className="origin-segment" role="radiogroup" aria-label="Происхождение рецепта"><button aria-pressed={origin === "parsed"} className={origin === "parsed" ? "selected" : ""} onClick={() => setOrigin("parsed")}>Спаршенные</button><button aria-pressed={origin === "generated"} className={origin === "generated" ? "selected" : ""} onClick={() => setOrigin("generated")}>Сгенерированные</button></div><div className="horizontal-pills" role="radiogroup" aria-label="Тип меню">{(Object.keys(styleMeta) as MenuStyle[]).map((value) => <button key={value} aria-pressed={style === value} className={style === value ? "selected" : ""} onClick={() => setStyle(value)}>{styleMeta[value].icon} {styleMeta[value].label}</button>)}</div><div className="meal-segment">{(Object.keys(mealMeta) as MealSlot[]).map((value) => <button key={value} className={slot === value ? "selected" : ""} onClick={() => setSlot(value)}>{mealMeta[value].label}</button>)}</div><div className="catalog-filters"><label>Сложность<select value={effort} onChange={(event) => setEffort(event.target.value as typeof effort)}><option value="all">Любая</option><option value="low">Низкая</option><option value="high">Высокая</option></select></label><label>Время<select value={time} onChange={(event) => setTime(event.target.value as typeof time)}><option value="all">Любое</option><option value="quick">До 20 мин</option><option value="medium">21–40 мин</option><option value="long">41+ мин</option></select></label></div><div className="section-heading"><div><p className="kicker">{visible.length} {visible.length === 1 ? "вариант" : "вариантов"}</p><h2>{mealMeta[slot].label}</h2></div></div>{visible.length ? <div className="catalog-grid">{visible.map((recipe, index) => { const sourceImage = recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined; return <button className="catalog-card glass-card" key={recipe.id} onClick={() => onOpenRecipe(recipe)}><div className={`catalog-art art-${index} ${sourceImage ? "has-photo" : ""}`}>{sourceImage ? <img src={sourceImage} alt={recipe.provenance.kind === "parsed" ? recipe.provenance.imageAlt ?? recipe.title : recipe.title} loading="lazy" referrerPolicy="no-referrer" /> : <span>{recipe.emoji}</span>}<em>{recipe.time} мин</em></div><h3>{recipe.title}</h3><p>{recipe.macros.kcal} ккал · {styleNote(recipe, style)}</p><div className="recipe-badges"><span>{recipe.effort.level === "low" ? "Мало действий" : "Много действий"}</span><span>{recipe.storage.ambient ? `Сухая банка ${recipe.storageDays} дн.` : recipe.freezable ? "Морозилка" : `Холодильник ${recipe.storageDays} дн.`}</span>{recipe.localization.fit !== "familiar" && <span>{recipe.localization.fit === "adapted" ? "Адаптирован" : "Нишевый вкус"}</span>}</div><span className="round-arrow">↗</span></button>; })}</div> : <section className="catalog-empty glass-card"><span>⌕</span><h3>Пока нет совпадений</h3><p>Смените время, сложность или категорию.</p></section>}</section>;
 }
 
@@ -817,6 +856,7 @@ function StyleStep({ selected, onSelect }: { selected: MenuStyle; onSelect: (sty
 
 function PeopleStep({ people, mealSlots, onUpdate, onMacro, onPreset, onAdd, onRemove }: { people: Person[]; mealSlots: MealSlot[]; onUpdate: (id: string, patch: Partial<Person>) => void; onMacro: (id: string, key: MacroKey, value: number) => void; onPreset: (id: string, preset: MacroPresetOption) => void; onAdd: () => void; onRemove: (id: string) => void }) {
   const presetOptions = Object.keys(macroPresetMeta) as MacroPresetOption[];
+  const [estimators, setEstimators] = useState<Record<string, boolean>>({});
   return <><StepIntro icon="◎" kicker="Для кого готовим" title="Люди и цели" text="Введите калории и выберите распределение — БЖУ пересчитаются автоматически." />{people.map((person, index) => {
     const plannedTargets = plannedTargetsFor(person);
     const calculatedCalories = macroCalories(person.daily);
@@ -824,7 +864,9 @@ function PeopleStep({ people, mealSlots, onUpdate, onMacro, onPreset, onAdd, onR
     const selectedPreset = person.macroPreset ?? "balanced";
     return <section className="person-editor glass-card" key={person.id}>
       <div className="person-editor-head"><span className={`person-dot tone-${index}`}>{person.name.slice(0, 1) || index + 1}</span><label>Имя<input value={person.name} onChange={(event) => onUpdate(person.id, { name: event.target.value })} /></label>{people.length > 1 && <button className="delete-person" onClick={() => onRemove(person.id)} aria-label={`Удалить ${person.name}`}>×</button>}</div>
-      <div className="macro-inputs">{(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => <label key={key} className={key === "kcal" ? "calorie-input" : ""}><span>{macroLabels[key]}</span><input aria-label={key === "kcal" ? `Калории для ${person.name}` : `${macroLabels[key]} для ${person.name}`} type="number" min="0" inputMode="numeric" value={person.daily[key]} onChange={(event) => onMacro(person.id, key, Number(event.target.value))} /><small>{key === "kcal" ? "ккал" : "г"}</small></label>)}</div>
+      <button className="secondary-button" aria-expanded={Boolean(estimators[person.id])} onClick={() => setEstimators((current) => ({ ...current, [person.id]: !current[person.id] }))}>Рассчитать мою норму</button>
+      {estimators[person.id] && <GoalEstimator person={person} onApply={(estimate, daily) => { onUpdate(person.id, { estimate, daily, macroPreset: "custom" }); setEstimators((current) => ({ ...current, [person.id]: false })); }} />}
+      <div className="macro-inputs">{(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => <label key={key} className={key === "kcal" ? "calorie-input" : ""}><span>{macroLabels[key]}</span><MacroNumberInput ariaLabel={key === "kcal" ? `Калории для ${person.name}` : `${macroLabels[key]} для ${person.name}`} value={person.daily[key]} onValueChange={(value) => onMacro(person.id, key, value)} /><small>{key === "kcal" ? "ккал" : "г"}</small></label>)}</div>
       <div className="macro-presets"><div className="macro-preset-heading"><p><b>Распределить калории</b><small>При изменении калорий БЖУ обновятся сами</small></p>{selectedPreset === "custom" && <em>Вручную</em>}</div><div className="macro-preset-grid" role="radiogroup" aria-label={`Распределение калорий для ${person.name}`}>{presetOptions.map((preset) => { const meta = macroPresetMeta[preset]; const selected = selectedPreset === preset; return <button key={preset} className={selected ? "selected" : ""} role="radio" aria-checked={selected} onClick={() => onPreset(person.id, preset)}><b>{meta.label}</b><small>{meta.description}</small></button>; })}</div><p className="macro-preset-note">Доли считаются от калорий. Это ориентир, не медицинская рекомендация; любое БЖУ можно поправить вручную.</p></div>
       {mismatch && <p className="inline-warning">Калории и БЖУ отличаются больше чем на 10% — выберите профиль ещё раз или проверьте ручные значения.</p>}
       <div className="person-slots"><p>Что из плана ест {person.name || "человек"}</p><div>{mealSlots.map((slot) => { const active = person.includedSlots.includes(slot); return <button key={slot} role="checkbox" aria-checked={active} className={active ? "selected" : ""} onClick={() => onUpdate(person.id, { includedSlots: active ? person.includedSlots.filter((item) => item !== slot) : [...person.includedSlots, slot] })}>{active ? "✓ " : "+ "}{mealMeta[slot].short}</button>; })}</div></div>
@@ -832,6 +874,39 @@ function PeopleStep({ people, mealSlots, onUpdate, onMacro, onPreset, onAdd, onR
       <DailyBalance goal={person.daily} planned={plannedTargets} context="В выбранных позициях" />
     </section>;
   })}<button className="add-person glass-card" disabled={people.length >= 4} onClick={onAdd}><span>＋</span><div><b>Добавить человека</b><small>До четырёх профилей в одном плане</small></div></button></>;
+}
+
+function GoalEstimator({ person, onApply }: { person: Person; onApply: (estimate: NutritionWizardInput, daily: Macros) => void }) {
+  const saved = person.estimate;
+  const [draft, setDraft] = useState<NutritionWizardInput>(() => ({
+    sex: saved?.sex ?? "male",
+    age: saved?.age ?? 30,
+    height: saved?.height ?? 178,
+    weight: saved?.weight ?? 78,
+    activity: saved?.activity ?? "medium",
+    musclePriority: saved?.musclePriority ?? false,
+    goal: saved?.goal ?? "loss",
+    monthlyWeightChangeKg: saved?.monthlyWeightChangeKg ?? 1,
+  }));
+  const calculation = calculateNutritionTarget(draft);
+  const result = "target" in calculation ? calculation as NutritionCalculation : null;
+  const updateNumber = (key: "age" | "height" | "weight" | "monthlyWeightChangeKg", value: string) => setDraft((current) => ({ ...current, [key]: Number(value) }));
+  return <section className="glass-card" aria-label="Расчёт ориентировочной нормы">
+    <p><b>Ориентировочный расчёт</b><small>По Mifflin–St Jeor и выбранной активности; это не медицинская рекомендация.</small></p>
+    <div role="group" aria-label="Пол">{(["male", "female"] as Sex[]).map((sex) => <button key={sex} className={draft.sex === sex ? "selected" : ""} aria-pressed={draft.sex === sex} onClick={() => setDraft((current) => ({ ...current, sex }))}>{sex === "male" ? "Мужчина" : "Женщина"}</button>)}</div>
+    <div className="macro-inputs">
+      <label><span>Возраст</span><input aria-label="Возраст" type="number" inputMode="numeric" min="18" max="100" value={draft.age || ""} onChange={(event) => updateNumber("age", event.target.value)} /><small>лет</small></label>
+      <label><span>Рост</span><input aria-label="Рост" type="number" inputMode="numeric" min="120" max="230" value={draft.height || ""} onChange={(event) => updateNumber("height", event.target.value)} /><small>см</small></label>
+      <label><span>Вес</span><input aria-label="Вес" type="number" inputMode="decimal" min="35" max="300" value={draft.weight || ""} onChange={(event) => updateNumber("weight", event.target.value)} /><small>кг</small></label>
+    </div>
+    <label><span>Активность</span><select value={draft.activity} onChange={(event) => setDraft((current) => ({ ...current, activity: event.target.value as ActivityKey }))}>{(Object.keys(activityMeta) as ActivityKey[]).map((key) => <option value={key} key={key}>{activityMeta[key].label}</option>)}</select></label>
+    <button type="button" className={draft.musclePriority ? "selected" : ""} aria-pressed={draft.musclePriority} onClick={() => setDraft((current) => ({ ...current, musclePriority: !current.musclePriority }))}>{draft.musclePriority ? "✓ " : ""}Тренируюсь / важно сохранить мышцы</button>
+    <label><span>Цель</span><select value={draft.goal} onChange={(event) => setDraft((current) => ({ ...current, goal: event.target.value as NutritionGoal }))}>{(Object.keys(goalMeta) as NutritionGoal[]).map((key) => <option value={key} key={key}>{goalMeta[key].label}</option>)}</select></label>
+    {draft.goal !== "maintenance" && <label><span>{draft.goal === "loss" ? "Снижать" : "Набирать"}, кг/месяц</span><input aria-label="Изменение веса в месяц" type="number" inputMode="decimal" min="0.1" max="12" step="0.1" value={draft.monthlyWeightChangeKg || ""} onChange={(event) => updateNumber("monthlyWeightChangeKg", event.target.value)} /></label>}
+    {result ? <p><b>{result.target.kcal} ккал</b><small>{result.target.protein} г белка · {result.target.fat} г жиров · {result.target.carbs} г углеводов</small></p> : <p>Проверьте введённые параметры.</p>}
+    {calculation.issues.map((issue) => <p className="inline-warning" key={issue.code}>{issue.message}</p>)}
+    <button className="secondary-button" disabled={!result} onClick={() => { if (result) onApply(draft, result.target); }}>Использовать эту норму</button>
+  </section>;
 }
 
 function CookingStep({ periodDays, cookEveryDays, remainder, decision, start, resolvedDays, canExtend, onDays, onDecision }: { periodDays: number; cookEveryDays: number; remainder: number; decision: "separate" | "extend" | "shorten" | null; start: string; resolvedDays: number; canExtend: boolean; onDays: (days: number) => void; onDecision: (value: "separate" | "extend" | "shorten") => void }) {
@@ -871,13 +946,27 @@ function RecipeView({ context, onBack, onChangePlan }: { context: RecipeContext;
   const savedTuning = person && batch && slot ? plan?.tuning?.[tuningKey(batch, slot, person)] : undefined;
   const [draft, setDraft] = useState<RecipeTuning>(savedTuning ?? automaticTuning);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [cookedWeights, setCookedWeights] = useState<Record<string, number>>({});
   const preview = person && slot ? portionFor(person, slot, recipe, draft) : null;
   const displayMacros: Macros = preview?.actual ?? { protein: round(recipe.macros.protein * draft.protein), fat: round(recipe.macros.fat * draft.fat), carbs: round(recipe.macros.carbs * draft.carbs), kcal: round(recipe.macros.kcal + recipe.macros.protein * (draft.protein - 1) * 4 + recipe.macros.fat * (draft.fat - 1) * 9 + recipe.macros.carbs * (draft.carbs - 1) * 4) };
   const freezeDays = batch && recipe.freezable ? Math.max(0, batch.days - recipe.storageDays) : 0;
   const originLabel = recipe.provenance.kind === "parsed" ? "Из источника" : "Сгенерирован и отредактирован";
+  const components = portionComponents(recipe);
+  const allocationPeople: PersonAllocation[] = batch && slot ? eaters.map((eater) => {
+    const portion = portionFor(eater, slot, recipe, eater.id === person?.id ? draft : plan?.tuning?.[tuningKey(batch, slot, eater)]);
+    return {
+      personId: eater.id,
+      label: eater.name,
+      portionCount: batch.days,
+      nutritionShare: Math.max(1, portion.grams * batch.days),
+      componentShares: Object.fromEntries(components.map((component) => [component.id, Math.max(1, component.ingredients.reduce((sum, ingredient) => sum + ingredient.quantity * ingredientScaleFor(ingredient, portion), 0) * batch.days)])),
+    };
+  }) : [];
+  const mixedAllocation = batch && slot && plan && components.length === 0 && cookedWeights.total > 0 ? allocateMixedDish(cookedWeights.total, allocationPeople) : null;
+  const componentAllocation = batch && slot && plan && components.length > 0 && components.every((component) => cookedWeights[component.id] > 0) ? allocateComponentDish(components.map((component) => ({ componentId: component.id, label: component.label, cookedWeightG: cookedWeights[component.id] })), allocationPeople) : null;
   function selectPerson(nextId: string) { setPersonId(nextId); const nextPerson = eaters.find((item) => item.id === nextId); if (!nextPerson || !batch || !slot) return; setDraft(plan?.tuning?.[tuningKey(batch, slot, nextPerson)] ?? portionFor(nextPerson, slot, recipe).ratios); setSaveStatus("idle"); }
   function updateDraft(key: keyof RecipeTuning, value: number) { setDraft((current) => ({ ...current, [key]: value })); setSaveStatus("idle"); }
   async function saveTuning() { if (!plan || !batch || !slot || !person || !onChangePlan) return; setSaveStatus("saving"); const next: ActivePlan = { ...plan, tuning: { ...plan.tuning, [tuningKey(batch, slot, person)]: draft } }; next.shopping = buildShopping(next); try { await onChangePlan(next); setSaveStatus("saved"); } catch { setSaveStatus("error"); } }
   function totalIngredientScale(ingredient: Ingredient) { if (!batch || !slot || !plan) return ingredientRatioFor(ingredient, draft); return eaters.reduce((sum, eater) => { const eaterTuning = eater.id === person?.id ? draft : plan.tuning?.[tuningKey(batch, slot, eater)]; return sum + ingredientScaleFor(ingredient, portionFor(eater, slot, recipe, eaterTuning)); }, 0) * batch.days; }
-  return <main className="app-shell recipe-detail"><div className="ambient ambient-one" /><header className="detail-header"><button className="icon-button glass" onClick={onBack} aria-label="Назад">‹</button><span className="glass">{recipe.effort.activeMinutes} мин активно · {recipe.time} всего</span></header><section className="detail-hero"><div className="detail-food glass"><span>{recipe.emoji}</span></div><p className="kicker">{mealMeta[recipe.slot].label} · {originLabel}</p><h1>{recipe.title}</h1><div className="detail-macros">{(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => <span key={key}><b>{displayMacros[key]}</b><small>{macroLabels[key]}{key === "kcal" ? "кал" : ""}</small></span>)}</div></section><section className="macro-tuner glass-card"><div className="tuner-heading"><div><p className="kicker">Гибкая порция</p><h2>Подстройка КБЖУ</h2></div>{person && <select aria-label="Для кого настроить порцию" value={person.id} onChange={(event) => selectPerson(event.target.value)}>{eaters.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</select>}</div><p className="tuner-copy">{person ? "База уже подогнана под цель. Здесь можно докрутить состав порции в разумных пределах." : "Попробуйте базовую порцию. В плане Mise начнёт с цели каждого человека."}</p><div className="tuner-controls">{([{ key: "protein", label: "Белковая часть", value: displayMacros.protein, range: recipe.flex.protein }, { key: "carbs", label: "Гарнир", value: displayMacros.carbs, range: recipe.flex.carbs }, { key: "fat", label: "Жиры и соус", value: displayMacros.fat, range: recipe.flex.fat }] as const).map((control) => <label key={control.key} aria-label={control.label}><span><b>{control.label}</b><em>{Math.round(draft[control.key] * 100)}% · {control.value} г</em></span><input type="range" min={control.range[0]} max={control.range[1]} step="0.05" value={draft[control.key]} onChange={(event) => updateDraft(control.key, Number(event.target.value))} /></label>)}</div><div className="tuner-actions"><button className="secondary-button" onClick={() => { setDraft(automaticTuning); setSaveStatus("idle"); }}>{person ? "Вернуть к цели" : "Сбросить"}</button>{person && <button className="primary-button" disabled={saveStatus === "saving"} onClick={saveTuning}>{saveStatus === "saving" ? "Сохраняем…" : saveStatus === "saved" ? "Сохранено ✓" : "Сохранить и пересчитать"}</button>}</div>{saveStatus === "error" && <p className="tuner-error" role="alert">Не удалось сохранить. Изменения не попали в план.</p>}</section><section className="recipe-info-grid"><article className="glass-card"><span>⌘</span><div><b>{recipe.effort.level === "low" ? "Низкая сложность" : "Высокая сложность"}</b><small>{recipe.effort.knifeActions} нарезки · {recipe.effort.cookware} ед. посуды · {recipe.effort.activeActions} действий</small></div></article><article className="glass-card"><span>◷</span><div><b>{recipe.effort.activeMinutes} мин активно</b><small>{recipe.time} мин общего времени</small></div></article></section><section className="detail-panel glass-card"><div className="detail-tabs"><button className={section === "ingredients" ? "selected" : ""} onClick={() => setSection("ingredients")}>Ингредиенты</button><button className={section === "steps" ? "selected" : ""} onClick={() => setSection("steps")}>Готовить</button><button className={section === "portion" ? "selected" : ""} onClick={() => setSection("portion")}>Разложить</button></div>{section === "ingredients" && <div className="detail-list"><div className="detail-note"><span>∑</span><p><b>{batch ? `На ${batch.days} дн. · ${eaters.length} чел.` : "На одну базовую порцию"}</b><small>Количество меняется вместе с рычагами КБЖУ</small></p></div>{recipe.ingredients.map((ingredient) => { const totalScale = totalIngredientScale(ingredient); return <div className="ingredient-row" key={ingredient.id}><span>✓</span><p>{ingredient.name}<small>{ingredient.group}</small></p><b>{ingredient.unit === "шт." ? round(ingredient.quantity * totalScale, 1) : round(ingredient.quantity * totalScale / 5) * 5} {ingredient.unit}</b></div>; })}</div>}{section === "steps" && <ol className="cooking-steps">{recipe.steps.map((text, index) => <li key={`${text}-${index}`}><span>{index + 1}</span><p>{text}</p></li>)}</ol>}{section === "portion" && <div className="portion-section">{batch && slot && plan ? <><div className="detail-note"><span>⌑</span><p><b>{batch.days} контейнера на человека</b><small>Подпишите имя, приём пищи и даты</small></p></div>{eaters.map((eater, index) => { const portion = portionFor(eater, slot, recipe, eater.id === person?.id ? draft : plan.tuning?.[tuningKey(batch, slot, eater)]); return <article className="portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3><p><b>{batch.days} × примерно {portion.grams} г</b></p><small>{portion.actual.kcal} К · {portion.actual.protein} Б · {portion.actual.fat} Ж · {portion.actual.carbs} У на контейнер</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>; })}<section className="storage-card"><span>{freezeDays > 0 ? "❄️" : "✓"}</span><div><h3>{freezeDays > 0 ? "Часть порций заморозить" : recipe.storage.ambient ? "Хранить в сухой банке" : "Хранить в холодильнике"}</h3><p>{freezeDays > 0 ? `Оставьте на ${recipe.storageDays} дня в холодильнике, ещё ${freezeDays} порц. каждого человека заморозьте.` : recipe.storage.ambient ?? `Ориентир для холодильника — до ${recipe.storageDays} дней.`}</p></div></section></> : <section className="detail-note"><span>◎</span><p><b>Точная раскладка появится в плане</b><small>Мы учтём КБЖУ и цели каждого человека.</small></p></section>}</div>}</section><RecipePackingGuide recipe={recipe} /><section className="recipe-storage glass-card"><p className="kicker">Ориентиры хранения</p><h2>{recipe.storage.ambient ? `Сухое хранение — до ${recipe.storageDays} дн.` : recipe.freezable ? `Холодильник ${recipe.storageDays} дн. или заморозка` : `Только холодильник — до ${recipe.storageDays} дн.`}</h2><p>{recipe.storage.ambient ?? recipe.storage.refrigerator}</p>{recipe.storage.freezer && <p><b>Морозилка{recipe.storage.freezerDays ? ` — до ${recipe.storage.freezerDays} дней` : ""}:</b> {recipe.storage.freezer}</p>}{recipe.storage.freezeParts && <p><b>Что замораживать:</b> {recipe.storage.freezeParts}</p>}{recipe.storage.thaw && <p><b>Как разморозить:</b> {recipe.storage.thaw}</p>}<small>Сроки — консервативные ориентиры, а не гарантия.</small></section><section className="recipe-source glass-card"><p className="kicker">Происхождение</p><h2>{originLabel}</h2>{recipe.provenance.kind === "parsed" ? <><a href={recipe.provenance.sourceUrl} target="_blank" rel="noreferrer">{recipe.provenance.sourceTitle} ↗</a>{recipe.provenance.adaptation && <p>Адаптация для Mise: {recipe.provenance.adaptation}</p>}<small>Найдено по запросу «{recipe.provenance.sourceQuery}».</small></> : <><p>Рецепт собран для курированного каталога Mise.</p><small>{recipe.provenance.basedOn?.length ? `Опирается на ${recipe.provenance.basedOn.length} отобранных источника.` : "Без внешнего рецепта-прототипа."}</small></>}</section></main>;
+  return <main className="app-shell recipe-detail"><div className="ambient ambient-one" /><header className="detail-header"><button className="icon-button glass" onClick={onBack} aria-label="Назад">‹</button><span className="glass">{recipe.effort.activeMinutes} мин активно · {recipe.time} всего</span></header><section className="detail-hero"><div className="detail-food glass"><span>{recipe.emoji}</span></div><p className="kicker">{mealMeta[recipe.slot].label} · {originLabel}</p><h1>{recipe.title}</h1><div className="detail-macros">{(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => <span key={key}><b>{displayMacros[key]}</b><small>{macroLabels[key]}{key === "kcal" ? "кал" : ""}</small></span>)}</div></section><section className="macro-tuner glass-card"><div className="tuner-heading"><div><p className="kicker">Гибкая порция</p><h2>Подстройка КБЖУ</h2></div>{person && <select aria-label="Для кого настроить порцию" value={person.id} onChange={(event) => selectPerson(event.target.value)}>{eaters.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</select>}</div><p className="tuner-copy">{person ? "База уже подогнана под цель. Здесь можно докрутить состав порции в разумных пределах." : "Попробуйте базовую порцию. В плане Mise начнёт с цели каждого человека."}</p><div className="tuner-controls">{([{ key: "protein", label: "Белковая часть", value: displayMacros.protein, range: recipe.flex.protein }, { key: "carbs", label: "Гарнир", value: displayMacros.carbs, range: recipe.flex.carbs }, { key: "fat", label: "Жиры и соус", value: displayMacros.fat, range: recipe.flex.fat }] as const).map((control) => <label key={control.key} aria-label={control.label}><span><b>{control.label}</b><em>{Math.round(draft[control.key] * 100)}% · {control.value} г</em></span><input type="range" min={control.range[0]} max={control.range[1]} step="0.05" value={draft[control.key]} onChange={(event) => updateDraft(control.key, Number(event.target.value))} /></label>)}</div><div className="tuner-actions"><button className="secondary-button" onClick={() => { setDraft(automaticTuning); setSaveStatus("idle"); }}>{person ? "Вернуть к цели" : "Сбросить"}</button>{person && <button className="primary-button" disabled={saveStatus === "saving"} onClick={saveTuning}>{saveStatus === "saving" ? "Сохраняем…" : saveStatus === "saved" ? "Сохранено ✓" : "Сохранить и пересчитать"}</button>}</div>{saveStatus === "error" && <p className="tuner-error" role="alert">Не удалось сохранить. Изменения не попали в план.</p>}</section><section className="recipe-info-grid"><article className="glass-card"><span>⌘</span><div><b>{recipe.effort.level === "low" ? "Низкая сложность" : "Высокая сложность"}</b><small>{recipe.effort.knifeActions} нарезки · {recipe.effort.cookware} ед. посуды · {recipe.effort.activeActions} действий</small></div></article><article className="glass-card"><span>◷</span><div><b>{recipe.effort.activeMinutes} мин активно</b><small>{recipe.time} мин общего времени</small></div></article></section><section className="detail-panel glass-card"><div className="detail-tabs"><button className={section === "ingredients" ? "selected" : ""} onClick={() => setSection("ingredients")}>Ингредиенты</button><button className={section === "steps" ? "selected" : ""} onClick={() => setSection("steps")}>Готовить</button><button className={section === "portion" ? "selected" : ""} onClick={() => setSection("portion")}>Разложить</button></div>{section === "ingredients" && <div className="detail-list"><div className="detail-note"><span>∑</span><p><b>{batch ? `На ${batch.days} дн. · ${eaters.length} чел.` : "На одну базовую порцию"}</b><small>Количество меняется вместе с рычагами КБЖУ</small></p></div>{recipe.ingredients.map((ingredient) => { const totalScale = totalIngredientScale(ingredient); return <div className="ingredient-row" key={ingredient.id}><span>✓</span><p>{ingredient.name}<small>{ingredient.group}</small></p><b>{ingredient.unit === "шт." ? round(ingredient.quantity * totalScale, 1) : round(ingredient.quantity * totalScale / 5) * 5} {ingredient.unit}</b></div>; })}</div>}{section === "steps" && <ol className="cooking-steps">{recipe.steps.map((text, index) => <li key={`${text}-${index}`}><span>{index + 1}</span><p>{text}</p></li>)}</ol>}{section === "portion" && <div className="portion-section">{batch && slot && plan ? <><div className="detail-note"><span>1</span><p><b>Один раз взвесьте готовую партию</b><small>Mise рассчитает точные граммы; ежедневно перевзвешивать еду не нужно.</small></p></div>{components.length === 0 ? <label><span>Фактический вес всего блюда</span><input aria-label="Фактический вес готового блюда" type="number" inputMode="numeric" min="1" value={cookedWeights.total || ""} onChange={(event) => setCookedWeights({ total: Number(event.target.value) })} /><small>г</small></label> : <div><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label key={component.id}><span>{component.label}</span><input aria-label={`Фактический вес: ${component.label}`} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) }))} /><small>г</small></label>)}</div>}{!mixedAllocation && !componentAllocation && <p role="status">Введите {components.length ? "вес каждого компонента" : "вес блюда"}, чтобы увидеть точную раскладку.</p>}{mixedAllocation?.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3>{allocation.perContainerG.map((grams, containerIndex) => <p key={containerIndex}><b>Контейнер {containerIndex + 1}: {grams} г</b></p>)}<em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}{componentAllocation && eaters.map((eater, index) => <article className="portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{Array.from({ length: batch.days }, (_, containerIndex) => <p key={containerIndex}><b>Контейнер {containerIndex + 1}: </b>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return `${component.label} ${allocation?.perContainerG[containerIndex] ?? 0} г`; }).join(" · ")}</p>)}<em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}<section className="storage-card"><span>{freezeDays > 0 ? "❄️" : "✓"}</span><div><h3>{freezeDays > 0 ? "Часть порций заморозить" : recipe.storage.ambient ? "Хранить в сухой банке" : "Хранить в холодильнике"}</h3><p>{freezeDays > 0 ? `Оставьте на ${recipe.storageDays} дня в холодильнике, ещё ${freezeDays} порц. каждого человека заморозьте.` : recipe.storage.ambient ?? `Ориентир для холодильника — до ${recipe.storageDays} дней.`}</p></div></section></> : <section className="detail-note"><span>◎</span><p><b>Точная раскладка появится в плане</b><small>Мы учтём КБЖУ и цели каждого человека.</small></p></section>}</div>}</section><RecipePackingGuide recipe={recipe} /><section className="recipe-storage glass-card"><p className="kicker">Ориентиры хранения</p><h2>{recipe.storage.ambient ? `Сухое хранение — до ${recipe.storageDays} дн.` : recipe.freezable ? `Холодильник ${recipe.storageDays} дн. или заморозка` : `Только холодильник — до ${recipe.storageDays} дн.`}</h2><p>{recipe.storage.ambient ?? recipe.storage.refrigerator}</p>{recipe.storage.freezer && <p><b>Морозилка{recipe.storage.freezerDays ? ` — до ${recipe.storage.freezerDays} дней` : ""}:</b> {recipe.storage.freezer}</p>}{recipe.storage.freezeParts && <p><b>Что замораживать:</b> {recipe.storage.freezeParts}</p>}{recipe.storage.thaw && <p><b>Как разморозить:</b> {recipe.storage.thaw}</p>}<small>Сроки — консервативные ориентиры, а не гарантия.</small></section><section className="recipe-source glass-card"><p className="kicker">Происхождение</p><h2>{originLabel}</h2>{recipe.provenance.kind === "parsed" ? <><a href={recipe.provenance.sourceUrl} target="_blank" rel="noreferrer">{recipe.provenance.sourceTitle} ↗</a>{recipe.provenance.adaptation && <p>Адаптация для Mise: {recipe.provenance.adaptation}</p>}<small>Найдено по запросу «{recipe.provenance.sourceQuery}».</small></> : <><p>Рецепт собран для курированного каталога Mise.</p><small>{recipe.provenance.basedOn?.length ? `Опирается на ${recipe.provenance.basedOn.length} отобранных источника.` : "Без внешнего рецепта-прототипа."}</small></>}</section></main>;
 }
