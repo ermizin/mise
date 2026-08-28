@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { countRu } from "./format";
-import { Icon } from "./icon";
 
 export type NotificationPlan = {
   id: string;
@@ -209,7 +208,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
   </div> : null;
 
   return <section className="notification-setup" aria-labelledby="notifications-title">
-    <div className="notification-heading"><span><Icon name="bell" /></span><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
+    <div className="notification-heading"><span>🔔</span><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
     <div className="reminder-list glass-card">
       <ReminderToggle active={toggles.shopping} title="Проверить покупки" note="Накануне каждой готовки, в то же время" onClick={() => toggle("shopping")} />
       <ReminderToggle active={toggles.cooking} title="Приготовить партию" note={countRu(plan.batches.length, "готовка", "готовки", "готовок")} onClick={() => toggle("cooking")} />
