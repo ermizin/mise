@@ -13,8 +13,8 @@ test("Meal Prep Manual import contains 50 auditable candidates", () => {
 });
 
 test("editorial queue keeps promoted and pending candidates separate", () => {
-  assert.equal(candidates.filter((item) => item.editorialStatus === "promoted").length, 17);
-  assert.equal(candidates.filter((item) => item.editorialStatus === "pending").length, 33);
+  assert.equal(candidates.filter((item) => item.editorialStatus === "promoted").length, 28);
+  assert.equal(candidates.filter((item) => item.editorialStatus === "pending").length, 22);
 });
 
 test("imported candidates have macros, time and ingredient facts without copied instructions", () => {

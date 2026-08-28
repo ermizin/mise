@@ -914,7 +914,7 @@
         "excludeSuggested": false,
         "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-28083",
@@ -1040,7 +1040,7 @@
         "excludeSuggested": false,
         "reviewNote": "Проверить перевод, хранение и КБЖУ."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-27802",
@@ -1648,7 +1648,7 @@
         "excludeSuggested": false,
         "reviewNote": "Проверить перевод, хранение и КБЖУ."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-27287",
@@ -1750,7 +1750,7 @@
         "excludeSuggested": false,
         "reviewNote": "Проверить перевод, хранение и КБЖУ."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-27270",
@@ -1912,7 +1912,7 @@
         "excludeSuggested": false,
         "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-27230",
@@ -2116,7 +2116,7 @@
         "excludeSuggested": false,
         "reviewNote": "Проверить перевод, хранение и КБЖУ."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-26996",
@@ -2282,7 +2282,7 @@
         "excludeSuggested": false,
         "reviewNote": "Проверить перевод, хранение и КБЖУ."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-26965",
@@ -2808,7 +2808,7 @@
         "excludeSuggested": true,
         "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-26720",
@@ -2940,7 +2940,7 @@
         "excludeSuggested": false,
         "reviewNote": "Проверить перевод, хранение и КБЖУ."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-26689",
@@ -3512,7 +3512,7 @@
         "excludeSuggested": false,
         "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-26583",
@@ -3978,7 +3978,7 @@
         "excludeSuggested": false,
         "reviewNote": "Нужна замена редкого продукта, перца, зелени или соуса."
       },
-      "editorialStatus": "pending"
+      "editorialStatus": "promoted"
     },
     {
       "id": "tmpm-26514",
