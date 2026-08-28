@@ -90,7 +90,7 @@ test("generated paleo and keto recipes keep their strict ingredient rules", () =
 
 test("parsed recipes keep auditable source and adaptation metadata", () => {
   const parsed = recipes.filter((item) => item.provenance.kind === "parsed");
-  assert.equal(parsed.length, 31);
+  assert.equal(parsed.length, 39);
   for (const item of parsed) {
     assert.match(item.provenance.sourceUrl, /^https:\/\//);
     assert.ok(item.provenance.sourceTitle.length > 0);
@@ -100,7 +100,7 @@ test("parsed recipes keep auditable source and adaptation metadata", () => {
 
 test("source photos and localization notes are attached to imported recipes", () => {
   const withPhotos = recipes.filter((item) => item.provenance.kind === "parsed" && item.provenance.imageUrl);
-  assert.equal(withPhotos.length, 21);
+  assert.equal(withPhotos.length, 29);
   assert.ok(withPhotos.every((item) => item.provenance.imageAlt && item.provenance.sourceUrl));
   for (const id of ["src-taco-mac", "src-teriyaki-tray", "src-halal-chicken"]) {
     const item = recipes.find((candidate) => candidate.id === id);
@@ -122,6 +122,32 @@ test("editorial promotion fixes unit-sized macros and obvious slot mistakes", ()
   assert.match(granola.storage.ambient, /сухой герметичной банке/i);
   assert.equal(massOats.macros.kcal, 490);
   assert.ok([nuggets, rolls, granola, massOats].every((item) => item.provenance.kind === "parsed" && item.provenance.adaptation));
+});
+
+test("new Meal Prep Manual recipes keep reviewed portions, localization and storage", () => {
+  const ids = [
+    "src-sausage-pepper-pasta",
+    "src-honey-lime-steak",
+    "src-chile-lime-chicken",
+    "src-light-stroganoff",
+    "src-sriracha-lime-chicken",
+    "src-bbq-burger-bowl",
+    "src-red-pepper-chicken-dip",
+    "src-beefy-cheese-potatoes",
+  ];
+  const promoted = ids.map((id) => recipes.find((item) => item.id === id));
+  assert.ok(promoted.every(Boolean));
+  assert.ok(promoted.every((item) => item.provenance.kind === "parsed" && item.provenance.imageUrl && item.provenance.adaptation));
+
+  const stroganoff = promoted.find((item) => item.id === "src-light-stroganoff");
+  assert.equal(stroganoff.macros.kcal, 507);
+  assert.equal(stroganoff.macros.protein, 40);
+  assert.match(stroganoff.provenance.adaptation, /пополам/i);
+
+  const dip = promoted.find((item) => item.id === "src-red-pepper-chicken-dip");
+  assert.equal(dip.macros.kcal, 218);
+  assert.equal(dip.freezable, false);
+  assert.match(dip.storage.refrigerator, /3 суток/i);
 });
 
 test("every recipe has bounded flexibility, effort and storage guidance", () => {
