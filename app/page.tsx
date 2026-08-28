@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   NotificationSetupPanel,
   type NotificationPlan,
 } from "./notification-setup";
+import { Icon, type IconName } from "./ui/icon";
+import { plural, withPlural, FORMS } from "@/lib/plural";
 import { MacroNumberInput } from "@/components/macro-number-input";
 import {
   allocateComponentDish,
@@ -224,28 +227,21 @@ const mealMeta: Record<
   snack1: { label: "Перекус 1", short: "Перекус 1", icon: "🍏" },
   snack2: { label: "Перекус 2", short: "Перекус 2", icon: "🥛" },
 };
-const styleMeta: Record<
-  MenuStyle,
-  { label: string; icon: string; description: string }
-> = {
+const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
   protein: {
     label: "Высокобелковое",
-    icon: "💪",
     description: "Больше белка для сытости и восстановления",
   },
   budget: {
     label: "Бюджетное",
-    icon: "◒",
     description: "Простые продукты и разумная стоимость",
   },
   paleo: {
     label: "Палео",
-    icon: "🌿",
     description: "Мясо, рыба, овощи — без зерновых",
   },
   keto: {
     label: "Кето",
-    icon: "🥑",
     description: "Меньше углеводов, больше полезных жиров",
   },
 };
@@ -4547,21 +4543,19 @@ export default function Home() {
         />
       )}
       {activePlan && notificationSetupOpen && (
-        <div className="modal-backdrop">
-          <section
-            className="success-sheet glass notification-modal"
-            role="dialog"
-            aria-modal="true"
-          >
-            <NotificationSetupPanel
-              plan={notificationPlanFor(activePlan)}
-              clientId={clientId()}
-              deviceId={deviceId()}
-              onDone={() => setNotificationSetupOpen(false)}
-              onCancel={() => setNotificationSetupOpen(false)}
-            />
-          </section>
-        </div>
+        <Sheet
+          titleId="notifications-title"
+          onClose={() => setNotificationSetupOpen(false)}
+          className="success-sheet glass notification-modal"
+        >
+          <NotificationSetupPanel
+            plan={notificationPlanFor(activePlan)}
+            clientId={clientId()}
+            deviceId={deviceId()}
+            onDone={() => setNotificationSetupOpen(false)}
+            onCancel={() => setNotificationSetupOpen(false)}
+          />
+        </Sheet>
       )}
       <BottomNav tab={tab} onNavigate={navigate} />
     </main>
@@ -4618,18 +4612,18 @@ function OnboardingScreen({
         <section className="onboarding-welcome">
           <div className="onboarding-visual" aria-hidden>
             <div className="visual-card visual-week">
-              <span>▦</span>
+              <Icon name="calendar" />
               <small>7 дней</small>
             </div>
             <div className="visual-card visual-shopping">
-              <span>⌑</span>
+              <Icon name="basket" />
               <small>покупки</small>
             </div>
             <div className="visual-dish">
               <span>🍲</span>
             </div>
             <div className="visual-card visual-prep">
-              <span>♨</span>
+              <Icon name="pot" />
               <small>готовка</small>
             </div>
           </div>
@@ -4644,7 +4638,7 @@ function OnboardingScreen({
             каждого человека.
           </p>
           <div className="onboarding-time glass-card">
-            <span>◷</span>
+            <Icon name="clock" />
             <p>
               <b>Первый план — около 5–10 минут</b>
               <small>
@@ -4654,7 +4648,7 @@ function OnboardingScreen({
           </div>
           <div className="onboarding-actions">
             <button className="primary-button" onClick={onNext}>
-              Показать, что получится <span>→</span>
+              Показать, что получится <Icon name="chevron" size={16} />
             </button>
             <button className="text-button" onClick={onFinish}>
               {hasPlan ? "Вернуться к плану" : "Составить план сразу"}
@@ -4675,7 +4669,9 @@ function OnboardingScreen({
           <div className="result-cards">
             <article className="result-card glass-card">
               <span className="result-number">1</span>
-              <div className="result-icon result-week">▦</div>
+              <div className="result-icon result-week">
+                <Icon name="calendar" />
+              </div>
               <div>
                 <h2>План недели</h2>
                 <p>Что есть каждый день и когда готовить следующую партию.</p>
@@ -4683,7 +4679,9 @@ function OnboardingScreen({
             </article>
             <article className="result-card glass-card">
               <span className="result-number">2</span>
-              <div className="result-icon result-shopping">⌑</div>
+              <div className="result-icon result-shopping">
+                <Icon name="basket" />
+              </div>
               <div>
                 <h2>Общие покупки</h2>
                 <p>Один список с количествами для всех людей и всех блюд.</p>
@@ -4691,7 +4689,9 @@ function OnboardingScreen({
             </article>
             <article className="result-card glass-card">
               <span className="result-number">3</span>
-              <div className="result-icon result-prep">♨</div>
+              <div className="result-icon result-prep">
+                <Icon name="pot" />
+              </div>
               <div>
                 <h2>Готовка и контейнеры</h2>
                 <p>Шаги, порции и подписи: имя, дата и приём пищи.</p>
@@ -4711,7 +4711,7 @@ function OnboardingScreen({
           <div className="onboarding-actions">
             <button className="primary-button" onClick={onFinish}>
               {hasPlan ? "Вернуться к плану" : "Составить первый план"}{" "}
-              <span>→</span>
+              <Icon name="chevron" size={16} />
             </button>
             <button className="text-button" onClick={onBack}>
               Назад
@@ -4807,9 +4807,15 @@ function PrepGuideOffer({
       <section className="prep-offer">
         <div className="prep-offer-visual" aria-hidden>
           <div className="prep-offer-main">🥣</div>
-          <span className="prep-float prep-float-containers">▤ Контейнеры</span>
-          <span className="prep-float prep-float-cooking">♨ Готовка</span>
-          <span className="prep-float prep-float-labels">✎ Подписи</span>
+          <span className="prep-float prep-float-containers">
+            <Icon name="container" /> Контейнеры
+          </span>
+          <span className="prep-float prep-float-cooking">
+            <Icon name="pot" /> Готовка
+          </span>
+          <span className="prep-float prep-float-labels">
+            <Icon name="edit" /> Подписи
+          </span>
         </div>
         <p className="kicker">Перед первым милпрепом</p>
         <h1>
@@ -4829,7 +4835,7 @@ function PrepGuideOffer({
         </div>
         <div className="onboarding-actions">
           <button className="primary-button" onClick={onShow}>
-            Да, показать <span>→</span>
+            Да, показать <Icon name="chevron" size={16} />
           </button>
           <button className="text-button" onClick={onSkip}>
             {hasPlan ? "Вернуться к плану" : "Нет, составить план"}
@@ -4849,24 +4855,24 @@ function MealPrepGuide({
   onBack: () => void;
   onFinish: () => void;
 }) {
-  const steps = [
+  const steps: { icon: IconName; title: string; text: string }[] = [
     {
-      icon: "▤",
+      icon: "container",
       title: "Подготовьте контейнеры",
       text: "По одному контейнеру на каждую порцию, подходящие крышки и наклейки или маркер для подписей.",
     },
     {
-      icon: "♨",
+      icon: "pot",
       title: "Готовьте партиями",
       text: "Сверьтесь со списком покупок, начните с самых долгих блюд и следуйте шагам в карточках рецептов.",
     },
     {
-      icon: "◎",
+      icon: "fridge",
       title: "Охладите и разложите",
       text: "Не держите готовую еду надолго в тепле. Разделите её по рассчитанным Mise порциям.",
     },
     {
-      icon: "❄",
+      icon: "snowflake",
       title: "Подпишите и уберите",
       text: "Укажите имя, дату и приём пищи. Ближние порции храните в холодильнике, остальные заморозьте по подсказке плана.",
     },
@@ -4896,7 +4902,9 @@ function MealPrepGuide({
           {steps.map((item, index) => (
             <article className="prep-guide-card glass-card" key={item.title}>
               <span className="prep-step-number">{index + 1}</span>
-              <div className="prep-step-icon">{item.icon}</div>
+              <div className="prep-step-icon">
+                <Icon name={item.icon} />
+              </div>
               <div>
                 <h2>{item.title}</h2>
                 <p>{item.text}</p>
@@ -4917,7 +4925,7 @@ function MealPrepGuide({
         <div className="onboarding-actions">
           <button className="primary-button" onClick={onFinish}>
             {hasPlan ? "Вернуться к плану" : "Составить первый план"}{" "}
-            <span>→</span>
+            <Icon name="chevron" size={16} />
           </button>
           <button className="text-button" onClick={onBack}>
             Назад
@@ -4925,64 +4933,6 @@ function MealPrepGuide({
         </div>
       </section>
     </main>
-  );
-}
-
-type IconName =
-  | "calendar"
-  | "pot"
-  | "basket"
-  | "person"
-  | "plus"
-  | "chevron"
-  | "check"
-  | "clock";
-const iconPaths: Record<IconName, string[]> = {
-  calendar: [
-    "M4 7.5A2.5 2.5 0 0 1 6.5 5h11A2.5 2.5 0 0 1 20 7.5v10A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5z",
-    "M4 10h16",
-    "M8.5 3v4",
-    "M15.5 3v4",
-  ],
-  pot: [
-    "M5 10h14v5.5A3.5 3.5 0 0 1 15.5 19h-7A3.5 3.5 0 0 1 5 15.5z",
-    "M3 12h2",
-    "M19 12h2",
-    "M9.5 3.5c0 1.6 1 1.6 1 3",
-    "M14 3.5c0 1.6 1 1.6 1 3",
-  ],
-  basket: [
-    "M4 9h16l-1.4 9.1A2 2 0 0 1 16.6 20H7.4a2 2 0 0 1-2-1.9z",
-    "M8.5 9 12 3.5 15.5 9",
-    "M10 13v3",
-    "M14 13v3",
-  ],
-  person: [
-    "M12 12.5a4.2 4.2 0 1 0 0-8.5 4.2 4.2 0 0 0 0 8.5z",
-    "M4.8 20.5c0-3.5 3.2-5.8 7.2-5.8s7.2 2.3 7.2 5.8",
-  ],
-  plus: ["M12 5.5v13", "M5.5 12h13"],
-  chevron: ["m9.5 5.5 6.5 6.5-6.5 6.5"],
-  check: ["m5 12.5 4.6 4.6L19 7.5"],
-  clock: ["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z", "M12 7.2v5.1l3.4 2"],
-};
-function Icon({ name, className }: { name: IconName; className?: string }) {
-  return (
-    <svg
-      className={className ? `icon ${className}` : "icon"}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      focusable="false"
-    >
-      {iconPaths[name].map((d) => (
-        <path key={d} d={d} />
-      ))}
-    </svg>
   );
 }
 
@@ -5043,14 +4993,12 @@ function EmptyState({
 }) {
   return (
     <section className="empty-state glass-card">
-      <div className="empty-orbit">
-        <span>✦</span>
-      </div>
+      <div className="empty-orbit" aria-hidden />
       <p className="kicker">Персональный милпреп</p>
       <h2>{title}</h2>
       <p>{text}</p>
       <button className="primary-button" onClick={onBuild}>
-        Составить план <span>→</span>
+        Составить план <Icon name="chevron" size={16} />
       </button>
     </section>
   );
@@ -5153,7 +5101,7 @@ function WeekScreen({
     return (
       <section className="empty-state glass-card" role="alert">
         <div className="empty-orbit">
-          <span>↻</span>
+          <Icon name="repeat" />
         </div>
         <p className="kicker">Данные на месте</p>
         <h2>План пока не загрузился</h2>
@@ -5162,7 +5110,7 @@ function WeekScreen({
           показывать пустую неделю вместо ошибки.
         </p>
         <button className="primary-button" onClick={() => location.reload()}>
-          Повторить <span>→</span>
+          Повторить <Icon name="chevron" size={16} />
         </button>
       </section>
     );
@@ -5257,7 +5205,7 @@ function WeekScreen({
           </p>
           <div className="today-actions">
             <button className="primary-button" onClick={onRepeat}>
-              Повторить план <span>→</span>
+              Повторить план <Icon name="chevron" size={16} />
             </button>
             <button className="secondary-button" onClick={onBuild}>
               Составить новый
@@ -5314,7 +5262,12 @@ function WeekScreen({
           )}
         </section>
       )}
-      <div className="date-strip" ref={stripRef} aria-label="Дни плана">
+      <div
+        className="date-strip"
+        ref={stripRef}
+        role="tablist"
+        aria-label="Дни плана"
+      >
         {dates.map((date) => {
           const dateBatch = batchFor(date);
           const isFirstOfBatch =
@@ -5322,8 +5275,9 @@ function WeekScreen({
           return (
             <button
               key={date}
+              role="tab"
               data-selected={date === selectedDate}
-              aria-pressed={date === selectedDate}
+              aria-selected={date === selectedDate}
               className={`${date === selectedDate ? "selected" : ""} ${date === today ? "is-today" : ""} ${isFirstOfBatch ? "batch-start" : ""}`}
               onClick={() => setSelectedDate(date)}
               aria-label={`${formatDate(date, true)}${date === today ? ", сегодня" : ""}${dateBatch.start === date ? `, начало готовки ${dateBatch.index + 1}` : ""}`}
@@ -5386,7 +5340,7 @@ function WeekScreen({
           <p>
             {batch.days}{" "}
             {batch.days === 1 ? "день" : batch.days < 5 ? "дня" : "дней"} ·{" "}
-            {dayMeals.length} блюд
+            {withPlural(dayMeals.length, FORMS.dish)}
           </p>
         </div>
         <Icon name="chevron" className="soft-chevron" />
@@ -5413,7 +5367,13 @@ function WeekScreen({
         disabled={confirmedBatchIds.includes(batch.id)}
         onClick={() => void confirmBatch()}
       >
-        <span>{confirmedBatchIds.includes(batch.id) ? "✓" : "♨"}</span>
+        <span>
+          {confirmedBatchIds.includes(batch.id) ? (
+            <Icon name="check" />
+          ) : (
+            <Icon name="pot" />
+          )}
+        </span>
         <div>
           <b>
             {confirmedBatchIds.includes(batch.id)
@@ -5552,7 +5512,7 @@ function RecipesScreen({
       <div className="section-heading">
         <div>
           <p className="kicker">
-            {visible.length} {visible.length === 1 ? "вариант" : "вариантов"}
+            {withPlural(visible.length, FORMS.option)}
           </p>
           <h2>{mealMeta[slot].label}</h2>
         </div>
@@ -5617,14 +5577,16 @@ function RecipesScreen({
                     </span>
                   )}
                 </div>
-                <span className="round-arrow">↗</span>
+                <span className="round-arrow">
+                  <Icon name="chevron" />
+                </span>
               </button>
             );
           })}
         </div>
       ) : (
         <section className="catalog-empty glass-card">
-          <span>⌕</span>
+          <Icon name="search" />
           <h3>Пока нет совпадений</h3>
           <p>Смените время, сложность или приём пищи.</p>
         </section>
@@ -5753,7 +5715,8 @@ function ShoppingScreen({
             <button
               className={`grocery-row ${item.checked ? "checked" : ""}`}
               key={item.key}
-              aria-pressed={item.checked}
+              role="checkbox"
+              aria-checked={item.checked}
               onClick={() => void toggle(item.key)}
             >
               <span className="checkmark">
@@ -5864,7 +5827,7 @@ function ProfileScreen({
           className="tutorial-entry notification-entry glass-card"
           onClick={onNotifications}
         >
-          <span>🔔</span>
+          <Icon name="bell" />
           <div>
             <b>Напоминания</b>
             <small>Время готовки, покупок и разморозки</small>
@@ -5884,7 +5847,7 @@ function ProfileScreen({
         className="tutorial-entry prep-tutorial-entry glass-card"
         onClick={onOpenPrepGuide}
       >
-        <span>♨</span>
+        <Icon name="pot" />
         <div>
           <b>Инструкция по милпрепу</b>
           <small>Контейнеры, готовка, раскладка и хранение</small>
@@ -6371,7 +6334,11 @@ function PlanBuilder({
                 : "Назад"
           }
         >
-          {mode === "settings" || step > initialStep ? "‹" : "×"}
+          {mode === "settings" || step > initialStep ? (
+            <Icon name="chevron-left" />
+          ) : (
+            <Icon name="close" />
+          )}
         </button>
         <div>
           {mode === "onboarding" && (
@@ -6541,7 +6508,7 @@ function PlanBuilder({
             disabled={!stepIsValid()}
             onClick={next}
           >
-            {step === 5 ? "Проверить план" : "Продолжить"} <span>→</span>
+            {step === 5 ? "Проверить план" : "Продолжить"} <Icon name="chevron" size={16} />
           </button>
         ) : (
           <button
@@ -6583,7 +6550,7 @@ function StepIntro({
   title,
   text,
 }: {
-  icon: string;
+  icon: React.ReactNode;
   kicker: string;
   title: string;
   text: string;
@@ -6617,7 +6584,7 @@ function PeriodStep({
   return (
     <>
       <StepIntro
-        icon="◷"
+        icon={<Icon name="clock" />}
         kicker="Когда едим"
         title="Выберите период"
         text="До 14 дней — так проще сохранить свежесть и разнообразие."
@@ -6632,7 +6599,7 @@ function PeriodStep({
               onChange={(event) => onStart(event.target.value)}
             />
           </label>
-          <span>→</span>
+          <Icon name="chevron" size={16} />
           <label>
             Конец
             <input
@@ -6642,20 +6609,22 @@ function PeriodStep({
             />
           </label>
         </div>
-        <div className="quick-periods">
+        <div className="quick-periods" role="radiogroup" aria-label="Быстрый выбор периода">
           {[3, 5, 7, 14].map((days) => (
             <button
               key={days}
+              role="radio"
+              aria-checked={rawDays === days}
               className={rawDays === days ? "selected" : ""}
               onClick={() => onQuick(days)}
             >
-              {days} дней
+              {withPlural(days, FORMS.day)}
             </button>
           ))}
         </div>
         {valid ? (
           <div className="result-line">
-            <span>✓</span>
+            <Icon name="check" />
             <p>
               <b>
                 {formatDate(start)} — {formatDate(end)}
@@ -6690,30 +6659,38 @@ function MealStep({
   return (
     <>
       <StepIntro
-        icon="◉"
+        icon={<Icon name="pot" />}
         kicker="Что планируем"
         title="Выберите блюда из Mise"
         text="Отметьте только то, что хотите приготовить заранее. Остаток дневной цели мы покажем отдельно."
       />
-      <div className="choice-grid meals-grid">
+      <div className="choice-grid meals-grid" role="group" aria-label="Приёмы пищи">
         {(Object.keys(mealMeta) as MealSlot[]).map((slot) => {
           const active = selected.includes(slot);
           return (
             <button
               key={slot}
+              role="checkbox"
               className={`choice-card glass-card ${active ? "selected" : ""}`}
-              aria-pressed={active}
+              aria-checked={active}
               onClick={() => onToggle(slot)}
             >
-              <span className="choice-icon">{mealMeta[slot].icon}</span>
               <b>{mealMeta[slot].label}</b>
-              <small>{active ? "Включён ✓" : "Добавить"}</small>
+              <small>
+                {active ? (
+                  <>
+                    Включён <Icon name="check" size={12} />
+                  </>
+                ) : (
+                  "Добавить"
+                )}
+              </small>
             </button>
           );
         })}
       </div>
       <section className="calculation-note glass-card">
-        <span>∑</span>
+        <Icon name="scale" />
         <p>
           <b>
             {selected.length} {positionLabel} меню на день
@@ -6737,7 +6714,7 @@ function StyleStep({
   return (
     <>
       <StepIntro
-        icon="✦"
+        icon={<Icon name="filter" />}
         kicker="Какое меню"
         title="Выберите направление"
         text="Мы изменим порядок рекомендаций и покажем самые подходящие варианты первыми."
@@ -6755,12 +6732,11 @@ function StyleStep({
             aria-checked={selected === style}
             onClick={() => onSelect(style)}
           >
-            <span>{styleMeta[style].icon}</span>
             <div>
               <h3>{styleMeta[style].label}</h3>
               <p>{styleMeta[style].description}</p>
             </div>
-            <i>{selected === style ? "✓" : ""}</i>
+            <i>{selected === style ? <Icon name="check" /> : ""}</i>
           </button>
         ))}
       </div>
@@ -6790,7 +6766,7 @@ function PeopleStep({
   return (
     <>
       <StepIntro
-        icon="◎"
+        icon={<Icon name="person" />}
         kicker="Для кого готовим"
         title="Люди, цели и исключения"
         text="КБЖУ задают порцию. «Не люблю» влияет на рекомендации, а «Аллергия/мне нельзя» полностью запрещает блюдо для этого человека."
@@ -6898,15 +6874,20 @@ function PeopleStep({
                   </p>
                   {selectedPreset === "custom" && <em>Вручную</em>}
                 </div>
-                <div className="macro-preset-grid">
+                <div
+                  className="macro-preset-grid"
+                  role="radiogroup"
+                  aria-label="Профиль БЖУ"
+                >
                   {presetOptions.map((preset) => {
                     const meta = macroPresetMeta[preset];
                     const selected = selectedPreset === preset;
                     return (
                       <button
                         key={preset}
+                        role="radio"
                         className={selected ? "selected" : ""}
-                        aria-pressed={selected}
+                        aria-checked={selected}
                         onClick={() => onPreset(person.id, preset)}
                       >
                         <b>{meta.label}</b>
@@ -6928,14 +6909,17 @@ function PeopleStep({
               </p>
             )}
             <div className="person-slots">
-              <p>Что из плана ест {person.name || "человек"}</p>
-              <div>
+              <p id={`person-slots-${person.id}`}>
+                Что из плана ест {person.name || "человек"}
+              </p>
+              <div role="group" aria-labelledby={`person-slots-${person.id}`}>
                 {mealSlots.map((slot) => {
                   const active = person.includedSlots.includes(slot);
                   return (
                     <button
                       key={slot}
-                      aria-pressed={active}
+                      role="checkbox"
+                      aria-checked={active}
                       className={active ? "selected" : ""}
                       onClick={() =>
                         onUpdate(person.id, {
@@ -6947,7 +6931,11 @@ function PeopleStep({
                         })
                       }
                     >
-                      {active ? "✓ " : "+ "}
+                      {active ? (
+                        <Icon name="check" size={12} />
+                      ) : (
+                        <Icon name="plus" size={12} />
+                      )}{" "}
                       {mealMeta[slot].short}
                     </button>
                   );
@@ -6982,7 +6970,11 @@ function PeopleStep({
                           })
                         }
                       >
-                        {active ? "✓ " : "+ "}
+                        {active ? (
+                          <Icon name="check" size={12} />
+                        ) : (
+                          <Icon name="plus" size={12} />
+                        )}{" "}
                         {option.label}
                       </button>
                     );
@@ -7017,7 +7009,11 @@ function PeopleStep({
                           })
                         }
                       >
-                        {active ? "! " : "+ "}
+                        {active ? (
+                          <Icon name="warning" size={12} />
+                        ) : (
+                          <Icon name="plus" size={12} />
+                        )}{" "}
                         {allergenMeta[allergen].short}
                       </button>
                     );
@@ -7058,7 +7054,7 @@ function PeopleStep({
         disabled={people.length >= 4}
         onClick={onAdd}
       >
-        <span>＋</span>
+        <Icon name="plus" />
         <div>
           <b>Добавить человека</b>
           <small>До четырёх профилей в одном плане</small>
@@ -7121,11 +7117,12 @@ function GoalEstimator({
   );
   return (
     <div className="goal-estimator">
-      <div className="estimator-sex" role="group" aria-label="Пол">
+      <div className="estimator-sex" role="radiogroup" aria-label="Пол">
         {(["male", "female"] as Sex[]).map((value) => (
           <button
             key={value}
-            aria-pressed={draft.sex === value}
+            role="radio"
+            aria-checked={draft.sex === value}
             className={draft.sex === value ? "selected" : ""}
             onClick={() => setDraft({ ...draft, sex: value })}
           >
@@ -7174,7 +7171,8 @@ function GoalEstimator({
           setDraft({ ...draft, musclePriority: !draft.musclePriority })
         }
       >
-        {draft.musclePriority ? "✓ " : ""}Тренируюсь / важно сохранить мышцы
+        {draft.musclePriority && <Icon name="check" size={12} />}Тренируюсь /
+        важно сохранить мышцы
       </button>
       <label className="estimator-select">
         <span>Цель</span>
@@ -7243,7 +7241,13 @@ function GoalEstimator({
             if (result) onApply(draft, result.target);
           }}
         >
-          {applied ? "Норма используется ✓" : "Использовать эту норму"}
+          {applied ? (
+            <>
+              Норма используется <Icon name="check" size={12} />
+            </>
+          ) : (
+            "Использовать эту норму"
+          )}
         </button>
       </div>
       {calculation.issues.map((issue) => (
@@ -7280,22 +7284,23 @@ function CookingStep({
   return (
     <>
       <StepIntro
-        icon="♨"
+        icon={<Icon name="pot" />}
         kicker="Ритм готовки"
         title="На сколько дней готовим за раз?"
         text="Выберите размер одной партии. Мы учтём хранение и заморозку."
       />
       <section className="glass-card cooking-card">
-        <div className="day-scale">
+        <div className="day-scale" role="radiogroup" aria-label="Дней на партию">
           {[1, 2, 3, 4, 5, 6, 7].map((days) => (
             <button
               key={days}
-              aria-pressed={cookEveryDays === days}
+              role="radio"
+              aria-checked={cookEveryDays === days}
               className={cookEveryDays === days ? "selected" : ""}
               onClick={() => onDays(days)}
             >
               <b>{days}</b>
-              <small>{days === 1 ? "день" : "дней"}</small>
+              <small>{plural(days, FORMS.day)}</small>
             </button>
           ))}
         </div>
@@ -7315,7 +7320,11 @@ function CookingStep({
         </div>
       </section>
       {remainder > 0 && (
-        <section className="remainder-sheet glass-card">
+        <section
+          className="remainder-sheet glass-card"
+          role="radiogroup"
+          aria-label="Как поступить с остатком"
+        >
           <p className="kicker">Нужно ваше решение</p>
           <h3>
             {periodDays} дней не делятся на {cookEveryDays} без остатка
@@ -7325,26 +7334,28 @@ function CookingStep({
             поступить?
           </p>
           <button
-            aria-pressed={decision === "separate"}
+            role="radio"
+            aria-checked={decision === "separate"}
             className={decision === "separate" ? "selected" : ""}
             onClick={() => onDecision("separate")}
           >
-            <span>◒</span>
+            <Icon name="container" />
             <div>
               <b>Приготовить остаток отдельно</b>
               <small>
                 Оставить даты, финальная мини-готовка на {remainder} дн.
               </small>
             </div>
-            <i>{decision === "separate" ? "✓" : ""}</i>
+            <i>{decision === "separate" ? <Icon name="check" /> : ""}</i>
           </button>
           <button
-            aria-pressed={decision === "extend"}
+            role="radio"
+            aria-checked={decision === "extend"}
             className={decision === "extend" ? "selected" : ""}
             disabled={!canExtend}
             onClick={() => onDecision("extend")}
           >
-            <span>＋</span>
+            <Icon name="plus" />
             <div>
               <b>Добавить {cookEveryDays - remainder} дн.</b>
               <small>
@@ -7353,15 +7364,16 @@ function CookingStep({
                   : "Получится больше 14 дней — выберите другой вариант"}
               </small>
             </div>
-            <i>{decision === "extend" ? "✓" : ""}</i>
+            <i>{decision === "extend" ? <Icon name="check" /> : ""}</i>
           </button>
           <button
-            aria-pressed={decision === "shorten"}
+            role="radio"
+            aria-checked={decision === "shorten"}
             className={decision === "shorten" ? "selected" : ""}
             disabled={periodDays - remainder < 1}
             onClick={() => onDecision("shorten")}
           >
-            <span>−</span>
+            <Icon name="minus" />
             <div>
               <b>Убрать {remainder} дн.</b>
               <small>
@@ -7369,7 +7381,7 @@ function CookingStep({
                 {formatDate(addDays(start, periodDays - remainder - 1))}
               </small>
             </div>
-            <i>{decision === "shorten" ? "✓" : ""}</i>
+            <i>{decision === "shorten" ? <Icon name="check" /> : ""}</i>
           </button>
         </section>
       )}
@@ -7422,23 +7434,27 @@ function MenuStep({
   return (
     <>
       <StepIntro
-        icon={mealMeta[position.slot].icon}
+        icon={<Icon name="pot" />}
         kicker={`${completed} из ${positions.length} выбрано`}
         title={`${mealMeta[position.slot].label} · готовка ${position.batch.index + 1}`}
         text={`${formatDate(position.batch.start)} — ${formatDate(position.batch.end)}. Выберите один из пяти вариантов; жёсткие исключения уже убраны.`}
       />
-      <div className="position-strip">
-        {positions.map((item, index) => (
-          <button
-            key={`${item.batch.id}-${item.slot}`}
-            className={`${index === currentIndex ? "current" : ""} ${selections[selectionKey(item.batch, item.slot)] ? "done" : ""}`}
-            onClick={() => onJump(index)}
-            aria-label={`Готовка ${item.batch.index + 1}, ${mealMeta[item.slot].label}`}
-          >
-            <span>{mealMeta[item.slot].icon}</span>
-            <small>{item.batch.index + 1}</small>
-          </button>
-        ))}
+      <div className="position-strip" role="tablist" aria-label="Позиции меню">
+        {positions.map((item, index) => {
+          const done = Boolean(selections[selectionKey(item.batch, item.slot)]);
+          return (
+            <button
+              key={`${item.batch.id}-${item.slot}`}
+              role="tab"
+              aria-selected={index === currentIndex}
+              className={`${index === currentIndex ? "current" : ""} ${done ? "done" : ""}`}
+              onClick={() => onJump(index)}
+              aria-label={`Готовка ${item.batch.index + 1}, ${mealMeta[item.slot].label}${done ? ", выбрано" : ""}`}
+            >
+              <small>{item.batch.index + 1}</small>
+            </button>
+          );
+        })}
       </div>
       {allAllowed.length === 0 && (
         <p className="inline-warning" role="alert">
@@ -7457,7 +7473,11 @@ function MenuStep({
             : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
         </button>
       )}
-      <div className="menu-candidates">
+      <div
+        className="menu-candidates"
+        role="radiogroup"
+        aria-label="Варианты блюда"
+      >
         {candidates.map((recipe, index) => {
           const selected = selectedId === recipe.id;
           const fit = fitScore(recipe, people, position.slot);
@@ -7474,8 +7494,9 @@ function MenuStep({
             >
               <button
                 className="candidate-main"
+                role="radio"
                 onClick={() => onChoose(recipe.id)}
-                aria-pressed={selected}
+                aria-checked={selected}
               >
                 <div className={`candidate-art art-${index}`}>
                   <span>{recipe.emoji}</span>
@@ -7498,7 +7519,7 @@ function MenuStep({
                     </small>
                   )}
                 </div>
-                <i>{selected ? "✓" : ""}</i>
+                <i>{selected ? <Icon name="check" /> : ""}</i>
               </button>
               {selected &&
                 positions.filter((item) => item.slot === position.slot).length >
@@ -7542,7 +7563,7 @@ function ReviewStep({
   return (
     <>
       <StepIntro
-        icon="✓"
+        icon={<Icon name="check" />}
         kicker="Почти готово"
         title="Проверьте план"
         text="После сохранения он появится в неделе, а продукты — в покупках."
@@ -7556,7 +7577,6 @@ function ReviewStep({
             {plan.periodDays} дней · {plan.people.length} чел.
           </h2>
         </div>
-        <span>{styleMeta[plan.menuStyle].icon}</span>
         <div className="review-stats">
           <p>
             <b>{plan.batches.length}</b>
@@ -7564,11 +7584,11 @@ function ReviewStep({
           </p>
           <p>
             <b>{recipeIds.size}</b>
-            <small>рецептов</small>
+            <small>{plural(recipeIds.size, FORMS.recipe)}</small>
           </p>
           <p>
             <b>{totalPortions}</b>
-            <small>порций</small>
+            <small>{plural(totalPortions, FORMS.portion)}</small>
           </p>
           <p>
             <b>{plan.shopping.length}</b>
@@ -7578,7 +7598,7 @@ function ReviewStep({
       </section>
       <section className="review-list glass-card">
         <button onClick={() => onEdit(0)}>
-          <span>◷</span>
+          <Icon name="clock" />
           <div>
             <b>Период</b>
             <small>
@@ -7588,7 +7608,7 @@ function ReviewStep({
           <i>Изменить</i>
         </button>
         <button onClick={() => onEdit(3)}>
-          <span>◎</span>
+          <Icon name="person" />
           <div>
             <b>Люди и КБЖУ</b>
             <small>{plan.people.map((person) => person.name).join(", ")}</small>
@@ -7596,7 +7616,7 @@ function ReviewStep({
           <i>Изменить</i>
         </button>
         <button onClick={() => onEdit(4)}>
-          <span>♨</span>
+          <Icon name="pot" />
           <div>
             <b>График готовки</b>
             <small>
@@ -7606,7 +7626,7 @@ function ReviewStep({
           <i>Изменить</i>
         </button>
         <button onClick={() => onEdit(5)}>
-          <span>✦</span>
+          <Icon name="check" />
           <div>
             <b>Выбранное меню</b>
             <small>{Object.keys(plan.selections).length} позиций</small>
@@ -7635,6 +7655,89 @@ function ReviewStep({
   );
 }
 
+const focusableSelector =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function Sheet({
+  titleId,
+  onClose,
+  className,
+  children,
+}: {
+  titleId: string;
+  onClose: () => void;
+  className?: string;
+  children: React.ReactNode;
+}) {
+  const dialogRef = useRef<HTMLElement | null>(null);
+  const backdropRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
+    const inertSiblings = Array.from(document.body.children).filter(
+      (node) => node !== backdropRef.current,
+    );
+    inertSiblings.forEach((node) => node.setAttribute("inert", ""));
+    dialogRef.current?.focus();
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+      if (event.key === "Tab") {
+        const node = dialogRef.current;
+        if (!node) return;
+        const focusable = Array.from(
+          node.querySelectorAll<HTMLElement>(focusableSelector),
+        );
+        if (focusable.length === 0) {
+          event.preventDefault();
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      inertSiblings.forEach((node) => node.removeAttribute("inert"));
+      opener?.focus();
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <div
+      className="modal-backdrop"
+      ref={backdropRef}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose();
+      }}
+    >
+      <section
+        ref={dialogRef}
+        tabIndex={-1}
+        className={className}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+      >
+        {children}
+      </section>
+    </div>,
+    document.body,
+  );
+}
+
 function SuccessSheet({
   plan,
   onOpen,
@@ -7644,56 +7747,49 @@ function SuccessSheet({
   onOpen: (tab: Tab) => void;
   onEdit: () => void;
 }) {
-  const dialogRef = useRef<HTMLElement | null>(null);
   const [phase, setPhase] = useState<"summary" | "notifications">("summary");
-  useEffect(() => {
-    dialogRef.current?.focus();
-  }, []);
   return (
-    <div className="modal-backdrop">
-      <section
-        ref={dialogRef}
-        tabIndex={-1}
-        className={`success-sheet glass ${phase === "notifications" ? "notification-modal" : ""}`}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="success-title"
-      >
-        {phase === "summary" ? (
-          <>
-            <div className="success-burst">✓</div>
-            <p className="kicker">Всё получилось</p>
-            <h2 id="success-title">План готов!</h2>
-            <p>
-              Дней: {plan.periodDays} · готовок: {plan.batches.length} ·
-              рецептов: {new Set(Object.values(plan.selections)).size} ·
-              продуктов: {plan.shopping.length}
-            </p>
-            <InstallInline />
-            <button
-              className="primary-button"
-              onClick={() => setPhase("notifications")}
-            >
-              Настроить напоминания <span>→</span>
-            </button>
-            <button className="secondary-button" onClick={() => onOpen("week")}>
-              Открыть план без них
-            </button>
-            <button className="text-button" onClick={onEdit}>
-              Изменить план
-            </button>
-          </>
-        ) : (
-          <NotificationSetupPanel
-            plan={notificationPlanFor(plan)}
-            clientId={clientId()}
-            deviceId={deviceId()}
-            onDone={() => onOpen("week")}
-            onCancel={() => onOpen("week")}
-          />
-        )}
-      </section>
-    </div>
+    <Sheet
+      titleId={phase === "summary" ? "success-title" : "notifications-title"}
+      onClose={() => onOpen("week")}
+      className={`success-sheet glass ${phase === "notifications" ? "notification-modal" : ""}`}
+    >
+      {phase === "summary" ? (
+        <>
+          <div className="success-burst">
+            <Icon name="check" size={28} />
+          </div>
+          <p className="kicker">Всё получилось</p>
+          <h2 id="success-title">План готов!</h2>
+          <p>
+            Дней: {plan.periodDays} · готовок: {plan.batches.length} ·
+            рецептов: {new Set(Object.values(plan.selections)).size} ·
+            продуктов: {plan.shopping.length}
+          </p>
+          <InstallInline />
+          <button
+            className="primary-button"
+            onClick={() => setPhase("notifications")}
+          >
+            Настроить напоминания <Icon name="chevron" size={16} />
+          </button>
+          <button className="secondary-button" onClick={() => onOpen("week")}>
+            Открыть план без них
+          </button>
+          <button className="text-button" onClick={onEdit}>
+            Изменить план
+          </button>
+        </>
+      ) : (
+        <NotificationSetupPanel
+          plan={notificationPlanFor(plan)}
+          clientId={clientId()}
+          deviceId={deviceId()}
+          onDone={() => onOpen("week")}
+          onCancel={() => onOpen("week")}
+        />
+      )}
+    </Sheet>
   );
 }
 
@@ -8023,11 +8119,15 @@ function RecipeView({
               disabled={saveStatus === "saving"}
               onClick={saveTuning}
             >
-              {saveStatus === "saving"
-                ? "Сохраняем…"
-                : saveStatus === "saved"
-                  ? "Сохранено ✓"
-                  : "Сохранить и пересчитать"}
+              {saveStatus === "saving" ? (
+                "Сохраняем…"
+              ) : saveStatus === "saved" ? (
+                <>
+                  Сохранено <Icon name="check" size={12} />
+                </>
+              ) : (
+                "Сохранить и пересчитать"
+              )}
             </button>
           )}
         </div>
@@ -8044,7 +8144,7 @@ function RecipeView({
       </section>
       <section className="recipe-info-grid">
         <article className="glass-card">
-          <span>⌘</span>
+          <Icon name="flame" />
           <div>
             <b>
               {recipe.effort.level === "low"
@@ -8058,7 +8158,7 @@ function RecipeView({
           </div>
         </article>
         <article className="glass-card">
-          <span>◷</span>
+          <Icon name="clock" />
           <div>
             <b>{recipe.effort.activeMinutes} мин активно</b>
             <small>{recipe.time} мин общего времени</small>
@@ -8066,20 +8166,26 @@ function RecipeView({
         </article>
       </section>
       <section className="detail-panel glass-card">
-        <div className="detail-tabs">
+        <div className="detail-tabs" role="tablist" aria-label="Раздел рецепта">
           <button
+            role="tab"
+            aria-selected={section === "ingredients"}
             className={section === "ingredients" ? "selected" : ""}
             onClick={() => setSection("ingredients")}
           >
             Ингредиенты
           </button>
           <button
+            role="tab"
+            aria-selected={section === "steps"}
             className={section === "steps" ? "selected" : ""}
             onClick={() => setSection("steps")}
           >
             Готовить
           </button>
           <button
+            role="tab"
+            aria-selected={section === "portion"}
             className={section === "portion" ? "selected" : ""}
             onClick={() => setSection("portion")}
           >
@@ -8089,7 +8195,7 @@ function RecipeView({
         {section === "ingredients" && (
           <div className="detail-list">
             <div className="detail-note">
-              <span>∑</span>
+              <Icon name="scale" />
               <p>
                 <b>
                   {batch
@@ -8103,7 +8209,7 @@ function RecipeView({
               const totalScale = totalIngredientScale(ingredient);
               return (
                 <div className="ingredient-row" key={ingredient.id}>
-                  <span>✓</span>
+                  <Icon name="check" />
                   <p>
                     {ingredient.name}
                     <small>
@@ -8156,7 +8262,13 @@ function RecipeView({
                 {mixedAllocation && <div className="allocation-results"><div className="detail-note"><span>2</span><p><b>Теперь разложите по контейнерам</b><small>Граммы рассчитаны из фактического веса всей готовой партии.</small></p></div>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p><small>В каждый контейнер</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
                 {componentAllocation && <div className="allocation-results"><div className="detail-note"><span>2</span><p><b>Теперь разложите компоненты</b><small>Никаких процентов — только граммы в каждый контейнер.</small></p></div>{eaters.map((eater, index) => <article className="portion-card component-portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return <p key={component.componentId}><span>{component.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>; })}<small>В каждый из {batch.days} контейнеров</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
                 <section className="storage-card">
-                  <span>{freezeDays > 0 ? "❄️" : "✓"}</span>
+                  <span>
+                    {freezeDays > 0 ? (
+                      <Icon name="snowflake" />
+                    ) : (
+                      <Icon name="check" />
+                    )}
+                  </span>
                   <div>
                     <h3>
                       {freezeDays > 0
@@ -8176,7 +8288,7 @@ function RecipeView({
               </>
             ) : (
               <section className="detail-note">
-                <span>◎</span>
+                <Icon name="info" />
                 <p>
                   <b>Точная раскладка появится в плане</b>
                   <small>Мы учтём КБЖУ и цели каждого человека.</small>
@@ -8240,7 +8352,7 @@ function RecipeView({
               target="_blank"
               rel="noreferrer"
             >
-              {recipe.provenance.sourceTitle} ↗
+              {recipe.provenance.sourceTitle} <Icon name="chevron" size={12} />
             </a>
             {recipe.provenance.adaptation && (
               <p>Адаптация для Mise: {recipe.provenance.adaptation}</p>

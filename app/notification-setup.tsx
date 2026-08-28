@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Icon } from "./ui/icon";
 
 export type NotificationPlan = {
   id: string;
@@ -204,12 +205,12 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
 
   const testControl = enabled ? <div className="notification-test-control">
     <button className="secondary-button notification-test-button" disabled={testState === "sending" || status === "saving"} onClick={sendTest}>{testState === "sending" ? "Отправляем тест…" : "Отправить тестовое уведомление"}</button>
-    {testState === "success" && <small role="status">✓ Тест отправлен на это устройство.</small>}
+    {testState === "success" && <small role="status"><Icon name="check" size={12} /> Тест отправлен на это устройство.</small>}
     {testState === "error" && <small className="test-error" role="alert">Тест не доставлен. Проверьте системные настройки.</small>}
   </div> : null;
 
   return <section className="notification-setup" aria-labelledby="notifications-title">
-    <div className="notification-heading"><span>🔔</span><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
+    <div className="notification-heading"><Icon name="bell" /><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
     <div className="reminder-list glass-card">
       <ReminderToggle active={toggles.shopping} title="Проверить покупки" note="Накануне каждой готовки, в то же время" onClick={() => toggle("shopping")} />
       <ReminderToggle active={toggles.cooking} title="Приготовить партию" note={`${plan.batches.length} ${plan.batches.length === 1 ? "готовка" : "готовки"}`} onClick={() => toggle("cooking")} />
@@ -219,7 +220,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       <ReminderToggle active={toggles["next-plan"]} title="Составить следующий план" note={`За 2 дня до окончания · ${cookTimes[plan.batches[0]?.id] ?? "18:00"}`} onClick={() => toggle("next-plan")} />
     </div>
     <p className="schedule-summary">Будет запланировано: <b>{jobs.length}</b>. Напоминания относятся только к этому плану и этому устройству.</p>
-    {status === "success" ? <><div className="notification-success" role="status">✓ {testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</div>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <span>→</span></button></> : <>
+    {status === "success" ? <><div className="notification-success" role="status"><Icon name="check" size={12} /> {testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</div>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <Icon name="chevron" size={16} /></button></> : <>
       {status === "unavailable" && <p className="notification-error" role="alert">На этом устройстве Web Push недоступен. На iPhone откройте Mise с экрана Домой.</p>}
       {status === "denied" && <p className="notification-error" role="alert">Разрешение не выдано. План продолжит работать без уведомлений.</p>}
       {status === "error" && <p className="notification-error" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</p>}
