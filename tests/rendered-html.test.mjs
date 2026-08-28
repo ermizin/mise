@@ -25,7 +25,8 @@ test("server-renders the Russian Mise shell and navigation", async () => {
   assert.match(html, /План на неделю/);
   assert.match(html, /Ищем сохранённый план/);
 
-  const labels = ["План на неделю", "Рецепты", "Составить план", "Покупки", "Профиль"];
+  assert.match(html, /aria-label="Составить план"/);
+  const labels = ["План на неделю", "Рецепты", "Покупки", "Профиль"];
   const positions = labels.map((label) => html.indexOf(`aria-label="${label}"`));
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);

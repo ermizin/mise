@@ -47,8 +47,8 @@ test("goals can be estimated as well as typed", async () => {
 
 test("the interface stays legible", async () => {
   const [page, css, layout] = await Promise.all([read("app/page.tsx"), read("app/globals.css"), read("app/layout.tsx")]);
-  const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 11);
-  assert.deepEqual(tiny, [], "nothing is smaller than 11px");
+  const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
+  assert.deepEqual(tiny, [], "nothing is smaller than 12px");
   assert.match(css, /--accent-grad-a: #c2410c/, "the primary button passes contrast");
   assert.match(css, /\.primary-button \{[^}]*var\(--accent-grad-a\), var\(--accent-grad-b\)/);
   assert.match(css, /@media \(prefers-color-scheme: dark\)/, "a dark theme exists");

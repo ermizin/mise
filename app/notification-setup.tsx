@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { countRu } from "./format";
+import { Icon } from "./icon";
 
 export type NotificationPlan = {
   id: string;
@@ -207,12 +209,12 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
   </div> : null;
 
   return <section className="notification-setup" aria-labelledby="notifications-title">
-    <div className="notification-heading"><span>🔔</span><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
+    <div className="notification-heading"><span><Icon name="bell" /></span><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
     <div className="reminder-list glass-card">
       <ReminderToggle active={toggles.shopping} title="Проверить покупки" note="Накануне каждой готовки, в то же время" onClick={() => toggle("shopping")} />
-      <ReminderToggle active={toggles.cooking} title="Приготовить партию" note={`${plan.batches.length} ${plan.batches.length === 1 ? "готовка" : "готовки"}`} onClick={() => toggle("cooking")} />
+      <ReminderToggle active={toggles.cooking} title="Приготовить партию" note={countRu(plan.batches.length, "готовка", "готовки", "готовок")} onClick={() => toggle("cooking")} />
       {toggles.cooking && <div className="cook-time-list">{plan.batches.map((batch) => <label key={batch.id}><span>Готовка {batch.index + 1} · {formatDate(batch.start)}</span><input type="time" value={cookTimes[batch.id] ?? "18:00"} onChange={(event) => setCookTimes((current) => ({ ...current, [batch.id]: event.target.value }))} /></label>)}</div>}
-      <ReminderToggle active={toggles.thaw} title="Разморозить порции" note={plan.frozenUseDates.length ? `${[...new Set(plan.frozenUseDates)].length} вечера` : "В этом плане не понадобится"} disabled={!plan.frozenUseDates.length} onClick={() => toggle("thaw")} />
+      <ReminderToggle active={toggles.thaw} title="Разморозить порции" note={plan.frozenUseDates.length ? countRu([...new Set(plan.frozenUseDates)].length, "вечер", "вечера", "вечеров") : "В этом плане не понадобится"} disabled={!plan.frozenUseDates.length} onClick={() => toggle("thaw")} />
       {toggles.thaw && plan.frozenUseDates.length > 0 && <label className="single-time"><span>Накануне использования</span><input type="time" value={thawTime} onChange={(event) => setThawTime(event.target.value)} /></label>}
       <ReminderToggle active={toggles["next-plan"]} title="Составить следующий план" note={`За 2 дня до окончания · ${cookTimes[plan.batches[0]?.id] ?? "18:00"}`} onClick={() => toggle("next-plan")} />
     </div>
@@ -230,5 +232,5 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
 }
 
 function ReminderToggle({ active, title, note, disabled = false, onClick }: { active: boolean; title: string; note: string; disabled?: boolean; onClick: () => void }) {
-  return <button className="reminder-toggle" aria-pressed={active} disabled={disabled} onClick={onClick}><span className={`toggle-control ${active && !disabled ? "active" : ""}`}><i /></span><span><b>{title}</b><small>{note}</small></span></button>;
+  return <button className="reminder-toggle" role="switch" aria-checked={active} disabled={disabled} onClick={onClick}><span className={`toggle-control ${active && !disabled ? "active" : ""}`}><i /></span><span><b>{title}</b><small>{note}</small></span></button>;
 }
