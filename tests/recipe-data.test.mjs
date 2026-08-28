@@ -365,6 +365,9 @@ test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd i
 
 test("solver exposes not-viable and hard-exclusion outcomes instead of deforming a dish", () => {
   const family = recipeFamiliesById["src-teriyaki-tray"];
+  const high = solveRecipeFamily(family, { targetCalories: 750 });
+  assert.ok(high.amounts["sweet-potato"] >= 45, "a high-calorie tray keeps its second carb component");
+  assert.ok(high.amounts.broccoli >= 90, "a high-calorie tray does not remove vegetables");
   const tooSmall = solveRecipeFamily(family, { targetCalories: 300 });
   assert.equal(tooSmall.viable, false);
   assert.equal(tooSmall.reason, "outside_calorie_range");

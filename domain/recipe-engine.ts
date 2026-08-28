@@ -432,9 +432,12 @@ function objective(family: RecipeFamily, amounts: Record<string, number>, target
   const proteinError = targetProtein ? Math.abs(targetProtein - nutrition.protein) : 0;
   const deviation = family.ingredients.reduce((sum, ingredient) => {
     const center = (ingredient.preferredMin + ingredient.preferredMax) / 2;
-    return sum + Math.abs((amounts[ingredient.sourceIngredientId] - center) / Math.max(1, ingredient.baseAmount)) / Math.max(1, ingredient.scalingPriority);
+    const relative =
+      (amounts[ingredient.sourceIngredientId] - center) /
+      Math.max(1, ingredient.baseAmount);
+    return sum + relative * relative * ingredient.scalingPriority;
   }, 0);
-  return Math.abs(targetCalories - nutrition.kcal) * 10 + shortfall * 150 + proteinError * 2 + deviation;
+  return Math.abs(targetCalories - nutrition.kcal) * 10 + shortfall * 150 + proteinError * 2 + deviation * 50;
 }
 
 function hillClimb(family: RecipeFamily, seed: "min" | "base" | "preferred", targetCalories: number, targetProtein?: number) {
@@ -444,7 +447,7 @@ function hillClimb(family: RecipeFamily, seed: "min" | "base" | "preferred", tar
   }));
   let score = objective(family, amounts, targetCalories, targetProtein);
   for (let iteration = 0; iteration < 2000; iteration += 1) {
-    let best: { id: string; amount: number; score: number } | null = null;
+    let best: { changes: Record<string, number>; score: number } | null = null;
     for (const ingredient of family.ingredients) {
       if (!ingredient.scalable) continue;
       const id = ingredient.sourceIngredientId;
@@ -454,11 +457,35 @@ function hillClimb(family: RecipeFamily, seed: "min" | "base" | "preferred", tar
         if (next === amounts[id]) continue;
         const candidate = { ...amounts, [id]: next };
         const nextScore = objective(family, candidate, targetCalories, targetProtein);
-        if (nextScore + 0.0001 < (best?.score ?? score)) best = { id, amount: next, score: nextScore };
+        if (nextScore + 0.0001 < (best?.score ?? score)) best = { changes: { [id]: next }, score: nextScore };
+      }
+    }
+    for (let leftIndex = 0; leftIndex < family.ingredients.length; leftIndex += 1) {
+      const left = family.ingredients[leftIndex];
+      if (!left.scalable) continue;
+      for (let rightIndex = leftIndex + 1; rightIndex < family.ingredients.length; rightIndex += 1) {
+        const right = family.ingredients[rightIndex];
+        if (!right.scalable || right.role !== left.role) continue;
+        const leftStep = left.unit === "piece" ? 0.1 : Math.max(1, canonicalIngredients[left.canonicalIngredientId].unit.roundTo);
+        const rightStep = right.unit === "piece" ? 0.1 : Math.max(1, canonicalIngredients[right.canonicalIngredientId].unit.roundTo);
+        const leftCalories = nutritionForAmount(left, 1).kcal;
+        const rightCalories = nutritionForAmount(right, 1).kcal;
+        if (leftCalories <= 0 || rightCalories <= 0) continue;
+        for (const direction of [-1, 1]) {
+          const leftAmount = normalizedAmount(left, amounts[left.sourceIngredientId] + direction * leftStep);
+          const leftDelta = leftAmount - amounts[left.sourceIngredientId];
+          if (!leftDelta) continue;
+          const desiredRightDelta = -(leftDelta * leftCalories) / rightCalories;
+          const rightAmount = normalizedAmount(right, amounts[right.sourceIngredientId] + Math.round(desiredRightDelta / rightStep) * rightStep);
+          if (rightAmount === amounts[right.sourceIngredientId]) continue;
+          const candidate = { ...amounts, [left.sourceIngredientId]: leftAmount, [right.sourceIngredientId]: rightAmount };
+          const nextScore = objective(family, candidate, targetCalories, targetProtein);
+          if (nextScore + 0.0001 < (best?.score ?? score)) best = { changes: { [left.sourceIngredientId]: leftAmount, [right.sourceIngredientId]: rightAmount }, score: nextScore };
+        }
       }
     }
     if (!best) break;
-    amounts[best.id] = best.amount;
+    Object.assign(amounts, best.changes);
     score = best.score;
   }
   return { amounts, nutrition: nutritionForFamily(family, amounts), score };
