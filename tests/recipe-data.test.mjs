@@ -11,7 +11,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -28,7 +28,7 @@ async function loadRecipeCatalog() {
   return sandbox.__catalog;
 }
 
-const { recipes, portionFor, ingredientScaleFor, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, portionFor, ingredientScaleFor, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -75,6 +75,22 @@ test("generated ingredients match the recipe title", () => {
   assert.ok(!ingredientIds("Говяжьи котлеты с цветной капустой").includes("chicken-thigh"));
   assert.ok(ingredientIds("Индейка в сливочном соусе").includes("cream"));
   assert.ok(ingredientIds("Домашний хумус с лепёшкой").includes("flatbread"));
+});
+
+test("ingredients and recipes expose structured allergen and label metadata", () => {
+  for (const item of recipes) {
+    assert.ok(Array.isArray(item.allergens), `${item.title} has recipe allergen tags`);
+    for (const ingredient of item.ingredients) {
+      assert.ok(Array.isArray(ingredient.allergens), `${ingredient.name} has allergen tags`);
+      assert.equal(typeof ingredient.checkLabel, "boolean", `${ingredient.name} has label guidance`);
+      for (const allergen of ingredient.allergens) assert.ok(item.allergens.includes(allergen));
+    }
+  }
+
+  assert.ok(recipe("Тунец с зелёной фасолью").allergens.includes("fish"));
+  assert.ok(recipe("Кето-сырники").allergens.includes("milk"));
+  assert.ok(recipes.some((item) => item.ingredients.some((ingredient) => ingredient.id === "tofu" && ingredient.allergens.includes("soy"))));
+  assert.ok(recipes.some((item) => item.ingredients.some((ingredient) => ingredient.id === "peanut-butter" && ingredient.allergens.includes("peanut") && ingredient.checkLabel)));
 });
 
 test("generated paleo and keto recipes keep their strict ingredient rules", () => {
@@ -251,4 +267,46 @@ test("catalog shows every matching recipe while the plan builder keeps five choi
   const builder = candidateRecipes("lunch", "protein", [], 1, { origin: "generated" });
   assert.ok(catalog.length > 5);
   assert.equal(builder.length, 5);
+});
+
+test("hard exclusions cannot be bypassed while dislikes stay reversible", () => {
+  const basePerson = {
+    id: "eater",
+    name: "Тест",
+    daily: { kcal: 2100, protein: 150, fat: 70, carbs: 210 },
+    includedSlots: ["lunch"],
+  };
+  const hardPerson = { ...basePerson, hardExclusions: ["fish"] };
+  const hardSafe = candidateRecipes("lunch", "protein", [hardPerson], 1, { limit: "all" });
+  assert.ok(hardSafe.length > 0);
+  assert.ok(hardSafe.every((item) => !item.allergens.includes("fish")));
+
+  const softPerson = { ...basePerson, dislikes: ["fish"] };
+  const preferred = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all" });
+  const allAllowed = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all", includeDisliked: true });
+  assert.ok(preferred.every((item) => dislikeMatches(item, softPerson).length === 0));
+  assert.ok(allAllowed.some((item) => dislikeMatches(item, softPerson).length > 0));
+  assert.ok(allAllowed.length > preferred.length);
+});
+
+test("plan validation catches an existing selection that conflicts with a person", () => {
+  const tuna = recipe("Тунец с зелёной фасолью");
+  const person = {
+    id: "allergic",
+    name: "Тест",
+    daily: { kcal: 2100, protein: 150, fat: 70, carbs: 210 },
+    includedSlots: [tuna.slot],
+    hardExclusions: ["fish"],
+  };
+  assert.deepEqual([...hardConflicts(tuna, person)], ["fish"]);
+  const batch = { id: "batch-0", index: 0, start: "2026-08-28", end: "2026-08-28", days: 1 };
+  const conflicts = validateHardExclusions({
+    batches: [batch],
+    mealSlots: [tuna.slot],
+    people: [person],
+    selections: { [`${batch.id}:${tuna.slot}`]: tuna.id },
+  });
+  assert.equal(conflicts.length, 1);
+  assert.equal(conflicts[0].person.id, person.id);
+  assert.equal(conflicts[0].recipe.id, tuna.id);
 });

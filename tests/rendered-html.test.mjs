@@ -75,6 +75,15 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /recalculateDailyMacros/);
   assert.match(page, /macroPreset: "custom"/);
   assert.doesNotMatch(page, /mealsPerDay|Приёмов пищи в день/);
+  for (const allergyCopy of [
+    "Аллергия / мне нельзя",
+    "Показать варианты из «не люблю»",
+    "Риск перекрёстного контакта",
+    "Проверяйте этикетку",
+    "Mise не заявляет медицинскую безопасность блюда",
+  ]) assert.match(page, new RegExp(allergyCopy));
+  assert.match(page, /role="checkbox"/);
+  assert.match(page, /aria-checked=\{active\}/);
   assert.match(page, /Ещё можно съесть/);
   assert.match(page, /никто не выбрал/);
   assert.match(page, /current\.filter\(\(slot\) => !unassignedSlots\.includes\(slot\)\)/);

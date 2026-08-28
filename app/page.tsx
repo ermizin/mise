@@ -35,6 +35,16 @@ import {
 type Tab = "week" | "recipes" | "builder" | "shopping" | "profile";
 type MenuStyle = "protein" | "budget" | "paleo" | "keto";
 type RecipeOrigin = "parsed" | "generated";
+type Allergen =
+  | "milk"
+  | "egg"
+  | "gluten"
+  | "fish"
+  | "soy"
+  | "peanut"
+  | "treeNuts"
+  | "sesame"
+  | "mustard";
 
 type Ingredient = {
   id: string;
@@ -42,6 +52,8 @@ type Ingredient = {
   quantity: number;
   unit: "г" | "мл" | "шт.";
   group: string;
+  allergens: Allergen[];
+  checkLabel: boolean;
 };
 type RecipeProvenance =
   | {
@@ -91,6 +103,7 @@ type Recipe = {
   cost: number;
   tags: MenuStyle[];
   ingredients: Ingredient[];
+  allergens: Allergen[];
   steps: string[];
   storageDays: number;
   freezable: boolean;
@@ -109,6 +122,8 @@ type Person = {
   macroPreset?: MacroPreset;
   includedSlots: MealSlot[];
   estimate?: NutritionWizardInput;
+  dislikes?: string[];
+  hardExclusions?: Allergen[];
 };
 type Batch = {
   id: string;
@@ -268,13 +283,127 @@ const goalMeta: Record<NutritionGoal, { label: string }> = {
   maintenance: { label: "Поддержание веса" },
   gain: { label: "Набор массы" },
 };
+const allergenMeta: Record<Allergen, { label: string; short: string }> = {
+  milk: { label: "Молоко и молочные продукты", short: "Молоко" },
+  egg: { label: "Яйца", short: "Яйца" },
+  gluten: { label: "Глютен", short: "Глютен" },
+  fish: { label: "Рыба", short: "Рыба" },
+  soy: { label: "Соя", short: "Соя" },
+  peanut: { label: "Арахис", short: "Арахис" },
+  treeNuts: { label: "Орехи", short: "Орехи" },
+  sesame: { label: "Кунжут", short: "Кунжут" },
+  mustard: { label: "Горчица", short: "Горчица" },
+};
+const dislikeOptions = [
+  { id: "fish", label: "Рыба", ingredientIds: ["salmon", "cod", "tuna"] },
+  { id: "cottage", label: "Творог", ingredientIds: ["cottage"] },
+  { id: "egg", label: "Яйца", ingredientIds: ["egg"] },
+  { id: "tofu", label: "Тофу", ingredientIds: ["tofu"] },
+  { id: "broccoli", label: "Брокколи", ingredientIds: ["broccoli"] },
+  { id: "buckwheat", label: "Гречка", ingredientIds: ["buckwheat"] },
+  {
+    id: "legumes",
+    label: "Бобовые",
+    ingredientIds: [
+      "lentils",
+      "white-beans",
+      "red-beans",
+      "black-beans",
+      "green-beans",
+      "beans",
+      "peas",
+      "chickpeas",
+    ],
+  },
+  { id: "avocado", label: "Авокадо", ingredientIds: ["avocado"] },
+  {
+    id: "coconut",
+    label: "Кокос",
+    ingredientIds: ["coconut-milk", "coconut-oil", "coconut-flakes"],
+  },
+  {
+    id: "turkey",
+    label: "Индейка",
+    ingredientIds: ["turkey", "turkey-mince", "turkey-slices"],
+  },
+] as const;
+const ingredientAllergens: Record<string, Allergen[]> = {
+  almond: ["treeNuts"],
+  "almond-flour": ["treeNuts"],
+  "almond-paste": ["treeNuts"],
+  bread: ["gluten"],
+  bulgur: ["gluten"],
+  butter: ["milk"],
+  cheese: ["milk"],
+  cod: ["fish"],
+  cottage: ["milk"],
+  cream: ["milk"],
+  "cream-cheese": ["milk"],
+  egg: ["egg"],
+  feta: ["milk"],
+  flatbread: ["gluten"],
+  gochujang: ["soy", "gluten"],
+  hummus: ["sesame"],
+  kefir: ["milk"],
+  mayonnaise: ["egg"],
+  milk: ["milk"],
+  mozzarella: ["milk"],
+  mustard: ["mustard"],
+  oats: ["gluten"],
+  parmesan: ["milk"],
+  pasta: ["gluten"],
+  "peanut-butter": ["peanut"],
+  "protein-powder": ["milk"],
+  salmon: ["fish"],
+  soy: ["soy", "gluten"],
+  tahini: ["sesame"],
+  tofu: ["soy"],
+  tortilla: ["gluten"],
+  tuna: ["fish"],
+  walnut: ["treeNuts"],
+  yogurt: ["milk"],
+};
+const packagedIngredientIds = new Set([
+  "bbq-sauce",
+  "bread",
+  "broth",
+  "cheese",
+  "cream-cheese",
+  "flatbread",
+  "gochujang",
+  "hot-sauce",
+  "hummus",
+  "mayonnaise",
+  "mustard",
+  "oats",
+  "pasta",
+  "peanut-butter",
+  "pickles",
+  "protein-powder",
+  "salsa",
+  "soy",
+  "sriracha",
+  "tahini",
+  "tomato-passata",
+  "tomato-paste",
+  "tortilla",
+  "yogurt",
+]);
 const i = (
   id: string,
   name: string,
   quantity: number,
   unit: Ingredient["unit"],
   group: string,
-): Ingredient => ({ id, name, quantity, unit, group });
+): Ingredient => ({
+  id,
+  name,
+  quantity,
+  unit,
+  group,
+  allergens: [...(ingredientAllergens[id] ?? [])],
+  checkLabel: packagedIngredientIds.has(id),
+});
 const noKnifeIngredientIds = new Set([
   "oats",
   "buckwheat",
@@ -344,6 +473,7 @@ type RecipeMeta = {
   flex?: Partial<RecipeFlex>;
   effort?: Partial<RecipeEffort>;
   localization?: Partial<RecipeLocalization>;
+  allergens?: Allergen[];
 };
 
 function ingredientAmount(ingredient: Ingredient) {
@@ -652,6 +782,12 @@ const r = (
       ]
     : generatedRecipeSteps(title, ingredients, time);
   const packing = packingFor(title, ingredients, servingWeight);
+  const allergens = [
+    ...new Set([
+      ...ingredients.flatMap((ingredient) => ingredient.allergens),
+      ...(meta.allergens ?? []),
+    ]),
+  ];
   return {
     id,
     slot,
@@ -663,6 +799,7 @@ const r = (
     cost,
     tags,
     ingredients,
+    allergens,
     steps,
     storageDays,
     freezable,
@@ -3815,6 +3952,62 @@ function selectionKey(batch: Batch, slot: MealSlot) {
 function tuningKey(batch: Batch, slot: MealSlot, person: Person) {
   return `${batch.id}:${slot}:${person.id}`;
 }
+function hardConflicts(recipe: Recipe, person: Person) {
+  const forbidden = new Set(person.hardExclusions ?? []);
+  return recipe.allergens.filter((allergen) => forbidden.has(allergen));
+}
+function dislikeMatches(recipe: Recipe, person: Person) {
+  const selected = new Set(person.dislikes ?? []);
+  return dislikeOptions
+    .filter(
+      (option) =>
+        selected.has(option.id) &&
+        option.ingredientIds.some((id) =>
+          recipe.ingredients.some((ingredient) => ingredient.id === id),
+        ),
+    )
+    .map((option) => option.label);
+}
+function relevantPeople(people: Person[], slot: MealSlot) {
+  return people.filter((person) => person.includedSlots.includes(slot));
+}
+function validateHardExclusions(
+  plan: Pick<ActivePlan, "batches" | "mealSlots" | "people" | "selections">,
+) {
+  const conflicts: {
+    batch: Batch;
+    slot: MealSlot;
+    person: Person;
+    recipe: Recipe;
+    allergens: Allergen[];
+  }[] = [];
+  for (const batch of plan.batches)
+    for (const slot of plan.mealSlots) {
+      const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
+      if (!recipe) continue;
+      for (const person of relevantPeople(plan.people, slot)) {
+        const allergens = hardConflicts(recipe, person);
+        if (allergens.length)
+          conflicts.push({ batch, slot, person, recipe, allergens });
+      }
+    }
+  return conflicts;
+}
+function crossContactWarnings(
+  plan: Pick<ActivePlan, "batches" | "mealSlots" | "people" | "selections">,
+  batch: Batch,
+) {
+  const prepared = new Set<Allergen>();
+  for (const slot of plan.mealSlots) {
+    const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
+    recipe?.allergens.forEach((allergen) => prepared.add(allergen));
+  }
+  return plan.people.flatMap((person) =>
+    (person.hardExclusions ?? [])
+      .filter((allergen) => prepared.has(allergen))
+      .map((allergen) => ({ person, allergen })),
+  );
+}
 function buildShopping(
   plan: Pick<ActivePlan, "batches" | "selections" | "people" | "tuning">,
 ): ShoppingItem[] {
@@ -3886,6 +4079,7 @@ type CatalogFilters = {
   effort?: "low" | "high";
   time?: "quick" | "medium" | "long";
   limit?: number | "all";
+  includeDisliked?: boolean;
 };
 function timeBand(recipe: Recipe): NonNullable<CatalogFilters["time"]> {
   return recipe.time <= 20 ? "quick" : recipe.time <= 40 ? "medium" : "long";
@@ -3897,12 +4091,16 @@ function candidateRecipes(
   batchDays = 1,
   filters: CatalogFilters = {},
 ) {
+  const eaters = relevantPeople(people, slot);
   const sorted = recipes
     .filter(
       (recipe) =>
         recipe.slot === slot &&
         recipe.tags.includes(style) &&
         (recipe.storageDays >= batchDays || recipe.freezable) &&
+        eaters.every((person) => hardConflicts(recipe, person).length === 0) &&
+        (filters.includeDisliked ||
+          eaters.every((person) => dislikeMatches(recipe, person).length === 0)) &&
         (!filters.origin || recipe.provenance.kind === filters.origin) &&
         (!filters.effort || recipe.effort.level === filters.effort) &&
         (!filters.time || timeBand(recipe) === filters.time),
@@ -3949,6 +4147,28 @@ function newPerson(index = 0): Person {
     daily: { ...defaultMacros },
     macroPreset: "balanced",
     includedSlots: ["breakfast", "lunch", "dinner"],
+    dislikes: [],
+    hardExclusions: [],
+  };
+}
+function normalizePerson(person: Person): Person {
+  return {
+    ...person,
+    dislikes: Array.isArray(person.dislikes) ? person.dislikes : [],
+    hardExclusions: Array.isArray(person.hardExclusions)
+      ? person.hardExclusions
+      : [],
+  };
+}
+function normalizePlan(plan: ActivePlan): ActivePlan {
+  return {
+    ...plan,
+    people: plan.people.map(normalizePerson),
+    shopping: plan.shopping.map((item) => ({
+      ...item,
+      allergens: [...(ingredientAllergens[item.id] ?? [])],
+      checkLabel: packagedIngredientIds.has(item.id),
+    })),
   };
 }
 function groupedShopping(items: ShoppingItem[]) {
@@ -3991,7 +4211,7 @@ export default function Home() {
     fetch("/api/plans", { headers: { "X-Mise-Client": clientId() } })
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data: { plan?: ActivePlan | null }) => {
-        if (mounted && data.plan) setActivePlan(data.plan);
+        if (mounted && data.plan) setActivePlan(normalizePlan(data.plan));
       })
       .catch(() => {
         if (mounted) setLoadError(true);
@@ -4828,6 +5048,7 @@ function WeekScreen({
     const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
     return recipe ? [{ slot, recipe }] : [];
   });
+  const contactWarnings = crossContactWarnings(plan, batch);
   const plannedMacros = addMacros(
     dayMeals
       .filter(({ slot }) => person?.includedSlots.includes(slot))
@@ -5021,6 +5242,23 @@ function WeekScreen({
         </div>
         <Icon name="chevron" className="soft-chevron" />
       </button>
+      {contactWarnings.length > 0 && (
+        <section className="allergy-warning glass-card" role="alert">
+          <span>!</span>
+          <div>
+            <h3>Риск перекрёстного контакта</h3>
+            <p>
+              В этой общей готовке есть: {contactWarnings
+                .map(
+                  ({ person: eater, allergen }) =>
+                    `${allergenMeta[allergen].short.toLowerCase()} — нельзя ${eater.name}`,
+                )
+                .join("; ")}. Разделите инвентарь, поверхности и порядок
+              готовки.
+            </p>
+          </div>
+        </section>
+      )}
       <div className="section-heading">
         <div>
           <p className="kicker">
@@ -5313,6 +5551,16 @@ function ShoppingScreen({
           </button>
         </div>
       )}
+      <section className="label-reminder glass-card">
+        <span>i</span>
+        <p>
+          <b>Проверяйте этикетку</b>
+          <small>
+            Состав и предупреждение о возможных следах зависят от конкретного
+            продукта и упаковки.
+          </small>
+        </p>
+      </section>
       {Object.entries(groups).map(([group, items]) => (
         <section className="shopping-group glass-card" key={group}>
           <div className="group-title">
@@ -5329,7 +5577,10 @@ function ShoppingScreen({
               <span className="checkmark">
                 {item.checked && <Icon name="check" />}
               </span>
-              <span className="grocery-name">{item.name}</span>
+              <span className="grocery-name">
+                {item.name}
+                {item.checkLabel && <small>Проверить состав и следы</small>}
+              </span>
               <b>
                 {item.quantity.toLocaleString("ru-RU")} {item.unit}
               </b>
@@ -5414,6 +5665,13 @@ function ProfileScreen({
                   ),
                 )}
               </div>
+              {(person.hardExclusions?.length ?? 0) > 0 && (
+                <small className="hard-summary">
+                  Нельзя: {person.hardExclusions
+                    ?.map((allergen) => allergenMeta[allergen].short.toLowerCase())
+                    .join(", ")}
+                </small>
+              )}
             </div>
           </section>
         );
@@ -5500,7 +5758,7 @@ function PlanBuilder({
     initialPlan?.menuStyle ?? "protein",
   );
   const [people, setPeople] = useState<Person[]>(
-    initialPlan?.people ?? [
+    initialPlan?.people.map(normalizePerson) ?? [
       { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
     ],
   );
@@ -5521,6 +5779,7 @@ function PlanBuilder({
   const [saveState, setSaveState] = useState<"idle" | "saving" | "error">(
     "idle",
   );
+  const [saveMessage, setSaveMessage] = useState("");
   const [successPlan, setSuccessPlan] = useState<ActivePlan | null>(null);
   const [draftRestored, setDraftRestored] = useState(false);
   const stepRef = useRef(step);
@@ -5557,7 +5816,7 @@ function PlanBuilder({
     setMealSlots(initialPlan?.mealSlots ?? ["breakfast", "lunch", "dinner"]);
     setMenuStyle(initialPlan?.menuStyle ?? "protein");
     setPeople(
-      initialPlan?.people ?? [
+      initialPlan?.people.map(normalizePerson) ?? [
         { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
       ],
     );
@@ -5581,7 +5840,7 @@ function PlanBuilder({
           setEnd(draft.end);
           setMealSlots(draft.mealSlots);
           setMenuStyle(draft.menuStyle);
-          setPeople(draft.people);
+          setPeople(draft.people.map(normalizePerson));
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
           setSelections(draft.selections);
@@ -5645,7 +5904,10 @@ function PlanBuilder({
           recipe &&
           recipe.slot === slot &&
           recipe.tags.includes(menuStyle) &&
-          (recipe.storageDays >= batch.days || recipe.freezable)
+          (recipe.storageDays >= batch.days || recipe.freezable) &&
+          relevantPeople(people, slot).every(
+            (person) => hardConflicts(recipe, person).length === 0,
+          )
         )
           valid[key] = recipe.id;
       }
@@ -5837,12 +6099,33 @@ function PlanBuilder({
     setSelections(updated);
   }
   async function save() {
+    if (!allSelected) {
+      const firstMissing = positions.findIndex(
+        (position) =>
+          !validSelections[selectionKey(position.batch, position.slot)],
+      );
+      setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
+      setStep(5);
+      setSaveState("error");
+      setSaveMessage(
+        "Одно из выбранных блюд нарушает «Аллергия/мне нельзя». Выберите подходящую замену.",
+      );
+      return;
+    }
     const plan: ActivePlan = {
       ...draftPlan,
       id: initialPlan?.id ?? crypto.randomUUID(),
       createdAt: initialPlan?.createdAt ?? new Date().toISOString(),
     };
+    if (validateHardExclusions(plan).length > 0) {
+      setSaveState("error");
+      setSaveMessage(
+        "План не сохранён: выбранное блюдо нарушает «Аллергия/мне нельзя».",
+      );
+      return;
+    }
     setSaveState("saving");
+    setSaveMessage("");
     try {
       await persistPlan(plan);
       setSaveState("idle");
@@ -5852,6 +6135,9 @@ function PlanBuilder({
       else setSuccessPlan(plan);
     } catch {
       setSaveState("error");
+      setSaveMessage(
+        "Не получилось сохранить. Проверьте соединение и попробуйте ещё раз.",
+      );
     }
   }
   return (
@@ -6001,6 +6287,7 @@ function PlanBuilder({
         )}
         {step === 5 && currentPosition && (
           <MenuStep
+            key={`${currentPosition.batch.id}:${currentPosition.slot}`}
             position={currentPosition}
             positions={positions}
             currentIndex={choiceIndex}
@@ -6063,7 +6350,8 @@ function PlanBuilder({
       </footer>
       {saveState === "error" && (
         <div className="save-error" role="alert">
-          Не получилось сохранить. Проверьте соединение и попробуйте ещё раз.
+          {saveMessage ||
+            "Не получилось сохранить. Проверьте соединение и попробуйте ещё раз."}
         </div>
       )}
       {successPlan && (
@@ -6295,8 +6583,8 @@ function PeopleStep({
       <StepIntro
         icon="◎"
         kicker="Для кого готовим"
-        title="Люди и цели"
-        text="Введите калории и выберите распределение — БЖУ пересчитаются автоматически."
+        title="Люди, цели и исключения"
+        text="КБЖУ задают порцию. «Не люблю» влияет на рекомендации, а «Аллергия/мне нельзя» полностью запрещает блюдо для этого человека."
       />
       {people.map((person, index) => {
         const plannedTargets = plannedTargetsFor(person);
@@ -6456,6 +6744,81 @@ function PeopleStep({
                   );
                 })}
               </div>
+            </div>
+            <div className="food-preferences">
+              <section>
+                <p>
+                  <b>Не люблю</b>
+                  <small>
+                    Mise не предложит такие блюда автоматически, но вы сможете
+                    выбрать их вручную.
+                  </small>
+                </p>
+                <div className="preference-pills">
+                  {dislikeOptions.map((option) => {
+                    const active = (person.dislikes ?? []).includes(option.id);
+                    return (
+                      <button
+                        key={option.id}
+                        role="checkbox"
+                        aria-checked={active}
+                        className={active ? "selected" : ""}
+                        onClick={() =>
+                          onUpdate(person.id, {
+                            dislikes: active
+                              ? (person.dislikes ?? []).filter(
+                                  (item) => item !== option.id,
+                                )
+                              : [...(person.dislikes ?? []), option.id],
+                          })
+                        }
+                      >
+                        {active ? "✓ " : "+ "}
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </section>
+              <section className="hard-preferences">
+                <p>
+                  <b>Аллергия / мне нельзя</b>
+                  <small>
+                    Жёсткий запрет: такое блюдо нельзя выбрать или сохранить.
+                  </small>
+                </p>
+                <div className="preference-pills">
+                  {(Object.keys(allergenMeta) as Allergen[]).map((allergen) => {
+                    const active = (person.hardExclusions ?? []).includes(
+                      allergen,
+                    );
+                    return (
+                      <button
+                        key={allergen}
+                        role="checkbox"
+                        aria-checked={active}
+                        className={active ? "selected hard" : ""}
+                        onClick={() =>
+                          onUpdate(person.id, {
+                            hardExclusions: active
+                              ? (person.hardExclusions ?? []).filter(
+                                  (item) => item !== allergen,
+                                )
+                              : [...(person.hardExclusions ?? []), allergen],
+                          })
+                        }
+                      >
+                        {active ? "! " : "+ "}
+                        {allergenMeta[allergen].short}
+                      </button>
+                    );
+                  })}
+                </div>
+                <small className="label-caveat">
+                  Для настоящей аллергии всё равно проверяйте состав и возможные
+                  следы на конкретной упаковке.
+                </small>
+              </section>
             </div>
             <div className="portion-preview">
               {person.includedSlots
@@ -6826,12 +7189,23 @@ function MenuStep({
   onChoose: (id: string) => void;
   onRepeat: (id: string, slot: MealSlot) => void;
 }) {
-  const candidates = candidateRecipes(
+  const [includeDisliked, setIncludeDisliked] = useState(false);
+  const preferred = candidateRecipes(
     position.slot,
     style,
     people,
     position.batch.days,
+    { limit: "all" },
   );
+  const allAllowed = candidateRecipes(
+    position.slot,
+    style,
+    people,
+    position.batch.days,
+    { limit: "all", includeDisliked: true },
+  );
+  const candidates = (includeDisliked ? allAllowed : preferred).slice(0, 5);
+  const hiddenDisliked = Math.max(0, allAllowed.length - preferred.length);
   const selectedId = selections[selectionKey(position.batch, position.slot)];
   const completed = positions.filter(
     ({ batch, slot }) => selections[selectionKey(batch, slot)],
@@ -6842,7 +7216,7 @@ function MenuStep({
         icon={mealMeta[position.slot].icon}
         kicker={`${completed} из ${positions.length} выбрано`}
         title={`${mealMeta[position.slot].label} · готовка ${position.batch.index + 1}`}
-        text={`${formatDate(position.batch.start)} — ${formatDate(position.batch.end)}. Выберите один из пяти вариантов.`}
+        text={`${formatDate(position.batch.start)} — ${formatDate(position.batch.end)}. Выберите один из пяти вариантов; жёсткие исключения уже убраны.`}
       />
       <div className="position-strip">
         {positions.map((item, index) => (
@@ -6857,10 +7231,33 @@ function MenuStep({
           </button>
         ))}
       </div>
+      {allAllowed.length === 0 && (
+        <p className="inline-warning" role="alert">
+          Для этой позиции нет блюда без указанных жёстких исключений. Измените
+          направление меню, состав позиций или ограничения.
+        </p>
+      )}
+      {hiddenDisliked > 0 && (
+        <button
+          className="secondary-button disliked-toggle"
+          aria-pressed={includeDisliked}
+          onClick={() => setIncludeDisliked((value) => !value)}
+        >
+          {includeDisliked
+            ? "Скрыть варианты из «не люблю»"
+            : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
+        </button>
+      )}
       <div className="menu-candidates">
         {candidates.map((recipe, index) => {
           const selected = selectedId === recipe.id;
           const fit = fitScore(recipe, people, position.slot);
+          const dislikeLabels = relevantPeople(people, position.slot).flatMap(
+            (person) =>
+              dislikeMatches(recipe, person).map(
+                (label) => `${label.toLowerCase()} — не любит ${person.name}`,
+              ),
+          );
           return (
             <article
               className={`candidate-card glass-card ${selected ? "selected" : ""}`}
@@ -6886,6 +7283,11 @@ function MenuStep({
                     {styleNote(recipe, style)} · хранится {recipe.storageDays}{" "}
                     дн.
                   </small>
+                  {dislikeLabels.length > 0 && (
+                    <small className="dislike-note">
+                      Из «не люблю»: {dislikeLabels.join("; ")}
+                    </small>
+                  )}
                 </div>
                 <i>{selected ? "✓" : ""}</i>
               </button>
@@ -7149,6 +7551,8 @@ function RecipeView({
     batch && recipe.freezable
       ? Math.max(0, batch.days - recipe.storageDays)
       : 0;
+  const contactWarnings =
+    plan && batch ? crossContactWarnings(plan, batch) : [];
   const originLabel =
     recipe.provenance.kind === "parsed"
       ? "Из источника"
@@ -7292,6 +7696,36 @@ function RecipeView({
           ))}
         </div>
       </section>
+      {recipe.allergens.length > 0 && (
+        <section className="recipe-allergens glass-card">
+          <p className="kicker">Метки каталога</p>
+          <h2>Аллергены в рецепте</h2>
+          <div className="allergen-badges">
+            {recipe.allergens.map((allergen) => (
+              <span key={allergen}>{allergenMeta[allergen].label}</span>
+            ))}
+          </div>
+          <p>
+            Эти метки не учитывают возможные следы в конкретной упаковке.
+          </p>
+        </section>
+      )}
+      {contactWarnings.length > 0 && (
+        <section className="allergy-warning glass-card" role="alert">
+          <span>!</span>
+          <div>
+            <h3>Общая готовка: перекрёстный контакт</h3>
+            <p>
+              {contactWarnings
+                .map(
+                  ({ person: eater, allergen }) =>
+                    `${allergenMeta[allergen].short} — нельзя ${eater.name}`,
+                )
+                .join("; ")}. Разделите инвентарь и поверхности.
+            </p>
+          </div>
+        </section>
+      )}
       <section className="macro-tuner glass-card">
         <div className="tuner-heading">
           <div>
@@ -7459,7 +7893,17 @@ function RecipeView({
                   <span>✓</span>
                   <p>
                     {ingredient.name}
-                    <small>{ingredient.group}</small>
+                    <small>
+                      {ingredient.group}
+                      {ingredient.allergens.length > 0
+                        ? ` · ${ingredient.allergens
+                            .map((allergen) => allergenMeta[allergen].short)
+                            .join(", ")}`
+                        : ""}
+                      {ingredient.checkLabel
+                        ? " · проверить этикетку/следы"
+                        : ""}
+                    </small>
                   </p>
                   <b>
                     {ingredient.unit === "шт."
@@ -7528,6 +7972,16 @@ function RecipeView({
             )}
           </div>
         )}
+      </section>
+      <section className="label-reminder glass-card">
+        <span>i</span>
+        <p>
+          <b>Проверьте конкретный продукт</b>
+          <small>
+            Сверьте состав и пометку «может содержать следы» на каждой
+            упаковке. Mise не заявляет медицинскую безопасность блюда.
+          </small>
+        </p>
       </section>
       <section className="recipe-storage glass-card">
         <p className="kicker">Ориентиры хранения</p>
