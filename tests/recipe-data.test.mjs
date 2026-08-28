@@ -7,11 +7,12 @@ import { loadTypeScriptModule } from "./typescript-module.mjs";
 
 async function loadRecipeCatalog() {
   const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
+  const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, portionFor, ingredientScaleFor, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, recipeFamiliesById, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -23,12 +24,17 @@ async function loadRecipeCatalog() {
     nutritionMacrosForCalories: nutrition.macrosForCalories,
     nutritionRecalculateDailyMacros: nutrition.recalculateDailyMacros,
     nutritionShareForSlots: nutrition.shareForSlots,
+    materializeInstructions: engine.materializeInstructions,
+    recipeToFamily: engine.recipeToFamily,
+    solveRecipeFamily: engine.solveRecipeFamily,
+    solveRecipeBatch: engine.solveRecipeBatch,
+    normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
 }
 
-const { recipes, portionFor, ingredientScaleFor, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, recipeFamiliesById, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -218,8 +224,8 @@ test("template cooking copy is no longer used by active recipes", async () => {
   ]) assert.ok(!source.includes(phrase), `removed template phrase: ${phrase}`);
 });
 
-test("flex controls clamp values and scale ingredient groups independently", () => {
-  const item = recipes.find((candidate) => candidate.id === "src-chicken-buckwheat");
+test("legacy flex controls remain available for recipes outside the pilot migration", () => {
+  const item = recipes.find((candidate) => candidate.id === "korean-bowl");
   assert.ok(item);
   const person = { id: "test", name: "Тест", daily: { kcal: 2100, protein: 150, fat: 70, carbs: 210 }, includedSlots: ["breakfast", "lunch", "dinner"] };
   const portion = portionFor(person, "lunch", item, { protein: 9, fat: 0.01, carbs: 9 });
@@ -227,7 +233,7 @@ test("flex controls clamp values and scale ingredient groups independently", () 
   assert.equal(portion.ratios.fat, item.flex.fat[0]);
   assert.equal(portion.ratios.carbs, item.flex.carbs[1]);
   assert.equal(ingredientScaleFor(item.ingredients.find((ingredient) => ingredient.id === "chicken"), portion), portion.factor * portion.ratios.protein);
-  assert.equal(ingredientScaleFor(item.ingredients.find((ingredient) => ingredient.id === "buckwheat"), portion), portion.factor * portion.ratios.carbs);
+  assert.equal(ingredientScaleFor(item.ingredients.find((ingredient) => ingredient.id === "rice"), portion), portion.factor * portion.ratios.carbs);
 });
 
 test("planned positions keep fixed shares and expose the daily remainder", () => {
@@ -309,4 +315,87 @@ test("plan validation catches an existing selection that conflicts with a person
   assert.equal(conflicts.length, 1);
   assert.equal(conflicts[0].person.id, person.id);
   assert.equal(conflicts[0].recipe.id, tuna.id);
+});
+
+test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing the legacy catalog", () => {
+  assert.equal(Object.keys(recipeFamiliesById).length, 18);
+  assert.ok(recipes.length > Object.keys(recipeFamiliesById).length);
+  for (const family of Object.values(recipeFamiliesById)) {
+    assert.equal(family.id.startsWith("src-"), true, `${family.title} reuses an existing recipe`);
+    assert.equal(family.provenance.kind, "parsed", `${family.title} preserves provenance`);
+    assert.ok(family.image.sourceUrl, `${family.title} preserves source photo metadata`);
+    assert.ok(family.ingredients.every((ingredient) => ingredient.canonicalIngredientId && ingredient.role), `${family.title} uses canonical ingredients and roles`);
+    assert.ok(family.miseInstructions[0].ingredientIds.length === family.ingredients.length, `${family.title} parameterizes its ingredient step`);
+    assert.ok(Number.isFinite(family.nutritionDeltaKcal), `${family.title} keeps source vs Mise nutrition QA`);
+  }
+});
+
+test("raw candidate adapter preserves all 217 source cards and legacy editorial statuses", async () => {
+  const datasets = await Promise.all([
+    readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8").then(JSON.parse),
+    readFile(new URL("../data/goodfood-candidates.json", import.meta.url), "utf8").then(JSON.parse),
+  ]);
+  const drafts = datasets.flatMap((dataset) => dataset.candidates.map((candidate) => normalizeRawRecipeCandidate(candidate, { publisher: dataset.source, accessedAt: dataset.importedAt })));
+  assert.equal(drafts.length, 217);
+  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "promoted").length, 28);
+  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "pending").length, 189);
+  assert.ok(drafts.every((draft) => draft.sourceUrl && draft.imageUrl && draft.sourceIngredients.length > 0));
+  assert.ok(drafts.every((draft) => Object.values(draft.sourceNutrition).every(Number.isFinite)));
+  assert.ok(drafts.every((draft) => draft.legacy.editorialStatus === draft.editorial.legacyStatus));
+});
+
+test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {
+  for (const family of Object.values(recipeFamiliesById)) {
+    for (const targetCalories of [450, 600, 750]) {
+      if (targetCalories < family.minViableCalories || targetCalories > family.maxViableCalories) continue;
+      const solved = solveRecipeFamily(family, { targetCalories });
+      assert.equal(solved.viable, true, `${family.title} solves ${targetCalories}: ${solved.explanation.join(" ")}`);
+      assert.ok(Math.abs(solved.nutrition.kcal - targetCalories) <= Math.max(12, targetCalories * 0.025), `${family.title} stays near ${targetCalories}`);
+      assert.ok(solved.nutrition.protein >= family.minimumProtein - 0.2, `${family.title} keeps minimum protein`);
+      for (const ingredient of family.ingredients) {
+        const amount = solved.amounts[ingredient.sourceIngredientId];
+        assert.ok(amount >= ingredient.minAmount - 0.51 && amount <= ingredient.maxAmount + 0.51, `${family.title}: ${ingredient.sourceIngredientId} stays bounded`);
+        if (ingredient.role === "protein" && ingredient.unit !== "piece") assert.ok(amount >= 45, `${family.title}: protein does not collapse`);
+        if (ingredient.role === "vegetable") assert.ok(amount > 0, `${family.title}: vegetables remain`);
+        if (ingredient.unit !== "piece") assert.equal(amount, Math.round(amount), `${family.title}: gram amounts are practical`);
+      }
+    }
+  }
+});
+
+test("solver exposes not-viable and hard-exclusion outcomes instead of deforming a dish", () => {
+  const family = recipeFamiliesById["src-teriyaki-tray"];
+  const tooSmall = solveRecipeFamily(family, { targetCalories: 300 });
+  assert.equal(tooSmall.viable, false);
+  assert.equal(tooSmall.reason, "outside_calorie_range");
+  const allergen = solveRecipeFamily(recipeFamiliesById["src-salmon-rice-veg"], { targetCalories: 600, hardExclusions: ["fish"] });
+  assert.equal(allergen.viable, false);
+  assert.equal(allergen.reason, "hard_exclusion");
+});
+
+test("two-person solver sums 600 and 450 kcal portions into one batch and parameterizes instructions", () => {
+  const family = recipeFamiliesById["src-teriyaki-tray"];
+  const batch = solveRecipeBatch(family, [
+    { id: "person-a", targetCalories: 600 },
+    { id: "person-b", targetCalories: 450 },
+  ]);
+  assert.equal(batch.viable, true);
+  assert.equal(batch.portions.length, 2);
+  for (const ingredient of family.ingredients) {
+    const id = ingredient.sourceIngredientId;
+    assert.equal(batch.totals[id], Math.round((batch.portions[0].variant.amounts[id] + batch.portions[1].variant.amounts[id]) * 10) / 10);
+  }
+  const steps = materializeInstructions(family, batch.totals);
+  assert.equal(steps.length, family.miseInstructions.length);
+  assert.match(steps[0], /куриное бедро|рис|батат/i);
+  assert.match(steps[0], /г/);
+});
+
+test("portion adapter uses Recipe Engine for migrated recipes and legacy math elsewhere", () => {
+  const person = { id: "engine", name: "Тест", daily: { kcal: 2000, protein: 140, fat: 65, carbs: 220 }, includedSlots: ["lunch"] };
+  const migrated = portionFor(person, "lunch", recipe("Курица с рисом и овощами"));
+  const legacy = portionFor(person, "lunch", recipe("Куриный боул по-корейски"));
+  assert.equal(migrated.engine, "recipe-family-v1");
+  assert.equal(legacy.engine, "legacy");
+  assert.ok(migrated.solvedAmounts.chicken > 0);
 });

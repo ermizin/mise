@@ -16,6 +16,12 @@ import {
   type PersonAllocation,
 } from "@/domain/portion-allocation";
 import {
+  materializeInstructions,
+  recipeToFamily,
+  solveRecipeFamily,
+  type RecipeFamily,
+} from "@/domain/recipe-engine";
+import {
   ACTIVITY_FACTORS,
   NUTRITION_CONFIG,
   calculateMealPlanTargets,
@@ -3663,6 +3669,11 @@ for (const style of Object.keys(generatedTitles) as MenuStyle[])
 const recipesById = Object.fromEntries(
   recipes.map((recipe) => [recipe.id, recipe]),
 ) as Record<string, Recipe>;
+const recipeFamiliesById = Object.fromEntries(
+  recipes
+    .map((recipe) => [recipe.id, recipeToFamily(recipe)] as const)
+    .filter((entry): entry is readonly [string, RecipeFamily] => Boolean(entry[1])),
+) as Record<string, RecipeFamily>;
 function clientId() {
   const key = "mise-client-id";
   const saved = localStorage.getItem(key);
@@ -3912,6 +3923,43 @@ function portionFor(
   tuning?: RecipeTuning,
 ) {
   const target = targetFor(person, slot);
+  const family = recipeFamiliesById[recipe.id];
+  if (family) {
+    const ratios = tuning
+      ? {
+          protein: clamp(tuning.protein, ...recipe.flex.protein),
+          fat: clamp(tuning.fat, ...recipe.flex.fat),
+          carbs: clamp(tuning.carbs, ...recipe.flex.carbs),
+        }
+      : { protein: 1, fat: 1, carbs: 1 };
+    const solved = solveRecipeFamily(family, {
+      targetCalories: target.kcal,
+      targetProtein: Math.min(
+        target.kcal / 8,
+        target.protein * ratios.protein,
+      ),
+      hardExclusions: person.hardExclusions,
+    });
+    if (solved.viable) {
+      const baseAmount = family.ingredients.reduce(
+        (sum, ingredient) => sum + ingredient.baseAmount,
+        0,
+      );
+      const solvedAmount = Object.values(solved.amounts).reduce(
+        (sum, amount) => sum + amount,
+        0,
+      );
+      return {
+        target,
+        factor: solvedAmount / Math.max(1, baseAmount),
+        actual: solved.nutrition,
+        ratios,
+        grams: round(solvedAmount),
+        solvedAmounts: solved.amounts,
+        engine: "recipe-family-v1" as const,
+      };
+    }
+  }
   const factor = target.kcal > 0 ? target.kcal / recipe.macros.kcal : 0;
   const proportional = scaleMacros(recipe.macros, factor);
   const automatic = {
@@ -3953,6 +4001,8 @@ function portionFor(
     actual,
     ratios,
     grams: round(recipe.servingWeight * gramsFactor),
+    solvedAmounts: undefined,
+    engine: "legacy" as const,
   };
 }
 function ingredientRatioFor(ingredient: Ingredient, ratios: RecipeTuning) {
@@ -3965,6 +4015,9 @@ function ingredientScaleFor(
   ingredient: Ingredient,
   portion: ReturnType<typeof portionFor>,
 ) {
+  const solvedAmount = portion.solvedAmounts?.[ingredient.id];
+  if (typeof solvedAmount === "number")
+    return solvedAmount / Math.max(ingredient.quantity, 0.0001);
   return portion.factor * ingredientRatioFor(ingredient, portion.ratios);
 }
 function buildBatches(
@@ -4147,6 +4200,15 @@ type CatalogFilters = {
 function timeBand(recipe: Recipe): NonNullable<CatalogFilters["time"]> {
   return recipe.time <= 20 ? "quick" : recipe.time <= 40 ? "medium" : "long";
 }
+function recipeFamilyViableFor(recipe: Recipe, person: Person, slot: MealSlot) {
+  const family = recipeFamiliesById[recipe.id];
+  if (!family) return true;
+  const target = targetFor(person, slot);
+  return solveRecipeFamily(family, {
+    targetCalories: target.kcal,
+    hardExclusions: person.hardExclusions,
+  }).viable;
+}
 function candidateRecipes(
   slot: MealSlot,
   style: MenuStyle,
@@ -4162,6 +4224,7 @@ function candidateRecipes(
         recipe.tags.includes(style) &&
         (recipe.storageDays >= batchDays || recipe.freezable) &&
         eaters.every((person) => hardConflicts(recipe, person).length === 0) &&
+        eaters.every((person) => recipeFamilyViableFor(recipe, person, slot)) &&
         (filters.includeDisliked ||
           eaters.every((person) => dislikeMatches(recipe, person).length === 0)) &&
         (!filters.origin || recipe.provenance.kind === filters.origin) &&
@@ -7951,6 +8014,18 @@ function RecipeView({
       }, 0) * batch.days
     );
   }
+  const recipeFamily = recipeFamiliesById[recipe.id];
+  const displaySteps = recipeFamily
+    ? materializeInstructions(
+        recipeFamily,
+        Object.fromEntries(
+          recipe.ingredients.map((ingredient) => [
+            ingredient.id,
+            ingredient.quantity * totalIngredientScale(ingredient),
+          ]),
+        ),
+      )
+    : recipe.steps;
   return (
     <main className="app-shell recipe-detail">
       <div className="ambient ambient-one" />
@@ -8221,7 +8296,7 @@ function RecipeView({
         )}
         {section === "steps" && (
           <ol className="cooking-steps">
-            {recipe.steps.map((text, index) => (
+            {displaySteps.map((text, index) => (
               <li key={`${text}-${index}`}>
                 <span>{index + 1}</span>
                 <p>{text}</p>
