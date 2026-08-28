@@ -92,7 +92,7 @@ export const NUTRITION_CONFIG = {
   macroPolicy: {
     proteinGPerKg: {
       standard: { maintenance: 1.2, loss: 1.5, gain: 1.4 },
-      muscle: { maintenance: 1.8, loss: 2, gain: 1.8 },
+      muscle: { maintenance: 2, loss: 2.2, gain: 2 },
     },
     fatCalorieShare: { standard: 0.3, muscle: 0.25 },
     maximumProteinCalorieShare: 0.4,

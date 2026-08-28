@@ -67,6 +67,13 @@ test("muscle priority primarily raises protein while keeping calories capped", (
   assert.ok(muscle.target.kcal - nutrition.macroCalories(muscle.target) <= 3);
 });
 
+test("muscle priority uses 2 g/kg for maintenance and gain, and 2.2 g/kg for loss", () => {
+  const weight = 80;
+  assert.equal(nutrition.calculateMacroTargets(3000, weight, true, "maintenance").protein, 160);
+  assert.equal(nutrition.calculateMacroTargets(3000, weight, true, "gain").protein, 160);
+  assert.equal(nutrition.calculateMacroTargets(3000, weight, true, "loss").protein, 176);
+});
+
 test("macro presets and custom recalculation never exceed target calories", () => {
   for (const preset of ["balanced", "protein", "carbs", "fat"]) {
     const result = nutrition.macrosForCalories(2001, preset);

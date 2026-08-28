@@ -5238,7 +5238,7 @@ function WeekScreen({
   async function confirmBatch() {
     if (confirmedBatchIds.includes(batch.id)) return;
     setCookingConfirmError(false);
-    const dedupeKey = `cooking-confirmed:${plan.id}:${batch.id}`;
+    const dedupeKey = `cooking-confirmed:${activePlan.id}:${batch.id}`;
     if (await trackAnalytics("cooking_confirmed", {}, dedupeKey)) {
       setConfirmedBatchIds((current) => [...current, batch.id]);
     } else setCookingConfirmError(true);
