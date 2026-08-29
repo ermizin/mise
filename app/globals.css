@@ -5529,3 +5529,419 @@ p {
     height: 52px;
   }
 }
+
+/* ============================================================
+   Готовка партии · макет 5b
+
+   Отдельная поверхность исполнения: одна стеклянная шапка, один слой карточек
+   и фиксированное действие. Время помечено как ориентир, потому что рецепты
+   пока не описывают зависимости для достоверного параллельного расписания.
+   ============================================================ */
+
+.batch-cooking-entry {
+  width: 100%;
+  padding: var(--pad-nested);
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--ink);
+  text-align: left;
+}
+.batch-cooking-entry > span {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-tile);
+  color: #fff;
+  background: var(--accent-grad);
+}
+.batch-cooking-entry b,
+.batch-cooking-entry small {
+  display: block;
+}
+.batch-cooking-entry b {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+}
+.batch-cooking-entry small {
+  margin-top: var(--space-1);
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.35;
+}
+.batch-cooking-entry .entry-chevron {
+  color: var(--ink-muted);
+}
+
+.cooking-batch-shell {
+  min-height: 100dvh;
+  padding: 0 18px calc(112px + env(safe-area-inset-bottom));
+}
+.cooking-batch-header {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 50%;
+  width: min(720px, 100%);
+  min-height: 116px;
+  padding: calc(48px + env(safe-area-inset-top)) 20px 14px;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: minmax(70px, 1fr) auto minmax(70px, 1fr);
+  align-items: center;
+  gap: var(--space-2);
+  border-radius: 0 0 var(--r-card) var(--r-card);
+}
+.cooking-batch-header button {
+  min-height: var(--hit-min);
+  padding: 0;
+  color: var(--ink-muted);
+  background: transparent;
+  font-size: var(--text-link);
+  font-weight: var(--weight-label);
+  text-align: left;
+}
+.cooking-batch-header .cooking-all-button {
+  color: var(--accent-text);
+  text-align: right;
+}
+.cooking-batch-header > div {
+  min-width: 0;
+  text-align: center;
+}
+.cooking-batch-header b,
+.cooking-batch-header small {
+  display: block;
+  white-space: nowrap;
+}
+.cooking-batch-header b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-h3);
+}
+.cooking-batch-header small {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.cooking-batch-progress {
+  grid-column: 1 / -1;
+  height: var(--r-bar);
+  overflow: hidden;
+  border-radius: var(--r-bar);
+  background: var(--ink-track);
+}
+.cooking-batch-progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 180ms ease;
+}
+.cooking-batch-content {
+  position: relative;
+  z-index: 1;
+  padding-top: calc(132px + env(safe-area-inset-top));
+  display: grid;
+  gap: var(--space-3);
+}
+.batch-cooking-summary {
+  padding: 19px;
+}
+.batch-cooking-summary-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.batch-cooking-summary-top p,
+.batch-cooking-summary-top span,
+.batch-cooking-summary-top strong,
+.batch-cooking-summary-top small {
+  margin: 0;
+  display: block;
+}
+.batch-cooking-summary-top p {
+  color: var(--ink-muted);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-label);
+}
+.batch-cooking-summary-top strong {
+  margin-top: var(--space-1);
+  font-family: var(--font-num);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  letter-spacing: var(--tracking-hero);
+}
+.batch-cooking-summary-top strong small {
+  display: inline;
+  color: var(--ink-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+}
+.batch-cooking-summary-top > div:first-child > span {
+  margin-top: var(--space-1);
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.batch-progress-ring {
+  flex: 0 0 84px;
+  width: 84px;
+  height: 84px;
+  padding: 10px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-pill);
+}
+.batch-progress-ring > span {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-content: center;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.92);
+  text-align: center;
+}
+.batch-progress-ring b {
+  font-size: var(--text-h2);
+  font-weight: var(--weight-bold);
+}
+.batch-progress-ring small {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.batch-summary-tiles {
+  margin-top: var(--space-4);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+.batch-summary-tiles > span {
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-nested);
+  background: var(--glass-3-bg);
+}
+.batch-summary-tiles > span.is-mint {
+  color: var(--mint-text);
+  border-color: var(--tint-mint-border);
+  background: var(--tint-mint-bg);
+}
+.batch-summary-tiles b,
+.batch-summary-tiles small {
+  display: block;
+}
+.batch-summary-tiles b {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+}
+.batch-summary-tiles small {
+  margin-top: 3px;
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.cooking-now-card {
+  padding: 18px;
+}
+.cooking-card-kicker,
+.cooking-after-card > p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-label);
+}
+.batch-step-list {
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+  list-style: none;
+}
+.batch-step-list li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+  color: var(--ink-muted);
+  opacity: 0.56;
+}
+.batch-step-list li.is-current,
+.batch-step-list li.is-complete {
+  color: var(--ink);
+  opacity: 1;
+}
+.batch-step-list li.is-complete {
+  opacity: 0.72;
+}
+.batch-step-list li > button {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-pill);
+  color: var(--ink-muted);
+  background: var(--glass-3-bg);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.batch-step-list li.is-current > button {
+  color: #fff;
+  border-color: transparent;
+  background: var(--accent-grad);
+}
+.batch-step-list li.is-complete > button {
+  color: var(--mint-text);
+  border-color: var(--tint-mint-border);
+  background: var(--tint-mint-bg);
+}
+.batch-step-list b,
+.batch-step-list small {
+  display: block;
+}
+.batch-step-list b {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: 1.32;
+  letter-spacing: var(--tracking-h3);
+}
+.batch-step-list small {
+  margin-top: var(--space-1);
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.batch-step-list li > span {
+  color: currentColor;
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.cooking-step-tools {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  display: flex;
+  gap: var(--space-2);
+  border-top: 1px solid var(--ink-line);
+}
+.cooking-step-tools button {
+  min-height: var(--hit-min);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-pill);
+  color: var(--ink-body);
+  background: var(--glass-3-bg);
+  font-size: var(--text-min);
+  font-weight: var(--weight-label);
+}
+.cooking-step-products {
+  margin-top: var(--space-3);
+  padding: var(--pad-nested);
+  display: grid;
+  gap: var(--space-2);
+  border-radius: var(--r-nested);
+  background: var(--glass-3-bg);
+}
+.cooking-step-products span {
+  font-size: var(--text-link);
+  line-height: 1.35;
+}
+.cooking-after-card {
+  padding: 17px 18px;
+  border: 1px solid var(--tint-mint-border);
+  border-radius: var(--r-card);
+  background: var(--tint-mint-bg);
+}
+.cooking-after-card > p {
+  color: var(--mint-text);
+}
+.cooking-after-card h2 {
+  margin: 7px 0 0;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+  letter-spacing: var(--tracking-h2);
+}
+.cooking-after-card > span {
+  display: block;
+  margin-top: 6px;
+  color: var(--ink-muted);
+  font-size: var(--text-link);
+  line-height: 1.45;
+}
+.cooking-after-card > div {
+  margin-top: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cooking-after-card small {
+  padding: 6px 10px;
+  border-radius: var(--r-tile);
+  background: rgba(255, 255, 255, 0.76);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.cooking-action-bar {
+  position: fixed;
+  z-index: 22;
+  left: 50%;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  width: min(600px, calc(100% - 32px));
+  padding: 9px;
+  transform: translateX(-50%);
+}
+.cooking-action-bar .primary-button {
+  width: 100%;
+  min-height: var(--hit-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 380px) {
+  .cooking-batch-shell {
+    padding-inline: 14px;
+  }
+  .cooking-batch-header {
+    padding-inline: 14px;
+  }
+  .batch-cooking-summary,
+  .cooking-now-card {
+    padding: 16px;
+  }
+  .batch-progress-ring {
+    flex-basis: 76px;
+    width: 76px;
+    height: 76px;
+    padding: 8px;
+  }
+  .batch-progress-ring > span {
+    width: 60px;
+    height: 60px;
+  }
+  .batch-summary-tiles > span {
+    padding-inline: 9px;
+  }
+  .cooking-step-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .cooking-step-tools button {
+    justify-content: center;
+    padding-inline: 8px;
+  }
+}

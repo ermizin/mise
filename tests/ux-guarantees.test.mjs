@@ -34,6 +34,25 @@ test("the week screen answers what to do today", async () => {
   assert.doesNotMatch(page, /name: index === 0 \? "Максим"/, "no personal name is hardcoded");
 });
 
+test("batch cooking follows screen 5b without inventing a parallel schedule", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  assert.match(page, /function BatchCookingView/, "batch cooking is a dedicated view");
+  assert.match(page, /function buildBatchCookingModel/, "one view model aggregates the batch");
+  assert.match(page, /Готовить партию по шагам/, "the week exposes the cooking mode");
+  assert.match(page, /Шаг готов — дальше/, "the primary action advances one step");
+  assert.match(page, /Продукты шага/, "calculated products stay available in context");
+  assert.match(page, /Активное время · ориентир/, "time is not presented as an exact schedule");
+  assert.match(page, /history\.pushState\(\{ mise: "batch-cooking" \}/, "hardware back closes cooking mode");
+  assert.match(page, /localStorage\.setItem\(progressKey/, "progress survives an accidental close");
+  assert.match(page, /localStorage\.removeItem\(progressKey\)/, "completed progress is cleared");
+  assert.match(css, /\.cooking-batch-header/, "screen 5b owns its glass header");
+  assert.match(css, /\.cooking-action-bar/, "the action stays reachable at the bottom");
+  assert.doesNotMatch(page, /Сейчас · параллельно/, "the UI does not claim dependency-aware parallel planning");
+});
+
 test("a failed shopping tick is visible", async () => {
   const page = await read("app/page.tsx");
   assert.match(page, /Отметка не сохранилась/, "a failed save is reported");

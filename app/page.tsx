@@ -199,6 +199,26 @@ type RecipeContext = {
   slot?: MealSlot;
   plan?: ActivePlan;
 };
+type BatchCookingContext = {
+  batchId: string;
+};
+type BatchCookingStep = {
+  id: string;
+  recipeId: string;
+  title: string;
+  detail: string;
+  minutes: number;
+  products: string[];
+};
+type BatchCookingModel = {
+  dishes: { recipe: Recipe; slot: MealSlot }[];
+  steps: BatchCookingStep[];
+  totalPortions: number;
+  activeMinutes: number;
+  totalMinutes: number;
+  freezePortions: number;
+  personPortions: { id: string; name: string; count: number }[];
+};
 type BuilderMode = "onboarding" | "settings";
 type BuilderEntry = {
   step: number;
@@ -4255,6 +4275,103 @@ function recipeCookingAmounts(
     ]),
   );
 }
+function recipeDisplaySteps(recipe: Recipe) {
+  const family = recipeFamiliesById[recipe.id];
+  return family
+    ? family.miseInstructions
+        .filter((step) => step.action !== "measure")
+        .map((step) => step.text)
+    : recipe.steps.filter(
+        (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
+      );
+}
+function minutesInStep(text: string, fallback: number) {
+  const match = text.match(/(?:около|примерно|~)?\s*(\d+)\s*мин/iu);
+  return match ? Math.max(1, Number(match[1])) : Math.max(1, fallback);
+}
+function buildBatchCookingModel(
+  plan: ActivePlan,
+  batch: Batch,
+): BatchCookingModel {
+  const dishes = plan.mealSlots.flatMap((slot) => {
+    const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
+    return recipe ? [{ recipe, slot }] : [];
+  });
+  const steps: BatchCookingStep[] = [];
+  let freezePortions = 0;
+  for (const { recipe, slot } of dishes) {
+    const eaters = plan.people.filter((person) =>
+      person.includedSlots.includes(slot),
+    );
+    const portions = eaters.map((person) =>
+      portionFor(
+        person,
+        slot,
+        recipe,
+        plan.tuning?.[tuningKey(batch, slot, person)],
+      ),
+    );
+    const amounts = recipeCookingAmounts(recipe, portions, batch.days);
+    const products = recipe.ingredients.map(
+      (ingredient) =>
+        `${ingredient.name} — ${ingredientAmountLabel(
+          ingredient,
+          amounts[ingredient.id] ?? ingredient.quantity,
+        )}`,
+    );
+    const displaySteps = recipeDisplaySteps(recipe);
+    const fallbackMinutes = Math.max(
+      1,
+      Math.round(recipe.effort.activeMinutes / Math.max(1, displaySteps.length + 1)),
+    );
+    steps.push({
+      id: `${slot}:${recipe.id}:measure`,
+      recipeId: recipe.id,
+      title: `Отмерьте продукты для «${recipe.title}»`,
+      detail: `${mealMeta[slot].label} · ${withPlural(batch.days * eaters.length, FORMS.portion)}`,
+      minutes: fallbackMinutes,
+      products,
+    });
+    displaySteps.forEach((text, index) => {
+      steps.push({
+        id: `${slot}:${recipe.id}:${index}`,
+        recipeId: recipe.id,
+        title: text,
+        detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
+        minutes: minutesInStep(text, fallbackMinutes),
+        products,
+      });
+    });
+    if (recipe.freezable)
+      freezePortions +=
+        Math.max(0, batch.days - recipe.storageDays) * eaters.length;
+  }
+  return {
+    dishes,
+    steps,
+    totalPortions: dishes.reduce(
+      (sum, { slot }) =>
+        sum +
+        batch.days *
+          plan.people.filter((person) => person.includedSlots.includes(slot))
+            .length,
+      0,
+    ),
+    activeMinutes: dishes.reduce(
+      (sum, { recipe }) => sum + recipe.effort.activeMinutes,
+      0,
+    ),
+    totalMinutes: dishes.reduce((sum, { recipe }) => sum + recipe.time, 0),
+    freezePortions,
+    personPortions: plan.people.map((person) => ({
+      id: person.id,
+      name: person.name,
+      count:
+        batch.days *
+        dishes.filter(({ slot }) => person.includedSlots.includes(slot)).length,
+    })),
+  };
+}
 function buildBatches(
   start: string,
   periodDays: number,
@@ -4617,6 +4734,8 @@ export default function Home() {
   const [recipeContext, setRecipeContext] = useState<RecipeContext | null>(
     null,
   );
+  const [batchCookingContext, setBatchCookingContext] =
+    useState<BatchCookingContext | null>(null);
   const [builderEntry, setBuilderEntry] = useState<BuilderEntry>({ step: 0 });
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("done");
   const [onboardingReturnTab, setOnboardingReturnTab] = useState<Tab | null>(
@@ -4755,6 +4874,7 @@ export default function Home() {
   function startPlanFlow(repeat: boolean) {
     const flowId = crypto.randomUUID();
     setRecipeContext(null);
+    setBatchCookingContext(null);
     setBuilderEntry({
       step: 0,
       repeat,
@@ -4768,6 +4888,7 @@ export default function Home() {
   }
   function navigate(next: Tab) {
     setRecipeContext(null);
+    setBatchCookingContext(null);
     if (next === "builder") {
       startPlanFlow(false);
       return;
@@ -4848,6 +4969,27 @@ export default function Home() {
         }
       />
     );
+  if (batchCookingContext && activePlan) {
+    const cookingBatch = activePlan.batches.find(
+      (batch) => batch.id === batchCookingContext.batchId,
+    );
+    if (cookingBatch)
+      return (
+        <BatchCookingView
+          plan={activePlan}
+          batch={cookingBatch}
+          onClose={() => setBatchCookingContext(null)}
+          onComplete={() => {
+            void trackAnalytics(
+              "cooking_confirmed",
+              {},
+              `cooking-confirmed:${activePlan.id}:${cookingBatch.id}`,
+            );
+            setBatchCookingContext(null);
+          }}
+        />
+      );
+  }
   if (tab === "builder")
     return (
       <PlanBuilder
@@ -4911,6 +5053,7 @@ export default function Home() {
           onEditPeriod={editPeriod}
           onEditMenu={editDayMenu}
           onOpenRecipe={setRecipeContext}
+          onOpenCooking={(batchId) => setBatchCookingContext({ batchId })}
           onOpenProfile={() => navigate("profile")}
           onChange={async (next) => {
             const previous = activePlan;
@@ -5893,6 +6036,7 @@ function WeekScreen({
   onEditPeriod,
   onEditMenu,
   onOpenRecipe,
+  onOpenCooking,
   onOpenProfile,
   onChange,
   onOpenGuide,
@@ -5905,6 +6049,7 @@ function WeekScreen({
   onEditPeriod: () => void;
   onEditMenu: (batchId: string) => void;
   onOpenRecipe: (context: RecipeContext) => void;
+  onOpenCooking: (batchId: string) => void;
   onOpenProfile: () => void;
   onChange: (plan: ActivePlan) => Promise<boolean>;
   onOpenGuide: () => void;
@@ -6562,6 +6707,30 @@ function WeekScreen({
             </div>
           </section>
         )}
+        <button
+          className="batch-cooking-entry glass-card"
+          onClick={() => onOpenCooking(batch.id)}
+        >
+          <span>
+            <Icon name="pot" />
+          </span>
+          <div>
+            <b>Готовить партию по шагам</b>
+            <small>
+              {withPlural(
+                activePlan.mealSlots.filter((slot) =>
+                  Boolean(
+                    recipesById[
+                      activePlan.selections[selectionKey(batch, slot)]
+                    ],
+                  ),
+                ).length,
+                FORMS.dish,
+              )} · подсказки, продукты и таймер
+            </small>
+          </div>
+          <Icon name="chevron" className="entry-chevron" />
+        </button>
         <button
           className={`cooking-confirm-button glass-card ${confirmedBatchIds.includes(batch.id) ? "confirmed" : ""}`}
           disabled={confirmedBatchIds.includes(batch.id)}
@@ -9842,6 +10011,253 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
   })} ${ingredient.unit}`;
 }
 
+function batchCookingProgressKey(plan: ActivePlan, batch: Batch) {
+  const selectionSignature = plan.mealSlots
+    .map((slot) => plan.selections[selectionKey(batch, slot)] ?? "")
+    .join(":");
+  return `mise-batch-cooking-v1:${plan.id}:${batch.id}:${selectionSignature}`;
+}
+
+function BatchCookingView({
+  plan,
+  batch,
+  onClose,
+  onComplete,
+}: {
+  plan: ActivePlan;
+  batch: Batch;
+  onClose: () => void;
+  onComplete: () => void;
+}) {
+  const model = useMemo(() => buildBatchCookingModel(plan, batch), [plan, batch]);
+  const progressKey = batchCookingProgressKey(plan, batch);
+  const [stepIndex, setStepIndex] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const saved = Number(localStorage.getItem(progressKey));
+    return Number.isFinite(saved)
+      ? Math.min(Math.max(0, saved), Math.max(0, model.steps.length - 1))
+      : 0;
+  });
+  const [showAll, setShowAll] = useState(false);
+  const [showProducts, setShowProducts] = useState(false);
+  const currentStep = model.steps[stepIndex];
+  const [remainingSeconds, setRemainingSeconds] = useState(
+    () => (currentStep?.minutes ?? 0) * 60,
+  );
+  const [timerRunning, setTimerRunning] = useState(false);
+  const backRef = useRef(onClose);
+  useEffect(() => {
+    backRef.current = onClose;
+  });
+  useEffect(() => {
+    history.pushState({ mise: "batch-cooking" }, "");
+    const onPop = () => backRef.current();
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  useEffect(() => {
+    void trackAnalytics("cooking_instructions_opened");
+  }, []);
+  useEffect(() => {
+    if (!timerRunning) return;
+    const timer = window.setInterval(() => {
+      setRemainingSeconds((seconds) => {
+        if (seconds <= 1) {
+          setTimerRunning(false);
+          return 0;
+        }
+        return seconds - 1;
+      });
+    }, 1_000);
+    return () => window.clearInterval(timer);
+  }, [timerRunning]);
+  if (!currentStep)
+    return (
+      <main className="app-shell cooking-batch-shell">
+        <div className="app-bg" aria-hidden />
+        <section className="empty-state glass-card">
+          <Icon name="pot" size={34} />
+          <h1>Для этой партии пока нет блюд</h1>
+          <p>Вернитесь в меню и добавьте хотя бы один рецепт.</p>
+          <button className="primary-button" onClick={onClose}>
+            Вернуться к неделе
+          </button>
+        </section>
+      </main>
+    );
+  const completed = stepIndex;
+  const progress = completed / Math.max(1, model.steps.length);
+  const progressPercent = Math.round(progress * 100);
+  const visibleSteps = showAll
+    ? model.steps
+    : model.steps.slice(stepIndex, stepIndex + 3);
+  const formatTimer = (seconds: number) =>
+    `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  const contactWarnings = crossContactWarnings(plan, batch);
+  function goToStep(nextIndex: number) {
+    setStepIndex(nextIndex);
+    localStorage.setItem(progressKey, String(nextIndex));
+    setRemainingSeconds(model.steps[nextIndex].minutes * 60);
+    setTimerRunning(false);
+    setShowProducts(false);
+  }
+  function advance() {
+    if (stepIndex >= model.steps.length - 1) {
+      localStorage.removeItem(progressKey);
+      onComplete();
+      return;
+    }
+    goToStep(stepIndex + 1);
+  }
+  return (
+    <main className="app-shell cooking-batch-shell">
+      <div className="app-bg" aria-hidden />
+      <header className="cooking-batch-header glass-1">
+        <button onClick={onClose}>Закрыть</button>
+        <div>
+          <b>Готовка · партия {batch.index + 1}</b>
+          <small>{formatDate(batch.start, true)}</small>
+        </div>
+        <button className="cooking-all-button" onClick={() => setShowAll((value) => !value)}>
+          {showAll ? "Текущий шаг" : "Все шаги"}
+        </button>
+        <span className="cooking-batch-progress" aria-hidden>
+          <i style={{ width: `${progressPercent}%` }} />
+        </span>
+      </header>
+      <div className="cooking-batch-content">
+        <section className="batch-cooking-summary glass-2" aria-live="polite">
+          <div className="batch-cooking-summary-top">
+            <div>
+              <p>Активное время · ориентир</p>
+              <strong>
+                {model.activeMinutes}
+                <small> мин</small>
+              </strong>
+              <span>
+                из ~{model.totalMinutes} мин · шаг {stepIndex + 1} из {model.steps.length}
+              </span>
+            </div>
+            <div
+              className="batch-progress-ring"
+              style={{
+                background: `conic-gradient(var(--accent) 0deg ${progress * 360}deg, var(--ink-track) ${progress * 360}deg 360deg)`,
+              }}
+              aria-label={`Готово ${progressPercent}% партии`}
+            >
+              <span>
+                <b>{progressPercent}%</b>
+                <small>партии</small>
+              </span>
+            </div>
+          </div>
+          <div className="batch-summary-tiles">
+            <span>
+              <b>{model.totalPortions}</b>
+              <small>{plural(model.totalPortions, FORMS.portion)}</small>
+            </span>
+            <span>
+              <b>{model.dishes.length}</b>
+              <small>{plural(model.dishes.length, FORMS.dish)}</small>
+            </span>
+            <span className="is-mint">
+              <b>{model.freezePortions}</b>
+              <small>заморозить</small>
+            </span>
+          </div>
+        </section>
+        {contactWarnings.length > 0 && (
+          <Note tone="warn" role="alert" label="Разделите инвентарь и поверхности">
+            {contactWarnings
+              .map(
+                ({ person, allergen }) =>
+                  `${allergenMeta[allergen].short.toLowerCase()} — нельзя ${person.name}`,
+              )
+              .join("; ")}.
+          </Note>
+        )}
+        <section className="cooking-now-card glass-2">
+          <p className="cooking-card-kicker">{showAll ? "Все шаги партии" : "Сейчас"}</p>
+          <ol className="batch-step-list">
+            {visibleSteps.map((step) => {
+              const absoluteIndex = model.steps.indexOf(step);
+              const isCurrent = absoluteIndex === stepIndex;
+              const isComplete = absoluteIndex < stepIndex;
+              return (
+                <li
+                  className={`${isCurrent ? "is-current" : ""}${isComplete ? " is-complete" : ""}`}
+                  key={step.id}
+                >
+                  <button
+                    disabled={absoluteIndex > stepIndex}
+                    onClick={() => isComplete && goToStep(absoluteIndex)}
+                    aria-current={isCurrent ? "step" : undefined}
+                    aria-label={isComplete ? `Вернуться к шагу ${absoluteIndex + 1}` : undefined}
+                  >
+                    {isComplete ? <Icon name="check" size={14} /> : absoluteIndex + 1}
+                  </button>
+                  <div>
+                    <b>{step.title}</b>
+                    <small>{step.detail}</small>
+                  </div>
+                  <span>{step.minutes} мин</span>
+                </li>
+              );
+            })}
+          </ol>
+          <div className="cooking-step-tools">
+            <button
+              onClick={() => {
+                if (remainingSeconds === 0)
+                  setRemainingSeconds(currentStep.minutes * 60);
+                setTimerRunning((value) => !value);
+              }}
+            >
+              <Icon name="clock" size={16} />
+              {timerRunning ? "Пауза" : "Таймер"} {formatTimer(remainingSeconds)}
+            </button>
+            <button onClick={() => setShowProducts((value) => !value)}>
+              <Icon name="basket" size={16} /> Продукты шага
+            </button>
+          </div>
+          {showProducts && (
+            <div className="cooking-step-products" role="status">
+              {currentStep.products.map((product) => (
+                <span key={product}>{product}</span>
+              ))}
+            </div>
+          )}
+        </section>
+        <section className="cooking-after-card">
+          <p>После остывания</p>
+          <h2>
+            {withPlural(model.totalPortions, FORMS.container)}: {model.totalPortions - model.freezePortions} в холодильник
+            {model.freezePortions > 0 ? `, ${model.freezePortions} в морозилку` : ""}
+          </h2>
+          <span>
+            Порции уже рассчитаны — после готовки взвесьте блюда и подпишите контейнеры.
+          </span>
+          <div>
+            {model.personPortions
+              .filter((person) => person.count > 0)
+              .map((person) => (
+                <small key={person.id}>
+                  {person.name} · {withPlural(person.count, FORMS.portion)}
+                </small>
+              ))}
+          </div>
+        </section>
+      </div>
+      <footer className="cooking-action-bar glass-1">
+        <button className="primary-button" onClick={advance}>
+          {stepIndex === model.steps.length - 1 ? "Партия готова" : "Шаг готов — дальше"}
+          <Icon name={stepIndex === model.steps.length - 1 ? "check" : "chevron"} size={17} />
+        </button>
+      </footer>
+    </main>
+  );
+}
+
 function RecipeView({
   context,
   onBack,
@@ -9998,7 +10414,6 @@ function RecipeView({
       setSaveStatus("error");
     }
   }
-  const recipeFamily = recipeFamiliesById[recipe.id];
   const cookingAmounts = (() => {
     if (!batch || !slot || !plan)
       return Object.fromEntries(
@@ -10017,13 +10432,7 @@ function RecipeView({
     });
     return recipeCookingAmounts(recipe, portions, batch.days);
   })();
-  const displaySteps = recipeFamily
-    ? recipeFamily.miseInstructions
-        .filter((step) => step.action !== "measure")
-        .map((step) => step.text)
-    : recipe.steps.filter(
-        (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
-      );
+  const displaySteps = recipeDisplaySteps(recipe);
   return (
     <main className="app-shell recipe-detail">
       <div className="ambient ambient-one" />
