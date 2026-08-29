@@ -75,6 +75,7 @@ type Ingredient = {
   id: string;
   name: string;
   fatNote?: string;
+  cheeseVariant?: "regular" | "light" | "either";
   quantity: number;
   unit: "г" | "мл" | "шт.";
   group: string;
@@ -523,17 +524,55 @@ const packagedIngredientIds = new Set([
   "tomato-paste",
   "tortilla",
   "worcestershire",
-  "yogurt",
 ]);
+
+const cheeseIngredientIds = new Set([
+  "cheese",
+  "cream-cheese",
+  "feta",
+  "mozzarella",
+  "parmesan",
+]);
+
+function cheeseVariantFor(
+  id: string,
+  name: string,
+  requested?: Ingredient["cheeseVariant"],
+): Ingredient["cheeseVariant"] {
+  if (!cheeseIngredientIds.has(id)) return undefined;
+  if (
+    requested === "regular" ||
+    requested === "light" ||
+    requested === "either"
+  )
+    return requested;
+  const normalized = name.toLowerCase();
+  if (/л[её]гк.*обыч|обыч.*л[её]гк/u.test(normalized)) return "either";
+  if (/л[её]гк/u.test(normalized)) return "light";
+  if (/обычн/u.test(normalized)) return "regular";
+  return id === "parmesan" ? "regular" : "either";
+}
 
 function normalizedIngredientName(id: string, name: string) {
   // Весь расчётный профиль молока в текущем каталоге — 2%; карточка и КБЖУ
   // должны ссылаться на один и тот же продукт, а не на 2,5/3,2% одновременно.
-  return id === "milk" ? "Молоко 2%" : name;
+  if (id === "milk") return "Молоко 2%";
+  if (id === "berries" && /^замороженные ягоды$/iu.test(name.trim()))
+    return "Замороженная черника";
+  return name;
 }
 
-function ingredientFatNote(id: string, name: string) {
+function ingredientFatNote(
+  id: string,
+  name: string,
+  cheeseVariant?: Ingredient["cheeseVariant"],
+) {
   const explicit = name.match(/(\d+(?:[.,]\d+)?)\s*%/u)?.[1];
+  const resolvedCheeseVariant = cheeseVariantFor(id, name, cheeseVariant);
+  if (resolvedCheeseVariant === "light") return "лёгкий";
+  if (resolvedCheeseVariant === "regular") return "обычный";
+  if (resolvedCheeseVariant === "either")
+    return "обычный или лёгкий; КБЖУ рассчитаны для обычного";
   switch (id) {
     case "beef":
       return "≈4% по расчётному профилю";
@@ -552,15 +591,10 @@ function ingredientFatNote(id: string, name: string) {
     case "cream":
       return explicit ? `${explicit.replace(".", ",")}%` : "сверить на упаковке";
     case "yogurt":
-      return "≈2% по расчётному профилю, сверить упаковку";
+      return "≈2% по расчётному профилю";
     case "butter":
       return "≈81% по расчётному профилю";
     case "kefir":
-    case "cream-cheese":
-    case "cheese":
-    case "parmesan":
-    case "feta":
-    case "mozzarella":
       return "сверить на упаковке";
     default:
       return undefined;
@@ -573,12 +607,19 @@ const i = (
   quantity: number,
   unit: Ingredient["unit"],
   group: string,
+  requestedCheeseVariant?: Ingredient["cheeseVariant"],
 ): Ingredient => {
   const normalizedName = normalizedIngredientName(id, name);
+  const cheeseVariant = cheeseVariantFor(
+    id,
+    normalizedName,
+    requestedCheeseVariant,
+  );
   return {
     id,
     name: normalizedName,
-    fatNote: ingredientFatNote(id, normalizedName),
+    fatNote: ingredientFatNote(id, normalizedName, cheeseVariant),
+    cheeseVariant,
     quantity,
     unit,
     group,
@@ -1683,7 +1724,7 @@ recipes.push(
   r(
     "src-protein-oats",
     "breakfast",
-    "Ночная овсянка с творогом и ягодами",
+    "Ночная овсянка с творогом и черникой",
     "🫐",
     10,
     { kcal: 415, protein: 31, fat: 11, carbs: 49 },
@@ -1694,11 +1735,11 @@ recipes.push(
       i("oats", "Овсяные хлопья", 65, "г", "Крупы"),
       i("milk", "Молоко 2,5%", 140, "мл", "Молочное"),
       i("cottage", "Мягкий творог", 120, "г", "Молочное"),
-      i("berries", "Замороженные ягоды", 70, "г", "Овощи и фрукты"),
+      i("berries", "Замороженная черника", 70, "г", "Овощи и фрукты"),
     ],
     [
       "Смешайте хлопья с молоком и мягким творогом.",
-      "Разложите по банкам и добавьте ягоды.",
+      "Разложите по банкам и добавьте чернику.",
       "Закройте и оставьте в холодильнике минимум на 6 часов.",
     ],
     2,
@@ -1706,7 +1747,7 @@ recipes.push(
     {
       provenance: parsed(
         recipeSources.proteinOats,
-        "Протеиновый порошок заменён на мягкий творог; кленовый сироп убран.",
+        "Протеиновый порошок заменён на мягкий творог; кленовый сироп убран; смесь ягод стандартизирована как замороженная черника.",
       ),
       storage: { refrigerator: "В закрытой банке при ≤4 °C — до 2 суток." },
     },
@@ -1945,7 +1986,7 @@ recipes.push(
   r(
     "src-frozen-yogurt",
     "snack2",
-    "Замороженный йогурт с ягодами",
+    "Замороженный йогурт с черникой",
     "🍧",
     5,
     { kcal: 205, protein: 20, fat: 5, carbs: 19 },
@@ -1954,10 +1995,10 @@ recipes.push(
     ["protein", "budget"],
     [
       i("yogurt", "Греческий йогурт", 200, "г", "Молочное"),
-      i("berries", "Замороженные ягоды", 100, "г", "Овощи и фрукты"),
+      i("berries", "Замороженная черника", 100, "г", "Овощи и фрукты"),
     ],
     [
-      "Измельчите замороженные ягоды с йогуртом до густой однородной массы.",
+      "Измельчите замороженную чернику с йогуртом до густой однородной массы.",
       "Разложите по небольшим контейнерам и сразу уберите в морозилку.",
       "Перед едой дайте постоять 5–10 минут при комнатной температуре.",
     ],
@@ -1966,7 +2007,7 @@ recipes.push(
     {
       provenance: parsed(
         recipeSources.frozenYogurt,
-        "Мёд убран; берутся обычные замороженные ягоды.",
+        "Мёд убран; смесь ягод стандартизирована как замороженная черника.",
       ),
       storage: {
         refrigerator:
@@ -4703,10 +4744,16 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
     shopping: plan.shopping.map((item) => {
       const name = normalizedIngredientName(item.id, item.name);
       const rebuilt = rebuiltShopping.get(item.key);
+      const cheeseVariant = cheeseVariantFor(
+        item.id,
+        name,
+        item.cheeseVariant,
+      );
       return {
         ...item,
         name,
-        fatNote: ingredientFatNote(item.id, name),
+        fatNote: ingredientFatNote(item.id, name, cheeseVariant),
+        cheeseVariant,
         allergens: [...(ingredientAllergens[item.id] ?? [])],
         checkLabel: packagedIngredientIds.has(item.id),
         batchIds: rebuilt?.batchIds ?? item.batchIds ?? [],
