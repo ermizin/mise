@@ -3,7 +3,7 @@ export type RecipeIngredientRole =
   | "carb"
   | "vegetable"
   | "fat"
-  | "fat_cooking" // Fixed against personal calorie targeting; batch cookware geometry is modeled separately.
+  | "fat_cooking" // Fixed against personal calorie targeting; batch cookware geometry is not modeled yet.
   | "sauce"
   | "flavour"
   | "flavour_fixed"
