@@ -2,6 +2,7 @@ import { auditRecipeCorpus } from "./audit-recipe-corpus.mjs";
 import { auditRecipeNutritionCorpus } from "./audit-recipe-nutrition.mjs";
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 export async function auditRecipeRelease() {
   const [editorial, nutrition] = await Promise.all([
@@ -43,7 +44,10 @@ export async function auditRecipeRelease() {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
   const report = await auditRecipeRelease();
   const outputIndex = process.argv.indexOf("--output");
   const outputPath = outputIndex >= 0 ? process.argv[outputIndex + 1] : null;
