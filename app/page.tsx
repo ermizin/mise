@@ -4784,7 +4784,9 @@ export default function Home() {
   return (
     <main className={`app-shell${tab === "recipes" ? " is-catalog" : ""}`}>
       <div className="app-bg" aria-hidden />
-      {tab !== "recipes" && (tab !== "week" || !activePlan) && (
+      {tab !== "recipes" &&
+        tab !== "profile" &&
+        (tab !== "week" || !activePlan) && (
       <header className="app-header">
         <div>
           <p className="kicker">{currentTitle.kicker}</p>
@@ -7174,109 +7176,197 @@ function ProfileScreen({
   onOpenPrepGuide: () => void;
   onNotifications: () => void;
 }) {
+  const profileMacroRows = [
+    { key: "protein", label: "Белки" },
+    { key: "fat", label: "Жиры" },
+    { key: "carbs", label: "Углеводы" },
+  ] as const;
+  const profileGoalLabels: Record<NutritionGoal, string> = {
+    maintenance: "Поддержание",
+    loss: "Дефицит",
+    gain: "Набор",
+  };
   return (
     <section className="screen profile-screen">
-      <section className="profile-hero glass-card">
-        <div className="large-avatar">М</div>
-        <div>
-          <p className="kicker">Ваше пространство</p>
-          <h2>
-            {people.length} {people.length === 1 ? "человек" : "человека"}
-          </h2>
-          <p>Цели используются для расчёта каждой порции.</p>
-        </div>
-      </section>
-      <div className="section-heading">
-        <div>
-          <p className="kicker">Участники плана</p>
-          <h2>КБЖУ и блюда</h2>
-        </div>
-        <button
-          className="text-button"
-          aria-label="Настроить людей и цели"
-          onClick={onConfigure}
-        >
-          Настроить
-        </button>
-      </div>
-      {people.map((person, index) => {
-        const planned = plannedTargetsFor(person);
-        const difference = macroDifference(person.daily, planned);
-        const positionLabel =
-          person.includedSlots.length === 1
-            ? "позиция"
-            : person.includedSlots.length < 5
-              ? "позиции"
-              : "позиций";
-        return (
-          <section className="person-summary glass-card" key={person.id}>
-            <div className={`person-dot tone-${index}`}>
-              {person.name.slice(0, 1)}
-            </div>
-            <div className="person-main">
-              <h3>{person.name}</h3>
-              <p>
+      <header className="profile-header">
+        <p className="kicker">
+          Профиль · {people.length}{" "}
+          {people.length === 1 ? "человек" : "человека"}
+        </p>
+        <h1>Цели и порции</h1>
+      </header>
+      <div className="profile-people-list">
+        {people.map((person, index) => {
+          const planned = plannedTargetsFor(person);
+          const difference = macroDifference(person.daily, planned);
+          const positionLabel =
+            person.includedSlots.length === 1
+              ? "позиция"
+              : person.includedSlots.length < 5
+                ? "позиции"
+                : "позиций";
+          const goalLabel = person.estimate
+            ? profileGoalLabels[person.estimate.goal]
+            : "Своя цель";
+          const slotsLabel = person.includedSlots
+            .map((slot) => mealMeta[slot].label.toLowerCase())
+            .join(", ");
+          const maxMacroGrams = Math.max(
+            person.daily.protein,
+            person.daily.fat,
+            person.daily.carbs,
+            1,
+          );
+          return (
+            <section
+              className={`person-summary profile-person-card glass-card${index === 0 ? " person-summary-primary" : ""}`}
+              key={person.id}
+            >
+              <div className="profile-person-head">
+                <div className={`person-dot tone-${index} profile-person-avatar`}>
+                  {person.name.slice(0, 1).toUpperCase() || "Я"}
+                </div>
+                <div className="profile-person-copy">
+                  <h3>{person.name}</h3>
+                  <p>
+                    {goalLabel} · {slotsLabel || "позиции не выбраны"}
+                  </p>
+                </div>
+                <button
+                  className="text-button profile-edit"
+                  aria-label={`Изменить цели и порции: ${person.name}`}
+                  onClick={onConfigure}
+                >
+                  Изменить
+                </button>
+              </div>
+              {index === 0 ? (
+                <div className="profile-macro-focus">
+                  <div
+                    className="profile-kcal-ring"
+                    aria-label={`${person.daily.kcal} килокалорий в день`}
+                  >
+                    <b>{person.daily.kcal}</b>
+                    <small>ккал в день</small>
+                  </div>
+                  <div className="profile-bars">
+                    {profileMacroRows.map(({ key, label }) => (
+                      <div className={`profile-bar macro-${key}`} key={key}>
+                        <p>
+                          <span>{label}</span>
+                          <b>{person.daily[key]} г</b>
+                        </p>
+                        <i>
+                          <span
+                            style={{
+                              width: `${Math.max(18, Math.round((person.daily[key] / maxMacroGrams) * 100))}%`,
+                            }}
+                          />
+                        </i>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="profile-compact-macros">
+                  <div>
+                    <b>{person.daily.kcal} ккал</b>
+                    <small>
+                      Б {person.daily.protein} · Ж {person.daily.fat} · У{" "}
+                      {person.daily.carbs}
+                    </small>
+                  </div>
+                  <span className="profile-mini-columns" aria-hidden>
+                    <i className="macro-protein" />
+                    <i className="macro-fat" />
+                    <i className="macro-carbs" />
+                  </span>
+                </div>
+              )}
+              <p className="profile-plan-summary">
                 {person.includedSlots.length} {positionLabel} из Mise ·{" "}
                 {difference.kcal > 50
-                  ? `ещё ≈ ${difference.kcal} ккал`
+                  ? `ещё ≈ ${difference.kcal} ккал вне плана`
                   : difference.kcal < -50
                     ? `выше цели на ≈ ${Math.abs(difference.kcal)} ккал`
                     : "цель примерно закрыта"}
               </p>
-              <div className="mini-macros">
-                {(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map(
-                  (key) => (
-                    <span key={key}>
-                      <b>{person.daily[key]}</b> {macroLabels[key]}
-                    </span>
-                  ),
-                )}
-              </div>
               {(person.hardExclusions?.length ?? 0) > 0 && (
-                <small className="hard-summary">
-                  Нельзя: {person.hardExclusions
-                    ?.map((allergen) => allergenMeta[allergen].short.toLowerCase())
-                    .join(", ")}
-                </small>
+                <div
+                  className="profile-exclusion-chips"
+                  aria-label={`Жёсткие исключения: ${person.name}`}
+                >
+                  {person.hardExclusions?.map((allergen) => (
+                    <span key={allergen}>
+                      Нельзя: {allergenMeta[allergen].short.toLowerCase()}
+                    </span>
+                  ))}
+                </div>
               )}
-            </div>
-          </section>
-        );
-      })}
+            </section>
+          );
+        })}
+      </div>
+      <button
+        className="profile-add-person"
+        aria-label="Настроить людей и цели"
+        onClick={onConfigure}
+      >
+        <span>
+          <b>Добавить человека</b>
+          <small>Порции и покупки пересчитаются</small>
+        </span>
+        <span className="profile-add-person-icon" aria-hidden>
+          +
+        </span>
+      </button>
       <InstallInline />
-      {hasPlan && (
+      <section
+        className="profile-settings-list glass-card"
+        aria-label="Настройки и помощь"
+      >
+        {hasPlan && (
+          <button
+            className="tutorial-entry profile-setting-row notification-entry"
+            onClick={onNotifications}
+          >
+            <span>
+              <Icon name="bell" />
+            </span>
+            <div>
+              <b>Напоминания</b>
+              <small>Время готовки, покупок и разморозки</small>
+            </div>
+            <Icon name="chevron" className="entry-chevron" />
+          </button>
+        )}
         <button
-          className="tutorial-entry notification-entry glass-card"
-          onClick={onNotifications}
+          className="tutorial-entry profile-setting-row"
+          onClick={onOpenTutorial}
         >
-          <Icon name="bell" />
+          <span>
+            <Icon name="info" />
+          </span>
           <div>
-            <b>Напоминания</b>
-            <small>Время готовки, покупок и разморозки</small>
+            <b>Как работает Mise</b>
+            <small>Ещё раз открыть короткий онбординг</small>
           </div>
           <Icon name="chevron" className="entry-chevron" />
         </button>
-      )}
-      <button className="tutorial-entry glass-card" onClick={onOpenTutorial}>
-        <span>
-          <Icon name="info" />
-        </span>
-        <div>
-          <b>Как работает Mise</b>
-          <small>Ещё раз открыть короткий онбординг</small>
-        </div>
-        <Icon name="chevron" className="entry-chevron" />
-      </button>
-      <button className="tutorial-entry glass-card" onClick={onOpenPrepGuide}>
-        <span>
-          <Icon name="pot" />
-        </span>
-        <div>
-          <b>Инструкция по милпрепу</b>
-          <small>Пять правил и чек-лист перед первой готовкой</small>
-        </div>
-        <Icon name="chevron" className="entry-chevron" />
-      </button>
+        <button
+          className="tutorial-entry profile-setting-row"
+          onClick={onOpenPrepGuide}
+        >
+          <span>
+            <Icon name="pot" />
+          </span>
+          <div>
+            <b>Инструкция по милпрепу</b>
+            <small>Пять правил и чек-лист перед первой готовкой</small>
+          </div>
+          <Icon name="chevron" className="entry-chevron" />
+        </button>
+      </section>
     </section>
   );
 }
