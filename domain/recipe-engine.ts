@@ -824,12 +824,57 @@ export function solveRecipeFamily(family: RecipeFamily, input: { targetCalories:
   };
 }
 
+function familyWithCookingFatShare(family: RecipeFamily, share: number): RecipeFamily {
+  return {
+    ...family,
+    ingredients: family.ingredients.map((ingredient) => {
+      if (ingredient.role !== "fat_cooking") return ingredient;
+      const amount = ingredient.baseAmount * share;
+      return {
+        ...ingredient,
+        baseAmount: amount,
+        minAmount: amount,
+        preferredMin: amount,
+        preferredMax: amount,
+        maxAmount: amount,
+      };
+    }),
+  };
+}
+
 export function solveRecipeBatch(family: RecipeFamily, portions: { id: string; targetCalories: number; targetProtein?: number; hardExclusions?: string[] }[]) {
-  const solved = portions.map((portion) => ({ id: portion.id, variant: solveRecipeFamily(family, portion) }));
+  const cookingFats = family.ingredients.filter((ingredient) => ingredient.role === "fat_cooking");
+  const totalTargetCalories = portions.reduce((sum, portion) => sum + Math.max(0, portion.targetCalories), 0);
+  const equalShare = portions.length ? 1 / portions.length : 0;
+  const solved = portions.map((portion) => {
+    const share = totalTargetCalories > 0
+      ? Math.max(0, portion.targetCalories) / totalTargetCalories
+      : equalShare;
+    const portionFamily = cookingFats.length
+      ? familyWithCookingFatShare(family, share)
+      : family;
+    return { id: portion.id, variant: solveRecipeFamily(portionFamily, portion) };
+  });
   const viable = solved.every((item) => item.variant.viable);
   const totals: Record<string, number> = {};
   if (viable) for (const { variant } of solved) for (const [id, amount] of Object.entries(variant.amounts)) totals[id] = round((totals[id] ?? 0) + amount);
-  return { familyId: family.id, viable, portions: solved, totals, packing: solved.map(({ id, variant }) => ({ id, calories: variant.nutrition.kcal, ingredientAmounts: variant.amounts })) };
+  const sharedCookingTotals = viable && portions.length
+    ? Object.fromEntries(
+        cookingFats.map((ingredient) => [ingredient.sourceIngredientId, ingredient.baseAmount]),
+      )
+    : {};
+  return {
+    familyId: family.id,
+    viable,
+    portions: solved,
+    totals,
+    sharedCookingTotals,
+    packing: solved.map(({ id, variant }) => ({
+      id,
+      calories: variant.nutrition.kcal,
+      ingredientAmounts: variant.amounts,
+    })),
+  };
 }
 
 export function materializeInstructions(family: RecipeFamily, amounts: Record<string, number>) {

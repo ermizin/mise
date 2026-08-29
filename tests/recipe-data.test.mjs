@@ -473,6 +473,42 @@ test("audited pan and form fats stay fixed across personal calorie targets", () 
   }
 });
 
+test("a shared batch uses pan and form fat once, then allocates it across portions", () => {
+  const family = recipeFamiliesById["src-chicken-bean-bowl"];
+  const cookingFat = family.ingredients.find((ingredient) => ingredient.role === "fat_cooking");
+  assert.ok(cookingFat);
+
+  const batch = solveRecipeBatch(family, [
+    { id: "higher", targetCalories: 600 },
+    { id: "lower", targetCalories: 450 },
+  ]);
+
+  assert.equal(batch.viable, true);
+  assert.equal(batch.sharedCookingTotals[cookingFat.sourceIngredientId], cookingFat.baseAmount);
+  assert.equal(batch.totals[cookingFat.sourceIngredientId], cookingFat.baseAmount);
+  assert.equal(
+    Math.round(
+      batch.packing.reduce(
+        (sum, portion) => sum + portion.ingredientAmounts[cookingFat.sourceIngredientId],
+        0,
+      ) * 10,
+    ) / 10,
+    cookingFat.baseAmount,
+  );
+  assert.ok(Math.abs(batch.packing[0].calories - 600) <= 15);
+  assert.ok(Math.abs(batch.packing[1].calories - 450) <= 12);
+
+  const empty = solveRecipeBatch(family, []);
+  assert.equal(empty.viable, true);
+  assert.equal(JSON.stringify(empty.totals), "{}");
+  assert.equal(JSON.stringify(empty.sharedCookingTotals), "{}");
+
+  const invalid = solveRecipeBatch(family, [{ id: "invalid", targetCalories: 0 }]);
+  assert.equal(invalid.viable, false);
+  assert.equal(JSON.stringify(invalid.totals), "{}");
+  assert.equal(JSON.stringify(invalid.sharedCookingTotals), "{}");
+});
+
 test("solver exposes not-viable and hard-exclusion outcomes instead of deforming a dish", () => {
   const family = recipeFamiliesById["src-teriyaki-tray"];
   const high = solveRecipeFamily(family, { targetCalories: 750 });
