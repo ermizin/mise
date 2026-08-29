@@ -245,6 +245,16 @@ test("includes the complete plan-builder and private persistence model", async (
     assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил 9d`);
   }
 
+  // Батч 4: узкий экран не ломает поля и кнопку, а мастер не
+  // создаёт backdrop-filter на каждой карточке.
+  assert.match(page, /\{step === 3 && <>Кто ест · <\/>\}Шаг/);
+  assert.match(page, /className="people-step-lead"/);
+  assert.match(css, /\.builder-actions \.primary-button \{[^}]*white-space: nowrap/s);
+  assert.match(css, /\.primary-button:disabled \{[^}]*opacity: 1/s);
+  assert.match(css, /\.field-box:focus-within \{/);
+  assert.match(css, /\.builder-shell \.builder-content \.glass-card \{[^}]*backdrop-filter: none/s);
+  assert.match(css, /@media \(max-width: 380px\) \{[\s\S]*?\.field-row-2 \{[^}]*grid-template-columns: 1fr/);
+
   // Число теней не растёт: стекло описано уровнями, а не по месту.
   assert.ok(
     (css.match(/box-shadow:/g) ?? []).length <= 44,
