@@ -1,0 +1,5230 @@
+[
+  {
+    "id": "tmpm-28584",
+    "titleRu": "Рис с брокколи и чеддером",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Сварите рис выбранным способом. Разморозьте брокколи в микроволновой печи и мелко порубите.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "pot",
+          "microwave"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В кастрюле на среднем огне приготовьте ру: растопите масло с мукой 2 минуты до золотистости. Порциями влейте молоко и бульон, часто помешивая до густого бешамеля; вмешайте приправы, горчицу и сыр.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "2 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "соус густой и однородный"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Вмешайте брокколи в сырный соус, затем соедините с рассыпчатым рисом. Остудите, разложите примерно по 200 г на застеленном противне и заморозьте в один слой до твёрдости.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "mixing_bowl",
+          "baking_sheet"
+        ],
+        "donenessCue": "порции полностью замёрзли"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28572",
+    "titleRu": "Рис с овощами",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Отделите листья кейла от жёстких стеблей, нарежьте тонкими лентами и разомните руками 1 минуту. Натрите морковь, нарежьте лук, измельчите чеснок; рис промойте до прозрачной воды.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "duration": "1 мин",
+        "equipment": [
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В кастрюле на среднем-сильном огне обжарьте рис с чесноком в масле до светло-коричневого цвета, добавьте паприку и луковый порошок на 1 минуту. Влейте воду, доведите до активного кипения, накройте и готовьте на минимальном огне 15 минут; выключите и выдержите под крышкой 10 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "simmer",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "1 мин; 15 мин; затем 10 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис впитал воду и стал рассыпчатым"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "На сковороде обжарьте лук, затем добавьте морковь и кейл. Разрыхлите рис вилкой, смешайте с овощами и соевым соусом. Разделите примерно по 150 г на противне, заморозьте и затем упакуйте; разогревайте в микроволновой печи около 2 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "разогрев около 2 мин",
+        "equipment": [
+          "skillet",
+          "baking_sheet",
+          "microwave"
+        ],
+        "donenessCue": "кейл тёмно-зелёный и мягкий, порции твёрдо замёрзли"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28533",
+    "titleRu": "Куриные боулы со сливочным соусом из кинзы и лайма",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Сварите рис до 3¾ чашек готового. Смешайте паприку, чесночный и луковый порошок, чили, соль, перец, сок лайма, масло и воду; покройте маринадом куриные бёдра.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "marinate",
+        "dependsOn": [],
+        "equipment": [
+          "mixing_bowl",
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте духовку до 204°C. Запекайте курицу на противне до полной готовности. На втором противне запеките батат, перевернув через 10–12 минут, затем добавьте брокколи и продолжайте готовить до мягкости и румяности.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "roast",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "204°C",
+        "duration": "переворот через 10–12 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица готова, батат и брокколи подрумянились"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Пробейте зелёный лук, халапеньо, кинзу, специи, сок лайма, йогурт и воду до текучего соуса. Нарежьте курицу, разложите рис, овощи и курицу на 5 порций, соус храните отдельно.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "blend",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "blender",
+          "mixing_bowl"
+        ],
+        "donenessCue": "соус льётся тонкой струйкой"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28513",
+    "titleRu": "Курица чипотле для боулов-буррито",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Пробейте в блендере лук, чипотле в адобо, сок лайма, соевый соус, масло, паприку, чесночный порошок, соль и орегано до гладкого маринада. Покройте им куриные бёдра и выдержите в холодильнике 3–4 часа.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "marinate",
+        "dependsOn": [],
+        "duration": "3–4 ч",
+        "equipment": [
+          "blender",
+          "mixing_bowl"
+        ],
+        "donenessCue": "маринад гладкий, курица покрыта со всех сторон"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте духовку до 218°C. Запекайте бёдра на противне до полной готовности, затем дайте немного отдохнуть и нарежьте кусочками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "roast",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "218°C",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица полностью готова внутри"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Верните нарезанную курицу в соки на противне и подрумяньте под грилем 3–5 минут, внимательно следя за цветом. Остудите, заморозьте одним слоем до твёрдости и упакуйте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "гриль 3–5 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "куски с выраженной румяностью, затем полностью замёрзли"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28504",
+    "titleRu": "Рис с чипотле, кинзой и лаймом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Промойте рис до прозрачной воды и сварите выбранным способом. Мелко порубите кинзу.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В горячий готовый рис вмешайте масло, сок лайма, кинзу и соль; разрыхлите вилкой до равномерного распределения.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "combine",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "donenessCue": "зёрна разделены и равномерно покрыты добавками"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Распределите рис тонким слоем на застеленном противне, заморозьте без крышки до твёрдости, разломите на удобные порции и упакуйте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "baking_sheet"
+        ],
+        "donenessCue": "рис полностью замёрз"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28499",
+    "titleRu": "Чёрная фасоль с чипотле",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Накануне залейте чёрную фасоль водой. На следующий день мелко нарежьте лук и чеснок.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "duration": "ночь",
+        "equipment": [
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В большой кастрюле на среднем-сильном огне обжарьте лук и чеснок в масле, добавьте кумин и орегано на 1 минуту. Введите фасоль, воду и лавровый лист, доведите до кипения, прикройте крышкой и томите 1 час.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "simmer",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "1 мин; затем 1 ч",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "фасоль мягкая с кремовой серединой"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разомните часть фасоли и верните в кастрюлю, затем уварите без крышки 20–30 минут до густого отвара. Остудите на противне, заморозьте пластом и разломите на порции.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "20–30 мин",
+        "equipment": [
+          "pot",
+          "baking_sheet"
+        ],
+        "donenessCue": "отвар густой, фасоль полностью замёрзла"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28492",
+    "titleRu": "Овощи фахитас с чипотле",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Удалите семенные перегородки у перцев и нарежьте перцы с луком тонкими одинаковыми полосками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "slice",
+        "dependsOn": [],
+        "equipment": [
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сильном огне готовьте овощи в большой сковороде небольшими партиями, каждый раз добавляя масло. После появления цвета влейте немного воды, дайте пару образоваться и выпариться, затем переложите готовую партию на тарелку.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "овощи подрумянились, но остались упругими"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Верните все партии в сковороду, перемешайте, разложите одним слоем на противне и заморозьте без крышки; после полного замораживания упакуйте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "skillet",
+          "baking_sheet"
+        ],
+        "donenessCue": "овощи замёрзли отдельными кусочками"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28302",
+    "titleRu": "Хрустящая говядина с чили и лапшой",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Подготовьте лапшу по инструкции на упаковке. Нарежьте белые и зелёные части лука, брокколи, морковные ленты и капусту; измельчите чеснок. Смешайте соевый и устричный соусы, кочуджан, мёд и крахмальную воду от лапши.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сильном огне обжарьте говядину в масле, добавьте белые части лука и отложите мясо. В той же сковороде приготовьте брокколи, морковь и капусту, затем верните говядину.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "говядина румяная, овощи стали мягче"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Добавьте лапшу и соус, аккуратно перемешайте до загустения. Введите чеснок и зелёные части лука в последние 1–2 минуты, затем разделите на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "stir",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "1–2 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "соус покрывает лапшу, чеснок ароматный"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28247",
+    "titleRu": "Курица терияки с овощами на противне",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Сварите рис до 3¾ чашек готового. Разогрейте духовку до 218°C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "temperature": "218°C",
+        "equipment": [
+          "oven",
+          "saucepan",
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "roast",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "218°C",
+        "duration": "курица 25 мин; овощи 10 мин + 8–10 мин; соус 8–10 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet",
+          "saucepan"
+        ],
+        "donenessCue": "соус покрывает ложку тонкой плёнкой"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "grill",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "3–6 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица хорошо подрумянилась"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-28083",
+    "titleRu": "Макароны тако",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Нарежьте перец средним кубиком, зелёный лук — тонкими кольцами, отделив зелёные верхушки. Подготовьте приправы.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "около 1 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "говядина румяная, перец размягчился, специи ароматные"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "simmer",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "10–12 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "паста мягкая"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27802",
+    "titleRu": "Средиземноморские роллы с курицей",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 218°C. Смешайте специи, масло и лимонный сок, покройте курицу и маринуйте минимум 30 минут. Нарежьте огурец, томаты и красный лук; отдельно смешайте их с маслом, уксусом и солью.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "marinate",
+        "dependsOn": [],
+        "temperature": "218°C",
+        "duration": "от 30 мин",
+        "equipment": [
+          "oven",
+          "mixing_bowl"
+        ],
+        "donenessCue": "курица покрыта маринадом"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Запекайте курицу 10 минут, затем переставьте на верхнюю полку и подрумяньте под грилем 5–8 минут. Дайте мясу отдохнуть и нарежьте тонкими ломтиками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "grill",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "218°C",
+        "duration": "10 мин + 5–8 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "верх курицы румяный, мясо готово"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Нарежьте салат тонкими полосками. Перед подачей намажьте тортильи хумусом, добавьте курицу, салат, овощную смесь и фету; для милпрепа держите салат и сочные овощи отдельно до сборки.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "mixing_bowl"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27343",
+    "titleRu": "Боулы со стейком чипотле и перцем",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Подморозьте стейк на пару часов для ровной нарезки. Смешайте масло, сок лайма, соевый соус, специи и чипотле; нарежьте мясо полосками около 6 мм, затем кубиком и маринуйте 30–60 минут. Нарежьте перец, лук и чеснок.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "marinate",
+        "dependsOn": [],
+        "duration": "подморозка несколько часов; маринование 30–60 мин",
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "donenessCue": "мясо равномерно покрыто маринадом"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На средней температуре обжарьте стейк в две партии, не переполняя сковороду. В остаточном масле обжарьте перец и лук, затем добавьте кукурузу и чеснок на 1–2 минуты.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "чеснок и кукуруза 1–2 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "стейк румяный, овощи мягче"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Сделайте в сковороде свободное место, добавьте рис, соевый соус, сок лайма и чипотле, разрыхлите рис. Верните стейк, перемешайте и разделите на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "stir",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "рис горячий, компоненты распределены равномерно"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27328",
+    "titleRu": "Сливочная паста с курицей из одной формы",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 191°C. Нарежьте куриные бёдра кусочками; разморозьте цветную капусту и тыкву в микроволновой печи. Пробейте творог, лимонный сок, масло, молоко, воду и приправы, затем добавьте овощи и взбейте до гладкого соуса.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "blend",
+        "dependsOn": [],
+        "temperature": "191°C",
+        "equipment": [
+          "oven",
+          "microwave",
+          "blender"
+        ],
+        "donenessCue": "овощи полностью измельчены в соусе"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В форме 23×40 см уложите курицу, затем чередуйте слои сухих спагетти и соуса так, чтобы каждая лапша была покрыта. Накройте фольгой и выпекайте 45 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "bake",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "191°C",
+        "duration": "45 мин",
+        "equipment": [
+          "oven",
+          "baking_dish"
+        ],
+        "donenessCue": "паста размягчилась, курица готова"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Снимите фольгу, аккуратно разделите слипшуюся пасту и дайте блюду остыть 10–15 минут: соус загустеет. Разделите на 5 порций; при повторном разогреве можно добавить немного молока.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "cool",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "10–15 мин",
+        "equipment": [
+          "baking_dish"
+        ],
+        "donenessCue": "соус заметно загустел"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27306",
+    "titleRu": "Паста с колбасками и перцем в одной кастрюле",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Нарежьте перец крупным кубиком, лук мелким кубиком, чеснок измельчите, шпинат крупно порубите. В глубокой кастрюле начните обжаривать фарш в масле.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Когда нижняя сторона фарша подрумянится, разберите его и вмешайте колбасные приправы; готовьте до почти полной готовности. Сделайте в центре свободное место, добавьте масло с луком и перцем на 2–3 минуты, затем чеснок; вмешайте томатную пасту на 1 минуту и добавьте томаты.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "2–3 мин; 1 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "фарш почти готов, томатная паста слегка карамелизовалась"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Добавьте пенне и бульон, готовьте под крышкой до мягкости пасты. Вмешайте пармезан, шпинат и сливки, дайте шпинату увянуть, попробуйте и разложите на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "simmer",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "паста мягкая, шпинат увял"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27287",
+    "titleRu": "Боулы с бургером барбекю и чеддером",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 218°C. Нарежьте картофель кубиком 1–2,5 см, смешайте с маслом и выложите на противень. Листья кейла отделите от стеблей, разомните руками 2 минуты и мелко нарежьте; томат нарежьте ломтиками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "temperature": "218°C",
+        "duration": "кейл 2 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet",
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Запекайте картофель 25–30 минут, перемешав в середине, до выраженной румяности. На сковороде обжарьте говядину, после корочки разберите её, а когда она почти готова, добавьте кейл и немного масла.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "roast",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "218°C",
+        "duration": "25–30 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet",
+          "skillet"
+        ],
+        "donenessCue": "картофель и говядина румяные, кейл увял"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разделите картофель и мясо с кейлом на 5 порций, добавьте маринованные огурцы, ломтики томата, сыр и соус барбекю.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "mixing_bowl"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27270",
+    "titleRu": "Боулы-буррито со стейком, мёдом и лаймом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Нарежьте стейк полосками около 6 мм толщиной и 2,5 см длиной. Смешайте компоненты маринада, покройте мясо и оставьте, пока готовите остальные части. Сварите рис; измельчите халапеньо, зелёный лук и кинзу.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22"
+        ],
+        "action": "marinate",
+        "dependsOn": [],
+        "equipment": [
+          "mixing_bowl",
+          "pot"
+        ],
+        "donenessCue": "мясо покрыто маринадом"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сильном-среднем огне обжарьте стейк двумя партиями, затем верните всё мясо и влейте предусмотренный соус. В горячий рис вмешайте зелёную смесь и выдержите под крышкой ещё 5–10 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "рис 5–10 мин",
+        "equipment": [
+          "skillet",
+          "pot"
+        ],
+        "donenessCue": "стейк румяный, рис пропитался зелёной смесью"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Обжарьте перец и кукурузу, добавьте промытую фасоль. Разделите рис, стейк и овощи на 5 порций, при желании добавьте сальсу отдельно.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "перец размягчился, фасоль прогрелась"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-27230",
+    "titleRu": "Курица в стиле уличных халяльных тележек",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "В кастрюле прогрейте масло с пряностями около 1 минуты, добавьте рис и воду, доведите до активного кипения. Накройте, готовьте на слабом огне 15 минут, выключите и выдержите ещё 10 минут; разрыхлите вилкой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24",
+          "source-ingredient-25",
+          "source-ingredient-26",
+          "source-ingredient-27",
+          "source-ingredient-28",
+          "source-ingredient-29"
+        ],
+        "action": "simmer",
+        "dependsOn": [],
+        "duration": "1 мин; 15 мин; затем 10 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис впитал жидкость и рассыпчатый"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте специи, лимонный сок и масло, покройте куриные бёдра и при желании маринуйте от 30 минут. Готовьте на гриле на среднем-сильном огне по 4–5 минут с каждой стороны; альтернативно запекайте при 204°C 20–22 минуты, при желании последние 5 минут под грилем. Дайте мясу отдохнуть и нарежьте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24",
+          "source-ingredient-25",
+          "source-ingredient-26",
+          "source-ingredient-27",
+          "source-ingredient-28",
+          "source-ingredient-29"
+        ],
+        "action": "grill",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "204°C",
+        "duration": "маринование от 30 мин; гриль 4–5 мин с каждой стороны или духовка 20–22 мин",
+        "equipment": [
+          "grill",
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица готова и хорошо подрумянилась"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Смешайте огурцы, томаты и лук с маслом и уксусом; отдельно нарежьте салат. Смешайте компоненты белого соуса до текучести. Храните компоненты отдельно; перед едой разогрейте рис с курицей, затем добавьте овощи, салат и соус.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24",
+          "source-ingredient-25",
+          "source-ingredient-26",
+          "source-ingredient-27",
+          "source-ingredient-28",
+          "source-ingredient-29"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "mixing_bowl",
+          "microwave"
+        ],
+        "donenessCue": "соус текучий"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26996",
+    "titleRu": "Курица с чили, лаймом и золотистым рисом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разломайте тонкую лапшу или фидео на короткие кусочки. В кастрюле обжарьте её в масле 3–5 минут до лёгкого вздутия и румянца; добавьте сухой рис, приправы и соль, перемешайте 1–2 минуты.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23"
+        ],
+        "action": "saute",
+        "dependsOn": [],
+        "duration": "3–5 мин; затем 1–2 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "лапша и рис слегка подрумянились"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Влейте жидкость, доведите до активного кипения, удерживайте 60–90 секунд, накройте и готовьте на слабом огне 18 минут. Выключите и выдержите под крышкой 10 минут, затем разрыхлите рис.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23"
+        ],
+        "action": "simmer",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "60–90 сек; 18 мин; затем 10 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис приготовился и рассыпчатый"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разогрейте духовку до 204°C. Покройте бёдра маринадом и запекайте 20–25 минут; после отдыха разберите на кусочки и покройте соками противня. Брокколини быстро приготовьте в микроволновой печи с водой, добавьте соус и разложите всё на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23"
+        ],
+        "action": "roast",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "temperature": "204°C",
+        "duration": "20–25 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet",
+          "microwave"
+        ],
+        "donenessCue": "курица готова, брокколини мягкая"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26965",
+    "titleRu": "Куриные наггетсы для перекуса",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 204°C. Измельчите батат до мелкой «рисовой» крошки, нарежьте зелёный лук, смешайте с яйцами, овсяной мукой, приправами и куриным фаршем.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "temperature": "204°C",
+        "equipment": [
+          "food_processor",
+          "mixing_bowl",
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "bake",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "204°C",
+        "duration": "8 мин + 4 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "наггетсы полностью готовы внутри"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 191°C до горячей середины.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "temperature": "191°C",
+        "equipment": [
+          "baking_sheet",
+          "air_fryer"
+        ],
+        "donenessCue": "наггетсы полностью замёрзли перед упаковкой"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26920",
+    "titleRu": "Завтрачные такитос с картофелем, колбасой и сыром",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Отварите картофель в кожуре 20–25 минут до лёгкого прокалывания вилкой, остудите, очистите и разомните с небольшими кусочками. Смешайте свинину с приправами, маслом и сахаром, распределите тонким прямоугольником на застеленном противне и запеките при 218°C до готовности; остудите и нарежьте на 40 полосок.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18"
+        ],
+        "action": "bake",
+        "dependsOn": [],
+        "temperature": "218°C",
+        "duration": "картофель 20–25 мин",
+        "equipment": [
+          "pot",
+          "oven",
+          "baking_sheet",
+          "mixing_bowl"
+        ],
+        "donenessCue": "картофель мягкий, свинина готова"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сковороде обжарьте красный перец, затем добавьте яйца. Смешайте картофель с творогом, чеддером, яйцами и перцем. Сухие тортильи прогрейте на сковороде примерно по 1 минуте с каждой стороны, сохраняя их гибкими.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18"
+        ],
+        "action": "fry",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "около 1 мин с каждой стороны",
+        "equipment": [
+          "skillet",
+          "mixing_bowl"
+        ],
+        "donenessCue": "яйца схватились, тортильи гибкие"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Выложите начинку на край каждой тортильи, добавьте полоску колбаски и плотно сверните швом вниз. Заморозьте такитос на противне, затем упакуйте. Разогревайте в микроволновой печи 1–2 минуты до горячей середины; для хрустящей корочки после короткого разогрева доведите в аэрогриле.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "разогрев 1–2 мин",
+        "equipment": [
+          "baking_sheet",
+          "microwave",
+          "air_fryer"
+        ],
+        "donenessCue": "начинка горячая в центре"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26895",
+    "titleRu": "Картофельно-брокколи крокеты с чеддером",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 191°C. Разморозьте брокколи в микроволновой печи. Пробейте брокколи, йогурт, сыр и яйца короткими импульсами до мелкой крошки, не превращая в пюре; отдельно смешайте сухие компоненты без комков.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "blend",
+        "dependsOn": [],
+        "temperature": "191°C",
+        "equipment": [
+          "oven",
+          "microwave",
+          "blender",
+          "mixing_bowl"
+        ],
+        "donenessCue": "брокколи мелко измельчена, но не жидкая"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Соедините влажную и сухую смесь, дайте тесту постоять несколько минут. Ложкой диаметром около 3 см разложите шарики на застеленных и смазанных противнях с промежутками, выпекайте 20 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "bake",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "191°C",
+        "duration": "20 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "крокеты схватились и пропеклись"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Остудите, заморозьте одним слоем и упакуйте. Для хрустящей корочки разогревайте в аэрогриле при 204°C; микроволновая печь даст мягкую текстуру.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "temperature": "204°C",
+        "equipment": [
+          "baking_sheet",
+          "air_fryer",
+          "microwave"
+        ],
+        "donenessCue": "крокеты полностью замёрзли перед упаковкой"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26872",
+    "titleRu": "Курица с лимоном и травами",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Нарежьте картофель, раздавите чеснок, залейте водой и отварите до лёгкого прокалывания вилкой. Слейте воду, разомните с маслом и молоком, посолите и поперчите.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "boil",
+        "dependsOn": [],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "картофель легко прокалывается вилкой"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте масло, сок лимона, дижонскую горчицу, сушёные лук, чеснок, орегано, базилик и соль. Нарежьте бёдра тонкими полосками около 6 мм, покройте маринадом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "marinate",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "donenessCue": "курица полностью покрыта маринадом"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "На среднем-сильном огне обжаривайте курицу небольшими партиями по 2–3 минуты с первой стороны, переворачивая до полной готовности. Морковь нарежьте по диагонали, смешайте с маслом и запекайте при 218°C 10–12 минут, переверните и готовьте ещё 8–10 минут. Разделите на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "roast",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "temperature": "218°C",
+        "duration": "курица 2–3 мин с первой стороны; морковь 10–12 мин + 8–10 мин",
+        "equipment": [
+          "skillet",
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица готова, морковь мягкая"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26746",
+    "titleRu": "Дип с курицей и печёным красным перцем",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Положите куриную грудку в кастрюлю, залейте водой почти до покрытия, накройте и готовьте на слабом огне 30–45 минут до полной готовности. Остудите и мелко порубите либо разберите насадкой-лопаткой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "cook",
+        "dependsOn": [],
+        "duration": "30–45 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "курица полностью готова"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Пробейте в блендере все компоненты, кроме курицы, до гладкой массы.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "blend",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "blender"
+        ],
+        "donenessCue": "масса гладкая"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Переложите соус в миску, вмешайте кусочки курицы, отрегулируйте соль, перец или острый соус. Храните в герметичной ёмкости в холодильнике 5–7 дней.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "combine",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "5–7 суток хранения",
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "donenessCue": "курица равномерно распределена в дипе"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26720",
+    "titleRu": "Говяжий строганов в мультиварке",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Нарежьте лук мелким кубиком, морковь и грибы крупным кубиком. В чаше медленноварки смешайте бульон, вустерширский соус, лук и специи, положите сверху говядину.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "slow_cooker"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Готовьте 4 часа на сильном режиме либо 6 часов на слабом. За 30 минут до окончания добавьте грибы и морковь. Отварите пасту в отдельной кастрюле и отцедите.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "4 ч на сильном или 6 ч на слабом; овощи последние 30 мин",
+        "equipment": [
+          "slow_cooker",
+          "pot"
+        ],
+        "donenessCue": "говядина мягкая"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Достаньте мясо и разберите. Смешайте крахмал с жидкостью, введите в чашу при постоянном помешивании до загустения, затем вмешайте сливочный сыр, йогурт и дижонскую горчицу. Верните мясо и пасту, перемешайте и разделите на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "stir",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "slow_cooker",
+          "mixing_bowl"
+        ],
+        "donenessCue": "соус загустел, сливочный сыр полностью расплавился"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26689",
+    "titleRu": "Протеиновые панкейки на противне",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 190 °C. В блендере пробейте молоко, творог, кленовый сироп, яблочное пюре и ваниль 30–60 секунд до гладкости. Отдельно взбейте белки до пышной пены и смешайте овсяную муку, сухое молоко, разрыхлитель, соду и соль.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "blend",
+        "duration": "30–60 сек",
+        "temperatureC": 190,
+        "equipment": [
+          "oven",
+          "blender",
+          "mixing_bowl",
+          "whisk"
+        ],
+        "donenessCue": "творог полностью измельчён, белки пенистые",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Аккуратно соедините блендерную смесь с белками, затем вмешайте сухие ингредиенты. Вылейте тесто на застеленный пергаментом и слегка смазанный противень 43 × 28 см, разровняйте. Выпекайте до упругой золотистой поверхности, остудите и разрежьте на 12 частей. Замораживайте сначала одним слоем; разогревайте 1–2 минуты в микроволновке.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "bake",
+        "temperatureC": 190,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "parchment"
+        ],
+        "donenessCue": "пласт поднялся, поверхность золотистая и пружинит",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "source_bake_duration_not_extracted"
+    ]
+  },
+  {
+    "id": "tmpm-26676",
+    "titleRu": "Жареный рис с курицей и карри",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Охладите готовый рис в холодильнике ночь. Смешайте масло, лимонный сок, йогурт, чесночный порошок, карри, паприку, кориандр, кумин и соль. Нарежьте бёдра тонкими полосками, покройте маринадом. Нарежьте лук, красный перец и кабачок; измельчите чеснок.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "marinate",
+        "duration": "до приготовления; рис охладить на ночь",
+        "equipment": [
+          "mixing_bowl",
+          "refrigerator"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сильном огне обжарьте курицу партиями в сковороде до румяных краёв и полной готовности, отложите. Добавьте оставшееся масло, лук и перец на 2–3 минуты, затем кабачок на несколько минут. Внесите чеснок и томатную пасту, прогрейте до аромата, добавьте рис и верните курицу с соками. Посолите, поперчите и посыпьте кинзой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "stir_fry",
+        "duration": "2–3 мин для лука и перца",
+        "equipment": [
+          "large_frying_pan"
+        ],
+        "donenessCue": "курица непрозрачна внутри, рис прогрет и сухой",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26660",
+    "titleRu": "Курица энчилада в мультиварке",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разморозьте цветную капусту в микроволновке. Пробейте в блендере томаты, цветную капусту, сок лайма, томатную пасту, лук, чипотле в адобо и чесночный порошок до гладкого соуса.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "blend",
+        "equipment": [
+          "microwave",
+          "blender"
+        ],
+        "donenessCue": "соус без крупных кусочков",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте куриное филе кубиками около 2,5 см, посолите и поперчите, залейте соусом в чаше мультиварки. Готовьте 6 часов на low; за последний час приоткройте крышку, если соус жидкий. Вмешайте в готовый рис сливочное масло и соль. Разложите курицу с рисом, посыпьте монтерей-джеком и кинзой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14"
+        ],
+        "action": "slow_cook",
+        "duration": "6 ч low",
+        "equipment": [
+          "slow_cooker",
+          "saucepan"
+        ],
+        "donenessCue": "курица полностью непрозрачна, соус как густой томатный",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26647",
+    "titleRu": "Запечённая овсянка с тыквой и пряностями",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175 °C. В блендере соедините тыквенное пюре, молоко, творог, яйца, сироп, соль, разрыхлитель, протеин и смесь тыквенных пряностей до гладкости.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "blend",
+        "temperatureC": 175,
+        "equipment": [
+          "oven",
+          "blender"
+        ],
+        "donenessCue": "жидкая смесь однородная",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смажьте форму 33 × 23 см, всыпьте овсянку, залейте тыквенной смесью и тщательно перемешайте. Выпекайте 50–60 минут до схватившегося центра. Для крема смешайте сливочный сыр, йогурт и кленовый сироп; нанесите на остывшие порции.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13"
+        ],
+        "action": "bake",
+        "duration": "50–60 мин",
+        "temperatureC": 175,
+        "equipment": [
+          "oven",
+          "baking_dish",
+          "mixing_bowl"
+        ],
+        "donenessCue": "центр не жидкий при лёгком нажатии",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26617",
+    "titleRu": "Куриные боулы со шрирачей и лаймом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Смешайте шрирачу, сок лайма, мёд, луковый и чесночный порошок, соль и перец; половиной соуса покройте куриные бёдра и выдержите от 30 минут до 2 часов. Разогрейте духовку до 200 °C. Нарежьте батат кубиками, смажьте маслом и запекайте 20–25 минут, перевернув через 15 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-3",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13"
+        ],
+        "action": "roast",
+        "duration": "маринование 30 мин–2 ч; батат 20–25 мин",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "mixing_bowl"
+        ],
+        "donenessCue": "батат мягкий и подрумяненный",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Выложите курицу на отдельный противень гладкой стороной вниз, запекайте 20–25 минут, переверните и готовьте ещё 5–10 минут; дайте отдохнуть и нарежьте. Разморозьте брокколи, обсушите, обжарьте с белой частью зелёного лука в масле 3–5 минут. Смешайте рис, курицу, батат, брокколи и остаток соуса; добавьте зелёную часть лука.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-13"
+        ],
+        "action": "assemble",
+        "duration": "курица 25–35 мин; брокколи 3–5 мин",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "frying_pan"
+        ],
+        "donenessCue": "курица без розового центра, брокколи с поджаренными краями",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26583",
+    "titleRu": "Боулы «небрежный Джо» с чизстейком",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 200 °C. Нарежьте картофель крупными кубиками, перемешайте с маслом, чесночным порошком, солью и перцем. Запекайте на двух свободно разложенных противнях 25 минут, переверните и готовьте ещё 8–10 минут до румяной хрустящей корочки.",
+        "ingredientIds": [
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18"
+        ],
+        "action": "roast",
+        "duration": "25 мин; затем 8–10 мин",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "sheet_pan"
+        ],
+        "donenessCue": "картофель золотистый и легко прокалывается",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сковороде обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, готовьте до мягкости. Смешайте горчицу, вустерский соус, кетчуп, бульон и крахмал, влейте и прогрейте до загустения. Разложите с рисом и картофелем, накройте проволоне и добавьте кетчуп.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-19"
+        ],
+        "action": "simmer",
+        "equipment": [
+          "large_frying_pan",
+          "mixing_bowl"
+        ],
+        "donenessCue": "перцы мягкие, соус густо покрывает фарш",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26566",
+    "titleRu": "Солёная запечённая овсянка с колбасой, яйцом и сыром",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Смешайте фарш из свинины с коричневым сахаром, солью, перцем, кайенским перцем, копчёной паприкой, луковым и чесночным порошком, орегано и шалфеем. Обжарьте в масле на среднем-сильном огне, разбивая на крошки; отложите. В этой же сковороде в масле размягчите мелко нарезанные лук и зелёный перец.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22"
+        ],
+        "action": "fry",
+        "equipment": [
+          "frying_pan"
+        ],
+        "donenessCue": "свинина без розовых участков, овощи мягкие",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте духовку до 190 °C. Взбейте яйца, молоко и творог. Добавьте овсяные хлопья, овсяную муку, разрыхлитель, соль, колбасную крошку, овощи и чеддер. Переложите в смазанную форму 33 × 23 см, разровняйте и запекайте 40–45 минут до плотного центра.",
+        "ingredientIds": [
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "bake",
+        "duration": "40–45 мин",
+        "temperatureC": 190,
+        "equipment": [
+          "oven",
+          "mixing_bowl",
+          "baking_dish"
+        ],
+        "donenessCue": "центр схватился и не дрожит",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26528",
+    "titleRu": "Картофель с говядиной и соусом кесо",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 200 °C. Нарежьте картофель кубиками, посолите, поперчите, перемешайте с оливковым маслом и запекайте на смазанном противне до румяной мягкости. Нарежьте лук, поблано и грибы крупно, кабачок средними кубиками; быстро обжарьте овощи в масле, сохранив упругость.",
+        "ingredientIds": [
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "roast",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "frying_pan"
+        ],
+        "donenessCue": "картофель золотистый, овощи слегка поджарены и не разварены",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На второй сковороде обжарьте фарш в масле, внесите томатный соус, паприку, чесночный порошок, кумин и соль; готовьте до полной готовности мяса. Для кесо прогрейте творог, оба сыра, молоко, чесночный порошок, чипотле и соль около минуты и пробейте блендером. Храните соус отдельно; картофель для хрустящей корочки разогревайте 6 минут при 200 °C в аэрогриле.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22"
+        ],
+        "action": "blend",
+        "duration": "около 1 мин прогрева соуса; аэрогриль 6 мин",
+        "temperatureC": 200,
+        "equipment": [
+          "frying_pan",
+          "microwave",
+          "blender",
+          "air_fryer"
+        ],
+        "donenessCue": "фарш полностью готов, кесо гладкий",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "source_roast_duration_not_extracted"
+    ]
+  },
+  {
+    "id": "tmpm-26514",
+    "titleRu": "Булочки с курицей баффало",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "В кипящей воде сварите куриные грудки около 20 минут до температуры готовности, разберите двумя вилками и мелко порубите. Смешайте с соусом баффало. Разогрейте духовку до 190 °C; соедините овсяную муку, петрушку, чесночный порошок, соду и соль.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-11"
+        ],
+        "action": "boil",
+        "duration": "около 20 мин",
+        "temperatureC": 190,
+        "equipment": [
+          "saucepan",
+          "mixing_bowl",
+          "oven"
+        ],
+        "donenessCue": "курица полностью непрозрачна и легко разбирается",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Мелко нарежьте зелёный лук, взбейте яйца и смешайте их с сыром и творогом. Введите сухую смесь, затем курицу. Ложкой по 30 г выложите холмики на противень с промежутками около 5 см. Выпекайте 15–17 минут до золотистых верхушек. Остудите, заморозьте сначала открытыми одним слоем; из заморозки грейте 60–90 секунд в микроволновке или 7–10 минут при 190 °C в аэрогриле.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "bake",
+        "duration": "15–17 мин",
+        "temperatureC": 190,
+        "equipment": [
+          "sheet_pan",
+          "oven",
+          "freezer",
+          "air_fryer"
+        ],
+        "donenessCue": "верхушки золотистые, булочки держат форму",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26489",
+    "titleRu": "Средиземноморский салат с курицей и пастой",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Отварите пасту до al dente по инструкции, откиньте и быстро охладите под холодной водой. Разогрейте духовку до 204 °C. Смешайте масло, лимонный сок, луковый и чесночный порошок, кумин, орегано и соль; покройте курицу, накройте фольгой и запекайте 20–30 минут. Остудите и тонко нарежьте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "roast",
+        "duration": "20–30 мин",
+        "temperatureC": 204,
+        "equipment": [
+          "saucepan",
+          "oven",
+          "casserole_dish"
+        ],
+        "donenessCue": "курица без розового центра, паста упругая",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте огурец и томаты, тонко нарежьте красный лук, промойте его холодной водой и обсушите. Взбейте оливковое масло, красный винный уксус, лимонный сок, чеснок, орегано, соль и перец. Смешайте пасту, овощи, шпинат, заправку, курицу и фету. Для лучшей текстуры добавляйте шпинат и соль непосредственно перед едой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "toss",
+        "equipment": [
+          "mixing_bowl",
+          "whisk"
+        ],
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26441",
+    "titleRu": "Индейка стир-фрай с арахисом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Приготовьте рис. В миске смешайте арахисовую пасту, мёд, соевый соус, рисовый уксус или китайское вино, кунжутное масло и хлопья чили до гладкого соуса. Разморозьте овощную смесь и слейте выделившуюся воду.",
+        "ingredientIds": [
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "mix",
+        "equipment": [
+          "saucepan",
+          "mixing_bowl"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте масло на большой сковороде и обжарьте фарш из индейки на среднем-сильном огне. Когда мясо почти готово, выпарите лишнюю влагу, добавьте овощи и готовьте 1–2 минуты. Влейте соус и перемешивайте до лёгкого загустения. Подавайте с рисом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "stir_fry",
+        "duration": "1–2 мин после овощей",
+        "equipment": [
+          "large_frying_pan"
+        ],
+        "donenessCue": "индейка полностью приготовлена, соус обволакивает овощи",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26429",
+    "titleRu": "Осенние боулы с курицей и поблано",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Приготовьте рис, добавьте сок лайма и соль. Разогрейте духовку до 220 °C. Выложите поблано, лук и неочищенный чеснок на противень, полейте маслом и запекайте 15–18 минут до пузырящейся кожицы. Отдохнувшие овощи пробейте с йогуртом, кинзой и соком лайма; посолите и разлейте соус по небольшим ёмкостям.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "blend",
+        "duration": "15–18 мин запекания",
+        "temperatureC": 220,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "blender"
+        ],
+        "donenessCue": "кожица перцев вздулась, соус гладкий",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте батат крупными кубиками и брокколи соцветиями, перемешайте батат с маслом и солью. Запекайте батат 22–25 минут, перевернув в середине; через 10–12 минут добавьте на противень брокколи с маслом. На сковороде обжарьте фарш из куриных бёдер с чесночным порошком и орегано до исчезновения розового цвета. Разложите с рисом, добавьте соус, при подаче — тыквенные семечки и фету.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22"
+        ],
+        "action": "assemble",
+        "duration": "22–25 мин",
+        "temperatureC": 220,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "frying_pan"
+        ],
+        "donenessCue": "батат мягкий, брокколи подрумянена, курица полностью готова",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26414",
+    "titleRu": "Французские тосты из протеиновых вафель с корицей",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Если клубника заморожена, разморозьте её 15–20 секунд в микроволновке, добавьте кленовый сироп и оставьте выделить сок. Смешайте протеиновую смесь для панкейков, йогурт, жидкие белки и воду. В разогретой и смазанной вафельнице диаметром около 20 см выпекайте до румяной плотной вафли.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "waffle",
+        "duration": "15–20 сек разморозки",
+        "equipment": [
+          "microwave",
+          "mixing_bowl",
+          "waffle_iron"
+        ],
+        "donenessCue": "вафля подрумянена и схватилась",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Взбейте белки или яйцо с молоком, ванилью и корицей. Разрежьте вафлю на четыре части, окуните каждую сторону в яичную смесь и обжарьте на сковороде по 2–3 минуты с каждой стороны до корочки и схватившихся краёв. Подайте с клубникой и взбитыми сливками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "fry",
+        "duration": "2–3 мин с каждой стороны",
+        "equipment": [
+          "mixing_bowl",
+          "frying_pan"
+        ],
+        "donenessCue": "образовалась корочка, края не влажные",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26358",
+    "titleRu": "Японское карри с говяжьим фаршем",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Приготовьте рис. На среднем-сильном огне обжарьте фарш; когда он почти готов, сдвиньте к краям, в вытопленном жире обжарьте лук, чеснок и имбирь до лёгкого румянца. Вмешайте карри, гарам масалу и муку, постоянно перемешивая до лёгкого поджаривания муки.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-16"
+        ],
+        "action": "brown",
+        "equipment": [
+          "large_pot"
+        ],
+        "donenessCue": "лук слегка золотистый, мука пахнет поджаркой",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Постепенно влейте говяжий бульон, соевый и вустерский соусы. Добавьте морковь и картофель, накройте и варите на среднем огне 15–20 минут до мягкости картофеля. Вмешайте горошек, посолите и поперчите; подайте с рисом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16"
+        ],
+        "action": "simmer",
+        "duration": "15–20 мин",
+        "equipment": [
+          "large_pot"
+        ],
+        "donenessCue": "картофель мягко прокалывается, соус загустел",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26232",
+    "titleRu": "Мак-энд-чиз для большой порции",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Отварите макароны чуть дольше al dente, сохраните воду от варки и охладите макароны. Разогрейте духовку до 220 °C. Нарежьте лук, перец и морковь крупно, оставьте чеснок целым; смешайте с цветной капустой, маслом, паприкой, чесночным и луковым порошком, солью и запекайте 25–30 минут, перевернув примерно через 20 минут.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-21"
+        ],
+        "action": "roast",
+        "duration": "25–30 мин",
+        "temperatureC": 220,
+        "equipment": [
+          "saucepan",
+          "oven",
+          "sheet_pan"
+        ],
+        "donenessCue": "овощи мягкие и местами румяные",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте куриные бёдра с маслом, паприкой, луковым и чесночным порошком, солью и перцем; запекайте на отдельном противне 15–20 минут при 220 °C, дайте отдохнуть и нарежьте. Пробейте запечённые овощи с тёртым чеддером, творогом, водой от пасты и молоком. Прогрейте соус с макаронами и курицей на среднем огне, помешивая до загустения; добавьте петрушку.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "blend",
+        "duration": "курица 15–20 мин",
+        "temperatureC": 220,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "blender",
+          "large_pot"
+        ],
+        "donenessCue": "курица готова, сырный соус густо покрывает макароны",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-26138",
+    "titleRu": "Говядина и овощи в глазури кочуджан",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Приготовьте рис. Смешайте чеснок, имбирь, соевый соус, кочуджан, мёд и воду. Тонко нарежьте лук и перец, нашинкуйте капусту, сделайте овощечисткой ленты из моркови и разрежьте их поперёк.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14"
+        ],
+        "action": "mix",
+        "equipment": [
+          "saucepan",
+          "mixing_bowl",
+          "vegetable_peeler"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В большой сковороде на половине масла обжарьте фарш. Когда он почти готов, добавьте оставшееся масло, лук и перец; после появления цвета внесите капусту и морковь и готовьте до мягкости. Верните всё в центр сковороды, влейте соус и прогрейте до пузырьков и аромата чеснока. При желании посыпьте зелёным луком, подайте с рисом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14"
+        ],
+        "action": "stir_fry",
+        "equipment": [
+          "large_frying_pan"
+        ],
+        "donenessCue": "фарш полностью приготовлен, капуста мягкая, соус слегка пузырится",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "source_cook_duration_not_extracted"
+    ]
+  },
+  {
+    "id": "tmpm-25475",
+    "titleRu": "Тефтели тикка-масала",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разложите по контейнерам готовый или замороженный рис, брокколи, по пять готовых белковых тефтелей и соус тикка-масала. Закройте и храните охлаждёнными.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "portion",
+        "equipment": [
+          "meal_prep_container"
+        ],
+        "dependsOn": []
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "requires_verified_component_recipe: high_protein_beef_meatballs",
+      "requires_verified_component_recipe: tikka_masala_sauce"
+    ]
+  },
+  {
+    "id": "tmpm-25463",
+    "titleRu": "Тефтели терияки из говядины",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разложите по контейнерам готовый или замороженный рис, овощную смесь для стир-фрая, по пять готовых белковых тефтелей и соус терияки. Закройте и храните охлаждёнными.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "portion",
+        "equipment": [
+          "meal_prep_container"
+        ],
+        "dependsOn": []
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "requires_verified_component_recipe: high_protein_beef_meatballs",
+      "requires_verified_component_recipe: teriyaki_sauce"
+    ]
+  },
+  {
+    "id": "tmpm-25461",
+    "titleRu": "Сэндвич с тефтелями",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Намажьте хлеб маслом, посыпьте чесночным порошком и подрумяньте в аэрогриле при 175 °C. Одновременно прогрейте готовые тефтели в маринаре до горячего центра.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "air_fry",
+        "temperatureC": 175,
+        "equipment": [
+          "air_fryer",
+          "saucepan"
+        ],
+        "donenessCue": "хлеб хрустящий, тефтели горячие в центре",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Выложите на тост маринару с тефтелями, накройте проволоне и верните в аэрогриль до расплавления сыра.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "melt",
+        "temperatureC": 175,
+        "equipment": [
+          "air_fryer"
+        ],
+        "donenessCue": "сыр полностью расплавлен",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "requires_verified_component_recipe: high_protein_beef_meatballs",
+      "requires_verified_component_recipe: marinara_sauce"
+    ]
+  },
+  {
+    "id": "tmpm-25453",
+    "titleRu": "Протеиновые тефтели из говядины",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 200 °C. Смешайте говяжий фарш, овсяную муку, яйца, чесночный и луковый порошок, соль и перец до равномерности. Сбрызните противни маслом, сформуйте ложкой одинаковые тефтели и разложите с промежутками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "form",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "mixing_bowl",
+          "sheet_pan"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Запекайте 17–20 минут, лучше по одному противню за раз для румяности. Остудите, заморозьте открытыми одним слоем до твёрдости и переложите в герметичные пакеты. Разогревайте несколько минут в микроволновке или около 5 минут при 200 °C в аэрогриле.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-8"
+        ],
+        "action": "bake",
+        "duration": "17–20 мин",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "freezer",
+          "air_fryer"
+        ],
+        "donenessCue": "тефтели румяные и полностью готовы внутри",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25304",
+    "titleRu": "Куриная грудка для заморозки",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 200 °C. Нарежьте куриные грудки кусочками толщиной 0,5–1 см и длиной до нескольких сантиметров. Смешайте с маслом, солью, чесночным и луковым порошком, паприкой и орегано. Распределите одним слоем по смазанным противням, не складывая кусочки друг на друга.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "season",
+        "temperatureC": 200,
+        "equipment": [
+          "oven",
+          "mixing_bowl",
+          "sheet_pan"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Запекайте до полной готовности, затем приподнимите один край противня, чтобы жидкость стекла в сторону, и остудите, пока мясо перестанет парить. Переложите на меньший противень, заморозьте открытыми одним слоем до твёрдости, затем упакуйте герметично. Пищевая порция — 100 г готовой курицы.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "freeze",
+        "equipment": [
+          "oven",
+          "sheet_pan",
+          "freezer"
+        ],
+        "donenessCue": "курица полностью непрозрачна и не выделяет розовый сок",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "source_bake_duration_not_extracted"
+    ]
+  },
+  {
+    "id": "tmpm-25290",
+    "titleRu": "Запечённая овсянка для большой порции",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175 °C. Смешайте овсяные хлопья, протеин, разрыхлитель и соль. В другой миске разомните бананы, добавьте растопленное масло, яйца, молоко, кленовый сироп и грецкие орехи.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "mix",
+        "temperatureC": 175,
+        "equipment": [
+          "oven",
+          "mixing_bowl"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Соедините сухую и жидкую смеси, переложите в смазанную форму 33 × 23 см и выпекайте при 175 °C до полностью схватившегося центра. Для топпинга слегка прогрейте арахисовую пасту, смешайте с сиропом и корицей и нанесите на остывшую овсянку.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13"
+        ],
+        "action": "bake",
+        "temperatureC": 175,
+        "equipment": [
+          "oven",
+          "baking_dish",
+          "microwave"
+        ],
+        "donenessCue": "центр плотный и не жидкий",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "source_bake_duration_not_extracted"
+    ]
+  },
+  {
+    "id": "tmpm-25244",
+    "titleRu": "Жареный рис с курицей фахитас",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Охладите готовый рис ночь. Смешайте масло, сок лайма, чесночный порошок, орегано, кориандр, кумин, паприку, чили, соль и перец. Нарежьте куриные бёдра тонкими полосками, покройте маринадом. Нарежьте лук и оба перца полосками, измельчите чеснок; кинзу порубите для подачи.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "marinate",
+        "duration": "рис охладить на ночь",
+        "equipment": [
+          "mixing_bowl",
+          "refrigerator"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На сильном огне обжарьте курицу партиями в части масла до румяности и полной готовности, отложите. Добавьте оставшееся масло, готовьте лук и перцы 3–5 минут, затем чеснок до аромата. Вмешайте рис, сок лайма, курицу с соками, отрегулируйте соль и перец. Посыпьте кинзой и подайте с долькой лайма.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "stir_fry",
+        "duration": "3–5 мин для овощей",
+        "equipment": [
+          "large_frying_pan"
+        ],
+        "donenessCue": "курица непрозрачна внутри, перцы слегка подрумянились",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25175",
+    "titleRu": "Стир-фрай из свинины с острым мёдом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Промойте рис до прозрачной воды и поставьте вариться. В миске смешайте хрустящее чили-чесночное масло, соевый соус, рисовый уксус и мёд. Нарежьте красный перец крупным кубиком, стручковую фасоль — отрезками 3–5 см, зелёный лук — мелко, разделив белую и зелёную части.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "mix",
+        "equipment": [
+          "saucepan",
+          "mixing_bowl"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В большой сковороде на среднем-сильном огне обжарьте свиной фарш в половине масла. Отложите готовое мясо, если сковорода тесная. На оставшемся масле обжарьте стручковую фасоль на сильном огне до тёмных подпалин, затем добавьте перец и белую часть лука на несколько минут. Верните свинину, влейте соус и перемешивайте до равномерного покрытия. Подавайте с рисом и зелёной частью лука.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "stir_fry",
+        "equipment": [
+          "large_frying_pan"
+        ],
+        "donenessCue": "свинина полностью приготовлена, на фасоли есть тёмные подпалины, соус обволакивает ингредиенты",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25159",
+    "titleRu": "Запечённые пенне для большой порции",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "На среднем-сильном огне обжарьте говяжий фарш. Добавьте лук и чеснок, слегка посолите и поперчите; после подрумянивания вмешайте оба вида томатов, орегано и базилик. Доведите до кипения и готовьте 10–20 минут, чтобы ушёл сырой томатный вкус, затем вмешайте шпинат до увядания.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-12",
+          "source-ingredient-14"
+        ],
+        "action": "simmer",
+        "duration": "10–20 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "фарш подрумянен, шпинат увял",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте духовку до 200°C. Отварите пенне по инструкции на упаковке и слейте воду; смешайте пасту с мясным соусом и отрегулируйте соль и перец.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-14"
+        ],
+        "action": "boil",
+        "temperature": "200°C",
+        "equipment": [
+          "pot",
+          "oven"
+        ],
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Выложите половину пасты в форму, распределите рикотту, накройте оставшейся пастой и посыпьте моцареллой с пармезаном. Запекайте 30 минут; если сыр темнеет слишком быстро, накройте фольгой. Дайте запеканке отдохнуть и остыть перед нарезкой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "bake",
+        "temperature": "200°C",
+        "duration": "30 мин",
+        "equipment": [
+          "oven",
+          "baking_dish"
+        ],
+        "donenessCue": "сыр расплавился и не подгорел",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25126",
+    "titleRu": "Гранола с корицей и изюмом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175°C. В миске для микроволновой печи прогрейте арахисовую пасту, кленовый сироп и ваниль, пока масса не станет текучей; вмешайте корицу и соль.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "heat",
+        "temperature": "175°C",
+        "equipment": [
+          "oven",
+          "microwave"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте овсяные хлопья с тёплой массой до равномерного покрытия, распределите слоем около 1,3 см по противню с пергаментом. Запекайте 20–22 минуты, пока середина не станет слегка упругой.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3"
+        ],
+        "action": "bake",
+        "temperature": "175°C",
+        "duration": "20–22 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "центр слегка упругий",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Полностью остудите, разломайте на нужные кусочки, вмешайте изюм и храните в герметичной таре.",
+        "ingredientIds": [
+          "source-ingredient-7"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25125",
+    "titleRu": "Двойная шоколадная гранола",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175°C. Прогрейте в микроволновой печи кленовый сироп, кокосовое масло и ваниль до расплавления масла; вмешайте какао и соль.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "heat",
+        "temperature": "175°C",
+        "equipment": [
+          "oven",
+          "microwave"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Покройте овсяные хлопья шоколадной смесью, разложите в один слой на противне с пергаментом и запекайте 20–22 минуты до лёгкой упругости в центре.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-5"
+        ],
+        "action": "bake",
+        "temperature": "175°C",
+        "duration": "20–22 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "центр слегка упругий",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Полностью остудите гранолу, разломайте и вмешайте шоколадные капли; переложите в герметичную тару.",
+        "ingredientIds": [
+          "source-ingredient-7"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25121",
+    "titleRu": "Протеиновая гранола-кластер с арахисовой пастой",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175°C. Нагрейте арахисовую пасту, кленовый сироп и ваниль в микроволновой печи до текучей консистенции, затем вмешайте протеиновый порошок, корицу и соль.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "mix",
+        "temperature": "175°C",
+        "equipment": [
+          "oven",
+          "microwave"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте овсяные хлопья с пастой, разложите на противне с пергаментом слоем около 1,3 см и запекайте 20–22 минуты, пока середина слегка не уплотнится.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-5"
+        ],
+        "action": "bake",
+        "temperature": "175°C",
+        "duration": "20–22 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "гранола слегка уплотнилась",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Дайте полностью остыть, затем разломайте на кластеры и уберите в герметичную тару.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "cool",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25092",
+    "titleRu": "Морковь с хумусом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Пробейте нут вместе с тахини, лимонным соком, оливковым маслом, чесночным порошком, кумином и солью; добавьте примерно четверть жидкости из банки нута и доведите до гладкой консистенции. Без кухонного комбайна разомните нут вилкой и постепенно вмешайте остальные продукты.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "blend",
+        "equipment": [
+          "food_processor"
+        ],
+        "donenessCue": "хумус гладкий",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Вымойте и очистите морковь; храните её в контейнере с водой в холодильнике. Разделите хумус и морковь на пять перекусов.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-1"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25082",
+    "titleRu": "Запеканка из батата, ветчины и яиц",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175°C. Нарежьте зелёный лук, натрите батат и крупно нарежьте ветчину. На среднем-сильном огне обжарьте белые части лука и батат с маслом 2–3 минуты, слегка приправьте; освободите центр сковороды и подрумяньте ветчину по краям.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-9"
+        ],
+        "action": "fry",
+        "temperature": "175°C",
+        "duration": "2–3 мин",
+        "equipment": [
+          "oven",
+          "skillet"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Взбейте яйца с зелёными частями лука, чеддером, солью, перцем и чесночным порошком. Смажьте форму, выложите батат, лук и ветчину, залейте яйцами и перемешайте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "mix",
+        "equipment": [
+          "mixing_bowl",
+          "baking_dish"
+        ],
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Запекайте 45 минут, пока центр полностью не схватится.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3"
+        ],
+        "action": "bake",
+        "temperature": "175°C",
+        "duration": "45 мин",
+        "equipment": [
+          "oven",
+          "baking_dish"
+        ],
+        "donenessCue": "центр запеканки схватился",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25071",
+    "titleRu": "Куриные боулы с рисом и чечевицей",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 190°C. Запекайте куриную грудку на противне 20 минут либо до внутренней температуры 68°C, удержанной 2 минуты.",
+        "ingredientIds": [
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "bake",
+        "temperature": "190°C",
+        "duration": "20 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "внутри 68°C не менее 2 минут",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте лук и обжарьте его в масле с солью 8–10 минут до карамельного цвета; можно добавить немного воды. Промойте рис с чечевицей до прозрачной воды, сварите до мягкости и вмешайте лук.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-5",
+          "source-ingredient-9"
+        ],
+        "action": "cook",
+        "duration": "8–10 мин",
+        "equipment": [
+          "skillet",
+          "pot"
+        ],
+        "donenessCue": "рис и чечевица мягкие",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разделите рис с чечевицей и курицу по контейнерам. Листовой салат и заправку храните отдельно; перед разогревом уберите их, прогрейте рис с курицей и только затем соберите боул.",
+        "ingredientIds": [
+          "source-ingredient-4",
+          "source-ingredient-6",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25044",
+    "titleRu": "Корейская говядина с рисовыми клецками ттокпокки",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Доведите воду до кипения. Нарежьте морковь лентами, разделите зелёный лук на белые и зелёные части, измельчите чеснок, подготовьте кимчи. Сварите рисовые клецки по времени упаковки до всплытия и мягкости при прокалывании вилкой; переложите в холодную воду и сохраните крахмальную воду.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-10"
+        ],
+        "action": "boil",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "клецки всплыли и легко прокалываются",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На среднем-сильном огне обжарьте говядину. Когда она будет готова примерно на 80%, сдвиньте её, добавьте белые части лука, чеснок и кимчи на 1–2 минуты до аромата, затем вмешайте морковь.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-6"
+        ],
+        "action": "fry",
+        "duration": "1–2 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "ароматы раскрылись, морковь начала размягчаться",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Влейте в сковороду кочуджан, соевый соус, сахар и крахмальную воду, добавьте клецки и прогрейте до обволакивающего соуса. Отрегулируйте соль и перец, посыпьте зелёной частью лука.",
+        "ingredientIds": [
+          "source-ingredient-5",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "simmer",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "соус обволакивает клецки",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25030",
+    "titleRu": "Протеиновые панкейки для милпрепа",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Смешайте оба протеиновых порошка, овсяную муку, крахмал, разрыхлитель и соду без комков. Добавьте белки, йогурт и воду; тесто должно быть текучим, но не жидким. Оставьте на 10–15 минут, чтобы оно загустело.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "mix",
+        "duration": "10–15 мин",
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "donenessCue": "тесто стало гуще",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте сковороду или гриль на среднем огне, слегка смажьте. Жарьте панкейки по 2–3 минуты с каждой стороны до румяной корочки и схватившихся краёв.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "fry",
+        "duration": "4–6 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "края схватились, обе стороны румяные",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Остудите на решётке до комнатной температуры, заморозьте в один слой до твёрдости и переложите в пакет. Разогревайте в микроволновой печи или тостере.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25006",
+    "titleRu": "Быстрые идеи для перекусов",
+    "paraphrasedInstructionDraft": [],
+    "proceduralStatus": "review_required",
+    "proceduralBlockers": [
+      "несколько_независимых_перекусов_в_одной_исходной_карточке: требуется разделить на отдельные рецепты"
+    ]
+  },
+  {
+    "id": "tmpm-24974",
+    "titleRu": "Говяжьи тефтели барбекю",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 200°C. Нарежьте картофель дольками, смешайте с маслом, разложите на смазанном противне и запекайте до румяности.",
+        "ingredientIds": [
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "roast",
+        "temperature": "200°C",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "дольки румяные",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Вымесите говядину с яйцами, овсяной мукой, чесночным и луковым порошком, солью, перцем и соусом барбекю. Сформуйте по 30 г, оставляя расстояние между тефтелями, и подтяните форму смазанными руками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "mix",
+        "equipment": [
+          "mixing_bowl",
+          "baking_sheet"
+        ],
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Запекайте тефтели при 200°C до полной готовности и румяности. При подаче добавьте отдельную порцию соуса барбекю к тефтелям и кетчуп к картофелю.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-8",
+          "source-ingredient-12",
+          "source-ingredient-13"
+        ],
+        "action": "bake",
+        "temperature": "200°C",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "тефтели полностью готовы",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24968",
+    "titleRu": "Говяжьи тефтели барбекю для большой порции",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Сварите рис выбранным способом. Запеките картофельные дольки с маслом при 200°C до румяности.",
+        "ingredientIds": [
+          "source-ingredient-9",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "roast",
+        "temperature": "200°C",
+        "equipment": [
+          "pot",
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "картофель румяный",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Вымесите фарш с яйцами, овсяной мукой, чесночным и луковым порошком, солью, перцем и соусом барбекю. Сформуйте тефтели по 30 г и запекайте при 200°C до полной готовности.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "bake",
+        "temperature": "200°C",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "тефтели полностью готовы",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Обжарьте красный лук в масле, вмешайте шпинат до увядания, затем промытую фасоль и рис. Приправьте паприкой, чесночным порошком, солью и перцем. Разложите с тефтелями, картофелем, соусом барбекю и кетчупом.",
+        "ingredientIds": [
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "assemble",
+        "equipment": [
+          "skillet"
+        ],
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24949",
+    "titleRu": "Куриные рисовые боулы со шрирачей и арахисом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 220°C. Смешайте майонез, шрирачу, рисовый уксус, луковый и чесночный порошок с солью, покройте этой смесью бёдра. Запекайте на противне 10 минут, затем включите верхний нагрев ещё примерно на 5 минут до румяности; дайте отдохнуть и нарежьте.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14"
+        ],
+        "action": "bake",
+        "temperature": "220°C",
+        "duration": "15 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица подрумянилась и готова внутри",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте соевый соус, арахисовую пасту, уксус, мёд, чеснок, шрирачу и кунжутное масло до гладкости. На среднем-сильном огне прогрейте брокколи с водой до испарения, затем добавьте масло, морковь и лук; готовьте до мягкости с небольшим хрустом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-19"
+        ],
+        "action": "fry",
+        "equipment": [
+          "mixing_bowl",
+          "skillet"
+        ],
+        "donenessCue": "вода испарилась, овощи мягкие",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Добавьте готовый рис и соус к овощам, перемешайте до покрытия. Вмешайте курицу, отрегулируйте соль и перец, сверху добавьте зелёный лук и дроблёный арахис.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-18",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "combine",
+        "equipment": [
+          "skillet"
+        ],
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24917",
+    "titleRu": "Завтрачные маффины со скрытыми овощами",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 175°C. Натрите кабачок и морковь, заверните в ткань или бумажные полотенца и хорошо отожмите влагу.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3"
+        ],
+        "action": "prepare",
+        "temperature": "175°C",
+        "equipment": [
+          "oven"
+        ],
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разомните бананы, вмешайте овощи, ваниль, кленовый сироп и яйца. Добавьте корицу, разрыхлитель, соду и соль, затем овсяную муку и шоколадные капли; перемешайте до однородного теста.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "mix",
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Смажьте ячейки формы маслом, равномерно распределите тесто и выпекайте до полной готовности. Остудите на решётке, заморозьте в один слой и переложите в пакет; разогревайте один маффин около минуты в микроволновой печи.",
+        "ingredientIds": [
+          "source-ingredient-13",
+          "source-ingredient-1"
+        ],
+        "action": "bake",
+        "temperature": "175°C",
+        "equipment": [
+          "oven",
+          "baking_dish",
+          "microwave"
+        ],
+        "donenessCue": "маффины полностью пропеклись",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24909",
+    "titleRu": "Быстрое карри с куриным фаршем",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "В кастрюле на топлёном масле обжарьте сухой рис с кумином и чесноком 2–3 минуты до лёгкого цвета. Влейте воду, приготовьте рис; через 15 минут выключите огонь, оставьте под крышкой ещё на 5 минут, затем вмешайте размороженные горошек с морковью.",
+        "ingredientIds": [
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "cook",
+        "duration": "20 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис мягкий, вода впиталась",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте лук, измельчите кинзу. На топлёном масле обжарьте лук, затем куриный фарш; когда фарш будет готов примерно на 80%, добавьте карри, гарам масалу, паприку, кайенский перец, чеснок и имбирь. Влейте томатный соус с водой и готовьте до лёгкого загустения.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "simmer",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "фарш полностью готов, соус слегка загустел",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Посолите и поперчите по вкусу, вмешайте кинзу и разложите карри с рисом.",
+        "ingredientIds": [
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-20"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24899",
+    "titleRu": "Боулы с индейкой, лимоном и чесноком",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 220°C. Нарежьте картофель тонкими четвертинками, смешайте с маслом, солью и перцем, разложите одним слоем и запекайте около 20 минут, переворачивая в середине, до выраженной румяности. Рядом прогрейте брокколи с маслом, солью и перцем.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "roast",
+        "temperature": "220°C",
+        "duration": "20 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "картофель румяный",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На среднем-сильном огне обжарьте фарш индейки в масле. Когда он почти готов, добавьте тёртый чеснок и готовьте до аромата, постоянно перемешивая, чтобы чеснок не сгорел.",
+        "ingredientIds": [
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-10"
+        ],
+        "action": "fry",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "индейка полностью готова",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Добавьте в сковороду готовый рис, лимонный сок и цедру, орегано, кориандр и луковый порошок. Вмешайте брокколи и картофель, посолите и поперчите; подайте с дзадзики и хлопьями чили.",
+        "ingredientIds": [
+          "source-ingredient-4",
+          "source-ingredient-9",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "combine",
+        "equipment": [
+          "skillet"
+        ],
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24866",
+    "titleRu": "Салат с курицей, пастой и дижонской заправкой",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Отварите пасту до аль денте по инструкции упаковки, слейте и промойте холодной водой. Разогрейте духовку или аэрогриль до 218°C, приправьте куриную грудку дижонской горчицей, чесночным порошком, солью и перцем; в аэрогриле готовьте 12–15 минут, в духовке немного дольше, до полной готовности. Остудите и нарежьте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "cook",
+        "temperature": "218°C",
+        "duration": "12–15 мин",
+        "equipment": [
+          "pot",
+          "oven",
+          "air_fryer"
+        ],
+        "donenessCue": "курица полностью готова",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте огурец, сельдерей и сладкий перец; у огурца удалите семена. Красный лук нарежьте мелко, промойте холодной водой и обсушите. Смешайте овощи с оливками и промытой фасолью.",
+        "ingredientIds": [
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "prepare",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Взбейте масло, винный уксус, чеснок, дижонскую горчицу, орегано, базилик, хлопья чили, соль и перец. Соедините заправку с пастой и овощами, затем аккуратно вмешайте курицу и скорректируйте вкус.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "mix",
+        "equipment": [
+          "mixing_bowl"
+        ],
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24851",
+    "titleRu": "Завтрачные булочки с колбасой",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Вымесите фарш индейки с коричневым сахаром, солью, перцем, паприкой, кайенским перцем, луковым и чесночным порошком, орегано и шалфеем. На среднем-сильном огне обжарьте в масле до отсутствия розового цвета, разберите на мелкие кусочки и отложите.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "fry",
+        "equipment": [
+          "mixing_bowl",
+          "skillet"
+        ],
+        "donenessCue": "розового цвета не осталось",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте оба перца и сладкий лук мелким кубиком. Обжарьте в масле до испарения большей части влаги, мягкости и лёгкой румяности, верните колбасную смесь и слегка остудите.",
+        "ingredientIds": [
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-1"
+        ],
+        "action": "fry",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "овощи мягкие и слегка подрумянены",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разогрейте духовку до 190°C. Смешайте овсяную муку, петрушку, чесночный порошок, соду и соль; отдельно яйца, сыр и йогурт. Соедините смеси с остывшей колбасой и овощами, отсадите порции по 30 г на противни и выпекайте 15–17 минут до золотистых верхушек.",
+        "ingredientIds": [
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19"
+        ],
+        "action": "bake",
+        "temperature": "190°C",
+        "duration": "15–17 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "верхушки золотистые",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Остудите, заморозьте до твёрдости и храните герметично. Для мягкой текстуры разогревайте из морозильника 60–90 секунд в микроволновой печи; для хрустящей — 7–10 минут в аэрогриле при 200°C.",
+        "ingredientIds": [
+          "source-ingredient-17",
+          "source-ingredient-18"
+        ],
+        "action": "reheat",
+        "temperature": "200°C",
+        "duration": "7–10 мин",
+        "equipment": [
+          "microwave",
+          "air_fryer"
+        ],
+        "dependsOn": [
+          "editorial-step-3"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24799",
+    "titleRu": "Мини-тако с говядиной, чили и сыром",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "В большой кастрюле на среднем-сильном огне разберите фарш в воде на очень мелкие частицы. Добавьте кумин, чили, паприку, луковый и чесночный порошок, затем томатную пасту; продолжайте мешать. Когда выпарится примерно половина воды, вмешайте муку и готовьте до густой начинки без лишней жидкости.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "cook",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "начинка густая и не вытекает",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На среднем огне прогрейте кукурузные тортильи до пара и переверните. На половину каждой распределите примерно 28 г начинки, добавьте щепотку сыра, сложите пополам и обжарьте по 1–2 минуты с каждой стороны до румяности.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "fry",
+        "duration": "2–4 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "тортильи подрумянились",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Остудите такос на противне, заморозьте в один слой до твёрдости и переложите в пакет. Разогревайте в аэрогриле при 200°C 5–6 минут, пока центр не станет горячим.",
+        "ingredientIds": [
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "air_fry",
+        "temperature": "200°C",
+        "duration": "5–6 мин",
+        "equipment": [
+          "air_fryer",
+          "baking_sheet"
+        ],
+        "donenessCue": "центр горячий",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24729",
+    "titleRu": "Сковорода «чизбургер»",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 220°C вместе с противнем. Нарежьте картофель тонкими четвертинками, смешайте с маслом, солью и перцем. Разложите на горячем противне, запекайте 10–12 минут, переверните и готовьте ещё 8–10 минут до желаемой румяности.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3"
+        ],
+        "action": "roast",
+        "temperature": "220°C",
+        "duration": "18–22 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "картофель румяный",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте лук, удалите жёсткие стебли кейла и крупно порубите листья; разомните кейл руками несколько минут до размягчения. Нарежьте маринованные огурцы.",
+        "ingredientIds": [
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "prepare",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "На сковороде обжарьте фарш в масле, затем разломайте. Когда он почти готов, сдвиньте его, добавьте лук с солью, через 1–2 минуты кейл, чесночный порошок и специи. Вмешайте готовый картофель, посыпьте чеддером и разложите с кетчупом.",
+        "ingredientIds": [
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "combine",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "фарш полностью готов, кейл увял",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24619",
+    "titleRu": "Боулы-буррито на 1000 ккал",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 218°C. Смешайте масло, паприку, кумин, луковый и чесночный порошок, чили, соль, сок лайма и апельсина; покройте маринадом бёдра. Запекайте на противне 12–14 минут, нарежьте крупным кубиком, смешайте с оставшимся маринадом и под верхним нагревом готовьте ещё 5–8 минут, периодически перемешивая, до румяности.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "bake",
+        "temperature": "218°C",
+        "duration": "17–22 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица румяная и полностью готова",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Нарежьте картофель, смешайте с маслом и готовьте в аэрогриле при 204°C 15 минут до румяности. На среднем-сильном огне обжарьте перец и лук, добавьте 1–2 ст. л. воды, накройте на 1–2 минуты до мягкости; вмешайте рис, фасоль, кинзу и лайм.",
+        "ingredientIds": [
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21"
+        ],
+        "action": "cook",
+        "temperature": "204°C",
+        "duration": "15 мин",
+        "equipment": [
+          "air_fryer",
+          "skillet"
+        ],
+        "donenessCue": "картофель румяный, овощи мягкие",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разложите рисовую смесь, курицу и картофель по пяти контейнерам, добавьте сыр. Сальсу держите отдельно; после разогрева добавьте сальсу и сметану.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-11",
+          "source-ingredient-17",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24608",
+    "titleRu": "Завтрачный скрэмбл с бататом и колбасой",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Вымесите куриный фарш с солью, перцем, луковым и чесночным порошком, кайенским перцем, паприкой, орегано, шалфеем и коричневым сахаром. Нарежьте батат кубиком около 6 мм, лук и зелёный перец — мелким кубиком.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14"
+        ],
+        "action": "prepare",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "На среднем-сильном огне обжарьте колбасную смесь в масле, переверните, разберите и доведите до готовности; переложите. В другой сковороде обжарьте батат, лук и перец, влейте 1–2 ст. л. воды и накройте на 1–2 минуты до мягкости батата. Верните колбасу, выпарьте лишнюю воду и остудите.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14"
+        ],
+        "action": "fry",
+        "duration": "1–2 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "батат мягкий, колбаса полностью готова",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разделите смесь по восьми контейнерам, добавьте сыр и заморозьте. Для порции дайте контейнеру немного согреться, прогрейте 30–45 секунд, вмешайте яйцо и продолжайте разогревать с перемешиванием интервалами по 1 минуте до схватывания яйца.",
+        "ingredientIds": [
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "reheat",
+        "duration": "30–45 сек + интервалы по 1 мин",
+        "equipment": [
+          "microwave"
+        ],
+        "donenessCue": "яйцо полностью схватилось",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24579",
+    "titleRu": "Брокколи-байты с халапеньо и чеддером",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разморозьте брокколи в микроволновой печи. Пробейте её с луком, халапеньо, чеддером, масекой, чесночным порошком, солью, перцем и водой до крошки; если нет комбайна, очень мелко порубите. Перемешивайте до липкой тестообразной массы.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
+        ],
+        "action": "blend",
+        "equipment": [
+          "microwave",
+          "food_processor",
+          "mixing_bowl"
+        ],
+        "donenessCue": "масса липкая и держит форму",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Распределите массу на противне с фольгой или пергаментом плотным слоем толщиной 3–6 мм, заморозьте до твёрдости и разрежьте на 48 кусочков.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "freeze",
+        "equipment": [
+          "baking_sheet"
+        ],
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разогрейте аэрогриль до 200°C. Готовьте замороженные байты 16–20 минут, переворачивая в середине; при желании слегка смажьте маслом. Следите за толщиной: кусочки должны стать хрустящими.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-10"
+        ],
+        "action": "air_fry",
+        "temperature": "200°C",
+        "duration": "16–20 мин",
+        "equipment": [
+          "air_fryer"
+        ],
+        "donenessCue": "байты хрустящие",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-24542",
+    "titleRu": "Рисовые боулы с чили и лимоном",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте духовку до 217°C. Смешайте йогурт, чили, луковый и чесночный порошок, соль и лимонный сок; тщательно покройте этим маринадом бёдра. Разложите на противне и запекайте 10–12 минут, затем под верхним нагревом готовьте по 3–5 минут с каждой стороны до нужной румяности. Дайте мясу отдохнуть и нарежьте крупным кубиком.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8"
+        ],
+        "action": "bake",
+        "temperature": "217°C",
+        "duration": "16–22 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
+        ],
+        "donenessCue": "курица подрумянилась и полностью готова",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Подготовьте готовый рис. Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте. На среднем огне разогрейте масло, обжарьте перец и лук 3–5 минут, добавьте капусту с чесноком ещё на 1–2 минуты. Вмешайте томатный соус и готовьте 3–5 минут, чтобы убрать сырой вкус.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-18"
+        ],
+        "action": "simmer",
+        "duration": "7–12 мин",
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "овощи размягчились, томатный соус потерял сырой вкус",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Добавьте рис, лимонный сок и курицу, прогрейте и перемешайте. При подаче добавьте томат и кинзу; острый перец используйте по желанию.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-12",
+          "source-ingredient-17",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "combine",
+        "equipment": [
+          "skillet"
+        ],
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  }
+]

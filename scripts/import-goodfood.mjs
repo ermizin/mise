@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { instructionFacts, schemaInstructionTexts } from "./recipe-instruction-facts.mjs";
 
 const args = new Map(process.argv.slice(2).map((value, index, all) => value.startsWith("--") ? [value, all[index + 1]] : ["", ""]));
 const limit = Math.min(118, Math.max(1, Number(args.get("--limit") ?? 100)));
@@ -49,9 +50,12 @@ function localizationFor(title, ingredients) {
 }
 
 function slotFor(category, title, id) {
-  const value = `${Array.isArray(category) ? category.join(" ") : category ?? ""} ${title}`.toLowerCase();
-  if (/breakfast|pancake|oat|egg|toast|porridge/.test(value)) return "breakfast";
-  if (/dessert|snack|cookie|brownie|muffin|bar\b|smoothie/.test(value)) return "snack1";
+  const categoryValue = `${Array.isArray(category) ? category.join(" ") : category ?? ""}`.toLowerCase();
+  const titleValue = title.toLowerCase();
+  const isMainCourse = /\bmain course\b/.test(categoryValue);
+  const titleSignalsBreakfast = /\bpancakes?\b|\boats\b|\begg\s+(?:bites?|muffins?|scramble|bake|casserole|toast|wraps?|rolls?)\b|\bfrench toast\b|\bporridge\b/.test(titleValue);
+  if (/\bbreakfast\b|\bbrunch\b/.test(categoryValue) || (!isMainCourse && titleSignalsBreakfast)) return "breakfast";
+  if (/\bdessert\b|\bsnack\b|\bcookie\b|\bbrownie\b|\bmuffin\b|\bbar\b|\bsmoothie\b/.test(`${categoryValue} ${titleValue}`)) return "snack1";
   return id.length % 2 ? "dinner" : "lunch";
 }
 
@@ -94,6 +98,7 @@ for (let offset = 0; offset < Math.min(limit, links.length); offset += 8) {
     const ingredients = (recipe.recipeIngredient ?? []).map((original) => ({ name: ingredientName(original) || clean(original), original: clean(original) })).filter((item) => item.name);
     const nutrition = recipe.nutrition ?? {};
     const title = clean(recipe.name ?? recipe.headline);
+    const sourceInstructions = schemaInstructionTexts(recipe.recipeInstructions);
     candidates.push({
       id,
       title,
@@ -117,6 +122,7 @@ for (let offset = 0; offset < Math.min(limit, links.length); offset += 8) {
         carbs: numeric(nutrition.carbohydrateContent),
       },
       ingredients,
+      ...instructionFacts(sourceInstructions),
       localization: localizationFor(title, ingredients),
       editorialStatus: previousStatuses.get(id) ?? "pending",
     });
