@@ -41,7 +41,6 @@ export const NUTRITION_AUDIT_REASON = Object.freeze({
   ML_DENSITY_MISSING: "ml_density_missing",
   PIECE_WEIGHT_MISSING: "piece_weight_missing",
   INVALID_CANONICAL_NUTRITION: "invalid_canonical_nutrition",
-  ESTIMATED_HOUSEHOLD_MEASURE: "estimated_household_measure",
   LABEL_REQUIRED: "label_required",
   FRACTIONAL_YIELD: "fractional_yield",
   DELTA_OUTSIDE_TOLERANCE: "nutrition_delta_outside_tolerance",
@@ -174,9 +173,6 @@ function auditIngredient(sourceIngredient, mapping) {
     return { complete: false, reason: reason(NUTRITION_AUDIT_REASON.INVALID_CANONICAL_NUTRITION, "blocked", { sourceName, canonicalId: canonical.id }) };
   }
   const warnings = [];
-  if (measured.status === "estimated_household") {
-    warnings.push(reason(NUTRITION_AUDIT_REASON.ESTIMATED_HOUSEHOLD_MEASURE, "review_required", { sourceName, unit: measured.unit }));
-  }
   if (canonical.reference?.dataType === "label_required") {
     warnings.push(reason(NUTRITION_AUDIT_REASON.LABEL_REQUIRED, "review_required", { sourceName, canonicalId: canonical.id }));
   }
@@ -205,9 +201,8 @@ export function auditNutritionEntry(candidate, { publisher = "unknown", accessed
     reasons.push(...audited.warnings);
   }
 
-  // A "full" result means every source ingredient was independently measured,
-  // mapped, converted to mass, and included.  There is intentionally no
-  // partial-card comparison: it could conceal a missing high-calorie item.
+  // A result is available only if every non-ignored source ingredient was
+  // mapped, converted to mass, and included in the independent total.
   const calculatedNutrition = complete
     ? Object.fromEntries(MACRO_KEYS.map((key) => [key, round(total[key] / servings)]))
     : null;

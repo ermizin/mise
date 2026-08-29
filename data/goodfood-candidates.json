@@ -8014,7 +8014,13 @@
         "cookMinutes": 12,
         "totalMinutes": 17
       },
-      "servings": 0,
+      "servings": 8,
+      "sourceNutritionScope": "per_serving",
+      "servingsEvidence": {
+        "method": "publisher_page",
+        "checkedAt": "2026-08-29",
+        "note": "Good Food указывает Serves 8."
+      },
       "macros": {
         "kcal": 59,
         "protein": 3,
@@ -8127,7 +8133,7 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "Выход порции требует проверки",
+        "portion": "1/8 готового блюда",
         "label": "Брокколи со специями · дата готовки · использовать в течение 3 суток"
       }
     },
@@ -9299,7 +9305,13 @@
         "prepMinutes": 20,
         "totalMinutes": 20
       },
-      "servings": 0,
+      "servings": 8,
+      "sourceNutritionScope": "per_serving",
+      "servingsEvidence": {
+        "method": "derived_from_batch",
+        "checkedAt": "2026-08-29",
+        "note": "800 г фарша и опубликованные КБЖУ 140 ккал на порцию соответствуют восьми порциям по 100 г."
+      },
       "macros": {
         "kcal": 140,
         "protein": 20,
@@ -9419,7 +9431,7 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "Выход порции требует проверки",
+        "portion": "1/8 готового блюда",
         "label": "Фрикадельки со специями · дата готовки · использовать в течение 3 суток"
       }
     },
@@ -11490,7 +11502,13 @@
         "cookMinutes": 140,
         "totalMinutes": 145
       },
-      "servings": 0,
+      "servings": 4,
+      "sourceNutritionScope": "per_serving",
+      "servingsEvidence": {
+        "method": "publisher_page",
+        "checkedAt": "2026-08-29",
+        "note": "Good Food указывает Serves 4."
+      },
       "macros": {
         "kcal": 537,
         "protein": 14,
@@ -11607,7 +11625,7 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "Выход порции требует проверки",
+        "portion": "1/4 готового блюда",
         "separate": "Влажный соус и свежие хрустящие компоненты держать отдельно до подачи.",
         "label": "Тесто для лепёшек · дата готовки · использовать в течение 3 суток"
       }

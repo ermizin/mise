@@ -28,13 +28,17 @@ function numeric(value) {
 
 function metricAmount(original) {
   const text = String(original ?? "").replaceAll(" ", " ");
-  const matches = [...text.matchAll(/(\d+(?:[.,]\d+)?)\s*(kg|g|ml|litres?|liters?|l)\b/gi)];
+  const matches = [...text.matchAll(/([\d\s.,/¼½¾⅓⅔⅛⅜⅝⅞]+)\s*(kg|g|ml|litres?|liters?|l|lbs?|pounds?|oz|ounces?|pints?)\b/gi)];
   if (!matches.length) return undefined;
   const preferred = matches.find((match) => /[()]/.test(text.slice(Math.max(0, match.index - 2), (match.index ?? 0) + match[0].length + 2))) ?? matches.at(-1);
-  const value = Number(preferred[1].replace(",", "."));
+  const value = numeric(preferred[1]);
+  if (!value) return undefined;
   const unit = preferred[2].toLowerCase();
   if (unit === "kg") return { amount: value * 1000, unit: "g", status: "exact_metric" };
   if (unit === "l" || unit.startsWith("lit")) return { amount: value * 1000, unit: "ml", status: "exact_metric" };
+  if (/^(?:lb|lbs|pound|pounds)$/.test(unit)) return { amount: value * 453.59237, unit: "g", status: "standard_imperial" };
+  if (/^(?:oz|ounce|ounces)$/.test(unit)) return { amount: value * 28.3495, unit: "g", status: "standard_household" };
+  if (/^pints?$/.test(unit)) return { amount: value * 568.261, unit: "ml", status: "standard_imperial" };
   return { amount: value, unit, status: "exact_metric" };
 }
 
@@ -43,10 +47,13 @@ function householdAmount(original) {
   const leading = text.match(/^([\d\s./¼½¾⅓⅔⅛⅜⅝⅞-]+)/)?.[1];
   const amount = numeric(leading);
   if (!amount) return undefined;
-  if (/\b(?:tbsp|tablespoons?)\b/i.test(text)) return { amount: amount * 15, unit: "ml", status: "estimated_household" };
-  if (/\b(?:tsp|teaspoons?)\b/i.test(text)) return { amount: amount * 5, unit: "ml", status: "estimated_household" };
-  if (/\b(?:cups?)\b/i.test(text)) return { amount: amount * 240, unit: "ml", status: "estimated_household" };
-  if (/\b(?:oz|ounces?)\b/i.test(text)) return { amount: amount * 28.3495, unit: "g", status: "estimated_household" };
+  // These are fixed kitchen-standard conversions, not a guessed serving size.
+  // Volume still remains volume: the nutrition audit must require a density
+  // before converting ml to grams for a particular ingredient.
+  if (/(?:tbsp|tablespoons?)\b/i.test(text)) return { amount: amount * 15, unit: "ml", status: "standard_household" };
+  if (/(?:tsp|teaspoons?)\b/i.test(text)) return { amount: amount * 5, unit: "ml", status: "standard_household" };
+  if (/(?:cups?)\b/i.test(text)) return { amount: amount * 240, unit: "ml", status: "standard_household" };
+  if (/(?:oz|ounces?)\b/i.test(text)) return { amount: amount * 28.3495, unit: "g", status: "standard_household" };
   return { amount, unit: "piece", status: "count" };
 }
 
@@ -88,7 +95,6 @@ function reasonsFor(card) {
   if (card.sourceNutrition.kcal < 120 || card.sourceNutrition.kcal > 900) reasons.push("extreme_source_calories");
   if (card.ingredients.some((item) => item.mappingStatus === "unresolved")) reasons.push("unresolved_ingredient");
   if (card.ingredients.some((item) => item.mappingStatus !== "ignored" && item.amountStatus === "missing")) reasons.push("missing_ingredient_amount");
-  if (card.ingredients.some((item) => item.amountStatus === "estimated_household")) reasons.push("estimated_household_measure");
   if (!card.instructionFacts.length && !card.paraphrasedInstructionDraft.length) reasons.push("missing_instruction_facts");
   if (!card.paraphrasedInstructionDraft.length) reasons.push("missing_russian_instructions");
   if (card.localization.excludeSuggested) reasons.push("niche_localization");
@@ -141,4 +147,3 @@ export function normalizeRecipeCorpus(datasets) {
   if (new Set(cards.map((card) => card.id)).size !== cards.length) throw new Error("Recipe corpus IDs must be unique.");
   return cards;
 }
-

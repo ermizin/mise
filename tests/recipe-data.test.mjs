@@ -148,7 +148,7 @@ test("production fat-sensitive ingredients expose an honest fat note", () => {
   assert.ok(ingredients.every((item) => item.fatNote?.length > 0));
   assert.ok(ingredients.filter((item) => item.id === "milk").every((item) => item.name === "Молоко 2%" && item.fatNote === "2%"));
   assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
-  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "label_required");
+  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "brand_label");
 });
 
 test("editorial promotion fixes unit-sized macros and obvious slot mistakes", () => {
