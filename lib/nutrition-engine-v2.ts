@@ -11,6 +11,7 @@ export {
   fitMacrosToCalories,
   macroCalories,
   macrosForCalories,
+  normalizeNutritionTargetMode,
   recalculateDailyMacros,
   shareForSlots,
 } from "../domain/nutrition";
@@ -26,6 +27,7 @@ export type {
   NutritionCalculation,
   NutritionGoal,
   NutritionIssue,
+  NutritionTargetMode,
   NutritionWizardInput,
   Sex,
 } from "../domain/nutrition";

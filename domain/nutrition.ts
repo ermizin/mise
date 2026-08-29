@@ -6,6 +6,16 @@ export type MacroPresetOption = Exclude<MacroPreset, "custom">;
 export type Sex = "male" | "female";
 export type ActivityKey = "low" | "light" | "medium" | "high" | "athlete";
 export type NutritionGoal = "maintenance" | "loss" | "gain";
+export type NutritionTargetMode = "auto" | "manual";
+
+export function normalizeNutritionTargetMode(
+  value: unknown,
+  hasEstimate: boolean,
+  matchesEstimate: boolean,
+): NutritionTargetMode {
+  if (value === "auto" || value === "manual") return value;
+  return hasEstimate && matchesEstimate ? "auto" : "manual";
+}
 
 export type NutritionWizardInput = {
   sex: Sex;

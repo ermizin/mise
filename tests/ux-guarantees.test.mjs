@@ -41,12 +41,14 @@ test("a failed shopping tick is visible", async () => {
   assert.match(page, /undo-bar/, "clearing can be undone");
 });
 
-test("goals can be estimated as well as typed", async () => {
+test("automatic and manual goals are both durable", async () => {
   const [page, nutrition] = await Promise.all([read("app/page.tsx"), read("domain/nutrition.ts")]);
   assert.match(nutrition, /function calculateNutritionTarget/, "the calculator exists");
   assert.match(nutrition, /10\s*\*\s*input\.weight\s*\+\s*6\.25\s*\*\s*input\.height\s*-\s*5\s*\*\s*input\.age/, "Mifflin-St Jeor");
   assert.match(nutrition, /energyPerKgWeightChange: 7_700/, "monthly weight change uses an explicit energy conversion");
-  assert.match(page, /Рассчитать мою норму/, "the second path is offered");
+  assert.match(page, /nutritionTargetMode/, "the chosen target source is persisted with the person");
+  assert.match(page, /Вернуть расчёт Mise/, "manual targets can be replaced by a fresh calculation");
+  assert.doesNotMatch(page, /manualIds/, "manual mode is not ephemeral component state");
   assert.match(page, /Ориентир|Ориентировочный/, "the estimate is framed as an orientation");
 });
 

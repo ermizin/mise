@@ -94,3 +94,11 @@ test("invalid and extreme wizard values are explicit", () => {
   assert.ok(extreme.issues.some((issue) => issue.severity === "warning"));
   assert.ok(nutrition.macroCalories(extreme.target) <= extreme.target.kcal);
 });
+
+test("nutrition target mode preserves legacy manual goals", () => {
+  assert.equal(nutrition.normalizeNutritionTargetMode("auto", false, false), "auto");
+  assert.equal(nutrition.normalizeNutritionTargetMode("manual", true, true), "manual");
+  assert.equal(nutrition.normalizeNutritionTargetMode(undefined, false, false), "manual");
+  assert.equal(nutrition.normalizeNutritionTargetMode(undefined, true, false), "manual");
+  assert.equal(nutrition.normalizeNutritionTargetMode(undefined, true, true), "auto");
+});

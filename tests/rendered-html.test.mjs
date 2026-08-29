@@ -199,9 +199,21 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /заменено вами/);
   // Заменённое вручную переживает пересборку.
   assert.match(page, /if \(pinned\.includes\(key\)\) continue;/);
+  assert.match(page, /pinnedSelectionKeys\?: string\[\]/);
+  assert.match(page, /initialPlan\?\.pinnedSelectionKeys \?\? \[\]/);
+  assert.match(page, /draft\.pinnedSelectionKeys \?\?/);
+  assert.match(page, /pinnedSelectionKeys: validPinned/);
   // «Собрать заново» обязано дать другое меню, а не то же самое.
   assert.match(page, /avoidPerSlot/);
   assert.match(page, /setPinned\(/);
+  // Ручная норма хранит режим вместе с человеком и не перезаписывается после
+  // повторного открытия настроек.
+  assert.match(page, /nutritionTargetMode\?: NutritionTargetMode/);
+  assert.match(page, /nutritionTargetMode: normalizeNutritionTargetMode/);
+  assert.match(page, /nutritionTargetMode: "manual"/);
+  assert.match(page, /nutritionTargetMode: "auto"/);
+  assert.match(page, /Вернуть расчёт Mise/);
+  assert.doesNotMatch(page, /manualIds/);
   // Пошаговый выбор по слотам ушёл вместе со своей разметкой.
   for (const dead of [
     "position-strip", "candidate-card", "candidate-art", "candidate-copy",
@@ -209,6 +221,28 @@ test("includes the complete plan-builder and private persistence model", async (
   ]) {
     assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} не пережил 9b`);
     assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил 9b`);
+  }
+
+  // Шаг «Люди и цели» (9d): один человек за раз, поля читаются полями,
+  // расчёт Mise не перетирает введённую вручную норму.
+  assert.match(page, /className="chip-row person-tabs" role="tablist"/);
+  assert.match(page, /role="tab"\s+aria-selected=\{item\.id === person\.id\}/);
+  assert.match(page, /className="field-box"/);
+  assert.match(css, /\.field-box \{/);
+  assert.match(page, /const manual = person\.nutritionTargetMode !== "auto"/);
+  assert.doesNotMatch(page, /manualIds/);
+  assert.match(page, /manual \|\| !target/);
+  assert.match(page, /\{manual \? "Вернуть расчёт Mise" : "Ввести своё"\}/);
+  assert.match(page, /Вернуть расчёт Mise/);
+  assert.match(page, /className=\{`norm-check \$\{converges \? "is-ok" : "is-off"\}`\} role="status"/);
+  assert.match(page, /Сумма макросов/);
+  assert.match(page, /Скопировать цели у/);
+  for (const dead of [
+    "person-editor", "goal-estimator", "macro-inputs", "preference-pills",
+    "portion-preview",
+  ]) {
+    assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} не пережил 9d`);
+    assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил 9d`);
   }
 
   // Число теней не растёт: стекло описано уровнями, а не по месту.

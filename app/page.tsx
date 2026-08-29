@@ -30,6 +30,7 @@ import {
   capMacrosAtCalories,
   macroCalories as nutritionMacroCalories,
   macrosForCalories as nutritionMacrosForCalories,
+  normalizeNutritionTargetMode,
   recalculateDailyMacros as nutritionRecalculateDailyMacros,
   type ActivityKey,
   type MacroKey,
@@ -39,6 +40,7 @@ import {
   type MealSlot,
   type NutritionCalculation,
   type NutritionGoal,
+  type NutritionTargetMode,
   type NutritionWizardInput,
   type Sex,
 } from "../lib/nutrition-engine-v2";
@@ -134,6 +136,7 @@ type Person = {
   macroPreset?: MacroPreset;
   includedSlots: MealSlot[];
   estimate?: NutritionWizardInput;
+  nutritionTargetMode?: NutritionTargetMode;
   dislikes?: string[];
   hardExclusions?: Allergen[];
 };
@@ -157,6 +160,7 @@ type ActivePlan = {
   people: Person[];
   batches: Batch[];
   selections: Record<string, string>;
+  pinnedSelectionKeys?: string[];
   tuning?: Record<string, RecipeTuning>;
   shopping: ShoppingItem[];
 };
@@ -190,6 +194,7 @@ type BuilderDraft = {
   cookEveryDays: number;
   remainderDecision: "separate" | "extend" | "shorten" | null;
   selections: Record<string, string>;
+  pinnedSelectionKeys?: string[];
 };
 type OnboardingStep =
   | "welcome"
@@ -309,6 +314,16 @@ const macroPresetMeta: Record<
   },
 };
 const defaultMacros: Macros = { kcal: 2100, protein: 158, fat: 70, carbs: 210 };
+const defaultNutritionEstimate: NutritionWizardInput = {
+  sex: "male",
+  age: 30,
+  height: 178,
+  weight: 78,
+  activity: "medium",
+  musclePriority: false,
+  goal: "loss",
+  monthlyWeightChangeKg: 1,
+};
 const activityMeta: Record<ActivityKey, { label: string; factor: number }> = {
   low: { label: "Сидячий образ жизни", factor: ACTIVITY_FACTORS.low },
   light: { label: "1–2 тренировки в неделю", factor: ACTIVITY_FACTORS.light },
@@ -4325,19 +4340,37 @@ function fitScore(recipe: Recipe, people: Person[], slot: MealSlot) {
   );
 }
 function newPerson(index = 0): Person {
+  const estimate = { ...defaultNutritionEstimate };
+  const calculation = calculateNutritionTarget(estimate);
   return {
     id: `person-${Date.now()}-${index}`,
     name: index === 0 ? "Я" : `Человек ${index + 1}`,
-    daily: { ...defaultMacros },
-    macroPreset: "balanced",
+    daily: "target" in calculation ? calculation.target : { ...defaultMacros },
+    macroPreset: "custom",
+    estimate,
+    nutritionTargetMode: "auto",
     includedSlots: ["breakfast", "lunch", "dinner"],
     dislikes: [],
     hardExclusions: [],
   };
 }
+function macrosEqual(left: Macros, right: Macros) {
+  return (Object.keys(left) as MacroKey[]).every((key) => left[key] === right[key]);
+}
 function normalizePerson(person: Person): Person {
+  const calculation = person.estimate
+    ? calculateNutritionTarget(estimateOf(person))
+    : null;
+  const calculatedTarget = calculation && "target" in calculation
+    ? (calculation as NutritionCalculation).target
+    : null;
   return {
     ...person,
+    nutritionTargetMode: normalizeNutritionTargetMode(
+      person.nutritionTargetMode,
+      Boolean(person.estimate),
+      Boolean(calculatedTarget && macrosEqual(person.daily, calculatedTarget)),
+    ),
     dislikes: Array.isArray(person.dislikes) ? person.dislikes : [],
     hardExclusions: Array.isArray(person.hardExclusions)
       ? person.hardExclusions
@@ -4347,6 +4380,11 @@ function normalizePerson(person: Person): Person {
 function normalizePlan(plan: ActivePlan): ActivePlan {
   return {
     ...plan,
+    pinnedSelectionKeys: Array.isArray(plan.pinnedSelectionKeys)
+      ? plan.pinnedSelectionKeys.filter(
+          (key): key is string => typeof key === "string" && Boolean(plan.selections[key]),
+        )
+      : [],
     people: plan.people.map(normalizePerson),
     shopping: plan.shopping.map((item) => ({
       ...item,
@@ -6811,8 +6849,10 @@ function PlanBuilder({
   );
   const [choiceIndex, setChoiceIndex] = useState(initialChoiceIndex);
   /* Ключи позиций, где блюдо выбрано вручную. Автосборка их не трогает —
-     это pinnedByUser из BACKEND.md §2, пока со своим источником. */
-  const [pinned, setPinned] = useState<string[]>([]);
+     источник сохраняется вместе с планом и черновиком. */
+  const [pinned, setPinned] = useState<string[]>(
+    initialPlan?.pinnedSelectionKeys ?? [],
+  );
   const [saveState, setSaveState] = useState<"idle" | "saving" | "error">(
     "idle",
   );
@@ -6860,6 +6900,7 @@ function PlanBuilder({
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(null);
     setSelections(initialPlan?.selections ?? {});
+    setPinned(initialPlan?.pinnedSelectionKeys ?? []);
     setChoiceIndex(initialChoiceIndex);
   }
   useEffect(() => {
@@ -6881,6 +6922,9 @@ function PlanBuilder({
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
           setSelections(draft.selections);
+          setPinned(
+            draft.pinnedSelectionKeys ?? initialPlan?.pinnedSelectionKeys ?? [],
+          );
           setStep(draft.step);
           setChoiceIndex(draft.choiceIndex);
           setDraftRestored(true);
@@ -6956,6 +7000,7 @@ function PlanBuilder({
       selections[selectionKey(batch, slot)] &&
       !validSelections[selectionKey(batch, slot)],
   ).length;
+  const validPinned = pinned.filter((key) => Boolean(validSelections[key]));
   /* Шаг «Выбор меню» открывается уже собранным: PRODUCT.md §4 п.7 обещает
      автоматически собранное меню, а не набор из девяти-пятнадцати выборов. */
   useEffect(() => {
@@ -6981,6 +7026,7 @@ function PlanBuilder({
       cookEveryDays,
       remainderDecision,
       selections,
+      pinnedSelectionKeys: pinned,
     };
     try {
       localStorage.setItem(builderDraftKey, JSON.stringify(draft));
@@ -6998,6 +7044,7 @@ function PlanBuilder({
     cookEveryDays,
     remainderDecision,
     selections,
+    pinned,
     successPlan,
     initialPlan,
     mode,
@@ -7015,6 +7062,7 @@ function PlanBuilder({
       people,
       batches,
       selections: validSelections,
+      pinnedSelectionKeys: validPinned,
       shopping: [],
     };
     return { ...base, shopping: buildShopping(base) };
@@ -7050,12 +7098,14 @@ function PlanBuilder({
             ...person,
             daily: recalculateDailyMacros(safeValue, person.daily, preset),
             macroPreset: preset,
+            nutritionTargetMode: "manual",
           };
         }
         return {
           ...person,
           daily: { ...person.daily, [key]: safeValue },
           macroPreset: "custom",
+          nutritionTargetMode: "manual",
         };
       }),
     );
@@ -7068,6 +7118,7 @@ function PlanBuilder({
               ...person,
               daily: macrosForCalories(person.daily.kcal, preset),
               macroPreset: preset,
+              nutritionTargetMode: "manual",
             }
           : person,
       ),
@@ -7396,7 +7447,7 @@ function PlanBuilder({
             people={people}
             style={menuStyle}
             selections={validSelections}
-            pinned={pinned}
+            pinned={validPinned}
             shopping={draftPlan.shopping}
             onReplace={replaceSelection}
             onReassemble={() => assembleMenu("reset")}
@@ -7663,6 +7714,68 @@ function StyleStep({
   );
 }
 
+/* Шаг «Люди и цели» — макет 9d.
+
+   Задача экрана: поля должны читаться полями. Раньше КБЖУ выглядел статистикой,
+   и люди не понимали, что цифры можно менять.
+
+   Один человек на экране, переключение вкладками. Норма считается по Миффлину —
+   Сан-Жеору из тех же параметров, что и раньше (lib/nutrition-engine-v2), но
+   пересчёт живёт прямо в карточке, а не за кнопкой «Рассчитать мою норму».
+   Ручной ввод перебивает расчёт: пока он включён, правки тела норму не трогают. */
+
+/* Цвета те же, что на «Неделе»: один код КБЖУ на всё приложение. */
+const macroFieldMeta: {
+  key: "protein" | "fat" | "carbs";
+  label: string;
+  color: string;
+  perGram: number;
+}[] = [
+  { key: "protein", label: "Белки", color: "var(--macro-protein)", perGram: 4 },
+  { key: "fat", label: "Жиры", color: "var(--macro-fat)", perGram: 9 },
+  { key: "carbs", label: "Углеводы", color: "var(--macro-carbs)", perGram: 4 },
+];
+
+const bodyFields: {
+  key: "age" | "height" | "weight";
+  label: string;
+  unit: string;
+  min: number;
+  max: number;
+}[] = [
+  { key: "age", label: "Возраст", unit: "лет", min: 18, max: 100 },
+  { key: "height", label: "Рост", unit: "см", min: 120, max: 230 },
+  { key: "weight", label: "Вес", unit: "кг", min: 35, max: 300 },
+];
+
+function estimateOf(person: Person): NutritionWizardInput {
+  const saved = person.estimate as
+    | (Partial<NutritionWizardInput> & { goal?: string })
+    | undefined;
+  const savedGoal: string | undefined = saved?.goal;
+  return {
+    sex: saved?.sex ?? defaultNutritionEstimate.sex,
+    age: saved?.age ?? defaultNutritionEstimate.age,
+    height: saved?.height ?? defaultNutritionEstimate.height,
+    weight: saved?.weight ?? defaultNutritionEstimate.weight,
+    activity: saved?.activity ?? defaultNutritionEstimate.activity,
+    musclePriority:
+      saved?.musclePriority ?? defaultNutritionEstimate.musclePriority,
+    goal:
+      savedGoal === "lose"
+        ? "loss"
+        : savedGoal === "keep"
+          ? "maintenance"
+          : savedGoal === "gain"
+            ? "gain"
+            : ((savedGoal as NutritionGoal | undefined) ??
+              defaultNutritionEstimate.goal),
+    monthlyWeightChangeKg:
+      saved?.monthlyWeightChangeKg ??
+      defaultNutritionEstimate.monthlyWeightChangeKg,
+  };
+}
+
 function PeopleStep({
   people,
   mealSlots,
@@ -7680,501 +7793,458 @@ function PeopleStep({
   onAdd: () => void;
   onRemove: (id: string) => void;
 }) {
-  const presetOptions = Object.keys(macroPresetMeta) as MacroPresetOption[];
-  const [estimators, setEstimators] = useState<Record<string, boolean>>({});
+  const [activeId, setActiveId] = useState(people[0]?.id ?? "");
+  const person = people.find((item) => item.id === activeId) ?? people[0];
+  if (!person) return null;
+
+  const manual = person.nutritionTargetMode !== "auto";
+  const draft = estimateOf(person);
+  const calculation = calculateNutritionTarget(draft);
+  const computed = "target" in calculation ? calculation.target : null;
+  const fromMacros = macroCalories(person.daily);
+  const gap = Math.abs(fromMacros - person.daily.kcal);
+  const converges = gap / Math.max(person.daily.kcal, 1) <= 0.03;
+
+  function patchBody(patch: Partial<NutritionWizardInput>) {
+    const next = { ...draft, ...patch };
+    const result = calculateNutritionTarget(next);
+    const target = "target" in result ? result.target : null;
+    onUpdate(
+      person.id,
+      manual || !target
+        ? { estimate: next, nutritionTargetMode: "manual" }
+        : {
+            estimate: next,
+            daily: target,
+            macroPreset: "custom",
+            nutritionTargetMode: "auto",
+          },
+    );
+  }
+
   return (
     <>
       <StepIntro
         icon={<Icon name="person" />}
-        kicker="Для кого готовим"
-        title="Люди, цели и исключения"
-        text="КБЖУ задают порцию. «Не люблю» влияет на рекомендации, а «Аллергия/мне нельзя» полностью запрещает блюдо для этого человека."
+        kicker="Кто ест"
+        title="Люди и цели"
+        text="Норма задаёт размер порции. «Не люблю» влияет на рекомендации, «Аллергия / мне нельзя» полностью запрещает блюдо."
       />
-      {people.map((person, index) => {
-        const plannedTargets = plannedTargetsFor(person);
-        const calculatedCalories = macroCalories(person.daily);
-        const mismatch =
-          Math.abs(calculatedCalories - person.daily.kcal) /
-            Math.max(person.daily.kcal, 1) >
-          0.1;
-        const selectedPreset = person.macroPreset ?? "balanced";
-        return (
-          <section className="person-editor glass-card" key={person.id}>
-            <div className="person-editor-head">
-              <span className={`person-dot tone-${index}`}>
-                {person.name.slice(0, 1) || index + 1}
-              </span>
-              <label>
-                Имя
-                <input
-                  value={person.name}
-                  onChange={(event) =>
-                    onUpdate(person.id, { name: event.target.value })
-                  }
-                />
-              </label>
-              {people.length > 1 && (
-                <button
-                  className="delete-person"
-                  onClick={() => onRemove(person.id)}
-                  aria-label={`Удалить ${person.name}`}
-                >
-                  ×
-                </button>
-              )}
-            </div>
-            <button
-              className="estimator-entry secondary-button"
-              aria-expanded={Boolean(estimators[person.id])}
-              onClick={() =>
-                setEstimators((current) => ({
-                  ...current,
-                  [person.id]: !current[person.id],
-                }))
-              }
-            >
-              Рассчитать мою норму
-            </button>
-            {estimators[person.id] && (
-              <GoalEstimator
-                person={person}
-                onApply={(estimate, daily) => {
-                  onUpdate(person.id, {
-                    estimate,
-                    daily,
-                    macroPreset: "custom",
-                  });
-                  setEstimators((current) => ({
-                    ...current,
-                    [person.id]: false,
-                  }));
-                }}
-              />
-            )}
-            <div className="macro-inputs calorie-only">
-              <label className="calorie-input" htmlFor={`macro-${person.id}-kcal`}>
-                <span>К</span>
-                <MacroNumberInput
-                  id={`macro-${person.id}-kcal`}
-                  ariaLabel={`Калории для ${person.name}`}
-                  value={person.daily.kcal}
-                  onValueChange={(value) => onMacro(person.id, "kcal", value)}
-                />
-                <small>ккал</small>
-              </label>
-            </div>
-            <details className="macro-advanced">
-              <summary>
-                Настроить БЖУ{" "}
-                <span>
-                  {person.daily.protein} Б · {person.daily.fat} Ж ·{" "}
-                  {person.daily.carbs} У
-                </span>
-              </summary>
-              <div className="macro-inputs">
-                {(["protein", "fat", "carbs"] as const).map((key) => (
-                  <label key={key} htmlFor={`macro-${person.id}-${key}`}>
-                    <span>{macroLabels[key]}</span>
-                    <MacroNumberInput
-                      id={`macro-${person.id}-${key}`}
-                      ariaLabel={`${macroLabels[key]} для ${person.name}`}
-                      value={person.daily[key]}
-                      onValueChange={(value) => onMacro(person.id, key, value)}
-                    />
-                    <small>г</small>
-                  </label>
-                ))}
-              </div>
-              <div className="macro-presets glass-3">
-                <div className="macro-preset-heading">
-                  <p>
-                    <b>Автоматическое распределение</b>
-                    <small>Выберите профиль или поправьте граммы выше</small>
-                  </p>
-                  {selectedPreset === "custom" && <em>Вручную</em>}
-                </div>
-                <div
-                  className="macro-preset-grid"
-                  role="radiogroup"
-                  aria-label="Профиль БЖУ"
-                >
-                  {presetOptions.map((preset) => {
-                    const meta = macroPresetMeta[preset];
-                    const selected = selectedPreset === preset;
-                    return (
-                      <button
-                        key={preset}
-                        role="radio"
-                        className={selected ? "selected" : ""}
-                        aria-checked={selected}
-                        onClick={() => onPreset(person.id, preset)}
-                      >
-                        <b>{meta.label}</b>
-                        <small>{meta.description}</small>
-                      </button>
-                    );
-                  })}
-                </div>
-                <p className="macro-preset-note">
-                  Это ориентир, не медицинская рекомендация; значения можно
-                  изменить вручную.
-                </p>
-              </div>
-            </details>
-            {mismatch && (
-              <Note tone="warn">
-                Калории и БЖУ отличаются больше чем на 10% — выберите профиль
-                ещё раз или проверьте ручные значения.
-              </Note>
-            )}
-            <div className="person-slots">
-              <p id={`person-slots-${person.id}`}>
-                Что из плана ест {person.name || "человек"}
-              </p>
-              <div role="group" aria-labelledby={`person-slots-${person.id}`}>
-                {mealSlots.map((slot) => {
-                  const active = person.includedSlots.includes(slot);
-                  return (
-                    <button
-                      key={slot}
-                      role="checkbox"
-                      aria-checked={active}
-                      className={active ? "selected" : ""}
-                      onClick={() =>
-                        onUpdate(person.id, {
-                          includedSlots: active
-                            ? person.includedSlots.filter(
-                                (item) => item !== slot,
-                              )
-                            : [...person.includedSlots, slot],
-                        })
-                      }
-                    >
-                      {active ? (
-                        <Icon name="check" size={12} />
-                      ) : (
-                        <Icon name="plus" size={12} />
-                      )}{" "}
-                      {mealMeta[slot].short}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="food-preferences">
-              <section>
-                <p>
-                  <b>Не люблю</b>
-                  <small>
-                    Mise не предложит такие блюда автоматически, но вы сможете
-                    выбрать их вручную.
-                  </small>
-                </p>
-                <div className="preference-pills">
-                  {dislikeOptions.map((option) => {
-                    const active = (person.dislikes ?? []).includes(option.id);
-                    return (
-                      <button
-                        key={option.id}
-                        role="checkbox"
-                        aria-checked={active}
-                        className={active ? "selected" : ""}
-                        onClick={() =>
-                          onUpdate(person.id, {
-                            dislikes: active
-                              ? (person.dislikes ?? []).filter(
-                                  (item) => item !== option.id,
-                                )
-                              : [...(person.dislikes ?? []), option.id],
-                          })
-                        }
-                      >
-                        {active ? (
-                          <Icon name="check" size={12} />
-                        ) : (
-                          <Icon name="plus" size={12} />
-                        )}{" "}
-                        {option.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
-              <section className="hard-preferences">
-                <p>
-                  <b>Аллергия / мне нельзя</b>
-                  <small>
-                    Жёсткий запрет: такое блюдо нельзя выбрать или сохранить.
-                  </small>
-                </p>
-                <div className="preference-pills">
-                  {(Object.keys(allergenMeta) as Allergen[]).map((allergen) => {
-                    const active = (person.hardExclusions ?? []).includes(
-                      allergen,
-                    );
-                    return (
-                      <button
-                        key={allergen}
-                        role="checkbox"
-                        aria-checked={active}
-                        className={active ? "selected hard" : ""}
-                        onClick={() =>
-                          onUpdate(person.id, {
-                            hardExclusions: active
-                              ? (person.hardExclusions ?? []).filter(
-                                  (item) => item !== allergen,
-                                )
-                              : [...(person.hardExclusions ?? []), allergen],
-                          })
-                        }
-                      >
-                        {active ? (
-                          <Icon name="warning" size={12} />
-                        ) : (
-                          <Icon name="plus" size={12} />
-                        )}{" "}
-                        {allergenMeta[allergen].short}
-                      </button>
-                    );
-                  })}
-                </div>
-                <small className="label-caveat">
-                  Для настоящей аллергии всё равно проверяйте состав и возможные
-                  следы на конкретной упаковке.
-                </small>
-              </section>
-            </div>
-            <div className="portion-preview">
-              {person.includedSlots
-                .filter((slot) => mealSlots.includes(slot))
-                .map((slot) => {
-                  const target = targetFor(person, slot);
-                  return (
-                    <p key={slot}>
-                      <span>{mealMeta[slot].label}</span>
-                      <b>
-                        {target.kcal} К · {target.protein} Б · {target.fat} Ж ·{" "}
-                        {target.carbs} У
-                      </b>
-                    </p>
-                  );
-                })}
-            </div>
-            <DailyBalance
-              goal={person.daily}
-              planned={plannedTargets}
-              context="В выбранных позициях"
-            />
-          </section>
-        );
-      })}
-      <button
-        className="add-person glass-card"
-        disabled={people.length >= 4}
-        onClick={onAdd}
-      >
-        <Icon name="plus" />
-        <div>
-          <b>Добавить человека</b>
-          <small>До четырёх профилей в одном плане</small>
-        </div>
-      </button>
-    </>
-  );
-}
 
-function GoalEstimator({
-  person,
-  onApply,
-}: {
-  person: Person;
-  onApply: (estimate: NutritionWizardInput, daily: Macros) => void;
-}) {
-  const saved = person.estimate as
-    | (Partial<NutritionWizardInput> & { goal?: string })
-    | undefined;
-  const savedGoal = (saved as { goal?: string } | undefined)?.goal;
-  const [draft, setDraft] = useState<NutritionWizardInput>(() => ({
-    sex: saved?.sex ?? "male",
-    age: saved?.age ?? 30,
-    height: saved?.height ?? 178,
-    weight: saved?.weight ?? 78,
-    activity: saved?.activity ?? "medium",
-    musclePriority: saved?.musclePriority ?? false,
-    goal:
-      savedGoal === "lose"
-        ? "loss"
-        : savedGoal === "keep"
-          ? "maintenance"
-          : savedGoal === "gain"
-            ? "gain"
-            : ((savedGoal as NutritionGoal | undefined) ?? "loss"),
-    monthlyWeightChangeKg: saved?.monthlyWeightChangeKg ?? 1,
-  }));
-  const fields: {
-    key: "age" | "height" | "weight";
-    label: string;
-    unit: string;
-    min: number;
-    max: number;
-  }[] = [
-    { key: "age", label: "Возраст", unit: "лет", min: 18, max: 100 },
-    { key: "height", label: "Рост", unit: "см", min: 120, max: 230 },
-    { key: "weight", label: "Вес", unit: "кг", min: 35, max: 300 },
-  ];
-  const complete = fields.every(
-    (field) => draft[field.key] >= field.min && draft[field.key] <= field.max,
-  );
-  const calculation = complete
-    ? calculateNutritionTarget(draft)
-    : { issues: [] };
-  const result = "target" in calculation ? (calculation as NutritionCalculation) : null;
-  const applied = Boolean(
-    result &&
-      person.daily.kcal === result.target.kcal &&
-      person.daily.protein === result.target.protein,
-  );
-  return (
-    <div className="goal-estimator">
-      <div className="estimator-sex" role="radiogroup" aria-label="Пол">
-        {(["male", "female"] as Sex[]).map((value) => (
+      <div className="chip-row person-tabs" role="tablist" aria-label="Люди">
+        {people.map((item) => (
           <button
-            key={value}
-            role="radio"
-            aria-checked={draft.sex === value}
-            className={draft.sex === value ? "selected" : ""}
-            onClick={() => setDraft({ ...draft, sex: value })}
+            key={item.id}
+            className="chip"
+            role="tab"
+            aria-selected={item.id === person.id}
+            onClick={() => setActiveId(item.id)}
           >
-            {value === "male" ? "Мужчина" : "Женщина"}
+            {item.name || "Человек"}
           </button>
         ))}
+        {people.length < 4 && (
+          <button className="chip is-add" onClick={onAdd}>
+            <Icon name="plus" size={13} /> человек
+          </button>
+        )}
       </div>
-      <div className="estimator-fields">
-        {fields.map((field) => (
-          <label key={field.key}>
-            <span>{field.label}</span>
+
+      <section className="glass-card person-card">
+        <label className="field">
+          <span className="field-label">
+            Имя <em>видно только вам</em>
+          </span>
+          <span className="field-box">
             <input
-              type="number"
-              inputMode="numeric"
-              min={field.min}
-              max={field.max}
-              value={draft[field.key] || ""}
+              value={person.name}
               onChange={(event) =>
-                setDraft({ ...draft, [field.key]: Number(event.target.value) })
+                onUpdate(person.id, { name: event.target.value })
               }
             />
-            <small>{field.unit}</small>
-          </label>
-        ))}
-      </div>
-      <label className="estimator-select">
-        <span>Активность</span>
-        <select
-          value={draft.activity}
-          onChange={(event) =>
-            setDraft({ ...draft, activity: event.target.value as ActivityKey })
-          }
-        >
-          {(Object.keys(activityMeta) as ActivityKey[]).map((key) => (
-            <option key={key} value={key}>
-              {activityMeta[key].label}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button
-        type="button"
-        className={`muscle-priority ${draft.musclePriority ? "selected" : ""}`}
-        aria-pressed={draft.musclePriority}
-        onClick={() =>
-          setDraft({ ...draft, musclePriority: !draft.musclePriority })
-        }
-      >
-        {draft.musclePriority && <Icon name="check" size={12} />}Тренируюсь /
-        важно сохранить мышцы
-      </button>
-      <label className="estimator-select">
-        <span>Цель</span>
-        <select
-          value={draft.goal}
-          onChange={(event) =>
-            setDraft({ ...draft, goal: event.target.value as NutritionGoal })
-          }
-        >
-          {(Object.keys(goalMeta) as NutritionGoal[]).map((key) => (
-            <option key={key} value={key}>
-              {goalMeta[key].label}
-            </option>
-          ))}
-        </select>
-      </label>
-      {draft.goal !== "maintenance" && (
-        <label className="estimator-select">
-          <span>
-            {draft.goal === "loss" ? "Снижать" : "Набирать"}, кг/месяц
           </span>
-          <input
-            type="number"
-            inputMode="decimal"
-            min="0.1"
-            max="12"
-            step="0.1"
-            value={draft.monthlyWeightChangeKg || ""}
-            onChange={(event) =>
-              setDraft({
-                ...draft,
-                monthlyWeightChangeKg: Number(event.target.value),
-              })
-            }
-          />
         </label>
-      )}
-      <div className="estimator-result">
-        <p>
-          {result ? (
-            <>
-              <b>{result.target.kcal} ккал</b>
-              <span className="estimator-macro-summary">
-                {result.target.protein} г белка · {result.target.fat} г жиров ·{" "}
-                {result.target.carbs} г углеводов
+
+        <div className="field-row">
+          {bodyFields.map((field) => (
+            <label className="field" key={field.key}>
+              <span className="field-label">{field.label}</span>
+              <span className="field-box">
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  enterKeyHint="next"
+                  min={field.min}
+                  max={field.max}
+                  value={draft[field.key] || ""}
+                  aria-label={`${field.label}, ${person.name || "человек"}`}
+                  onChange={(event) =>
+                    patchBody({ [field.key]: Number(event.target.value) })
+                  }
+                />
+                <em>{field.unit}</em>
               </span>
-              <small>
-                Ориентир, а не медицинская рекомендация. После применения
-                результат можно изменить вручную.
-              </small>
+            </label>
+          ))}
+        </div>
+
+        <div className="field-row field-row-2">
+          <div className="field">
+            <span className="field-label">Пол</span>
+            <div className="seg" role="radiogroup" aria-label="Пол">
+              {(["male", "female"] as Sex[]).map((value) => (
+                <button
+                  key={value}
+                  role="radio"
+                  aria-checked={draft.sex === value}
+                  onClick={() => patchBody({ sex: value })}
+                >
+                  {value === "male" ? "Мужчина" : "Женщина"}
+                </button>
+              ))}
+            </div>
+          </div>
+          <label className="field">
+            <span className="field-label">Активность</span>
+            <span className="field-box">
+              <select
+                value={draft.activity}
+                onChange={(event) =>
+                  patchBody({ activity: event.target.value as ActivityKey })
+                }
+              >
+                {(Object.keys(activityMeta) as ActivityKey[]).map((key) => (
+                  <option key={key} value={key}>
+                    {activityMeta[key].label}
+                  </option>
+                ))}
+              </select>
+            </span>
+          </label>
+        </div>
+
+        <div className="field">
+          <span className="field-label">Цель</span>
+          <div className="seg seg-accent" role="radiogroup" aria-label="Цель">
+            {(Object.keys(goalMeta) as NutritionGoal[]).map((key) => (
+              <button
+                key={key}
+                role="radio"
+                aria-checked={draft.goal === key}
+                onClick={() => patchBody({ goal: key })}
+              >
+                {goalMeta[key].label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {draft.goal !== "maintenance" && (
+          <label className="field">
+            <span className="field-label">
+              {draft.goal === "loss" ? "Снижать" : "Набирать"}, кг в месяц
+            </span>
+            <span className="field-box">
+              <input
+                type="number"
+                inputMode="decimal"
+                min="0.1"
+                max="12"
+                step="0.1"
+                value={draft.monthlyWeightChangeKg || ""}
+                onChange={(event) =>
+                  patchBody({
+                    monthlyWeightChangeKg: Number(event.target.value),
+                  })
+                }
+              />
+            </span>
+          </label>
+        )}
+
+        <button
+          className="check-row muscle-row"
+          role="checkbox"
+          aria-checked={draft.musclePriority}
+          onClick={() => patchBody({ musclePriority: !draft.musclePriority })}
+        >
+          <span className="check-box">
+            <Icon name="check" size={13} />
+          </span>
+          <span>Тренируюсь, важно сохранить мышцы</span>
+        </button>
+      </section>
+
+      <section className="glass-card norm-card">
+        <div className="norm-head">
+          <div>
+            <p className="kicker">
+              Норма {person.name || "человека"} ·{" "}
+              {manual ? "ввели вы" : "посчитал Mise"}
+            </p>
+            <p className="norm-figure">
+              <b>{person.daily.kcal}</b> <span>ккал/день</span>
+            </p>
+          </div>
+          <button
+            className="pill-button"
+            aria-pressed={manual}
+            disabled={manual && !computed}
+            onClick={() => {
+              if (!manual) {
+                onUpdate(person.id, { nutritionTargetMode: "manual" });
+                return;
+              }
+              if (!computed) return;
+              onUpdate(person.id, {
+                estimate: draft,
+                daily: computed,
+                macroPreset: "custom",
+                nutritionTargetMode: "auto",
+              });
+            }}
+          >
+            {manual ? "Вернуть расчёт Mise" : "Ввести своё"}
+          </button>
+        </div>
+
+        <label className="field" htmlFor={`macro-${person.id}-kcal`}>
+          <span className="field-label">Калории в день</span>
+          <span className="field-box">
+            <MacroNumberInput
+              id={`macro-${person.id}-kcal`}
+              ariaLabel={`Калории для ${person.name || "человека"}`}
+              value={person.daily.kcal}
+              onValueChange={(value) => {
+                onMacro(person.id, "kcal", value);
+              }}
+            />
+            <em>ккал</em>
+          </span>
+        </label>
+
+        <div className="norm-macros">
+          {macroFieldMeta.map(({ key, label, color, perGram }) => (
+            <label
+              className="field macro-field"
+              key={key}
+              htmlFor={`macro-${person.id}-${key}`}
+            >
+              <span className="field-label">
+                <i style={{ background: color }} aria-hidden /> {label}
+              </span>
+              <span className="field-box">
+                <MacroNumberInput
+                  id={`macro-${person.id}-${key}`}
+                  ariaLabel={`${label} для ${person.name || "человека"}`}
+                  value={person.daily[key]}
+                  onValueChange={(value) => {
+                    onMacro(person.id, key, value);
+                  }}
+                />
+                <em>г</em>
+              </span>
+              <span className="macro-bar" aria-hidden>
+                <i
+                  style={{
+                    background: color,
+                    width: `${Math.min(100, Math.round((person.daily[key] * perGram * 100) / Math.max(person.daily.kcal, 1)))}%`,
+                  }}
+                />
+              </span>
+            </label>
+          ))}
+        </div>
+
+        <div className="field">
+          <span className="field-label">Автоматическое распределение</span>
+          <div
+            className="chip-row wrap-chips"
+            role="radiogroup"
+            aria-label="Профиль БЖУ"
+          >
+            {(Object.keys(macroPresetMeta) as MacroPresetOption[]).map(
+              (preset) => {
+                const selected = (person.macroPreset ?? "balanced") === preset;
+                return (
+                  <button
+                    key={preset}
+                    className="chip"
+                    role="radio"
+                    aria-checked={selected}
+                    title={macroPresetMeta[preset].description}
+                    onClick={() => onPreset(person.id, preset)}
+                  >
+                    {macroPresetMeta[preset].label}
+                  </button>
+                );
+              },
+            )}
+          </div>
+          <small className="field-hint">
+            {macroPresetMeta[
+              (person.macroPreset ?? "balanced") === "custom"
+                ? "balanced"
+                : ((person.macroPreset ?? "balanced") as MacroPresetOption)
+            ].description}{" "}
+            — доли от калорий. Значения можно поправить вручную.
+          </small>
+        </div>
+
+        <p className={`norm-check ${converges ? "is-ok" : "is-off"}`} role="status">
+          {converges ? (
+            <>
+              <Icon name="check" size={14} /> Сумма макросов — {fromMacros} ккал,
+              сходится
             </>
           ) : (
             <>
-              <b>Проверьте параметры</b>
-              <small>
-                Возраст {fields[0].min}–{fields[0].max}, рост {fields[1].min}–
-                {fields[1].max} см, вес {fields[2].min}–{fields[2].max} кг.
-              </small>
+              <Icon name="warning" size={14} /> Сумма макросов — {fromMacros}{" "}
+              ккал против {person.daily.kcal}: не сходится на {gap}
             </>
           )}
         </p>
-        <button
-          className="secondary-button"
-          disabled={!result}
-          onClick={() => {
-            if (result) onApply(draft, result.target);
-          }}
-        >
-          {applied ? (
-            <>
-              Норма используется <Icon name="check" size={12} />
-            </>
-          ) : (
-            "Использовать эту норму"
-          )}
-        </button>
+
+        {calculation.issues.map((issue) => (
+          <Note tone="warn" key={issue.code}>
+            {issue.message}
+          </Note>
+        ))}
+      </section>
+
+      <section className="glass-card person-card">
+        <div className="field">
+          <span className="field-label">Что из плана ест</span>
+          <div className="chip-row wrap-chips">
+            {mealSlots.map((slot) => {
+              const active = person.includedSlots.includes(slot);
+              return (
+                <button
+                  key={slot}
+                  className="chip"
+                  role="checkbox"
+                  aria-checked={active}
+                  onClick={() =>
+                    onUpdate(person.id, {
+                      includedSlots: active
+                        ? person.includedSlots.filter((item) => item !== slot)
+                        : [...person.includedSlots, slot],
+                    })
+                  }
+                >
+                  {mealMeta[slot].short}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="field">
+          <span className="field-label">
+            Не люблю <em>Mise не предложит сам, выбрать вручную можно</em>
+          </span>
+          <div className="chip-row wrap-chips">
+            {dislikeOptions.map((option) => {
+              const active = (person.dislikes ?? []).includes(option.id);
+              return (
+                <button
+                  key={option.id}
+                  className="chip"
+                  role="checkbox"
+                  aria-checked={active}
+                  onClick={() =>
+                    onUpdate(person.id, {
+                      dislikes: active
+                        ? (person.dislikes ?? []).filter(
+                            (item) => item !== option.id,
+                          )
+                        : [...(person.dislikes ?? []), option.id],
+                    })
+                  }
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="field">
+          <span className="field-label">
+            Аллергия / мне нельзя <em>жёсткий запрет, обойти нельзя</em>
+          </span>
+          <div className="chip-row wrap-chips">
+            {(Object.keys(allergenMeta) as Allergen[]).map((allergen) => {
+              const active = (person.hardExclusions ?? []).includes(allergen);
+              return (
+                <button
+                  key={allergen}
+                  className={`chip${active ? " is-hard" : ""}`}
+                  role="checkbox"
+                  aria-checked={active}
+                  onClick={() =>
+                    onUpdate(person.id, {
+                      hardExclusions: active
+                        ? (person.hardExclusions ?? []).filter(
+                            (item) => item !== allergen,
+                          )
+                        : [...(person.hardExclusions ?? []), allergen],
+                    })
+                  }
+                >
+                  {allergenMeta[allergen].short}
+                </button>
+              );
+            })}
+          </div>
+          <small className="field-hint">
+            Для настоящей аллергии всё равно проверяйте состав и возможные следы
+            на конкретной упаковке.
+          </small>
+        </div>
+      </section>
+
+      <DailyBalance
+        goal={person.daily}
+        planned={plannedTargetsFor(person)}
+        context="В выбранных позициях"
+      />
+
+      <p className="onboarding-fineprint">
+        Расчёт по формуле Миффлина — Сан-Жеора. Это ориентир, а не медицинская
+        рекомендация.
+      </p>
+
+      <div className="chip-row menu-actions">
+        {people[0] && person.id !== people[0].id && (
+          <button
+            className="chip"
+            onClick={() =>
+              onUpdate(person.id, {
+                daily: { ...people[0].daily },
+                estimate: people[0].estimate,
+                macroPreset: people[0].macroPreset,
+                nutritionTargetMode: people[0].nutritionTargetMode,
+              })
+            }
+          >
+            Скопировать цели у «{people[0].name || "Я"}»
+          </button>
+        )}
+        {people.length > 1 && (
+          <button
+            className="chip"
+            onClick={() => {
+              const next = people.find((item) => item.id !== person.id);
+              onRemove(person.id);
+              if (next) setActiveId(next.id);
+            }}
+          >
+            Удалить {person.name || "человека"}
+          </button>
+        )}
       </div>
-      {calculation.issues.map((issue) => (
-        <Note tone="warn" key={issue.code}>
-          {issue.message}
-        </Note>
-      ))}
-    </div>
+    </>
   );
 }
 
