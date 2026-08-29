@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { instructionFacts, wprmInstructionTexts } from "./recipe-instruction-facts.mjs";
 
 const args = new Map(process.argv.slice(2).map((value, index, all) => value.startsWith("--") ? [value, all[index + 1]] : ["", ""]));
 const limit = Math.min(500, Math.max(1, Number(args.get("--limit") ?? 250)));
@@ -60,7 +61,7 @@ function localizationFor(title, ingredients) {
 
 function slotFor(course, title, id) {
   const value = `${course} ${title}`.toLowerCase();
-  if (/breakfast|pancake|oat|egg bite|french toast/.test(value)) return "breakfast";
+  if (/\bbreakfast\b|\bpancakes?\b|\boats\b|\begg\s+bites?\b|\bfrench toast\b/.test(value)) return "breakfast";
   if (/dessert|snack|bite|cookie|brownie|muffin|bar\b/.test(value)) return "snack1";
   return id % 2 ? "dinner" : "lunch";
 }
@@ -82,6 +83,7 @@ const candidates = posts.slice(0, limit).map((post) => {
   const ingredients = ingredientFacts(html);
   const course = first(html, /wprm-recipe-course[^>]*>([\s\S]*?)<\/span>/i);
   const imageUrl = decode(html.match(/wprm-recipe-image[\s\S]{0,800}?<a href="([^"]+)"/i)?.[1] ?? "");
+  const sourceInstructions = wprmInstructionTexts(html);
   return {
     id: `tmpm-${post.id}`,
     title,
@@ -105,6 +107,7 @@ const candidates = posts.slice(0, limit).map((post) => {
       carbs: nutrition(html, "carbohydrates"),
     },
     ingredients,
+    ...instructionFacts(sourceInstructions),
     localization: localizationFor(title, ingredients),
     editorialStatus: previousStatuses.get(`tmpm-${post.id}`) ?? "pending",
   };

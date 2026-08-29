@@ -13,6 +13,13 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "recipes:import:tmpm": "node scripts/import-mealprepmanual.mjs --limit 500 --output data/mealprepmanual-candidates.json",
     "recipes:import:goodfood": "node scripts/import-goodfood.mjs --limit 100 --output data/goodfood-candidates.json",
+    "recipes:enrich:instructions": "node scripts/enrich-recipe-corpus.mjs",
+    "recipes:instructions:check": "node scripts/build-recipe-editorial-drafts.mjs --dry-run",
+    "recipes:editorial:apply": "node scripts/apply-recipe-editorial-cards.mjs",
+    "recipes:audit": "node scripts/audit-recipe-corpus.mjs",
+    "recipes:audit:nutrition": "node scripts/audit-recipe-nutrition.mjs",
+    "recipes:audit:release": "node scripts/audit-recipe-release.mjs",
+    "recipes:audit:release:write": "node scripts/audit-recipe-release.mjs --output data/recipe-release-audit.json",
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {

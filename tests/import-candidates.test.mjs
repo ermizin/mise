@@ -28,12 +28,26 @@ test("editorial queue keeps promoted and pending candidates separate", () => {
   assert.ok(goodFood.candidates.every((item) => item.editorialStatus === "pending"));
 });
 
-test("imported candidates have macros, time and ingredient facts without copied instructions", () => {
+test("imported candidates have macros, time, ingredients and prose-free instruction facts", () => {
   for (const item of allCandidates) {
     assert.ok(Object.values(item.macros).every(Number.isFinite), `${item.title} has macros`);
     assert.ok(Number.isFinite(item.time.totalMinutes) && item.time.totalMinutes > 0, `${item.title} has total time`);
     assert.ok(item.ingredients.length > 0, `${item.title} has ingredients`);
+    assert.ok(item.instructionFacts.length > 0, `${item.title} has structured instruction facts`);
+    assert.equal(item.sourceInstructionCount, item.instructionFacts.length, `${item.title} keeps the source step count`);
+    assert.match(item.sourceInstructionHash, /^[a-f0-9]{64}$/, `${item.title} has an instruction audit hash`);
+    assert.ok(item.instructionFacts.every((step) => step.text === "" && !("raw" in step) && !("source" in step)), `${item.title} stores no source prose`);
     assert.equal("instructions" in item, false);
+  }
+});
+
+test("Good Food slot derivation does not confuse veggie or main-course egg titles with breakfast", () => {
+  for (const id of [
+    "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+    "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+    "goodfood-veggie-nuggets-with-summer-slaw",
+  ]) {
+    assert.notEqual(goodFood.candidates.find((item) => item.id === id)?.slot, "breakfast", id);
   }
 });
 
