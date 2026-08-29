@@ -147,8 +147,30 @@ test("production fat-sensitive ingredients expose an honest fat note", () => {
   assert.ok(ingredients.length > 0);
   assert.ok(ingredients.every((item) => item.fatNote?.length > 0));
   assert.ok(ingredients.filter((item) => item.id === "milk").every((item) => item.name === "Молоко 2%" && item.fatNote === "2%"));
+  const cheeses = ingredients.filter((item) => ["cream-cheese", "cheese", "parmesan", "feta", "mozzarella"].includes(item.id));
+  assert.ok(cheeses.length > 0);
+  assert.ok(cheeses.every((item) => ["regular", "light", "either"].includes(item.cheeseVariant)));
+  assert.ok(cheeses.every((item) => /^(?:обычный|обычная|лёгкий|лёгкая)/u.test(item.fatNote)));
+  assert.ok(cheeses.some((item) => item.cheeseVariant === "either" && /КБЖУ рассчитаны для обычного/u.test(item.fatNote)));
+  assert.ok(cheeses.some((item) => item.cheeseVariant === "regular" && item.fatNote === "обычный"));
+  const yogurts = ingredients.filter((item) => item.id === "yogurt");
+  assert.ok(yogurts.length > 0);
+  assert.ok(yogurts.every((item) => item.fatNote === "≈2% по расчётному профилю" && item.checkLabel === false));
   assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
   assert.equal(canonicalIngredients.cream_processed.reference.dataType, "label_required");
+  assert.equal(canonicalIngredients.cheese_processed.canonicalName, "Полутвёрдый сыр (обычный)");
+  assert.equal(canonicalIngredients.yogurt_processed.canonicalName, "Греческий йогурт 2%");
+});
+
+test("frozen berry recipes name the berry explicitly", () => {
+  const frozenBerryIngredients = recipes.flatMap((item) => item.ingredients)
+    .filter((item) => item.id === "berries" && /заморож/iu.test(item.name));
+  assert.equal(frozenBerryIngredients.length, 2);
+  assert.ok(frozenBerryIngredients.every((item) => item.name === "Замороженная черника"));
+  assert.equal(canonicalIngredients.berries_raw.canonicalName, "Черника");
+  assert.match(canonicalIngredients.berries_raw.reference.description, /Blueberries/u);
+  assert.ok(recipes.some((item) => item.id === "src-protein-oats" && /черник/u.test(item.title)));
+  assert.ok(recipes.some((item) => item.id === "src-frozen-yogurt" && /черник/u.test(item.title)));
 });
 
 test("editorial promotion fixes unit-sized macros and obvious slot mistakes", () => {
