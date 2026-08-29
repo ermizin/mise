@@ -12,7 +12,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -36,7 +36,7 @@ async function loadRecipeCatalog() {
   return sandbox.__catalog;
 }
 
-const { recipes, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -414,6 +414,34 @@ test("review-required families stay out of automatic menu candidates", () => {
   const lunchIds = candidateRecipes("lunch", "protein", [], 1, { limit: "all" }).map((item) => item.id);
   assert.equal(breakfastIds.includes("src-cottage-bake"), false);
   assert.equal(lunchIds.includes("src-taco-mac"), true);
+});
+
+test("production catalog contains ready recipes and preserves reviewed legacy recipes", () => {
+  const blockedIds = Object.values(recipeFamiliesById)
+    .filter((family) => family.reviewStatus === "review_required")
+    .map((family) => family.id)
+    .sort();
+  const visibleIds = new Set(productionRecipes.map((item) => item.id));
+
+  assert.equal(blockedIds.length, 8);
+  assert.equal(productionRecipes.length, recipes.length - blockedIds.length);
+  assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
+  assert.ok(
+    recipes
+      .filter((item) => !recipeFamiliesById[item.id])
+      .every((item) => visibleIds.has(item.id)),
+    "reviewed legacy catalog remains available while its family migration is pending",
+  );
+  assert.ok(productionRecipes.every(isProductionReadyRecipe));
+
+  for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"])
+    for (const style of ["protein", "budget", "paleo", "keto"])
+      assert.ok(
+        candidateRecipes(slot, style, [], 1, { limit: "all" }).every((item) =>
+          visibleIds.has(item.id),
+        ),
+        `${style}/${slot} candidates stay inside the production catalog`,
+      );
 });
 
 test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {

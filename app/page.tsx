@@ -3761,6 +3761,10 @@ const recipeFamiliesById = Object.fromEntries(
     .map((recipe) => [recipe.id, recipeToFamily(recipe)] as const)
     .filter((entry): entry is readonly [string, RecipeFamily] => Boolean(entry[1])),
 ) as Record<string, RecipeFamily>;
+function isProductionReadyRecipe(recipe: Recipe) {
+  return recipeFamiliesById[recipe.id]?.reviewStatus !== "review_required";
+}
+const productionRecipes = recipes.filter(isProductionReadyRecipe);
 function clientId() {
   const key = "mise-client-id";
   const saved = localStorage.getItem(key);
@@ -4310,7 +4314,7 @@ function candidateRecipes(
       (recipe) =>
         recipe.slot === slot &&
         recipe.tags.includes(style) &&
-        recipeFamiliesById[recipe.id]?.reviewStatus !== "review_required" &&
+        isProductionReadyRecipe(recipe) &&
         (recipe.storageDays >= batchDays || recipe.freezable) &&
         eaters.every((person) => hardConflicts(recipe, person).length === 0) &&
         eaters.every((person) => recipeFamilyViableFor(recipe, person, slot)) &&
@@ -4818,7 +4822,7 @@ function deckDishes(plan: ActivePlan | null) {
     slot,
     recipe:
       chosen.find((recipe) => recipe?.slot === slot) ??
-      recipes.find((recipe) => recipe.slot === slot),
+      productionRecipes.find((recipe) => recipe.slot === slot),
   }));
 }
 
@@ -6200,7 +6204,9 @@ function RecipesScreen({
 
   const active = activeCatalogFilters(state);
   const visible = useMemo(() => {
-    const matched = recipes.filter((recipe) => catalogMatches(recipe, state));
+    const matched = productionRecipes.filter((recipe) =>
+      catalogMatches(recipe, state),
+    );
     const missing = new Map(
       matched.map((recipe) => [recipe.id, missingCountFor(recipe, plan) ?? 0]),
     );
@@ -6213,7 +6219,9 @@ function RecipesScreen({
   }, [plan, state]);
 
   const fromYourProducts = plan
-    ? recipes.filter((recipe) => missingCountFor(recipe, plan) === 0).length
+    ? productionRecipes.filter(
+        (recipe) => missingCountFor(recipe, plan) === 0,
+      ).length
     : null;
 
   return (
@@ -6222,7 +6230,7 @@ function RecipesScreen({
         <div className="catalog-head-row">
           <div>
             <p className="catalog-kicker">
-              {withPlural(recipes.length, FORMS.recipe)}
+              {withPlural(productionRecipes.length, FORMS.recipe)}
               {fromYourProducts === null
                 ? ""
                 : ` · ${fromYourProducts} из ваших`}
@@ -6989,6 +6997,7 @@ function PlanBuilder({
         const recipe = recipesById[selections[key]];
         if (
           recipe &&
+          isProductionReadyRecipe(recipe) &&
           recipe.slot === slot &&
           recipe.tags.includes(menuStyle) &&
           (recipe.storageDays >= batch.days || recipe.freezable) &&
