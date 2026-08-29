@@ -172,6 +172,8 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Рецепт, продукт или «что убрать»/);
   assert.match(page, /Сначала те, где меньше докупать/);
   assert.match(page, /Фильтры, активно \$\{active\.length\}/);
+  assert.match(page, /favoriteRecipesStorageKey = "mise-favorite-recipes-v1"/);
+  assert.match(page, /localStorage\.setItem\(favoriteRecipesStorageKey/);
   // «Докупить N» не рендерится без плана: пустой бейдж хуже отсутствующего.
   assert.match(page, /missing !== null &&/);
   // Отступ скролла под фиксированной шапкой ведёт наблюдатель, а не константа,

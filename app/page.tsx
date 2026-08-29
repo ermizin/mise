@@ -264,6 +264,23 @@ const onboardingStorageKey = "mise-onboarding-v3";
 const reminderDefaultsKey = "mise-reminder-defaults-v1";
 const builderDraftKey = "mise-builder-draft-v3";
 const analyticsStoragePrefix = "mise-analytics-v1";
+const favoriteRecipesStorageKey = "mise-favorite-recipes-v1";
+
+function storedFavoriteRecipeIds() {
+  try {
+    const stored = JSON.parse(
+      localStorage.getItem(favoriteRecipesStorageKey) ?? "[]",
+    );
+    if (!Array.isArray(stored)) return [];
+    return [
+      ...new Set(
+        stored.filter((id): id is string => typeof id === "string"),
+      ),
+    ];
+  } catch {
+    return [];
+  }
+}
 
 const mealMeta: Record<
   MealSlot,
@@ -4562,6 +4579,7 @@ export default function Home() {
   const [guideOrigin, setGuideOrigin] = useState<"welcome" | null>(null);
   const [catalogState, setCatalogState] =
     useState<CatalogState>(emptyCatalogState);
+  const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
@@ -4592,6 +4610,21 @@ export default function Home() {
       );
     };
   }, []);
+  /* eslint-disable-next-line react-hooks/set-state-in-effect -- restores this device's catalog preference after hydration */
+  useEffect(() => setFavoriteRecipeIds(storedFavoriteRecipeIds()), []);
+  function toggleFavoriteRecipe(recipeId: string) {
+    setFavoriteRecipeIds((current) => {
+      const next = current.includes(recipeId)
+        ? current.filter((id) => id !== recipeId)
+        : [...current, recipeId];
+      try {
+        localStorage.setItem(favoriteRecipesStorageKey, JSON.stringify(next));
+      } catch {
+        // The toggle still works for this session when device storage is unavailable.
+      }
+      return next;
+    });
+  }
   /* eslint-disable react-hooks/set-state-in-effect -- bootstraps onboarding state and the stored plan on mount */
   useEffect(() => {
     let mounted = true;
@@ -4835,6 +4868,8 @@ export default function Home() {
           plan={activePlan}
           state={catalogState}
           onState={setCatalogState}
+          favoriteRecipeIds={favoriteRecipeIds}
+          onToggleFavorite={toggleFavoriteRecipe}
           onOpenRecipe={(recipe) => setRecipeContext({ recipe })}
         />
       )}
@@ -6674,14 +6709,21 @@ function RecipesScreen({
   plan,
   state,
   onState,
+  favoriteRecipeIds,
+  onToggleFavorite,
   onOpenRecipe,
 }: {
   plan: ActivePlan | null;
   state: CatalogState;
   onState: (next: CatalogState) => void;
+  favoriteRecipeIds: string[];
+  onToggleFavorite: (recipeId: string) => void;
   onOpenRecipe: (recipe: Recipe) => void;
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [favoriteEffects, setFavoriteEffects] = useState<Record<string, number>>(
+    {},
+  );
   const headerRef = useRef<HTMLElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -6840,6 +6882,15 @@ function RecipesScreen({
                 recipe={recipe}
                 index={index}
                 plan={plan}
+                favorite={favoriteRecipeIds.includes(recipe.id)}
+                favoriteEffect={favoriteEffects[recipe.id] ?? 0}
+                onToggleFavorite={() => {
+                  setFavoriteEffects((current) => ({
+                    ...current,
+                    [recipe.id]: (current[recipe.id] ?? 0) + 1,
+                  }));
+                  onToggleFavorite(recipe.id);
+                }}
                 onOpen={() => onOpenRecipe(recipe)}
               />
             ))}
@@ -6982,39 +7033,77 @@ function RecipeCard({
   recipe,
   index,
   plan,
+  favorite,
+  favoriteEffect,
+  onToggleFavorite,
   onOpen,
 }: {
   recipe: Recipe;
   index: number;
   plan: ActivePlan | null;
+  favorite: boolean;
+  favoriteEffect: number;
+  onToggleFavorite: () => void;
   onOpen: () => void;
 }) {
   const missing = missingCountFor(recipe, plan);
   const batchNumber = batchNumberFor(recipe, plan);
   return (
-    <button className="recipe-card" onClick={onOpen}>
-      <div className={`recipe-media art-${index % 5}`}>
-        <RecipeMedia recipe={recipe} />
-        {batchNumber && (
-          <span className="recipe-batch-badge">в партии {batchNumber}</span>
-        )}
-        <span className="recipe-kcal">{recipe.macros.kcal} ккал</span>
-      </div>
-      <div className="recipe-body">
-        <h2>{recipe.title}</h2>
-        <p className="recipe-meta">
-          {recipe.time} мин · {recipe.servingWeight} г · Б {recipe.macros.protein}
-        </p>
-        <div className="recipe-chips">
-          {missing !== null && (
-            <span className={`missing-badge ${missing ? "is-short" : "is-ready"}`}>
-              докупить {missing}
-            </span>
+    <article className="recipe-card">
+      <button
+        type="button"
+        className="recipe-card-open"
+        aria-label={`Открыть рецепт: ${recipe.title}`}
+        onClick={onOpen}
+      >
+        <div className={`recipe-media art-${index % 5}`}>
+          <RecipeMedia recipe={recipe} />
+          {batchNumber && (
+            <span className="recipe-batch-badge">в партии {batchNumber}</span>
           )}
-          <span className="recipe-chip">{propertyChipFor(recipe, plan)}</span>
+          <span className="recipe-kcal">{recipe.macros.kcal} ккал</span>
         </div>
-      </div>
-    </button>
+        <div className="recipe-body">
+          <h2>{recipe.title}</h2>
+          <p className="recipe-meta">
+            {recipe.time} мин · {recipe.servingWeight} г · Б {recipe.macros.protein}
+          </p>
+          <div className="recipe-chips">
+            {missing !== null && (
+              <span className={`missing-badge ${missing ? "is-short" : "is-ready"}`}>
+                докупить {missing}
+              </span>
+            )}
+            <span className="recipe-chip">{propertyChipFor(recipe, plan)}</span>
+          </div>
+        </div>
+      </button>
+      <button
+        type="button"
+        className={`recipe-favorite-button${favorite ? " is-favorite" : ""}`}
+        aria-pressed={favorite}
+        aria-label={`${favorite ? "Убрать из избранного" : "В избранное"}: ${recipe.title}`}
+        onClick={(event) => {
+          event.stopPropagation();
+          onToggleFavorite();
+        }}
+      >
+        <span className="recipe-favorite-visual">
+          <span
+            className={`recipe-favorite-heart${
+              favoriteEffect
+                ? favoriteEffect % 2
+                  ? " has-effect-a"
+                  : " has-effect-b"
+                : ""
+            }`}
+            aria-hidden
+          >
+            ♥
+          </span>
+        </span>
+      </button>
+    </article>
   );
 }
 

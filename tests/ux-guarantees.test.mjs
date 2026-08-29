@@ -59,6 +59,19 @@ test("recipe cards keep photos and cooking measurements actionable", async () =>
     /\.recipe-media img \{[\s\S]*?position: absolute;[\s\S]*?inset: 0;[\s\S]*?height: 100%;/,
     "catalog photos stay inside the fixed media frame",
   );
+  assert.match(page, /aria-pressed=\{favorite\}/, "favorite is exposed as a toggle");
+  assert.match(
+    page,
+    /favorite \? "Убрать из избранного" : "В избранное"/,
+    "favorite announces both states",
+  );
+  assert.match(page, /event\.stopPropagation\(\)/, "favorite never opens the recipe card");
+  assert.match(
+    css,
+    /\.recipe-favorite-button \{[\s\S]*?width: 44px;[\s\S]*?height: 44px;/,
+    "favorite keeps a 44px touch target",
+  );
+  assert.match(css, /ms-heart-a 380ms/, "favorite keeps the supplied spring response");
   assert.match(css, /\.detail-food img \{[\s\S]*?object-fit: cover;/, "the detail photo fills the existing hero frame");
   assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
   assert.match(page, /cookingAmounts\[ingredient\.id\]/, "ingredients and cooking read the same calculated amounts");
