@@ -38,7 +38,8 @@ export type RawRecipeCandidate = {
 export type IngredientMappingDecision = {
   sourceName: string;
   canonicalIngredientId: string | null;
-  status: "mapped" | "ignored" | "unresolved";
+  replacementCanonicalIngredientIds?: string[];
+  status: "mapped" | "replaced" | "ignored" | "unresolved";
   reason?: string;
 };
 
@@ -206,7 +207,7 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "black-beans": fdcReference("173735", "Beans, black, mature seeds, cooked, boiled, without salt"),
   broccoli: fdcReference("170379", "Broccoli, raw"),
   broth: fdcReference("174536", "Soup, chicken broth, ready-to-serve", "Для концентрата или кубика использовать этикетку."),
-  bouillon: fdcReference("171563", "Soup, chicken broth cubes, dry", "Состав и аллергены зависят от марки; этикетка обязательна."),
+  bouillon: fdcReference("171563", "Soup, chicken broth cubes, dry", "Консервативный профиль отмечает сою и глютен; состав зависит от марки, этикетка обязательна."),
   buckwheat: fdcReference("170685", "Buckwheat groats, roasted, dry"),
   cabbage: fdcReference("169975", "Cabbage, raw"),
   carrot: fdcReference("170393", "Carrots, raw"),
@@ -280,7 +281,7 @@ const ingredientSeeds: IngredientSeed[] = [
   ["black-beans", "Фасоль чёрная", "legume", "cooked", n(132, 8.86, 0.54, 23.71)],
   ["broccoli", "Брокколи", "vegetable", "raw", n(34, 2.82, 0.37, 6.64)],
   ["broth", "Бульон", "sauce", "processed", n(6, 0.64, 0.21, 0.44)],
-  ["bouillon", "Сухой бульон", "sauce", "processed", n(198, 14.6, 4.7, 23.5)],
+  ["bouillon", "Сухой бульон", "sauce", "processed", n(198, 14.6, 4.7, 23.5), 1, ["soy", "gluten"]],
   ["buckwheat", "Гречка сухая", "grain", "raw", n(346, 11.73, 2.71, 74.95)],
   ["cabbage", "Капуста", "vegetable", "raw", n(25, 1.28, 0.1, 5.8)],
   ["carrot", "Морковь", "vegetable", "raw", n(41, 0.93, 0.24, 9.58), 80],
@@ -386,6 +387,9 @@ function normalizedAlias(value: string) {
 
 const canonicalByAlias = new Map<string, CanonicalIngredient>();
 for (const item of Object.values(canonicalIngredients)) for (const alias of item.aliases) canonicalByAlias.set(normalizedAlias(alias), item);
+const canonicalByLegacyId = new Map(
+  ingredientSeeds.map(([legacyId, , , state]) => [legacyId, canonicalIngredients[`${legacyId.replaceAll("-", "_")}_${state}`]]),
+);
 
 const ingredientAliasTargets: Record<string, string> = {
   "2% milk": "milk",
@@ -459,14 +463,20 @@ const ingredientAliasTargets: Record<string, string> = {
 };
 
 for (const [alias, legacyId] of Object.entries(ingredientAliasTargets)) {
-  const canonicalId = `${legacyId.replaceAll("-", "_")}_${ingredientSeeds.find(([id]) => id === legacyId)?.[3]}`;
-  const canonical = canonicalIngredients[canonicalId];
+  const canonical = canonicalByLegacyId.get(legacyId);
   if (canonical) canonicalByAlias.set(normalizedAlias(alias), canonical);
 }
 
+const ingredientReplacementTargets: Record<string, { legacyIds: string[]; reason: string }> = {
+  mirin: {
+    legacyIds: ["vinegar", "brown-sugar"],
+    reason: "В адаптации Mise мирин заменён отмеренными уксусом и коричневым сахаром; замена сохранена для аудита КБЖУ.",
+  },
+};
+
 const ignoredIngredientReasons: Record<string, string> = Object.fromEntries([
   "baking soda", "cayenne pepper", "chili powder", "cinnamon", "cumin", "fennel seeds",
-  "garlic powder", "ginger", "ground cumin", "italian seasoning", "jalapeño", "mirin",
+  "garlic powder", "ginger", "ground cumin", "italian seasoning", "jalapeño",
   "onion powder", "oregano", "paprika", "pepper", "red pepper flakes", "salt",
   "salt and pepper to taste", "salt to taste", "smoked paprika", "turmeric", "water",
   "hot water", "water to consistency", "white pepper",
@@ -501,10 +511,22 @@ export function normalizeRawRecipeCandidate(
     const ingredient = value as { id?: string; name?: string };
     const sourceName = String(ingredient.name ?? ingredient.id ?? "").trim();
     const alias = normalizedAlias(sourceName);
-    const canonical = canonicalByAlias.get(normalizedAlias(ingredient.id ?? "")) ?? canonicalByAlias.get(alias);
-    if (canonical) return { sourceName, canonicalIngredientId: canonical.id, status: "mapped" };
+    const explicitCanonical = ingredient.id ? canonicalByAlias.get(normalizedAlias(ingredient.id)) : undefined;
+    if (explicitCanonical) return { sourceName, canonicalIngredientId: explicitCanonical.id, status: "mapped" };
     const reason = ignoredIngredientReasons[alias];
     if (reason) return { sourceName, canonicalIngredientId: null, status: "ignored", reason };
+    const replacement = ingredientReplacementTargets[alias];
+    if (replacement) {
+      return {
+        sourceName,
+        canonicalIngredientId: null,
+        replacementCanonicalIngredientIds: replacement.legacyIds.map((id) => canonicalByLegacyId.get(id)?.id).filter((id): id is string => Boolean(id)),
+        status: "replaced",
+        reason: replacement.reason,
+      };
+    }
+    const canonical = canonicalByAlias.get(alias);
+    if (canonical) return { sourceName, canonicalIngredientId: canonical.id, status: "mapped" };
     return { sourceName, canonicalIngredientId: null, status: "unresolved", reason: "Нужно редакционное решение для канонического ингредиента." };
   });
   const canonicalIngredientIds = ingredientMappings.map((mapping) => mapping.canonicalIngredientId);

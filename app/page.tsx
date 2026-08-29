@@ -374,6 +374,7 @@ const ingredientAllergens: Record<string, Allergen[]> = {
   "almond-flour": ["treeNuts"],
   "almond-paste": ["treeNuts"],
   bread: ["gluten"],
+  bouillon: ["soy", "gluten"],
   bulgur: ["gluten"],
   butter: ["milk"],
   cheese: ["milk"],
@@ -2931,7 +2932,7 @@ recipes.push(
   ], 4, true, { provenance: mealPrepManualParsed("One Pot Sausage and Pepper Pasta", "one-pot-sausage-and-pepper-pasta", "https://mealprepmanual.com/wp-content/uploads/2025/09/One-Pot-Sausage-and-Pepper-Pasta.jpg", "Горячая паста со свиным фаршем, перцем и шпинатом", "Italian sausage заменена постным свиным фаршем с фенхелем и паприкой; half-and-half — обычными сливками 10%."), localization: { fit: "familiar", availability: "common", note: "Это горячая паста из одной кастрюли, а не непривычный для России макаронный салат." }, storage: { refrigerator: "В закрытом контейнере при ≤4 °C — ориентировочно до 4 суток.", freezerDays: 45, freezeParts: "Замораживать готовую пасту порционно; сыр для подачи можно добавить уже после разогрева." }, effort: { knifeActions: 4, cookware: 1, activeActions: 10, activeMinutes: 20, level: "high" } }),
 
   r("src-honey-lime-steak", "lunch", "Говядина с лаймом, рисом, фасолью и кукурузой", "🥩", 60, { kcal: 605, protein: 41, fat: 17, carbs: 73 }, 500, 320, ["protein"], [
-    i("beef", "Постная говядина", 136, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 54, "г", "Крупы"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("corn", "Замороженная кукуруза", 20, "г", "Овощи и фрукты"), i("black-beans", "Консервированная фасоль", 84, "г", "Бакалея"), i("salsa", "Томатная сальса", 24, "г", "Бакалея"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("honey", "Мёд", 4, "г", "Бакалея"), i("soy", "Соевый соус", 3, "мл", "Бакалея"), i("olive-oil", "Растительное масло", 7.5, "г", "Бакалея"), i("lime-juice", "Сок лайма", 6, "г", "Овощи и фрукты"),
+    i("beef", "Постная говядина", 136, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 54, "г", "Крупы"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("corn", "Замороженная кукуруза", 20, "г", "Овощи и фрукты"), i("black-beans", "Консервированная фасоль", 84, "г", "Бакалея"), i("salsa", "Томатная сальса", 24, "г", "Бакалея"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("honey", "Мёд", 4, "г", "Бакалея"), i("soy", "Соевый соус", 3, "мл", "Бакалея"), i("olive-oil", "Растительное масло", 7.5, "г", "Бакалея"), i("lime-juice", "Сок лайма", 6, "мл", "Овощи и фрукты"),
   ], [
     "Сварите рис; мелко нарезанную зелень и острый перец добавляйте только по желанию, чтобы вкус можно было оставить нейтральным.",
     "Нарежьте говядину тонкими полосками поперёк волокон и ненадолго смешайте с цитрусовым соком, соевым соусом, паприкой и чесноком.",
@@ -4266,6 +4267,7 @@ function timeBand(recipe: Recipe): NonNullable<CatalogFilters["time"]> {
 function recipeFamilyViableFor(recipe: Recipe, person: Person, slot: MealSlot) {
   const family = recipeFamiliesById[recipe.id];
   if (!family) return true;
+  if (family.reviewStatus !== "pilot") return false;
   const target = targetFor(person, slot);
   return solveRecipeFamily(family, {
     targetCalories: target.kcal,
@@ -4285,6 +4287,7 @@ function candidateRecipes(
       (recipe) =>
         recipe.slot === slot &&
         recipe.tags.includes(style) &&
+        recipeFamiliesById[recipe.id]?.reviewStatus !== "review_required" &&
         (recipe.storageDays >= batchDays || recipe.freezable) &&
         eaters.every((person) => hardConflicts(recipe, person).length === 0) &&
         eaters.every((person) => recipeFamilyViableFor(recipe, person, slot)) &&

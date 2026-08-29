@@ -375,6 +375,9 @@ test("missing caloric and allergenic source components are explicit in the pilot
   assert.ok(crispy.allergens.includes("molluscs"));
   assert.ok(crispy.allergens.includes("soy"));
   assert.ok(crispy.allergens.includes("gluten"));
+  const bouillon = canonicalIngredients.bouillon_processed;
+  assert.ok(bouillon.allergens.includes("soy"));
+  assert.ok(bouillon.allergens.includes("gluten"));
 });
 
 test("raw candidate adapter preserves all 217 source cards and legacy editorial statuses", async () => {
@@ -397,6 +400,20 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
     assert.equal(draft.ingredientMappings.some((mapping) => mapping.status === "unresolved"), false, `${draft.sourceTitle} has 100% mapped-or-ignored editorial resolution`);
     assert.notEqual(draft.normalizationStatus, "ingredient_review_required", `${draft.sourceTitle} leaves ingredient review`);
   }
+  const rawPepper = pilotDrafts.flatMap((draft) => draft.ingredientMappings).filter((mapping) => mapping.sourceName.toLowerCase() === "pepper");
+  assert.ok(rawPepper.length >= 5);
+  assert.ok(rawPepper.every((mapping) => mapping.status === "ignored"), "black pepper is not mapped to sweet bell pepper");
+  const teriyaki = pilotDrafts.find((draft) => draft.sourceTitle === "Sheet Pan Teriyaki Chicken and Vegetables");
+  const mirin = teriyaki.ingredientMappings.find((mapping) => mapping.sourceName.toLowerCase() === "mirin");
+  assert.equal(mirin.status, "replaced");
+  assert.deepEqual([...mirin.replacementCanonicalIngredientIds].sort(), ["brown_sugar_processed", "vinegar_processed"]);
+});
+
+test("review-required families stay out of automatic menu candidates", () => {
+  const breakfastIds = candidateRecipes("breakfast", "protein", [], 1, { limit: "all" }).map((item) => item.id);
+  const lunchIds = candidateRecipes("lunch", "protein", [], 1, { limit: "all" }).map((item) => item.id);
+  assert.equal(breakfastIds.includes("src-cottage-bake"), false);
+  assert.equal(lunchIds.includes("src-taco-mac"), true);
 });
 
 test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {
@@ -429,6 +446,9 @@ test("solver exposes not-viable and hard-exclusion outcomes instead of deforming
   const allergen = solveRecipeFamily(recipeFamiliesById["src-salmon-rice-veg"], { targetCalories: 600, hardExclusions: ["fish"] });
   assert.equal(allergen.viable, false);
   assert.equal(allergen.reason, "hard_exclusion");
+  const bouillonAllergen = solveRecipeFamily(recipeFamiliesById["src-creamy-chicken-pasta"], { targetCalories: 600, hardExclusions: ["soy"] });
+  assert.equal(bouillonAllergen.viable, false);
+  assert.equal(bouillonAllergen.reason, "hard_exclusion");
 });
 
 test("two-person solver sums 600 and 450 kcal portions into one batch and parameterizes instructions", () => {
