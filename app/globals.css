@@ -948,7 +948,6 @@ p {
 }
 .compose-fab:active:not(:disabled) {
   transform: scale(0.965);
-  box-shadow: 0 7px 16px rgba(154, 52, 18, 0.24);
 }
 .compose-fab .icon {
   width: 22px;
@@ -6377,9 +6376,6 @@ p {
   background: rgba(255, 255, 255, 0.5);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   backdrop-filter: blur(30px) saturate(180%);
-  box-shadow:
-    0 -2px 26px rgba(122, 72, 32, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 .bottom-nav-indicator {
   position: absolute;
@@ -6390,7 +6386,6 @@ p {
   width: calc((100% - 12px) / 4);
   border-radius: var(--r-nested);
   background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 3px 10px rgba(122, 72, 32, 0.12);
   transform: translateX(calc(var(--tab) * 100%));
   transition: transform 280ms var(--motion-segment);
 }
