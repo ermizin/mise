@@ -55,7 +55,8 @@ type Allergen =
   | "peanut"
   | "treeNuts"
   | "sesame"
-  | "mustard";
+  | "mustard"
+  | "molluscs";
 
 type Ingredient = {
   id: string;
@@ -333,6 +334,7 @@ const allergenMeta: Record<Allergen, { label: string; short: string }> = {
   treeNuts: { label: "Орехи", short: "Орехи" },
   sesame: { label: "Кунжут", short: "Кунжут" },
   mustard: { label: "Горчица", short: "Горчица" },
+  molluscs: { label: "Моллюски", short: "Моллюски" },
 };
 const dislikeOptions = [
   { id: "fish", label: "Рыба", ingredientIds: ["salmon", "cod", "tuna"] },
@@ -389,6 +391,7 @@ const ingredientAllergens: Record<string, Allergen[]> = {
   milk: ["milk"],
   mozzarella: ["milk"],
   mustard: ["mustard"],
+  "oyster-sauce": ["molluscs", "soy", "gluten"],
   oats: ["gluten"],
   parmesan: ["milk"],
   pasta: ["gluten"],
@@ -400,6 +403,7 @@ const ingredientAllergens: Record<string, Allergen[]> = {
   tofu: ["soy"],
   tortilla: ["gluten"],
   tuna: ["fish"],
+  worcestershire: ["fish"],
   walnut: ["treeNuts"],
   yogurt: ["milk"],
 };
@@ -415,6 +419,7 @@ const packagedIngredientIds = new Set([
   "hummus",
   "mayonnaise",
   "mustard",
+  "oyster-sauce",
   "oats",
   "pasta",
   "peanut-butter",
@@ -427,6 +432,7 @@ const packagedIngredientIds = new Set([
   "tomato-passata",
   "tomato-paste",
   "tortilla",
+  "worcestershire",
   "yogurt",
 ]);
 const i = (
@@ -1489,6 +1495,7 @@ recipes.push(
       i("cottage", "Творог 5%", 250, "г", "Молочное"),
       i("egg", "Яйца", 2, "шт.", "Молочное"),
       i("milk", "Молоко 2,5%", 80, "мл", "Молочное"),
+      i("butter", "Сливочное масло для формы", 2, "г", "Молочное"),
     ],
     [
       "Разотрите творог с желтками и молоком до однородности.",
@@ -1643,6 +1650,7 @@ recipes.push(
       i("red-beans", "Красная фасоль", 100, "г", "Бакалея"),
       i("tomato-passata", "Протёртые томаты", 100, "мл", "Бакалея"),
       i("onion", "Лук", 0.5, "шт.", "Овощи и фрукты"),
+      i("olive-oil", "Оливковое масло", 4, "г", "Бакалея"),
     ],
     [
       "Промойте рис и отварите его до готовности по инструкции на упаковке.",
@@ -1675,6 +1683,8 @@ recipes.push(
       i("rice", "Рис", 55, "г", "Крупы"),
       i("broccoli", "Брокколи", 150, "г", "Овощи и фрукты"),
       i("zucchini", "Кабачок", 120, "г", "Овощи и фрукты"),
+      i("garlic", "Чеснок", 5, "г", "Овощи и фрукты"),
+      i("olive-oil", "Оливковое масло", 5, "г", "Бакалея"),
     ],
     [
       "Промойте рис и отварите его до готовности по инструкции на упаковке.",
@@ -1712,11 +1722,13 @@ recipes.push(
       i("onion", "Лук", 0.5, "шт.", "Овощи и фрукты"),
       i("carrot", "Морковь", 0.5, "шт.", "Овощи и фрукты"),
       i("tomato-passata", "Протёртые томаты", 100, "мл", "Бакалея"),
+      i("egg", "Яйцо", 0.5, "шт.", "Молочное"),
+      i("olive-oil", "Оливковое масло", 5, "г", "Бакалея"),
     ],
     [
       "Промойте гречку и отварите её до готовности по инструкции на упаковке.",
-      "Смешайте фарш с мелко нарезанным луком, сформуйте тефтели.",
-      "Припустите морковь, добавьте протёртые томаты и тефтели, тушите до полной готовности мяса.",
+      "Смешайте фарш с мелко нарезанным луком и яйцом, сформуйте тефтели.",
+      "Припустите морковь в отмеренном масле, добавьте протёртые томаты и тефтели, тушите до полной готовности мяса.",
       "Остудите и разложите с гречкой по контейнерам.",
     ],
     4,
@@ -1724,7 +1736,7 @@ recipes.push(
     {
       provenance: parsed(
         recipeSources.turkeyMeatballs,
-        "Рис внутри тефтелей убран; гречка подаётся отдельно, чтобы проще масштабировать порции.",
+        "Рис внутри тефтелей убран; гречка подаётся отдельно, чтобы проще масштабировать порции. Яйцо сохранено как связующий аллергенный компонент, масло нормировано до фактически используемого количества.",
       ),
       storage: { freezerDays: 60 },
     },
@@ -1846,6 +1858,8 @@ recipes.push(
       i("tomato-passata", "Протёртые томаты", 84, "мл", "Бакалея"),
       i("milk", "Молоко 2,5%", 48, "мл", "Молочное"),
       i("cheese", "Полутвёрдый сыр", 17, "г", "Молочное"),
+      i("broth", "Бульон", 96, "мл", "Бакалея"),
+      i("olive-oil", "Оливковое масло", 3, "г", "Бакалея"),
     ],
     [
       "Нарежьте перец, обжарьте фарш в глубокой кастрюле и разомните его лопаткой.",
@@ -1895,6 +1909,10 @@ recipes.push(
       i("sweet-potato", "Батат", 60, "г", "Овощи и фрукты"),
       i("broccoli", "Брокколи", 90, "г", "Овощи и фрукты"),
       i("soy", "Соевый соус", 15, "мл", "Бакалея"),
+      i("olive-oil", "Растительное масло", 6, "г", "Бакалея"),
+      i("brown-sugar", "Коричневый сахар", 5, "г", "Бакалея"),
+      i("vinegar", "Рисовый или белый уксус", 3, "мл", "Бакалея"),
+      i("garlic", "Чеснок", 2, "г", "Овощи и фрукты"),
     ],
     [
       "Поставьте вариться рис.",
@@ -1946,6 +1964,11 @@ recipes.push(
       i("tomato", "Томаты", 1, "шт.", "Овощи и фрукты"),
       i("yogurt", "Греческий йогурт", 30, "г", "Молочное"),
       i("mayonnaise", "Майонез", 15, "г", "Бакалея"),
+      i("butter", "Сливочное масло", 5, "г", "Молочное"),
+      i("olive-oil", "Оливковое масло", 9, "г", "Бакалея"),
+      i("lemon", "Лимонный сок", 6, "мл", "Овощи и фрукты"),
+      i("onion", "Красный лук", 17, "г", "Овощи и фрукты"),
+      i("vinegar", "Белый уксус", 5, "мл", "Бакалея"),
     ],
     [
       "Приготовьте рис с куркумой, зирой и небольшим количеством масла.",
@@ -2375,13 +2398,18 @@ recipes.push(
       i("carrot", "Морковь", 23, "г", "Овощи и фрукты"),
       i("soy", "Соевый соус", 9, "мл", "Бакалея"),
       i("gochujang", "Паста кочудян", 6, "г", "Бакалея"),
+      i("olive-oil", "Оливковое масло", 9, "г", "Бакалея"),
+      i("honey", "Мёд", 8.4, "г", "Бакалея"),
+      i("oyster-sauce", "Устричный соус", 9, "г", "Бакалея"),
+      i("garlic", "Чеснок", 4, "г", "Овощи и фрукты"),
+      i("onion", "Зелёный лук", 20, "г", "Овощи и фрукты"),
     ],
     [
       "Приготовьте лапшу по инструкции и сохраните немного воды от варки.",
       "Нарежьте брокколи и капусту, морковь натрите длинными полосками.",
       "Хорошо подрумяньте фарш на сильном огне, разбивая его на мелкие хрустящие кусочки, затем временно переложите.",
       "Быстро обжарьте овощи, верните мясо и добавьте лапшу.",
-      "Смешайте соевый соус, кочудян, немного мёда и воды от лапши; влейте и прогрейте до загустения.",
+      "Смешайте соевый и устричный соусы, кочудян, мёд и воду от лапши; влейте и прогрейте до загустения.",
     ],
     4,
     true,
@@ -2427,6 +2455,10 @@ recipes.push(
       i("tomato", "Томаты", 40, "г", "Овощи и фрукты"),
       i("lettuce", "Салат романо", 57, "г", "Овощи и фрукты"),
       i("feta", "Фета", 7, "г", "Молочное"),
+      i("onion", "Красный лук", 33, "г", "Овощи и фрукты"),
+      i("olive-oil", "Оливковое масло", 5, "г", "Бакалея"),
+      i("lemon", "Лимонный сок", 5, "мл", "Овощи и фрукты"),
+      i("vinegar", "Уксус", 5, "мл", "Бакалея"),
     ],
     [
       "Смешайте лимонный сок, масло, зиру, орегано, чеснок и паприку; замаринуйте курицу минимум на 30 минут.",
@@ -2490,7 +2522,9 @@ recipes.push(
       i("pumpkin", "Замороженная тыква", 45, "г", "Овощи и фрукты"),
       i("cottage", "Творог 5%", 45, "г", "Молочное"),
       i("milk", "Молоко 2,5%", 72, "мл", "Молочное"),
-      i("cheese", "Пармезан или полутвёрдый сыр", 11, "г", "Молочное"),
+      i("parmesan", "Пармезан", 11, "г", "Молочное"),
+      i("olive-oil", "Растительное масло", 4.5, "г", "Бакалея"),
+      i("lemon", "Лимонный сок", 2, "мл", "Овощи и фрукты"),
     ],
     [
       "Нарежьте курицу небольшими кусочками и распределите по дну глубокой формы.",
@@ -4345,6 +4379,8 @@ export default function Home() {
   /* Инструктаж, открытый из онбординга, возвращает на его первый экран,
      а не завершает онбординг. */
   const [guideOrigin, setGuideOrigin] = useState<"welcome" | null>(null);
+  const [catalogState, setCatalogState] =
+    useState<CatalogState>(emptyCatalogState);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
@@ -4601,6 +4637,9 @@ export default function Home() {
       )}
       {tab === "recipes" && (
         <RecipesScreen
+          plan={activePlan}
+          state={catalogState}
+          onState={setCatalogState}
           onOpenRecipe={(recipe) => setRecipeContext({ recipe })}
         />
       )}
@@ -5933,143 +5972,502 @@ function WeekScreen({
   );
 }
 
+/* Каталог «Рецепты» — макет 9a.
+
+   Девять безымянных полос фильтров заменены одной кнопкой со счётчиком: активные
+   фильтры видно, и снимаются они там же, где надеваются. Сортировка по умолчанию —
+   «сначала те, где меньше докупать», потому что это и есть вопрос пользователя.
+
+   Числа считает клиент из уже существующих функций (buildShopping и каталог):
+   своего API рецептов у проекта нет. Формы данных — как в BACKEND.md §1,
+   чтобы переезд на сервер был заменой источника, а не переписыванием экрана. */
+
+type CatalogSort = "missing" | "time" | "protein";
+type CatalogProperty = "freezable" | "no-cook" | "protein";
+type CatalogState = {
+  q: string;
+  slot: MealSlot | null;
+  effort: "low" | "high" | null;
+  time: "quick" | "medium" | "long" | null;
+  properties: CatalogProperty[];
+  sort: CatalogSort;
+};
+
+const emptyCatalogState: CatalogState = {
+  q: "",
+  slot: null,
+  effort: null,
+  time: null,
+  properties: [],
+  sort: "missing",
+};
+
+const catalogPropertyLabels: Record<CatalogProperty, string> = {
+  freezable: "Морозится",
+  "no-cook": "Без готовки",
+  protein: "Много белка",
+};
+
+const catalogTimeLabels: Record<"quick" | "medium" | "long", string> = {
+  quick: "До 20 мин",
+  medium: "21–40 мин",
+  long: "41+ мин",
+};
+
+const catalogEffortLabels: Record<"low" | "high", string> = {
+  low: "Мало действий",
+  high: "Много действий",
+};
+
+const catalogSortLabels: Record<CatalogSort, string> = {
+  missing: "Сначала те, где меньше докупать",
+  time: "Сначала быстрые",
+  protein: "Сначала белковые",
+};
+
+function hasProperty(recipe: Recipe, property: CatalogProperty) {
+  if (property === "freezable") return recipe.freezable;
+  if (property === "no-cook") return recipe.time <= 10;
+  return recipe.macros.protein >= 30;
+}
+
+/* «Докупить N»: сколько продуктов рецепта ещё нет в списке покупок активного
+   плана. Без плана числа не существует — бейдж тогда не рисуется вовсе. */
+function missingCountFor(recipe: Recipe, plan: ActivePlan | null) {
+  if (!plan) return null;
+  const bought = new Set(plan.shopping.map((item) => item.id));
+  return recipe.ingredients.filter(
+    (ingredient) => !bought.has(ingredient.id),
+  ).length;
+}
+
+/* В какой партии плана это блюдо уже готовится. */
+function batchNumberFor(recipe: Recipe, plan: ActivePlan | null) {
+  if (!plan) return null;
+  for (const batch of plan.batches)
+    for (const slot of Object.keys(mealMeta) as MealSlot[])
+      if (plan.selections[selectionKey(batch, slot)] === recipe.id)
+        return batch.index + 1;
+  return null;
+}
+
+/* Второй чип карточки — одно свойство, по фиксированному приоритету. */
+function propertyChipFor(recipe: Recipe, plan: ActivePlan | null) {
+  if (recipe.time <= 10) return "без готовки";
+  if (recipe.freezable) return "морозится";
+  if (plan && plan.people.every((person) => !hardConflicts(recipe, person).length))
+    return "на всех";
+  return withPlural(recipe.storageDays, FORMS.day);
+}
+
+function catalogMatches(recipe: Recipe, state: CatalogState) {
+  const query = state.q.trim().toLowerCase();
+  const exclude = query.startsWith("без ") ? query.slice(4).trim() : "";
+  const names = recipe.ingredients.map((ingredient) =>
+    ingredient.name.toLowerCase(),
+  );
+  if (exclude && names.some((name) => name.includes(exclude))) return false;
+  if (query && !exclude) {
+    const hit =
+      recipe.title.toLowerCase().includes(query) ||
+      names.some((name) => name.includes(query));
+    if (!hit) return false;
+  }
+  if (state.slot && recipe.slot !== state.slot) return false;
+  if (state.effort && recipe.effort.level !== state.effort) return false;
+  if (state.time && timeBand(recipe) !== state.time) return false;
+  return state.properties.every((property) => hasProperty(recipe, property));
+}
+
+type ActiveCatalogFilter = { id: string; label: string; clear: () => CatalogState };
+
+function activeCatalogFilters(state: CatalogState): ActiveCatalogFilter[] {
+  const active: ActiveCatalogFilter[] = [];
+  if (state.q.trim())
+    active.push({
+      id: "q",
+      label: state.q.trim(),
+      clear: () => ({ ...state, q: "" }),
+    });
+  if (state.slot)
+    active.push({
+      id: "slot",
+      label: mealMeta[state.slot].label,
+      clear: () => ({ ...state, slot: null }),
+    });
+  if (state.time)
+    active.push({
+      id: "time",
+      label: catalogTimeLabels[state.time],
+      clear: () => ({ ...state, time: null }),
+    });
+  if (state.effort)
+    active.push({
+      id: "effort",
+      label: catalogEffortLabels[state.effort],
+      clear: () => ({ ...state, effort: null }),
+    });
+  for (const property of state.properties)
+    active.push({
+      id: property,
+      label: catalogPropertyLabels[property],
+      clear: () => ({
+        ...state,
+        properties: state.properties.filter((item) => item !== property),
+      }),
+    });
+  return active;
+}
+
 function RecipesScreen({
+  plan,
+  state,
+  onState,
   onOpenRecipe,
 }: {
+  plan: ActivePlan | null;
+  state: CatalogState;
+  onState: (next: CatalogState) => void;
   onOpenRecipe: (recipe: Recipe) => void;
 }) {
-  const [slot, setSlot] = useState<MealSlot>("lunch");
-  const [effort, setEffort] = useState<"all" | "low" | "high">("all");
-  const [time, setTime] = useState<"all" | "quick" | "medium" | "long">("all");
-  const visible = recipes.filter(
-    (recipe) =>
-      recipe.slot === slot &&
-      (effort === "all" || recipe.effort.level === effort) &&
-      (time === "all" || timeBand(recipe) === time),
-  );
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const headerRef = useRef<HTMLElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  /* Шапка фиксированная, и её высота зависит от длины чисел и от того, сколько
+     чипов активно. Считать её руками — тот самый способ уронить первую строку
+     под блюр, поэтому отступ скролла ведёт ResizeObserver. */
+  useEffect(() => {
+    const header = headerRef.current;
+    const scroll = scrollRef.current;
+    if (!header || !scroll) return;
+    const observer = new ResizeObserver(([entry]) => {
+      scroll.style.paddingTop = `${entry.contentRect.height + 8}px`;
+    });
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
+  const active = activeCatalogFilters(state);
+  const visible = useMemo(() => {
+    const matched = recipes.filter((recipe) => catalogMatches(recipe, state));
+    const missing = new Map(
+      matched.map((recipe) => [recipe.id, missingCountFor(recipe, plan) ?? 0]),
+    );
+    return [...matched].sort((a, b) => {
+      if (state.sort === "time") return a.time - b.time;
+      if (state.sort === "protein") return b.macros.protein - a.macros.protein;
+      const diff = (missing.get(a.id) ?? 0) - (missing.get(b.id) ?? 0);
+      return diff || a.time - b.time;
+    });
+  }, [plan, state]);
+
+  const fromYourProducts = plan
+    ? recipes.filter((recipe) => missingCountFor(recipe, plan) === 0).length
+    : null;
+
   return (
-    <section className="screen recipes-screen">
-      <div className="meal-segment" role="tablist" aria-label="Приём пищи">
-        {(Object.keys(mealMeta) as MealSlot[]).map((value) => (
-          <button
-            key={value}
-            role="tab"
-            aria-selected={slot === value}
-            className={slot === value ? "selected" : ""}
-            onClick={() => setSlot(value)}
-          >
-            {mealMeta[value].label}
-          </button>
-        ))}
-      </div>
-      <div className="catalog-filters">
-        <label>
-          Сложность
-          <select
-            value={effort}
-            onChange={(event) => setEffort(event.target.value as typeof effort)}
-          >
-            <option value="all">Любая</option>
-            <option value="low">Низкая</option>
-            <option value="high">Высокая</option>
-          </select>
-        </label>
-        <label>
-          Время
-          <select
-            value={time}
-            onChange={(event) => setTime(event.target.value as typeof time)}
-          >
-            <option value="all">Любое</option>
-            <option value="quick">До 20 мин</option>
-            <option value="medium">21–40 мин</option>
-            <option value="long">41+ мин</option>
-          </select>
-        </label>
-      </div>
-      <div className="section-heading">
-        <div>
-          <p className="kicker">
-            {withPlural(visible.length, FORMS.option)}
-          </p>
-          <h2>{mealMeta[slot].label}</h2>
+    <section className="screen catalog-screen">
+      <header className="catalog-header glass-1" ref={headerRef}>
+        <div className="catalog-head-row">
+          <div>
+            <p className="catalog-kicker">
+              {withPlural(recipes.length, FORMS.recipe)}
+              {fromYourProducts === null
+                ? ""
+                : ` · ${fromYourProducts} из ваших`}
+            </p>
+            <h1>Рецепты</h1>
+          </div>
+          <div className="catalog-head-actions">
+            <button
+              className="catalog-sort-button"
+              aria-label={`Сортировка: ${catalogSortLabels[state.sort]}`}
+              onClick={() =>
+                onState({
+                  ...state,
+                  sort:
+                    state.sort === "missing"
+                      ? "time"
+                      : state.sort === "time"
+                        ? "protein"
+                        : "missing",
+                })
+              }
+            >
+              <Icon name="filter" size={18} />
+            </button>
+            <button
+              className={`catalog-filter-button ${active.length ? "is-active" : ""}`}
+              aria-label={
+                active.length
+                  ? `Фильтры, активно ${active.length}`
+                  : "Фильтры"
+              }
+              onClick={() => setFiltersOpen(true)}
+            >
+              Фильтры
+              {active.length > 0 && (
+                <span className="catalog-filter-count">{active.length}</span>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
-      {visible.length ? (
-        <div className="catalog-grid">
-          {visible.map((recipe, index) => {
-            const sourceImage =
-              recipe.provenance.kind === "parsed"
-                ? recipe.provenance.imageUrl
-                : undefined;
-            const style = recipe.tags[0] ?? "protein";
-            return (
+        <label className="catalog-search">
+          <Icon name="search" size={16} />
+          <input
+            type="search"
+            value={state.q}
+            placeholder="Рецепт, продукт или «что убрать»"
+            aria-label="Поиск по рецептам и продуктам"
+            onChange={(event) => onState({ ...state, q: event.target.value })}
+          />
+        </label>
+        {(active.length > 0 || !state.slot) && (
+          <div className="chip-row catalog-chips">
+            {active.map((filter) => (
               <button
-                className="catalog-card glass-card"
-                key={recipe.id}
-                onClick={() => onOpenRecipe(recipe)}
+                key={filter.id}
+                className="chip"
+                aria-checked
+                role="checkbox"
+                aria-label={`Снять фильтр: ${filter.label}`}
+                onClick={() => onState(filter.clear())}
               >
-                <div
-                  className={`catalog-art art-${index % 5} ${sourceImage ? "has-photo" : ""}`}
-                >
-                  {sourceImage ? (
-                    // Source photos are remote recipe assets rather than build-time images.
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={sourceImage}
-                      alt={
-                        recipe.provenance.kind === "parsed"
-                          ? (recipe.provenance.imageAlt ?? recipe.title)
-                          : recipe.title
-                      }
-                      loading="lazy"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <span>{recipe.emoji}</span>
-                  )}
-                  <em>{recipe.time} мин</em>
-                </div>
-                <h3>{recipe.title}</h3>
-                <p>
-                  {recipe.macros.kcal} ккал · {styleNote(recipe, style)}
-                </p>
-                <div className="recipe-badges">
-                  <span>
-                    {recipe.effort.level === "low"
-                      ? "Мало действий"
-                      : "Много действий"}
-                  </span>
-                  <span>
-                    {recipe.storage.ambient
-                      ? `Сухая банка ${recipe.storageDays} дн.`
-                      : recipe.freezable
-                        ? "Морозилка"
-                        : `Холодильник ${recipe.storageDays} дн.`}
-                  </span>
-                  {recipe.localization.fit !== "familiar" && (
-                    <span>
-                      {recipe.localization.fit === "adapted"
-                        ? "Адаптирован"
-                        : "Нишевый вкус"}
-                    </span>
-                  )}
-                </div>
-                <span className="round-arrow">
-                  <Icon name="chevron" />
-                </span>
+                {filter.label}
+                <Icon name="close" size={13} />
               </button>
-            );
-          })}
+            ))}
+            {(Object.keys(catalogPropertyLabels) as CatalogProperty[])
+              .filter((property) => !state.properties.includes(property))
+              .map((property) => (
+                <button
+                  key={property}
+                  className="chip"
+                  role="checkbox"
+                  aria-checked={false}
+                  onClick={() =>
+                    onState({
+                      ...state,
+                      properties: [...state.properties, property],
+                    })
+                  }
+                >
+                  {catalogPropertyLabels[property]}
+                </button>
+              ))}
+          </div>
+        )}
+      </header>
+
+      <div className="catalog-scroll" ref={scrollRef}>
+        <div className="catalog-sort-row">
+          <span>{catalogSortLabels[state.sort]}</span>
+          {active.length > 0 && (
+            <button
+              className="btn btn-ghost"
+              onClick={() => onState({ ...emptyCatalogState, sort: state.sort })}
+            >
+              Сбросить
+            </button>
+          )}
         </div>
-      ) : (
-        <section className="catalog-empty glass-card">
-          <Icon name="search" />
-          <h3>Пока нет совпадений</h3>
-          <p>Смените время, сложность или приём пищи.</p>
-        </section>
+        {visible.length ? (
+          <div className="catalog-grid" aria-live="polite">
+            {visible.map((recipe, index) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                index={index}
+                plan={plan}
+                onOpen={() => onOpenRecipe(recipe)}
+              />
+            ))}
+          </div>
+        ) : (
+          <section className="catalog-empty glass-card">
+            <Icon name="search" />
+            <h3>Ничего с этими фильтрами</h3>
+            {active[0] ? (
+              <button
+                className="btn btn-secondary"
+                onClick={() => onState(active[0].clear())}
+              >
+                Снять «{active[0].label}»
+              </button>
+            ) : (
+              <p>В каталоге пока нет таких блюд.</p>
+            )}
+          </section>
+        )}
+      </div>
+
+      {filtersOpen && (
+        <Sheet
+          titleId="catalog-filters-title"
+          onClose={() => setFiltersOpen(false)}
+          className="catalog-filters-sheet glass"
+        >
+          <div className="sheet-head">
+            <h2 id="catalog-filters-title">Фильтры</h2>
+            <button
+              className="btn btn-ghost"
+              onClick={() => onState({ ...emptyCatalogState, sort: state.sort })}
+            >
+              Сбросить всё
+            </button>
+          </div>
+          <FilterGroup
+            label="Приём пищи"
+            options={(Object.keys(mealMeta) as MealSlot[]).map((value) => ({
+              value,
+              label: mealMeta[value].label,
+            }))}
+            value={state.slot}
+            onChange={(slot) => onState({ ...state, slot })}
+          />
+          <FilterGroup
+            label="Время"
+            options={(["quick", "medium", "long"] as const).map((value) => ({
+              value,
+              label: catalogTimeLabels[value],
+            }))}
+            value={state.time}
+            onChange={(time) => onState({ ...state, time })}
+          />
+          <FilterGroup
+            label="Сколько действий"
+            options={(["low", "high"] as const).map((value) => ({
+              value,
+              label: catalogEffortLabels[value],
+            }))}
+            value={state.effort}
+            onChange={(effort) => onState({ ...state, effort })}
+          />
+          <fieldset className="filter-group">
+            <legend className="t-kicker">Свойства</legend>
+            <div className="chip-row">
+              {(Object.keys(catalogPropertyLabels) as CatalogProperty[]).map(
+                (property) => {
+                  const on = state.properties.includes(property);
+                  return (
+                    <button
+                      key={property}
+                      className="chip"
+                      role="checkbox"
+                      aria-checked={on}
+                      onClick={() =>
+                        onState({
+                          ...state,
+                          properties: on
+                            ? state.properties.filter((item) => item !== property)
+                            : [...state.properties, property],
+                        })
+                      }
+                    >
+                      {catalogPropertyLabels[property]}
+                    </button>
+                  );
+                },
+              )}
+            </div>
+          </fieldset>
+          <button
+            className="btn btn-primary catalog-filters-apply"
+            onClick={() => setFiltersOpen(false)}
+          >
+            Показать {withPlural(visible.length, FORMS.recipe)}
+          </button>
+        </Sheet>
       )}
     </section>
+  );
+}
+
+function FilterGroup<T extends string>({
+  label,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  options: { value: T; label: string }[];
+  value: T | null;
+  onChange: (value: T | null) => void;
+}) {
+  return (
+    <fieldset className="filter-group" role="radiogroup" aria-label={label}>
+      <legend className="t-kicker">{label}</legend>
+      <div className="chip-row">
+        {options.map((option) => {
+          const on = value === option.value;
+          return (
+            <button
+              key={option.value}
+              className="chip"
+              role="radio"
+              aria-checked={on}
+              onClick={() => onChange(on ? null : option.value)}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
+function RecipeCard({
+  recipe,
+  index,
+  plan,
+  onOpen,
+}: {
+  recipe: Recipe;
+  index: number;
+  plan: ActivePlan | null;
+  onOpen: () => void;
+}) {
+  const photo =
+    recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
+  const missing = missingCountFor(recipe, plan);
+  const batchNumber = batchNumberFor(recipe, plan);
+  return (
+    <button className="recipe-card" onClick={onOpen}>
+      <div className={`recipe-media art-${index % 5}`}>
+        {photo ? (
+          // Фото рецепта — удалённый ассет источника, не сборочная картинка.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={photo}
+            alt=""
+            loading="lazy"
+            referrerPolicy="no-referrer"
+          />
+        ) : (
+          <span aria-hidden>{recipe.emoji}</span>
+        )}
+        {batchNumber && (
+          <span className="recipe-batch-badge">в партии {batchNumber}</span>
+        )}
+        <span className="recipe-kcal">{recipe.macros.kcal} ккал</span>
+      </div>
+      <div className="recipe-body">
+        <h2>{recipe.title}</h2>
+        <p className="recipe-meta">
+          {recipe.time} мин · {recipe.servingWeight} г · Б {recipe.macros.protein}
+        </p>
+        <div className="recipe-chips">
+          {missing !== null && (
+            <span className={`missing-badge ${missing ? "is-short" : "is-ready"}`}>
+              докупить {missing}
+            </span>
+          )}
+          <span className="recipe-chip">{propertyChipFor(recipe, plan)}</span>
+        </div>
+      </div>
+    </button>
   );
 }
 
