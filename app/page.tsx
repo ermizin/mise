@@ -23,6 +23,16 @@ import {
   type RecipeFamily,
 } from "@/domain/recipe-engine";
 import {
+  mealOccurrenceKey,
+  moveOccurrence,
+  normalizeMealExecution,
+  reconcileMealExecution,
+  toggleBaseEaten,
+  toggleMovedEaten,
+  type MealExecution,
+  type MealMove,
+} from "@/domain/meal-execution";
+import {
   ACTIVITY_FACTORS,
   NUTRITION_CONFIG,
   calculateMealPlanTargets,
@@ -169,6 +179,15 @@ type ActivePlan = {
   pinnedSelectionKeys?: string[];
   tuning?: Record<string, RecipeTuning>;
   shopping: ShoppingItem[];
+  mealExecution?: MealExecution;
+};
+type WeekMealRow = {
+  key: string;
+  kind: "base" | "moved";
+  slot: MealSlot;
+  recipe: Recipe;
+  sourceBatch: Batch;
+  move?: MealMove;
 };
 type RecipeContext = {
   recipe: Recipe;
@@ -3807,6 +3826,15 @@ function totalPlanPortions(plan: ActivePlan) {
 const recipesById = Object.fromEntries(
   recipes.map((recipe) => [recipe.id, recipe]),
 ) as Record<string, Recipe>;
+const executionRecipeStorage = Object.fromEntries(
+  recipes.map((recipe) => [
+    recipe.id,
+    { storageDays: recipe.storageDays, freezable: recipe.freezable },
+  ]),
+);
+function executionPlanFor(plan: ActivePlan) {
+  return { ...plan, recipeStorage: executionRecipeStorage };
+}
 const recipeFamiliesById = Object.fromEntries(
   recipes
     .map((recipe) => [recipe.id, recipeToFamily(recipe)] as const)
@@ -3907,6 +3935,13 @@ function formatDate(value: string, withWeekday = false) {
   })
     .format(parseDate(value))
     .replace(".", "");
+}
+function formatDayHeading(value: string) {
+  const label = new Intl.DateTimeFormat("ru-RU", {
+    weekday: "long",
+    day: "numeric",
+  }).format(parseDate(value));
+  return `${label.charAt(0).toUpperCase()}${label.slice(1)}`;
 }
 function round(value: number, digits = 0) {
   const factor = 10 ** digits;
@@ -4244,6 +4279,9 @@ function notificationPlanFor(plan: ActivePlan): NotificationPlan {
 function selectionKey(batch: Batch, slot: MealSlot) {
   return `${batch.id}:${slot}`;
 }
+function mealExecutionFor(plan: ActivePlan): MealExecution {
+  return normalizeMealExecution(executionPlanFor(plan), plan.mealExecution);
+}
 function tuningKey(batch: Batch, slot: MealSlot, person: Person) {
   return `${batch.id}:${slot}:${person.id}`;
 }
@@ -4474,7 +4512,7 @@ function normalizePerson(person: Person): Person {
   };
 }
 function normalizePlan(plan: ActivePlan): ActivePlan {
-  return {
+  const normalized = {
     ...plan,
     pinnedSelectionKeys: Array.isArray(plan.pinnedSelectionKeys)
       ? plan.pinnedSelectionKeys.filter(
@@ -4492,6 +4530,13 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
         checkLabel: packagedIngredientIds.has(item.id),
       };
     }),
+  };
+  return {
+    ...normalized,
+    mealExecution: normalizeMealExecution(
+      executionPlanFor(normalized),
+      plan.mealExecution,
+    ),
   };
 }
 function groupedShopping(items: ShoppingItem[]) {
@@ -4738,10 +4783,10 @@ export default function Home() {
   const currentTitle = titles[tab as Exclude<Tab, "builder">];
   return (
     <main className={`app-shell${tab === "recipes" ? " is-catalog" : ""}`}>
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <div className="ambient ambient-three" />
-      {tab !== "recipes" && (
+      <div className="app-bg" aria-hidden />
+      {tab !== "recipes" &&
+        tab !== "profile" &&
+        (tab !== "week" || !activePlan) && (
       <header className="app-header">
         <div>
           <p className="kicker">{currentTitle.kicker}</p>
@@ -4767,6 +4812,18 @@ export default function Home() {
           onEditPeriod={editPeriod}
           onEditMenu={editDayMenu}
           onOpenRecipe={setRecipeContext}
+          onOpenProfile={() => navigate("profile")}
+          onChange={async (next) => {
+            const previous = activePlan;
+            setActivePlan(next);
+            try {
+              await persistPlan(next);
+              return true;
+            } catch {
+              if (previous) setActivePlan(previous);
+              return false;
+            }
+          }}
           onOpenGuide={() => {
             setOnboardingReturnTab("week");
             setOnboardingStep("rules");
@@ -4830,7 +4887,11 @@ export default function Home() {
           />
         </Sheet>
       )}
-      <BottomNav tab={tab} onNavigate={navigate} />
+      <BottomNav
+        tab={tab}
+        onNavigate={navigate}
+        showCompose={!activePlan}
+      />
     </main>
   );
 }
@@ -5619,9 +5680,11 @@ function InstallInline() {
 function BottomNav({
   tab,
   onNavigate,
+  showCompose,
 }: {
   tab: Tab;
   onNavigate: (tab: Tab) => void;
+  showCompose: boolean;
 }) {
   const items: {
     id: Exclude<Tab, "builder">;
@@ -5636,14 +5699,16 @@ function BottomNav({
   ];
   return (
     <>
-      <button
-        className="compose-fab"
-        onClick={() => onNavigate("builder")}
-        aria-label="Составить план"
-      >
-        <Icon name="plus" />
-        <small>Составить</small>
-      </button>
+      {showCompose && (
+        <button
+          className="compose-fab"
+          onClick={() => onNavigate("builder")}
+          aria-label="Составить план"
+        >
+          <Icon name="plus" />
+          <small>Составить</small>
+        </button>
+      )}
       <nav className="bottom-nav glass" aria-label="Основная навигация">
         {items.map((item) => (
           <button
@@ -5725,6 +5790,8 @@ function WeekScreen({
   onEditPeriod,
   onEditMenu,
   onOpenRecipe,
+  onOpenProfile,
+  onChange,
   onOpenGuide,
 }: {
   plan: ActivePlan | null;
@@ -5735,6 +5802,8 @@ function WeekScreen({
   onEditPeriod: () => void;
   onEditMenu: (batchId: string) => void;
   onOpenRecipe: (context: RecipeContext) => void;
+  onOpenProfile: () => void;
+  onChange: (plan: ActivePlan) => Promise<boolean>;
   onOpenGuide: () => void;
 }) {
   const today = isoDate(new Date());
@@ -5752,6 +5821,14 @@ function WeekScreen({
           .map((item) => item.id),
   );
   const [cookingConfirmError, setCookingConfirmError] = useState(false);
+  const [executionError, setExecutionError] = useState("");
+  const [savingExecution, setSavingExecution] = useState(false);
+  const [lastMove, setLastMove] = useState<{
+    token: string;
+    previousPlan: ActivePlan;
+    title: string;
+    toDate: string;
+  } | null>(null);
   const stripRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     stripRef.current
@@ -5759,9 +5836,14 @@ function WeekScreen({
       ?.scrollIntoView({
         inline: "center",
         block: "nearest",
-        behavior: "smooth",
+        behavior: "auto",
       });
   }, [selectedDate]);
+  useEffect(() => {
+    if (!lastMove) return;
+    const timer = window.setTimeout(() => setLastMove(null), 5_000);
+    return () => window.clearTimeout(timer);
+  }, [lastMove]);
   if (loading)
     return (
       <section className="loading-card glass-card">
@@ -5805,56 +5887,230 @@ function WeekScreen({
   const dayIndex = daysInclusive(batch.start, selectedDate) - 1;
   const person =
     plan.people.find((item) => item.id === personId) ?? plan.people[0];
-  const dayMeals = plan.mealSlots.flatMap((slot) => {
-    const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
-    return recipe ? [{ slot, recipe }] : [];
-  });
-  const contactWarnings = crossContactWarnings(plan, batch);
-  const plannedMacros = addMacros(
-    dayMeals
-      .filter(({ slot }) => person?.includedSlots.includes(slot))
-      .map(
-        ({ slot, recipe }) =>
-          portionFor(
-            person,
-            slot,
-            recipe,
-            plan.tuning?.[tuningKey(batch, slot, person)],
-          ).actual,
-      ),
+  if (!person)
+    return (
+      <EmptyState
+        onBuild={onBuild}
+        title="Добавьте человека в план"
+        text="Чтобы показать порции и цели на день, Mise нужен хотя бы один участник."
+      />
+    );
+  const execution = mealExecutionFor(activePlan);
+  const movedSources = new Set(
+    execution.moves.map((move) =>
+      mealOccurrenceKey(move.personId, move.fromDate, move.slot),
+    ),
   );
+  function rowsFor(date: string): WeekMealRow[] {
+    const dateBatch = batchFor(date);
+    const baseRows = activePlan.mealSlots.flatMap((slot) => {
+      if (!person.includedSlots.includes(slot)) return [];
+      const key = mealOccurrenceKey(person.id, date, slot);
+      if (movedSources.has(key)) return [];
+      const recipe =
+        recipesById[activePlan.selections[selectionKey(dateBatch, slot)]];
+      return recipe
+        ? [{ key, kind: "base" as const, slot, recipe, sourceBatch: dateBatch }]
+        : [];
+    });
+    const movedRows = execution.moves.flatMap((move) => {
+      if (move.personId !== person.id || move.toDate !== date) return [];
+      const sourceBatch = activePlan.batches.find(
+        (item) => item.id === move.sourceBatchId,
+      );
+      const recipe = recipesById[move.recipeId];
+      return sourceBatch && recipe
+        ? [
+            {
+              key: `move:${move.id}`,
+              kind: "moved" as const,
+              slot: move.slot,
+              recipe,
+              sourceBatch,
+              move,
+            },
+          ]
+        : [];
+    });
+    return [...baseRows, ...movedRows].sort(
+      (left, right) =>
+        allMealSlots.indexOf(left.slot) - allMealSlots.indexOf(right.slot) ||
+        Number(left.kind === "moved") - Number(right.kind === "moved"),
+    );
+  }
+  const mealRows = rowsFor(selectedDate);
+  const portionForRow = (row: WeekMealRow) =>
+    portionFor(
+      person,
+      row.slot,
+      row.recipe,
+      activePlan.tuning?.[tuningKey(row.sourceBatch, row.slot, person)],
+    );
+  const rowIsEaten = (row: WeekMealRow) =>
+    row.kind === "moved"
+      ? Boolean(row.move?.wasEaten)
+      : execution.eaten.includes(row.key);
+  const plannedMacros = addMacros(
+    mealRows.map((row) => portionForRow(row).actual),
+  );
+  const eatenMacros = addMacros(
+    mealRows
+      .filter(rowIsEaten)
+      .map((row) => portionForRow(row).actual),
+  );
+  const eatenCount = mealRows.filter(rowIsEaten).length;
+  const remainingMacros = {
+    kcal: Math.max(0, person.daily.kcal - eatenMacros.kcal),
+    protein: Math.max(0, person.daily.protein - eatenMacros.protein),
+    fat: Math.max(0, person.daily.fat - eatenMacros.fat),
+    carbs: Math.max(0, person.daily.carbs - eatenMacros.carbs),
+  };
+  const ringCircumference = 2 * Math.PI * 44;
+  const ringProgress = Math.min(
+    1,
+    eatenMacros.kcal / Math.max(1, person.daily.kcal),
+  );
+  const contactWarnings = crossContactWarnings(plan, batch);
   const planEnded = today > plan.end;
   const notStarted = today < plan.start;
-  const todayBatch = planEnded || notStarted ? null : batchFor(today);
-  const cookToday = Boolean(todayBatch && todayBatch.start === today);
-  const nextCook = plan.batches.find((item) => item.start > today);
-  const daysToNextCook = nextCook
-    ? daysInclusive(today, nextCook.start) - 1
-    : 0;
+  const nextCook = plan.batches.find((item) => item.start > selectedDate);
   const tomorrow = addDays(today, 1);
   const thawTitles =
     planEnded || tomorrow > plan.end || tomorrow < plan.start
       ? []
-      : (() => {
-          const nextBatch = batchFor(tomorrow);
-          const index = daysInclusive(nextBatch.start, tomorrow) - 1;
-          return plan.mealSlots.flatMap((slot) => {
-            const recipe =
-              recipesById[activePlan.selections[selectionKey(nextBatch, slot)]];
-            return recipe && recipe.freezable && index + 1 > recipe.storageDays
-              ? [recipe.title]
-              : [];
+      : rowsFor(tomorrow)
+          .filter(
+            (row) =>
+              row.recipe.freezable &&
+              daysInclusive(row.sourceBatch.start, tomorrow) - 1 >=
+                row.recipe.storageDays,
+          )
+          .map((row) => row.recipe.title);
+  const tomorrowDate =
+    selectedDate < activePlan.end ? addDays(selectedDate, 1) : null;
+  const tomorrowRows = tomorrowDate ? rowsFor(tomorrowDate) : [];
+  const nextCookRecipes = nextCook
+    ? activePlan.mealSlots.flatMap((slot) => {
+        const recipe =
+          recipesById[activePlan.selections[selectionKey(nextCook, slot)]];
+        return recipe ? [{ slot, recipe }] : [];
+      })
+    : [];
+  const nextCookPortions = nextCook
+    ? nextCookRecipes.reduce(
+        (sum, { slot }) =>
+          sum +
+          activePlan.people.filter((item) => item.includedSlots.includes(slot))
+            .length *
+            nextCook.days,
+        0,
+      )
+    : 0;
+  const nextCookMinutes = nextCookRecipes.reduce(
+    (sum, { recipe }) => sum + recipe.time,
+    0,
+  );
+  const macroRows: {
+    key: "protein" | "fat" | "carbs";
+    label: string;
+  }[] = [
+    { key: "protein", label: "Белки" },
+    { key: "fat", label: "Жиры" },
+    { key: "carbs", label: "Углеводы" },
+  ];
+  function moveBlockReason(row: WeekMealRow) {
+    if (selectedDate >= activePlan.end) return "Это последний день плана";
+    const targetDate = addDays(selectedDate, 1);
+    const targetIndex = daysInclusive(row.sourceBatch.start, targetDate) - 1;
+    if (!row.recipe.freezable && targetIndex >= row.recipe.storageDays)
+      return "Эта порция не хранится до завтра и не подходит для заморозки";
+    return null;
+  }
+  async function saveExecution(
+    nextExecution: MealExecution,
+    failureMessage: string,
+    undo?: { title: string; toDate: string },
+  ) {
+    const previousPlan = activePlan;
+    setSavingExecution(true);
+    setExecutionError("");
+    if (!undo) setLastMove(null);
+    const nextPlan = {
+      ...activePlan,
+      mealExecution: reconcileMealExecution(
+        executionPlanFor(activePlan),
+        nextExecution,
+      ),
+    };
+    const saved = await onChange(nextPlan);
+    setSavingExecution(false);
+    if (!saved) {
+      setExecutionError(failureMessage);
+      return false;
+    }
+    if (undo)
+      setLastMove({
+        token: crypto.randomUUID(),
+        previousPlan,
+        title: undo.title,
+        toDate: undo.toDate,
+      });
+    return true;
+  }
+  async function toggleEaten(row: WeekMealRow) {
+    const nextExecution =
+      row.kind === "moved" && row.move
+        ? toggleMovedEaten(executionPlanFor(activePlan), execution, row.move.id)
+        : toggleBaseEaten(executionPlanFor(activePlan), execution, {
+            personId: person.id,
+            date: selectedDate,
+            slot: row.slot,
           });
-        })();
-  const todayMealCount =
-    planEnded || notStarted
-      ? 0
-      : plan.mealSlots.filter(
-          (slot) =>
-            recipesById[
-              activePlan.selections[selectionKey(batchFor(today), slot)]
-            ],
-        ).length;
+    await saveExecution(
+      nextExecution,
+      "Отметка не сохранилась. Проверьте соединение и попробуйте ещё раз.",
+    );
+  }
+  async function moveToTomorrow(row: WeekMealRow) {
+    const reason = moveBlockReason(row);
+    if (reason) {
+      setExecutionError(reason);
+      return;
+    }
+    const toDate = addDays(selectedDate, 1);
+    const nextExecution = row.move
+      ? moveOccurrence(executionPlanFor(activePlan), execution, {
+          kind: "moved",
+          id: row.move.id,
+          toDate,
+        })
+      : moveOccurrence(executionPlanFor(activePlan), execution, {
+          kind: "base",
+          id: crypto.randomUUID(),
+          personId: person.id,
+          date: selectedDate,
+          slot: row.slot,
+          toDate,
+          createdAt: new Date().toISOString(),
+        });
+    await saveExecution(
+      nextExecution,
+      "Перенос не сохранился. Проверьте соединение и попробуйте ещё раз.",
+      { title: row.recipe.title, toDate },
+    );
+  }
+  async function undoMove() {
+    if (!lastMove) return;
+    setSavingExecution(true);
+    setExecutionError("");
+    const restored = await onChange(lastMove.previousPlan);
+    setSavingExecution(false);
+    if (restored) setLastMove(null);
+    else
+      setExecutionError(
+        "Не удалось вернуть порцию. Проверьте соединение и попробуйте ещё раз.",
+      );
+  }
   async function confirmBatch() {
     if (confirmedBatchIds.includes(batch.id)) return;
     setCookingConfirmError(false);
@@ -5865,6 +6121,27 @@ function WeekScreen({
   }
   return (
     <section className="screen week-screen">
+      <header className="week-screen-header">
+        <div>
+          <button
+            className="week-period-button"
+            onClick={onEditPeriod}
+            aria-label={`Изменить период ${formatDate(plan.start)} — ${formatDate(plan.end)}`}
+          >
+            {formatDate(plan.start)} — {formatDate(plan.end)} · партия{" "}
+            {batch.index + 1} из {plan.batches.length}
+            <Icon name="chevron" size={14} />
+          </button>
+          <h1>{formatDayHeading(selectedDate)}</h1>
+        </div>
+        <button
+          className="week-avatar glass-3"
+          onClick={onOpenProfile}
+          aria-label="Открыть профиль"
+        >
+          М
+        </button>
+      </header>
       {planEnded ? (
         <section className="today-card glass-card ended" role="status">
           <p className="kicker">План завершён</p>
@@ -5884,56 +6161,13 @@ function WeekScreen({
             </button>
           </div>
         </section>
-      ) : (
+      ) : notStarted ? (
         <section className="today-card glass-card" role="status">
-          <p className="kicker">
-            {notStarted
-              ? `План начнётся ${formatDate(plan.start)}`
-              : cookToday
-                ? "Сегодня — день готовки"
-                : "Сегодня"}
-          </p>
-          <h2>
-            {notStarted
-              ? "Пока ничего доставать не нужно"
-              : cookToday
-                ? `Готовим партию ${todayBatch!.index + 1} на ${todayBatch!.days} дн.`
-                : `${todayMealCount} ${todayMealCount === 1 ? "контейнер" : todayMealCount < 5 ? "контейнера" : "контейнеров"} из холодильника`}
-          </h2>
-          <button
-            className="period-summary-button"
-            onClick={onEditPeriod}
-            aria-label={`Изменить период ${formatDate(plan.start)} — ${formatDate(plan.end)}`}
-          >
-            <span>
-              {formatDate(plan.start)} — {formatDate(plan.end)}
-            </span>
-            <Icon name="chevron" className="soft-chevron" />
-          </button>
-          <p>
-            {nextCook
-              ? `Следующая готовка ${formatDate(nextCook.start)} — через ${daysToNextCook} ${daysToNextCook === 1 ? "день" : daysToNextCook < 5 ? "дня" : "дней"}.`
-              : "Это последняя партия периода."}
-          </p>
-          {thawTitles.length > 0 && (
-            <p className="today-thaw">
-              Вечером переложите в холодильник: {thawTitles.join(", ")}.
-            </p>
-          )}
-          {selectedDate !== clampDate(today, plan.start, plan.end) && (
-            <button
-              className="text-button"
-              onClick={() =>
-                setSelectedDate(
-                  clampDate(today, activePlan.start, activePlan.end),
-                )
-              }
-            >
-              Показать сегодняшний день
-            </button>
-          )}
+          <p className="kicker">План начнётся {formatDate(plan.start)}</p>
+          <h2>Пока ничего доставать не нужно</h2>
+          <p>Можно заранее проверить покупки и освободить место в морозилке.</p>
         </section>
-      )}
+      ) : null}
       <div
         className="date-strip"
         ref={stripRef}
@@ -5965,13 +6199,16 @@ function WeekScreen({
           );
         })}
       </div>
-      <section className="glass-card">
-        <div className="macro-top">
+      <section className="week-macro-card glass-card" aria-live="polite">
+        <div className="week-macro-head">
           <div>
-            <p className="kicker">Блюда из Mise на этот день</p>
-            <h2>{person.name}</h2>
+            <p className="kicker">План на день</p>
+            <b>
+              Съедено {eatenCount} из {withPlural(mealRows.length, FORMS.portion)}
+            </b>
           </div>
           <select
+            className="week-person-select"
             value={person.id}
             onChange={(event) => setPersonId(event.target.value)}
             aria-label="Выбрать человека"
@@ -5983,102 +6220,67 @@ function WeekScreen({
             ))}
           </select>
         </div>
-        <div className="macro-grid">
-          {(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => (
-            <div key={key}>
-              <span>{macroLabels[key]}</span>
-              <b>{plannedMacros[key]}</b>
-              <small>{key === "kcal" ? "ккал" : "г"}</small>
+        <div className="week-macro-body">
+          <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${person.daily.kcal} килокалорий`}>
+            <svg viewBox="0 0 100 100" aria-hidden>
+              <circle className="week-ring-track" cx="50" cy="50" r="44" />
+              <circle
+                className="week-ring-value"
+                cx="50"
+                cy="50"
+                r="44"
+                strokeDasharray={ringCircumference}
+                strokeDashoffset={ringCircumference * (1 - ringProgress)}
+              />
+            </svg>
+            <div>
+              <b>{eatenMacros.kcal}</b>
+              <small>/ {person.daily.kcal}</small>
             </div>
-          ))}
-        </div>
-        <DailyBalance
-          goal={person.daily}
-          planned={plannedMacros}
-          context="В выбранных блюдах"
-        />
-      </section>
-      <button
-        className="prep-callout glass-card"
-        onClick={() => setSelectedDate(batch.start)}
-        aria-label={`Открыть день готовки ${batch.index + 1}`}
-      >
-        <Icon name="pot" className="prep-icon" />
-        <div>
-          <p className="kicker">Готовка {batch.index + 1}</p>
-          <h3>
-            {formatDate(batch.start)} — {formatDate(batch.end)}
-          </h3>
-          <p>
-            {withPlural(batch.days, FORMS.day)} ·{" "}
-            {withPlural(dayMeals.length, FORMS.dish)}
-          </p>
-        </div>
-        <Icon name="chevron" className="soft-chevron" />
-      </button>
-      {contactWarnings.length > 0 && (
-        <section className="allergy-warning glass-card" role="alert">
-          <span>!</span>
-          <div>
-            <h3>Риск перекрёстного контакта</h3>
-            <p>
-              В этой общей готовке есть: {contactWarnings
-                .map(
-                  ({ person: eater, allergen }) =>
-                    `${allergenMeta[allergen].short.toLowerCase()} — нельзя ${eater.name}`,
-                )
-                .join("; ")}. Разделите инвентарь, поверхности и порядок
-              готовки.
-            </p>
           </div>
-        </section>
-      )}
-      <button
-        className={`cooking-confirm-button glass-card ${confirmedBatchIds.includes(batch.id) ? "confirmed" : ""}`}
-        disabled={confirmedBatchIds.includes(batch.id)}
-        onClick={() => void confirmBatch()}
-      >
-        <span>
-          {confirmedBatchIds.includes(batch.id) ? (
-            <Icon name="check" />
+          <div className="week-macro-bars">
+            {macroRows.map(({ key, label }) => (
+              <div className={`week-macro-row macro-${key}`} key={key}>
+                <p>
+                  <span>{label}</span>
+                  <b>
+                    {eatenMacros[key]} / {person.daily[key]}
+                  </b>
+                </p>
+                <span className="macro-bar">
+                  <i
+                    style={{
+                      width: `${Math.min(100, (eatenMacros[key] / Math.max(1, person.daily[key])) * 100)}%`,
+                    }}
+                  />
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="week-balance glass-3">
+          {eatenCount === 0 ? (
+            <>
+              В плане Mise на этот день <b>{plannedMacros.kcal} ккал</b>.
+              Отмечайте съеденные порции — кольцо покажет факт.
+            </>
           ) : (
-            <Icon name="pot" />
+            <>
+              До дневного ориентира останется <b>≈ {remainingMacros.kcal} ккал</b>:
+              {` ${remainingMacros.protein} Б · ${remainingMacros.fat} Ж · ${remainingMacros.carbs} У`}.
+            </>
           )}
-        </span>
-        <div>
-          <b>
-            {confirmedBatchIds.includes(batch.id)
-              ? "Партия отмечена приготовленной"
-              : "Отметить, что партия приготовлена"}
-          </b>
-          <small>
-            Только это подтверждение засчитывается как реальная готовка
-          </small>
-        </div>
-      </button>
-      {cookingConfirmError && (
-        <Note tone="warn" role="alert">
-          Не удалось сохранить отметку о готовке. Проверьте соединение и
-          попробуйте ещё раз.
-        </Note>
-      )}
-      <button className="tutorial-entry glass-card" onClick={onOpenGuide}>
-        <span>
-          <Icon name="label" />
-        </span>
-        <div>
-          <b>Как готовить партиями</b>
-          <small>Пять правил и чек-лист перед готовкой</small>
-        </div>
-        <Icon name="chevron" className="entry-chevron" />
-      </button>
-      <div className="section-heading">
+        </p>
+      </section>
+      <div className="week-day-heading">
         <div>
           <p className="kicker">
-            {formatDate(selectedDate, true)} · день {dayIndex + 1} из{" "}
-            {batch.days}
+            {selectedDate === today ? "Сегодня" : formatDate(selectedDate, true)} ·
+            {selectedDate === batch.start
+              ? " день готовки"
+              : ` день ${dayIndex + 1} из ${batch.days}`}
           </p>
-          <h2>Меню дня</h2>
+          <h2>Порции на день</h2>
         </div>
         <button
           className="text-button"
@@ -6088,50 +6290,235 @@ function WeekScreen({
           Изменить
         </button>
       </div>
-      <div className="day-meals">
-        {dayMeals.map(({ slot, recipe }, index) => {
-          const portion = person?.includedSlots.includes(slot)
-            ? portionFor(
-                person,
-                slot,
-                recipe,
-                plan.tuning?.[tuningKey(batch, slot, person)],
-              )
+      <div className="week-execution-list" aria-busy={savingExecution}>
+        {mealRows.map((row, index) => {
+          const portion = portionForRow(row);
+          const eaten = rowIsEaten(row);
+          const photo =
+            row.recipe.provenance.kind === "parsed"
+              ? row.recipe.provenance.imageUrl
+              : undefined;
+          const movedFrom = row.move
+            ? `Перенесено с ${formatDate(row.move.fromDate, true)}`
             : null;
-          const left = batch.days - dayIndex;
-          const prepStatus =
-            dayIndex === 0
-              ? selectedDate === today
-                ? "Готовить сегодня"
-                : "День готовки"
-              : `Разогреть · осталось ${left} ${left === 1 ? "контейнер" : left < 5 ? "контейнера" : "контейнеров"}`;
+          const frozen =
+            row.recipe.freezable &&
+            daysInclusive(row.sourceBatch.start, selectedDate) - 1 >=
+              row.recipe.storageDays;
+          const moveReason = moveBlockReason(row);
           return (
-            <button
-              className="week-meal glass-card"
-              key={`${slot}-${recipe.id}`}
-              onClick={() => onOpenRecipe({ recipe, batch, slot, plan })}
+            <article
+              className={`week-execution-row glass-card${eaten ? " is-eaten" : ""}`}
+              key={row.key}
             >
-              <div className={`food-art art-${index % 5}`}>
-                <span>{recipe.emoji}</span>
-                <small>{mealMeta[slot].label}</small>
-              </div>
-              <div className="week-meal-copy">
-                <p className="kicker">{prepStatus}</p>
-                <h3>{recipe.title}</h3>
-                {portion ? (
-                  <p>
-                    {portion.actual.kcal} ккал · {portion.actual.protein} Б ·
-                    около {portion.grams} г
-                  </p>
+              <button
+                className="week-eaten-check"
+                role="checkbox"
+                aria-checked={eaten}
+                aria-label={`${eaten ? "Снять отметку «съедено»" : "Отметить съеденным"}: ${row.recipe.title}`}
+                disabled={savingExecution}
+                onClick={() => void toggleEaten(row)}
+              >
+                {eaten && <Icon name="check" size={17} />}
+              </button>
+              <div className={`week-meal-thumb art-${index % 5}`}>
+                {photo ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={photo}
+                    alt=""
+                    loading="lazy"
+                    referrerPolicy="no-referrer"
+                  />
                 ) : (
-                  <p>Не входит в меню {person.name}</p>
+                  <span>{row.recipe.emoji}</span>
                 )}
               </div>
-              <Icon name="chevron" className="soft-chevron" />
-            </button>
+              <button
+                className="week-meal-open"
+                onClick={() =>
+                  onOpenRecipe({
+                    recipe: row.recipe,
+                    batch: row.sourceBatch,
+                    slot: row.slot,
+                    plan: activePlan,
+                  })
+                }
+                aria-label={`Открыть рецепт ${row.recipe.title}`}
+              >
+                <span className="week-meal-topline">
+                  <span>{movedFrom ?? mealMeta[row.slot].label}</span>
+                  <b>{portion.actual.kcal} ккал</b>
+                </span>
+                <strong>{row.recipe.title}</strong>
+                <small>
+                  {portion.grams} г · Б{portion.actual.protein} Ж{portion.actual.fat}{" "}
+                  У{portion.actual.carbs}
+                </small>
+                {frozen && (
+                  <span className="week-freeze-badge">
+                    <Icon name="snowflake" size={14} /> разморозить накануне
+                  </span>
+                )}
+              </button>
+              <button
+                className="week-move-button"
+                disabled={savingExecution || Boolean(moveReason)}
+                title={moveReason ?? undefined}
+                aria-label={
+                  moveReason
+                    ? `${row.recipe.title}: ${moveReason}`
+                    : `Перенести ${row.recipe.title} на завтра`
+                }
+                onClick={() => void moveToTomorrow(row)}
+              >
+                <Icon name="chevron" size={18} />
+              </button>
+            </article>
           );
         })}
       </div>
+      {mealRows.length === 0 && (
+        <p className="week-no-portions glass-3">
+          На этот день порций нет: они перенесены или не входят в меню {person.name}.
+        </p>
+      )}
+      {tomorrowDate && (
+        <section className="week-tomorrow-card glass-card">
+          <div>
+            <h2>
+              {selectedDate === today
+                ? `Завтра, ${new Intl.DateTimeFormat("ru-RU", { weekday: "long" }).format(parseDate(tomorrowDate))}`
+                : formatDate(tomorrowDate, true)}
+            </h2>
+            <b>{withPlural(tomorrowRows.length, FORMS.portion)}</b>
+          </div>
+          <p>
+            {tomorrowRows.map((row) => (
+              <span
+                className={row.kind === "moved" ? "is-moved" : undefined}
+                key={row.key}
+              >
+                {row.recipe.title}
+              </span>
+            ))}
+          </p>
+        </section>
+      )}
+      {thawTitles.length > 0 && (
+        <Note
+          tone="mint"
+          icon={<Icon name="snowflake" />}
+          label="Разморозка на завтра"
+          role="status"
+        >
+          Вечером переложите в холодильник: {thawTitles.join(", ")}.
+        </Note>
+      )}
+      {executionError && (
+        <Note tone="warn" role="alert" label="Изменение не сохранено">
+          {executionError}
+        </Note>
+      )}
+      {nextCook && (
+        <button
+          className="week-next-cook glass-card"
+          onClick={() => setSelectedDate(nextCook.start)}
+          aria-label={`Открыть следующую готовку ${nextCook.index + 1}`}
+        >
+          <div>
+            <p>Следующая готовка</p>
+            <h3>
+              Партия {nextCook.index + 1} — {formatDate(nextCook.start, true)}
+            </h3>
+            <small>
+              {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
+              {withPlural(nextCookPortions, FORMS.portion)} · ~{nextCookMinutes}{" "}
+              мин
+            </small>
+          </div>
+          <Icon name="chevron" className="soft-chevron" />
+        </button>
+      )}
+      <div className="week-operation-stack">
+        {contactWarnings.length > 0 && (
+          <section className="allergy-warning glass-card" role="alert">
+            <span>!</span>
+            <div>
+              <h3>Риск перекрёстного контакта</h3>
+              <p>
+                В этой общей готовке есть:{" "}
+                {contactWarnings
+                  .map(
+                    ({ person: eater, allergen }) =>
+                      `${allergenMeta[allergen].short.toLowerCase()} — нельзя ${eater.name}`,
+                  )
+                  .join("; ")}. Разделите инвентарь, поверхности и порядок
+                готовки.
+              </p>
+            </div>
+          </section>
+        )}
+        <button
+          className={`cooking-confirm-button glass-card ${confirmedBatchIds.includes(batch.id) ? "confirmed" : ""}`}
+          disabled={confirmedBatchIds.includes(batch.id)}
+          onClick={() => void confirmBatch()}
+        >
+          <span>
+            {confirmedBatchIds.includes(batch.id) ? (
+              <Icon name="check" />
+            ) : (
+              <Icon name="pot" />
+            )}
+          </span>
+          <div>
+            <b>
+              {confirmedBatchIds.includes(batch.id)
+                ? "Партия отмечена приготовленной"
+                : "Отметить, что партия приготовлена"}
+            </b>
+            <small>
+              Только это подтверждение засчитывается как реальная готовка
+            </small>
+          </div>
+        </button>
+        {cookingConfirmError && (
+          <Note tone="warn" role="alert">
+            Не удалось сохранить отметку о готовке. Проверьте соединение и
+            попробуйте ещё раз.
+          </Note>
+        )}
+        <button className="tutorial-entry glass-card" onClick={onOpenGuide}>
+          <span>
+            <Icon name="label" />
+          </span>
+          <div>
+            <b>Как готовить партиями</b>
+            <small>Пять правил и чек-лист перед готовкой</small>
+          </div>
+          <Icon name="chevron" className="entry-chevron" />
+        </button>
+      </div>
+      {selectedDate !== clampDate(today, plan.start, plan.end) && (
+        <button
+          className="text-button week-today-button"
+          onClick={() =>
+            setSelectedDate(clampDate(today, activePlan.start, activePlan.end))
+          }
+        >
+          Показать сегодняшний день
+        </button>
+      )}
+      {lastMove && (
+        <div className="execution-toast glass-1" role="status">
+          <span>
+            {lastMove.title} → {formatDate(lastMove.toDate, true)}
+          </span>
+          <button disabled={savingExecution} onClick={() => void undoMove()}>
+            Вернуть
+          </button>
+        </div>
+      )}
     </section>
   );
 }
@@ -6789,109 +7176,197 @@ function ProfileScreen({
   onOpenPrepGuide: () => void;
   onNotifications: () => void;
 }) {
+  const profileMacroRows = [
+    { key: "protein", label: "Белки" },
+    { key: "fat", label: "Жиры" },
+    { key: "carbs", label: "Углеводы" },
+  ] as const;
+  const profileGoalLabels: Record<NutritionGoal, string> = {
+    maintenance: "Поддержание",
+    loss: "Дефицит",
+    gain: "Набор",
+  };
   return (
     <section className="screen profile-screen">
-      <section className="profile-hero glass-card">
-        <div className="large-avatar">М</div>
-        <div>
-          <p className="kicker">Ваше пространство</p>
-          <h2>
-            {people.length} {people.length === 1 ? "человек" : "человека"}
-          </h2>
-          <p>Цели используются для расчёта каждой порции.</p>
-        </div>
-      </section>
-      <div className="section-heading">
-        <div>
-          <p className="kicker">Участники плана</p>
-          <h2>КБЖУ и блюда</h2>
-        </div>
-        <button
-          className="text-button"
-          aria-label="Настроить людей и цели"
-          onClick={onConfigure}
-        >
-          Настроить
-        </button>
-      </div>
-      {people.map((person, index) => {
-        const planned = plannedTargetsFor(person);
-        const difference = macroDifference(person.daily, planned);
-        const positionLabel =
-          person.includedSlots.length === 1
-            ? "позиция"
-            : person.includedSlots.length < 5
-              ? "позиции"
-              : "позиций";
-        return (
-          <section className="person-summary glass-card" key={person.id}>
-            <div className={`person-dot tone-${index}`}>
-              {person.name.slice(0, 1)}
-            </div>
-            <div className="person-main">
-              <h3>{person.name}</h3>
-              <p>
+      <header className="profile-header">
+        <p className="kicker">
+          Профиль · {people.length}{" "}
+          {people.length === 1 ? "человек" : "человека"}
+        </p>
+        <h1>Цели и порции</h1>
+      </header>
+      <div className="profile-people-list">
+        {people.map((person, index) => {
+          const planned = plannedTargetsFor(person);
+          const difference = macroDifference(person.daily, planned);
+          const positionLabel =
+            person.includedSlots.length === 1
+              ? "позиция"
+              : person.includedSlots.length < 5
+                ? "позиции"
+                : "позиций";
+          const goalLabel = person.estimate
+            ? profileGoalLabels[person.estimate.goal]
+            : "Своя цель";
+          const slotsLabel = person.includedSlots
+            .map((slot) => mealMeta[slot].label.toLowerCase())
+            .join(", ");
+          const maxMacroGrams = Math.max(
+            person.daily.protein,
+            person.daily.fat,
+            person.daily.carbs,
+            1,
+          );
+          return (
+            <section
+              className={`person-summary profile-person-card glass-card${index === 0 ? " person-summary-primary" : ""}`}
+              key={person.id}
+            >
+              <div className="profile-person-head">
+                <div className={`person-dot tone-${index} profile-person-avatar`}>
+                  {person.name.slice(0, 1).toUpperCase() || "Я"}
+                </div>
+                <div className="profile-person-copy">
+                  <h3>{person.name}</h3>
+                  <p>
+                    {goalLabel} · {slotsLabel || "позиции не выбраны"}
+                  </p>
+                </div>
+                <button
+                  className="text-button profile-edit"
+                  aria-label={`Изменить цели и порции: ${person.name}`}
+                  onClick={onConfigure}
+                >
+                  Изменить
+                </button>
+              </div>
+              {index === 0 ? (
+                <div className="profile-macro-focus">
+                  <div
+                    className="profile-kcal-ring"
+                    aria-label={`${person.daily.kcal} килокалорий в день`}
+                  >
+                    <b>{person.daily.kcal}</b>
+                    <small>ккал в день</small>
+                  </div>
+                  <div className="profile-bars">
+                    {profileMacroRows.map(({ key, label }) => (
+                      <div className={`profile-bar macro-${key}`} key={key}>
+                        <p>
+                          <span>{label}</span>
+                          <b>{person.daily[key]} г</b>
+                        </p>
+                        <i>
+                          <span
+                            style={{
+                              width: `${Math.max(18, Math.round((person.daily[key] / maxMacroGrams) * 100))}%`,
+                            }}
+                          />
+                        </i>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="profile-compact-macros">
+                  <div>
+                    <b>{person.daily.kcal} ккал</b>
+                    <small>
+                      Б {person.daily.protein} · Ж {person.daily.fat} · У{" "}
+                      {person.daily.carbs}
+                    </small>
+                  </div>
+                  <span className="profile-mini-columns" aria-hidden>
+                    <i className="macro-protein" />
+                    <i className="macro-fat" />
+                    <i className="macro-carbs" />
+                  </span>
+                </div>
+              )}
+              <p className="profile-plan-summary">
                 {person.includedSlots.length} {positionLabel} из Mise ·{" "}
                 {difference.kcal > 50
-                  ? `ещё ≈ ${difference.kcal} ккал`
+                  ? `ещё ≈ ${difference.kcal} ккал вне плана`
                   : difference.kcal < -50
                     ? `выше цели на ≈ ${Math.abs(difference.kcal)} ккал`
                     : "цель примерно закрыта"}
               </p>
-              <div className="mini-macros">
-                {(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map(
-                  (key) => (
-                    <span key={key}>
-                      <b>{person.daily[key]}</b> {macroLabels[key]}
-                    </span>
-                  ),
-                )}
-              </div>
               {(person.hardExclusions?.length ?? 0) > 0 && (
-                <small className="hard-summary">
-                  Нельзя: {person.hardExclusions
-                    ?.map((allergen) => allergenMeta[allergen].short.toLowerCase())
-                    .join(", ")}
-                </small>
+                <div
+                  className="profile-exclusion-chips"
+                  aria-label={`Жёсткие исключения: ${person.name}`}
+                >
+                  {person.hardExclusions?.map((allergen) => (
+                    <span key={allergen}>
+                      Нельзя: {allergenMeta[allergen].short.toLowerCase()}
+                    </span>
+                  ))}
+                </div>
               )}
-            </div>
-          </section>
-        );
-      })}
+            </section>
+          );
+        })}
+      </div>
+      <button
+        className="profile-add-person"
+        aria-label="Настроить людей и цели"
+        onClick={onConfigure}
+      >
+        <span>
+          <b>Добавить человека</b>
+          <small>Порции и покупки пересчитаются</small>
+        </span>
+        <span className="profile-add-person-icon" aria-hidden>
+          +
+        </span>
+      </button>
       <InstallInline />
-      {hasPlan && (
+      <section
+        className="profile-settings-list glass-card"
+        aria-label="Настройки и помощь"
+      >
+        {hasPlan && (
+          <button
+            className="tutorial-entry profile-setting-row notification-entry"
+            onClick={onNotifications}
+          >
+            <span>
+              <Icon name="bell" />
+            </span>
+            <div>
+              <b>Напоминания</b>
+              <small>Время готовки, покупок и разморозки</small>
+            </div>
+            <Icon name="chevron" className="entry-chevron" />
+          </button>
+        )}
         <button
-          className="tutorial-entry notification-entry glass-card"
-          onClick={onNotifications}
+          className="tutorial-entry profile-setting-row"
+          onClick={onOpenTutorial}
         >
-          <Icon name="bell" />
+          <span>
+            <Icon name="info" />
+          </span>
           <div>
-            <b>Напоминания</b>
-            <small>Время готовки, покупок и разморозки</small>
+            <b>Как работает Mise</b>
+            <small>Ещё раз открыть короткий онбординг</small>
           </div>
           <Icon name="chevron" className="entry-chevron" />
         </button>
-      )}
-      <button className="tutorial-entry glass-card" onClick={onOpenTutorial}>
-        <span>
-          <Icon name="info" />
-        </span>
-        <div>
-          <b>Как работает Mise</b>
-          <small>Ещё раз открыть короткий онбординг</small>
-        </div>
-        <Icon name="chevron" className="entry-chevron" />
-      </button>
-      <button className="tutorial-entry glass-card" onClick={onOpenPrepGuide}>
-        <span>
-          <Icon name="pot" />
-        </span>
-        <div>
-          <b>Инструкция по милпрепу</b>
-          <small>Пять правил и чек-лист перед первой готовкой</small>
-        </div>
-        <Icon name="chevron" className="entry-chevron" />
-      </button>
+        <button
+          className="tutorial-entry profile-setting-row"
+          onClick={onOpenPrepGuide}
+        >
+          <span>
+            <Icon name="pot" />
+          </span>
+          <div>
+            <b>Инструкция по милпрепу</b>
+            <small>Пять правил и чек-лист перед первой готовкой</small>
+          </div>
+          <Icon name="chevron" className="entry-chevron" />
+        </button>
+      </section>
     </section>
   );
 }
@@ -7185,7 +7660,14 @@ function PlanBuilder({
       pinnedSelectionKeys: validPinned,
       shopping: [],
     };
-    return { ...base, shopping: buildShopping(base) };
+    return {
+      ...base,
+      mealExecution: reconcileMealExecution(
+        executionPlanFor(base),
+        initialPlan?.mealExecution,
+      ),
+      shopping: buildShopping(base),
+    };
   })();
   const steps = [
     "Период",
