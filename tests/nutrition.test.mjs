@@ -74,6 +74,35 @@ test("muscle priority uses 2 g/kg for maintenance and gain, and 2.2 g/kg for los
   assert.equal(nutrition.calculateMacroTargets(3000, weight, true, "loss").protein, 176);
 });
 
+test("a person can add a meal slot that was absent from the original plan", () => {
+  const people = [
+    { id: "one", name: "Маша", includedSlots: ["breakfast", "lunch", "dinner"] },
+    { id: "two", name: "Саша", includedSlots: ["breakfast", "lunch", "dinner"] },
+  ];
+  const result = nutrition.togglePersonMealSlot(
+    people,
+    ["breakfast", "lunch", "dinner"],
+    "two",
+    "snack2",
+  );
+
+  assert.equal(JSON.stringify(result.mealSlots), JSON.stringify(["breakfast", "lunch", "snack2", "dinner"]));
+  assert.equal(JSON.stringify(result.people[0].includedSlots), JSON.stringify(["breakfast", "lunch", "dinner"]));
+  assert.ok(result.people[1].includedSlots.includes("snack2"));
+});
+
+test("removing the last eater also removes that slot from the plan", () => {
+  const result = nutrition.togglePersonMealSlot(
+    [{ id: "one", includedSlots: ["breakfast", "snack2"] }],
+    ["breakfast", "snack2"],
+    "one",
+    "snack2",
+  );
+
+  assert.equal(JSON.stringify(result.mealSlots), JSON.stringify(["breakfast"]));
+  assert.equal(JSON.stringify(result.people[0].includedSlots), JSON.stringify(["breakfast"]));
+});
+
 test("macro presets and custom recalculation never exceed target calories", () => {
   for (const preset of ["balanced", "protein", "carbs", "fat"]) {
     const result = nutrition.macrosForCalories(2001, preset);

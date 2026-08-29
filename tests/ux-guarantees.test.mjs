@@ -52,6 +52,18 @@ test("automatic and manual goals are both durable", async () => {
   assert.match(page, /Ориентир|Ориентировочный/, "the estimate is framed as an orientation");
 });
 
+test("profile settings can add any standard meal slot", async () => {
+  const page = await read("app/page.tsx");
+  assert.match(
+    page,
+    /availableMealSlots=\{mode === "settings" \? allMealSlots : mealSlots\}/,
+    "settings expose all five standard slots, including snack2",
+  );
+  assert.match(page, /availableMealSlots\.map\(\(slot\) =>/);
+  assert.match(page, /onMealSlotToggle\(person\.id, slot\)/);
+  assert.match(page, /Выберите блюдо для нового приёма пищи/);
+});
+
 test("the interface stays legible", async () => {
   const [page, css, layout] = await Promise.all([read("app/page.tsx"), read("app/globals.css"), read("app/layout.tsx")]);
   const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
