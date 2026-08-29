@@ -202,6 +202,7 @@ type Recipe = {
   localization: RecipeLocalization;
 };
 type RecipeTuning = { protein: number; fat: number; carbs: number };
+type CookedWeights = Record<string, number>;
 type Person = {
   id: string;
   name: string;
@@ -245,6 +246,7 @@ type ActivePlan = {
   selectionAssignments?: Record<string, RecipeAssignment[]>;
   pinnedSelectionKeys?: string[];
   tuning?: Record<string, RecipeTuning>;
+  cookedWeights?: Record<string, CookedWeights>;
   shopping: ShoppingItem[];
   mealExecution?: MealExecution;
 };
@@ -292,6 +294,7 @@ type BuilderEntry = {
   flowId?: string;
   startedAt?: number;
   isNextPlan?: boolean;
+  addPerson?: boolean;
 };
 type BuilderDraft = {
   planId: string | null;
@@ -354,6 +357,8 @@ const reminderDefaultsKey = "mise-reminder-defaults-v1";
 const builderDraftKey = "mise-builder-draft-v3";
 const analyticsStoragePrefix = "mise-analytics-v1";
 const favoriteRecipesStorageKey = "mise-favorite-recipes-v1";
+const localPlanStoragePrefix = "mise-local-plan-v1";
+const pendingPlanStoragePrefix = "mise-pending-plan-v1";
 
 function storedFavoriteRecipeIds() {
   try {
@@ -4005,6 +4010,31 @@ function clientId() {
   localStorage.setItem(key, created);
   return created;
 }
+function localPlanKey(id = clientId()) {
+  return `${localPlanStoragePrefix}:${id}`;
+}
+function pendingPlanKey(id = clientId()) {
+  return `${pendingPlanStoragePrefix}:${id}`;
+}
+function storedLocalPlan(id = clientId()) {
+  try {
+    const raw = localStorage.getItem(localPlanKey(id));
+    return raw ? normalizePlan(JSON.parse(raw) as ActivePlan) : null;
+  } catch {
+    return null;
+  }
+}
+function storeLocalPlan(plan: ActivePlan, id = clientId()) {
+  localStorage.setItem(localPlanKey(id), JSON.stringify(plan));
+}
+function storedPendingPlan(id = clientId()) {
+  try {
+    const raw = localStorage.getItem(pendingPlanKey(id));
+    return raw ? (JSON.parse(raw) as ActivePlan) : null;
+  } catch {
+    return null;
+  }
+}
 function analyticsKey(kind: "id" | "sent", dedupeKey: string) {
   return `${analyticsStoragePrefix}:${kind}:${dedupeKey}`;
 }
@@ -4634,6 +4664,49 @@ function mealExecutionFor(plan: ActivePlan): MealExecution {
 function tuningKey(batch: Batch, slot: MealSlot, person: Person) {
   return `${batch.id}:${slot}:${person.id}`;
 }
+function cookedWeightsKey(batch: Batch, slot: MealSlot, recipeId: string) {
+  return `${batch.id}:${slot}:${recipeId}`;
+}
+function allocationPeopleForDish(
+  plan: ActivePlan,
+  batch: Batch,
+  slot: MealSlot,
+  recipe: Recipe,
+  personIds: string[],
+) {
+  const components = portionComponents(recipe);
+  return plan.people
+    .filter((person) => personIds.includes(person.id))
+    .map<PersonAllocation>((person) => {
+      const portion = portionFor(
+        person,
+        slot,
+        recipe,
+        plan.tuning?.[tuningKey(batch, slot, person)],
+      );
+      return {
+        personId: person.id,
+        label: person.name,
+        portionCount: batch.days,
+        nutritionShare: Math.max(1, portion.grams * batch.days),
+        componentShares: Object.fromEntries(
+          components.map((component) => [
+            component.id,
+            Math.max(
+              1,
+              component.ingredients.reduce(
+                (sum, ingredient) =>
+                  sum +
+                  ingredient.quantity *
+                    ingredientScaleFor(ingredient, portion),
+                0,
+              ) * batch.days,
+            ),
+          ]),
+        ),
+      };
+    });
+}
 function hardConflicts(recipe: Recipe, person: Person) {
   const forbidden = new Set(person.hardExclusions ?? []);
   return recipe.allergens.filter((allergen) => forbidden.has(allergen));
@@ -5137,6 +5210,9 @@ export default function Home() {
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [planSyncState, setPlanSyncState] = useState<
+    "synced" | "pending" | "error"
+  >("synced");
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
   const persistQueue = useRef<Promise<void>>(Promise.resolve());
   const currentTabRef = useRef<Tab>("week");
@@ -5220,6 +5296,14 @@ export default function Home() {
   /* eslint-disable react-hooks/set-state-in-effect -- bootstraps onboarding state and the stored plan on mount */
   useEffect(() => {
     let mounted = true;
+    const id = clientId();
+    const cachedPlan = storedLocalPlan(id);
+    const pendingPlan = storedPendingPlan(id);
+    if (cachedPlan) setActivePlan(cachedPlan);
+    if (pendingPlan) {
+      setActivePlan(normalizePlan(pendingPlan));
+      setPlanSyncState("pending");
+    }
     if (!localStorage.getItem(onboardingStorageKey))
       setOnboardingStep("welcome");
     if ("serviceWorker" in navigator)
@@ -5243,18 +5327,53 @@ export default function Home() {
       setTab("builder");
       void trackAnalytics("plan_create_started", { flowId });
     }
-    fetch("/api/plans", { headers: { "X-Mise-Client": clientId() } })
+    async function flushPendingPlan() {
+      const pending = storedPendingPlan(id);
+      if (!pending || !navigator.onLine) return;
+      try {
+        const response = await fetch("/api/plans", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Mise-Client": id,
+          },
+          body: JSON.stringify({ plan: pending }),
+        });
+        if (!response.ok) {
+          if (mounted) setPlanSyncState("error");
+          return;
+        }
+        const current = storedPendingPlan(id);
+        if (current && JSON.stringify(current) === JSON.stringify(pending)) {
+          localStorage.removeItem(pendingPlanKey(id));
+          if (mounted) setPlanSyncState("synced");
+        } else if (mounted) setPlanSyncState("pending");
+      } catch {
+        if (mounted) setPlanSyncState("pending");
+      }
+    }
+    window.addEventListener("online", flushPendingPlan);
+    void flushPendingPlan();
+    fetch("/api/plans", { headers: { "X-Mise-Client": id } })
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data: { plan?: ActivePlan | null }) => {
-        if (mounted && data.plan) {
-          setActivePlan(normalizePlan(data.plan));
+        if (mounted && data.plan && !storedPendingPlan(id)) {
+          const normalized = normalizePlan(data.plan);
+          setActivePlan(normalized);
+          try {
+            storeLocalPlan(normalized, id);
+          } catch {
+            // The server result remains usable for this session.
+          }
           void trackAnalytics("saved_plan_reopened");
         }
       })
       .catch(() => {
-        if (mounted) {
+        if (mounted && !cachedPlan && !pendingPlan) {
           setLoadError(true);
           void trackAnalytics("blocking_error", { errorCode: "plan_load" });
+        } else if (mounted) {
+          setPlanSyncState(navigator.onLine ? "error" : "pending");
         }
       })
       .finally(() => {
@@ -5262,26 +5381,60 @@ export default function Home() {
       });
     return () => {
       mounted = false;
+      window.removeEventListener("online", flushPendingPlan);
     };
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
   async function persistPlan(plan: ActivePlan) {
+    const id = clientId();
+    const previousLocalPlan = storedLocalPlan(id);
+    setActivePlan(plan);
+    try {
+      storeLocalPlan(plan, id);
+      localStorage.setItem(pendingPlanKey(id), JSON.stringify(plan));
+    } catch {
+      // Continue with the network save when device storage is unavailable.
+    }
     const run = async () => {
-      const response = await fetch("/api/plans", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Mise-Client": clientId(),
-        },
-        body: JSON.stringify({ plan }),
-      });
-      if (!response.ok) throw new Error("Не удалось сохранить план");
+      try {
+        const response = await fetch("/api/plans", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Mise-Client": id,
+          },
+          body: JSON.stringify({ plan }),
+        });
+        if (!response.ok) {
+          const pending = storedPendingPlan(id);
+          if (pending && JSON.stringify(pending) === JSON.stringify(plan))
+            localStorage.removeItem(pendingPlanKey(id));
+          try {
+            if (previousLocalPlan) storeLocalPlan(previousLocalPlan, id);
+            else localStorage.removeItem(localPlanKey(id));
+          } catch {
+            // The caller will still restore the in-memory plan.
+          }
+          setActivePlan(previousLocalPlan);
+          setPlanSyncState("error");
+          throw new Error("Не удалось сохранить план");
+        }
+        const pending = storedPendingPlan(id);
+        if (pending && JSON.stringify(pending) === JSON.stringify(plan))
+          localStorage.removeItem(pendingPlanKey(id));
+        setPlanSyncState("synced");
+      } catch (error) {
+        if (!navigator.onLine || error instanceof TypeError) {
+          setPlanSyncState("pending");
+          return;
+        }
+        throw error;
+      }
     };
     persistQueue.current = persistQueue.current
       .catch(() => undefined)
       .then(run);
     await persistQueue.current;
-    setActivePlan(plan);
   }
   async function deletePlan() {
     try {
@@ -5292,6 +5445,8 @@ export default function Home() {
       });
       if (!response.ok) throw new Error("Не удалось удалить план");
       localStorage.removeItem(builderDraftKey);
+      localStorage.removeItem(localPlanKey());
+      localStorage.removeItem(pendingPlanKey());
       setNotificationSetupOpen(false);
       setActivePlan(null);
       navigate("week");
@@ -5372,6 +5527,16 @@ export default function Home() {
     setBuilderEntry({ step: 3, returnTab: "profile", mode: "settings" });
     setTab("builder");
   }
+  function addPerson() {
+    setRecipeContext(null);
+    setBuilderEntry({
+      step: 3,
+      returnTab: "profile",
+      mode: "settings",
+      addPerson: true,
+    });
+    setTab("builder");
+  }
   function finishOnboarding(reminders?: ReminderDefaults) {
     localStorage.setItem(onboardingStorageKey, "complete");
     if (reminders)
@@ -5433,6 +5598,7 @@ export default function Home() {
           plan={activePlan}
           batch={cookingBatch}
           onClose={() => setBatchCookingContext(null)}
+          onChangePlan={persistPlan}
           onComplete={() => {
             void trackAnalytics(
               "cooking_confirmed",
@@ -5455,6 +5621,7 @@ export default function Home() {
         flowId={builderEntry.flowId}
         startedAt={builderEntry.startedAt}
         isNextPlan={builderEntry.isNextPlan}
+        addPerson={builderEntry.addPerson}
         onClose={() => navigate(builderEntry.returnTab ?? "week")}
         onSaved={(plan, destination) => {
           setActivePlan(plan);
@@ -5483,23 +5650,33 @@ export default function Home() {
       }`}
     >
       <div className="app-bg" aria-hidden />
+      {planSyncState !== "synced" && (
+        <div
+          className={`plan-sync-banner is-${planSyncState}`}
+          role={planSyncState === "error" ? "alert" : "status"}
+        >
+          {planSyncState === "pending"
+            ? "Нет сети — изменения сохранены на устройстве и отправятся автоматически."
+            : "Сервер не принял изменения. Проверьте план и попробуйте ещё раз."}
+        </div>
+      )}
       {tab !== "recipes" &&
         tab !== "profile" &&
-        tab !== "shopping" &&
-        (tab !== "week" || !activePlan) && (
-      <header className="app-header">
-        <div>
-          <p className="kicker">{currentTitle.kicker}</p>
-          <h1>{currentTitle.title}</h1>
-        </div>
-        <button
-          className="avatar glass"
-          onClick={() => navigate("profile")}
-          aria-label="Открыть профиль"
-        >
-          М
-        </button>
-      </header>
+        !activePlan &&
+        (tab === "week" || tab === "shopping") && (
+        <header className="app-header">
+          <div>
+            <p className="kicker">{currentTitle.kicker}</p>
+            <h1>{currentTitle.title}</h1>
+          </div>
+          <button
+            className="avatar glass"
+            onClick={() => navigate("profile")}
+            aria-label="Открыть профиль"
+          >
+            Я
+          </button>
+        </header>
       )}
       <div
         key={tab}
@@ -5571,6 +5748,7 @@ export default function Home() {
           people={activePlan?.people ?? [newPerson()]}
           hasPlan={Boolean(activePlan)}
           onConfigure={editPeople}
+          onAddPerson={addPerson}
           onBuild={() => startPlanFlow(Boolean(activePlan))}
           onDeletePlan={deletePlan}
           onOpenTutorial={() => {
@@ -5603,7 +5781,7 @@ export default function Home() {
       <BottomNav
         tab={currentTab}
         onNavigate={navigate}
-        showCompose={tab === "week" && !activePlan}
+        showCompose={tab === "week" && !activePlan && !loadingPlan}
         bump={tabMotion.bump}
       />
     </main>
@@ -6659,13 +6837,13 @@ function WeekScreen({
   } | null>(null);
   const stripRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
-    stripRef.current
-      ?.querySelector<HTMLElement>("[data-selected='true']")
-      ?.scrollIntoView({
-        inline: "center",
-        block: "nearest",
-        behavior: "auto",
-      });
+    const strip = stripRef.current;
+    const selected = strip?.querySelector<HTMLElement>("[data-selected='true']");
+    if (!strip || !selected) return;
+    strip.scrollLeft = Math.max(
+      0,
+      selected.offsetLeft - (strip.clientWidth - selected.offsetWidth) / 2,
+    );
   }, [selectedDate]);
   useEffect(() => {
     if (!lastMove) return;
@@ -6825,11 +7003,13 @@ function WeekScreen({
   const ringCircumference = 2 * Math.PI * 44;
   const ringProgress = Math.min(
     1,
-    eatenMacros.kcal / Math.max(1, person.daily.kcal),
+    eatenMacros.kcal / Math.max(1, plannedMacros.kcal),
   );
   const contactWarnings = crossContactWarnings(plan, batch);
   const planEnded = today > plan.end;
   const notStarted = today < plan.start;
+  const daysUntilPlanEnd = daysInclusive(today, plan.end) - 1;
+  const planEndingSoon = !planEnded && !notStarted && daysUntilPlanEnd <= 2;
   const nextCook = plan.batches.find((item) => item.start > selectedDate);
   const tomorrow = addDays(today, 1);
   const thawTitles =
@@ -7050,7 +7230,7 @@ function WeekScreen({
           onClick={onOpenProfile}
           aria-label="Открыть профиль"
         >
-          М
+          {person.name.trim().slice(0, 1).toUpperCase() || "Я"}
         </button>
       </header>
       <div className="tab-panel-body week-tab-body">
@@ -7080,10 +7260,19 @@ function WeekScreen({
           <p>Можно заранее проверить покупки и освободить место в морозилке.</p>
         </section>
       ) : null}
+      {planEndingSoon && (
+        <section className="plan-ending-card glass-card" role="status">
+          <div>
+            <p className="kicker">{daysUntilPlanEnd === 0 ? "План заканчивается сегодня" : `План заканчивается через ${withPlural(daysUntilPlanEnd, FORMS.day)}`}</p>
+            <h2>Собрать следующий заранее?</h2>
+            <p>Текущий план останется доступен, пока вы готовите следующий.</p>
+          </div>
+          <button className="primary-button" onClick={onRepeat}>Собрать следующий <Icon name="chevron" size={16} /></button>
+        </section>
+      )}
       <div
         className="date-strip"
         ref={stripRef}
-        role="tablist"
         aria-label="Дни плана"
       >
         {dates.map((date) => {
@@ -7093,9 +7282,8 @@ function WeekScreen({
           return (
             <button
               key={date}
-              role="tab"
               data-selected={date === selectedDate}
-              aria-selected={date === selectedDate}
+              aria-current={date === selectedDate ? "date" : undefined}
               className={`${date === selectedDate ? "selected" : ""} ${date === today ? "is-today" : ""} ${isFirstOfBatch ? "batch-start" : ""}`}
               onClick={() => setSelectedDate(date)}
               aria-label={`${formatDate(date, true)}${date === today ? ", сегодня" : ""}${dateBatch.start === date ? `, начало готовки ${dateBatch.index + 1}` : ""}`}
@@ -7208,7 +7396,7 @@ function WeekScreen({
           aria-label={`Изменить меню на ${formatDate(selectedDate, true)}`}
           onClick={() => onEditMenu(batch.id)}
         >
-          Изменить
+          Изменить меню партии
         </button>
       </div>
       <div className="week-execution-list" aria-busy={savingExecution}>
@@ -7322,8 +7510,9 @@ function WeekScreen({
                 }
                 onClick={() => void moveToTomorrow(row)}
               >
-                <Icon name="chevron" size={18} />
+                <Icon name="next-day" size={18} />
               </button>
+              {moveReason && <p className="week-move-reason">{moveReason}</p>}
             </article>
           );
         })}
@@ -8119,6 +8308,7 @@ function ShoppingScreen({
 }) {
   const [failed, setFailed] = useState(false);
   const [undoItems, setUndoItems] = useState<ShoppingItem[] | null>(null);
+  const [undoLabel, setUndoLabel] = useState("Список изменён");
   const [filter, setFilter] = useState<"all" | "unchecked" | "batch-1">(
     "all",
   );
@@ -8150,11 +8340,13 @@ function ShoppingScreen({
     items.some((item) => !item.checked),
   ).length;
   const firstBatchId = plan.batches[0]?.id;
-  const visibleShopping = plan.shopping.filter((item) => {
-    if (filter === "unchecked") return !item.checked;
-    if (filter === "batch-1") return Boolean(firstBatchId && item.batchIds?.includes(firstBatchId));
-    return true;
-  });
+  const visibleShopping = plan.shopping
+    .filter((item) => {
+      if (filter === "unchecked") return !item.checked;
+      if (filter === "batch-1") return Boolean(firstBatchId && item.batchIds?.includes(firstBatchId));
+      return true;
+    })
+    .sort((left, right) => Number(left.checked) - Number(right.checked));
   const groups = groupedShopping(visibleShopping);
   async function apply(
     shopping: ShoppingItem[],
@@ -8171,14 +8363,17 @@ function ShoppingScreen({
       currentPlan.shopping.map((item) =>
         item.key === key ? { ...item, checked: !item.checked } : item,
       ),
-      null,
+      currentPlan.shopping,
     );
+    if (ok && previous)
+      setUndoLabel(previous.checked ? "Отметка снята" : "Отмечено купленным");
     if (ok && previous && !previous.checked)
       void trackAnalytics("shopping_item_checked");
     if (!ok)
       void trackAnalytics("blocking_error", { errorCode: "shopping_save" });
   }
   function clearChecks() {
+    setUndoLabel("Отметки сняты");
     void apply(
       currentPlan.shopping.map((item) => ({ ...item, checked: false })),
       currentPlan.shopping,
@@ -8213,8 +8408,7 @@ function ShoppingScreen({
         <div>
           <p className="kicker">
             {formatDate(plan.start)} — {formatDate(plan.end)} ·{" "}
-            {plan.people.length}{" "}
-            {plan.people.length === 1 ? "человек" : "человека"}
+            {withPlural(plan.people.length, FORMS.person)}
           </p>
           <h1>Покупки</h1>
         </div>
@@ -8288,7 +8482,7 @@ function ShoppingScreen({
       )}
       {undoItems && (
         <div className="undo-bar" role="status">
-          <span>Отметки сняты</span>
+          <span>{undoLabel}</span>
           <button className="text-button" onClick={undo}>
             Вернуть
           </button>
@@ -8354,6 +8548,7 @@ function ProfileScreen({
   people,
   hasPlan,
   onConfigure,
+  onAddPerson,
   onBuild,
   onDeletePlan,
   onOpenTutorial,
@@ -8363,6 +8558,7 @@ function ProfileScreen({
   people: Person[];
   hasPlan: boolean;
   onConfigure: () => void;
+  onAddPerson: () => void;
   onBuild: () => void;
   onDeletePlan: () => Promise<boolean>;
   onOpenTutorial: () => void;
@@ -8387,8 +8583,7 @@ function ProfileScreen({
     <section className="screen profile-screen has-stable-tab-header">
       <header className="profile-header">
         <p className="kicker">
-          Профиль · {people.length}{" "}
-          {people.length === 1 ? "человек" : "человека"}
+          Профиль · {withPlural(people.length, FORMS.person)}
         </p>
         <h1>Цели и порции</h1>
       </header>
@@ -8491,7 +8686,7 @@ function ProfileScreen({
       <button
         className="profile-add-person"
         aria-label="Настроить людей и цели"
-        onClick={onConfigure}
+        onClick={onAddPerson}
       >
         <span>
           <b>Добавить человека</b>
@@ -8615,6 +8810,7 @@ function PlanBuilder({
   flowId,
   startedAt,
   isNextPlan = false,
+  addPerson = false,
   onClose,
   onSaved,
   persistPlan,
@@ -8627,6 +8823,7 @@ function PlanBuilder({
   flowId?: string;
   startedAt?: number;
   isNextPlan?: boolean;
+  addPerson?: boolean;
   onClose: () => void;
   onSaved: (plan: ActivePlan, destination: Tab) => void;
   persistPlan: (plan: ActivePlan) => Promise<void>;
@@ -8659,9 +8856,14 @@ function PlanBuilder({
     initialPlan?.menuStyle ?? "protein",
   );
   const [people, setPeople] = useState<Person[]>(
-    initialPlan?.people.map(normalizePerson) ?? [
-      { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
-    ],
+    () => {
+      const initialPeople = initialPlan?.people.map(normalizePerson) ?? [
+        { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
+      ];
+      return addPerson && initialPeople.length < 4
+        ? [...initialPeople, newPerson(initialPeople.length)]
+        : initialPeople;
+    },
   );
   const [cookEveryDays, setCookEveryDays] = useState(
     initialPlan?.cookEveryDays ?? 3,
@@ -8690,8 +8892,13 @@ function PlanBuilder({
     "idle",
   );
   const [saveMessage, setSaveMessage] = useState("");
+  const [unassignedConfirmOpen, setUnassignedConfirmOpen] = useState(false);
   const [successPlan, setSuccessPlan] = useState<ActivePlan | null>(null);
   const [draftRestored, setDraftRestored] = useState(false);
+  const activeBuilderDraftKey =
+    mode === "settings"
+      ? `${builderDraftKey}:settings:${initialPlan?.id ?? "new"}:${initialStep}`
+      : builderDraftKey;
   const stepRef = useRef(step);
   const closeRef = useRef(onClose);
   useEffect(() => {
@@ -8700,7 +8907,7 @@ function PlanBuilder({
   });
   function clearDraft() {
     try {
-      localStorage.removeItem(builderDraftKey);
+      localStorage.removeItem(activeBuilderDraftKey);
     } catch {
       /* storage may be unavailable */
     }
@@ -8740,9 +8947,8 @@ function PlanBuilder({
   }
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    if (mode === "settings") return;
     try {
-      const raw = localStorage.getItem(builderDraftKey);
+      const raw = localStorage.getItem(activeBuilderDraftKey);
       if (raw) {
         const draft = JSON.parse(raw) as BuilderDraft;
         const sameTarget = draft.planId === (initialPlan?.id ?? null);
@@ -8765,15 +8971,14 @@ function PlanBuilder({
           setStep(draft.step);
           setChoiceIndex(draft.choiceIndex);
           setDraftRestored(true);
-        } else if (!fresh) localStorage.removeItem(builderDraftKey);
+        } else if (!fresh) localStorage.removeItem(activeBuilderDraftKey);
       }
     } catch {
       /* a broken draft must never block the wizard */
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount
   useEffect(() => {
-    if (mode === "settings") return;
-    history.pushState({ mise: "builder" }, "");
+    history.pushState({ mise: "builder", mode }, "");
     const onPop = () => {
       if (stepRef.current > initialStep) {
         setStep((value) => value - 1);
@@ -8883,7 +9088,7 @@ function PlanBuilder({
     return Boolean(validSelectionAssignments[slotKey]?.length);
   });
   useEffect(() => {
-    if (successPlan || mode === "settings") return;
+    if (successPlan) return;
     const draft: BuilderDraft = {
       planId: initialPlan?.id ?? null,
       savedAt: Date.now(),
@@ -8902,7 +9107,7 @@ function PlanBuilder({
       pinnedSelectionKeys: pinned,
     };
     try {
-      localStorage.setItem(builderDraftKey, JSON.stringify(draft));
+      localStorage.setItem(activeBuilderDraftKey, JSON.stringify(draft));
     } catch {
       /* storage may be unavailable */
     }
@@ -8923,6 +9128,7 @@ function PlanBuilder({
     successPlan,
     initialPlan,
     mode,
+    activeBuilderDraftKey,
   ]);
   const draftPlan = ((): ActivePlan => {
     const base: ActivePlan = {
@@ -9070,9 +9276,8 @@ function PlanBuilder({
   function next() {
     if (!stepIsValid()) return;
     if (step === 3 && unassignedSlots.length) {
-      setMealSlots((current) =>
-        current.filter((slot) => !unassignedSlots.includes(slot)),
-      );
+      setUnassignedConfirmOpen(true);
+      return;
     }
     if (step === 4) {
       const firstMissing = positions.findIndex(
@@ -9517,11 +9722,7 @@ function PlanBuilder({
         {step === 3 && unassignedSlots.length > 0 && (
           <Note tone="mint" role="status">
             {unassignedSlots.map((slot) => mealMeta[slot].label).join(", ")}{" "}
-            никто не выбрал —{" "}
-            {unassignedSlots.length === 1
-              ? "эта позиция не войдёт"
-              : "эти позиции не войдут"}{" "}
-            в план.
+            никто не выбрал. Перед продолжением Mise попросит назначить или явно убрать {unassignedSlots.length === 1 ? "эту позицию" : "эти позиции"}.
           </Note>
         )}
         {step === 4 && (
@@ -9639,6 +9840,50 @@ function PlanBuilder({
             "Не получилось сохранить. Проверьте соединение и попробуйте ещё раз."}
         </Note>
       )}
+      {unassignedConfirmOpen && (
+        <Sheet
+          titleId="unassigned-slots-title"
+          onClose={() => setUnassignedConfirmOpen(false)}
+          className="unassigned-slots-sheet glass"
+        >
+          <h2 id="unassigned-slots-title">Кому готовим эти позиции?</h2>
+          <p>
+            {unassignedSlots.map((slot) => mealMeta[slot].label).join(", ")} никто не выбрал. Mise не будет удалять их молча.
+          </p>
+          <button
+            className="primary-button"
+            onClick={() => {
+              setPeople((current) =>
+                current.map((person) => ({
+                  ...person,
+                  includedSlots: [
+                    ...new Set([...person.includedSlots, ...unassignedSlots]),
+                  ],
+                })),
+              );
+              setUnassignedConfirmOpen(false);
+              setStep(4);
+            }}
+          >
+            Назначить всем и продолжить
+          </button>
+          <button
+            className="secondary-button"
+            onClick={() => {
+              setMealSlots((current) =>
+                current.filter((slot) => !unassignedSlots.includes(slot)),
+              );
+              setUnassignedConfirmOpen(false);
+              setStep(4);
+            }}
+          >
+            Убрать из плана
+          </button>
+          <button className="text-button" onClick={() => setUnassignedConfirmOpen(false)}>
+            Вернуться и выбрать вручную
+          </button>
+        </Sheet>
+      )}
       {successPlan && (
         <SuccessSheet
           plan={successPlan}
@@ -9737,7 +9982,7 @@ function PeriodStep({
             icon={<Icon name="check" />}
             label={`${formatDate(start)} — ${formatDate(end)}`}
           >
-            {rawDays} дней в плане
+            {withPlural(rawDays, FORMS.day)} в плане
           </Note>
         ) : (
           <Note tone="warn">Период должен быть от 1 до 14 дней.</Note>
@@ -9799,7 +10044,7 @@ function MealStep({
         icon={<Icon name="scale" />}
         label={`${selected.length} ${positionLabel} меню на день`}
       >
-        {selected.length * periodDays} порций на человека за период, если он ест
+        {withPlural(selected.length * periodDays, FORMS.portion)} на человека за период, если он ест
         все выбранные блюда
       </Note>
     </>
@@ -10988,7 +11233,7 @@ function MenuReviewStep({
       </p>
 
       <div className="chip-row menu-actions">
-        <button className="chip" role="checkbox" aria-checked={false} onClick={onReassemble}>
+        <button className="chip" onClick={onReassemble}>
           Собрать заново
         </button>
         <button className="chip" onClick={onManual}>
@@ -11369,11 +11614,13 @@ function BatchCookingView({
   plan,
   batch,
   onClose,
+  onChangePlan,
   onComplete,
 }: {
   plan: ActivePlan;
   batch: Batch;
   onClose: () => void;
+  onChangePlan: (plan: ActivePlan) => Promise<void>;
   onComplete: () => void;
 }) {
   const model = useMemo(() => buildBatchCookingModel(plan, batch), [plan, batch]);
@@ -11387,11 +11634,20 @@ function BatchCookingView({
   });
   const [showAll, setShowAll] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
+  const [portioning, setPortioning] = useState(false);
+  const [portionSaveState, setPortionSaveState] = useState<
+    "idle" | "saving" | "error"
+  >("idle");
+  const [cookedWeights, setCookedWeights] = useState<
+    Record<string, CookedWeights>
+  >(() => ({ ...plan.cookedWeights }));
   const currentStep = model.steps[stepIndex];
   const [remainingSeconds, setRemainingSeconds] = useState(
     () => (currentStep?.minutes ?? 0) * 60,
   );
   const [timerRunning, setTimerRunning] = useState(false);
+  const [timerEndsAt, setTimerEndsAt] = useState<number | null>(null);
+  const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
   const backRef = useRef(onClose);
   useEffect(() => {
     backRef.current = onClose;
@@ -11409,17 +11665,47 @@ function BatchCookingView({
     void trackAnalytics("cooking_instructions_opened");
   }, []);
   useEffect(() => {
-    if (!timerRunning) return;
-    const timer = window.setInterval(() => {
-      setRemainingSeconds((seconds) => {
-        if (seconds <= 1) {
-          setTimerRunning(false);
-          return 0;
-        }
-        return seconds - 1;
-      });
-    }, 1_000);
-    return () => window.clearInterval(timer);
+    if (!timerRunning || !timerEndsAt) return;
+    const finishTimer = () => {
+      setTimerRunning(false);
+      setTimerEndsAt(null);
+      setRemainingSeconds(0);
+      if ("vibrate" in navigator) navigator.vibrate([180, 100, 180]);
+      if ("Notification" in window && Notification.permission === "granted")
+        new Notification("Mise · таймер готов", {
+          body: currentStep?.title ?? "Переходите к следующему шагу.",
+          icon: "/icon-192.png",
+        });
+    };
+    const refresh = () => {
+      const next = Math.max(0, Math.ceil((timerEndsAt - Date.now()) / 1_000));
+      setRemainingSeconds(next);
+      if (next === 0) finishTimer();
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 1_000);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
+    };
+  }, [currentStep?.title, timerEndsAt, timerRunning]);
+  useEffect(() => {
+    const wakeLockNavigator = navigator as Navigator & {
+      wakeLock?: { request: (kind: "screen") => Promise<{ release: () => Promise<void> }> };
+    };
+    if (timerRunning && document.visibilityState === "visible")
+      void wakeLockNavigator.wakeLock
+        ?.request("screen")
+        .then((lock) => {
+          wakeLockRef.current = lock;
+        })
+        .catch(() => undefined);
+    return () => {
+      const lock = wakeLockRef.current;
+      wakeLockRef.current = null;
+      if (lock) void lock.release().catch(() => undefined);
+    };
   }, [timerRunning]);
   if (!currentStep)
     return (
@@ -11449,15 +11735,41 @@ function BatchCookingView({
     localStorage.setItem(progressKey, String(nextIndex));
     setRemainingSeconds(model.steps[nextIndex].minutes * 60);
     setTimerRunning(false);
+    setTimerEndsAt(null);
     setShowProducts(false);
   }
   function advance() {
     if (stepIndex >= model.steps.length - 1) {
-      localStorage.removeItem(progressKey);
-      onComplete();
+      setTimerRunning(false);
+      setTimerEndsAt(null);
+      setPortioning(true);
       return;
     }
     goToStep(stepIndex + 1);
+  }
+  function dishWeightsComplete(dish: BatchCookingModel["dishes"][number]) {
+    const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
+    const weights = cookedWeights[key] ?? {};
+    const components = portionComponents(dish.recipe);
+    return components.length === 0
+      ? weights.total > 0
+      : components.every((component) => weights[component.id] > 0);
+  }
+  const allDishWeightsComplete =
+    model.dishes.length > 0 && model.dishes.every(dishWeightsComplete);
+  async function savePortioningAndComplete() {
+    if (!allDishWeightsComplete) return;
+    setPortionSaveState("saving");
+    try {
+      await onChangePlan({
+        ...plan,
+        cookedWeights: { ...plan.cookedWeights, ...cookedWeights },
+      });
+      localStorage.removeItem(progressKey);
+      onComplete();
+    } catch {
+      setPortionSaveState("error");
+    }
   }
   return (
     <main className="app-shell cooking-batch-shell">
@@ -11526,6 +11838,7 @@ function BatchCookingView({
               .join("; ")}.
           </Note>
         )}
+        {!portioning ? (
         <section className="cooking-now-card glass-2">
           <p className="cooking-card-kicker">{showAll ? "Все шаги партии" : "Сейчас"}</p>
           <ol className="batch-step-list">
@@ -11558,9 +11871,24 @@ function BatchCookingView({
           <div className="cooking-step-tools">
             <button
               onClick={() => {
-                if (remainingSeconds === 0)
-                  setRemainingSeconds(currentStep.minutes * 60);
-                setTimerRunning((value) => !value);
+                if (timerRunning) {
+                  setRemainingSeconds(
+                    Math.max(
+                      0,
+                      Math.ceil(((timerEndsAt ?? Date.now()) - Date.now()) / 1_000),
+                    ),
+                  );
+                  setTimerRunning(false);
+                  setTimerEndsAt(null);
+                  return;
+                }
+                const seconds =
+                  remainingSeconds === 0
+                    ? currentStep.minutes * 60
+                    : remainingSeconds;
+                setRemainingSeconds(seconds);
+                setTimerEndsAt(Date.now() + seconds * 1_000);
+                setTimerRunning(true);
               }}
             >
               <Icon name="clock" size={16} />
@@ -11578,7 +11906,143 @@ function BatchCookingView({
             </div>
           )}
         </section>
-        <section className="cooking-after-card">
+        ) : (
+          <section className="batch-portioning" aria-labelledby="batch-portioning-title">
+            <div className="batch-portioning-heading glass-2">
+              <p className="cooking-card-kicker">Финальный шаг</p>
+              <h1 id="batch-portioning-title">Разложите по контейнерам</h1>
+              <p>Взвесьте каждое готовое блюдо один раз. Mise рассчитает граммы и готовые подписи.</p>
+            </div>
+            {model.dishes.map((dish) => {
+              const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
+              const weights = cookedWeights[key] ?? {};
+              const components = portionComponents(dish.recipe);
+              const people = allocationPeopleForDish(
+                plan,
+                batch,
+                dish.slot,
+                dish.recipe,
+                dish.personIds,
+              );
+              const mixed =
+                components.length === 0 && weights.total > 0
+                  ? allocateMixedDish(weights.total, people)
+                  : null;
+              const component =
+                components.length > 0 &&
+                components.every((item) => weights[item.id] > 0)
+                  ? allocateComponentDish(
+                      components.map((item) => ({
+                        componentId: item.id,
+                        label: item.label,
+                        cookedWeightG: weights[item.id],
+                      })),
+                      people,
+                    )
+                  : null;
+              return (
+                <article className="batch-portion-card glass-2" key={key}>
+                  <div className="batch-portion-card-heading">
+                    <RecipeMedia recipe={dish.recipe} />
+                    <div>
+                      <small>{mealMeta[dish.slot].label}</small>
+                      <h2>{dish.recipe.title}</h2>
+                    </div>
+                  </div>
+                  {components.length === 0 ? (
+                    <label className="cooked-weight-field">
+                      <span>Фактический вес блюда</span>
+                      <span className="weight-control">
+                        <input
+                          aria-label={`Фактический вес: ${dish.recipe.title}`}
+                          type="number"
+                          inputMode="numeric"
+                          min="1"
+                          value={weights.total || ""}
+                          onChange={(event) =>
+                            setCookedWeights((current) => ({
+                              ...current,
+                              [key]: { total: Number(event.target.value) },
+                            }))
+                          }
+                        />
+                        <small>г</small>
+                      </span>
+                    </label>
+                  ) : (
+                    <div className="component-weight-fields">
+                      <p>Фактический вес компонентов</p>
+                      {components.map((item) => (
+                        <label className="cooked-weight-field" key={item.id}>
+                          <span>{item.label}</span>
+                          <span className="weight-control">
+                            <input
+                              aria-label={`Фактический вес: ${item.label}`}
+                              type="number"
+                              inputMode="numeric"
+                              min="1"
+                              value={weights[item.id] || ""}
+                              onChange={(event) =>
+                                setCookedWeights((current) => ({
+                                  ...current,
+                                  [key]: {
+                                    ...current[key],
+                                    [item.id]: Number(event.target.value),
+                                  },
+                                }))
+                              }
+                            />
+                            <small>г</small>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                  {!mixed && !component && (
+                    <p className="allocation-prompt" role="status">Введите вес, чтобы увидеть раскладку.</p>
+                  )}
+                  {mixed && (
+                    <div className="allocation-results">
+                      {mixed.allocations.map((allocation, index) => (
+                        <article className="portion-card" key={allocation.personId}>
+                          <div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div>
+                          <div>
+                            <h3>{allocation.label}</h3>
+                            <p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p>
+                            <small>В каждый контейнер</small>
+                            <em>Подпись: {allocation.label} / {mealMeta[dish.slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                  {component && (
+                    <div className="allocation-results">
+                      {people.map((person, index) => (
+                        <article className="portion-card component-portion-card" key={person.personId}>
+                          <div className={`person-dot tone-${index}`}>{person.label.slice(0, 1)}</div>
+                          <div>
+                            <h3>{person.label}</h3>
+                            {component.components.map((item) => {
+                              const allocation = item.allocations.find((entry) => entry.personId === person.personId);
+                              return <p key={item.componentId}><span>{item.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>;
+                            })}
+                            <small>В каждый из {batch.days} контейнеров</small>
+                            <em>Подпись: {person.label} / {mealMeta[dish.slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em>
+                          </div>
+                        </article>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              );
+            })}
+            {portionSaveState === "error" && (
+              <Note tone="warn" role="alert">Не удалось сохранить раскладку. Проверьте связь и попробуйте ещё раз.</Note>
+            )}
+          </section>
+        )}
+        {!portioning && <section className="cooking-after-card">
           <p>После остывания</p>
           <h2>
             {withPlural(model.totalPortions, FORMS.container)}: {model.totalPortions - model.freezePortions} в холодильник
@@ -11596,12 +12060,22 @@ function BatchCookingView({
                 </small>
               ))}
           </div>
-        </section>
+        </section>}
       </div>
       <footer className="cooking-action-bar glass-1">
-        <button className="primary-button" onClick={advance}>
-          {stepIndex === model.steps.length - 1 ? "Партия готова" : "Шаг готов — дальше"}
-          <Icon name={stepIndex === model.steps.length - 1 ? "check" : "chevron"} size={17} />
+        <button
+          className="primary-button"
+          disabled={portioning && (!allDishWeightsComplete || portionSaveState === "saving")}
+          onClick={portioning ? savePortioningAndComplete : advance}
+        >
+          {portioning
+            ? portionSaveState === "saving"
+              ? "Сохраняем раскладку…"
+              : "Раскладка готова — завершить"
+            : stepIndex === model.steps.length - 1
+              ? "К раскладке"
+              : "Шаг готов — дальше"}
+          <Icon name={portioning ? "check" : "chevron"} size={17} />
         </button>
       </footer>
     </main>
@@ -11641,9 +12115,14 @@ function RecipeView({
   const [saveStatus, setSaveStatus] = useState<
     "idle" | "saving" | "saved" | "error"
   >("idle");
+  const cookedKey =
+    batch && slot ? cookedWeightsKey(batch, slot, recipe.id) : null;
   const [cookedWeights, setCookedWeights] = useState<Record<string, number>>(
-    {},
+    () => (cookedKey ? { ...plan?.cookedWeights?.[cookedKey] } : {}),
   );
+  const [portionSaveStatus, setPortionSaveStatus] = useState<
+    "idle" | "saving" | "saved" | "error"
+  >(() => (cookedKey && plan?.cookedWeights?.[cookedKey] ? "saved" : "idle"));
   const backRef = useRef(onBack);
   useEffect(() => {
     backRef.current = onBack;
@@ -11762,6 +12241,30 @@ function RecipeView({
       setSaveStatus("saved");
     } catch {
       setSaveStatus("error");
+    }
+  }
+  async function saveCookedWeights() {
+    if (
+      !plan ||
+      !batch ||
+      !slot ||
+      !cookedKey ||
+      !onChangePlan ||
+      (!mixedAllocation && !componentAllocation)
+    )
+      return;
+    setPortionSaveStatus("saving");
+    try {
+      await onChangePlan({
+        ...plan,
+        cookedWeights: {
+          ...plan.cookedWeights,
+          [cookedKey]: cookedWeights,
+        },
+      });
+      setPortionSaveStatus("saved");
+    } catch {
+      setPortionSaveStatus("error");
     }
   }
   const cookingAmounts = (() => {
@@ -12086,13 +12589,30 @@ function RecipeView({
               <>
                 <Note tone="mint" icon={<Icon name="scale" />} label="Сначала взвесьте готовую еду">Затем введите фактический вес — Mise сам рассчитает раскладку. После расчёта подпишите имя, приём пищи и даты.</Note>
                 {components.length === 0 ? (
-                  <label className="cooked-weight-field"><span>Взвесьте всё готовое блюдо</span><span className="weight-control"><input aria-label="Фактический вес готового блюда" type="number" inputMode="numeric" min="1" value={cookedWeights.total || ""} onChange={(event) => setCookedWeights({ total: Number(event.target.value) })} /><small>г</small></span></label>
+                  <label className="cooked-weight-field"><span>Взвесьте всё готовое блюдо</span><span className="weight-control"><input aria-label="Фактический вес готового блюда" type="number" inputMode="numeric" min="1" value={cookedWeights.total || ""} onChange={(event) => { setCookedWeights({ total: Number(event.target.value) }); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>
                 ) : (
-                  <div className="component-weight-fields"><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label className="cooked-weight-field" key={component.id}><span>{component.label}</span><span className="weight-control"><input aria-label={`Фактический вес: ${component.label}`} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) }))} /><small>г</small></span></label>)}</div>
+                  <div className="component-weight-fields"><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label className="cooked-weight-field" key={component.id}><span>{component.label}</span><span className="weight-control"><input aria-label={`Фактический вес: ${component.label}`} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => { setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) })); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>)}</div>
                 )}
                 {!mixedAllocation && !componentAllocation && <p className="allocation-prompt" role="status">Введите {components.length ? "вес каждого компонента" : "вес блюда"}, чтобы увидеть точную раскладку.</p>}
                 {mixedAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите по контейнерам">Граммы рассчитаны из фактического веса всей готовой партии.</Note>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p><small>В каждый контейнер</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
                 {componentAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите компоненты">Никаких процентов — только граммы в каждый контейнер.</Note>{eaters.map((eater, index) => <article className="portion-card component-portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return <p key={component.componentId}><span>{component.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>; })}<small>В каждый из {batch.days} контейнеров</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
+                {(mixedAllocation || componentAllocation) && (
+                  <div className="portion-save-row">
+                    <button
+                      className="primary-button"
+                      disabled={portionSaveStatus === "saving"}
+                      onClick={saveCookedWeights}
+                    >
+                      {portionSaveStatus === "saving"
+                        ? "Сохраняем…"
+                        : portionSaveStatus === "saved"
+                          ? "Раскладка сохранена"
+                          : "Сохранить раскладку"}
+                    </button>
+                    {portionSaveStatus === "saved" && <p role="status">При повторном открытии веса и подписи останутся здесь.</p>}
+                    {portionSaveStatus === "error" && <p role="alert">Не удалось сохранить раскладку.</p>}
+                  </div>
+                )}
                 <Note
                   tone="mint"
                   icon={

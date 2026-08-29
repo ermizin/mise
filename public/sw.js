@@ -1,4 +1,5 @@
-const CACHE_NAME = "mise-shell-v2";
+const CACHE_NAME = "mise-shell-v3";
+const PLAN_CACHE_NAME = "mise-plan-v1";
 const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
@@ -10,13 +11,40 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     Promise.all([
       self.clients.claim(),
-      caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))),
+      caches.keys().then((keys) => Promise.all(keys.filter((key) => ![CACHE_NAME, PLAN_CACHE_NAME].includes(key)).map((key) => caches.delete(key)))),
     ]),
   );
 });
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
+  const url = new URL(event.request.url);
+  if (url.pathname === "/api/plans") {
+    const clientId = event.request.headers.get("X-Mise-Client") || "anonymous";
+    const cacheKey = new Request(`${url.origin}/api/plans?mise-client=${encodeURIComponent(clientId)}`);
+    const network = fetch(event.request).then(async (response) => {
+      if (response.ok) {
+        const cache = await caches.open(PLAN_CACHE_NAME);
+        await cache.put(cacheKey, response.clone());
+      }
+      return response;
+    });
+    event.waitUntil(network.catch(() => undefined));
+    event.respondWith(
+      caches.open(PLAN_CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(cacheKey);
+        if (cached) return cached;
+        return network.catch(
+          () =>
+            new Response(JSON.stringify({ error: "offline", plan: null }), {
+              status: 503,
+              headers: { "Content-Type": "application/json" },
+            }),
+        );
+      }),
+    );
+    return;
+  }
   event.respondWith(fetch(event.request).catch(() => caches.match(event.request).then((response) => response || caches.match("/"))));
 });
 

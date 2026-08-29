@@ -25,7 +25,7 @@ test("server-renders the Russian Mise shell and navigation", async () => {
   assert.match(html, /План на неделю/);
   assert.match(html, /Ищем сохранённый план/);
 
-  const labels = ["Составить план", "План на неделю", "Рецепты", "Покупки", "Профиль"];
+  const labels = ["План на неделю", "Рецепты", "Покупки", "Профиль"];
   const positions = labels.map((label) => html.indexOf(`aria-label="${label}"`));
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
@@ -76,7 +76,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/);
   assert.match(page, /function editPeople\(\)/);
   assert.match(page, /setBuilderEntry\(\{[\s\S]*?step: 3,[\s\S]*?returnTab: "profile"/);
-  assert.match(page, /aria-label="Настроить людей и цели"\s+onClick=\{onConfigure\}/);
+  assert.match(page, /aria-label="Настроить людей и цели"\s+onClick=\{onAddPerson\}/);
   assert.match(page, /navigate\(builderEntry\.returnTab \?\? "week"\)/);
   for (const preset of ["Сбалансировано", "Больше белка", "Больше углеводов", "Больше жиров"]) assert.match(page, new RegExp(preset));
   assert.match(page, /Как распределить БЖУ/);
@@ -272,8 +272,9 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(css, /@media \(max-width: 380px\) \{[\s\S]*?\.field-row-2 \{[^}]*grid-template-columns: 1fr/);
 
   // Число теней не растёт: стекло описано уровнями, а не по месту.
+  // Три дополнительных слоя принадлежат единому движущемуся bottom-nav.
   assert.ok(
-    (css.match(/box-shadow:/g) ?? []).length <= 44,
+    (css.match(/box-shadow:/g) ?? []).length <= 47,
     "тени задаются уровнями стекла, а не по месту",
   );
 });

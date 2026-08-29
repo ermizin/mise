@@ -52,7 +52,10 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(page, /behavior: "auto"/);
   assert.match(page, /history\.pushState\([\s\S]*?miseTab: next/);
   assert.match(page, /window\.addEventListener\("popstate"/);
-  assert.match(page, /showCompose=\{tab === "week" && !activePlan\}/);
+  assert.match(
+    page,
+    /showCompose=\{tab === "week" && !activePlan && !loadingPlan\}/,
+  );
   assert.match(page, /className="bottom-nav-indicator"/);
   assert.match(page, /const \[gridMotionEpoch, setGridMotionEpoch\] = useState\(0\)/);
   assert.match(page, /animationDelay: `\$\{index \* 40\}ms`/);
