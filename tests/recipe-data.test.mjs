@@ -12,7 +12,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, recipeFamiliesById, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -25,6 +25,8 @@ async function loadRecipeCatalog() {
     nutritionRecalculateDailyMacros: nutrition.recalculateDailyMacros,
     nutritionShareForSlots: nutrition.shareForSlots,
     materializeInstructions: engine.materializeInstructions,
+    canonicalIngredients: engine.canonicalIngredients,
+    PILOT_RAW_SOURCE_SLUGS: engine.PILOT_RAW_SOURCE_SLUGS,
     recipeToFamily: engine.recipeToFamily,
     solveRecipeFamily: engine.solveRecipeFamily,
     solveRecipeBatch: engine.solveRecipeBatch,
@@ -34,7 +36,7 @@ async function loadRecipeCatalog() {
   return sandbox.__catalog;
 }
 
-const { recipes, recipeFamiliesById, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -319,15 +321,60 @@ test("plan validation catches an existing selection that conflicts with a person
 
 test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing the legacy catalog", () => {
   assert.equal(Object.keys(recipeFamiliesById).length, 18);
+  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "pilot").length, 10);
+  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "review_required").length, 8);
   assert.ok(recipes.length > Object.keys(recipeFamiliesById).length);
   for (const family of Object.values(recipeFamiliesById)) {
     assert.equal(family.id.startsWith("src-"), true, `${family.title} reuses an existing recipe`);
     assert.equal(family.provenance.kind, "parsed", `${family.title} preserves provenance`);
     assert.ok(family.image.sourceUrl, `${family.title} preserves source photo metadata`);
     assert.ok(family.ingredients.every((ingredient) => ingredient.canonicalIngredientId && ingredient.role), `${family.title} uses canonical ingredients and roles`);
+    assert.equal(new Set(family.ingredients.map((ingredient) => ingredient.sourceIngredientId)).size, family.ingredients.length, `${family.title} has one editorial role per ingredient`);
     assert.ok(family.miseInstructions[0].ingredientIds.length === family.ingredients.length, `${family.title} parameterizes its ingredient step`);
     assert.ok(Number.isFinite(family.nutritionDeltaKcal), `${family.title} keeps source vs Mise nutrition QA`);
+    assert.ok(Object.values(family.nutritionDelta).every(Number.isFinite), `${family.title} keeps full macro deltas`);
+    const thresholds = {
+      kcal: Math.max(50, family.sourceNutrition.kcal * 0.1),
+      protein: Math.max(5, family.sourceNutrition.protein * 0.15),
+      fat: Math.max(4, family.sourceNutrition.fat * 0.2),
+      carbs: Math.max(8, family.sourceNutrition.carbs * 0.15),
+    };
+    const expectedStatus = Object.keys(thresholds).some((key) => Math.abs(family.nutritionDelta[key]) > thresholds[key]) ? "review_required" : "pilot";
+    assert.equal(family.reviewStatus, expectedStatus, `${family.title} exposes its editorial nutrition status`);
   }
+});
+
+test("every canonical ingredient used by the 18 pilot families has an auditable nutrition reference", () => {
+  const used = new Set(Object.values(recipeFamiliesById).flatMap((family) => family.ingredients.map((ingredient) => ingredient.canonicalIngredientId)));
+  for (const id of used) {
+    const ingredient = canonicalIngredients[id];
+    assert.ok(ingredient, `${id} is present in the canonical registry`);
+    assert.ok(ingredient.reference.provider && ingredient.reference.checkedAt && ingredient.reference.sourceUrl, `${id} has source metadata`);
+    assert.ok(ingredient.reference.recordId && ingredient.reference.description && ingredient.reference.dataType, `${id} identifies the exact reference profile`);
+    assert.ok(Object.values(ingredient.nutritionPer100g).every(Number.isFinite), `${id} has finite KБЖУ`);
+  }
+});
+
+test("missing caloric and allergenic source components are explicit in the pilot families", () => {
+  const expected = {
+    "src-turkey-meatballs": ["egg", "olive-oil"],
+    "src-taco-mac": ["broth", "olive-oil"],
+    "src-teriyaki-tray": ["olive-oil", "brown-sugar", "vinegar", "garlic"],
+    "src-halal-chicken": ["butter", "olive-oil", "lemon", "vinegar"],
+    "src-crispy-beef-noodles": ["olive-oil", "honey", "oyster-sauce", "garlic"],
+    "src-mediterranean-wrap": ["olive-oil", "lemon", "vinegar"],
+    "src-creamy-chicken-pasta": ["olive-oil", "lemon", "bouillon"],
+    "src-light-stroganoff": ["mustard", "worcestershire", "starch"],
+    "src-bbq-burger-bowl": ["olive-oil"],
+  };
+  for (const [familyId, ids] of Object.entries(expected)) {
+    const actual = new Set(recipeFamiliesById[familyId].ingredients.map((ingredient) => ingredient.sourceIngredientId));
+    for (const id of ids) assert.ok(actual.has(id), `${familyId} includes ${id}`);
+  }
+  const crispy = recipes.find((item) => item.id === "src-crispy-beef-noodles");
+  assert.ok(crispy.allergens.includes("molluscs"));
+  assert.ok(crispy.allergens.includes("soy"));
+  assert.ok(crispy.allergens.includes("gluten"));
 });
 
 test("raw candidate adapter preserves all 217 source cards and legacy editorial statuses", async () => {
@@ -342,6 +389,14 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
   assert.ok(drafts.every((draft) => draft.sourceUrl && draft.imageUrl && draft.sourceIngredients.length > 0));
   assert.ok(drafts.every((draft) => Object.values(draft.sourceNutrition).every(Number.isFinite)));
   assert.ok(drafts.every((draft) => draft.legacy.editorialStatus === draft.editorial.legacyStatus));
+
+  const pilotDrafts = drafts.filter((draft) => PILOT_RAW_SOURCE_SLUGS.some((slug) => draft.sourceUrl.includes(slug)));
+  assert.equal(pilotDrafts.length, 11, "all pilot families backed by the raw corpus are selected without adding raw cards");
+  for (const draft of pilotDrafts) {
+    assert.equal(draft.ingredientMappings.length, draft.sourceIngredients.length, `${draft.sourceTitle} has a decision for every source ingredient`);
+    assert.equal(draft.ingredientMappings.some((mapping) => mapping.status === "unresolved"), false, `${draft.sourceTitle} has 100% mapped-or-ignored editorial resolution`);
+    assert.notEqual(draft.normalizationStatus, "ingredient_review_required", `${draft.sourceTitle} leaves ingredient review`);
+  }
 });
 
 test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {

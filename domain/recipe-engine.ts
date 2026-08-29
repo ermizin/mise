@@ -121,6 +121,7 @@ export type RecipeFamily = {
   minimumProtein: number;
   sourceNutrition: Nutrition;
   miseCalculatedNutrition: Nutrition;
+  nutritionDelta: Nutrition;
   nutritionDeltaKcal: number;
   miseInstructions: RecipeInstruction[];
   storage: Record<string, unknown>;
@@ -205,6 +206,7 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "black-beans": fdcReference("173735", "Beans, black, mature seeds, cooked, boiled, without salt"),
   broccoli: fdcReference("170379", "Broccoli, raw"),
   broth: fdcReference("174536", "Soup, chicken broth, ready-to-serve", "Для концентрата или кубика использовать этикетку."),
+  bouillon: fdcReference("171563", "Soup, chicken broth cubes, dry", "Состав и аллергены зависят от марки; этикетка обязательна."),
   buckwheat: fdcReference("170685", "Buckwheat groats, roasted, dry"),
   cabbage: fdcReference("169975", "Cabbage, raw"),
   carrot: fdcReference("170393", "Carrots, raw"),
@@ -278,12 +280,13 @@ const ingredientSeeds: IngredientSeed[] = [
   ["black-beans", "Фасоль чёрная", "legume", "cooked", n(132, 8.86, 0.54, 23.71)],
   ["broccoli", "Брокколи", "vegetable", "raw", n(34, 2.82, 0.37, 6.64)],
   ["broth", "Бульон", "sauce", "processed", n(6, 0.64, 0.21, 0.44)],
+  ["bouillon", "Сухой бульон", "sauce", "processed", n(198, 14.6, 4.7, 23.5)],
   ["buckwheat", "Гречка сухая", "grain", "raw", n(346, 11.73, 2.71, 74.95)],
   ["cabbage", "Капуста", "vegetable", "raw", n(25, 1.28, 0.1, 5.8)],
   ["carrot", "Морковь", "vegetable", "raw", n(41, 0.93, 0.24, 9.58), 80],
   ["cauliflower", "Цветная капуста", "vegetable", "raw", n(25, 1.92, 0.28, 4.97)],
   ["cheese", "Полутвёрдый сыр", "dairy", "processed", n(403, 22.87, 33.31, 3.37), 1, ["milk"]],
-  ["chicken", "Куриная грудка", "meat", "raw", n(120, 22.5, 2.6, 0)],
+  ["chicken", "Куриная грудка", "meat", "raw", n(120, 22.5, 2.62, 0)],
   ["chicken-thigh", "Куриное бедро без кожи", "meat", "raw", n(121, 19.66, 4.12, 0)],
   ["corn", "Кукуруза", "vegetable", "cooked", n(94, 3.11, 0.74, 22.33)],
   ["cottage", "Творог 4–5%", "dairy", "processed", n(98, 11.12, 4.3, 3.38), 1, ["milk"]],
@@ -341,19 +344,22 @@ const ingredientSeeds: IngredientSeed[] = [
   ["starch", "Кукурузный крахмал", "grain", "processed", n(381, 0.26, 0.05, 91.27)],
 ];
 
+const densityByLegacyId: Record<string, number> = {
+  broth: 1,
+  cream: 1.01,
+  lemon: 1.03,
+  "lime-juice": 1.03,
+  milk: 1.03,
+  soy: 1.16,
+  "tomato-passata": 1.04,
+  vinegar: 1,
+};
+
 export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.fromEntries(
   ingredientSeeds.map(([legacyId, name, category, state, nutrition, gramsPerUnit = 1, allergens = []]) => {
     const id = `${legacyId.replaceAll("-", "_")}_${state}`;
-    const densityByLegacyId: Record<string, number> = {
-      broth: 1,
-      cream: 1.01,
-      lemon: 1.03,
-      "lime-juice": 1.03,
-      milk: 1.03,
-      soy: 1.16,
-      "tomato-passata": 1.04,
-      vinegar: 1,
-    };
+    const referenceProfile = nutritionReferences[legacyId];
+    if (!referenceProfile) throw new Error(`Нет nutrition reference для canonical ingredient ${legacyId}.`);
     return [id, {
       id,
       canonicalName: name,
@@ -362,9 +368,9 @@ export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.
       state,
       nutritionPer100g: nutrition,
       allergens,
-      unit: { sensibleUnit: gramsPerUnit > 1 ? "piece" : "g", gramsPerUnit, roundTo: gramsPerUnit > 1 ? 0.1 : 5 },
+      unit: { sensibleUnit: gramsPerUnit > 1 ? "piece" : densityByLegacyId[legacyId] ? "ml" : "g", gramsPerUnit, roundTo: gramsPerUnit > 1 ? 0.1 : 5 },
       densityGPerMl: densityByLegacyId[legacyId],
-      reference: nutritionReferences[legacyId],
+      reference: referenceProfile,
     } satisfies CanonicalIngredient];
   }),
 );
@@ -394,7 +400,7 @@ const ingredientAliasTargets: Record<string, string> = {
   "canned black beans": "black-beans",
   carrots: "carrot",
   "cheddar cheese": "cheese",
-  "chicken boullion": "broth",
+  "chicken boullion": "bouillon",
   cilantro: "greens",
   "chopped parsley": "greens",
   "chopped parsley for garnish": "greens",
@@ -423,6 +429,7 @@ const ingredientAliasTargets: Record<string, string> = {
   "lo mein noodles": "pasta",
   macaroni: "pasta",
   mayo: "mayonnaise",
+  oil: "olive-oil",
   "olive oil": "olive-oil",
   "oyster sauce": "oyster-sauce",
   "parmesan cheese": "parmesan",
@@ -440,6 +447,10 @@ const ingredientAliasTargets: Record<string, string> = {
   "shredded cheese": "cheese",
   "small red onion": "onion",
   spaghetti: "pasta",
+  "soy sauce": "soy",
+  "sweet potato": "sweet-potato",
+  "tomato paste": "tomato-paste",
+  "hot sauce": "hot-sauce",
   "top round roast": "beef",
   "top sirloin steak": "beef",
   tortillas: "tortilla",
@@ -536,21 +547,32 @@ export const PILOT_RECIPE_IDS = [
 ] as const;
 const pilotIds = new Set<string>(PILOT_RECIPE_IDS);
 
-const roleSets: Record<RecipeIngredientRole, Set<string>> = {
-  protein: new Set(["beef", "beef-mince", "chicken", "chicken-thigh", "pork-mince", "salmon", "turkey-mince", "cottage"]),
-  carb: new Set(["black-beans", "buckwheat", "corn", "oats", "pasta", "peas", "potato", "red-beans", "rice", "sweet-potato", "tortilla"]),
-  vegetable: new Set(["berries", "broccoli", "cabbage", "carrot", "cauliflower", "cucumber", "lettuce", "mushrooms", "onion", "pepper", "pumpkin", "roasted-pepper", "spinach", "tomato", "zucchini"]),
-  fat: new Set(["cheese", "cream", "cream-cheese", "feta", "mayonnaise", "parmesan"]),
-  sauce: new Set(["bbq-sauce", "gochujang", "honey", "hummus", "milk", "salsa", "tomato-passata", "tomato-paste", "yogurt"]),
-  flavour: new Set(["broth", "hot-sauce", "soy"]),
-  flavour_fixed: new Set(["lime"]),
-  garnish: new Set(["greens", "pickles"]),
-};
-
-function roleFor(id: string): RecipeIngredientRole {
-  for (const [role, ids] of Object.entries(roleSets) as [RecipeIngredientRole, Set<string>][]) if (ids.has(id)) return role;
-  return "flavour";
+function familyRoles(groups: Partial<Record<RecipeIngredientRole, string[]>>) {
+  return Object.fromEntries(
+    Object.entries(groups).flatMap(([role, ids]) => (ids ?? []).map((id) => [id, role])),
+  ) as Record<string, RecipeIngredientRole>;
 }
+
+const pilotRoleOverrides: Record<string, Record<string, RecipeIngredientRole>> = {
+  "src-cottage-bake": familyRoles({ protein: ["cottage", "egg"], sauce: ["milk"], fat: ["butter"] }),
+  "src-protein-oats": familyRoles({ protein: ["cottage"], carb: ["oats"], sauce: ["milk"], vegetable: ["berries"] }),
+  "src-chicken-buckwheat": familyRoles({ protein: ["chicken"], carb: ["buckwheat"], vegetable: ["carrot"], garnish: ["greens"] }),
+  "src-chicken-rice-veg": familyRoles({ protein: ["chicken"], carb: ["rice"], vegetable: ["carrot", "pepper", "peas"] }),
+  "src-chicken-bean-bowl": familyRoles({ protein: ["chicken"], carb: ["rice", "red-beans"], vegetable: ["onion"], sauce: ["tomato-passata"], fat: ["olive-oil"] }),
+  "src-salmon-rice-veg": familyRoles({ protein: ["salmon"], carb: ["rice"], vegetable: ["broccoli", "zucchini"], fat: ["olive-oil"], flavour_fixed: ["garlic"] }),
+  "src-turkey-meatballs": familyRoles({ protein: ["turkey-mince"], carb: ["buckwheat"], vegetable: ["onion", "carrot"], sauce: ["tomato-passata"], fat: ["olive-oil"], flavour_fixed: ["egg"] }),
+  "src-taco-mac": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["pepper"], sauce: ["tomato-passata", "milk"], fat: ["cheese", "olive-oil"], flavour: ["broth"] }),
+  "src-teriyaki-tray": familyRoles({ protein: ["chicken-thigh"], carb: ["rice", "sweet-potato"], vegetable: ["broccoli"], fat: ["olive-oil"], flavour_fixed: ["soy", "brown-sugar", "vinegar", "garlic"] }),
+  "src-halal-chicken": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["cucumber", "tomato", "onion"], fat: ["mayonnaise", "butter", "olive-oil"], sauce: ["yogurt"], flavour_fixed: ["lemon", "vinegar"] }),
+  "src-crispy-beef-noodles": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["broccoli", "cabbage", "carrot", "onion"], fat: ["olive-oil"], sauce: ["gochujang"], flavour_fixed: ["soy", "honey", "oyster-sauce", "garlic"] }),
+  "src-mediterranean-wrap": familyRoles({ protein: ["chicken-thigh"], carb: ["tortilla"], vegetable: ["cucumber", "tomato", "lettuce", "onion"], fat: ["feta", "olive-oil"], sauce: ["hummus"], flavour_fixed: ["lemon", "vinegar"] }),
+  "src-creamy-chicken-pasta": familyRoles({ protein: ["chicken-thigh"], carb: ["pasta"], vegetable: ["cauliflower", "pumpkin"], sauce: ["cottage", "milk"], fat: ["parmesan", "olive-oil"], flavour_fixed: ["lemon", "bouillon"] }),
+  "src-sausage-pepper-pasta": familyRoles({ protein: ["pork-mince"], carb: ["pasta"], vegetable: ["onion", "pepper", "spinach"], sauce: ["tomato-passata", "tomato-paste"], fat: ["cream", "parmesan", "olive-oil"], flavour_fixed: ["garlic"] }),
+  "src-honey-lime-steak": familyRoles({ protein: ["beef"], carb: ["rice", "black-beans"], vegetable: ["pepper", "corn"], fat: ["olive-oil"], sauce: ["salsa"], flavour_fixed: ["lime", "honey", "soy", "lime-juice"] }),
+  "src-light-stroganoff": familyRoles({ protein: ["beef"], carb: ["pasta"], vegetable: ["carrot", "mushrooms", "onion"], fat: ["cream-cheese"], sauce: ["yogurt", "broth"], flavour_fixed: ["mustard", "worcestershire", "starch"] }),
+  "src-bbq-burger-bowl": familyRoles({ protein: ["beef-mince"], carb: ["potato"], vegetable: ["cabbage", "tomato"], fat: ["cheese", "olive-oil"], sauce: ["bbq-sauce"], garnish: ["pickles"] }),
+  "src-red-pepper-chicken-dip": familyRoles({ protein: ["chicken", "cottage"], vegetable: ["roasted-pepper"], sauce: ["milk", "hot-sauce"], fat: ["cream-cheese", "parmesan"] }),
+};
 
 function unitFor(unit: LegacyIngredient["unit"]): RecipeUnit {
   return unit === "мл" ? "ml" : unit === "шт." ? "piece" : "g";
@@ -575,7 +597,13 @@ function round(value: number, digits = 1) { const m = 10 ** digits; return Math.
 
 function nutritionForAmount(ingredient: RecipeFamilyIngredient, amount: number): Nutrition {
   const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
-  const grams = amount * (ingredient.unit === "piece" ? canonical.unit.gramsPerUnit : 1);
+  const grams = amount * (
+    ingredient.unit === "piece"
+      ? canonical.unit.gramsPerUnit
+      : ingredient.unit === "ml"
+        ? canonical.densityGPerMl ?? 1
+        : 1
+  );
   const factor = grams / 100;
   return {
     kcal: canonical.nutritionPer100g.kcal * factor,
@@ -611,7 +639,8 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
   for (const ingredient of recipe.ingredients) {
     const canonical = canonicalByAlias.get(ingredient.id);
     if (!canonical) return null;
-    const role = roleFor(ingredient.id);
+    const role = pilotRoleOverrides[recipe.id]?.[ingredient.id];
+    if (!role) return null;
     ingredients.push({
       sourceIngredientId: ingredient.id,
       canonicalIngredientId: canonical.id,
@@ -624,6 +653,20 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
     });
   }
   const calculated = nutritionForFamily({ ingredients });
+  const nutritionDelta = {
+    kcal: round(calculated.kcal - recipe.macros.kcal),
+    protein: round(calculated.protein - recipe.macros.protein),
+    fat: round(calculated.fat - recipe.macros.fat),
+    carbs: round(calculated.carbs - recipe.macros.carbs),
+  };
+  const nutritionThresholds: Nutrition = {
+    kcal: Math.max(50, recipe.macros.kcal * 0.1),
+    protein: Math.max(5, recipe.macros.protein * 0.15),
+    fat: Math.max(4, recipe.macros.fat * 0.2),
+    carbs: Math.max(8, recipe.macros.carbs * 0.15),
+  };
+  const needsNutritionReview = (Object.keys(nutritionDelta) as (keyof Nutrition)[])
+    .some((key) => Math.abs(nutritionDelta[key]) > nutritionThresholds[key]);
   const sourceUrl = typeof recipe.provenance.sourceUrl === "string" ? recipe.provenance.sourceUrl : undefined;
   const imageUrl = typeof recipe.provenance.imageUrl === "string" ? recipe.provenance.imageUrl : undefined;
   const mealLike = recipe.slot === "lunch" || recipe.slot === "dinner";
@@ -639,7 +682,8 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
     minimumProtein: mealLike ? Math.min(35, Math.max(24, Math.floor(recipe.macros.protein * 0.68))) : Math.max(16, Math.floor(recipe.macros.protein * 0.65)),
     sourceNutrition: recipe.macros,
     miseCalculatedNutrition: calculated,
-    nutritionDeltaKcal: round(calculated.kcal - recipe.macros.kcal),
+    nutritionDelta,
+    nutritionDeltaKcal: nutritionDelta.kcal,
     miseInstructions: parameterizedInstructions(recipe),
     storage: recipe.storage,
     freezing: { freezable: recipe.freezable, storageDays: recipe.storageDays },
@@ -654,7 +698,7 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
     ]).filter(Boolean))],
     localization: recipe.localization,
     substitutions: {},
-    reviewStatus: Math.abs(calculated.kcal - recipe.macros.kcal) > Math.max(100, recipe.macros.kcal * 0.2) ? "review_required" : "pilot",
+    reviewStatus: needsNutritionReview ? "review_required" : "pilot",
   };
 }
 
