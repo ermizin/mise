@@ -12,7 +12,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -31,12 +31,14 @@ async function loadRecipeCatalog() {
     solveRecipeFamily: engine.solveRecipeFamily,
     solveRecipeBatch: engine.solveRecipeBatch,
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
+    auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
+    aggregateCookingAmounts: engine.aggregateCookingAmounts,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
 }
 
-const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -132,6 +134,21 @@ test("source photos and localization notes are attached to imported recipes", ()
     assert.equal(item.localization.fit, "adapted");
     assert.ok(item.localization.note.length > 0);
   }
+});
+
+test("production fat-sensitive ingredients expose an honest fat note", () => {
+  const fatSensitiveIds = new Set([
+    "beef", "beef-mince", "pork-mince", "tuna", "salmon", "milk", "cottage", "cream",
+    "yogurt", "butter", "kefir", "cream-cheese", "cheese", "parmesan", "feta",
+    "mozzarella",
+  ]);
+  const ingredients = productionRecipes.flatMap((item) => item.ingredients)
+    .filter((item) => fatSensitiveIds.has(item.id));
+  assert.ok(ingredients.length > 0);
+  assert.ok(ingredients.every((item) => item.fatNote?.length > 0));
+  assert.ok(ingredients.filter((item) => item.id === "milk").every((item) => item.name === "Молоко 2%" && item.fatNote === "2%"));
+  assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
+  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "label_required");
 });
 
 test("editorial promotion fixes unit-sized macros and obvious slot mistakes", () => {
@@ -335,13 +352,27 @@ test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing t
     assert.ok(family.ingredients.every((ingredient) => ingredient.canonicalIngredientId && ingredient.role), `${family.title} uses canonical ingredients and roles`);
     assert.equal(new Set(family.ingredients.map((ingredient) => ingredient.sourceIngredientId)).size, family.ingredients.length, `${family.title} has one editorial role per ingredient`);
     assert.ok(family.miseInstructions[0].ingredientIds.length === family.ingredients.length, `${family.title} parameterizes its ingredient step`);
+    assert.ok(family.editorialAudit.ingredientMapping.reviewedAt, `${family.title} keeps ingredient mapping audit`);
+    assert.equal(family.editorialAudit.ingredientMapping.sourceIngredientCount > 0, true, `${family.title} records source coverage`);
+    assert.ok(family.editorialAudit.nutrition.reviewedAt && family.editorialAudit.nutrition.note, `${family.title} keeps scoped nutrition evidence`);
+    assert.ok(Object.values(family.legacyEditorialNutrition).every(Number.isFinite), `${family.title} preserves historical editorial macros`);
+    if (!family.editorialAudit.nutrition.comparableToMise) {
+      assert.equal(family.editorialAudit.nutrition.quantitativeCoverage, "incomplete");
+      assert.equal(family.comparisonNutrition, null, `${family.title} does not compare incompatible nutrition bases`);
+      assert.equal(family.nutritionDelta, null, `${family.title} does not invent a nutrition delta`);
+      assert.equal(family.nutritionDeltaKcal, null, `${family.title} keeps the numeric delta empty`);
+      assert.equal(family.reviewStatus, "review_required", `${family.title} remains blocked until adapted nutrition is reviewed`);
+      continue;
+    }
+    assert.equal(family.editorialAudit.nutrition.quantitativeCoverage, "verified", `${family.title} gates comparison on quantitative coverage`);
+    assert.ok(family.sourceNutrition && family.comparisonNutrition, `${family.title} keeps source and comparison nutrition separately`);
     assert.ok(Number.isFinite(family.nutritionDeltaKcal), `${family.title} keeps source vs Mise nutrition QA`);
     assert.ok(Object.values(family.nutritionDelta).every(Number.isFinite), `${family.title} keeps full macro deltas`);
     const thresholds = {
-      kcal: Math.max(50, family.sourceNutrition.kcal * 0.1),
-      protein: Math.max(5, family.sourceNutrition.protein * 0.15),
-      fat: Math.max(4, family.sourceNutrition.fat * 0.2),
-      carbs: Math.max(8, family.sourceNutrition.carbs * 0.15),
+      kcal: Math.max(50, family.comparisonNutrition.kcal * 0.1),
+      protein: Math.max(5, family.comparisonNutrition.protein * 0.15),
+      fat: Math.max(4, family.comparisonNutrition.fat * 0.2),
+      carbs: Math.max(8, family.comparisonNutrition.carbs * 0.15),
     };
     const expectedStatus = Object.keys(thresholds).some((key) => Math.abs(family.nutritionDelta[key]) > thresholds[key]) ? "review_required" : "pilot";
     assert.equal(family.reviewStatus, expectedStatus, `${family.title} exposes its editorial nutrition status`);
@@ -357,6 +388,41 @@ test("every canonical ingredient used by the 18 pilot families has an auditable 
     assert.ok(ingredient.reference.recordId && ingredient.reference.description && ingredient.reference.dataType, `${id} identifies the exact reference profile`);
     assert.ok(Object.values(ingredient.nutritionPer100g).every(Number.isFinite), `${id} has finite KБЖУ`);
   }
+});
+
+test("the seven source-audited adaptations resolve every legacy source ingredient explicitly", () => {
+  const curatedFamilies = Object.values(recipeFamiliesById).filter((family) => family.editorialAudit.ingredientMapping.source === "curated_source_audit");
+  assert.equal(curatedFamilies.length, 7);
+  assert.equal(curatedFamilies.reduce((sum, family) => sum + family.editorialAudit.ingredientMapping.sourceIngredientCount, 0), 55);
+  let hasUnavailableSourceAmount = false;
+  for (const family of curatedFamilies) {
+    const audit = family.editorialAudit.ingredientMapping;
+    assert.equal(audit.decisions.length, audit.sourceIngredientCount, `${family.title} covers every source component`);
+    assert.equal(audit.decisions.some((decision) => decision.disposition === "unresolved"), false, `${family.title} has no ambiguous source component`);
+    assert.equal(family.editorialAudit.nutrition.quantitativeCoverage, "incomplete", `${family.title} cannot be declared comparable before its missing source quantities are resolved`);
+    const familyCanonicalIds = new Set(family.ingredients.map((ingredient) => ingredient.canonicalIngredientId));
+    const auditedCanonicalIds = new Set(audit.decisions.flatMap((decision) => decision.canonicalIngredientIds));
+    assert.equal([...familyCanonicalIds].every((id) => auditedCanonicalIds.has(id)), true, `${family.title} links every adapted ingredient back to source audit`);
+    for (const decision of audit.decisions) {
+      assert.ok(decision.reason, `${family.title}: ${decision.sourceName} has an editorial reason`);
+      if (decision.disposition !== "retained" && decision.disposition !== "replaced") continue;
+      assert.ok(decision.canonicalIngredientIds.length > 0, `${family.title}: ${decision.sourceName} points to the adaptation`);
+      assert.equal(decision.miseAmounts.length > 0, true, `${family.title}: ${decision.sourceName} records the adapted amount and unit`);
+      assert.equal(decision.miseAmounts.every((amount) => Number.isFinite(amount.amount) && amount.unit), true);
+      if (decision.amountStatus === "source_amount_unavailable") hasUnavailableSourceAmount = true;
+      if (decision.amountStatus === "quantified") assert.ok(Number.isFinite(decision.sourceAmount) && decision.sourceUnit);
+      for (const id of decision.canonicalIngredientIds) {
+        assert.ok(familyCanonicalIds.has(id), `${family.title}: ${decision.sourceName} target is present in Recipe Family`);
+        assert.ok(canonicalIngredients[id]?.reference?.sourceUrl, `${family.title}: ${decision.sourceName} target has nutrition evidence`);
+      }
+    }
+  }
+  assert.equal(hasUnavailableSourceAmount, true, "legacy source gaps stay explicit instead of being treated as comparable");
+  assert.equal(recipeFamiliesById["src-cottage-bake"].editorialAudit.nutrition.scope, "per_100g_raw");
+  assert.equal(recipeFamiliesById["src-protein-oats"].sourceNutrition.kcal, 349);
+  assert.equal(recipeFamiliesById["src-chicken-bean-bowl"].sourceNutrition.kcal, 378);
+  assert.equal(recipeFamiliesById["src-salmon-rice-veg"].sourceNutrition, null);
+  assert.equal(curatedFamilies.every((family) => family.reviewStatus === "review_required"), true);
 });
 
 test("missing caloric and allergenic source components are explicit in the pilot families", () => {
@@ -399,18 +465,76 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
 
   const pilotDrafts = drafts.filter((draft) => PILOT_RAW_SOURCE_SLUGS.some((slug) => draft.sourceUrl.includes(slug)));
   assert.equal(pilotDrafts.length, 11, "all pilot families backed by the raw corpus are selected without adding raw cards");
+  const allDispositions = [];
   for (const draft of pilotDrafts) {
     assert.equal(draft.ingredientMappings.length, draft.sourceIngredients.length, `${draft.sourceTitle} has a decision for every source ingredient`);
-    assert.equal(draft.ingredientMappings.some((mapping) => mapping.status === "unresolved"), false, `${draft.sourceTitle} has 100% mapped-or-ignored editorial resolution`);
+    assert.equal(draft.ingredientMappings.some((mapping) => mapping.status === "unresolved"), false, `${draft.sourceTitle} has 100% canonical resolution`);
     assert.notEqual(draft.normalizationStatus, "ingredient_review_required", `${draft.sourceTitle} leaves ingredient review`);
+    const family = Object.values(recipeFamiliesById).find((item) => item.provenance.sourceUrl === draft.sourceUrl);
+    assert.ok(family, `${draft.sourceTitle} is linked to its pilot Recipe Family`);
+    assert.equal(family.editorialAudit.ingredientMapping.source, "raw_candidate");
+    assert.equal(family.editorialAudit.ingredientMapping.sourceIngredientCount, draft.sourceIngredients.length, `${draft.sourceTitle} freezes full source coverage`);
+    assert.equal(JSON.stringify(family.sourceNutrition), JSON.stringify(draft.sourceNutrition), `${draft.sourceTitle} preserves publisher nutrition instead of legacy edits`);
+    assert.equal(family.editorialAudit.nutrition.sourceServings, draft.servings, `${draft.sourceTitle} preserves source serving basis`);
+    const dispositions = auditRawCandidateAgainstFamily(draft, family);
+    assert.equal(dispositions.length, draft.sourceIngredients.length, `${draft.sourceTitle} resolves every source ingredient against the adaptation`);
+    assert.equal(dispositions.some((decision) => decision.disposition === "unresolved"), false, `${draft.sourceTitle} has no silent source-to-adaptation gap`);
+    assert.equal(family.editorialAudit.nutrition.quantitativeCoverage, "verified", `${draft.sourceTitle} exposes a verified quantitative gate`);
+    const quantitativeDecisions = dispositions.filter((decision) => decision.disposition === "retained" || decision.disposition === "replaced");
+    assert.ok(quantitativeDecisions.length > 0);
+    assert.equal(quantitativeDecisions.every((decision) => decision.amountStatus === "quantified"), true, `${draft.sourceTitle} keeps source and Mise amounts for every retained or replaced component`);
+    assert.equal(quantitativeDecisions.every((decision) => Number.isFinite(decision.sourceAmountPerServing) && Number.isFinite(decision.sourceAmountForMiseServing) && decision.sourceUnit && decision.miseAmounts.length > 0), true, `${draft.sourceTitle} has amount, unit and serving-conversion coverage before nutrition comparison`);
+    allDispositions.push(...dispositions.map((decision) => ({ ...decision, familyId: family.id })));
   }
   const rawPepper = pilotDrafts.flatMap((draft) => draft.ingredientMappings).filter((mapping) => mapping.sourceName.toLowerCase() === "pepper");
   assert.ok(rawPepper.length >= 5);
-  assert.ok(rawPepper.every((mapping) => mapping.status === "ignored"), "black pepper is not mapped to sweet bell pepper");
+  assert.ok(rawPepper.every((mapping) => mapping.status === "ignored_microcomponent"), "black pepper is not mapped to sweet bell pepper");
+  const syntheticPepper = normalizeRawRecipeCandidate({
+    id: "synthetic-black-pepper",
+    sourceTitle: "Synthetic mapping regression",
+    sourceUrl: "https://example.invalid/synthetic-black-pepper",
+    sourceIngredients: [{ id: "pepper", name: "black pepper" }],
+    sourceNutrition: { kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  }, { publisher: "test", accessedAt: "2026-08-29" });
+  assert.equal(syntheticPepper.ingredientMappings[0].status, "ignored_microcomponent", "an untrusted raw id cannot override the source name");
+  const trustedPepper = normalizeRawRecipeCandidate({
+    id: "synthetic-canonical-pepper",
+    sourceTitle: "Synthetic canonical mapping",
+    sourceUrl: "https://example.invalid/synthetic-canonical-pepper",
+    sourceIngredients: [{ id: "pepper_raw", name: "black pepper" }],
+    sourceNutrition: { kcal: 0, protein: 0, fat: 0, carbs: 0 },
+  }, { publisher: "test", accessedAt: "2026-08-29" });
+  assert.equal(trustedPepper.ingredientMappings[0].canonicalIngredientId, "pepper_raw", "only an exact canonical id is trusted over the source name");
   const teriyaki = pilotDrafts.find((draft) => draft.sourceTitle === "Sheet Pan Teriyaki Chicken and Vegetables");
   const mirin = teriyaki.ingredientMappings.find((mapping) => mapping.sourceName.toLowerCase() === "mirin");
   assert.equal(mirin.status, "replaced");
   assert.deepEqual([...mirin.replacementCanonicalIngredientIds].sort(), ["brown_sugar_processed", "vinegar_processed"]);
+  const omittedFoods = allDispositions.filter((decision) => decision.disposition === "omitted_by_adaptation");
+  assert.equal(omittedFoods.length, 9, "all real source foods omitted from raw-backed adaptations are explicit");
+  assert.ok(omittedFoods.some((decision) => decision.familyId === "src-mediterranean-wrap" && decision.sourceName.toLowerCase() === "ginger"));
+  assert.ok(omittedFoods.some((decision) => decision.familyId === "src-honey-lime-steak" && decision.sourceName.toLowerCase() === "jalapeño"));
+  for (const decision of allDispositions) {
+    for (const id of decision.canonicalIngredientIds) {
+      assert.ok(canonicalIngredients[id]?.reference?.sourceUrl, `${decision.familyId}: ${decision.sourceName} has an auditable canonical reference`);
+    }
+  }
+  const rawMappingCounts = pilotDrafts.flatMap((draft) => draft.ingredientMappings).reduce((counts, mapping) => {
+    counts[mapping.status] = (counts[mapping.status] ?? 0) + 1;
+    return counts;
+  }, {});
+  assert.equal(rawMappingCounts.mapped, 128);
+  assert.equal((rawMappingCounts.ignored_noncaloric ?? 0) + (rawMappingCounts.ignored_microcomponent ?? 0), 68);
+  assert.ok(rawMappingCounts.ignored_noncaloric > 0);
+  assert.ok(rawMappingCounts.ignored_microcomponent > 0);
+  assert.equal(rawMappingCounts.replaced, 1);
+  assert.equal(rawMappingCounts.unresolved ?? 0, 0);
+  assert.equal(recipeFamiliesById["src-halal-chicken"].comparisonNutrition.kcal, 773, "halal chicken compares against the unedited raw source value");
+  assert.equal(recipeFamiliesById["src-red-pepper-chicken-dip"].comparisonNutrition.kcal, 218, "dip records that one Mise portion equals two source portions");
+  assert.equal(recipeFamiliesById["src-light-stroganoff"].comparisonNutrition.kcal, 506.5, "stroganoff records that one Mise portion equals half a source portion");
+  const dipChicken = allDispositions.find((decision) => decision.familyId === "src-red-pepper-chicken-dip" && decision.sourceName === "boneless skinless chicken breast");
+  assert.equal(dipChicken.sourceAmountForMiseServing, 90.8, "dip ingredient ledger applies the 2× source-serving ratio");
+  const stroganoffBeef = allDispositions.find((decision) => decision.familyId === "src-light-stroganoff" && decision.sourceName === "top round roast");
+  assert.equal(stroganoffBeef.sourceAmountForMiseServing, 113.5, "stroganoff ingredient ledger applies the 0.5× source-serving ratio");
 });
 
 test("review-required families stay out of automatic menu candidates", () => {
@@ -585,10 +709,55 @@ test("two-person solver sums 600 and 450 kcal portions into one batch and parame
     const id = ingredient.sourceIngredientId;
     assert.equal(batch.totals[id], Math.round((batch.portions[0].variant.amounts[id] + batch.portions[1].variant.amounts[id]) * 10) / 10);
   }
-  const steps = materializeInstructions(family, batch.totals);
+  const displayNames = Object.fromEntries(
+    family.ingredients.map((ingredient) => [ingredient.sourceIngredientId, `Покупательское имя ${ingredient.sourceIngredientId}`]),
+  );
+  const steps = materializeInstructions(family, batch.totals, displayNames);
   assert.equal(steps.length, family.miseInstructions.length);
-  assert.match(steps[0], /куриное бедро|рис|батат/i);
+  assert.match(steps[0], /Покупательское имя chicken-thigh/i);
   assert.match(steps[0], /г/);
+  assert.equal(family.miseInstructions[0].action, "measure");
+  assert.equal(family.miseInstructions.length, recipes.find((item) => item.id === family.id).steps.length);
+  assert.equal(
+    family.miseInstructions.filter((step) => step.action !== "measure").length,
+    recipes.find((item) => item.id === family.id).steps.length - 1,
+  );
+  assert.equal(
+    family.miseInstructions[1].text,
+    recipes.find((item) => item.id === family.id).steps[1],
+  );
+});
+
+test("cooking amounts count pan fat once and all other ingredients for every day", () => {
+  const family = recipeFamiliesById["src-cottage-bake"];
+  const onePortion = Object.fromEntries(
+    family.ingredients.map((ingredient) => [ingredient.sourceIngredientId, ingredient.baseAmount]),
+  );
+  const totals = aggregateCookingAmounts(family.ingredients, [onePortion, onePortion], 3);
+  for (const ingredient of family.ingredients) {
+    const expected = ingredient.role === "fat_cooking"
+      ? ingredient.baseAmount
+      : ingredient.baseAmount * 2 * 3;
+    assert.equal(totals[ingredient.sourceIngredientId], expected);
+  }
+});
+
+test("recipe view and shopping helper use solved family amounts for a multi-day batch", () => {
+  const item = recipes.find((candidate) => candidate.id === "src-taco-mac");
+  const family = recipeFamiliesById[item.id];
+  const people = [
+    { id: "a", name: "А", daily: { kcal: 2000, protein: 150, fat: 65, carbs: 210 }, includedSlots: ["lunch"] },
+    { id: "b", name: "Б", daily: { kcal: 1600, protein: 120, fat: 55, carbs: 165 }, includedSlots: ["lunch"] },
+  ];
+  const portions = people.map((person) => portionFor(person, "lunch", item));
+  assert.ok(portions.every((portion) => portion.engine === "recipe-family-v1"));
+  const amounts = recipeCookingAmounts(item, portions, 3);
+  for (const ingredient of family.ingredients) {
+    const expected = ingredient.role === "fat_cooking"
+      ? ingredient.baseAmount
+      : Math.round(portions.reduce((sum, portion) => sum + portion.solvedAmounts[ingredient.sourceIngredientId], 0) * 3 * 10) / 10;
+    assert.equal(amounts[ingredient.sourceIngredientId], expected);
+  }
 });
 
 test("portion adapter uses Recipe Engine for migrated recipes and legacy math elsewhere", () => {

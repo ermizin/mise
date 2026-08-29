@@ -38,10 +38,59 @@ export type RawRecipeCandidate = {
 
 export type IngredientMappingDecision = {
   sourceName: string;
+  sourceAmount: number | null;
+  sourceUnit: string | null;
+  sourceAmountPerServing: number | null;
   canonicalIngredientId: string | null;
   replacementCanonicalIngredientIds?: string[];
-  status: "mapped" | "replaced" | "ignored" | "unresolved";
+  status: "mapped" | "replaced" | "ignored_noncaloric" | "ignored_microcomponent" | "unresolved";
   reason?: string;
+};
+
+export type AuditedIngredientAmount = {
+  canonicalIngredientId: string;
+  amount: number;
+  unit: RecipeUnit;
+};
+
+export type SourceIngredientDisposition = {
+  sourceName: string;
+  sourceAmount: number | null;
+  sourceUnit: string | null;
+  sourceAmountPerServing: number | null;
+  sourceAmountForMiseServing: number | null;
+  canonicalIngredientIds: string[];
+  miseAmounts: AuditedIngredientAmount[];
+  amountStatus: "quantified" | "source_amount_unavailable" | "not_applicable";
+  disposition: "retained" | "replaced" | "omitted_by_adaptation" | "ignored_noncaloric" | "ignored_microcomponent" | "unresolved";
+  reason: string;
+};
+
+export type SourceNutritionEvidence = {
+  scope: "per_serving" | "per_100g_raw" | "unavailable";
+  sourceServings?: number;
+  miseServingToSourceServingRatio?: number;
+  quantitativeCoverage: "verified" | "incomplete";
+  comparableToMise: boolean;
+  reviewedAt: string;
+  note: string;
+};
+
+export type RecipeFamilyEditorialAudit = {
+  ingredientMapping:
+    | {
+        source: "raw_candidate";
+        reviewedAt: string;
+        sourceIngredientCount: number;
+        sourceSlug: string;
+      }
+    | {
+        source: "curated_source_audit";
+        reviewedAt: string;
+        sourceIngredientCount: number;
+        decisions: SourceIngredientDisposition[];
+      };
+  nutrition: SourceNutritionEvidence;
 };
 
 export type NormalizedRecipeDraft = RawRecipeCandidate & {
@@ -121,10 +170,13 @@ export type RecipeFamily = {
   minViableCalories: number;
   maxViableCalories: number;
   minimumProtein: number;
-  sourceNutrition: Nutrition;
+  sourceNutrition: Nutrition | null;
+  comparisonNutrition: Nutrition | null;
+  legacyEditorialNutrition: Nutrition;
   miseCalculatedNutrition: Nutrition;
-  nutritionDelta: Nutrition;
-  nutritionDeltaKcal: number;
+  nutritionDelta: Nutrition | null;
+  nutritionDeltaKcal: number | null;
+  editorialAudit: RecipeFamilyEditorialAudit;
   miseInstructions: RecipeInstruction[];
   storage: Record<string, unknown>;
   freezing: { freezable: boolean; storageDays: number };
@@ -218,16 +270,26 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "chicken-thigh": fdcReference("173627", "Chicken thigh, meat only, raw"),
   corn: fdcReference("168401", "Corn, sweet, yellow, frozen, cooked, boiled, drained, without salt"),
   cottage: fdcReference("172179", "Cheese, cottage, creamed", "Ближайший профиль к творогу 4–5%; сверить этикетку."),
-  cream: fdcReference("171308", "Cream, half and half, lowfat", "Прокси для сливок 10%."),
+  cream: {
+    provider: "Простоквашино, карточка продукта",
+    checkedAt,
+    note: "Расчётный профиль сливок 10%; конкретную упаковку сверить по этикетке.",
+    sourceUrl: "https://prostokvashino.ru/product/slivki-10--500-g/",
+    recordId: "prostokvashino:cream-10-500",
+    dataType: "label_required",
+    description: "Сливки 10%: 120 ккал, белки 2,9 г, жиры 10 г, углеводы 4,5 г на 100 г",
+  },
   "cream-cheese": fdcReference("173418", "Cheese, cream", "Творожный сыр зависит от марки; сверить этикетку."),
   cucumber: fdcReference("168409", "Cucumber, with peel, raw"),
   egg: fdcReference("171287", "Egg, whole, raw, fresh"),
   feta: fdcReference("173420", "Cheese, feta"),
   gochujang: labelReference("label:gochujang", "Gochujang", "Состав и КБЖУ зависят от бренда; профиль только для планирования, этикетка обязательна."),
   greens: fdcReference("170416", "Parsley, fresh", "Прокси для свежей зелени."),
+  ginger: fdcReference("169231", "Ginger root, raw"),
   honey: fdcReference("169640", "Honey"),
   "hot-sauce": fdcReference("171186", "Sauce, hot chile, sriracha", "Прокси для острого соуса; сверить этикетку."),
   hummus: fdcReference("174289", "Hummus, commercial", "Коммерческий хумус зависит от марки; сверить этикетку."),
+  jalapeno: fdcReference("168576", "Peppers, jalapeno, raw"),
   lettuce: fdcReference("169247", "Lettuce, cos or romaine, raw"),
   lime: fdcReference("168155", "Limes, raw"),
   mayonnaise: fdcReference("171009", "Salad dressing, mayonnaise, regular", "Майонез зависит от жирности; сверить этикетку."),
@@ -343,16 +405,18 @@ const ingredientSeeds: IngredientSeed[] = [
   ["chicken-thigh", "Куриное бедро без кожи", "meat", "raw", n(121, 19.66, 4.12, 0)],
   ["corn", "Кукуруза", "vegetable", "cooked", n(94, 3.11, 0.74, 22.33)],
   ["cottage", "Творог 4–5%", "dairy", "processed", n(98, 11.12, 4.3, 3.38), 1, ["milk"]],
-  ["cream", "Сливки 10%", "dairy", "processed", n(72, 3.33, 5, 3.33), 1, ["milk"]],
+  ["cream", "Сливки 10%", "dairy", "processed", n(120, 2.9, 10, 4.5), 1, ["milk"]],
   ["cream-cheese", "Творожный сыр", "dairy", "processed", n(350, 6.15, 34.44, 5.52), 1, ["milk"]],
   ["cucumber", "Огурец", "vegetable", "raw", n(15, 0.65, 0.11, 3.63), 200],
   ["egg", "Куриное яйцо", "egg", "raw", n(143, 12.56, 9.51, 0.72), 50, ["egg"]],
   ["feta", "Фета", "dairy", "processed", n(265, 14.21, 21.49, 3.88), 1, ["milk"]],
   ["gochujang", "Паста кочудян", "sauce", "processed", n(210, 5, 3, 43), 1, ["soy", "gluten"]],
   ["greens", "Зелень", "vegetable", "raw", n(36, 2.97, 0.79, 6.33)],
+  ["ginger", "Имбирь", "vegetable", "raw", n(80, 1.82, 0.75, 17.77)],
   ["honey", "Мёд", "sweetener", "processed", n(304, 0.3, 0, 82.4)],
   ["hot-sauce", "Острый соус", "sauce", "processed", n(93, 1.93, 0.93, 19.16)],
   ["hummus", "Хумус", "legume", "processed", n(237, 7.78, 17.82, 15), 1, ["sesame"]],
+  ["jalapeno", "Халапеньо", "vegetable", "raw", n(29, 0.91, 0.37, 6.5)],
   ["lettuce", "Салат романо", "vegetable", "raw", n(17, 1.23, 0.3, 3.29)],
   ["lime", "Лайм", "fruit", "raw", n(30, 0.7, 0.2, 10.54), 70],
   ["mayonnaise", "Майонез", "fat", "processed", n(680, 0.96, 74.85, 0.57), 1, ["egg"]],
@@ -649,6 +713,7 @@ const ingredientAliasTargets: Record<string, string> = {
   "4% cottage cheese": "cottage",
   "poblano pepper": "pepper",
   "poblano peppers": "pepper",
+  "jalapeño": "jalapeno",
   "top round roast": "beef",
   "top round steak": "beef",
   "top sirloin steak": "beef",
@@ -691,13 +756,14 @@ const ingredientReplacementTargets: Record<string, { legacyIds: string[]; reason
   },
 };
 
-const ignoredIngredientReasons: Record<string, string> = Object.fromEntries([
-  "baking powder", "baking soda", "cayenne pepper", "chili powder", "cinnamon", "cumin", "cumin seeds", "fennel seeds",
-  "garlic powder", "ginger", "ground cumin", "italian seasoning", "jalapeño",
-  "onion powder", "oregano", "paprika", "pepper", "red pepper flakes", "salt",
-  "salt and pepper to taste", "salt to taste", "smoked paprika", "turmeric", "water",
-  "hot water", "water to consistency", "white pepper",
-].map((name) => [name, "Редакционный микрокомпонент: указан в инструкции, но не используется для вариативного расчёта КБЖУ."]));
+const noncaloricIngredientReasons: Record<string, string> = Object.fromEntries([
+  "baking soda", "salt", "salt to taste", "water", "hot water", "water to consistency",
+].map((name) => [name, "Некалорийный технологический компонент: сохранён в source audit, но не используется для вариативного расчёта КБЖУ."]));
+const microIngredientReasons: Record<string, string> = Object.fromEntries([
+  "baking powder", "black pepper", "cayenne pepper", "chili powder", "cinnamon", "cumin", "cumin seeds", "fennel seeds",
+  "garlic powder", "ground cumin", "italian seasoning", "onion powder", "oregano", "paprika",
+  "pepper", "red pepper flakes", "salt and pepper to taste", "smoked paprika", "turmeric", "white pepper",
+].map((name) => [name, "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ."]));
 
 // The imported corpus contains two very different parsers.  TMPM usually gives
 // a short ingredient name, while Good Food often keeps the preparation and the
@@ -826,14 +892,13 @@ function canonicalFromSourceName(alias: string): CanonicalIngredient | undefined
   return undefined;
 }
 
-function ignoredMicroIngredientReason(alias: string): string | undefined {
-  if (ignoredIngredientReasons[alias]) return ignoredIngredientReasons[alias];
+function inferredMicroIngredientReason(alias: string): string | undefined {
   // A flavour word is sometimes the prefix of a nutritionally meaningful
   // product ("vanilla protein powder", "pepper jack cheese").  Do not let
   // the broad preparation matcher turn those into a silent omission.
   if (/\b(?:protein|cheese|oil|butter|milk|cream|flour|sugar|chocolate|peanuts?|nuts?|seeds?)\b/.test(alias)) return undefined;
   return ignoredMicroIngredientPatterns.some((pattern) => pattern.test(alias))
-    ? "Редакционный микрокомпонент: указан в инструкции, но не используется для вариативного расчёта КБЖУ."
+    ? "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ."
     : undefined;
 }
 
@@ -860,20 +925,34 @@ export function normalizeRawRecipeCandidate(
     carbs: Number(legacyNutrition.carbs ?? 0),
   };
   const sourceTimes = (candidate.sourceTimes ?? candidate.time ?? {}) as Record<string, number | undefined>;
+  const sourceServings = Number.isFinite(Number(candidate.servings)) ? Number(candidate.servings) : undefined;
   const instructionFacts = Array.isArray(candidate.instructionFacts) ? candidate.instructionFacts as RecipeInstruction[] : [];
   const paraphrasedInstructionDraft = Array.isArray(candidate.paraphrasedInstructionDraft) ? candidate.paraphrasedInstructionDraft as RecipeInstruction[] : [];
   const ingredientMappings: IngredientMappingDecision[] = sourceIngredients.map((value) => {
-    const ingredient = value as { id?: string; name?: string };
+    const ingredient = value as { id?: string; name?: string; amountMetric?: string | number; unitMetric?: string; amount?: string | number; quantity?: string | number; unit?: string };
     const sourceName = String(ingredient.name ?? ingredient.id ?? "").trim();
+    const sourceAmountValue = ingredient.amountMetric ?? ingredient.amount ?? ingredient.quantity;
+    const parsedSourceAmount = sourceAmountValue === undefined || sourceAmountValue === null || String(sourceAmountValue).trim() === ""
+      ? null
+      : Number(sourceAmountValue);
+    const sourceAmount = parsedSourceAmount !== null && Number.isFinite(parsedSourceAmount) ? parsedSourceAmount : null;
+    const sourceUnitValue = String(ingredient.unitMetric ?? ingredient.unit ?? "").trim();
+    const sourceUnit = sourceUnitValue || null;
+    const sourceAmountPerServing = sourceAmount !== null && sourceServings
+      ? sourceAmount / sourceServings
+      : null;
+    const measurement = { sourceName, sourceAmount, sourceUnit, sourceAmountPerServing };
     const alias = normalizedAlias(sourceName);
-    const explicitCanonical = ingredient.id ? canonicalByAlias.get(normalizedAlias(ingredient.id)) : undefined;
-    if (explicitCanonical) return { sourceName, canonicalIngredientId: explicitCanonical.id, status: "mapped" };
-    const reason = ignoredMicroIngredientReason(alias);
-    if (reason) return { sourceName, canonicalIngredientId: null, status: "ignored", reason };
+    const explicitCanonical = ingredient.id ? canonicalIngredients[ingredient.id] : undefined;
+    if (explicitCanonical) return { ...measurement, canonicalIngredientId: explicitCanonical.id, status: "mapped" };
+    const noncaloricReason = noncaloricIngredientReasons[alias];
+    if (noncaloricReason) return { ...measurement, canonicalIngredientId: null, status: "ignored_noncaloric", reason: noncaloricReason };
+    const microReason = microIngredientReasons[alias];
+    if (microReason) return { ...measurement, canonicalIngredientId: null, status: "ignored_microcomponent", reason: microReason };
     const replacement = ingredientReplacementTargets[alias];
     if (replacement) {
       return {
-        sourceName,
+        ...measurement,
         canonicalIngredientId: null,
         replacementCanonicalIngredientIds: replacement.legacyIds.map((id) => canonicalByLegacyId.get(id)?.id).filter((id): id is string => Boolean(id)),
         status: "replaced",
@@ -881,8 +960,10 @@ export function normalizeRawRecipeCandidate(
       };
     }
     const canonical = canonicalFromSourceName(alias);
-    if (canonical) return { sourceName, canonicalIngredientId: canonical.id, status: "mapped" };
-    return { sourceName, canonicalIngredientId: null, status: "unresolved", reason: "Нужно редакционное решение для канонического ингредиента." };
+    if (canonical) return { ...measurement, canonicalIngredientId: canonical.id, status: "mapped" };
+    const inferredMicroReason = inferredMicroIngredientReason(alias);
+    if (inferredMicroReason) return { ...measurement, canonicalIngredientId: null, status: "ignored_microcomponent", reason: inferredMicroReason };
+    return { ...measurement, canonicalIngredientId: null, status: "unresolved", reason: "Нужно редакционное решение для канонического ингредиента." };
   });
   const canonicalIngredientIds = ingredientMappings.map((mapping) => mapping.canonicalIngredientId);
   const legacyStatus = String(candidate.editorialStatus ?? "pending");
@@ -893,7 +974,7 @@ export function normalizeRawRecipeCandidate(
     sourceUrl: candidate.sourceUrl,
     accessedAt: context.accessedAt,
     imageUrl: typeof candidate.imageUrl === "string" ? candidate.imageUrl : undefined,
-    servings: Number.isFinite(Number(candidate.servings)) ? Number(candidate.servings) : undefined,
+    servings: sourceServings,
     sourceIngredients,
     sourceNutrition,
     sourceTimes,
@@ -923,6 +1004,359 @@ export const PILOT_RECIPE_IDS = [
   "src-sausage-pepper-pasta", "src-honey-lime-steak",
 ] as const;
 const pilotIds = new Set<string>(PILOT_RECIPE_IDS);
+
+const editorialReviewedAt = "2026-08-29";
+
+type PilotNutritionRecord = SourceNutritionEvidence & { declaredNutrition?: Nutrition | null };
+
+const comparableRawNutrition = (
+  sourceServings: number,
+  note = "КБЖУ на порцию сохранены из raw-карточки источника; сопоставление выполняется только после редакционной сверки состава.",
+  miseServingToSourceServingRatio = 1,
+  declaredNutrition?: Nutrition,
+): PilotNutritionRecord => ({
+  scope: "per_serving",
+  sourceServings,
+  miseServingToSourceServingRatio,
+  quantitativeCoverage: "verified",
+  comparableToMise: true,
+  reviewedAt: editorialReviewedAt,
+  note,
+  declaredNutrition,
+});
+
+const pilotNutritionRecords: Record<string, PilotNutritionRecord> = {
+  "src-cottage-bake": {
+    scope: "per_100g_raw",
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "Food.ru публикует КБЖУ на 100 г сырьевых продуктов, а выход готовой запеканки не указан; сравнение с порцией Mise некорректно.",
+    declaredNutrition: { kcal: 115.72, protein: 12.99, fat: 6.13, carbs: 2.14 },
+  },
+  "src-protein-oats": {
+    scope: "per_serving",
+    sourceServings: 4,
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "BBC Good Food даёт КБЖУ одной из четырёх порций исходного рецепта; Mise заменяет протеин творогом и исключает несколько калорийных компонентов.",
+    declaredNutrition: { kcal: 349, protein: 17, fat: 11, carbs: 41 },
+  },
+  "src-chicken-buckwheat": {
+    scope: "per_100g_raw",
+    sourceServings: 1,
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "Food.ru публикует КБЖУ на 100 г сырьевых продуктов без выхода блюда; Mise отдельно задаёт увеличенную порцию и количества овощей.",
+    declaredNutrition: { kcal: 171.82, protein: 20.36, fat: 2.31, carbs: 18.55 },
+  },
+  "src-chicken-rice-veg": {
+    scope: "per_100g_raw",
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "Food.ru публикует КБЖУ на 100 г сырьевых продуктов; состав и доля партии в адаптации Mise изменены, поэтому порционная дельта не вычисляется.",
+    declaredNutrition: { kcal: 121.01, protein: 7.14, fat: 5.23, carbs: 11.16 },
+  },
+  "src-chicken-bean-bowl": {
+    scope: "per_serving",
+    sourceServings: 4,
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "MyProtein даёт КБЖУ исходной порции, но Mise меняет вид фасоли, томатный компонент, количества и исключает лайм с кориандром.",
+    declaredNutrition: { kcal: 378, protein: 30, fat: 8, carbs: 35 },
+  },
+  "src-salmon-rice-veg": {
+    scope: "unavailable",
+    sourceServings: 3,
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "На доступной первичной странице MyProtein числовые КБЖУ отсутствуют; кускус заменён рисом, а веса рыбы и овощей заданы редакционно.",
+    declaredNutrition: null,
+  },
+  "src-turkey-meatballs": {
+    scope: "per_100g_raw",
+    quantitativeCoverage: "incomplete",
+    comparableToMise: false,
+    reviewedAt: editorialReviewedAt,
+    note: "Food.ru публикует КБЖУ на 100 г сырьевых продуктов; Mise выносит гарнир отдельно и заменяет рис, томатную пасту и количества жира.",
+    declaredNutrition: { kcal: 186.46, protein: 11.05, fat: 9.96, carbs: 12.29 },
+  },
+  "src-taco-mac": comparableRawNutrition(5),
+  "src-teriyaki-tray": comparableRawNutrition(5, "Источник даёт КБЖУ на одну из пяти порций; переход от 563 г готового риса в партии к сухому рису Mise отмечен отдельно и остаётся редакционным блокером."),
+  "src-halal-chicken": comparableRawNutrition(6, "КБЖУ raw-карточки источника восстановлены без прежней редакционной подмены 705 ккал; салат-латук исключён явно.", 1, { kcal: 773, protein: 53, fat: 36, carbs: 60 }),
+  "src-crispy-beef-noodles": comparableRawNutrition(5),
+  "src-mediterranean-wrap": comparableRawNutrition(6),
+  "src-creamy-chicken-pasta": comparableRawNutrition(5),
+  "src-light-stroganoff": comparableRawNutrition(5, "Одна порция Mise соответствует половине большой порции источника; коэффициент 0,5 хранится отдельно от исходных КБЖУ.", 0.5, { kcal: 1013, protein: 80, fat: 22, carbs: 125 }),
+  "src-bbq-burger-bowl": comparableRawNutrition(5),
+  "src-red-pepper-chicken-dip": comparableRawNutrition(10, "Одна порция Mise соответствует двум небольшим порциям дипа из источника; коэффициент 2 хранится отдельно от исходных КБЖУ.", 2, { kcal: 109, protein: 14.6, fat: 4.6, carbs: 2.4 }),
+  "src-sausage-pepper-pasta": comparableRawNutrition(5),
+  "src-honey-lime-steak": comparableRawNutrition(5),
+};
+
+const idsFor = (...legacyIds: string[]) => legacyIds.map((legacyId) => {
+  const canonical = canonicalByLegacyId.get(legacyId);
+  if (!canonical) throw new Error(`Нет canonical ingredient для редакционного mapping: ${legacyId}.`);
+  return canonical.id;
+});
+const sourceDecision = (
+  sourceName: string,
+  disposition: SourceIngredientDisposition["disposition"],
+  legacyIds: string[],
+  reason: string,
+  sourceAmount: number | null = null,
+  sourceUnit: string | null = null,
+): SourceIngredientDisposition => ({
+  sourceName,
+  sourceAmount,
+  sourceUnit,
+  sourceAmountPerServing: null,
+  sourceAmountForMiseServing: null,
+  canonicalIngredientIds: idsFor(...legacyIds),
+  miseAmounts: [],
+  amountStatus: "not_applicable",
+  disposition,
+  reason,
+});
+const retained = (sourceName: string, legacyId: string, reason = "Сопоставлен с ингредиентом адаптации Mise.", sourceAmount: number | null = null, sourceUnit: string | null = null) =>
+  sourceDecision(sourceName, "retained", [legacyId], reason, sourceAmount, sourceUnit);
+const replaced = (sourceName: string, legacyIds: string[], reason: string, sourceAmount: number | null = null, sourceUnit: string | null = null) =>
+  sourceDecision(sourceName, "replaced", legacyIds, reason, sourceAmount, sourceUnit);
+const omitted = (sourceName: string, reason: string, sourceAmount: number | null = null, sourceUnit: string | null = null) =>
+  sourceDecision(sourceName, "omitted_by_adaptation", [], reason, sourceAmount, sourceUnit);
+const ignoredNoncaloric = (sourceName: string, reason = "Некалорийный технологический компонент; сохранён в source audit, но исключён из вариативного КБЖУ.", sourceAmount: number | null = null, sourceUnit: string | null = null) =>
+  sourceDecision(sourceName, "ignored_noncaloric", [], reason, sourceAmount, sourceUnit);
+const ignoredMicrocomponent = (sourceName: string, reason = "Малый вкусовой компонент сохранён в source audit; его вклад не объявляется нулевым.", sourceAmount: number | null = null, sourceUnit: string | null = null) =>
+  sourceDecision(sourceName, "ignored_microcomponent", [], reason, sourceAmount, sourceUnit);
+const retainedMeasured = (sourceName: string, legacyId: string, sourceAmount: number, sourceUnit: string, reason = "Сопоставлен с ингредиентом адаптации Mise.") =>
+  retained(sourceName, legacyId, reason, sourceAmount, sourceUnit);
+const replacedMeasured = (sourceName: string, legacyIds: string[], sourceAmount: number, sourceUnit: string, reason: string) =>
+  replaced(sourceName, legacyIds, reason, sourceAmount, sourceUnit);
+const omittedMeasured = (sourceName: string, sourceAmount: number, sourceUnit: string, reason: string) =>
+  omitted(sourceName, reason, sourceAmount, sourceUnit);
+const ignoredNoncaloricMeasured = (sourceName: string, sourceAmount: number, sourceUnit: string, reason?: string) =>
+  ignoredNoncaloric(sourceName, reason, sourceAmount, sourceUnit);
+
+const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]> = {
+  "src-cottage-bake": [
+    retainedMeasured("Творог", "cottage", 500, "g"), retainedMeasured("Молоко", "milk", 200, "g", "Сохранён, но количество адаптировано."), retainedMeasured("Яйца", "egg", 4, "piece"),
+    omitted("Ванилин", "Исключён из адаптации Mise как необязательная ароматическая добавка."),
+    retained("Масло для формы", "butter", "Компонент источника сохранён и редакционно нормирован до 2 г на базовую порцию."),
+  ],
+  "src-protein-oats": [
+    replacedMeasured("Протеиновый порошок", ["cottage"], 30, "g", "Заменён мягким творогом по зафиксированной адаптации Mise."),
+    retainedMeasured("Овсяные хлопья", "oats", 200, "g"), retainedMeasured("Молоко", "milk", 400, "ml"), retainedMeasured("Ягоды", "berries", 75, "g"),
+    omittedMeasured("Семена чиа", 2, "tbsp", "Исключены из упрощённой адаптации Mise."), omittedMeasured("Кленовый сироп", 2, "tsp", "Исключён из адаптации Mise."),
+    omittedMeasured("Арахисовая паста", 2, "tbsp", "Исключена из адаптации Mise; исходный аллерген не переносится в адаптированный состав."),
+    omittedMeasured("Греческий йогурт", 4, "tbsp", "Исключён из адаптации Mise."), ignoredNoncaloricMeasured("Вода", 100, "ml"),
+  ],
+  "src-chicken-buckwheat": [
+    retainedMeasured("Куриная грудка", "chicken", 120, "g", "Сохранена с редакционно увеличенным количеством."),
+    retainedMeasured("Гречка", "buckwheat", 50, "g", "Сохранена как сухая крупа с редакционно увеличенным количеством."),
+    retained("Морковь", "carrot", "Источник указывает по вкусу; Mise задаёт измеримое количество."),
+    ignoredNoncaloric("Соль"), retained("Зелень", "greens", "Источник упоминает зелень в шаге; Mise задаёт измеримое количество."),
+    omitted("Растительное масло после готовности", "В источнике необязательно; в адаптацию Mise не включено."),
+  ],
+  "src-chicken-rice-veg": [
+    retainedMeasured("Рис", "rice", 250, "g"), retainedMeasured("Курица", "chicken", 800, "g"), omittedMeasured("Лук", 80, "g", "Исключён из адаптации Mise."),
+    retainedMeasured("Морковь", "carrot", 100, "g"), retainedMeasured("Болгарский перец", "pepper", 300, "g"),
+    replacedMeasured("Консервированный горошек", ["peas"], 150, "g", "Заменён замороженным горошком с явным количеством."),
+    omittedMeasured("Чеснок", 15, "g", "Исключён из адаптации Mise."), ignoredNoncaloricMeasured("Вода", 500, "g"), ignoredNoncaloric("Соль"), ignoredMicrocomponent("Специи"),
+  ],
+  "src-chicken-bean-bowl": [
+    retainedMeasured("Оливковое масло", "olive-oil", 1, "tbsp"), retainedMeasured("Лук", "onion", 1, "piece"), omittedMeasured("Чеснок", 2, "clove", "Исключён из адаптации Mise."),
+    retainedMeasured("Куриные грудки", "chicken", 2, "breast", "Сохранены с редакционно заданной массой."),
+    replacedMeasured("Чёрная фасоль", ["red-beans"], 2, "can", "Заменена красной фасолью по зафиксированной адаптации Mise."),
+    replacedMeasured("Сальса", ["tomato-passata"], 1, "jar", "Заменена протёртыми томатами по зафиксированной адаптации Mise."),
+    replacedMeasured("Бурый рис", ["rice"], 200, "g", "Локализован как обычный сухой рис с отдельно заданной массой."),
+    omitted("Лайм", "Исключён из адаптации Mise."), omitted("Кориандр", "Исключён из адаптации Mise."),
+  ],
+  "src-salmon-rice-veg": [
+    retainedMeasured("Филе дикого лосося", "salmon", 3, "fillet", "Сохранено, но масса и профиль лосося заданы редакционно."),
+    replacedMeasured("Кускус", ["rice"], 180, "g", "Заменён сухим рисом по зафиксированной адаптации Mise."),
+    retainedMeasured("Оливковое масло", "olive-oil", 1, "tbsp"), retainedMeasured("Чеснок", "garlic", 3, "clove"), omittedMeasured("Лимон", 1, "piece", "Исключён из адаптации Mise."),
+    omittedMeasured("Каджунская смесь", 1.5, "tbsp", "Заменена в инструкции паприкой и сухими травами; микрокомпонент не участвует в вариативном КБЖУ."),
+    retained("Брокколи", "broccoli", "Источник не задаёт массу; Mise задаёт измеримое количество."),
+    retainedMeasured("Кабачки", "zucchini", 2, "piece", "Источник задаёт штуки; Mise задаёт измеримую массу."),
+  ],
+  "src-turkey-meatballs": [
+    retainedMeasured("Фарш индейки", "turkey-mince", 400, "g"), replacedMeasured("Рис внутри тефтелей", ["buckwheat"], 100, "g", "Заменён отдельным гарниром из гречки."),
+    retainedMeasured("Лук", "onion", 160, "g"), retainedMeasured("Морковь", "carrot", 100, "g"), retainedMeasured("Растительное масло", "olive-oil", 50, "g", "Сохранено и нормировано до фактического количества."),
+    retainedMeasured("Яйцо", "egg", 60, "g", "Сохранено как связующий и аллергенный компонент."),
+    replacedMeasured("Томатная паста", ["tomato-passata"], 30, "g", "Заменена протёртыми томатами с отдельной массой."), ignoredNoncaloric("Вода"),
+  ],
+};
+
+const rawPilotIngredientAudits: Record<string, { sourceSlug: string; sourceIngredientCount: number }> = {
+  "src-crispy-beef-noodles": { sourceSlug: "crispy-chili-beef-noodles", sourceIngredientCount: 16 },
+  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 15 },
+  "src-taco-mac": { sourceSlug: "taco-mac", sourceIngredientCount: 16 },
+  "src-mediterranean-wrap": { sourceSlug: "mediterranean-chicken-wraps", sourceIngredientCount: 24 },
+  "src-creamy-chicken-pasta": { sourceSlug: "easy-dump-and-bake-creamy-chicken-pasta", sourceIngredientCount: 17 },
+  "src-sausage-pepper-pasta": { sourceSlug: "one-pot-sausage-and-pepper-pasta", sourceIngredientCount: 20 },
+  "src-bbq-burger-bowl": { sourceSlug: "bbq-cheddar-burger-bowls", sourceIngredientCount: 12 },
+  "src-honey-lime-steak": { sourceSlug: "honey-lime-steak-burrito-bowls", sourceIngredientCount: 22 },
+  "src-halal-chicken": { sourceSlug: "halal-cart-style-chicken-buffet-prep", sourceIngredientCount: 29 },
+  "src-red-pepper-chicken-dip": { sourceSlug: "roasted-red-pepper-chicken-dip", sourceIngredientCount: 9 },
+  "src-light-stroganoff": { sourceSlug: "slow-cooker-big-boy-beef-stroganoff", sourceIngredientCount: 17 },
+};
+
+const pilotAdaptationOmissionReasons: Record<string, Record<string, string>> = {
+  "src-crispy-beef-noodles": { "lemon wedges": "Лимонные дольки исключены из адаптации Mise как необязательная подача." },
+  "src-taco-mac": { "green onions": "Зелёный лук исключён из упрощённой адаптации Mise." },
+  "src-mediterranean-wrap": { ginger: "Имбирь исключён из локализованной смеси специй Mise; его исходные 3 г остаются в source audit." },
+  "src-creamy-chicken-pasta": { "chopped parsley": "Петрушка исключена как необязательный гарнир." },
+  "src-honey-lime-steak": {
+    cilantro: "Кинза исключена из локализованной адаптации Mise.",
+    scallions: "Зелёный лук исключён из локализованной адаптации Mise.",
+    "jalapeño": "Халапеньо исключён из локализованной адаптации Mise; исходные 20 г остаются в source audit.",
+  },
+  "src-halal-chicken": { lettuce: "Латук исключён из текущей buffet-адаптации Mise." },
+  "src-light-stroganoff": { "chopped parsley for garnish": "Петрушка исключена как необязательный гарнир." },
+};
+
+const pilotAdaptationReplacementTargets: Record<string, Record<string, { legacyIds: string[]; reason: string }>> = {
+  "src-teriyaki-tray": {
+    "cooked rice": {
+      legacyIds: ["rice"],
+      reason: "Источник задаёт 563 г готового риса на пять порций, а Mise хранит сухой рис; конверсия состояния отмечена явно и требует отдельной проверки количества.",
+    },
+  },
+  "src-bbq-burger-bowl": {
+    kale: {
+      legacyIds: ["cabbage"],
+      reason: "Кейл источника заменён доступной белокочанной капустой по зафиксированной локализации Mise.",
+    },
+  },
+};
+
+export function auditRawCandidateAgainstFamily(
+  draft: Pick<NormalizedRecipeDraft, "ingredientMappings">,
+  family: Pick<RecipeFamily, "id" | "ingredients" | "editorialAudit">,
+): SourceIngredientDisposition[] {
+  const familyCanonicalIds = new Set(family.ingredients.map((ingredient) => ingredient.canonicalIngredientId));
+  const sourceServingRatio = family.editorialAudit.nutrition.miseServingToSourceServingRatio ?? 1;
+  const dispositionFor = (
+    mapping: IngredientMappingDecision,
+    canonicalIngredientIds: string[],
+    disposition: SourceIngredientDisposition["disposition"],
+    reason: string,
+  ): SourceIngredientDisposition => {
+    const miseAmounts = family.ingredients
+      .filter((ingredient) => canonicalIngredientIds.includes(ingredient.canonicalIngredientId))
+      .map((ingredient) => ({ canonicalIngredientId: ingredient.canonicalIngredientId, amount: ingredient.baseAmount, unit: ingredient.unit }));
+    const requiresAmounts = disposition === "retained" || disposition === "replaced";
+    const targetsCovered = canonicalIngredientIds.length > 0 && canonicalIngredientIds.every((id) => miseAmounts.some((amount) => amount.canonicalIngredientId === id));
+    const sourceAmountForMiseServing = mapping.sourceAmountPerServing !== null
+      ? mapping.sourceAmountPerServing * sourceServingRatio
+      : null;
+    const amountStatus = requiresAmounts
+      ? sourceAmountForMiseServing !== null && Boolean(mapping.sourceUnit) && targetsCovered
+        ? "quantified"
+        : "source_amount_unavailable"
+      : "not_applicable";
+    return {
+      sourceName: mapping.sourceName,
+      sourceAmount: mapping.sourceAmount,
+      sourceUnit: mapping.sourceUnit,
+      sourceAmountPerServing: mapping.sourceAmountPerServing,
+      sourceAmountForMiseServing,
+      canonicalIngredientIds,
+      miseAmounts,
+      amountStatus,
+      disposition,
+      reason,
+    };
+  };
+  return draft.ingredientMappings.map((mapping) => {
+    if (mapping.status === "unresolved") {
+      return dispositionFor(mapping, [], "unresolved", mapping.reason ?? "Нет canonical mapping.");
+    }
+    if (mapping.status === "ignored_noncaloric") {
+      return dispositionFor(mapping, [], "ignored_noncaloric", mapping.reason ?? "Некалорийный технологический компонент.");
+    }
+    if (mapping.status === "ignored_microcomponent") {
+      return dispositionFor(mapping, [], "ignored_microcomponent", mapping.reason ?? "Малый вкусовой компонент.");
+    }
+    if (mapping.status === "replaced") {
+      const canonicalIngredientIds = mapping.replacementCanonicalIngredientIds ?? [];
+      const complete = canonicalIngredientIds.length > 0 && canonicalIngredientIds.every((id) => familyCanonicalIds.has(id));
+      return dispositionFor(mapping, canonicalIngredientIds, complete ? "replaced" : "unresolved", complete ? mapping.reason ?? "Явная замена источника." : "Замена не покрыта ингредиентами Recipe Family.");
+    }
+    const canonicalIngredientId = mapping.canonicalIngredientId;
+    if (canonicalIngredientId && familyCanonicalIds.has(canonicalIngredientId)) {
+      return dispositionFor(mapping, [canonicalIngredientId], "retained", "Canonical ingredient сохранён в Recipe Family.");
+    }
+    const alias = normalizedAlias(mapping.sourceName);
+    const replacement = pilotAdaptationReplacementTargets[family.id]?.[alias];
+    if (replacement) {
+      const canonicalIngredientIds = idsFor(...replacement.legacyIds);
+      const complete = canonicalIngredientIds.every((id) => familyCanonicalIds.has(id));
+      return dispositionFor(mapping, canonicalIngredientIds, complete ? "replaced" : "unresolved", complete ? replacement.reason : "Редакционная замена отсутствует в Recipe Family.");
+    }
+    const omissionReason = pilotAdaptationOmissionReasons[family.id]?.[alias];
+    if (omissionReason) {
+      return dispositionFor(mapping, canonicalIngredientId ? [canonicalIngredientId] : [], "omitted_by_adaptation", omissionReason);
+    }
+    return dispositionFor(mapping, canonicalIngredientId ? [canonicalIngredientId] : [], "unresolved", "Canonical ingredient источника отсутствует в Recipe Family без редакционного решения.");
+  });
+}
+
+function editorialAuditFor(recipeId: string, ingredients: RecipeFamilyIngredient[]): RecipeFamilyEditorialAudit {
+  const nutritionRecord = pilotNutritionRecords[recipeId];
+  if (!nutritionRecord) throw new Error(`Нет nutrition audit для pilot Recipe Family ${recipeId}.`);
+  const nutrition: SourceNutritionEvidence = {
+    scope: nutritionRecord.scope,
+    sourceServings: nutritionRecord.sourceServings,
+    miseServingToSourceServingRatio: nutritionRecord.miseServingToSourceServingRatio,
+    quantitativeCoverage: nutritionRecord.quantitativeCoverage,
+    comparableToMise: nutritionRecord.comparableToMise,
+    reviewedAt: nutritionRecord.reviewedAt,
+    note: nutritionRecord.note,
+  };
+  const raw = rawPilotIngredientAudits[recipeId];
+  if (raw) {
+    return {
+      ingredientMapping: { source: "raw_candidate", reviewedAt: editorialReviewedAt, ...raw },
+      nutrition,
+    };
+  }
+  const decisions = curatedPilotIngredientAudits[recipeId];
+  if (!decisions) throw new Error(`Нет ingredient audit для pilot Recipe Family ${recipeId}.`);
+  const hydratedDecisions = decisions.map((decision): SourceIngredientDisposition => {
+    const miseAmounts = ingredients
+      .filter((ingredient) => decision.canonicalIngredientIds.includes(ingredient.canonicalIngredientId))
+      .map((ingredient) => ({ canonicalIngredientId: ingredient.canonicalIngredientId, amount: ingredient.baseAmount, unit: ingredient.unit }));
+    const requiresAmounts = decision.disposition === "retained" || decision.disposition === "replaced";
+    const targetsCovered = decision.canonicalIngredientIds.length > 0 && decision.canonicalIngredientIds.every((id) => miseAmounts.some((amount) => amount.canonicalIngredientId === id));
+    const amountStatus = requiresAmounts
+      ? decision.sourceAmount !== null && Boolean(decision.sourceUnit) && targetsCovered
+        ? "quantified"
+        : "source_amount_unavailable"
+      : "not_applicable";
+    const sourceAmountPerServing = decision.sourceAmount !== null && nutritionRecord.sourceServings
+      ? round(decision.sourceAmount / nutritionRecord.sourceServings, 2)
+      : null;
+    return {
+      ...decision,
+      sourceAmountPerServing,
+      sourceAmountForMiseServing: sourceAmountPerServing !== null
+        ? round(sourceAmountPerServing * (nutritionRecord.miseServingToSourceServingRatio ?? 1), 2)
+        : null,
+      miseAmounts,
+      amountStatus,
+    };
+  });
+  return {
+    ingredientMapping: { source: "curated_source_audit", reviewedAt: editorialReviewedAt, sourceIngredientCount: hydratedDecisions.length, decisions: hydratedDecisions },
+    nutrition,
+  };
+}
 
 function familyRoles(groups: Partial<Record<RecipeIngredientRole, string[]>>) {
   return Object.fromEntries(
@@ -1002,13 +1436,24 @@ export function nutritionForFamily(family: Pick<RecipeFamily, "ingredients">, am
 
 function parameterizedInstructions(recipe: LegacyRecipeForEngine): RecipeInstruction[] {
   const names = recipe.ingredients.map((item) => [item.id, item.name.toLowerCase()] as const);
-  return recipe.steps.map((source, index) => {
-    const ingredientIds = index === 0 ? recipe.ingredients.map((item) => item.id) : names.filter(([, name]) => source.toLowerCase().includes(name)).map(([id]) => id);
-    const text = index === 0
-      ? "Отмерьте рассчитанные Mise количества ингредиентов, указанные для этой порции или всей партии."
-      : source.replace(/\b\d+(?:[.,]\d+)?\s*(?:г|мл|шт\.?)(?!\p{L})/giu, "рассчитанное количество");
-    return { id: `step-${index + 1}`, text, ingredientIds, dependsOn: index ? [`step-${index}`] : [] };
-  });
+  const measurementStep: RecipeInstruction = {
+    id: "step-measure",
+    text: "Отмерьте рассчитанные Mise количества ингредиентов для всей готовки.",
+    ingredientIds: recipe.ingredients.map((item) => item.id),
+    action: "measure",
+    dependsOn: [],
+  };
+  const cookingSteps = recipe.steps
+    .filter((source) => !/^На одну базовую порцию отмерьте:/iu.test(source))
+    .map((source, index) => ({
+      id: `step-${index + 1}`,
+      text: source.replace(/\b\d+(?:[.,]\d+)?\s*(?:г|мл|шт\.?)(?!\p{L})/giu, "рассчитанное количество"),
+      ingredientIds: names
+        .filter(([, name]) => source.toLowerCase().includes(name))
+        .map(([id]) => id),
+      dependsOn: [index ? `step-${index}` : measurementStep.id],
+    }));
+  return [measurementStep, ...cookingSteps];
 }
 
 export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | null {
@@ -1031,20 +1476,37 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
     });
   }
   const calculated = nutritionForFamily({ ingredients });
-  const nutritionDelta = {
-    kcal: round(calculated.kcal - recipe.macros.kcal),
-    protein: round(calculated.protein - recipe.macros.protein),
-    fat: round(calculated.fat - recipe.macros.fat),
-    carbs: round(calculated.carbs - recipe.macros.carbs),
-  };
-  const nutritionThresholds: Nutrition = {
-    kcal: Math.max(50, recipe.macros.kcal * 0.1),
-    protein: Math.max(5, recipe.macros.protein * 0.15),
-    fat: Math.max(4, recipe.macros.fat * 0.2),
-    carbs: Math.max(8, recipe.macros.carbs * 0.15),
-  };
-  const needsNutritionReview = (Object.keys(nutritionDelta) as (keyof Nutrition)[])
-    .some((key) => Math.abs(nutritionDelta[key]) > nutritionThresholds[key]);
+  const nutritionRecord = pilotNutritionRecords[recipe.id];
+  const editorialAudit = editorialAuditFor(recipe.id, ingredients);
+  const sourceNutrition = nutritionRecord.declaredNutrition === undefined ? recipe.macros : nutritionRecord.declaredNutrition;
+  const sourceServingRatio = nutritionRecord.miseServingToSourceServingRatio ?? 1;
+  const comparisonNutrition = nutritionRecord.comparableToMise && nutritionRecord.quantitativeCoverage === "verified" && sourceNutrition
+    ? {
+        kcal: round(sourceNutrition.kcal * sourceServingRatio),
+        protein: round(sourceNutrition.protein * sourceServingRatio),
+        fat: round(sourceNutrition.fat * sourceServingRatio),
+        carbs: round(sourceNutrition.carbs * sourceServingRatio),
+      }
+    : null;
+  const nutritionDelta = comparisonNutrition
+    ? {
+        kcal: round(calculated.kcal - comparisonNutrition.kcal),
+        protein: round(calculated.protein - comparisonNutrition.protein),
+        fat: round(calculated.fat - comparisonNutrition.fat),
+        carbs: round(calculated.carbs - comparisonNutrition.carbs),
+      }
+    : null;
+  const nutritionThresholds: Nutrition | null = comparisonNutrition
+    ? {
+        kcal: Math.max(50, comparisonNutrition.kcal * 0.1),
+        protein: Math.max(5, comparisonNutrition.protein * 0.15),
+        fat: Math.max(4, comparisonNutrition.fat * 0.2),
+        carbs: Math.max(8, comparisonNutrition.carbs * 0.15),
+      }
+    : null;
+  const needsNutritionReview = !nutritionDelta || !nutritionThresholds ||
+    (Object.keys(nutritionDelta) as (keyof Nutrition)[])
+      .some((key) => Math.abs(nutritionDelta[key]) > nutritionThresholds[key]);
   const sourceUrl = typeof recipe.provenance.sourceUrl === "string" ? recipe.provenance.sourceUrl : undefined;
   const imageUrl = typeof recipe.provenance.imageUrl === "string" ? recipe.provenance.imageUrl : undefined;
   const mealLike = recipe.slot === "lunch" || recipe.slot === "dinner";
@@ -1058,10 +1520,13 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
     minViableCalories: mealLike ? 400 : Math.max(180, Math.floor(calculated.kcal * 0.72 / 10) * 10),
     maxViableCalories: mealLike ? 780 : Math.ceil(calculated.kcal * 1.45 / 10) * 10,
     minimumProtein: mealLike ? Math.min(35, Math.max(24, Math.floor(recipe.macros.protein * 0.68))) : Math.max(16, Math.floor(recipe.macros.protein * 0.65)),
-    sourceNutrition: recipe.macros,
+    sourceNutrition,
+    comparisonNutrition,
+    legacyEditorialNutrition: recipe.macros,
     miseCalculatedNutrition: calculated,
     nutritionDelta,
-    nutritionDeltaKcal: nutritionDelta.kcal,
+    nutritionDeltaKcal: nutritionDelta?.kcal ?? null,
+    editorialAudit,
     miseInstructions: parameterizedInstructions(recipe),
     storage: recipe.storage,
     freezing: { freezable: recipe.freezable, storageDays: recipe.storageDays },
@@ -1231,13 +1696,36 @@ export function solveRecipeBatch(family: RecipeFamily, portions: { id: string; t
   };
 }
 
-export function materializeInstructions(family: RecipeFamily, amounts: Record<string, number>) {
-  return family.miseInstructions.map((step, index) => {
-    if (index !== 0) return step.text;
+export function aggregateCookingAmounts(
+  ingredients: Pick<RecipeFamilyIngredient, "sourceIngredientId" | "baseAmount" | "role">[],
+  portionAmounts: Record<string, number>[],
+  days = 1,
+) {
+  return Object.fromEntries(
+    ingredients.map((ingredient) => {
+      if (ingredient.role === "fat_cooking")
+        return [ingredient.sourceIngredientId, portionAmounts.length ? ingredient.baseAmount : 0];
+      const total = portionAmounts.reduce(
+        (sum, amounts) => sum + (amounts[ingredient.sourceIngredientId] ?? 0),
+        0,
+      );
+      return [ingredient.sourceIngredientId, round(total * Math.max(0, days))];
+    }),
+  );
+}
+
+export function materializeInstructions(
+  family: RecipeFamily,
+  amounts: Record<string, number>,
+  displayNames: Record<string, string> = {},
+) {
+  return family.miseInstructions.map((step) => {
+    if (step.action !== "measure") return step.text;
     const lines = family.ingredients.map((ingredient) => {
       const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
       const unit = ingredient.unit === "piece" ? "шт." : ingredient.unit === "ml" ? "мл" : "г";
-      return `${canonical.canonicalName.toLowerCase()} — ${round(amounts[ingredient.sourceIngredientId] ?? ingredient.baseAmount)} ${unit}`;
+      const name = displayNames[ingredient.sourceIngredientId] ?? canonical.canonicalName;
+      return `${name} — ${round(amounts[ingredient.sourceIngredientId] ?? ingredient.baseAmount)} ${unit}`;
     });
     return `${step.text} ${lines.join("; ")}.`;
   });

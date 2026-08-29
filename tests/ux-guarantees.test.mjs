@@ -41,6 +41,20 @@ test("a failed shopping tick is visible", async () => {
   assert.match(page, /undo-bar/, "clearing can be undone");
 });
 
+test("recipe cards keep photos and cooking measurements actionable", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  assert.match(page, /function RecipeMedia/, "one media component owns the photo fallback");
+  assert.match(page, /onError=\{\(\) => setFailedPhoto\(photo\)\}/, "a failed source photo falls back instead of leaving a blank card");
+  assert.match(page, /<RecipeMedia recipe=\{recipe\} eager \/>/, "the opened recipe uses its photo too");
+  assert.match(css, /\.detail-food img \{[\s\S]*?object-fit: cover;/, "the detail photo fills the existing hero frame");
+  assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
+  assert.match(page, /cookingAmounts\[ingredient\.id\]/, "ingredients and cooking read the same calculated amounts");
+  assert.doesNotMatch(page, /function totalIngredientScale/, "the obsolete divergent scale path is gone");
+});
+
 test("automatic and manual goals are both durable", async () => {
   const [page, nutrition] = await Promise.all([read("app/page.tsx"), read("domain/nutrition.ts")]);
   assert.match(nutrition, /function calculateNutritionTarget/, "the calculator exists");
@@ -62,6 +76,36 @@ test("profile settings can add any standard meal slot", async () => {
   assert.match(page, /availableMealSlots\.map\(\(slot\) =>/);
   assert.match(page, /onMealSlotToggle\(person\.id, slot\)/);
   assert.match(page, /Выберите блюдо для нового приёма пищи/);
+});
+
+test("profile presents the real household goals and keeps its actions connected", async () => {
+  const page = await read("app/page.tsx");
+  const start = page.indexOf("function ProfileScreen(");
+  const end = page.indexOf("function PlanBuilder(", start);
+  assert.ok(start >= 0 && end > start, "the dedicated profile screen is present");
+  const profile = page.slice(start, end);
+
+  assert.match(
+    page,
+    /tab !== "recipes"\s*&&\s*tab !== "profile"/,
+    "profile owns its header instead of showing the generic app header",
+  );
+  assert.match(profile, /<h1>Цели и порции<\/h1>/);
+  assert.match(profile, /people\.map\(\(person, index\)/, "profile renders real people");
+  assert.match(profile, /profileGoalLabels\[person\.estimate\.goal\]/, "the person goal is shown");
+  assert.match(profile, /person\.includedSlots[\s\S]*?mealMeta\[slot\]/, "the included meal slots are shown");
+  assert.match(profile, /plannedTargetsFor\(person\)/, "the plan summary derives from current targets");
+  assert.ok(
+    (profile.match(/onClick=\{onConfigure\}/g) ?? []).length >= 2,
+    "editing a person and adding one share the configuration flow",
+  );
+  assert.match(profile, /\{hasPlan && \([\s\S]*?onClick=\{onNotifications\}/, "reminders are available only with a plan");
+  assert.match(profile, /onClick=\{onOpenTutorial\}/, "onboarding can be reopened");
+  assert.match(profile, /onClick=\{onOpenPrepGuide\}/, "prep guidance can be reopened");
+  assert.match(profile, /className="profile-settings-list glass-card"/, "settings remain grouped");
+  for (const className of ["profile-kcal-ring", "profile-bars", "profile-compact-macros"]) {
+    assert.match(profile, new RegExp(`className="${className}`), `${className} remains in the profile`);
+  }
 });
 
 test("the interface stays legible", async () => {

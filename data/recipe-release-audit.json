@@ -2,16 +2,16 @@
   "schemaVersion": 1,
   "total": 217,
   "counts": {
-    "ready": 24,
+    "ready": 22,
     "review_required": 20,
-    "blocked": 173
+    "blocked": 175
   },
   "reasonCounts": {
     "editorial:extreme_kcal": 42,
     "editorial:fractional_servings": 1,
     "editorial:invalid_macros": 2,
     "editorial:invalid_yield": 5,
-    "editorial:label_dependent_ingredient": 6,
+    "editorial:label_dependent_ingredient": 7,
     "editorial:missing_paraphrased_instructions": 1,
     "editorial:missing_yield": 3,
     "editorial:niche_localization": 9,
@@ -20,15 +20,15 @@
     "nutrition:estimated_household_measure": 72,
     "nutrition:fractional_yield": 1,
     "nutrition:ignored_component_not_calculable": 180,
-    "nutrition:independent_calculation_complete": 37,
+    "nutrition:independent_calculation_complete": 35,
     "nutrition:invalid_source_nutrition": 2,
     "nutrition:invalid_yield": 8,
-    "nutrition:label_required": 6,
+    "nutrition:label_required": 7,
     "nutrition:missing_ingredient_amount": 8,
-    "nutrition:ml_density_missing": 43,
+    "nutrition:ml_density_missing": 45,
     "nutrition:nutrition_delta_outside_tolerance": 8,
-    "nutrition:nutrition_delta_within_tolerance": 37,
-    "nutrition:piece_weight_missing": 32,
+    "nutrition:nutrition_delta_within_tolerance": 35,
+    "nutrition:piece_weight_missing": 33,
     "nutrition:replacement_without_distribution": 2,
     "nutrition:unresolved_ingredient": 160
   },
@@ -165,10 +165,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 513,
+        "kcal": 514.2,
         "protein": 43.1,
-        "fat": 17.4,
-        "carbs": 44.4
+        "fat": 17.5,
+        "carbs": 44.6
       },
       "reasons": [
         {
@@ -225,14 +225,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "water"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "jalapeño"
           }
         },
         {
@@ -662,10 +654,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 546,
+        "kcal": 546.4,
         "protein": 39.7,
         "fat": 20.6,
-        "carbs": 49.7
+        "carbs": 49.8
       },
       "reasons": [
         {
@@ -682,14 +674,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "garlic powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ginger"
           }
         },
         {
@@ -841,15 +825,10 @@
       "id": "tmpm-27328",
       "title": "Easy Dump and Bake Creamy Chicken Pasta",
       "sourceUrl": "https://mealprepmanual.com/easy-dump-and-bake-creamy-chicken-pasta/",
-      "verdict": "ready",
+      "verdict": "blocked",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "ready",
-      "calculatedNutrition": {
-        "kcal": 564.3,
-        "protein": 47.1,
-        "fat": 17.4,
-        "carbs": 53
-      },
+      "nutritionVerdict": "blocked",
+      "calculatedNutrition": null,
       "reasons": [
         {
           "gate": "nutrition",
@@ -901,21 +880,12 @@
         },
         {
           "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
+          "code": "ml_density_missing",
+          "severity": "blocked",
           "detail": {
-            "sourceName": "chopped parsley"
+            "sourceName": "chopped parsley",
+            "unit": "ml"
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
         }
       ]
     },
@@ -923,16 +893,26 @@
       "id": "tmpm-27306",
       "title": "One Pot Sausage and Pepper Pasta",
       "sourceUrl": "https://mealprepmanual.com/one-pot-sausage-and-pepper-pasta/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
-      "nutritionVerdict": "ready",
+      "verdict": "review_required",
+      "editorialVerdict": "review_required",
+      "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 692.6,
-        "protein": 51,
-        "fat": 28,
-        "carbs": 59.2
+        "kcal": 698.3,
+        "protein": 50.9,
+        "fat": 28.6,
+        "carbs": 59.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "label_dependent_ingredient",
+          "severity": "review_required",
+          "detail": {
+            "ingredients": [
+              "half and half"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -1007,6 +987,15 @@
         },
         {
           "gate": "nutrition",
+          "code": "label_required",
+          "severity": "review_required",
+          "detail": {
+            "sourceName": "half and half",
+            "canonicalId": "cream_processed"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -1025,10 +1014,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 629.6,
-        "protein": 46.8,
-        "fat": 28.2,
-        "carbs": 46.7
+        "kcal": 633.2,
+        "protein": 46.9,
+        "fat": 28.3,
+        "carbs": 47.4
       },
       "reasons": [
         {
@@ -1057,14 +1046,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dill pickle slices"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -1083,10 +1064,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 605.9,
+        "kcal": 607,
         "protein": 43.2,
         "fat": 14.2,
-        "carbs": 75.8
+        "carbs": 76.1
       },
       "reasons": [
         {
@@ -1135,14 +1116,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "jalapeño"
           }
         },
         {
@@ -1760,14 +1733,6 @@
           "detail": {
             "sourceName": "salt and pepper to taste"
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "chopped parsley"
-          }
         }
       ]
     },
@@ -1839,15 +1804,10 @@
       "id": "tmpm-26720",
       "title": "Slow Cooker Big Boy Beef Stroganoff",
       "sourceUrl": "https://mealprepmanual.com/slow-cooker-big-boy-beef-stroganoff/",
-      "verdict": "review_required",
+      "verdict": "blocked",
       "editorialVerdict": "review_required",
-      "nutritionVerdict": "ready",
-      "calculatedNutrition": {
-        "kcal": 1022.4,
-        "protein": 76.3,
-        "fat": 23,
-        "carbs": 124.1
-      },
+      "nutritionVerdict": "blocked",
+      "calculatedNutrition": null,
       "reasons": [
         {
           "gate": "editorial",
@@ -1903,21 +1863,12 @@
         },
         {
           "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
+          "code": "ml_density_missing",
+          "severity": "blocked",
           "detail": {
-            "sourceName": "chopped parsley for garnish"
+            "sourceName": "chopped parsley for garnish",
+            "unit": "ml"
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
         }
       ]
     },
@@ -2983,10 +2934,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 697.3,
+        "kcal": 699.7,
         "protein": 43.5,
         "fat": 29.8,
-        "carbs": 61.1
+        "carbs": 61.6
       },
       "reasons": [
         {
@@ -3003,14 +2954,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "garam masala"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ginger"
           }
         },
         {
@@ -3041,10 +2984,10 @@
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 1001.4,
+        "kcal": 1002.1,
         "protein": 73.2,
         "fat": 38.8,
-        "carbs": 88.4
+        "carbs": 88.5
       },
       "reasons": [
         {
@@ -3145,14 +3088,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt and pepper to taste"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "chopped parsley"
           }
         },
         {
@@ -4796,14 +4731,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "cayenne pepper"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ginger"
           }
         },
         {
@@ -6872,10 +6799,11 @@
         },
         {
           "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
+          "code": "piece_weight_missing",
+          "severity": "blocked",
           "detail": {
-            "sourceName": "jalapeño"
+            "sourceName": "jalapeño",
+            "unit": "piece"
           }
         }
       ]
@@ -7230,14 +7158,6 @@
           "severity": "blocked",
           "detail": {
             "sourceName": "velveted chicken"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ginger"
           }
         },
         {
@@ -8306,14 +8226,6 @@
           "severity": "blocked",
           "detail": {
             "sourceName": "rice sticks"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "jalapeño"
           }
         }
       ]

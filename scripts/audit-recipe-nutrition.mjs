@@ -149,9 +149,9 @@ function auditIngredient(sourceIngredient, mapping) {
       }),
     };
   }
-  if (mapping.status === "ignored") {
-    // The normalizer only assigns `ignored` to water, salt, leaveners and
-    // editorial micro-seasonings. Count them as zero in the independent
+  if (mapping.status === "ignored_noncaloric" || mapping.status === "ignored_microcomponent") {
+    // The normalizer only assigns ignored statuses to water, salt, leaveners
+    // and editorial micro-seasonings. Count them as zero in the independent
     // macro sum and keep an auditable note. A meaningful omitted ingredient
     // remains unresolved instead, so it still blocks the calculation.
     return {
