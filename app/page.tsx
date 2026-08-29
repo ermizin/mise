@@ -4324,14 +4324,6 @@ function fitScore(recipe: Recipe, people: Person[], slot: MealSlot) {
     scores.reduce((sum, value) => sum + value, 0) / scores.length,
   );
 }
-function styleNote(recipe: Recipe, style: MenuStyle) {
-  if (style === "protein") return `${recipe.macros.protein} г белка`;
-  if (style === "budget") return `≈ ${recipe.cost} ₽ / порция`;
-  if (style === "keto") return `${recipe.macros.carbs} г углеводов`;
-  return recipe.tags.includes("paleo")
-    ? "Палео-совместимо"
-    : "Легко адаптировать";
-}
 function newPerson(index = 0): Person {
   return {
     id: `person-${Date.now()}-${index}`,
@@ -6818,6 +6810,9 @@ function PlanBuilder({
     initialPlan?.selections ?? {},
   );
   const [choiceIndex, setChoiceIndex] = useState(initialChoiceIndex);
+  /* Ключи позиций, где блюдо выбрано вручную. Автосборка их не трогает —
+     это pinnedByUser из BACKEND.md §2, пока со своим источником. */
+  const [pinned, setPinned] = useState<string[]>([]);
   const [saveState, setSaveState] = useState<"idle" | "saving" | "error">(
     "idle",
   );
@@ -6931,8 +6926,6 @@ function PlanBuilder({
       batches.flatMap((batch) => mealSlots.map((slot) => ({ batch, slot }))),
     [batches, mealSlots],
   );
-  const currentPosition =
-    positions[Math.min(choiceIndex, Math.max(0, positions.length - 1))];
   const unassignedSlots = mealSlots.filter(
     (slot) => !people.some((person) => person.includedSlots.includes(slot)),
   );
@@ -6963,6 +6956,16 @@ function PlanBuilder({
       selections[selectionKey(batch, slot)] &&
       !validSelections[selectionKey(batch, slot)],
   ).length;
+  /* Шаг «Выбор меню» открывается уже собранным: PRODUCT.md §4 п.7 обещает
+     автоматически собранное меню, а не набор из девяти-пятнадцати выборов. */
+  useEffect(() => {
+    if (step !== 5) return;
+    const missing = positions.some(
+      ({ batch, slot }) => !validSelections[selectionKey(batch, slot)],
+    );
+    if (missing) assembleMenu("fill");
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- пересобирать на каждый рендер нельзя: validSelections пересчитывается всегда
+  }, [step, positions]);
   useEffect(() => {
     if (successPlan || mode === "settings") return;
     const draft: BuilderDraft = {
@@ -7123,22 +7126,58 @@ function PlanBuilder({
     }
     setStep((value) => Math.min(6, value + 1));
   }
-  function choose(recipeId: string) {
-    if (!currentPosition) return;
-    const key = selectionKey(currentPosition.batch, currentPosition.slot);
-    const updated = { ...validSelections, [key]: recipeId };
-    setSelections(updated);
-    const nextMissing = positions.findIndex(
-      (position, index) =>
-        index > choiceIndex &&
-        !updated[selectionKey(position.batch, position.slot)],
-    );
-    if (nextMissing >= 0) setChoiceIndex(nextMissing);
-  }
-  function repeatForSlot(recipeId: string, slot: MealSlot) {
+  /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
+     кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
+     Внутри одного приёма пищи блюда по партиям стараемся не повторять. */
+  function assembleMenu(mode: "fill" | "reset" = "fill") {
     const updated = { ...validSelections };
-    for (const batch of batches) updated[selectionKey(batch, slot)] = recipeId;
+    const usedPerSlot = new Map<MealSlot, Set<string>>();
+    /* «Собрать заново» должно давать другое меню, а не то же самое:
+       прошлый выбор уходит в отказ, следующий берётся по убыванию fitScore. */
+    const avoidPerSlot = new Map<MealSlot, Set<string>>();
+    for (const slot of mealSlots) {
+      usedPerSlot.set(slot, new Set());
+      avoidPerSlot.set(slot, new Set());
+    }
+    if (mode === "reset")
+      for (const { batch, slot } of positions) {
+        const key = selectionKey(batch, slot);
+        if (pinned.includes(key)) continue;
+        if (updated[key]) avoidPerSlot.get(slot)?.add(updated[key]);
+        delete updated[key];
+      }
+    for (const { batch, slot } of positions) {
+      const key = selectionKey(batch, slot);
+      const used = usedPerSlot.get(slot) ?? new Set<string>();
+      if (updated[key]) {
+        used.add(updated[key]);
+        continue;
+      }
+      const options = candidateRecipes(slot, menuStyle, people, batch.days, {
+        limit: "all",
+      });
+      const avoid = avoidPerSlot.get(slot) ?? new Set<string>();
+      const pick =
+        options.find(
+          (recipe) => !used.has(recipe.id) && !avoid.has(recipe.id),
+        ) ??
+        options.find((recipe) => !used.has(recipe.id)) ??
+        options[0] ??
+        candidateRecipes(slot, menuStyle, people, batch.days, {
+          limit: 1,
+          includeDisliked: true,
+        })[0];
+      if (!pick) continue;
+      updated[key] = pick.id;
+      used.add(pick.id);
+    }
     setSelections(updated);
+  }
+  function replaceSelection(key: string, recipeId: string) {
+    setSelections({ ...validSelections, [key]: recipeId });
+    setPinned((current) =>
+      current.includes(key) ? current : [...current, key],
+    );
   }
   async function save() {
     if (!allSelected) {
@@ -7350,18 +7389,17 @@ function PlanBuilder({
             }}
           />
         )}
-        {step === 5 && currentPosition && (
-          <MenuStep
-            key={`${currentPosition.batch.id}:${currentPosition.slot}`}
-            position={currentPosition}
-            positions={positions}
-            currentIndex={choiceIndex}
-            selections={validSelections}
-            style={menuStyle}
+        {step === 5 && (
+          <MenuReviewStep
+            batches={batches}
+            mealSlots={mealSlots}
             people={people}
-            onJump={setChoiceIndex}
-            onChoose={choose}
-            onRepeat={repeatForSlot}
+            style={menuStyle}
+            selections={validSelections}
+            pinned={pinned}
+            shopping={draftPlan.shopping}
+            onReplace={replaceSelection}
+            onReassemble={() => assembleMenu("reset")}
           />
         )}
         {step === 6 && (
@@ -8270,152 +8308,301 @@ function CookingStep({
   );
 }
 
-function MenuStep({
-  position,
-  positions,
-  currentIndex,
-  selections,
-  style,
+/* Шаг «Выбор меню» — макет 9b.
+
+   Меню приходит собранным по fitScore, человек его проверяет. Это то, что
+   PRODUCT.md §4 п.7 и §5 требовали с самого начала («текущий ручной flow ещё
+   нужно заменить»), а не новый контракт: число шагов мастера не меняется.
+
+   Заменённая вручную строка помечается и переживает «Собрать заново» —
+   это pinnedByUser из BACKEND.md §2, только источник пока клиентский. */
+
+const eveningForms = ["вечер готовки", "вечера готовки", "вечеров готовки"] as const;
+const sharedForms = ["общий продукт", "общих продукта", "общих продуктов"] as const;
+const buyForms = ["продукт купить", "продукта купить", "продуктов купить"] as const;
+
+/* Сколько порций партии не доживают до своего дня и уходят в морозилку.
+   Правило то же, что у напоминаний: порция дня N морозится при N >= storageDays. */
+function freezeSummary(
+  batches: Batch[],
+  mealSlots: MealSlot[],
+  people: Person[],
+  selections: Record<string, string>,
+) {
+  let portions = 0;
+  let shortest: Recipe | null = null;
+  for (const batch of batches)
+    for (const slot of mealSlots) {
+      const recipe = recipesById[selections[selectionKey(batch, slot)]];
+      if (!recipe?.freezable) continue;
+      const eaters = relevantPeople(people, slot).length;
+      const frozenDays = Math.max(0, batch.days - recipe.storageDays);
+      if (!frozenDays || !eaters) continue;
+      portions += frozenDays * eaters;
+      if (!shortest || recipe.storageDays < shortest.storageDays)
+        shortest = recipe;
+    }
+  return { portions, shortest };
+}
+
+function MenuReviewStep({
+  batches,
+  mealSlots,
   people,
-  onJump,
-  onChoose,
-  onRepeat,
+  style,
+  selections,
+  pinned,
+  shopping,
+  onReplace,
+  onReassemble,
 }: {
-  position: { batch: Batch; slot: MealSlot };
-  positions: { batch: Batch; slot: MealSlot }[];
-  currentIndex: number;
-  selections: Record<string, string>;
-  style: MenuStyle;
+  batches: Batch[];
+  mealSlots: MealSlot[];
   people: Person[];
-  onJump: (index: number) => void;
-  onChoose: (id: string) => void;
-  onRepeat: (id: string, slot: MealSlot) => void;
+  style: MenuStyle;
+  selections: Record<string, string>;
+  pinned: string[];
+  shopping: ShoppingItem[];
+  onReplace: (key: string, recipeId: string) => void;
+  onReassemble: () => void;
 }) {
+  const [replacing, setReplacing] = useState<{
+    key: string;
+    batch: Batch;
+    slot: MealSlot;
+  } | null>(null);
+  const [expanded, setExpanded] = useState<string[]>([]);
+  /* «Не люблю» — мягкое исключение: блюдо прячется из первых рекомендаций,
+     но остаётся доступным явно (PRODUCT.md §5). */
   const [includeDisliked, setIncludeDisliked] = useState(false);
-  const preferred = candidateRecipes(
-    position.slot,
-    style,
-    people,
-    position.batch.days,
-    { limit: "all" },
+
+  const chosen = batches.flatMap((batch) =>
+    mealSlots
+      .map((slot) => recipesById[selections[selectionKey(batch, slot)]])
+      .filter(Boolean),
   );
-  const allAllowed = candidateRecipes(
-    position.slot,
-    style,
-    people,
-    position.batch.days,
-    { limit: "all", includeDisliked: true },
+  const ingredientUse = new Map<string, number>();
+  for (const recipe of new Set(chosen))
+    for (const ingredient of recipe.ingredients)
+      ingredientUse.set(
+        ingredient.id,
+        (ingredientUse.get(ingredient.id) ?? 0) + 1,
+      );
+  const shared = [...ingredientUse.values()].filter((count) => count > 1).length;
+  const freeze = freezeSummary(batches, mealSlots, people, selections);
+  const dishes = new Set(chosen.map((recipe) => recipe.id)).size;
+  const portions = batches.reduce(
+    (sum, batch) =>
+      sum +
+      batch.days *
+        mealSlots.reduce(
+          (slotSum, slot) => slotSum + relevantPeople(people, slot).length,
+          0,
+        ),
+    0,
   );
-  const candidates = (includeDisliked ? allAllowed : preferred).slice(0, 5);
-  const hiddenDisliked = Math.max(0, allAllowed.length - preferred.length);
-  const selectedId = selections[selectionKey(position.batch, position.slot)];
-  const completed = positions.filter(
-    ({ batch, slot }) => selections[selectionKey(batch, slot)],
-  ).length;
+
   return (
     <>
-      <StepIntro
-        icon={<Icon name="pot" />}
-        kicker={`${completed} из ${positions.length} выбрано`}
-        title={`${mealMeta[position.slot].label} · готовка ${position.batch.index + 1}`}
-        text={`${formatDate(position.batch.start)} — ${formatDate(position.batch.end)}. Выберите один из пяти вариантов; жёсткие исключения уже убраны.`}
-      />
-      <div className="position-strip" role="tablist" aria-label="Позиции меню">
-        {positions.map((item, index) => {
-          const done = Boolean(selections[selectionKey(item.batch, item.slot)]);
-          return (
-            <button
-              key={`${item.batch.id}-${item.slot}`}
-              role="tab"
-              aria-selected={index === currentIndex}
-              className={`${index === currentIndex ? "current" : ""} ${done ? "done" : ""}`}
-              onClick={() => onJump(index)}
-              aria-label={`Готовка ${item.batch.index + 1}, ${mealMeta[item.slot].label}${done ? ", выбрано" : ""}`}
-            >
-              <small>{item.batch.index + 1}</small>
-            </button>
-          );
-        })}
+      <p className="wizard-bubble">
+        Собрал меню на {withPlural(
+          batches.reduce((sum, batch) => sum + batch.days, 0),
+          FORMS.day,
+        )}: {withPlural(dishes, FORMS.dish)}, {withPlural(portions, FORMS.portion)}.
+        Посмотрите — что не нравится, заменю.
+      </p>
+
+      <div className="menu-summary">
+        <div className="summary-tile">
+          <b className="tone-accent-num">{batches.length}</b>
+          <span>{plural(batches.length, eveningForms)}</span>
+        </div>
+        <div className="summary-tile">
+          <b className="tone-mint-num">{shared}</b>
+          <span>{plural(shared, sharedForms)}</span>
+        </div>
+        <div className="summary-tile">
+          <b className="tone-amber-num">{shopping.length}</b>
+          <span>{plural(shopping.length, buyForms)}</span>
+        </div>
       </div>
-      {allAllowed.length === 0 && (
-        <Note tone="warn" role="alert">
-          Для этой позиции нет блюда без указанных жёстких исключений. Измените
-          направление меню, состав позиций или ограничения.
+
+      {batches.map((batch) => {
+        const rows = mealSlots
+          .map((slot) => ({
+            slot,
+            key: selectionKey(batch, slot),
+            recipe: recipesById[selections[selectionKey(batch, slot)]],
+          }))
+          .filter((row) => row.recipe);
+        const open = expanded.includes(batch.id);
+        const visible = open ? rows : rows.slice(0, 3);
+        return (
+          <section className="batch-menu glass-card" key={batch.id}>
+            <div className="batch-menu-head">
+              <b>
+                Партия {batch.index + 1} · {formatDate(batch.start)} —{" "}
+                {formatDate(batch.end)}
+              </b>
+              <span>
+                {withPlural(
+                  batch.days *
+                    mealSlots.reduce(
+                      (sum, slot) => sum + relevantPeople(people, slot).length,
+                      0,
+                    ),
+                  FORMS.portion,
+                )}
+              </span>
+            </div>
+            <div className="batch-menu-rows">
+              {visible.map(({ slot, key, recipe }, index) => {
+                const isPinned = pinned.includes(key);
+                return (
+                  <div
+                    className={`menu-row${isPinned ? " is-pinned" : ""}`}
+                    key={key}
+                  >
+                    <span className={`menu-row-art art-${index % 5}`} aria-hidden>
+                      {recipe.emoji}
+                    </span>
+                    <div>
+                      <small>
+                        {mealMeta[slot].label}
+                        {isPinned
+                          ? " · заменено вами"
+                          : ` · ${withPlural(batch.days * relevantPeople(people, slot).length, FORMS.portion)}`}
+                      </small>
+                      <b>{recipe.title}</b>
+                    </div>
+                    <button
+                      className="menu-swap"
+                      aria-label={`Заменить блюдо: ${mealMeta[slot].label}, ${recipe.title}`}
+                      onClick={() => setReplacing({ key, batch, slot })}
+                    >
+                      <Icon name="repeat" size={16} />
+                    </button>
+                  </div>
+                );
+              })}
+              {rows.length > 3 && (
+                <button
+                  className="batch-menu-more"
+                  onClick={() =>
+                    setExpanded((current) =>
+                      open
+                        ? current.filter((id) => id !== batch.id)
+                        : [...current, batch.id],
+                    )
+                  }
+                >
+                  <span>
+                    {open
+                      ? "Свернуть"
+                      : `и ещё ${withPlural(rows.length - 3, FORMS.dish)}`}
+                  </span>
+                  <span className="menu-more-action">
+                    {open ? "скрыть" : "показать"}
+                  </span>
+                </button>
+              )}
+            </div>
+          </section>
+        );
+      })}
+
+      {freeze.portions > 0 && freeze.shortest && (
+        <Note tone="mint" icon={<Icon name="snowflake" />}>
+          {freeze.shortest.title} хранится {withPlural(
+            freeze.shortest.storageDays,
+            FORMS.day,
+          )} — {withPlural(freeze.portions, FORMS.portion)} уйдут в морозилку,
+          напомним переложить накануне.
         </Note>
       )}
-      {hiddenDisliked > 0 && (
-        <button
-          className="secondary-button disliked-toggle"
-          aria-pressed={includeDisliked}
-          onClick={() => setIncludeDisliked((value) => !value)}
-        >
-          {includeDisliked
-            ? "Скрыть варианты из «не люблю»"
-            : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
+
+      <p className="onboarding-fineprint">
+        КБЖУ и сроки хранения — ориентиры, а не медицинская гарантия.
+      </p>
+
+      <div className="chip-row menu-actions">
+        <button className="chip" role="checkbox" aria-checked={false} onClick={onReassemble}>
+          Собрать заново
         </button>
-      )}
-      <div
-        className="menu-candidates"
-        role="radiogroup"
-        aria-label="Варианты блюда"
-      >
-        {candidates.map((recipe, index) => {
-          const selected = selectedId === recipe.id;
-          const fit = fitScore(recipe, people, position.slot);
-          const dislikeLabels = relevantPeople(people, position.slot).flatMap(
-            (person) =>
-              dislikeMatches(recipe, person).map(
-                (label) => `${label.toLowerCase()} — не любит ${person.name}`,
-              ),
-          );
-          return (
-            <article
-              className={`candidate-card glass-card ${selected ? "selected" : ""}`}
-              key={recipe.id}
-            >
-              <button
-                className="candidate-main"
-                role="radio"
-                onClick={() => onChoose(recipe.id)}
-                aria-checked={selected}
-              >
-                <div className={`candidate-art art-${index}`}>
-                  <span>{recipe.emoji}</span>
-                  <em>{recipe.time} мин</em>
-                </div>
-                <div className="candidate-copy">
-                  <div className="fit-badge">Совпадение {fit}%</div>
-                  <h3>{recipe.title}</h3>
-                  <p>
-                    {recipe.macros.kcal} К · {recipe.macros.protein} Б ·{" "}
-                    {recipe.macros.fat} Ж · {recipe.macros.carbs} У
-                  </p>
-                  <small>
-                    {styleNote(recipe, style)} · хранится {recipe.storageDays}{" "}
-                    дн.
-                  </small>
-                  {dislikeLabels.length > 0 && (
-                    <small className="dislike-note">
-                      Из «не люблю»: {dislikeLabels.join("; ")}
-                    </small>
-                  )}
-                </div>
-                <i>{selected ? <Icon name="check" /> : ""}</i>
-              </button>
-              {selected &&
-                positions.filter((item) => item.slot === position.slot).length >
-                  1 && (
-                  <button
-                    className="repeat-button"
-                    onClick={() => onRepeat(recipe.id, position.slot)}
-                  >
-                    Повторить во всех готовках
-                  </button>
-                )}
-            </article>
-          );
-        })}
+        <button className="chip" disabled title="Ручной режим появится позже">
+          Выбрать вручную
+        </button>
       </div>
+
+      {replacing && (
+        <Sheet
+          titleId="menu-replace-title"
+          onClose={() => setReplacing(null)}
+          className="replace-sheet glass"
+        >
+          <div className="sheet-head">
+            <h2 id="menu-replace-title">
+              {mealMeta[replacing.slot].label} · партия {replacing.batch.index + 1}
+            </h2>
+          </div>
+          <div className="replace-list" role="radiogroup" aria-label="Чем заменить">
+            {candidateRecipes(replacing.slot, style, people, replacing.batch.days, {
+              limit: 6,
+              includeDisliked,
+            }).map((recipe, index) => {
+              const active = selections[replacing.key] === recipe.id;
+              return (
+                <button
+                  key={recipe.id}
+                  className="replace-option glass-3"
+                  role="radio"
+                  aria-checked={active}
+                  onClick={() => {
+                    onReplace(replacing.key, recipe.id);
+                    setReplacing(null);
+                  }}
+                >
+                  <span className={`menu-row-art art-${index % 5}`} aria-hidden>
+                    {recipe.emoji}
+                  </span>
+                  <div>
+                    <b>{recipe.title}</b>
+                    <small>
+                      {recipe.macros.kcal} ккал · {recipe.time} мин · совпадение{" "}
+                      {fitScore(recipe, people, replacing.slot)}%
+                    </small>
+                  </div>
+                  {active && <Icon name="check" size={16} />}
+                </button>
+              );
+            })}
+          </div>
+          {(() => {
+            const hidden = Math.max(
+              0,
+              candidateRecipes(replacing.slot, style, people, replacing.batch.days, {
+                limit: "all",
+                includeDisliked: true,
+              }).length -
+                candidateRecipes(replacing.slot, style, people, replacing.batch.days, {
+                  limit: "all",
+                }).length,
+            );
+            if (!hidden) return null;
+            return (
+              <button
+                className="btn btn-secondary"
+                aria-pressed={includeDisliked}
+                onClick={() => setIncludeDisliked((value) => !value)}
+              >
+                {includeDisliked
+                  ? "Скрыть варианты из «не люблю»"
+                  : `Показать варианты из «не люблю» — ${hidden}`}
+              </button>
+            );
+          })()}
+        </Sheet>
+      )}
     </>
   );
 }

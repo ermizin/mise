@@ -1761,8 +1761,7 @@ p {
   overflow-x: auto;
   scrollbar-width: none;
 }
-.date-strip::-webkit-scrollbar,
-.position-strip::-webkit-scrollbar {
+.date-strip::-webkit-scrollbar {
   display: none;
 }
 .date-strip button {
@@ -1906,8 +1905,7 @@ p {
   place-items: center;
   overflow: hidden;
 }
-.food-art span,
-.candidate-art span {
+.food-art span {
   filter: drop-shadow(0 8px 12px rgba(63, 57, 46, 0.14));
 }
 .food-art span {
@@ -1955,25 +1953,6 @@ p {
   font-size: var(--text-link);
 }
 
-.position-strip {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.candidate-art em {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 5px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: var(--r-chip-sq);
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.68);
-  font-size: var(--text-min);
-  font-style: normal;
-  font-weight: var(--weight-semibold);
-}
 
 /* ============================================================
    Каталог «Рецепты» · макет 9a
@@ -3122,62 +3101,6 @@ p {
   background: rgba(210, 246, 234, 0.62);
 }
 
-.position-strip {
-  margin: -4px -20px 13px;
-  padding: 5px 20px 13px;
-}
-.position-strip button {
-  position: relative;
-  flex: 0 0 53px;
-  height: 59px;
-  border: 1px solid rgba(255, 255, 255, 0.74);
-  border-radius: var(--r-nested);
-  background: rgba(255, 255, 255, 0.38);
-}
-.position-strip button span,
-.position-strip button small {
-  display: block;
-}
-.position-strip button span {
-  font-size: var(--glyph-s);
-}
-.position-strip button small {
-  color: var(--muted);
-  font-size: var(--text-min);
-}
-.position-strip button.done::after {
-  content: "✓";
-  position: absolute;
-  top: -5px;
-  right: -4px;
-  width: 18px;
-  height: 18px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: #fff;
-  background: var(--mint-deep);
-  font-size: var(--text-min);
-  font-weight: var(--weight-bold);
-}
-.position-strip button.current {
-  border-color: var(--accent);
-  box-shadow: 0 8px 18px rgba(224, 80, 34, 0.15);
-}
-.menu-candidates {
-  display: grid;
-  gap: 11px;
-}
-.disliked-toggle {
-  width: 100%;
-  margin-bottom: 11px;
-}
-.candidate-copy .dislike-note {
-  display: block;
-  margin-top: 5px;
-  color: #8b5a43;
-  line-height: 1.35;
-}
 .allergy-warning,
 .label-reminder {
   position: relative;
@@ -3237,94 +3160,6 @@ p {
   color: var(--muted);
   font-size: var(--text-min);
 }
-.candidate-card {
-  padding: 0;
-  overflow: hidden;
-}
-.candidate-card.selected {
-  border-color: rgba(44, 157, 126, 0.5);
-  background: rgba(223, 249, 240, 0.7);
-}
-.candidate-main {
-  width: 100%;
-  min-height: 126px;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 99px 1fr 28px;
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-  background: transparent;
-}
-.candidate-art {
-  position: relative;
-  height: 104px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--r-nested);
-}
-.candidate-art span {
-  font-size: var(--glyph-l);
-}
-.candidate-art em {
-  top: auto;
-  right: 5px;
-  bottom: 5px;
-}
-.candidate-copy {
-  min-width: 0;
-}
-.fit-badge {
-  display: inline-block;
-  margin-bottom: 5px;
-  padding: 4px 7px;
-  border-radius: var(--r-chip-sq);
-  color: #1e7c63;
-  background: rgba(190, 238, 222, 0.62);
-  font-size: var(--text-min);
-  font-weight: var(--weight-bold);
-}
-.candidate-copy h3 {
-  margin: 0 0 6px;
-  font-size: var(--text-h3);
-  line-height: 1.15;
-}
-.candidate-copy p {
-  margin: 0 0 5px;
-  color: var(--ink-soft);
-  font-size: var(--text-min);
-  font-weight: var(--weight-semibold);
-}
-.candidate-copy small {
-  color: var(--muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
-}
-.candidate-main > i {
-  width: 27px;
-  height: 27px;
-  display: grid;
-  place-items: center;
-  border: 2px solid rgba(39, 120, 98, 0.2);
-  border-radius: 50%;
-  color: #fff;
-  font-style: normal;
-}
-.candidate-card.selected .candidate-main > i {
-  border-color: var(--mint-deep);
-  background: var(--mint-deep);
-}
-.repeat-button {
-  width: calc(100% - 20px);
-  min-height: 40px;
-  margin: -1px 10px 10px;
-  border-radius: var(--r-tile);
-  color: var(--mint-deep);
-  background: rgba(255, 255, 255, 0.44);
-  font-size: var(--text-min);
-  font-weight: var(--weight-bold);
-}
-
 .review-hero > div:first-child {
   display: inline-block;
   max-width: calc(100% - 65px);
@@ -4006,19 +3841,6 @@ p {
     padding-left: 14px;
     padding-right: 14px;
   }
-  .position-strip {
-    margin-left: -14px;
-    margin-right: -14px;
-    padding-left: 14px;
-    padding-right: 14px;
-  }
-  .candidate-main {
-    grid-template-columns: 82px 1fr 25px;
-    gap: 8px;
-  }
-  .candidate-art {
-    height: 91px;
-  }
   .macro-inputs {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -4293,8 +4115,7 @@ p {
     opacity: 0.32;
   }
   .date-strip button,
-  .day-scale button,
-  .position-strip button {
+  .day-scale button {
     color: var(--ink-soft);
   }
   .primary-button {
@@ -4342,10 +4163,6 @@ p {
     background: rgba(24, 33, 31, 0.64);
   }
   .food-art small {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(24, 33, 31, 0.94);
-  }
-  .candidate-art em {
     border-color: rgba(255, 255, 255, 0.12);
     background: rgba(24, 33, 31, 0.94);
   }
@@ -4422,13 +4239,6 @@ p {
   }
   .remainder-sheet > button > span {
     background: rgba(24, 33, 31, 0.86);
-  }
-  .position-strip button {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(24, 33, 31, 0.66);
-  }
-  .repeat-button {
-    background: rgba(24, 33, 31, 0.72);
   }
   .review-hero > span {
     background: rgba(24, 33, 31, 0.76);
@@ -4735,4 +4545,213 @@ p {
   .analytics-thresholds {
     grid-template-columns: 1fr;
   }
+}
+
+/* ============================================================
+   Шаг «Выбор меню» · макет 9b
+
+   Меню приходит собранным, шаг — проверка. Пошаговый выбор по слотам
+   (9c) отложен в P2, место под него оставлено чипом в панели действий.
+
+   Новых стеклянных поверхностей здесь нет намеренно: на шаге уже блюрятся
+   шапка, панель действий и карточки партий, а FRONTEND.md §4 держит потолок
+   в три слоя. Плитки итога, строки блюд и варианты замены — полупрозрачная
+   заливка с кромкой, без backdrop-filter.
+   ============================================================ */
+
+.wizard-bubble {
+  align-self: flex-start;
+  max-width: 82%;
+  margin: 0 0 11px;
+  padding: 13px 15px;
+  border-radius: var(--r-row) var(--r-row) var(--r-row) var(--r-chip-sq);
+  background: var(--glass-3-bg);
+  border: 1px solid var(--glass-3-border);
+  font-size: var(--text-body);
+  line-height: 1.4;
+}
+
+.menu-summary {
+  margin-bottom: 11px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+.summary-tile {
+  padding: 12px 13px;
+  border-radius: var(--r-nested);
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+}
+.summary-tile b {
+  display: block;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  letter-spacing: var(--tracking-hero);
+}
+.summary-tile span {
+  display: block;
+  margin-top: 5px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.tone-accent-num {
+  color: var(--accent-text-strong);
+}
+.tone-mint-num {
+  color: var(--mint-text);
+}
+.tone-amber-num {
+  color: var(--amber-text);
+}
+
+.batch-menu {
+  margin-bottom: 11px;
+}
+.batch-menu-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.batch-menu-head b {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-h3);
+}
+.batch-menu-head span {
+  flex: none;
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.batch-menu-rows {
+  margin-top: var(--space-3);
+  display: grid;
+  gap: var(--space-2);
+}
+.menu-row {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 11px;
+  align-items: center;
+  padding: 7px;
+  border-radius: var(--r-nested);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+}
+/* Заменённое вручную видно и не перетирается пересборкой. */
+.menu-row.is-pinned {
+  background: rgba(255, 244, 236, 0.75);
+  border-color: rgba(242, 87, 26, 0.28);
+}
+.menu-row.is-pinned small {
+  color: var(--accent-text-strong);
+}
+.menu-row-art {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-tile);
+  font-size: var(--glyph-s);
+}
+.menu-row small {
+  display: block;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.menu-row b {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--text-link);
+  font-weight: var(--weight-label);
+  line-height: 1.25;
+}
+.menu-swap {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  margin-right: 3px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-tile);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  color: var(--accent-text);
+}
+/* Зона нажатия 44 без роста самой кнопки. */
+.menu-swap::after {
+  content: "";
+  position: absolute;
+  inset: -5px;
+}
+.batch-menu-more {
+  width: 100%;
+  min-height: var(--hit-min);
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: none;
+  color: var(--ink-muted);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-label);
+}
+.menu-more-action {
+  color: var(--accent-text);
+}
+.menu-actions {
+  margin-top: var(--space-3);
+  flex-wrap: wrap;
+  overflow: visible;
+  mask-image: none;
+}
+
+.replace-sheet {
+  width: min(580px, 100%);
+  padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
+  border-radius: var(--r-chrome) var(--r-chrome) 0 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.replace-list {
+  display: grid;
+  gap: var(--space-2);
+}
+.replace-option {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  gap: 11px;
+  align-items: center;
+  min-height: var(--hit-min);
+  padding: 8px;
+  border-radius: var(--r-nested);
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  text-align: left;
+  color: var(--accent-text);
+}
+.replace-option[aria-checked="true"] {
+  border-color: rgba(242, 87, 26, 0.55);
+  background: rgba(255, 244, 236, 0.8);
+}
+.replace-option b {
+  display: block;
+  color: var(--ink);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-h3);
+}
+.replace-option small {
+  display: block;
+  margin-top: 3px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
 }

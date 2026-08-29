@@ -44,7 +44,6 @@ test("includes the complete plan-builder and private persistence model", async (
   for (const step of ["Период", "Приёмы пищи", "Вид меню", "Люди и цели", "Готовка", "Выбор меню", "Проверка"]) assert.match(page, new RegExp(step));
   for (const style of ["Высокобелковое", "Бюджетное", "Палео", "Кето"]) assert.match(page, new RegExp(style));
   assert.match(page, /Приготовить остаток отдельно/);
-  assert.match(page, /Выберите один из пяти вариантов/);
   assert.match(page, /Сначала взвесьте готовую еду/);
   assert.match(page, /Фактический вес готового блюда/);
   assert.match(page, /buildShopping/);
@@ -192,6 +191,24 @@ test("includes the complete plan-builder and private persistence model", async (
   ]) {
     assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} не пережил каталог 9a`);
     assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил каталог 9a`);
+  }
+
+  // Шаг «Выбор меню» (9b): меню приходит собранным, шаг — проверка.
+  assert.match(page, /Посмотрите — что не нравится, заменю/);
+  assert.match(page, /function assembleMenu/);
+  assert.match(page, /заменено вами/);
+  // Заменённое вручную переживает пересборку.
+  assert.match(page, /if \(pinned\.includes\(key\)\) continue;/);
+  // «Собрать заново» обязано дать другое меню, а не то же самое.
+  assert.match(page, /avoidPerSlot/);
+  assert.match(page, /setPinned\(/);
+  // Пошаговый выбор по слотам ушёл вместе со своей разметкой.
+  for (const dead of [
+    "position-strip", "candidate-card", "candidate-art", "candidate-copy",
+    "menu-candidates", "fit-badge", "repeat-button", "disliked-toggle",
+  ]) {
+    assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} не пережил 9b`);
+    assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил 9b`);
   }
 
   // Число теней не растёт: стекло описано уровнями, а не по месту.
