@@ -41,6 +41,20 @@ test("a failed shopping tick is visible", async () => {
   assert.match(page, /undo-bar/, "clearing can be undone");
 });
 
+test("recipe cards keep photos and cooking measurements actionable", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  assert.match(page, /function RecipeMedia/, "one media component owns the photo fallback");
+  assert.match(page, /onError=\{\(\) => setFailedPhoto\(photo\)\}/, "a failed source photo falls back instead of leaving a blank card");
+  assert.match(page, /<RecipeMedia recipe=\{recipe\} eager \/>/, "the opened recipe uses its photo too");
+  assert.match(css, /\.detail-food img \{[\s\S]*?object-fit: cover;/, "the detail photo fills the existing hero frame");
+  assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
+  assert.match(page, /cookingAmounts\[ingredient\.id\]/, "ingredients and cooking read the same calculated amounts");
+  assert.doesNotMatch(page, /function totalIngredientScale/, "the obsolete divergent scale path is gone");
+});
+
 test("automatic and manual goals are both durable", async () => {
   const [page, nutrition] = await Promise.all([read("app/page.tsx"), read("domain/nutrition.ts")]);
   assert.match(nutrition, /function calculateNutritionTarget/, "the calculator exists");

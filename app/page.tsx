@@ -17,7 +17,7 @@ import {
   type PersonAllocation,
 } from "@/domain/portion-allocation";
 import {
-  materializeInstructions,
+  aggregateCookingAmounts,
   recipeToFamily,
   solveRecipeFamily,
   type RecipeFamily,
@@ -64,6 +64,7 @@ type Allergen =
 type Ingredient = {
   id: string;
   name: string;
+  fatNote?: string;
   quantity: number;
   unit: "г" | "мл" | "шт.";
   group: string;
@@ -464,21 +465,67 @@ const packagedIngredientIds = new Set([
   "worcestershire",
   "yogurt",
 ]);
+
+function normalizedIngredientName(id: string, name: string) {
+  // Весь расчётный профиль молока в текущем каталоге — 2%; карточка и КБЖУ
+  // должны ссылаться на один и тот же продукт, а не на 2,5/3,2% одновременно.
+  return id === "milk" ? "Молоко 2%" : name;
+}
+
+function ingredientFatNote(id: string, name: string) {
+  const explicit = name.match(/(\d+(?:[.,]\d+)?)\s*%/u)?.[1];
+  switch (id) {
+    case "beef":
+      return "≈4% по расчётному профилю";
+    case "beef-mince":
+      return /85\s*\/\s*15/u.test(name) ? "15% (85/15)" : "7% (93/7)";
+    case "pork-mince":
+      return "10% (90/10)";
+    case "tuna":
+      return "сверить на упаковке";
+    case "salmon":
+      return "≈13% по расчётному профилю";
+    case "milk":
+      return "2%";
+    case "cottage":
+      return explicit ? `${explicit.replace(".", ",")}%` : "4–5% по расчётному профилю";
+    case "cream":
+      return explicit ? `${explicit.replace(".", ",")}%` : "сверить на упаковке";
+    case "yogurt":
+      return "≈2% по расчётному профилю, сверить упаковку";
+    case "butter":
+      return "≈81% по расчётному профилю";
+    case "kefir":
+    case "cream-cheese":
+    case "cheese":
+    case "parmesan":
+    case "feta":
+    case "mozzarella":
+      return "сверить на упаковке";
+    default:
+      return undefined;
+  }
+}
+
 const i = (
   id: string,
   name: string,
   quantity: number,
   unit: Ingredient["unit"],
   group: string,
-): Ingredient => ({
-  id,
-  name,
-  quantity,
-  unit,
-  group,
-  allergens: [...(ingredientAllergens[id] ?? [])],
-  checkLabel: packagedIngredientIds.has(id),
-});
+): Ingredient => {
+  const normalizedName = normalizedIngredientName(id, name);
+  return {
+    id,
+    name: normalizedName,
+    fatNote: ingredientFatNote(id, normalizedName),
+    quantity,
+    unit,
+    group,
+    allergens: [...(ingredientAllergens[id] ?? [])],
+    checkLabel: packagedIngredientIds.has(id),
+  };
+};
 const noKnifeIngredientIds = new Set([
   "oats",
   "buckwheat",
@@ -4122,6 +4169,36 @@ function ingredientScaleFor(
     return solvedAmount / Math.max(ingredient.quantity, 0.0001);
   return portion.factor * ingredientRatioFor(ingredient, portion.ratios);
 }
+function recipeCookingAmounts(
+  recipe: Recipe,
+  portions: ReturnType<typeof portionFor>[],
+  days: number,
+) {
+  const family = recipeFamiliesById[recipe.id];
+  if (family) {
+    const portionAmounts = portions.map((portion) =>
+      Object.fromEntries(
+        recipe.ingredients.map((ingredient) => [
+          ingredient.id,
+          portion.solvedAmounts?.[ingredient.id] ??
+            ingredient.quantity * ingredientScaleFor(ingredient, portion),
+        ]),
+      ),
+    );
+    return aggregateCookingAmounts(family.ingredients, portionAmounts, days);
+  }
+  return Object.fromEntries(
+    recipe.ingredients.map((ingredient) => [
+      ingredient.id,
+      ingredient.quantity *
+        portions.reduce(
+          (sum, portion) => sum + ingredientScaleFor(ingredient, portion),
+          0,
+        ) *
+        days,
+    ]),
+  );
+}
 function buildBatches(
   start: string,
   periodDays: number,
@@ -4244,15 +4321,11 @@ function buildShopping(
             plan.tuning?.[tuningKey(batch, slot, person)],
           ),
         );
+      const cookingAmounts = recipeCookingAmounts(recipe, portions, batch.days);
       for (const ingredient of recipe.ingredients) {
         const key = `${ingredient.id}:${ingredient.unit}`;
         const existing = aggregate.get(key);
-        const totalScale =
-          portions.reduce(
-            (sum, portion) => sum + ingredientScaleFor(ingredient, portion),
-            0,
-          ) * batch.days;
-        const quantity = ingredient.quantity * totalScale;
+        const quantity = cookingAmounts[ingredient.id] ?? 0;
         if (existing) existing.quantity += quantity;
         else
           aggregate.set(key, { ...ingredient, key, quantity, checked: false });
@@ -4409,11 +4482,16 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
         )
       : [],
     people: plan.people.map(normalizePerson),
-    shopping: plan.shopping.map((item) => ({
-      ...item,
-      allergens: [...(ingredientAllergens[item.id] ?? [])],
-      checkLabel: packagedIngredientIds.has(item.id),
-    })),
+    shopping: plan.shopping.map((item) => {
+      const name = normalizedIngredientName(item.id, item.name);
+      return {
+        ...item,
+        name,
+        fatNote: ingredientFatNote(item.id, name),
+        allergens: [...(ingredientAllergens[item.id] ?? [])],
+        checkLabel: packagedIngredientIds.has(item.id),
+      };
+    }),
   };
 }
 function groupedShopping(items: ShoppingItem[]) {
@@ -4837,6 +4915,40 @@ function deckDishes(plan: ActivePlan | null) {
   }));
 }
 
+function RecipeMedia({
+  recipe,
+  eager = false,
+}: {
+  recipe: Recipe;
+  eager?: boolean;
+}) {
+  const photo =
+    recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
+  const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
+  if (!photo || failedPhoto === photo)
+    return (
+      <span className="recipe-media-fallback" aria-hidden>
+        {recipe.emoji}
+      </span>
+    );
+  return (
+    // Фото рецепта — удалённое превью источника; при сетевой ошибке остаётся
+    // устойчивый emoji-fallback вместо пустой карточки.
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={photo}
+      alt={
+        recipe.provenance.kind === "parsed"
+          ? recipe.provenance.imageAlt || recipe.title
+          : recipe.title
+      }
+      loading={eager ? "eager" : "lazy"}
+      referrerPolicy="no-referrer"
+      onError={() => setFailedPhoto(photo)}
+    />
+  );
+}
+
 function DeckCard({
   slot,
   recipe,
@@ -4849,20 +4961,12 @@ function DeckCard({
   main?: boolean;
 }) {
   if (!recipe) return null;
-  const photo =
-    recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
   return (
     <div
       className={`deck-card glass-2 ${main ? "deck-main" : index === 0 ? "deck-left" : "deck-right"}`}
     >
       <div className={`deck-thumb art-${index % 5}`}>
-        {photo ? (
-          // Фото рецепта — удалённый ассет источника, не сборочная картинка.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={photo} alt="" loading="lazy" referrerPolicy="no-referrer" />
-        ) : (
-          recipe.emoji
-        )}
+        <RecipeMedia recipe={recipe} />
         {main && (
           <span className="deck-kcal">{recipe.macros.kcal} ккал</span>
         )}
@@ -6498,25 +6602,12 @@ function RecipeCard({
   plan: ActivePlan | null;
   onOpen: () => void;
 }) {
-  const photo =
-    recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
   const missing = missingCountFor(recipe, plan);
   const batchNumber = batchNumberFor(recipe, plan);
   return (
     <button className="recipe-card" onClick={onOpen}>
       <div className={`recipe-media art-${index % 5}`}>
-        {photo ? (
-          // Фото рецепта — удалённый ассет источника, не сборочная картинка.
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={photo}
-            alt=""
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <span aria-hidden>{recipe.emoji}</span>
-        )}
+        <RecipeMedia recipe={recipe} />
         {batchNumber && (
           <span className="recipe-batch-badge">в партии {batchNumber}</span>
         )}
@@ -6669,6 +6760,7 @@ function ShoppingScreen({
               </span>
               <span className="grocery-name">
                 {item.name}
+                {item.fatNote && <small>Жирность: {item.fatNote}</small>}
                 {item.checkLabel && <small>Проверить состав и следы</small>}
               </span>
               <b>
@@ -8959,6 +9051,19 @@ function SuccessSheet({
   );
 }
 
+function roundedIngredientAmount(ingredient: Ingredient, amount: number) {
+  if (ingredient.unit === "шт.") return round(amount, 1);
+  if (amount < 10) return round(amount, 1);
+  if (amount < 50) return round(amount);
+  return round(amount / 5) * 5;
+}
+
+function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
+  return `${roundedIngredientAmount(ingredient, amount).toLocaleString("ru-RU", {
+    maximumFractionDigits: 1,
+  })} ${ingredient.unit}`;
+}
+
 function RecipeView({
   context,
   onBack,
@@ -9115,36 +9220,32 @@ function RecipeView({
       setSaveStatus("error");
     }
   }
-  function totalIngredientScale(ingredient: Ingredient) {
-    if (!batch || !slot || !plan) return ingredientRatioFor(ingredient, draft);
-    return (
-      eaters.reduce((sum, eater) => {
-        const eaterTuning =
-          eater.id === person?.id
-            ? draft
-            : plan.tuning?.[tuningKey(batch, slot, eater)];
-        return (
-          sum +
-          ingredientScaleFor(
-            ingredient,
-            portionFor(eater, slot, recipe, eaterTuning),
-          )
-        );
-      }, 0) * batch.days
-    );
-  }
   const recipeFamily = recipeFamiliesById[recipe.id];
+  const cookingAmounts = (() => {
+    if (!batch || !slot || !plan)
+      return Object.fromEntries(
+        recipe.ingredients.map((ingredient) => [
+          ingredient.id,
+          ingredient.quantity * ingredientRatioFor(ingredient, draft),
+        ]),
+      );
+
+    const portions = eaters.map((eater) => {
+      const eaterTuning =
+        eater.id === person?.id
+          ? draft
+          : plan.tuning?.[tuningKey(batch, slot, eater)];
+      return portionFor(eater, slot, recipe, eaterTuning);
+    });
+    return recipeCookingAmounts(recipe, portions, batch.days);
+  })();
   const displaySteps = recipeFamily
-    ? materializeInstructions(
-        recipeFamily,
-        Object.fromEntries(
-          recipe.ingredients.map((ingredient) => [
-            ingredient.id,
-            ingredient.quantity * totalIngredientScale(ingredient),
-          ]),
-        ),
-      )
-    : recipe.steps;
+    ? recipeFamily.miseInstructions
+        .filter((step) => step.action !== "measure")
+        .map((step) => step.text)
+    : recipe.steps.filter(
+        (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
+      );
   return (
     <main className="app-shell recipe-detail">
       <div className="ambient ambient-one" />
@@ -9165,7 +9266,7 @@ function RecipeView({
       </header>
       <section className="detail-hero">
         <div className="detail-food glass">
-          <span>{recipe.emoji}</span>
+          <RecipeMedia recipe={recipe} eager />
         </div>
         <p className="kicker">
           {mealMeta[recipe.slot].label} · {originLabel}
@@ -9381,43 +9482,74 @@ function RecipeView({
                   : "На одну базовую порцию"
               }
             >
-              Количество меняется вместе с рычагами КБЖУ
+              Те же количества стоят первым шагом в «Готовить»
             </Note>
-            {recipe.ingredients.map((ingredient) => {
-              const totalScale = totalIngredientScale(ingredient);
-              return (
-                <div className="ingredient-row" key={ingredient.id}>
-                  <Icon name="check" />
-                  <p>
-                    {ingredient.name}
-                    <small>
-                      {ingredient.group}
-                      {ingredient.allergens.length > 0
-                        ? ` · ${ingredient.allergens
-                            .map((allergen) => allergenMeta[allergen].short)
-                            .join(", ")}`
-                        : ""}
-                      {ingredient.checkLabel
-                        ? " · проверить этикетку/следы"
-                        : ""}
-                    </small>
-                  </p>
-                  <b>
-                    {ingredient.unit === "шт."
-                      ? round(ingredient.quantity * totalScale, 1)
-                      : round((ingredient.quantity * totalScale) / 5) * 5}{" "}
-                    {ingredient.unit}
-                  </b>
-                </div>
-              );
-            })}
+            {recipe.ingredients.map((ingredient) => (
+              <div className="ingredient-row" key={ingredient.id}>
+                <Icon name="check" />
+                <p>
+                  {ingredient.name}
+                  <small>
+                    {ingredient.fatNote
+                      ? `Жирность: ${ingredient.fatNote} · `
+                      : ""}
+                    {ingredient.group}
+                    {ingredient.allergens.length > 0
+                      ? ` · ${ingredient.allergens
+                          .map((allergen) => allergenMeta[allergen].short)
+                          .join(", ")}`
+                      : ""}
+                    {ingredient.checkLabel
+                      ? " · проверить этикетку/следы"
+                      : ""}
+                  </small>
+                </p>
+                <b>
+                  {ingredientAmountLabel(
+                    ingredient,
+                    cookingAmounts[ingredient.id] ?? ingredient.quantity,
+                  )}
+                </b>
+              </div>
+            ))}
           </div>
         )}
         {section === "steps" && (
           <ol className="cooking-steps">
+            <li className="cooking-measure-step">
+              <span>1</span>
+              <div>
+                <p>
+                  <b>Сначала отмерьте всё на эту готовку</b>
+                  <small>
+                    {batch
+                      ? `${batch.days} дн. · ${eaters.length} чел.`
+                      : "Одна базовая порция"}
+                  </small>
+                </p>
+                <div className="cooking-measures">
+                  {recipe.ingredients.map((ingredient) => (
+                    <div key={ingredient.id}>
+                      <span>
+                        {ingredient.name}
+                        {ingredient.fatNote && (
+                          <small>Жирность: {ingredient.fatNote}</small>
+                        )}
+                      </span>
+                      <b>
+                        {ingredientAmountLabel(
+                          ingredient,
+                          cookingAmounts[ingredient.id] ?? ingredient.quantity,
+                        )}
+                      </b>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </li>
             {displaySteps.map((text, index) => (
               <li key={`${text}-${index}`}>
-                <span>{index + 1}</span>
+                <span>{index + 2}</span>
                 <p>{text}</p>
               </li>
             ))}
