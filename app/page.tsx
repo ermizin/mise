@@ -4777,6 +4777,10 @@ function groupedShopping(items: ShoppingItem[]) {
 
 export default function Home() {
   const [tab, setTab] = useState<Tab>("week");
+  const [tabMotion, setTabMotion] = useState<{
+    direction: -1 | 1;
+    epoch: number;
+  }>({ direction: 1, epoch: 0 });
   const [activePlan, setActivePlan] = useState<ActivePlan | null>(null);
   const [recipeContext, setRecipeContext] = useState<RecipeContext | null>(
     null,
@@ -4940,6 +4944,20 @@ export default function Home() {
       startPlanFlow(false);
       return;
     }
+    if (next !== tab) {
+      const order: Exclude<Tab, "builder">[] = [
+        "week",
+        "recipes",
+        "shopping",
+        "profile",
+      ];
+      const currentIndex = order.indexOf(tab as Exclude<Tab, "builder">);
+      const nextIndex = order.indexOf(next as Exclude<Tab, "builder">);
+      setTabMotion((current) => ({
+        direction: nextIndex >= currentIndex ? 1 : -1,
+        epoch: current.epoch + 1,
+      }));
+    }
     setTab(next);
   }
   function repeatPlan() {
@@ -5069,7 +5087,11 @@ export default function Home() {
   };
   const currentTitle = titles[tab as Exclude<Tab, "builder">];
   return (
-    <main className={`app-shell${tab === "recipes" ? " is-catalog" : ""}`}>
+    <main
+      className={`app-shell${tab === "recipes" ? " is-catalog" : ""}${
+        tabMotion.direction > 0 ? " is-tab-forward" : " is-tab-backward"
+      }`}
+    >
       <div className="app-bg" aria-hidden />
       {tab !== "recipes" &&
         tab !== "profile" &&
@@ -5184,6 +5206,7 @@ export default function Home() {
         tab={tab}
         onNavigate={navigate}
         showCompose={!activePlan}
+        motionEpoch={tabMotion.epoch}
       />
     </main>
   );
@@ -5337,6 +5360,7 @@ function DeckCard({
 function OnboardingShell({
   guide = false,
   underBar = false,
+  motionDirection = 1,
   header,
   bar,
   onNext,
@@ -5345,6 +5369,7 @@ function OnboardingShell({
 }: {
   guide?: boolean;
   underBar?: boolean;
+  motionDirection?: -1 | 1;
   header?: ReactNode;
   bar: ReactNode;
   onNext?: () => void;
@@ -5354,7 +5379,7 @@ function OnboardingShell({
   const swipeFrom = useRef<{ x: number; y: number } | null>(null);
   return (
     <main
-      className={`onboarding-shell${guide ? " is-guide" : ""}`}
+      className={`onboarding-shell${guide ? " is-guide" : motionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
       onTouchStart={(event) => {
         const touch = event.touches[0];
         swipeFrom.current = touch
@@ -5368,11 +5393,19 @@ function OnboardingShell({
         if (!from || !touch) return;
         const dx = touch.clientX - from.x;
         const dy = touch.clientY - from.y;
-        if (Math.abs(dx) < 60 || Math.abs(dx) <= Math.abs(dy)) return;
+        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
         if (dx < 0) onNext?.();
         else onBack?.();
       }}
     >
+      {!guide && (
+        <div className="onboarding-motion-bg" aria-hidden>
+          <i />
+          <i />
+          <i />
+          <i />
+        </div>
+      )}
       {header}
       <div className={`onboarding-scroll${underBar ? " under-bar" : ""}`}>
         {children}
@@ -5397,50 +5430,69 @@ function OnboardingScreen({
   onFinish: (reminders?: ReminderDefaults) => void;
   onCloseGuide: () => void;
 }) {
+  const [motionDirection, setMotionDirection] = useState<-1 | 1>(1);
+  const motionOrder: Exclude<OnboardingStep, "done">[] = [
+    "welcome",
+    "batches",
+    "reminders",
+    "rules",
+    "kitchen",
+  ];
+  const go = (next: Exclude<OnboardingStep, "done">) => {
+    setMotionDirection(
+      motionOrder.indexOf(next) < motionOrder.indexOf(step) ? -1 : 1,
+    );
+    onGo(next);
+  };
   if (step === "rules")
-    return <PrepRulesScreen onClose={onCloseGuide} onNext={() => onGo("kitchen")} />;
+    return <PrepRulesScreen onClose={onCloseGuide} onNext={() => go("kitchen")} />;
   if (step === "kitchen")
     return (
       <PrepKitchenScreen
         plan={plan}
         hasPlan={hasPlan}
-        onBack={() => onGo("rules")}
+        onBack={() => go("rules")}
         onDone={onCloseGuide}
       />
     );
   if (step === "batches")
     return (
       <OnboardingBatches
-        onBack={() => onGo("welcome")}
-        onNext={() => onGo("reminders")}
+        motionDirection={motionDirection}
+        onBack={() => go("welcome")}
+        onNext={() => go("reminders")}
         onSkip={() => onFinish()}
       />
     );
   if (step === "reminders")
     return (
       <OnboardingReminders
-        onBack={() => onGo("batches")}
+        motionDirection={motionDirection}
+        onBack={() => go("batches")}
         onFinish={onFinish}
       />
     );
   return (
     <OnboardingWelcome
+      motionDirection={motionDirection}
       plan={plan}
       hasPlan={hasPlan}
-      onNext={() => onGo("batches")}
+      onNext={() => go("batches")}
       onSkip={() => onFinish()}
-      onOpenGuide={() => onGo("rules")}
+      onOpenGuide={() => go("rules")}
     />
   );
 }
 
 function OnboardingWelcome({
+  motionDirection,
   plan,
   hasPlan,
   onNext,
   onSkip,
   onOpenGuide,
 }: {
+  motionDirection: -1 | 1;
   plan: ActivePlan | null;
   hasPlan: boolean;
   onNext: () => void;
@@ -5452,6 +5504,7 @@ function OnboardingWelcome({
   const deck = deckDishes(plan);
   return (
     <OnboardingShell
+      motionDirection={motionDirection}
       onNext={onNext}
       bar={
         <ActionBar step={0} steps={onboardingFlow.length}>
@@ -5521,16 +5574,19 @@ function OnboardingWelcome({
 }
 
 function OnboardingBatches({
+  motionDirection,
   onBack,
   onNext,
   onSkip,
 }: {
+  motionDirection: -1 | 1;
   onBack: () => void;
   onNext: () => void;
   onSkip: () => void;
 }) {
   return (
     <OnboardingShell
+      motionDirection={motionDirection}
       onNext={onNext}
       onBack={onBack}
       bar={
@@ -5629,9 +5685,11 @@ function OnboardingBatches({
 }
 
 function OnboardingReminders({
+  motionDirection,
   onBack,
   onFinish,
 }: {
+  motionDirection: -1 | 1;
   onBack: () => void;
   onFinish: (reminders?: ReminderDefaults) => void;
 }) {
@@ -5659,6 +5717,7 @@ function OnboardingReminders({
   ];
   return (
     <OnboardingShell
+      motionDirection={motionDirection}
       onBack={onBack}
       bar={
         <ActionBar step={2} steps={onboardingFlow.length}>
@@ -5974,10 +6033,12 @@ function BottomNav({
   tab,
   onNavigate,
   showCompose,
+  motionEpoch,
 }: {
   tab: Tab;
   onNavigate: (tab: Tab) => void;
   showCompose: boolean;
+  motionEpoch: number;
 }) {
   const items: {
     id: Exclude<Tab, "builder">;
@@ -5990,6 +6051,10 @@ function BottomNav({
     { id: "shopping", label: "Покупки", full: "Покупки", icon: "basket" },
     { id: "profile", label: "Профиль", full: "Профиль", icon: "person" },
   ];
+  const activeIndex = Math.max(
+    0,
+    items.findIndex((item) => item.id === tab),
+  );
   return (
     <>
       {showCompose && (
@@ -6003,10 +6068,19 @@ function BottomNav({
         </button>
       )}
       <nav className="bottom-nav glass" aria-label="Основная навигация">
+        <span
+          className="bottom-nav-indicator"
+          style={{ transform: `translateX(${activeIndex * 100}%)` }}
+          aria-hidden
+        />
         {items.map((item) => (
           <button
             key={item.id}
-            className={tab === item.id ? "is-active" : ""}
+            className={
+              tab === item.id
+                ? `is-active${motionEpoch ? (motionEpoch % 2 ? " has-nav-effect-a" : " has-nav-effect-b") : ""}`
+                : ""
+            }
             aria-label={item.full}
             aria-current={tab === item.id ? "page" : undefined}
             onClick={() => onNavigate(item.id)}
@@ -6074,6 +6148,36 @@ function DailyBalance({
   );
 }
 
+function AnimatedNumber({ value, step = 1 }: { value: number; step?: number }) {
+  const nodeRef = useRef<HTMLSpanElement | null>(null);
+  const previousRef = useRef(value);
+  useEffect(() => {
+    const from = previousRef.current;
+    previousRef.current = value;
+    const node = nodeRef.current;
+    if (!node || from === value) return;
+    const startedAt = performance.now();
+    let frame = 0;
+    const draw = (now: number) => {
+      const progress = Math.min(1, (now - startedAt) / 520);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = from + (value - from) * eased;
+      node.textContent = String(Math.round(current / step) * step);
+      if (progress < 1) frame = window.requestAnimationFrame(draw);
+    };
+    frame = window.requestAnimationFrame(draw);
+    return () => window.cancelAnimationFrame(frame);
+  }, [step, value]);
+  return <span ref={nodeRef}>{value}</span>;
+}
+
+function waitForMotion(duration: number) {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return new Promise<void>((resolve) =>
+    window.setTimeout(resolve, reduced ? 160 : duration),
+  );
+}
+
 function WeekScreen({
   plan,
   loading,
@@ -6118,11 +6222,21 @@ function WeekScreen({
   const [cookingConfirmError, setCookingConfirmError] = useState(false);
   const [executionError, setExecutionError] = useState("");
   const [savingExecution, setSavingExecution] = useState(false);
+  const [executionMotion, setExecutionMotion] = useState<{
+    kind: "tick-in" | "tick-out" | "moving" | "restoring";
+    rowKey: string;
+    epoch: number;
+  } | null>(null);
+  const [motionEpoch, setMotionEpoch] = useState(0);
+  const [toastLeaving, setToastLeaving] = useState(false);
   const [lastMove, setLastMove] = useState<{
     token: string;
     previousPlan: ActivePlan;
     title: string;
     toDate: string;
+    rowKey: string;
+    moveId: string;
+    epoch: number;
   } | null>(null);
   const stripRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -6136,19 +6250,49 @@ function WeekScreen({
   }, [selectedDate]);
   useEffect(() => {
     if (!lastMove) return;
-    const timer = window.setTimeout(() => setLastMove(null), 5_000);
-    return () => window.clearTimeout(timer);
+    const leaveTimer = window.setTimeout(() => setToastLeaving(true), 5_000);
+    const removeTimer = window.setTimeout(() => setLastMove(null), 5_260);
+    return () => {
+      window.clearTimeout(leaveTimer);
+      window.clearTimeout(removeTimer);
+    };
   }, [lastMove]);
   if (loading)
     return (
-      <section className="loading-card glass-card">
-        <span className="spinner" />
-        <p>Ищем сохранённый план…</p>
+      <section
+        className="screen week-loading-state"
+        aria-busy="true"
+        aria-label="Загружаем сохранённый план"
+      >
+        <p className="week-loading-copy">Ищем сохранённый план…</p>
+        <div className="week-loading-heading">
+          <i />
+          <i />
+        </div>
+        <div className="week-loading-macro glass-card">
+          <span className="week-loading-ring" />
+          <div>
+            <i />
+            <i />
+            <i />
+          </div>
+        </div>
+        <div className="week-loading-list">
+          {[0, 1, 2].map((item) => (
+            <div className="week-loading-row glass-card" key={item}>
+              <span />
+              <div>
+                <i />
+                <i />
+              </div>
+            </div>
+          ))}
+        </div>
       </section>
     );
   if (loadError)
     return (
-      <section className="empty-state glass-card" role="alert">
+      <section className="empty-state load-error-state glass-card" role="alert">
         <div className="empty-orbit">
           <Icon name="repeat" />
         </div>
@@ -6324,12 +6468,21 @@ function WeekScreen({
   async function saveExecution(
     nextExecution: MealExecution,
     failureMessage: string,
-    undo?: { title: string; toDate: string },
+    undo?: {
+      title: string;
+      toDate: string;
+      rowKey: string;
+      moveId: string;
+      epoch: number;
+    },
   ) {
     const previousPlan = activePlan;
     setSavingExecution(true);
     setExecutionError("");
-    if (!undo) setLastMove(null);
+    if (!undo) {
+      setToastLeaving(false);
+      setLastMove(null);
+    }
     const nextPlan = {
       ...activePlan,
       mealExecution: reconcileMealExecution(
@@ -6337,22 +6490,45 @@ function WeekScreen({
         nextExecution,
       ),
     };
-    const saved = await onChange(nextPlan);
-    setSavingExecution(false);
-    if (!saved) {
-      setExecutionError(failureMessage);
-      return false;
-    }
-    if (undo)
+    if (undo) {
+      setToastLeaving(false);
       setLastMove({
         token: crypto.randomUUID(),
         previousPlan,
         title: undo.title,
         toDate: undo.toDate,
+        rowKey: undo.rowKey,
+        moveId: undo.moveId,
+        epoch: undo.epoch,
       });
+    }
+    const saved = await onChange(nextPlan);
+    setSavingExecution(false);
+    if (!saved) {
+      if (undo) {
+        setLastMove(null);
+        setExecutionMotion({
+          kind: "restoring",
+          rowKey: undo.rowKey,
+          epoch: undo.epoch,
+        });
+        window.setTimeout(() => setExecutionMotion(null), 320);
+      }
+      setExecutionError(failureMessage);
+      return false;
+    }
     return true;
   }
   async function toggleEaten(row: WeekMealRow) {
+    const wasEaten = rowIsEaten(row);
+    const epoch = motionEpoch + 1;
+    setMotionEpoch(epoch);
+    setExecutionMotion({
+      kind: wasEaten ? "tick-out" : "tick-in",
+      rowKey: row.key,
+      epoch,
+    });
+    window.setTimeout(() => setExecutionMotion(null), 320);
     const nextExecution =
       row.kind === "moved" && row.move
         ? toggleMovedEaten(executionPlanFor(activePlan), execution, row.move.id)
@@ -6373,15 +6549,20 @@ function WeekScreen({
       return;
     }
     const toDate = addDays(selectedDate, 1);
+    const epoch = motionEpoch + 1;
+    const moveId = row.move?.id ?? crypto.randomUUID();
+    setMotionEpoch(epoch);
+    setExecutionMotion({ kind: "moving", rowKey: row.key, epoch });
+    await waitForMotion(260);
     const nextExecution = row.move
       ? moveOccurrence(executionPlanFor(activePlan), execution, {
           kind: "moved",
-          id: row.move.id,
+          id: moveId,
           toDate,
         })
       : moveOccurrence(executionPlanFor(activePlan), execution, {
           kind: "base",
-          id: crypto.randomUUID(),
+          id: moveId,
           personId: person.id,
           date: selectedDate,
           slot: row.slot,
@@ -6391,20 +6572,36 @@ function WeekScreen({
     await saveExecution(
       nextExecution,
       "Перенос не сохранился. Проверьте соединение и попробуйте ещё раз.",
-      { title: row.recipe.title, toDate },
+      { title: row.recipe.title, toDate, rowKey: row.key, moveId, epoch },
     );
+    setExecutionMotion(null);
   }
   async function undoMove() {
     if (!lastMove) return;
+    const undoing = lastMove;
+    const epoch = motionEpoch + 1;
+    setMotionEpoch(epoch);
+    setExecutionMotion({
+      kind: "restoring",
+      rowKey: undoing.rowKey,
+      epoch,
+    });
+    setToastLeaving(true);
     setSavingExecution(true);
     setExecutionError("");
-    const restored = await onChange(lastMove.previousPlan);
+    const restored = await onChange(undoing.previousPlan);
     setSavingExecution(false);
-    if (restored) setLastMove(null);
-    else
+    if (restored) {
+      await waitForMotion(260);
+      setLastMove(null);
+      setExecutionMotion(null);
+    } else {
+      setToastLeaving(false);
+      setExecutionMotion(null);
       setExecutionError(
         "Не удалось вернуть порцию. Проверьте соединение и попробуйте ещё раз.",
       );
+    }
   }
   async function confirmBatch() {
     if (confirmedBatchIds.includes(batch.id)) return;
@@ -6498,8 +6695,17 @@ function WeekScreen({
         <div className="week-macro-head">
           <div>
             <p className="kicker">План на день</p>
-            <b>
-              Съедено {eatenCount} из {withPlural(mealRows.length, FORMS.portion)}
+            <b
+              className={`week-eaten-count${
+                executionMotion?.kind.startsWith("tick")
+                  ? executionMotion.epoch % 2
+                    ? " has-pop-a"
+                    : " has-pop-b"
+                  : ""
+              }`}
+            >
+              Съедено <AnimatedNumber value={eatenCount} /> из{" "}
+              {withPlural(mealRows.length, FORMS.portion)}
             </b>
           </div>
           <select
@@ -6529,7 +6735,7 @@ function WeekScreen({
               />
             </svg>
             <div>
-              <b>{eatenMacros.kcal}</b>
+              <b><AnimatedNumber value={eatenMacros.kcal} step={5} /></b>
               <small>/ {person.daily.kcal}</small>
             </div>
           </div>
@@ -6539,7 +6745,7 @@ function WeekScreen({
                 <p>
                   <span>{label}</span>
                   <b>
-                    {eatenMacros[key]} / {person.daily[key]}
+                    <AnimatedNumber value={eatenMacros[key]} /> / {person.daily[key]}
                   </b>
                 </p>
                 <span className="macro-bar">
@@ -6601,9 +6807,15 @@ function WeekScreen({
             daysInclusive(row.sourceBatch.start, selectedDate) - 1 >=
               row.recipe.storageDays;
           const moveReason = moveBlockReason(row);
+          const rowMotion = executionMotion?.rowKey === row.key
+            ? `${executionMotion.epoch % 2 ? " motion-a" : " motion-b"} is-${executionMotion.kind}`
+            : "";
+          const tickLeaving =
+            executionMotion?.rowKey === row.key &&
+            executionMotion.kind === "tick-out";
           return (
             <article
-              className={`week-execution-row glass-card${eaten ? " is-eaten" : ""}`}
+              className={`week-execution-row glass-card${eaten ? " is-eaten" : ""}${rowMotion}`}
               key={row.key}
             >
               <button
@@ -6614,7 +6826,22 @@ function WeekScreen({
                 disabled={savingExecution}
                 onClick={() => void toggleEaten(row)}
               >
-                {eaten && <Icon name="check" size={17} />}
+                {(eaten || tickLeaving) && (
+                  <span
+                    className={`week-eaten-tick${
+                      executionMotion?.rowKey === row.key &&
+                      executionMotion.kind.startsWith("tick")
+                        ? ` is-${executionMotion.kind}${
+                            executionMotion.epoch % 2
+                              ? " tick-effect-a"
+                              : " tick-effect-b"
+                          }`
+                        : ""
+                    }`}
+                  >
+                    <Icon name="check" size={17} />
+                  </span>
+                )}
               </button>
               <div className={`week-meal-thumb art-${index % 5}`}>
                 {photo ? (
@@ -6642,7 +6869,15 @@ function WeekScreen({
                 aria-label={`Открыть рецепт ${row.recipe.title}`}
               >
                 <span className="week-meal-topline">
-                  <span>{movedFrom ?? mealMeta[row.slot].label}</span>
+                  <span
+                    className={
+                      row.move && lastMove?.moveId === row.move.id
+                        ? `week-moved-chip${lastMove.epoch % 2 ? " has-pop-a" : " has-pop-b"}`
+                        : undefined
+                    }
+                  >
+                    {movedFrom ?? mealMeta[row.slot].label}
+                  </span>
                   <b>{portion.actual.kcal} ккал</b>
                 </span>
                 <strong>{row.recipe.title}</strong>
@@ -6686,7 +6921,15 @@ function WeekScreen({
                 ? `Завтра, ${new Intl.DateTimeFormat("ru-RU", { weekday: "long" }).format(parseDate(tomorrowDate))}`
                 : formatDate(tomorrowDate, true)}
             </h2>
-            <b>{withPlural(tomorrowRows.length, FORMS.portion)}</b>
+            <b
+              className={
+                lastMove?.toDate === tomorrowDate
+                  ? `week-tomorrow-count${lastMove.epoch % 2 ? " has-pop-a" : " has-pop-b"}`
+                  : undefined
+              }
+            >
+              {withPlural(tomorrowRows.length, FORMS.portion)}
+            </b>
           </div>
           <p>
             {tomorrowRows.map((row) => (
@@ -6829,7 +7072,16 @@ function WeekScreen({
         </button>
       )}
       {lastMove && (
-        <div className="execution-toast glass-1" role="status">
+        <div
+          className={`execution-toast glass-1${
+            toastLeaving
+              ? " is-leaving"
+              : lastMove.epoch % 2
+                ? " is-entering-a"
+                : " is-entering-b"
+          }`}
+          role="status"
+        >
           <span>
             {lastMove.title} → {formatDate(lastMove.toDate, true)}
           </span>
@@ -7005,11 +7257,17 @@ function RecipesScreen({
   onOpenRecipe: (recipe: Recipe) => void;
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [gridMotionEpoch, setGridMotionEpoch] = useState(0);
   const [favoriteEffects, setFavoriteEffects] = useState<Record<string, number>>(
     {},
   );
   const headerRef = useRef<HTMLElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+
+  function updateCatalog(next: CatalogState) {
+    setGridMotionEpoch((current) => current + 1);
+    onState(next);
+  }
 
   /* Шапка фиксированная, и её высота зависит от длины чисел и от того, сколько
      чипов активно. Считать её руками — тот самый способ уронить первую строку
@@ -7070,7 +7328,7 @@ function RecipesScreen({
               className="btn btn-icon catalog-sort-button"
               aria-label={`Сортировка: ${catalogSortLabels[state.sort]}`}
               onClick={() =>
-                onState({
+                updateCatalog({
                   ...state,
                   sort:
                     state.sort === "missing"
@@ -7106,7 +7364,9 @@ function RecipesScreen({
             value={state.q}
             placeholder="Рецепт, продукт или «что убрать»"
             aria-label="Поиск по рецептам и продуктам"
-            onChange={(event) => onState({ ...state, q: event.target.value })}
+            onChange={(event) =>
+              updateCatalog({ ...state, q: event.target.value })
+            }
           />
         </label>
         {(active.length > 0 || !state.slot) && (
@@ -7118,7 +7378,7 @@ function RecipesScreen({
                 aria-checked
                 role="checkbox"
                 aria-label={`Снять фильтр: ${filter.label}`}
-                onClick={() => onState(filter.clear())}
+                onClick={() => updateCatalog(filter.clear())}
               >
                 {filter.label}
                 <Icon name="close" size={13} />
@@ -7133,7 +7393,7 @@ function RecipesScreen({
                   role="checkbox"
                   aria-checked={false}
                   onClick={() =>
-                    onState({
+                    updateCatalog({
                       ...state,
                       properties: [...state.properties, property],
                     })
@@ -7147,12 +7407,22 @@ function RecipesScreen({
       </header>
 
       <div className="catalog-scroll" ref={scrollRef}>
-        <div className="catalog-sort-row">
+        <div
+          className={`catalog-sort-row${
+            gridMotionEpoch
+              ? gridMotionEpoch % 2
+                ? " has-grid-effect-a"
+                : " has-grid-effect-b"
+              : ""
+          }`}
+        >
           <span>{catalogSortLabels[state.sort]}</span>
           {active.length > 0 && (
             <button
               className="btn btn-ghost"
-              onClick={() => onState({ ...emptyCatalogState, sort: state.sort })}
+              onClick={() =>
+                updateCatalog({ ...emptyCatalogState, sort: state.sort })
+              }
             >
               Сбросить
             </button>
@@ -7168,6 +7438,7 @@ function RecipesScreen({
                 plan={plan}
                 favorite={favoriteRecipeIds.includes(recipe.id)}
                 favoriteEffect={favoriteEffects[recipe.id] ?? 0}
+                gridMotionEpoch={gridMotionEpoch}
                 onToggleFavorite={() => {
                   setFavoriteEffects((current) => ({
                     ...current,
@@ -7186,7 +7457,7 @@ function RecipesScreen({
             {active[0] ? (
               <button
                 className="btn btn-secondary"
-                onClick={() => onState(active[0].clear())}
+                onClick={() => updateCatalog(active[0].clear())}
               >
                 Снять «{active[0].label}»
               </button>
@@ -7207,7 +7478,9 @@ function RecipesScreen({
             <h2 id="catalog-filters-title">Фильтры</h2>
             <button
               className="btn btn-ghost"
-              onClick={() => onState({ ...emptyCatalogState, sort: state.sort })}
+              onClick={() =>
+                updateCatalog({ ...emptyCatalogState, sort: state.sort })
+              }
             >
               Сбросить всё
             </button>
@@ -7219,7 +7492,7 @@ function RecipesScreen({
               label: mealMeta[value].label,
             }))}
             value={state.slot}
-            onChange={(slot) => onState({ ...state, slot })}
+            onChange={(slot) => updateCatalog({ ...state, slot })}
           />
           <FilterGroup
             label="Время"
@@ -7228,7 +7501,7 @@ function RecipesScreen({
               label: catalogTimeLabels[value],
             }))}
             value={state.time}
-            onChange={(time) => onState({ ...state, time })}
+            onChange={(time) => updateCatalog({ ...state, time })}
           />
           <FilterGroup
             label="Сколько действий"
@@ -7237,7 +7510,7 @@ function RecipesScreen({
               label: catalogEffortLabels[value],
             }))}
             value={state.effort}
-            onChange={(effort) => onState({ ...state, effort })}
+            onChange={(effort) => updateCatalog({ ...state, effort })}
           />
           <fieldset className="filter-group">
             <legend className="t-kicker">Свойства</legend>
@@ -7252,7 +7525,7 @@ function RecipesScreen({
                       role="checkbox"
                       aria-checked={on}
                       onClick={() =>
-                        onState({
+                        updateCatalog({
                           ...state,
                           properties: on
                             ? state.properties.filter((item) => item !== property)
@@ -7319,6 +7592,7 @@ function RecipeCard({
   plan,
   favorite,
   favoriteEffect,
+  gridMotionEpoch,
   onToggleFavorite,
   onOpen,
 }: {
@@ -7327,13 +7601,27 @@ function RecipeCard({
   plan: ActivePlan | null;
   favorite: boolean;
   favoriteEffect: number;
+  gridMotionEpoch: number;
   onToggleFavorite: () => void;
   onOpen: () => void;
 }) {
   const missing = missingCountFor(recipe, plan);
   const batchNumber = batchNumberFor(recipe, plan);
   return (
-    <article className="recipe-card">
+    <article
+      className={`recipe-card${
+        gridMotionEpoch
+          ? gridMotionEpoch % 2
+            ? " has-grid-effect-a"
+            : " has-grid-effect-b"
+          : ""
+      }`}
+      style={
+        gridMotionEpoch && index < 6
+          ? { animationDelay: `${index * 40}ms` }
+          : undefined
+      }
+    >
       <button
         type="button"
         className="recipe-card-open"

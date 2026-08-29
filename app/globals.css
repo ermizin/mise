@@ -201,6 +201,15 @@
   --toggle-h: 29px;
   --checkbox: 22px;
 
+  /* ---------- Motion handoff ---------- */
+  --motion-base: 420ms;
+  --motion-stagger: 45ms;
+  --motion-press: 130ms;
+  --motion-screen: 588ms;
+  --motion-settled: cubic-bezier(0.22, 0.9, 0.28, 1);
+  --motion-spring: cubic-bezier(0.34, 1.3, 0.5, 1);
+  --motion-segment: cubic-bezier(0.34, 1.28, 0.5, 1);
+
   /* ---------- Фокус ----------
      Непрозрачное кольцо. Читается и на стекле, и на акценте. */
   --focus-ring: 0 0 0 2px #fff, 0 0 0 4px #8f2708;
@@ -5943,5 +5952,425 @@ p {
   .cooking-step-tools button {
     justify-content: center;
     padding-inline: 8px;
+  }
+}
+
+/* ============================================================
+   Motion handoff · onboarding, navigation, week, catalog, states
+   Двигаем только opacity/transform; геометрия стеклянных панелей стабильна.
+   ============================================================ */
+
+.onboarding-shell {
+  touch-action: pan-y;
+}
+.onboarding-motion-bg {
+  position: absolute;
+  z-index: 0;
+  inset: -12%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.onboarding-motion-bg i {
+  position: absolute;
+  inset: 0;
+  opacity: 0.58;
+  will-change: transform, opacity;
+}
+.onboarding-motion-bg i:nth-child(1) {
+  background: radial-gradient(42% 30% at 84% 8%, var(--bg-spot-warm), transparent 68%);
+  animation: mise-onb-breathe-a 13s ease-in-out infinite alternate;
+}
+.onboarding-motion-bg i:nth-child(2) {
+  background: radial-gradient(40% 32% at 8% 30%, var(--bg-spot-green), transparent 68%);
+  animation: mise-onb-breathe-b 16s ease-in-out infinite alternate;
+}
+.onboarding-motion-bg i:nth-child(3) {
+  background: radial-gradient(38% 30% at 94% 54%, var(--bg-spot-lilac), transparent 68%);
+  animation: mise-onb-breathe-c 10.5s ease-in-out infinite alternate;
+}
+.onboarding-motion-bg i:nth-child(4) {
+  background: radial-gradient(52% 38% at 10% 90%, var(--bg-spot-peach), transparent 66%);
+  animation: mise-onb-breathe-a 15s 1.2s ease-in-out infinite alternate-reverse;
+}
+.onboarding-scroll,
+.onboarding-shell > .action-bar-slot {
+  z-index: 1;
+}
+.onboarding-shell.motion-enter-right .onboarding-scroll {
+  animation: mise-onb-screen-right var(--motion-screen) var(--motion-settled) both;
+}
+.onboarding-shell.motion-enter-left .onboarding-scroll {
+  animation: mise-onb-screen-left var(--motion-screen) var(--motion-settled) both;
+}
+.onboarding-shell:not(.is-guide) .onboarding-top {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) both;
+}
+.onboarding-shell:not(.is-guide) .onboarding-title {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 45ms both;
+}
+.onboarding-shell:not(.is-guide) .onboarding-lead {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 90ms both;
+}
+.onboarding-shell:not(.is-guide) > .action-bar-slot {
+  animation: mise-onb-panel 483ms var(--motion-settled) 72ms both;
+}
+.onboarding-shell:not(.is-guide) .action-dots span.is-current {
+  animation: mise-onb-dot 378ms var(--motion-spring) 135ms both;
+}
+.onboarding-shell:not(.is-guide) .deck-main {
+  animation: mise-onb-deck-main 504ms var(--motion-spring) 153ms both;
+}
+.onboarding-shell:not(.is-guide) .deck-left {
+  animation: mise-onb-deck-left 483ms var(--motion-spring) 198ms both;
+}
+.onboarding-shell:not(.is-guide) .deck-right {
+  animation: mise-onb-deck-right 483ms var(--motion-spring) 221ms both;
+}
+.onboarding-shell:not(.is-guide) .promise-tile {
+  animation: mise-onb-rise-small var(--motion-base) var(--motion-spring) both;
+}
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(1) { animation-delay: 270ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(2) { animation-delay: 302ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(3) { animation-delay: 333ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(4) { animation-delay: 365ms; }
+.onboarding-shell:not(.is-guide) .promise-grid + * {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 405ms both;
+}
+.onboarding-shell:not(.is-guide) .onboarding-card {
+  animation: mise-onb-rise-small 462ms var(--motion-settled) 135ms both;
+}
+.onboarding-shell:not(.is-guide) .batch-day > span {
+  transform-origin: bottom;
+  animation: mise-onb-bar var(--motion-base) var(--motion-spring) both;
+}
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(1) > span { animation-delay: 180ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(2) > span { animation-delay: 198ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(3) > span { animation-delay: 216ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(4) > span { animation-delay: 234ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(5) > span { animation-delay: 252ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(6) > span { animation-delay: 270ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(7) > span { animation-delay: 288ms; }
+.onboarding-shell:not(.is-guide) .onb-row {
+  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) both;
+}
+.onboarding-shell:not(.is-guide) .onb-row:nth-child(1) { animation-delay: 315ms; }
+.onboarding-shell:not(.is-guide) .onb-row:nth-child(2) { animation-delay: 342ms; }
+.onboarding-shell:not(.is-guide) .onb-row:nth-child(3) { animation-delay: 369ms; }
+.onboarding-shell:not(.is-guide) .push-card {
+  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) both;
+}
+.onboarding-shell:not(.is-guide) .push-card:nth-child(1) { animation-delay: 198ms; }
+.onboarding-shell:not(.is-guide) .push-card:nth-child(2) { animation-delay: 234ms; }
+.onboarding-shell:not(.is-guide) .toggle-list {
+  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) 270ms both;
+}
+.onboarding-shell:not(.is-guide) .toggle-row:nth-child(1)[aria-checked="true"] .toggle::after {
+  animation: mise-onb-toggle 365ms var(--motion-spring) 333ms both;
+}
+.onboarding-shell:not(.is-guide) .toggle-row:nth-child(2)[aria-checked="true"] .toggle::after {
+  animation: mise-onb-toggle 365ms var(--motion-spring) 365ms both;
+}
+.onboarding-shell:not(.is-guide) .onboarding-fineprint {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 387ms both;
+}
+.onboarding-shell .btn,
+.onboarding-shell .primary-button,
+.onboarding-shell .secondary-button,
+.week-move-button {
+  transition: transform var(--motion-press) ease, box-shadow var(--motion-press) ease;
+}
+.onboarding-shell .btn:active,
+.onboarding-shell .primary-button:active,
+.onboarding-shell .secondary-button:active {
+  transform: scale(0.965);
+}
+
+.bottom-nav {
+  isolation: isolate;
+  overflow: hidden;
+}
+.bottom-nav-indicator {
+  position: absolute;
+  z-index: 0;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: calc((100% - 14px) / 4);
+  border-radius: var(--r-nested);
+  background: rgba(255, 255, 255, 0.62);
+  transition: transform 280ms var(--motion-segment);
+}
+.bottom-nav button {
+  position: relative;
+  z-index: 1;
+}
+.bottom-nav button.is-active {
+  background: transparent;
+}
+.bottom-nav button.has-nav-effect-a > .icon {
+  animation: mise-nav-icon-a 340ms var(--motion-spring) both;
+}
+.bottom-nav button.has-nav-effect-b > .icon {
+  animation: mise-nav-icon-b 340ms var(--motion-spring) both;
+}
+.app-shell.is-tab-forward > .screen {
+  animation: mise-tab-forward 320ms var(--motion-settled) both;
+}
+.app-shell.is-tab-backward > .screen {
+  animation: mise-tab-backward 320ms var(--motion-settled) both;
+}
+
+.catalog-sort-row.has-grid-effect-a {
+  animation: mise-catalog-result-a 260ms linear both;
+}
+.catalog-sort-row.has-grid-effect-b {
+  animation: mise-catalog-result-b 260ms linear both;
+}
+.recipe-card.has-grid-effect-a {
+  animation: mise-catalog-grid-a 320ms var(--motion-settled) both;
+}
+.recipe-card.has-grid-effect-b {
+  animation: mise-catalog-grid-b 320ms var(--motion-settled) both;
+}
+
+.week-loading-state {
+  padding-top: max(28px, env(safe-area-inset-top));
+}
+.week-loading-copy {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.week-loading-heading {
+  display: grid;
+  gap: 10px;
+  margin-bottom: var(--space-5);
+}
+.week-loading-heading i,
+.week-loading-macro i,
+.week-loading-row i,
+.week-loading-row > span,
+.week-loading-ring {
+  display: block;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.7);
+}
+.week-loading-heading i:first-child { width: 42%; height: 13px; border-radius: var(--r-bar); }
+.week-loading-heading i:last-child { width: 66%; height: 34px; border-radius: var(--r-tile); }
+.week-loading-macro {
+  padding: var(--pad-card);
+  display: grid;
+  grid-template-columns: 108px 1fr;
+  align-items: center;
+  gap: var(--space-5);
+}
+.week-loading-ring {
+  width: 102px;
+  height: 102px;
+  border: 10px solid rgba(242, 87, 26, 0.12);
+  border-top-color: rgba(242, 87, 26, 0.4);
+  border-radius: 50%;
+}
+.week-loading-macro > div { display: grid; gap: 14px; }
+.week-loading-macro i { height: 9px; border-radius: var(--r-bar); }
+.week-loading-macro i:nth-child(1) { width: 72%; }
+.week-loading-macro i:nth-child(2) { width: 100%; }
+.week-loading-macro i:nth-child(3) { width: 88%; }
+.week-loading-list { display: grid; gap: 10px; }
+.week-loading-row {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.week-loading-row > span { width: 58px; height: 58px; border-radius: var(--r-nested); }
+.week-loading-row > div { display: grid; gap: 9px; }
+.week-loading-row i { height: 12px; border-radius: var(--r-bar); }
+.week-loading-row i:first-child { width: 82%; }
+.week-loading-row i:last-child { width: 58%; }
+.week-loading-heading i,
+.week-loading-macro i,
+.week-loading-row i,
+.week-loading-row > span,
+.week-loading-ring {
+  background-image: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.9) 48%, transparent 66%);
+  background-size: 240% 100%;
+  animation: mise-skeleton-shimmer 1.4s linear infinite;
+}
+.week-loading-row:nth-child(2) * { animation-delay: 90ms; }
+.week-loading-row:nth-child(3) * { animation-delay: 180ms; }
+.load-error-state {
+  animation: mise-state-error 320ms var(--motion-settled) both;
+}
+
+.week-execution-row {
+  transition: background-color 300ms linear, border-color 300ms linear;
+}
+.week-execution-row .week-meal-open strong {
+  transition: color 300ms linear;
+}
+.week-eaten-check::before {
+  transition: background-color 300ms linear, border-color 300ms linear;
+}
+.week-eaten-tick {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+}
+.week-eaten-tick.is-tick-in.tick-effect-a { animation: mise-week-tick-in-a 300ms var(--motion-spring) both; }
+.week-eaten-tick.is-tick-in.tick-effect-b { animation: mise-week-tick-in-b 300ms var(--motion-spring) both; }
+.week-eaten-tick.is-tick-out.tick-effect-a { animation: mise-week-tick-out-a 260ms var(--motion-settled) both; }
+.week-eaten-tick.is-tick-out.tick-effect-b { animation: mise-week-tick-out-b 260ms var(--motion-settled) both; }
+.week-execution-row.is-moving.motion-a { animation: mise-week-row-out-a 260ms var(--motion-settled) both; }
+.week-execution-row.is-moving.motion-b { animation: mise-week-row-out-b 260ms var(--motion-settled) both; }
+.week-execution-row.is-restoring.motion-a { animation: mise-week-row-in-a 300ms var(--motion-settled) both; }
+.week-execution-row.is-restoring.motion-b { animation: mise-week-row-in-b 300ms var(--motion-settled) both; }
+.week-eaten-count,
+.week-tomorrow-count,
+.week-moved-chip {
+  display: inline-block;
+  transform-origin: center;
+}
+.has-pop-a { animation: mise-week-pop-a 340ms var(--motion-spring) both; }
+.has-pop-b { animation: mise-week-pop-b 340ms var(--motion-spring) both; }
+.week-tomorrow-count.has-pop-a,
+.week-tomorrow-count.has-pop-b { animation-delay: 140ms; }
+.week-ring-value,
+.week-macro-row .macro-bar i {
+  transition: stroke-dashoffset 520ms var(--motion-settled), width 520ms var(--motion-settled);
+}
+.week-move-button:active { transform: scale(0.9); }
+.execution-toast.is-entering-a { animation: mise-toast-in-a 320ms var(--motion-settled) both; }
+.execution-toast.is-entering-b { animation: mise-toast-in-b 320ms var(--motion-settled) both; }
+.execution-toast.is-leaving { animation: mise-toast-out 260ms var(--motion-settled) both; }
+
+@keyframes mise-onb-breathe-a {
+  from { opacity: 0.46; transform: translate3d(-1.5%, 1%, 0) scale(1); }
+  to { opacity: 0.64; transform: translate3d(2%, -1.5%, 0) scale(1.045); }
+}
+@keyframes mise-onb-breathe-b {
+  from { opacity: 0.4; transform: translate3d(1%, -1%, 0) scale(1.035); }
+  to { opacity: 0.6; transform: translate3d(-2%, 1.5%, 0) scale(1); }
+}
+@keyframes mise-onb-breathe-c {
+  from { opacity: 0.38; transform: translate3d(0, 1.5%, 0) scale(1); }
+  to { opacity: 0.56; transform: translate3d(-1.5%, -1%, 0) scale(1.04); }
+}
+@keyframes mise-onb-screen-right { from { opacity: 0.3; transform: translateX(56px); } to { opacity: 1; transform: none; } }
+@keyframes mise-onb-screen-left { from { opacity: 0.3; transform: translateX(-56px); } to { opacity: 1; transform: none; } }
+@keyframes mise-onb-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes mise-onb-rise-small { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes mise-onb-panel { from { opacity: 0; transform: translateY(18px) scale(0.985); } to { opacity: 1; transform: none; } }
+@keyframes mise-onb-dot { from { opacity: 0.35; transform: scaleX(0.45); } to { opacity: 1; transform: none; } }
+@keyframes mise-onb-deck-main { from { opacity: 0; transform: translateX(-50%) translateY(18px) scale(0.92) rotate(-1deg); } to { opacity: 1; transform: translateX(-50%); } }
+@keyframes mise-onb-deck-left { from { opacity: 0; transform: translateY(14px) scale(0.92) rotate(-10deg); } to { opacity: 1; transform: rotate(-7deg); } }
+@keyframes mise-onb-deck-right { from { opacity: 0; transform: translateY(14px) scale(0.92) rotate(9deg); } to { opacity: 1; transform: rotate(6deg); } }
+@keyframes mise-onb-bar { from { opacity: 0.35; transform: scaleY(0.16); } to { opacity: 1; transform: scaleY(1); } }
+@keyframes mise-onb-toggle { from { opacity: 0.6; transform: translateX(0) scale(0.9); } to { opacity: 1; transform: translateX(19px); } }
+@keyframes mise-nav-icon-a { 0% { transform: none; } 55% { transform: translateY(-4px) scale(1.1); } 100% { transform: none; } }
+@keyframes mise-nav-icon-b { 0% { transform: none; } 55% { transform: translateY(-4px) scale(1.1); } 100% { transform: none; } }
+@keyframes mise-tab-forward { from { opacity: 0.25; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-tab-backward { from { opacity: 0.25; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-catalog-result-a { from { opacity: 0.35; } to { opacity: 1; } }
+@keyframes mise-catalog-result-b { from { opacity: 0.35; } to { opacity: 1; } }
+@keyframes mise-catalog-grid-a { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes mise-catalog-grid-b { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes mise-skeleton-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+@keyframes mise-skeleton-breathe { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
+@keyframes mise-state-error { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes mise-week-tick-in-a { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@keyframes mise-week-tick-in-b { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@keyframes mise-week-tick-out-a { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.5); } }
+@keyframes mise-week-tick-out-b { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.5); } }
+@keyframes mise-week-row-out-a { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(38px); } }
+@keyframes mise-week-row-out-b { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(38px); } }
+@keyframes mise-week-row-in-a { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes mise-week-row-in-b { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+@keyframes mise-week-pop-a { 0%, 100% { transform: scale(1); } 55% { transform: scale(1.16); } }
+@keyframes mise-week-pop-b { 0%, 100% { transform: scale(1); } 55% { transform: scale(1.16); } }
+@keyframes mise-toast-in-a { from { opacity: 0; transform: translate(-50%, 22px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes mise-toast-in-b { from { opacity: 0; transform: translate(-50%, 22px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes mise-toast-out { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, 22px); } }
+@keyframes mise-motion-fade { from { opacity: 0.45; } to { opacity: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-motion-bg i {
+    animation: none !important;
+  }
+  .onboarding-shell.motion-enter-right .onboarding-scroll,
+  .onboarding-shell.motion-enter-left .onboarding-scroll,
+  .onboarding-shell:not(.is-guide) .onboarding-top,
+  .onboarding-shell:not(.is-guide) .onboarding-title,
+  .onboarding-shell:not(.is-guide) .onboarding-lead,
+  .onboarding-shell:not(.is-guide) > .action-bar-slot,
+  .onboarding-shell:not(.is-guide) .action-dots span.is-current,
+  .onboarding-shell:not(.is-guide) .deck-card,
+  .onboarding-shell:not(.is-guide) .promise-tile,
+  .onboarding-shell:not(.is-guide) .promise-grid + *,
+  .onboarding-shell:not(.is-guide) .onboarding-card,
+  .onboarding-shell:not(.is-guide) .batch-day > span,
+  .onboarding-shell:not(.is-guide) .onb-row,
+  .onboarding-shell:not(.is-guide) .push-card,
+  .onboarding-shell:not(.is-guide) .toggle-list,
+  .onboarding-shell:not(.is-guide) .onboarding-fineprint,
+  .app-shell.is-tab-forward > .screen,
+  .app-shell.is-tab-backward > .screen,
+  .catalog-sort-row.has-grid-effect-a,
+  .catalog-sort-row.has-grid-effect-b,
+  .recipe-card.has-grid-effect-a,
+  .recipe-card.has-grid-effect-b,
+  .load-error-state,
+  .week-eaten-tick,
+  .week-execution-row.is-moving,
+  .week-execution-row.is-restoring,
+  .has-pop-a,
+  .has-pop-b,
+  .execution-toast.is-entering-a,
+  .execution-toast.is-entering-b,
+  .execution-toast.is-leaving {
+    animation: mise-motion-fade 160ms ease both !important;
+  }
+  .onboarding-shell .btn,
+  .onboarding-shell .primary-button,
+  .onboarding-shell .secondary-button,
+  .week-move-button {
+    transition-duration: var(--motion-press) !important;
+  }
+  .onboarding-shell .btn:active,
+  .onboarding-shell .primary-button:active,
+  .onboarding-shell .secondary-button:active {
+    transform: scale(0.965);
+  }
+  .bottom-nav-indicator {
+    transition: none !important;
+  }
+  .bottom-nav button.has-nav-effect-a > .icon,
+  .bottom-nav button.has-nav-effect-b > .icon {
+    animation: mise-motion-fade 160ms ease both !important;
+  }
+  .week-loading-heading i,
+  .week-loading-macro i,
+  .week-loading-row i,
+  .week-loading-row > span,
+  .week-loading-ring {
+    background-position: 50% 0;
+    animation: mise-skeleton-breathe 1.4s ease-in-out infinite !important;
+  }
+  .week-execution-row,
+  .week-execution-row .week-meal-open strong,
+  .week-eaten-check::before {
+    transition-duration: 300ms !important;
+  }
+  .week-ring-value,
+  .week-macro-row .macro-bar i {
+    transition-duration: 520ms !important;
   }
 }
