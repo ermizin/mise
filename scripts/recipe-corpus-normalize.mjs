@@ -57,6 +57,57 @@ function householdAmount(original) {
   return { amount, unit: "piece", status: "count" };
 }
 
+const averagePortionGrams = {
+  herbs: { handful: 15, large: 30, pack: 30 },
+  spinach: { handful: 50, large: 100, pack: 200 },
+  rocket: { handful: 30, large: 60, pack: 60 },
+  cheese: { handful: 30, large: 50, pack: 100 },
+  corn: { handful: 100, large: 200, pack: 200 },
+  peas: { handful: 75, large: 150, pack: 300 },
+  peanuts: { handful: 30, large: 50, pack: 100 },
+};
+
+function averageAmount(ingredient) {
+  const original = String(ingredient.original ?? "").replaceAll(" ", " ").trim();
+  const name = String(ingredient.name ?? "").toLowerCase();
+  const text = original.toLowerCase();
+  const standard = (amount, unit) => ({ amount, unit, status: "standard_average" });
+
+  if (/\bthumb-sized piece (?:of )?ginger\b/.test(text)) return standard(25, "g");
+  if (/\blarge knob of butter\b/.test(text)) return standard(25, "g");
+  if (/\bknob (?:of )?butter\b/.test(text)) return standard(15, "g");
+  if (/\bgood squeeze (?:of )?lemon juice\b/.test(text)) return standard(15, "ml");
+  if (/\bsqueeze (?:of )?lemon juice\b/.test(text)) return standard(10, "ml");
+  if (/\bsplash (?:of )?milk\b/.test(text)) return standard(30, "ml");
+  if (/\bdrop (?:of )?(?:olive )?oil\b/.test(text)) return standard(5, "ml");
+  if (/\bjuice of 2 lemons\b/.test(text)) return standard(60, "ml");
+  if (/\bjuice (?:of )?1(?:½|\.5|\s+1\/2)?\s*-\s*2 lemons?\b/.test(text)) return standard(50, "ml");
+  if (/\blarge glass (?:of )?(?:red |white )?wine\b/.test(text)) return standard(250, "ml");
+  if (/\bflour for dusting\b/.test(text)) return standard(30, "g");
+  if (/\b(?:olive |vegetable |rapeseed |sunflower )?oil for frying\b/.test(text)) return standard(30, "ml");
+  if (/\b(?:olive |vegetable |rapeseed |sunflower )?oil (?:for )?drizzl(?:e|ing)\b|\bdrizzle of (?:olive )?oil\b/.test(text)) return standard(15, "ml");
+  if (/\bketchup(?:,)? optional\b/.test(text)) return standard(40, "g");
+
+  // A source line such as "rice, naan and lime" is not one ingredient. Do
+  // not turn it into a guessed serving merely because one word looks familiar.
+  const unparenthesized = text.replace(/\([^)]*\)/g, "");
+  if (/\b(?:and|or)\b/.test(unparenthesized)) return undefined;
+  const portion = text.match(/\b(?:(small|big|large)\s+pack|(?:(big|large)\s+)?handful)\b/);
+  if (!portion) return undefined;
+  const product = [
+    ["herbs", /\b(?:herbs?|coriander|parsley|mint|basil|dill|chives)\b/],
+    ["spinach", /\bspinach\b/],
+    ["rocket", /\brocket\b/],
+    ["cheese", /\b(?:cheese|cheddar|parmesan|feta)\b/],
+    ["corn", /\b(?:sweetcorn|corn)\b/],
+    ["peas", /\bpeas?\b/],
+    ["peanuts", /\bpeanuts?\b/],
+  ].find(([, pattern]) => pattern.test(name));
+  if (!product) return undefined;
+  const size = portion[1] ? "pack" : portion[2] ? "large" : "handful";
+  return standard(averagePortionGrams[product[0]][size], "g");
+}
+
 export function sourceAmount(ingredient) {
   const metric = numeric(ingredient.amountMetric);
   if (metric && /^(?:g|kg|ml|l)$/i.test(String(ingredient.unitMetric ?? ""))) {
@@ -65,7 +116,7 @@ export function sourceAmount(ingredient) {
     if (unit === "l") return { amount: metric * 1000, unit: "ml", status: "exact_metric" };
     return { amount: metric, unit, status: "exact_metric" };
   }
-  return metricAmount(ingredient.original) ?? householdAmount(ingredient.original);
+  return metricAmount(ingredient.original) ?? householdAmount(ingredient.original) ?? averageAmount(ingredient);
 }
 
 function perServingIngredient(source, mapping, servings) {

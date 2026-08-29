@@ -7,8 +7,8 @@ const goodFood = JSON.parse(await readFile(new URL("../data/goodfood-candidates.
 const candidates = mealPrepManual.candidates;
 const allCandidates = [...mealPrepManual.candidates, ...goodFood.candidates];
 
-test("Meal Prep Manual import contains every complete auditable candidate", () => {
-  assert.equal(candidates.length, 126);
+test("Meal Prep Manual source pages produce complete auditable recipe cards", () => {
+  assert.equal(candidates.length, 130);
   assert.ok(candidates.every((item) => item.sourceUrl.startsWith("https://mealprepmanual.com/")));
   assert.ok(candidates.every((item) => item.imageUrl?.startsWith("https://mealprepmanual.com/wp-content/")));
   assert.ok(candidates.every((item) => item.imageUse === "source-preview-only"));
@@ -16,7 +16,9 @@ test("Meal Prep Manual import contains every complete auditable candidate", () =
 
 test("candidate pool contains at least 200 unique recipes across two sources", () => {
   assert.ok(allCandidates.length >= 200);
-  assert.equal(new Set(allCandidates.map((item) => item.sourceUrl)).size, allCandidates.length);
+  assert.equal(allCandidates.length, 221);
+  assert.equal(new Set(allCandidates.map((item) => item.id)).size, allCandidates.length);
+  assert.equal(new Set(allCandidates.map((item) => item.sourceUrl)).size, 217, "one aggregate source page is split into five recipes");
   assert.ok(goodFood.candidates.length >= 90);
   assert.ok(goodFood.candidates.every((item) => new URL(item.sourceUrl).hostname === "www.bbcgoodfood.com"));
   assert.ok(allCandidates.every((item) => item.imageUse === "source-preview-only" && item.imageUrl?.startsWith("https://")));
@@ -24,7 +26,7 @@ test("candidate pool contains at least 200 unique recipes across two sources", (
 
 test("editorial queue keeps promoted and pending candidates separate", () => {
   assert.equal(candidates.filter((item) => item.editorialStatus === "promoted").length, 28);
-  assert.equal(candidates.filter((item) => item.editorialStatus === "pending").length, 98);
+  assert.equal(candidates.filter((item) => item.editorialStatus === "pending").length, 102);
   assert.ok(goodFood.candidates.every((item) => item.editorialStatus === "pending"));
 });
 

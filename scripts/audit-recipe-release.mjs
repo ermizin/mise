@@ -3,6 +3,7 @@ import { auditRecipeNutritionCorpus } from "./audit-recipe-nutrition.mjs";
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
+import { applyRecipeReviewResolutions, loadRecipeReviewResolutions } from "./recipe-review-decisions.mjs";
 
 export async function auditRecipeRelease() {
   const [editorial, nutrition] = await Promise.all([
@@ -29,19 +30,20 @@ export async function auditRecipeRelease() {
       ],
     };
   });
-  if (cards.length !== 217 || new Set(cards.map((card) => card.id)).size !== 217) throw new Error("Release audit must cover 217 unique cards");
+  if (new Set(cards.map((card) => card.id)).size !== cards.length) throw new Error("Release audit recipe IDs must be unique");
   const counts = Object.fromEntries(["ready", "review_required", "blocked"].map((verdict) => [verdict, cards.filter((card) => card.verdict === verdict).length]));
   const reasonCounts = Object.fromEntries([...new Set(cards.flatMap((card) => card.reasons.map((item) => `${item.gate}:${item.code}`)))].sort().map((key) => [
     key,
     cards.filter((card) => card.reasons.some((item) => `${item.gate}:${item.code}` === key)).length,
   ]));
-  return {
+  const report = {
     schemaVersion: 1,
     total: cards.length,
     counts,
     reasonCounts,
     cards,
   };
+  return applyRecipeReviewResolutions(report, await loadRecipeReviewResolutions());
 }
 
 if (

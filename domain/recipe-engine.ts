@@ -115,7 +115,7 @@ export type CanonicalIngredient = {
     note: string;
     sourceUrl: string;
     recordId: string;
-    dataType: "foundation" | "sr_legacy" | "interpolated" | "label_required";
+    dataType: "foundation" | "sr_legacy" | "interpolated" | "brand_label" | "label_required";
     description: string;
   };
 };
@@ -234,12 +234,12 @@ const fdcReference = (recordId: string, description: string, note = "Значе�
   description,
 });
 const labelReference = (recordId: string, description: string, note: string): CanonicalIngredient["reference"] => ({
-  provider: "Mise editorial label profile",
+  provider: recordId.startsWith("brand:") ? "Mise branded label profile" : "Mise editorial packaged-product average",
   checkedAt,
   note,
   sourceUrl: "https://fdc.nal.usda.gov/data-documentation/",
   recordId,
-  dataType: "label_required",
+  dataType: recordId.startsWith("brand:") ? "brand_label" : "interpolated",
   description,
 });
 const interpolatedReference = (recordId: string, description: string, note: string): CanonicalIngredient["reference"] => ({
@@ -285,7 +285,7 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
     note: "Расчётный профиль сливок 10%; конкретную упаковку сверить по этикетке.",
     sourceUrl: "https://prostokvashino.ru/product/slivki-10--500-g/",
     recordId: "prostokvashino:cream-10-500",
-    dataType: "label_required",
+    dataType: "brand_label",
     description: "Сливки 10%: 120 ккал, белки 2,9 г, жиры 10 г, углеводы 4,5 г на 100 г",
   },
   "cream-cheese": fdcReference("173418", "Cheese, cream", "Творожный сыр зависит от марки; сверить этикетку."),
@@ -335,6 +335,8 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "brown-sugar": fdcReference("168833", "Sugars, brown"),
   "white-sugar": fdcReference("169655", "Sugars, granulated"),
   "maple-syrup": fdcReference("169661", "Syrups, maple"),
+  mirin: averageReference("mirin", "Mirin rice seasoning", "Средний профиль мирина для расчёта; для брендового продукта сверить состав и этикетку."),
+  poppadum: averageReference("poppadum", "Poppadum, ready-to-eat", "Средний профиль готовых мини-пападамов; конкретную упаковку сверить по этикетке."),
   garlic: fdcReference("169230", "Garlic, raw"),
   "egg-white": fdcReference("172183", "Egg, white, raw, fresh"),
   celery: fdcReference("169988", "Celery, raw"),
@@ -550,6 +552,8 @@ const ingredientSeeds: IngredientSeed[] = [
   ["brown-sugar", "Коричневый сахар", "sweetener", "processed", n(380, 0.12, 0, 98.09)],
   ["white-sugar", "Белый сахар", "sweetener", "processed", n(387, 0, 0, 100)],
   ["maple-syrup", "Кленовый сироп", "sweetener", "processed", n(260, 0.04, 0.06, 67)],
+  ["mirin", "Мирин", "sauce", "processed", n(241, 0.2, 0, 43), 1],
+  ["poppadum", "Пападам", "grain", "processed", n(371, 21.2, 3.3, 64), 10, ["legumes"]],
   ["garlic", "Чеснок", "vegetable", "raw", n(149, 6.36, 0.5, 33.06), 5],
   ["egg-white", "Яичный белок", "egg", "raw", n(52, 10.9, 0.17, 0.73), 33, ["egg"]],
   ["celery", "Сельдерей", "vegetable", "raw", n(14, 0.69, 0.17, 2.97), 40],
@@ -725,6 +729,7 @@ const densityByLegacyId: Record<string, number> = {
   lemon: 1.03,
   "lime-juice": 1.03,
   "maple-syrup": 1.31,
+  mirin: 1.05,
   mayonnaise: 0.92,
   mascarpone: 1.02,
   milk: 1.03,
@@ -826,6 +831,8 @@ const ingredientAliasTargets: Record<string, string> = {
   "granulated sugar": "white-sugar",
   "maple syrup": "maple-syrup",
   "pure maple syrup": "maple-syrup",
+  mirin: "mirin",
+  "poppadum crisps": "poppadum",
   "canned black beans": "black-beans",
   carrots: "carrot",
   "cheddar cheese": "cheese",
@@ -1383,12 +1390,7 @@ for (const [alias, legacyId] of Object.entries(ingredientAliasTargets)) {
   if (canonical) canonicalByAlias.set(normalizedAlias(alias), canonical);
 }
 
-const ingredientReplacementTargets: Record<string, { legacyIds: string[]; reason: string }> = {
-  mirin: {
-    legacyIds: ["vinegar", "brown-sugar"],
-    reason: "В адаптации Mise мирин заменён отмеренными уксусом и коричневым сахаром; замена сохранена для аудита КБЖУ.",
-  },
-};
+const ingredientReplacementTargets: Record<string, { legacyIds: string[]; reason: string }> = {};
 
 const noncaloricIngredientReasons: Record<string, string> = Object.fromEntries([
   "baking soda", "salt", "salt to taste", "water", "hot water", "water to consistency",
@@ -1913,6 +1915,10 @@ const pilotAdaptationReplacementTargets: Record<string, Record<string, { legacyI
     "cooked rice": {
       legacyIds: ["rice"],
       reason: "Источник задаёт 563 г готового риса на пять порций, а Mise хранит сухой рис; конверсия состояния отмечена явно и требует отдельной проверки количества.",
+    },
+    mirin: {
+      legacyIds: ["vinegar", "brown-sugar"],
+      reason: "В текущей pilot-адаптации мирин заменён отмеренными уксусом и коричневым сахаром; в остальных карточках используется отдельный средний профиль мирина.",
     },
   },
   "src-bbq-burger-bowl": {

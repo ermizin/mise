@@ -78,7 +78,7 @@ const categoryDefinitions = [
   { key: 'localization', label: 'Нишевая локализация', codes: ['niche_localization'], options: [['keep_specialty', 'Оставить специализированный продукт'], ['local_substitute', 'Подобрать измеримый локальный аналог'], ['exclude_card', 'Исключить карточку']] },
   { key: 'amount', label: 'Нет количества ингредиента', codes: ['missing_ingredient_amount'], options: [['find_amount', 'Найти точное количество в первичном источнике'], ['set_verified_weight', 'Указать подтверждённый вес'], ['exclude_card', 'Исключить карточку']] },
   { key: 'replacement', label: 'Замена без распределения', codes: ['replacement_without_distribution'], options: [['define_distribution', 'Задать распределение замены'], ['restore_original', 'Вернуть исходный ингредиент'], ['exclude_card', 'Исключить карточку']] },
-  { key: 'ambiguity', label: 'Оставшиеся неоднозначности', codes: [], options: [['research_source', 'Проверить первичный источник'], ['manual_review', 'Ручное редакторское решение'], ['exclude_card', 'Исключить карточку']] },
+  { key: 'ambiguity', label: 'Разница КБЖУ / прочее', codes: [], options: [['accept_calculated_nutrition', 'Принять расчёт Mise по средним значениям'], ['keep_source_nutrition', 'Оставить КБЖУ источника'], ['research_source', 'Проверить первичный источник'], ['manual_review', 'Другое ручное решение'], ['exclude_card', 'Исключить карточку']] },
 ];
 const knownCodes = new Set(categoryDefinitions.flatMap((definition) => definition.codes));
 const nonBlocking = new Set(['independent_calculation_complete', 'nutrition_delta_within_tolerance']);
@@ -121,7 +121,7 @@ function categoriesFor(reasons) {
   return result;
 }
 
-const records = audit.cards.map((auditCard) => {
+const records = audit.cards.filter((auditCard) => auditCard.verdict === 'blocked' || auditCard.verdict === 'review_required').map((auditCard) => {
   const recipe = candidates.get(auditCard.id) || {};
   const card = editorial.get(auditCard.id) || {};
   const reasons = (auditCard.reasons || []).map((reason) => ({
@@ -153,7 +153,8 @@ const records = audit.cards.map((auditCard) => {
 }).filter((record) => record.categories.length > 0);
 
 const categoryCounts = Object.fromEntries(categoryDefinitions.map((definition) => [definition.key, records.filter((record) => record.categories.includes(definition.key)).length]));
-const payload = { generatedAt: new Date().toISOString(), auditCounts: audit.counts, categoryDefinitions, categoryCounts, records };
+const visibleCategoryDefinitions = categoryDefinitions.filter((definition) => categoryCounts[definition.key] > 0);
+const payload = { generatedAt: new Date().toISOString(), auditCounts: audit.counts, categoryDefinitions: visibleCategoryDefinitions, categoryCounts, records };
 const embeddedPayload = JSON.stringify(payload).replace(/</g, '\\u003c');
 
 const html = `<!doctype html>
@@ -201,13 +202,15 @@ const html = `<!doctype html>
   <script>
     (() => {
       const data = JSON.parse(document.getElementById('review-data').textContent);
-      const STORAGE = 'mise-recipe-review-decisions-v1';
+      const STORAGE = 'mise-recipe-review-decisions-round2-v1';
       const el = (id) => document.getElementById(id);
       const filters = el('filters'), cards = el('cards'), summary = el('summary'), progress = el('progress'), search = el('search');
       const definitions = new Map(data.categoryDefinitions.map((item) => [item.key, item]));
       let active = new Set(data.categoryDefinitions.map((item) => item.key));
       let decisions = {};
       try { decisions = JSON.parse(localStorage.getItem(STORAGE) || '{}'); } catch { decisions = {}; }
+      const recordIds = new Set(data.records.map((record) => record.id));
+      decisions = Object.fromEntries(Object.entries(decisions).filter(([id]) => recordIds.has(id)));
       const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', "'":'&#39;', '"':'&quot;' })[character]);
       const formatValue = (value) => value === null || value === undefined || value === '' ? '—' : typeof value === 'object' ? JSON.stringify(value) : String(value);
       const formatDetail = (detail) => detail === null ? '' : escapeHtml(JSON.stringify(detail, null, 2));
@@ -222,7 +225,7 @@ const html = `<!doctype html>
       }
       function updateProgress() {
         const all = data.records.length;
-        const done = Object.values(decisions).filter((item) => item && item.option).length;
+        const done = Object.entries(decisions).filter(([id, item]) => recordIds.has(id) && item && item.option).length;
         const shown = visibleRecords().length;
         progress.innerHTML = escapeHtml(done) + ' / ' + escapeHtml(all) + '<small>решений сохранено · видно ' + escapeHtml(shown) + '</small>';
       }
@@ -259,7 +262,7 @@ const html = `<!doctype html>
         updateProgress();
       }
       function exportPayload() {
-        return { schemaVersion: 1, exportedAt: new Date().toISOString(), sourceAuditGeneratedAt: data.generatedAt, decisions: Object.entries(decisions).filter(([, value]) => value && (value.option || value.note)).map(([id, value]) => ({ id, ...value })) };
+        return { schemaVersion: 1, exportedAt: new Date().toISOString(), sourceAuditGeneratedAt: data.generatedAt, decisions: Object.entries(decisions).filter(([id, value]) => recordIds.has(id) && value && (value.option || value.note)).map(([id, value]) => ({ id, ...value })) };
       }
       filters.addEventListener('click', (event) => {
         const button = event.target.closest('[data-filter]'); if (!button) return;

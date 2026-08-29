@@ -1,63 +1,42 @@
 {
   "schemaVersion": 1,
-  "total": 217,
+  "total": 221,
   "counts": {
-    "ready": 67,
-    "review_required": 87,
-    "blocked": 63
+    "ready": 91,
+    "review_required": 114,
+    "blocked": 0,
+    "excluded": 16
   },
   "reasonCounts": {
-    "editorial:extreme_kcal": 42,
-    "editorial:fractional_servings": 1,
-    "editorial:invalid_macros": 2,
+    "editorial:extreme_kcal": 24,
     "editorial:invalid_yield": 2,
-    "editorial:missing_paraphrased_instructions": 1,
     "editorial:missing_yield": 3,
-    "editorial:niche_localization": 9,
-    "editorial:procedure_review_required": 21,
-    "editorial:unresolved_ingredient_mapping": 18,
-    "nutrition:fractional_yield": 1,
-    "nutrition:ignored_component_not_calculable": 186,
-    "nutrition:independent_calculation_complete": 102,
-    "nutrition:invalid_source_nutrition": 2,
+    "editorial:niche_localization": 8,
+    "editorial:procedure_review_required": 5,
+    "editorial:unresolved_ingredient_mapping": 3,
+    "nutrition:ignored_component_not_calculable": 191,
+    "nutrition:independent_calculation_complete": 110,
     "nutrition:invalid_yield": 5,
-    "nutrition:missing_ingredient_amount": 35,
-    "nutrition:nutrition_delta_outside_tolerance": 62,
-    "nutrition:nutrition_delta_within_tolerance": 102,
-    "nutrition:replacement_without_distribution": 2,
-    "nutrition:unresolved_ingredient": 18
+    "nutrition:missing_ingredient_amount": 1,
+    "nutrition:nutrition_delta_outside_tolerance": 102,
+    "nutrition:nutrition_delta_within_tolerance": 110,
+    "nutrition:unresolved_ingredient": 3
   },
   "cards": [
     {
       "id": "tmpm-28584",
       "title": "Broccoli Cheddar Rice",
       "sourceUrl": "https://mealprepmanual.com/broccoli-cheddar-rice/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 280.3,
-        "protein": 10.2,
-        "fat": 9.9,
-        "carbs": 37.7
+        "kcal": 266.2,
+        "protein": 9.7,
+        "fat": 9.4,
+        "carbs": 35.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "fractional_servings",
-          "severity": "review_required",
-          "detail": {
-            "servings": 9.5
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "fractional_yield",
-          "severity": "review_required",
-          "detail": {
-            "servings": 9.5
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -92,7 +71,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28572",
@@ -150,7 +131,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28533",
@@ -264,7 +247,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28513",
@@ -322,7 +307,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28504",
@@ -356,7 +343,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28499",
@@ -414,13 +403,15 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28492",
       "title": "Chipotle Fajita Vegetables",
       "sourceUrl": "https://mealprepmanual.com/chipotle-fajita-vegetables/",
-      "verdict": "review_required",
+      "verdict": "excluded",
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -452,7 +443,12 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "tmpm-28492",
+        "note": "Исключено владельцем после проверки низкой калорийности."
+      }
     },
     {
       "id": "tmpm-28302",
@@ -502,16 +498,23 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28247",
       "title": "Sheet Pan Teriyaki Chicken and Vegetables",
       "sourceUrl": "https://mealprepmanual.com/sheet-pan-teriyaki-chicken-and-vegetables/",
-      "verdict": "blocked",
+      "verdict": "ready",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 560.3,
+        "protein": 43.6,
+        "fat": 14.3,
+        "carbs": 61.1
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -531,25 +534,25 @@
         },
         {
           "gate": "nutrition",
-          "code": "replacement_without_distribution",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "mirin",
-            "replacements": [
-              "vinegar_processed",
-              "brown_sugar_processed"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "water"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-28083",
@@ -623,7 +626,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27802",
@@ -721,7 +726,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27343",
@@ -795,7 +802,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27328",
@@ -869,7 +878,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27306",
@@ -967,7 +978,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27287",
@@ -1017,7 +1030,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27270",
@@ -1099,7 +1114,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-27230",
@@ -1245,7 +1262,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26996",
@@ -1383,34 +1402,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26965",
       "title": "Chicken Nuggets for Snack City",
       "sourceUrl": "https://mealprepmanual.com/chicken-nuggets-for-snack-city/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 34.8,
-        "protein": 3.2,
-        "fat": 1.5,
-        "carbs": 2.1
+        "kcal": 208.5,
+        "protein": 18.9,
+        "fat": 9.1,
+        "carbs": 12.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 29.7,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -1445,34 +1454,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26920",
       "title": "Cheesy Potato and Sausage Breakfast Taquitos",
       "sourceUrl": "https://mealprepmanual.com/cheesy-potato-and-sausage-breakfast-taquitos/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 152.6,
-        "protein": 9,
-        "fat": 5.7,
-        "carbs": 16.8
+        "kcal": 305.2,
+        "protein": 18,
+        "fat": 11.4,
+        "carbs": 33.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 149,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -1547,7 +1546,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26895",
@@ -1617,7 +1618,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26872",
@@ -1699,7 +1702,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26746",
@@ -1728,16 +1733,6 @@
           }
         },
         {
-          "gate": "editorial",
-          "code": "niche_localization",
-          "severity": "review_required",
-          "detail": {
-            "fit": "niche",
-            "availability": "common",
-            "excludeSuggested": true
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
@@ -1763,7 +1758,21 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [
+        {
+          "gate": "editorial",
+          "code": "niche_localization",
+          "severity": "review_required",
+          "detail": {
+            "fit": "niche",
+            "availability": "common",
+            "excludeSuggested": true
+          },
+          "resolution": "Владелец оставил карточку: продукты доступны и отдельной локализационной замены не требуется."
+        }
+      ],
+      "exclusion": null
     },
     {
       "id": "tmpm-26720",
@@ -1841,44 +1850,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26689",
       "title": "Sheet Pan Protein Pancakes",
       "sourceUrl": "https://mealprepmanual.com/sheet-pan-protein-pancakes/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 137.5,
-        "protein": 9,
-        "fat": 3.4,
-        "carbs": 17.5
+        "kcal": 275,
+        "protein": 17.9,
+        "fat": 6.8,
+        "carbs": 35.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 138,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "source_bake_duration_not_extracted"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -1921,7 +1910,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26676",
@@ -2003,7 +1994,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26660",
@@ -2053,7 +2046,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26647",
@@ -2103,7 +2098,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26617",
@@ -2161,7 +2158,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26583",
@@ -2231,7 +2230,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26566",
@@ -2350,14 +2351,16 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26528",
       "title": "Beefy Queso Loaded Potatoes",
       "sourceUrl": "https://mealprepmanual.com/beefy-queso-loaded-potatoes/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 674.5,
@@ -2366,16 +2369,6 @@
         "carbs": 47
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "source_roast_duration_not_extracted"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2442,7 +2435,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26514",
@@ -2452,24 +2447,12 @@
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 49.2,
-        "protein": 4,
-        "fat": 2.2,
-        "carbs": 3.2
+        "kcal": 197,
+        "protein": 16,
+        "fat": 8.8,
+        "carbs": 12.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 43,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -2522,7 +2505,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26489",
@@ -2623,7 +2608,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26441",
@@ -2665,7 +2652,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26429",
@@ -2739,7 +2728,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26414",
@@ -2789,7 +2780,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26358",
@@ -2839,7 +2832,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26232",
@@ -2965,14 +2960,16 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-26138",
       "title": "Gochujang Glazed Beef & Vegetables",
       "sourceUrl": "https://mealprepmanual.com/gochujang-glazed-beef-vegetables/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 609.8,
@@ -2981,16 +2978,6 @@
         "carbs": 59.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "source_cook_duration_not_extracted"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3017,20 +3004,22 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25475",
       "title": "Tikka Masala Meatballs",
       "sourceUrl": "https://mealprepmanual.com/tikka-masala-meatballs/",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 818.5,
-        "protein": 44.6,
-        "fat": 39.7,
-        "carbs": 76.6
+        "kcal": 794.1,
+        "protein": 43.8,
+        "fat": 39.6,
+        "carbs": 71.8
       },
       "reasons": [
         {
@@ -3051,38 +3040,31 @@
           "detail": {
             "fields": [
               "kcal",
-              "fat",
-              "carbs"
+              "fat"
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "tmpm-25475",
+        "note": "Исключено владельцем: неопределённые составные фрикадельки и соус."
+      }
     },
     {
       "id": "tmpm-25463",
       "title": "Teriyaki Beef Meatballs",
       "sourceUrl": "https://mealprepmanual.com/teriyaki-beef-meatballs/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 867.9,
-        "protein": 47.4,
-        "fat": 37.3,
-        "carbs": 89.4
+        "kcal": 581.5,
+        "protein": 40.5,
+        "fat": 11.6,
+        "carbs": 74.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "requires_verified_component_recipe: high_protein_beef_meatballs",
-              "requires_verified_component_recipe: teriyaki_sauce"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -3090,19 +3072,19 @@
           "detail": {
             "fields": [
               "kcal",
-              "protein",
-              "fat",
               "carbs"
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25461",
       "title": "Meatball Sub",
       "sourceUrl": "https://mealprepmanual.com/meatball-sub/",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -3141,34 +3123,27 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "tmpm-25461",
+        "note": "Исключено владельцем: покупные фрикадельки и маринара остаются внешними компонентами."
+      }
     },
     {
       "id": "tmpm-25453",
       "title": "High Protein Beef Meatballs",
       "sourceUrl": "https://mealprepmanual.com/high-protein-beef-meatballs/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 3916.6,
-        "protein": 497.6,
-        "fat": 175.7,
-        "carbs": 53.3
+        "kcal": 230.4,
+        "protein": 29.3,
+        "fat": 10.3,
+        "carbs": 3.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 46,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3211,48 +3186,32 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "review_required",
-          "detail": {
-            "fields": [
-              "kcal",
-              "protein",
-              "fat",
-              "carbs"
-            ]
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25304",
       "title": "Batch Prepped Chicken Breast for the Freezer",
       "sourceUrl": "https://mealprepmanual.com/freezer-chicken-breast/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 158.3,
+        "protein": 25.5,
+        "fat": 5.5,
+        "carbs": 0
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "invalid_macros",
-          "severity": "blocked"
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "source_bake_duration_not_extracted"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "invalid_source_nutrition",
-          "severity": "blocked"
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3292,15 +3251,27 @@
           "detail": {
             "sourceName": "oregano"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "protein"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25290",
       "title": "Big Boy Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/big-boy-baked-oatmeal/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "ready",
+      "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 969.1,
@@ -3309,28 +3280,6 @@
         "carbs": 98.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 980,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "source_bake_duration_not_extracted"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3365,7 +3314,23 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [
+        {
+          "gate": "editorial",
+          "code": "extreme_kcal",
+          "severity": "review_required",
+          "detail": {
+            "kcal": 980,
+            "expectedRange": [
+              150,
+              800
+            ]
+          },
+          "resolution": "Владелец подтвердил исходные 980 ккал на порцию; рецепт рассчитан для набора массы."
+        }
+      ],
+      "exclusion": null
     },
     {
       "id": "tmpm-25244",
@@ -3463,7 +3428,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25175",
@@ -3489,7 +3456,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25159",
@@ -3551,7 +3520,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25126",
@@ -3601,7 +3572,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25125",
@@ -3643,7 +3616,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25121",
@@ -3693,7 +3668,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25092",
@@ -3743,7 +3720,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25082",
@@ -3793,7 +3772,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25071",
@@ -3843,7 +3824,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25044",
@@ -3878,34 +3861,24 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-25030",
       "title": "Meal Prepped Protein Pancakes",
       "sourceUrl": "https://mealprepmanual.com/meal-prepped-protein-pancakes/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 86,
-        "protein": 10.5,
-        "fat": 1.3,
-        "carbs": 8
+        "kcal": 250.9,
+        "protein": 30.6,
+        "fat": 3.7,
+        "carbs": 23.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 77,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3940,37 +3913,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
-      "id": "tmpm-25006",
-      "title": "Quick and Easy Snack Ideas",
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
+      "title": "Five-Minute Hash Brown Breakfast Bowl",
       "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 1820.9,
-        "protein": 83.2,
-        "fat": 56.9,
-        "carbs": 257.1
+        "kcal": 338.5,
+        "protein": 22.9,
+        "fat": 14.5,
+        "carbs": 29
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "missing_paraphrased_instructions",
-          "severity": "blocked"
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "несколько_независимых_перекусов_в_одной_исходной_карточке: требуется разделить на отдельные рецепты"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3979,6 +3939,35 @@
             "sourceName": "seasoned salt to taste"
           }
         },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "fat"
+            ]
+          }
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "title": "Avocado and White Bean Rice Cakes",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 440.5,
+        "protein": 14.6,
+        "fat": 16.1,
+        "carbs": 63.7
+      },
+      "reasons": [
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3997,6 +3986,90 @@
         },
         {
           "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "title": "Egg, Chicken and Cheese Quesadilla",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 364.2,
+        "protein": 25,
+        "fat": 16,
+        "carbs": 28.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "title": "Apple Yogurt Granola Bowl",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 397.4,
+        "protein": 18.5,
+        "fat": 9.2,
+        "carbs": 64.2
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "tmpm-25006-strawberry-lime-sorbet",
+      "title": "Strawberry Lime Sorbet",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 280.4,
+        "protein": 2.2,
+        "fat": 1,
+        "carbs": 72
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -4010,13 +4083,13 @@
           "detail": {
             "fields": [
               "kcal",
-              "protein",
-              "fat",
               "carbs"
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24974",
@@ -4082,7 +4155,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24968",
@@ -4184,7 +4259,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24949",
@@ -4234,34 +4311,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24917",
       "title": "Hidden Vegetable Breakfast Muffins",
       "sourceUrl": "https://mealprepmanual.com/hidden-vegetable-breakfast-muffins/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 124,
-        "protein": 4,
-        "fat": 4.1,
-        "carbs": 18.4
+        "kcal": 247.9,
+        "protein": 8,
+        "fat": 8.1,
+        "carbs": 36.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 119,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4312,7 +4379,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24909",
@@ -4411,7 +4480,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24899",
@@ -4493,7 +4564,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24866",
@@ -4577,34 +4650,24 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24851",
       "title": "Sausage Breakfast Biscuits",
       "sourceUrl": "https://mealprepmanual.com/sausage-breakfast-biscuits/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 50.3,
-        "protein": 3.4,
-        "fat": 2.5,
-        "carbs": 3.5
+        "kcal": 201.2,
+        "protein": 13.6,
+        "fat": 10.1,
+        "carbs": 14.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 50,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4711,34 +4774,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24799",
       "title": "Chili Beef and Cheese Mini Tacos",
       "sourceUrl": "https://mealprepmanual.com/chili-beef-and-cheese-mini-tacos/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 81.6,
-        "protein": 5.5,
-        "fat": 3.1,
-        "carbs": 8.1
+        "kcal": 239.8,
+        "protein": 16.1,
+        "fat": 9.2,
+        "carbs": 23.9
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 84,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4805,7 +4858,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24729",
@@ -4863,7 +4918,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24619",
@@ -4957,7 +5014,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24608",
@@ -5047,34 +5106,24 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24579",
       "title": "Jalapeño Cheddar Broccoli Bites",
       "sourceUrl": "https://mealprepmanual.com/jalapeno-cheddar-broccoli-bites/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 25.8,
-        "protein": 1.3,
-        "fat": 0.9,
-        "carbs": 3.4
+        "kcal": 154.6,
+        "protein": 7.7,
+        "fat": 5.7,
+        "carbs": 20.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 26,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -5133,7 +5182,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24542",
@@ -5207,7 +5258,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-24018",
@@ -5241,7 +5294,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23797",
@@ -5347,34 +5402,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-10514",
       "title": "Protein Waffles",
       "sourceUrl": "https://mealprepmanual.com/protein-waffles/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 75.3,
-        "protein": 9.2,
-        "fat": 1.1,
-        "carbs": 7
+        "kcal": 231.6,
+        "protein": 28.2,
+        "fat": 3.5,
+        "carbs": 21.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 68,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -5401,7 +5446,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23554",
@@ -5487,7 +5534,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23545",
@@ -5545,7 +5594,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23544",
@@ -5571,34 +5622,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23518",
       "title": "Protein Pumpkin Muffins",
       "sourceUrl": "https://mealprepmanual.com/protein-pumpkin-muffins/",
       "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 176,
-        "protein": 8.2,
-        "fat": 6.9,
-        "carbs": 22.4
+        "kcal": 352,
+        "protein": 16.4,
+        "fat": 13.8,
+        "carbs": 44.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 91,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -5651,7 +5692,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23501",
@@ -5686,7 +5729,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23462",
@@ -5728,7 +5773,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23431",
@@ -5756,7 +5803,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23405",
@@ -5807,7 +5856,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23316",
@@ -5841,7 +5892,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23306",
@@ -5931,7 +5984,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23261",
@@ -5981,34 +6036,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23228",
       "title": "Nashville Hot Chicken Nuggets",
       "sourceUrl": "https://mealprepmanual.com/nashville-hot-chicken-nuggets/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 38.9,
-        "protein": 3.1,
-        "fat": 1.8,
-        "carbs": 2.5
+        "kcal": 194.6,
+        "protein": 15.7,
+        "fat": 9,
+        "carbs": 12.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 32,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6075,7 +6120,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23194",
@@ -6125,7 +6172,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23113",
@@ -6191,7 +6240,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-23090",
@@ -6281,7 +6332,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22980",
@@ -6331,7 +6384,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22968",
@@ -6393,7 +6448,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22922",
@@ -6443,16 +6500,23 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22884",
       "title": "Stir Fry Meal Prep",
       "sourceUrl": "https://mealprepmanual.com/stir-fry-meal-prep/",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 483.6,
+        "protein": 45.5,
+        "fat": 5.5,
+        "carbs": 57.5
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -6472,18 +6536,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "replacement_without_distribution",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "mirin",
-            "replacements": [
-              "vinegar_processed",
-              "brown_sugar_processed"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -6497,35 +6549,37 @@
           "detail": {
             "sourceName": "gochugaru"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22550",
       "title": "Chicken Meatballs",
       "sourceUrl": "https://mealprepmanual.com/chicken-meatballs/",
       "verdict": "review_required",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 44.6,
-        "protein": 5.1,
-        "fat": 2.4,
-        "carbs": 0.7
+        "kcal": 217.7,
+        "protein": 24.8,
+        "fat": 11.7,
+        "carbs": 3.2
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 36,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6568,15 +6622,17 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "fat"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22571",
@@ -6690,7 +6746,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22531",
@@ -6724,7 +6782,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22442",
@@ -6766,7 +6826,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22428",
@@ -6840,7 +6902,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22345",
@@ -6914,7 +6978,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22331",
@@ -6980,7 +7046,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22278",
@@ -7022,7 +7090,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22261",
@@ -7059,7 +7129,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22144",
@@ -7103,34 +7175,24 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-22181",
       "title": "Broccoli Bites",
       "sourceUrl": "https://mealprepmanual.com/broccoli-bites/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 16.4,
-        "protein": 0.7,
-        "fat": 0.2,
-        "carbs": 3.4
+        "kcal": 157.1,
+        "protein": 7.2,
+        "fat": 1.6,
+        "carbs": 32.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 16,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7181,7 +7243,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-21976",
@@ -7215,7 +7279,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-21841",
@@ -7277,7 +7343,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-21839",
@@ -7327,7 +7395,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-19895",
@@ -7370,7 +7440,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-18874",
@@ -7406,7 +7478,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-18557",
@@ -7448,7 +7522,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-18065",
@@ -7456,26 +7532,14 @@
       "sourceUrl": "https://mealprepmanual.com/tater-tots/",
       "verdict": "review_required",
       "editorialVerdict": "review_required",
-      "nutritionVerdict": "ready",
+      "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 41.6,
-        "protein": 0.6,
-        "fat": 1.6,
-        "carbs": 6.5
+        "kcal": 290.9,
+        "protein": 3.9,
+        "fat": 11,
+        "carbs": 45.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 22,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -7504,15 +7568,19 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "fat",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-17591",
@@ -7586,7 +7654,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-17409",
@@ -7612,7 +7682,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-17393",
@@ -7640,7 +7712,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-17381",
@@ -7668,7 +7742,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-17115",
@@ -7702,26 +7778,35 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16861",
       "title": "Air Fryer Crinkle Cut Fries",
       "sourceUrl": "https://mealprepmanual.com/air-fryer-crinkle-cut-fries/",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "review_required",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 116.4,
+        "protein": 3.1,
+        "fat": 0.1,
+        "carbs": 26.4
+      },
       "reasons": [
         {
           "gate": "editorial",
-          "code": "invalid_macros",
-          "severity": "blocked"
-        },
-        {
-          "gate": "nutrition",
-          "code": "invalid_source_nutrition",
-          "severity": "blocked"
+          "code": "extreme_kcal",
+          "severity": "review_required",
+          "detail": {
+            "kcal": 120,
+            "expectedRange": [
+              150,
+              800
+            ]
+          }
         },
         {
           "gate": "nutrition",
@@ -7730,8 +7815,20 @@
           "detail": {
             "sourceName": "salt to taste"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16850",
@@ -7765,7 +7862,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16615",
@@ -7807,7 +7906,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16479",
@@ -7857,7 +7958,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16454",
@@ -7907,7 +8010,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16300",
@@ -7949,34 +8054,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16283",
       "title": "Stuffed Hash Browns",
       "sourceUrl": "https://mealprepmanual.com/stuffed-hash-browns/",
       "verdict": "review_required",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 92.2,
-        "protein": 2.8,
-        "fat": 3.6,
-        "carbs": 12.5
+        "kcal": 276.5,
+        "protein": 8.4,
+        "fat": 10.9,
+        "carbs": 37.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 62,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7995,42 +8090,33 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "fat"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16249",
       "title": "Double Chocolate Chip Pancake Bites",
       "sourceUrl": "https://mealprepmanual.com/double-chocolate-chip-pancake-bites/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 37.4,
-        "protein": 2.4,
-        "fat": 1.1,
-        "carbs": 4.8
+        "kcal": 179.4,
+        "protein": 11.6,
+        "fat": 5.1,
+        "carbs": 23.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "review_required",
-          "detail": {
-            "kcal": 36,
-            "expectedRange": [
-              150,
-              800
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8057,7 +8143,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "tmpm-16046",
@@ -8115,7 +8203,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
@@ -8150,7 +8240,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-chicken-pasta-bake",
@@ -8192,51 +8284,46 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-satay-sweet-potato-curry",
       "title": "Sweet potato & peanut curry",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/satay-sweet-potato-curry",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 616,
+        "protein": 12.2,
+        "fat": 35.4,
+        "carbs": 67.2
+      },
       "reasons": [
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "thumb-sized piece ginger grated",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "cooked rice to serve (optional)",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "dry roasted peanuts to serve (optional)",
-            "unit": null
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-slow-cooker-chicken-tikka-masala",
       "title": "Slow cooker chicken tikka masala",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-chicken-tikka-masala",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "review_required",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -8249,15 +8336,6 @@
             "ingredients": [
               "cooked basmati rice lime wedges and naan bread, to serve (optional)"
             ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "thumb-sized piece ginger finely grated or chopped",
-            "unit": null
           }
         },
         {
@@ -8292,13 +8370,18 @@
             "sourceName": "cooked basmati rice lime wedges and naan bread, to serve (optional)"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-slow-cooker-chicken-tikka-masala",
+        "note": "Исключено владельцем; slow cooker локализуется как мультиварка в отдельной задаче по кухонной утвари."
+      }
     },
     {
       "id": "goodfood-family-meals-easy-fish-pie-recipe",
       "title": "Family meals: Easy fish pie recipe",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie-recipe",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "ready",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -8308,64 +8391,37 @@
           "code": "missing_ingredient_amount",
           "severity": "blocked",
           "detail": {
-            "sourceName": "handful frozen sweetcorn",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
             "sourceName": "handful frozen petits pois",
             "unit": null
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "handful grated cheddar",
-            "unit": null
-          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-family-meals-easy-fish-pie-recipe",
+        "note": "Исключено владельцем."
+      }
     },
     {
       "id": "goodfood-kadala-curry",
       "title": "Chickpea curry",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/kadala-curry",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 693.1,
+        "protein": 18.5,
+        "fat": 27.5,
+        "carbs": 94.9
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "cooked rice and/or dahl"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "fresh or dried chilli to taste"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "thumb-sized piece ginger peeled",
-            "unit": null
           }
         },
         {
@@ -8402,22 +8458,32 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "cooked rice and/or dahl"
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-slow-cooker-lamb-curry",
       "title": "Slow cooker lamb curry",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-lamb-curry",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 774.5,
+        "protein": 47.9,
+        "fat": 15.4,
+        "carbs": 114.5
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -8437,14 +8503,18 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "cooked brown rice to serve",
-            "unit": null
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-sausage-leek-mash-pie",
@@ -8470,7 +8540,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-10minute-couscous-salad",
@@ -8496,16 +8568,23 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-big-batch-bolognese",
       "title": "Big-batch bolognese",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/big-batch-bolognese",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 398,
+        "protein": 34.1,
+        "fat": 21.4,
+        "carbs": 14
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -8525,43 +8604,33 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "large glass red wine (optional)",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "parmesan to serve",
-            "unit": null
+            "fields": [
+              "kcal",
+              "fat"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-slow-cooker-beef-bourguignon",
       "title": "Slow cooker beef bourguignon",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-beef-bourguignon",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 588.7,
+        "protein": 45.1,
+        "fat": 22.7,
+        "carbs": 37.1
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "mashed potatoes or crusty bread, to serve"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8580,22 +8649,32 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "mashed potatoes or crusty bread, to serve"
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-power-packed-pasta-boxes",
       "title": "Meal prep: pasta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/power-packed-pasta-boxes",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 1510,
+        "protein": 96.6,
+        "fat": 48.7,
+        "carbs": 175.3
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -8607,43 +8686,64 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "big handful rocket",
-            "unit": null
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-tuna-pasta-bake",
       "title": "Tuna pasta bake",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/tuna-pasta-bake",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 494.4,
+        "protein": 25.7,
+        "fat": 24.9,
+        "carbs": 43.6
+      },
       "reasons": [
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "large handful chopped parsley",
-            "unit": null
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-vegan-shepherds-pie",
       "title": "Vegan shepherd's pie",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegan-shepherds-pie",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 402,
+        "protein": 13.7,
+        "fat": 10.1,
+        "carbs": 69.5
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -8679,32 +8779,32 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "small pack flat-leaf parsley chopped",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "tomato ketchup to serve (optional)",
-            "unit": null
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-vegetarian-bolognese",
       "title": "Vegetarian bolognese",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegetarian-bolognese",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 445.7,
+        "protein": 29,
+        "fat": 17,
+        "carbs": 47.5
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -8724,14 +8824,18 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "vegetarian hard cheese to serve, optional",
-            "unit": null
+            "fields": [
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-slow-cooker-sausage-casserole",
@@ -8776,7 +8880,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-italian-vegetable-soup",
@@ -8827,7 +8933,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-aubergine-tomato-halloumi-pie",
@@ -8870,7 +8978,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
@@ -8880,10 +8990,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 454.3,
-        "protein": 34.2,
-        "fat": 6,
-        "carbs": 67
+        "kcal": 543.3,
+        "protein": 35.8,
+        "fat": 6.1,
+        "carbs": 86.8
       },
       "reasons": [
         {
@@ -8905,16 +9015,23 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-mini-lentil-shepherds-pies",
       "title": "Mini lentil shepherd’s pies",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/mini-lentil-shepherds-pies",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 490.6,
+        "protein": 19,
+        "fat": 15.3,
+        "carbs": 70.1
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -8926,23 +9043,31 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "peas to serve (optional)",
-            "unit": null
+            "fields": [
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-freezer-ratatouille",
       "title": "For-the-freezer ratatouille",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/freezer-ratatouille",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 162.5,
+        "protein": 7.3,
+        "fat": 2.6,
+        "carbs": 32.3
+      },
       "reasons": [
         {
           "gate": "editorial",
@@ -8962,15 +9087,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "dried thyme or oregano plus a pinch extra"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "squeeze of lemon juice",
-            "unit": null
           }
         },
         {
@@ -8999,33 +9115,32 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "squeeze of lemon juice",
-            "unit": null
+            "fields": [
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-family-meals-chicken-veg-casserole",
       "title": "Family meals: Chicken & veg casserole",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-chicken-veg-casserole",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 582.6,
+        "protein": 49.3,
+        "fat": 15.3,
+        "carbs": 65.3
+      },
       "reasons": [
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "knob of butter",
-            "unit": null
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9049,8 +9164,22 @@
           "detail": {
             "sourceName": "dried thyme"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
@@ -9078,16 +9207,23 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-big-batch-pressure-cooker-bolognese",
       "title": "Big-batch pressure cooker bolognese",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/big-batch-pressure-cooker-bolognese",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 516,
+        "protein": 35.1,
+        "fat": 14.2,
+        "carbs": 57.4
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -9107,72 +9243,85 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "cooked spaghetti grated parmesan and basil leaves, to serve",
-            "unit": null
+            "sourceName": "basil"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-creamy-bean-kale-pasta",
       "title": "Creamy bean & kale pasta",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/creamy-bean-kale-pasta",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 499.5,
+        "protein": 22,
+        "fat": 8,
+        "carbs": 86.1
+      },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "water or vegetable broth"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "parsley"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
           "severity": "review_required",
           "detail": {
-            "ingredients": [
-              "creamy beans (see recipe below)",
-              "salsa verde (see recipe below)"
+            "fields": [
+              "fat"
             ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "requires_verified_component_recipe: creamy_beans",
-              "requires_verified_component_recipe: salsa_verde"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "creamy beans (see recipe below)"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "salsa verde (see recipe below)"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-courgette-tomato-soup",
       "title": "Courgette & tomato soup",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/courgette-tomato-soup",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 221.3,
+        "protein": 9.2,
+        "fat": 4.2,
+        "carbs": 38.4
+      },
       "reasons": [
         {
           "gate": "editorial",
@@ -9196,14 +9345,18 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "crusty bread to serve (optional)",
-            "unit": null
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-banana-overnight-oats",
@@ -9237,36 +9390,51 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-creamy-chicken-sweetcorn-soup",
       "title": "Creamy chicken & sweetcorn soup",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/creamy-chicken-sweetcorn-soup",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 351.3,
+        "protein": 27,
+        "fat": 15.2,
+        "carbs": 29.4
+      },
       "reasons": [
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "small bunch chives finely snipped",
-            "unit": null
+            "fields": [
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-smoky-black-bean-chilli",
       "title": "Smoky black bean chilli",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/smoky-black-bean-chilli",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 832.9,
+        "protein": 47.3,
+        "fat": 39.1,
+        "carbs": 75.2
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -9278,32 +9446,34 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "soured cream to serve",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "grated cheddar to serve",
-            "unit": null
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
       "title": "Family meals: Easy beef stew with sweet potato topping",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-beef-stew-sweet-potato-topping",
-      "verdict": "blocked",
+      "verdict": "ready",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 516,
+        "protein": 32.8,
+        "fat": 17.3,
+        "carbs": 59.7
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -9315,29 +9485,23 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "knob of butter",
-            "unit": null
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "handful grated cheddar",
-            "unit": null
-          }
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
       "title": "Roasted cauliflower cheese toad-in-the-hole with red onion gravy",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -9390,7 +9554,12 @@
             "sourceName": "red onion gravy (see recipe below)"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+        "note": "Исключено владельцем."
+      }
     },
     {
       "id": "goodfood-family-meals-mild-chicken-curry",
@@ -9458,7 +9627,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-black-pepper-hasselback-potatoes",
@@ -9492,7 +9663,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-beef-red-wine-potato-pie",
@@ -9546,7 +9719,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-vegan-breakfast-muffins",
@@ -9580,7 +9755,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-tuna-nicoise-protein-pots",
@@ -9606,43 +9783,38 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-coconut-rice-with-prawn-stir-fry",
       "title": "Coconut rice with prawn stir-fry",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/coconut-rice-with-prawn-stir-fry",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 406.3,
+        "protein": 19.5,
+        "fat": 8.8,
+        "carbs": 63.4
+      },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "ingredients": [
-              "yellow coconut curry sauce (see 'Complete the dish')"
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "requires_verified_component_recipe: yellow_coconut_curry_sauce"
-            ]
+            "sourceName": "red chilli deseeded and finely chopped"
           }
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "yellow coconut curry sauce (see 'Complete the dish')"
+            "sourceName": "coriander"
           }
         },
         {
@@ -9652,14 +9824,26 @@
           "detail": {
             "sourceName": "small handful of coriander finely chopped"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "protein"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-spiced-broccoli",
       "title": "Spiced broccoli",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/spiced-broccoli",
-      "verdict": "review_required",
+      "verdict": "excluded",
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -9715,65 +9899,73 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-spiced-broccoli",
+        "note": "Исключено из самостоятельных блюд: это подрецепт-компонент, который встраивается в основные карточки."
+      }
     },
     {
       "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
       "title": "Chickpea & spinach gratin with salsa verde",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/chickpea-spinach-gratin-with-salsa-verde",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 632,
+        "protein": 34.9,
+        "fat": 19.9,
+        "carbs": 82.9
+      },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "water or vegetable broth"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "parsley"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
           "severity": "review_required",
           "detail": {
-            "ingredients": [
-              "creamy beans (see recipe below)",
-              "salsa verde (see recipe below)"
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
             ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "requires_verified_component_recipe: creamy_beans",
-              "requires_verified_component_recipe: salsa_verde"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "creamy beans (see recipe below)"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "salsa verde (see recipe below)"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
       "title": "Marinated chicken with orzo, tomato & feta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/marinated-chicken-with-orzo-tomato-feta",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "review_required",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 884.7,
+        "protein": 55.3,
+        "fat": 46.5,
+        "carbs": 60.6
+      },
       "reasons": [
         {
           "gate": "editorial",
@@ -9788,36 +9980,6 @@
           }
         },
         {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "lemon & parmesan vinaigrette (see 'Complete the dish')",
-              "lemon orzo (see 'Complete the dish')"
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "requires_verified_component_recipe: lemon_parmesan_vinaigrette",
-              "requires_verified_component_recipe: lemon_orzo"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "lemon & parmesan vinaigrette (see 'Complete the dish')"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
@@ -9825,152 +9987,6 @@
             "sourceName": "dried oregano"
           }
         },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "lemon orzo (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "leftover soft herbs finely chopped, to garnish",
-            "unit": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "goodfood-family-meals-easy-fish-cakes",
-      "title": "Family meals: Easy fish cakes",
-      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-cakes",
-      "verdict": "blocked",
-      "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
-      "reasons": [
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "handful of grated cheddar cheese",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "flour for dusting",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "olive oil for frying",
-            "unit": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
-      "title": "Lemon orzo with trout, spiced broccoli & peperonata",
-      "sourceUrl": "https://www.bbcgoodfood.com/premium/lemon-orzo-with-trout-spiced-broccoli-peperonata",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
-      "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "spiced broccoli (see 'Complete the dish')",
-              "lemon & parmesan vinaigrette (see 'Complete the dish')",
-              "peperonata (see 'Complete the dish')",
-              "herby lemon orzo (see 'Complete the dish')"
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "внешние_компоненты: для пеперонаты, пряной брокколи, заправки и орзо нужны отдельные карточки"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "spiced broccoli (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "lemon & parmesan vinaigrette (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "peperonata (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "herby lemon orzo (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "leftover soft herbs finely chopped, to garnish",
-            "unit": null
-          }
-        }
-      ]
-    },
-    {
-      "id": "goodfood-steak-broccoli-protein-pots",
-      "title": "Steak & broccoli protein pots",
-      "sourceUrl": "https://www.bbcgoodfood.com/recipes/steak-broccoli-protein-pots",
-      "verdict": "review_required",
-      "editorialVerdict": "ready",
-      "nutritionVerdict": "review_required",
-      "calculatedNutrition": {
-        "kcal": 431.8,
-        "protein": 33,
-        "fat": 5.5,
-        "carbs": 62.6
-      },
-      "reasons": [
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9981,13 +9997,110 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-cakes",
+      "title": "Family meals: Easy fish cakes",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-cakes",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 385.2,
+        "protein": 28.7,
+        "fat": 13.3,
+        "carbs": 38.9
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "protein",
+              "fat",
+              "carbs"
+            ]
+          }
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "title": "Lemon orzo with trout, spiced broccoli & peperonata",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 653,
+        "protein": 20.7,
+        "fat": 30.7,
+        "carbs": 74.8
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "protein"
+            ]
+          }
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
+    },
+    {
+      "id": "goodfood-steak-broccoli-protein-pots",
+      "title": "Steak & broccoli protein pots",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/steak-broccoli-protein-pots",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 488.3,
+        "protein": 34,
+        "fat": 5.6,
+        "carbs": 75.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
+          }
+        }
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-lemon-parmesan-vinaigrette",
       "title": "Lemon & parmesan vinaigrette",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/lemon-parmesan-vinaigrette",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -10019,28 +10132,24 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "juice of 2 lemons",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "garlic granules"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-lemon-parmesan-vinaigrette",
+        "note": "Исключено из самостоятельных блюд: это заправка-компонент."
+      }
     },
     {
       "id": "goodfood-spiced-meatballs",
       "title": "Spiced meatballs",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/spiced-meatballs",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -10114,7 +10223,12 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-spiced-meatballs",
+        "note": "Исключено из самостоятельных блюд: это заготовка-компонент без отдельной подачи."
+      }
     },
     {
       "id": "goodfood-storecupboard-pasta-salad",
@@ -10152,13 +10266,15 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-pickled-red-cabbage-salad",
       "title": "Pickled red cabbage salad",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/pickled-red-cabbage-salad",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -10207,26 +10323,27 @@
             "sourceName": "small handful of parsley finely chopped"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-pickled-red-cabbage-salad",
+        "note": "Исключено из самостоятельных блюд: это компонент для основных карточек."
+      }
     },
     {
       "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
       "title": "Picnic quiches",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/roasted-tomato-pancetta-picnic-quiches",
-      "verdict": "blocked",
+      "verdict": "ready",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 339.1,
+        "protein": 8.8,
+        "fat": 26.7,
+        "carbs": 16.7
+      },
       "reasons": [
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "olive oil for drizzling",
-            "unit": null
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10242,14 +10359,26 @@
           "detail": {
             "sourceName": "tartlet tins (about 7.5cm diameter each)"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-yellow-coconut-curry-sauce",
       "title": "Yellow coconut curry sauce",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/yellow-coconut-curry-sauce",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -10346,7 +10475,12 @@
             "sourceName": "ground cumin"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-yellow-coconut-curry-sauce",
+        "note": "Исключено из самостоятельных блюд: это соус-компонент."
+      }
     },
     {
       "id": "goodfood-vegan-ragu",
@@ -10380,7 +10514,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-summery-beans-herby-green-aioli",
@@ -10433,70 +10569,70 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
       "title": "Meatball & chickpea yellow coconut curry with rice & pickled red cabbage",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 898.6,
+        "protein": 40.2,
+        "fat": 38.4,
+        "carbs": 102.2
+      },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "ingredients": [
-              "spiced meatballs (see 'Complete the dish')",
-              "yellow coconut curry sauce (see 'Complete the dish')",
-              "pickled red cabbage (see 'Complete the dish')"
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "внешние_компоненты: требуются отдельные карточки фрикаделек, соуса карри и маринованной капусты"
-            ]
+            "sourceName": "lemon zest"
           }
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "spiced meatballs (see 'Complete the dish')"
+            "sourceName": "parsley"
           }
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "yellow coconut curry sauce (see 'Complete the dish')"
+            "sourceName": "red chilli deseeded and finely chopped"
           }
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "jasmine rice",
-            "unit": null
+            "sourceName": "coriander"
           }
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "pickled red cabbage (see 'Complete the dish')"
+            "sourceName": "mint"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "parsley"
           }
         },
         {
@@ -10506,14 +10642,28 @@
           "detail": {
             "sourceName": "small handful of coriander leaves picked"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-lemon-orzo",
       "title": "Lemon orzo",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/lemon-orzo",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -10530,32 +10680,19 @@
           "detail": {
             "servings": null
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "large handful of finely chopped soft herbs such as chives, dill and basil",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "good squeeze of lemon juice",
-            "unit": null
-          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-lemon-orzo",
+        "note": "Исключено из самостоятельных блюд: это базовый гарнир-компонент."
+      }
     },
     {
       "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
       "title": "Speedy turkey wraps with pickled red cabbage",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/speedy-turkey-wraps-with-pickled-red-cabbage",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -10605,16 +10742,26 @@
             "sourceName": "pickled red cabbage (see 'Complete the dish')"
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+        "note": "Исключено владельцем."
+      }
     },
     {
       "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
       "title": "Roasted lemony broccoli & mascarpone flatbreads",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/roasted-lemony-broccoli-mascarpone-flatbreads",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "review_required",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 854.8,
+        "protein": 20.9,
+        "fat": 36.9,
+        "carbs": 110.2
+      },
       "reasons": [
         {
           "gate": "editorial",
@@ -10629,58 +10776,27 @@
           }
         },
         {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "ingredients": [
-              "batch of flatbread dough (see 'Complete the dish')",
-              "peperonata (see 'Complete the dish')",
-              "spiced broccoli (see 'Complete the dish')",
-              "lemon & parmesan vinaigrette (see 'Complete the dish')"
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "внешние_компоненты: тесто, пепероната, пряная брокколи и заправка описаны в отдельных карточках"
-            ]
+            "sourceName": "water"
           }
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "batch of flatbread dough (see 'Complete the dish')"
+            "sourceName": "salt"
           }
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "peperonata (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "spiced broccoli (see 'Complete the dish')"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "lemon & parmesan vinaigrette (see 'Complete the dish')"
+            "sourceName": "pepper"
           }
         },
         {
@@ -10690,14 +10806,26 @@
           "detail": {
             "sourceName": "red chilli deseeded if you like, finely sliced"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-flatbread-dough",
       "title": "Flatbread dough",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/flatbread-dough",
-      "verdict": "ready",
+      "verdict": "excluded",
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -10733,13 +10861,18 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-flatbread-dough",
+        "note": "Исключено из самостоятельных блюд: это тесто-компонент."
+      }
     },
     {
       "id": "goodfood-peperonata",
       "title": "Peperonata",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/peperonata",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "blocked",
       "nutritionVerdict": "blocked",
       "calculatedNutrition": null,
@@ -10769,7 +10902,12 @@
             "servings": null
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-peperonata",
+        "note": "Исключено из самостоятельных блюд: это овощной компонент для основных карточек."
+      }
     },
     {
       "id": "goodfood-bulgur-quinoa-lunch-bowls",
@@ -10837,7 +10975,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-vegan-paella",
@@ -10847,10 +10987,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
-        "kcal": 410,
-        "protein": 13,
-        "fat": 8.2,
-        "carbs": 73
+        "kcal": 446.5,
+        "protein": 13.7,
+        "fat": 8.3,
+        "carbs": 81
       },
       "reasons": [
         {
@@ -10887,27 +11027,24 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-spiced-lentil-butternut-squash-soup",
       "title": "Spiced lentil & butternut squash soup",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/spiced-lentil-butternut-squash-soup",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 323.8,
+        "protein": 14.5,
+        "fat": 13.1,
+        "carbs": 41.7
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "dukkah (see tip) and natural yogurt, to serve"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10934,58 +11071,41 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "dukkah (see tip) and natural yogurt, to serve"
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash",
       "title": "Beef, mushroom & marsala stroganoff with herby mash",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/beef-mushroom-marsala-stroganoff-with-herby-mash",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 780.5,
+        "protein": 36,
+        "fat": 40.3,
+        "carbs": 70.7
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "leftover ragu (see recipe below)"
-            ]
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "внешний_компонент: используется готовое рагу из другой карточки"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "celery salt (optional)"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "handful of soft herbs (we used chives, parsley and dill)",
-            "unit": null
           }
         },
         {
@@ -10998,13 +11118,18 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "leftover ragu (see recipe below)"
+            "fields": [
+              "protein",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-pork-harissa-meatballs",
@@ -11049,7 +11174,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-crunchy-broccoli-cranberry-salad",
@@ -11083,26 +11210,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-chicken-sweet-potato-peanut-stew",
       "title": "Chicken, sweet potato & peanut stew",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-sweet-potato-peanut-stew",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 460.8,
+        "protein": 35.8,
+        "fat": 21.1,
+        "carbs": 35.1
+      },
       "reasons": [
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "thumb-sized piece of ginger finely grated",
-            "unit": null
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11113,14 +11238,25 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
           "detail": {
-            "sourceName": "handful of chopped coriander and chopped peanuts, to serve",
-            "unit": null
+            "sourceName": "coriander"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-mozzarella-pepper-aubergine-calzone",
@@ -11170,7 +11306,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-freeze-ahead-roasties",
@@ -11197,16 +11335,23 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-lentil-kofta-orzo-feta",
       "title": "Lentil kofta with orzo & feta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/lentil-kofta-orzo-feta",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 683,
+        "protein": 30.1,
+        "fat": 16.9,
+        "carbs": 104.6
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -11234,21 +11379,24 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "pinch of sugar",
-            "unit": null
+            "fields": [
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-crispy-lamb-pea-tabbouleh",
       "title": "Crispy lamb & pea tabbouleh",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/crispy-lamb-pea-tabbouleh",
-      "verdict": "blocked",
-      "editorialVerdict": "blocked",
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "review_required",
       "calculatedNutrition": {
         "kcal": 780.9,
@@ -11257,16 +11405,6 @@
         "carbs": 95.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "procedure_review_required",
-          "severity": "blocked",
-          "detail": {
-            "blockers": [
-              "внешний_компонент: используется готовый кебаб из баранины из другой карточки"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11295,7 +11433,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-apple-penne-slaw-walnuts",
@@ -11321,16 +11461,23 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-sausage-egg-muffins",
       "title": "Sausage & egg muffins",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/sausage-egg-muffins",
-      "verdict": "blocked",
+      "verdict": "ready",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 467.8,
+        "protein": 33.9,
+        "fat": 21,
+        "carbs": 33.8
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -11350,62 +11497,63 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "ketchup (optional)",
-            "unit": null
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-mushroom-lentil-beef-ragu",
       "title": "Mushroom, lentil & beef ragu",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/mushroom-lentil-beef-ragu",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 916.1,
+        "protein": 77.5,
+        "fat": 46,
+        "carbs": 55.5
+      },
       "reasons": [
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "large knob of butter",
-            "unit": null
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-black-bean-spicy-beef-pasta",
       "title": "Black bean & spicy beef pasta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/black-bean-spicy-beef-pasta",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 898.2,
+        "protein": 42.7,
+        "fat": 27.2,
+        "carbs": 126.3
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "leftover ragu (see recipe below)"
-            ]
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "leftover ragu (see recipe below)"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11413,29 +11561,37 @@
           "detail": {
             "sourceName": "small handful of parsley"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-harissa-beef-tomato-bulgur",
       "title": "Harissa beef & tomato bulgur",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/harissa-beef-tomato-bulgur",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 676.1,
+        "protein": 39.6,
+        "fat": 25.6,
+        "carbs": 81.2
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "leftover ragu (see recipe below)",
-              "lemon wedges and natural yogurt, to serve"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11454,14 +11610,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "leftover ragu (see recipe below)"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -11470,13 +11618,18 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "lemon wedges and natural yogurt, to serve"
+            "fields": [
+              "protein",
+              "fat"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-turmeric-granola",
@@ -11520,7 +11673,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
@@ -11554,27 +11709,24 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-orange-oregano-pulled-pork",
       "title": "Orange & oregano pulled pork",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/orange-oregano-pulled-pork",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 655.8,
+        "protein": 38.5,
+        "fat": 27.2,
+        "carbs": 61.7
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "corn cobs cooked rice and tortilla wraps (optional), to serve"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11609,14 +11761,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "corn cobs cooked rice and tortilla wraps (optional), to serve"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -11630,8 +11774,23 @@
           "detail": {
             "sourceName": "handful of coriander finely chopped"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-tomato-pepper-bean-one-pot",
@@ -11667,7 +11826,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-scandi-beetroot-salmon-pasta",
@@ -11702,27 +11863,24 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-indian-rice-salad-chicken",
       "title": "Indian rice salad with chicken",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/indian-rice-salad-chicken",
-      "verdict": "blocked",
-      "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "verdict": "review_required",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 685.8,
+        "protein": 21.2,
+        "fat": 9.5,
+        "carbs": 127.7
+      },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "unresolved_ingredient_mapping",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "natural yogurt and mini poppadum crisps, to serve (optional)"
-            ]
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11741,39 +11899,32 @@
         },
         {
           "gate": "nutrition",
-          "code": "unresolved_ingredient",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "natural yogurt and mini poppadum crisps, to serve (optional)"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "medium curry powder plus 1 tsp for the rice"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "juice 1&frac12;-2 lemon depending on size",
-            "unit": null
+            "fields": [
+              "kcal",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-chicken-squash-pesto-lasagne",
       "title": "Chicken, squash & pesto lasagne",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-squash-pesto-lasagne",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 987.1,
+        "protein": 47.4,
+        "fat": 66.9,
+        "carbs": 49.3
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -11793,33 +11944,35 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "splash of milk",
-            "unit": null
+            "fields": [
+              "kcal",
+              "protein",
+              "fat",
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-prawn-rice-mango-jar-salad",
       "title": "Prawn, rice & mango jar salad",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/prawn-rice-mango-jar-salad",
-      "verdict": "blocked",
+      "verdict": "review_required",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 582.6,
+        "protein": 23.1,
+        "fat": 5.9,
+        "carbs": 108
+      },
       "reasons": [
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "handful baby spinach",
-            "unit": null
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11835,17 +11988,36 @@
           "detail": {
             "sourceName": "small handful coriander roughly chopped"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ]
+          }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-deli-pasta-salad",
       "title": "Quick and easy pasta salad",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/deli-pasta-salad",
-      "verdict": "blocked",
+      "verdict": "excluded",
       "editorialVerdict": "review_required",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "review_required",
+      "calculatedNutrition": {
+        "kcal": 499.2,
+        "protein": 19.7,
+        "fat": 13.7,
+        "carbs": 76.1
+      },
       "reasons": [
         {
           "gate": "editorial",
@@ -11859,14 +12031,20 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "review_required",
           "detail": {
-            "sourceName": "large handful fresh basil leaves",
-            "unit": null
+            "fields": [
+              "carbs"
+            ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": {
+        "id": "goodfood-deli-pasta-salad",
+        "note": "Исключено владельцем."
+      }
     },
     {
       "id": "goodfood-salmon-pasta-salad-lemon-capers",
@@ -11903,7 +12081,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
@@ -11937,7 +12117,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-black-bean-soup-with-chunky-raita",
@@ -11996,7 +12178,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-wild-salmon-with-radish-orange-slaw",
@@ -12081,7 +12265,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-fragrant-biryani-with-coriander-cod",
@@ -12091,10 +12277,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 516.9,
-        "protein": 38,
+        "kcal": 507.7,
+        "protein": 37.8,
         "fat": 9.4,
-        "carbs": 69.2
+        "carbs": 67.2
       },
       "reasons": [
         {
@@ -12147,7 +12333,9 @@
           "code": "independent_calculation_complete",
           "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
@@ -12182,16 +12370,23 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-pork-with-cucumber-apricot-couscous",
       "title": "Pork with cucumber & apricot couscous",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/pork-with-cucumber-apricot-couscous",
-      "verdict": "blocked",
+      "verdict": "ready",
       "editorialVerdict": "ready",
-      "nutritionVerdict": "blocked",
-      "calculatedNutrition": null,
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 563,
+        "protein": 32.9,
+        "fat": 18.9,
+        "carbs": 68
+      },
       "reasons": [
         {
           "gate": "nutrition",
@@ -12219,22 +12414,25 @@
         },
         {
           "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "drop of olive oil for roasting",
-            "unit": null
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "mint leaves chopped"
           }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-veggie-nuggets-with-summer-slaw",
@@ -12284,7 +12482,9 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     },
     {
       "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
@@ -12326,7 +12526,239 @@
             ]
           }
         }
-      ]
+      ],
+      "resolvedReasons": [],
+      "exclusion": null
     }
-  ]
+  ],
+  "resolutions": {
+    "schemaVersion": 1,
+    "sourceExport": {
+      "exportedAt": "2026-08-29T16:33:40.651Z",
+      "sourceAuditGeneratedAt": "2026-08-29T15:50:44.499Z",
+      "fileName": "mise-recipe-review-decisions.json"
+    },
+    "exclusions": [
+      {
+        "id": "tmpm-28492",
+        "note": "Исключено владельцем после проверки низкой калорийности."
+      },
+      {
+        "id": "tmpm-25475",
+        "note": "Исключено владельцем: неопределённые составные фрикадельки и соус."
+      },
+      {
+        "id": "tmpm-25461",
+        "note": "Исключено владельцем: покупные фрикадельки и маринара остаются внешними компонентами."
+      },
+      {
+        "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+        "note": "Исключено владельцем."
+      },
+      {
+        "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+        "note": "Исключено владельцем."
+      },
+      {
+        "id": "goodfood-deli-pasta-salad",
+        "note": "Исключено владельцем."
+      },
+      {
+        "id": "goodfood-slow-cooker-chicken-tikka-masala",
+        "note": "Исключено владельцем; slow cooker локализуется как мультиварка в отдельной задаче по кухонной утвари."
+      },
+      {
+        "id": "goodfood-family-meals-easy-fish-pie-recipe",
+        "note": "Исключено владельцем."
+      },
+      {
+        "id": "goodfood-spiced-broccoli",
+        "note": "Исключено из самостоятельных блюд: это подрецепт-компонент, который встраивается в основные карточки."
+      },
+      {
+        "id": "goodfood-lemon-parmesan-vinaigrette",
+        "note": "Исключено из самостоятельных блюд: это заправка-компонент."
+      },
+      {
+        "id": "goodfood-spiced-meatballs",
+        "note": "Исключено из самостоятельных блюд: это заготовка-компонент без отдельной подачи."
+      },
+      {
+        "id": "goodfood-pickled-red-cabbage-salad",
+        "note": "Исключено из самостоятельных блюд: это компонент для основных карточек."
+      },
+      {
+        "id": "goodfood-yellow-coconut-curry-sauce",
+        "note": "Исключено из самостоятельных блюд: это соус-компонент."
+      },
+      {
+        "id": "goodfood-lemon-orzo",
+        "note": "Исключено из самостоятельных блюд: это базовый гарнир-компонент."
+      },
+      {
+        "id": "goodfood-flatbread-dough",
+        "note": "Исключено из самостоятельных блюд: это тесто-компонент."
+      },
+      {
+        "id": "goodfood-peperonata",
+        "note": "Исключено из самостоятельных блюд: это овощной компонент для основных карточек."
+      }
+    ],
+    "resolvedReasons": [
+      {
+        "id": "tmpm-25290",
+        "gate": "editorial",
+        "code": "extreme_kcal",
+        "resolution": "Владелец подтвердил исходные 980 ккал на порцию; рецепт рассчитан для набора массы."
+      },
+      {
+        "id": "tmpm-26746",
+        "gate": "editorial",
+        "code": "niche_localization",
+        "resolution": "Владелец оставил карточку: продукты доступны и отдельной локализационной замены не требуется."
+      }
+    ],
+    "decisions": [
+      {
+        "id": "tmpm-28584",
+        "option": "round_yield",
+        "category": "yield",
+        "note": ""
+      },
+      {
+        "id": "tmpm-28492",
+        "option": "exclude_card",
+        "category": "kcal",
+        "note": ""
+      },
+      {
+        "id": "tmpm-28247",
+        "note": "не понял"
+      },
+      {
+        "id": "tmpm-26965",
+        "option": "adjust_servings",
+        "category": "kcal",
+        "note": "получились скорее всего ккал на шт"
+      },
+      {
+        "id": "tmpm-26689",
+        "option": "rewrite_procedure",
+        "category": "procedure",
+        "note": "расчет скорее всего на шт. Уточнить время запекания. Это панкейки на противне; готовность определяется по схватившемуся центру."
+      },
+      {
+        "id": "tmpm-26528",
+        "option": "rewrite_procedure",
+        "category": "procedure",
+        "note": "жарка до готовности фарша"
+      },
+      {
+        "id": "tmpm-25475",
+        "option": "exclude_card",
+        "category": "ambiguity",
+        "note": ""
+      },
+      {
+        "id": "tmpm-25461",
+        "option": "exclude_card",
+        "category": "procedure",
+        "note": "соус маринара покупной; покупные фрикадельки в блок"
+      },
+      {
+        "id": "tmpm-25304",
+        "note": "до готовности; добавить примерные ориентиры по запеканию одной куриной грудки"
+      },
+      {
+        "id": "tmpm-25290",
+        "option": "confirm_kcal",
+        "category": "kcal",
+        "note": ""
+      },
+      {
+        "id": "tmpm-25006",
+        "note": "дели на рецепты"
+      },
+      {
+        "id": "goodfood-creamy-bean-kale-pasta",
+        "note": "рецепты ингредиентов встроить в рецепт блюда"
+      },
+      {
+        "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+        "option": "exclude_card",
+        "category": "ambiguity",
+        "note": ""
+      },
+      {
+        "id": "goodfood-coconut-rice-with-prawn-stir-fry",
+        "note": "проверить, спарсен ли рецепт целиком"
+      },
+      {
+        "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+        "note": "Встроить сальса-верде. Creamy beans — белая фасоль; примерно треть размять вилкой."
+      },
+      {
+        "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+        "note": "Встроить подрецепты фрикаделек, жёлтого кокосового соуса и маринованной капусты из того же источника."
+      },
+      {
+        "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+        "option": "exclude_card",
+        "category": "ambiguity",
+        "note": ""
+      },
+      {
+        "id": "tmpm-26746",
+        "option": "keep_specialty",
+        "category": "localization",
+        "note": ""
+      },
+      {
+        "id": "tmpm-26514",
+        "option": "adjust_servings",
+        "category": "kcal",
+        "note": "тут нет ничего нишевого"
+      },
+      {
+        "id": "tmpm-26489",
+        "option": "manual_review",
+        "category": "ambiguity",
+        "note": ""
+      },
+      {
+        "id": "tmpm-18065",
+        "option": "adjust_servings",
+        "category": "kcal",
+        "note": ""
+      },
+      {
+        "id": "goodfood-deli-pasta-salad",
+        "option": "exclude_card",
+        "category": "amount",
+        "note": ""
+      },
+      {
+        "id": "goodfood-satay-sweet-potato-curry",
+        "note": "переводи и пользуйся здравым смыслом"
+      },
+      {
+        "id": "goodfood-slow-cooker-chicken-tikka-masala",
+        "option": "exclude_card",
+        "category": "ambiguity",
+        "note": "медленноварка = мультиварка; поддержку кухонной утвари добавить в бэклог"
+      },
+      {
+        "id": "goodfood-family-meals-easy-fish-pie-recipe",
+        "option": "exclude_card",
+        "category": "amount",
+        "note": "хм, ну щедро"
+      },
+      {
+        "id": "goodfood-kadala-curry",
+        "option": "set_verified_weight",
+        "category": "amount",
+        "note": "Cooked rice нужно приготовить. Для подачи — примерно 240 г сухого риса на 4 порции; так переделывать везде."
+      }
+    ]
+  }
 }

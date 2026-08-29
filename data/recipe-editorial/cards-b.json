@@ -849,6 +849,51 @@
           "baking_sheet"
         ],
         "donenessCue": "курица без розовых участков, соус загустел"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24",
+          "source-ingredient-25",
+          "source-ingredient-26",
+          "source-ingredient-27",
+          "source-ingredient-28",
+          "source-ingredient-29",
+          "source-ingredient-30",
+          "source-ingredient-31"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис мягкий, без твёрдой сердцевины"
       }
     ],
     "proceduralStatus": "ready",
@@ -2079,6 +2124,32 @@
           "saucepan"
         ],
         "donenessCue": "батат мягкий, шпинат увял"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис мягкий, без твёрдой сердцевины"
       }
     ],
     "proceduralStatus": "ready",
@@ -2189,6 +2260,35 @@
           "saucepan"
         ],
         "donenessCue": "шпинат увял, соус уварился"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис мягкий, без твёрдой сердцевины"
       }
     ],
     "proceduralStatus": "ready",
@@ -2222,6 +2322,32 @@
           "slow_cooker"
         ],
         "donenessCue": "ягнёнок и овощи мягкие"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11",
+          "source-ingredient-12"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис мягкий, без твёрдой сердцевины"
       }
     ],
     "proceduralStatus": "ready",

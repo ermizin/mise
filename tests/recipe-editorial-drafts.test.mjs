@@ -120,8 +120,8 @@ test("dry run leaves both JSON files byte-identical and normal mode changes only
   assert.equal(after.candidates[0].paraphrasedInstructionDraft.length, 2);
 });
 
-test("all 217 applied editorial cards pass concrete-procedure validation", async () => {
+test("all derived recipe cards pass concrete-procedure validation", async () => {
   const report = await applyRecipeEditorialCards();
-  assert.equal(report.total, 217);
-  assert.equal(report.ready + report.reviewRequired, 217);
+  assert.equal(report.total, 221);
+  assert.equal(report.ready + report.reviewRequired, report.total);
 });

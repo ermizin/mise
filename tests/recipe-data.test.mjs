@@ -157,7 +157,7 @@ test("production fat-sensitive ingredients expose an honest fat note", () => {
   assert.ok(yogurts.length > 0);
   assert.ok(yogurts.every((item) => item.fatNote === "≈2% по расчётному профилю" && item.checkLabel === false));
   assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
-  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "label_required");
+  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "brand_label");
   assert.equal(canonicalIngredients.cheese_processed.canonicalName, "Полутвёрдый сыр (обычный)");
   assert.equal(canonicalIngredients.yogurt_processed.canonicalName, "Греческий йогурт 2%");
 });
@@ -533,15 +533,15 @@ test("missing caloric and allergenic source components are explicit in the pilot
   assert.ok(bouillon.allergens.includes("gluten"));
 });
 
-test("raw candidate adapter preserves all 217 source cards and legacy editorial statuses", async () => {
+test("raw candidate adapter preserves 217 source pages as 221 derived cards and legacy editorial statuses", async () => {
   const datasets = await Promise.all([
     readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/goodfood-candidates.json", import.meta.url), "utf8").then(JSON.parse),
   ]);
   const drafts = datasets.flatMap((dataset) => dataset.candidates.map((candidate) => normalizeRawRecipeCandidate(candidate, { publisher: dataset.source, accessedAt: dataset.importedAt })));
-  assert.equal(drafts.length, 217);
+  assert.equal(drafts.length, 221);
   assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "promoted").length, 28);
-  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "pending").length, 189);
+  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "pending").length, 193);
   assert.ok(drafts.every((draft) => draft.sourceUrl && draft.imageUrl && draft.sourceIngredients.length > 0));
   assert.ok(drafts.every((draft) => Object.values(draft.sourceNutrition).every(Number.isFinite)));
   assert.ok(drafts.every((draft) => draft.legacy.editorialStatus === draft.editorial.legacyStatus));
@@ -590,8 +590,8 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
   assert.equal(trustedPepper.ingredientMappings[0].canonicalIngredientId, "pepper_raw", "only an exact canonical id is trusted over the source name");
   const teriyaki = pilotDrafts.find((draft) => draft.sourceTitle === "Sheet Pan Teriyaki Chicken and Vegetables");
   const mirin = teriyaki.ingredientMappings.find((mapping) => mapping.sourceName.toLowerCase() === "mirin");
-  assert.equal(mirin.status, "replaced");
-  assert.deepEqual([...mirin.replacementCanonicalIngredientIds].sort(), ["brown_sugar_processed", "vinegar_processed"]);
+  assert.equal(mirin.status, "mapped");
+  assert.equal(mirin.canonicalIngredientId, "mirin_processed");
   const omittedFoods = allDispositions.filter((decision) => decision.disposition === "omitted_by_adaptation");
   assert.equal(omittedFoods.length, 9, "all real source foods omitted from raw-backed adaptations are explicit");
   assert.ok(omittedFoods.some((decision) => decision.familyId === "src-mediterranean-wrap" && decision.sourceName.toLowerCase() === "ginger"));
@@ -605,11 +605,11 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
     counts[mapping.status] = (counts[mapping.status] ?? 0) + 1;
     return counts;
   }, {});
-  assert.equal(rawMappingCounts.mapped, 128);
+  assert.equal(rawMappingCounts.mapped, 129);
   assert.equal((rawMappingCounts.ignored_noncaloric ?? 0) + (rawMappingCounts.ignored_microcomponent ?? 0), 68);
   assert.ok(rawMappingCounts.ignored_noncaloric > 0);
   assert.ok(rawMappingCounts.ignored_microcomponent > 0);
-  assert.equal(rawMappingCounts.replaced, 1);
+  assert.equal(rawMappingCounts.replaced ?? 0, 0);
   assert.equal(rawMappingCounts.unresolved ?? 0, 0);
   assert.equal(recipeFamiliesById["src-halal-chicken"].comparisonNutrition.kcal, 773, "halal chicken compares against the unedited raw source value");
   assert.equal(recipeFamiliesById["src-red-pepper-chicken-dip"].comparisonNutrition.kcal, 218, "dip records that one Mise portion equals two source portions");

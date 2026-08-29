@@ -56,6 +56,37 @@ test("standard household volume still needs a verified ingredient density", () =
   assert.ok(report.reasons.some((item) => item.code === NUTRITION_AUDIT_REASON.ML_DENSITY_MISSING));
 });
 
+test("single-product editorial amounts use documented standard averages", () => {
+  const measured = (original, name = original) => sourceAmount({ original, name });
+  assert.deepEqual(measured("thumb-sized piece ginger", "ginger"), { amount: 25, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("knob butter", "butter"), { amount: 15, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("large knob of butter", "butter"), { amount: 25, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("good squeeze of lemon juice", "lemon juice"), { amount: 15, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("squeeze lemon juice", "lemon juice"), { amount: 10, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("splash of milk", "milk"), { amount: 30, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("drop of olive oil", "olive oil"), { amount: 5, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("juice of 2 lemons", "lemon juice"), { amount: 60, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("juice 1½-2 lemons", "lemon juice"), { amount: 50, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("large glass red wine", "red wine"), { amount: 250, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("flour for dusting", "flour"), { amount: 30, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("olive oil for frying", "olive oil"), { amount: 30, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("olive oil for drizzling", "olive oil"), { amount: 15, unit: "ml", status: "standard_average" });
+  assert.deepEqual(measured("ketchup, optional", "ketchup"), { amount: 40, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("a large handful of parsley", "parsley"), { amount: 30, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("a small pack spinach", "spinach"), { amount: 200, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("big handful rocket", "rocket"), { amount: 60, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("large pack grated cheese", "cheese"), { amount: 100, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("handful sweetcorn", "sweetcorn"), { amount: 100, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("handful peas", "peas"), { amount: 75, unit: "g", status: "standard_average" });
+  assert.deepEqual(measured("handful peanuts", "peanuts"), { amount: 30, unit: "g", status: "standard_average" });
+});
+
+test("averages do not guess servings from combined garnish lines or bare staples", () => {
+  assert.equal(sourceAmount({ original: "cooked basmati rice, lime wedges and naan, to serve", name: "cooked basmati rice lime wedges and naan" }), undefined);
+  assert.equal(sourceAmount({ original: "jasmine rice", name: "jasmine rice" }), undefined);
+  assert.equal(sourceAmount({ original: "handful of corn and peas", name: "corn and peas" }), undefined);
+});
+
 test("counted vegetables use the canonical average piece mass", () => {
   const report = auditNutritionEntry({
     id: "counted-broccoli", title: "Counted broccoli", sourceUrl: "https://example.test", servings: 1,
@@ -104,10 +135,10 @@ test("nutrition deltas distinguish a reasonable source match from a bad mismatch
 
 test("nutrition audit emits one machine verdict for every scraped recipe", async () => {
   const report = await auditRecipeNutritionCorpus();
-  assert.equal(report.total, 217);
-  assert.equal(report.cards.length, 217);
-  assert.equal(new Set(report.cards.map((card) => card.id)).size, 217);
-  assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, 217);
+  assert.equal(report.total, 221);
+  assert.equal(report.cards.length, report.total);
+  assert.equal(new Set(report.cards.map((card) => card.id)).size, report.total);
+  assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, report.total);
   assert.equal(report.reasonCounts.ml_density_missing ?? 0, 0, "all current household-volume ingredients use an explicit standard density");
   for (const card of report.cards.filter((item) => item.verdict === "ready")) {
     assert.equal(card.calculationComplete, true);
