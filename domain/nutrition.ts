@@ -107,6 +107,46 @@ export const MEAL_SLOT_SHARES: Record<MealSlot, number> = Object.fromEntries(
 export const ACTIVITY_FACTORS: Record<ActivityKey, number> =
   NUTRITION_CONFIG.activityFactors;
 
+type PersonWithMealSlots = {
+  id: string;
+  includedSlots: MealSlot[];
+};
+
+export function togglePersonMealSlot<T extends PersonWithMealSlots>(
+  people: readonly T[],
+  planSlots: readonly MealSlot[],
+  personId: string,
+  slot: MealSlot,
+) {
+  const person = people.find((item) => item.id === personId);
+  if (!person) return { people: [...people], mealSlots: [...planSlots] };
+
+  const removing = person.includedSlots.includes(slot);
+  const nextPeople = people.map((item) =>
+    item.id !== personId
+      ? item
+      : {
+          ...item,
+          includedSlots: removing
+            ? item.includedSlots.filter((itemSlot) => itemSlot !== slot)
+            : [...item.includedSlots, slot],
+        },
+  );
+  const slotStillUsed = nextPeople.some((item) =>
+    item.includedSlots.includes(slot),
+  );
+  const selectedSlots = new Set(planSlots);
+  if (slotStillUsed) selectedSlots.add(slot);
+  else selectedSlots.delete(slot);
+
+  return {
+    people: nextPeople,
+    mealSlots: NUTRITION_CONFIG.mealSlots
+      .map(({ id }) => id)
+      .filter((id) => selectedSlots.has(id)),
+  };
+}
+
 function round(value: number, digits = 0) {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;

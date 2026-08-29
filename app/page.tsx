@@ -31,6 +31,7 @@ import {
   macroCalories as nutritionMacroCalories,
   macrosForCalories as nutritionMacrosForCalories,
   recalculateDailyMacros as nutritionRecalculateDailyMacros,
+  togglePersonMealSlot as togglePersonMealSlotSelection,
   type ActivityKey,
   type MacroKey,
   type MacroPreset,
@@ -245,6 +246,13 @@ const mealMeta: Record<
   snack1: { label: "Перекус 1", short: "Перекус 1", icon: "🍏" },
   snack2: { label: "Перекус 2", short: "Перекус 2", icon: "🥛" },
 };
+const allMealSlots: MealSlot[] = [
+  "breakfast",
+  "snack1",
+  "lunch",
+  "snack2",
+  "dinner",
+];
 const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
   protein: {
     label: "Высокобелковое",
@@ -7080,6 +7088,16 @@ function PlanBuilder({
       }),
     );
   }
+  function togglePersonMealSlot(personId: string, slot: MealSlot) {
+    const next = togglePersonMealSlotSelection(
+      people,
+      mealSlots,
+      personId,
+      slot,
+    );
+    setPeople(next.people);
+    setMealSlots(next.mealSlots);
+  }
   function stepIsValid(index = step) {
     if (index === 0) return validPeriod;
     if (index === 1) return mealSlots.length > 0;
@@ -7143,7 +7161,9 @@ function PlanBuilder({
       setStep(5);
       setSaveState("error");
       setSaveMessage(
-        "Одно из выбранных блюд нарушает «Аллергия/мне нельзя». Выберите подходящую замену.",
+        staleCount > 0
+          ? "Одно из выбранных блюд больше не подходит. Выберите замену."
+          : "Выберите блюдо для нового приёма пищи.",
       );
       return;
     }
@@ -7294,7 +7314,9 @@ function PlanBuilder({
           <PeopleStep
             people={people}
             mealSlots={mealSlots}
+            availableMealSlots={mode === "settings" ? allMealSlots : mealSlots}
             onUpdate={updatePerson}
+            onMealSlotToggle={togglePersonMealSlot}
             onMacro={updateMacro}
             onPreset={applyMacroPreset}
             onAdd={() => {
@@ -7621,7 +7643,9 @@ function StyleStep({
 function PeopleStep({
   people,
   mealSlots,
+  availableMealSlots,
   onUpdate,
+  onMealSlotToggle,
   onMacro,
   onPreset,
   onAdd,
@@ -7629,7 +7653,9 @@ function PeopleStep({
 }: {
   people: Person[];
   mealSlots: MealSlot[];
+  availableMealSlots: MealSlot[];
   onUpdate: (id: string, patch: Partial<Person>) => void;
+  onMealSlotToggle: (id: string, slot: MealSlot) => void;
   onMacro: (id: string, key: MacroKey, value: number) => void;
   onPreset: (id: string, preset: MacroPresetOption) => void;
   onAdd: () => void;
@@ -7787,7 +7813,7 @@ function PeopleStep({
                 Что из плана ест {person.name || "человек"}
               </p>
               <div role="group" aria-labelledby={`person-slots-${person.id}`}>
-                {mealSlots.map((slot) => {
+                {availableMealSlots.map((slot) => {
                   const active = person.includedSlots.includes(slot);
                   return (
                     <button
@@ -7795,15 +7821,7 @@ function PeopleStep({
                       role="checkbox"
                       aria-checked={active}
                       className={active ? "selected" : ""}
-                      onClick={() =>
-                        onUpdate(person.id, {
-                          includedSlots: active
-                            ? person.includedSlots.filter(
-                                (item) => item !== slot,
-                              )
-                            : [...person.includedSlots, slot],
-                        })
-                      }
+                      onClick={() => onMealSlotToggle(person.id, slot)}
                     >
                       {active ? (
                         <Icon name="check" size={12} />

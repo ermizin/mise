@@ -13,6 +13,7 @@ export {
   macrosForCalories,
   recalculateDailyMacros,
   shareForSlots,
+  togglePersonMealSlot,
 } from "../domain/nutrition";
 
 export type {
