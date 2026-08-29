@@ -271,10 +271,14 @@ test("keeps the approved ingredients and excludes pasta salads from the first po
 });
 
 test("catalog shows every matching recipe while the plan builder keeps five choices", () => {
-  const catalog = candidateRecipes("lunch", "protein", [], 1, { origin: "generated", limit: "all" });
-  const builder = candidateRecipes("lunch", "protein", [], 1, { origin: "generated" });
-  assert.ok(catalog.length > 5);
-  assert.equal(builder.length, 5);
+  const catalog = candidateRecipes("lunch", "protein", [], 1, { origin: "parsed", limit: "all" });
+  const builder = candidateRecipes("lunch", "protein", [], 1, { origin: "parsed" });
+  assert.ok(catalog.length > 0);
+  assert.equal(builder.length, Math.min(5, catalog.length));
+  assert.equal(
+    JSON.stringify(builder.map((item) => item.id)),
+    JSON.stringify(catalog.slice(0, 5).map((item) => item.id)),
+  );
 });
 
 test("hard exclusions cannot be bypassed while dislikes stay reversible", () => {
@@ -289,7 +293,7 @@ test("hard exclusions cannot be bypassed while dislikes stay reversible", () => 
   assert.ok(hardSafe.length > 0);
   assert.ok(hardSafe.every((item) => !item.allergens.includes("fish")));
 
-  const softPerson = { ...basePerson, dislikes: ["fish"] };
+  const softPerson = { ...basePerson, dislikes: ["broccoli"] };
   const preferred = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all" });
   const allAllowed = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all", includeDisliked: true });
   assert.ok(preferred.every((item) => dislikeMatches(item, softPerson).length === 0));
@@ -416,7 +420,7 @@ test("review-required families stay out of automatic menu candidates", () => {
   assert.equal(lunchIds.includes("src-taco-mac"), true);
 });
 
-test("production catalog contains ready recipes and preserves reviewed legacy recipes", () => {
+test("production catalog contains only explicitly reviewed complete recipes", () => {
   const blockedIds = Object.values(recipeFamiliesById)
     .filter((family) => family.reviewStatus === "review_required")
     .map((family) => family.id)
@@ -424,14 +428,30 @@ test("production catalog contains ready recipes and preserves reviewed legacy re
   const visibleIds = new Set(productionRecipes.map((item) => item.id));
 
   assert.equal(blockedIds.length, 8);
-  assert.equal(productionRecipes.length, recipes.length - blockedIds.length);
+  const expectedReadyIds = recipes
+    .filter(
+      (item) =>
+        (item.provenance.kind === "parsed" ||
+          item.provenance.editoriallyApproved === true) &&
+        item.ingredients.length >= 3 &&
+        recipeFamiliesById[item.id]?.reviewStatus !== "review_required",
+    )
+    .map((item) => item.id)
+    .sort();
+
+  assert.equal(productionRecipes.length, expectedReadyIds.length);
+  assert.equal(productionRecipes.length, 30);
+  assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
   assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
   assert.ok(
-    recipes
-      .filter((item) => !recipeFamiliesById[item.id])
-      .every((item) => visibleIds.has(item.id)),
-    "reviewed legacy catalog remains available while its family migration is pending",
+    productionRecipes.every(
+      (item) =>
+        item.provenance.kind === "parsed" ||
+        item.provenance.editoriallyApproved === true,
+    ),
+    "generated placeholders require explicit editorial approval",
   );
+  assert.ok(productionRecipes.every((item) => item.ingredients.length >= 3));
   assert.ok(productionRecipes.every(isProductionReadyRecipe));
 
   for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"])

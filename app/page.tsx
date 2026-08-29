@@ -80,7 +80,11 @@ type RecipeProvenance =
       imageUrl?: string;
       imageAlt?: string;
     }
-  | { kind: "generated"; basedOn?: string[] };
+  | {
+      kind: "generated";
+      basedOn?: string[];
+      editoriallyApproved?: boolean;
+    };
 type RecipeStorage = {
   refrigerator: string;
   ambient?: string;
@@ -3762,7 +3766,14 @@ const recipeFamiliesById = Object.fromEntries(
     .filter((entry): entry is readonly [string, RecipeFamily] => Boolean(entry[1])),
 ) as Record<string, RecipeFamily>;
 function isProductionReadyRecipe(recipe: Recipe) {
-  return recipeFamiliesById[recipe.id]?.reviewStatus !== "review_required";
+  const editoriallyReady =
+    recipe.provenance.kind === "parsed" ||
+    recipe.provenance.editoriallyApproved === true;
+  return (
+    editoriallyReady &&
+    recipe.ingredients.length >= 3 &&
+    recipeFamiliesById[recipe.id]?.reviewStatus !== "review_required"
+  );
 }
 const productionRecipes = recipes.filter(isProductionReadyRecipe);
 function clientId() {
