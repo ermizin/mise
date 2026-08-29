@@ -4,6 +4,7 @@
 - Keep changes aligned with its target user, core flow, MVP scope, and explicit `Не делаем` list.
 - If a requested change expands or conflicts with that contract, point out the conflict before implementing it instead of silently widening the MVP.
 - When a product decision changes, update `PRODUCT.md` in the same change so the code and product contract do not drift.
+- Before recipe catalog, Recipe Engine, or recipe photo work, read `RECIPE_HANDOFF.md`: it records the frozen decisions, the confirmed engine defects with file references, and which items require owner approval before implementation.
 ## Validation and publishing
 
 - Treat each completed Mise change as an independently shippable increment: validate it immediately with the relevant tests and publish it to the current Sites release before starting or accumulating another finished change.

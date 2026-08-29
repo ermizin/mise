@@ -429,8 +429,46 @@ test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd i
         assert.ok(amount >= ingredient.minAmount - 0.51 && amount <= ingredient.maxAmount + 0.51, `${family.title}: ${ingredient.sourceIngredientId} stays bounded`);
         if (ingredient.role === "protein" && ingredient.unit !== "piece") assert.ok(amount >= 45, `${family.title}: protein does not collapse`);
         if (ingredient.role === "vegetable") assert.ok(amount > 0, `${family.title}: vegetables remain`);
-        if (ingredient.unit !== "piece") assert.equal(amount, Math.round(amount), `${family.title}: gram amounts are practical`);
+        if (ingredient.unit !== "piece" && ingredient.scalable) assert.equal(amount, Math.round(amount), `${family.title}: scalable gram amounts are practical`);
+        if (!ingredient.scalable) assert.equal(amount, ingredient.baseAmount, `${family.title}: fixed ingredients keep their editorial amount`);
       }
+    }
+  }
+});
+
+test("audited pan and form fats stay fixed across personal calorie targets", () => {
+  const cookingFats = Object.values(recipeFamiliesById)
+    .flatMap((family) => family.ingredients
+      .filter((ingredient) => ingredient.role === "fat_cooking")
+      .map((ingredient) => ({ family, ingredient })));
+
+  assert.deepEqual(
+    cookingFats.map(({ family, ingredient }) => `${family.id}:${ingredient.sourceIngredientId}`).sort(),
+    [
+      "src-chicken-bean-bowl:olive-oil",
+      "src-cottage-bake:butter",
+      "src-crispy-beef-noodles:olive-oil",
+      "src-honey-lime-steak:olive-oil",
+      "src-sausage-pepper-pasta:olive-oil",
+      "src-taco-mac:olive-oil",
+      "src-turkey-meatballs:olive-oil",
+    ],
+    "only audited pan and form fats are fixed; marinade and coating fats remain edible recipe components",
+  );
+  for (const { family, ingredient } of cookingFats) {
+    assert.equal(ingredient.scalable, false, `${family.title}: ${ingredient.sourceIngredientId} is fixed`);
+    assert.equal(ingredient.minAmount, ingredient.baseAmount);
+    assert.equal(ingredient.preferredMin, ingredient.baseAmount);
+    assert.equal(ingredient.preferredMax, ingredient.baseAmount);
+    assert.equal(ingredient.maxAmount, ingredient.baseAmount);
+    for (const targetCalories of [450, 600, 750]) {
+      if (targetCalories < family.minViableCalories || targetCalories > family.maxViableCalories) continue;
+      const solved = solveRecipeFamily(family, { targetCalories });
+      assert.equal(
+        solved.amounts[ingredient.sourceIngredientId],
+        ingredient.baseAmount,
+        `${family.title}: ${ingredient.sourceIngredientId} stays fixed at ${targetCalories} kcal`,
+      );
     }
   }
 });

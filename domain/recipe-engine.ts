@@ -3,6 +3,7 @@ export type RecipeIngredientRole =
   | "carb"
   | "vegetable"
   | "fat"
+  | "fat_cooking" // Fixed against personal calorie targeting; batch cookware geometry is modeled separately.
   | "sauce"
   | "flavour"
   | "flavour_fixed"
@@ -576,21 +577,21 @@ function familyRoles(groups: Partial<Record<RecipeIngredientRole, string[]>>) {
 }
 
 const pilotRoleOverrides: Record<string, Record<string, RecipeIngredientRole>> = {
-  "src-cottage-bake": familyRoles({ protein: ["cottage", "egg"], sauce: ["milk"], fat: ["butter"] }),
+  "src-cottage-bake": familyRoles({ protein: ["cottage", "egg"], sauce: ["milk"], fat_cooking: ["butter"] }),
   "src-protein-oats": familyRoles({ protein: ["cottage"], carb: ["oats"], sauce: ["milk"], vegetable: ["berries"] }),
   "src-chicken-buckwheat": familyRoles({ protein: ["chicken"], carb: ["buckwheat"], vegetable: ["carrot"], garnish: ["greens"] }),
   "src-chicken-rice-veg": familyRoles({ protein: ["chicken"], carb: ["rice"], vegetable: ["carrot", "pepper", "peas"] }),
-  "src-chicken-bean-bowl": familyRoles({ protein: ["chicken"], carb: ["rice", "red-beans"], vegetable: ["onion"], sauce: ["tomato-passata"], fat: ["olive-oil"] }),
+  "src-chicken-bean-bowl": familyRoles({ protein: ["chicken"], carb: ["rice", "red-beans"], vegetable: ["onion"], sauce: ["tomato-passata"], fat_cooking: ["olive-oil"] }),
   "src-salmon-rice-veg": familyRoles({ protein: ["salmon"], carb: ["rice"], vegetable: ["broccoli", "zucchini"], fat: ["olive-oil"], flavour_fixed: ["garlic"] }),
-  "src-turkey-meatballs": familyRoles({ protein: ["turkey-mince"], carb: ["buckwheat"], vegetable: ["onion", "carrot"], sauce: ["tomato-passata"], fat: ["olive-oil"], flavour_fixed: ["egg"] }),
-  "src-taco-mac": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["pepper"], sauce: ["tomato-passata", "milk"], fat: ["cheese", "olive-oil"], flavour: ["broth"] }),
+  "src-turkey-meatballs": familyRoles({ protein: ["turkey-mince"], carb: ["buckwheat"], vegetable: ["onion", "carrot"], sauce: ["tomato-passata"], fat_cooking: ["olive-oil"], flavour_fixed: ["egg"] }),
+  "src-taco-mac": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["pepper"], sauce: ["tomato-passata", "milk"], fat: ["cheese"], fat_cooking: ["olive-oil"], flavour: ["broth"] }),
   "src-teriyaki-tray": familyRoles({ protein: ["chicken-thigh"], carb: ["rice", "sweet-potato"], vegetable: ["broccoli"], fat: ["olive-oil"], flavour_fixed: ["soy", "brown-sugar", "vinegar", "garlic"] }),
   "src-halal-chicken": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["cucumber", "tomato", "onion"], fat: ["mayonnaise", "butter", "olive-oil"], sauce: ["yogurt"], flavour_fixed: ["lemon", "vinegar"] }),
-  "src-crispy-beef-noodles": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["broccoli", "cabbage", "carrot", "onion"], fat: ["olive-oil"], sauce: ["gochujang"], flavour_fixed: ["soy", "honey", "oyster-sauce", "garlic"] }),
+  "src-crispy-beef-noodles": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["broccoli", "cabbage", "carrot", "onion"], fat_cooking: ["olive-oil"], sauce: ["gochujang"], flavour_fixed: ["soy", "honey", "oyster-sauce", "garlic"] }),
   "src-mediterranean-wrap": familyRoles({ protein: ["chicken-thigh"], carb: ["tortilla"], vegetable: ["cucumber", "tomato", "lettuce", "onion"], fat: ["feta", "olive-oil"], sauce: ["hummus"], flavour_fixed: ["lemon", "vinegar"] }),
   "src-creamy-chicken-pasta": familyRoles({ protein: ["chicken-thigh"], carb: ["pasta"], vegetable: ["cauliflower", "pumpkin"], sauce: ["cottage", "milk"], fat: ["parmesan", "olive-oil"], flavour_fixed: ["lemon", "bouillon"] }),
-  "src-sausage-pepper-pasta": familyRoles({ protein: ["pork-mince"], carb: ["pasta"], vegetable: ["onion", "pepper", "spinach"], sauce: ["tomato-passata", "tomato-paste"], fat: ["cream", "parmesan", "olive-oil"], flavour_fixed: ["garlic"] }),
-  "src-honey-lime-steak": familyRoles({ protein: ["beef"], carb: ["rice", "black-beans"], vegetable: ["pepper", "corn"], fat: ["olive-oil"], sauce: ["salsa"], flavour_fixed: ["lime", "honey", "soy", "lime-juice"] }),
+  "src-sausage-pepper-pasta": familyRoles({ protein: ["pork-mince"], carb: ["pasta"], vegetable: ["onion", "pepper", "spinach"], sauce: ["tomato-passata", "tomato-paste"], fat: ["cream", "parmesan"], fat_cooking: ["olive-oil"], flavour_fixed: ["garlic"] }),
+  "src-honey-lime-steak": familyRoles({ protein: ["beef"], carb: ["rice", "black-beans"], vegetable: ["pepper", "corn"], fat_cooking: ["olive-oil"], sauce: ["salsa"], flavour_fixed: ["lime", "honey", "soy", "lime-juice"] }),
   "src-light-stroganoff": familyRoles({ protein: ["beef"], carb: ["pasta"], vegetable: ["carrot", "mushrooms", "onion"], fat: ["cream-cheese"], sauce: ["yogurt", "broth"], flavour_fixed: ["mustard", "worcestershire", "starch"] }),
   "src-bbq-burger-bowl": familyRoles({ protein: ["beef-mince"], carb: ["potato"], vegetable: ["cabbage", "tomato"], fat: ["cheese", "olive-oil"], sauce: ["bbq-sauce"], garnish: ["pickles"] }),
   "src-red-pepper-chicken-dip": familyRoles({ protein: ["chicken", "cottage"], vegetable: ["roasted-pepper"], sauce: ["milk", "hot-sauce"], fat: ["cream-cheese", "parmesan"] }),
@@ -606,6 +607,7 @@ function bounds(base: number, role: RecipeIngredientRole) {
     carb: [0.35, 0.75, 1.25, 2.1, true, 1],
     vegetable: [0.8, 0.95, 1.2, 1.45, true, 5],
     fat: [0.25, 0.65, 1.2, 1.8, true, 1],
+    fat_cooking: [1, 1, 1, 1, false, 9],
     sauce: [0.5, 0.8, 1.25, 1.6, true, 3],
     flavour: [0.75, 0.9, 1.15, 1.3, true, 6],
     flavour_fixed: [1, 1, 1, 1, false, 9],
@@ -725,6 +727,7 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
 }
 
 function normalizedAmount(ingredient: RecipeFamilyIngredient, value: number) {
+  if (!ingredient.scalable) return ingredient.baseAmount;
   const step = ingredient.unit === "piece" ? 0.1 : 1;
   return round(Math.max(ingredient.minAmount, Math.min(ingredient.maxAmount, Math.round(value / step) * step)), ingredient.unit === "piece" ? 1 : 0);
 }
