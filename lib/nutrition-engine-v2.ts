@@ -14,6 +14,7 @@ export {
   normalizeNutritionTargetMode,
   recalculateDailyMacros,
   shareForSlots,
+  togglePersonMealSlot,
 } from "../domain/nutrition";
 
 export type {
