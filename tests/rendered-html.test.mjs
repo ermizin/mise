@@ -49,18 +49,22 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Фактический вес готового блюда/);
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
-  assert.match(page, /mise-onboarding-v2/);
+  assert.match(page, /mise-onboarding-v3/);
   assert.match(page, /mise-builder-draft-v\d/);
-  assert.match(page, /mise-prep-guide-offer-v1/);
-  assert.match(page, /Питаться легко,/);
-  assert.match(page, /Один план · три результата/);
-  for (const result of ["План недели", "Общие покупки", "Готовка и контейнеры"]) assert.match(page, new RegExp(result));
-  assert.match(page, /Нужна инструкция/);
-  for (const topic of ["Подготовьте контейнеры", "Готовьте партиями", "Охладите и разложите", "Подпишите и уберите"]) assert.match(page, new RegExp(topic));
+  assert.match(page, /mise-reminder-defaults-v1/);
+  // Онбординг — три экрана: обещание, партии, напоминания (SCREENS.md 7a/8a/8b).
+  assert.match(page, /Готовим раз —/);
+  assert.match(page, /Готовка партиями —/);
+  assert.match(page, /Два напоминания,/);
+  for (const promise of ["список покупок на всех", "расчётов в голове"]) assert.match(page, new RegExp(promise));
+  // Инструктаж — два экрана, не блокирует и открывается из профиля и из недели.
+  for (const rule of ["Остудить за 2 часа", "3–4 дня в холодильнике", "Разморозка — в холодильнике", "Подписывать каждую крышку", "Разогревать до горячего"]) assert.match(page, new RegExp(rule));
+  for (const item of ["Кухонные весы", "Место в морозилке", "Маркер или наклейки"]) assert.match(page, new RegExp(item));
   assert.match(page, /Инструкция по милпрепу/);
+  assert.match(page, /Как готовить партиями/);
   assert.match(page, /Добавить Mise на экран Домой/);
   assert.match(page, /Настроить напоминания/);
-  assert.match(page, /КБЖУ и сроки хранения — полезные ориентиры/);
+  assert.match(page, /КБЖУ и сроки хранения — ориентиры, а не медицинская гарантия/);
   assert.match(page, /Как работает Mise/);
   assert.match(page, /function editDayMenu\(batchId: string\)/);
   assert.match(page, /setBuilderEntry\(\{[\s\S]*?step: 5,[\s\S]*?batchId,[\s\S]*?returnTab: "week"/);
@@ -113,8 +117,10 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /\.onboarding-shell/);
-  assert.match(css, /\.prep-offer/);
-  assert.match(css, /\.prep-checklist/);
+  assert.match(css, /\.action-bar \{/);
+  assert.match(css, /\.rule-card \{/);
+  // Экран онбординга — колонка во всю высоту: панель действий не уезжает вверх.
+  assert.match(css, /\.onboarding-shell \{[^}]*height: 100dvh/);
 
   // Стекло описано токенами, а не литералами: блюр приходит из --glass-*-blur.
   assert.match(css, /--glass-2-blur: blur\(28px\) saturate\(180%\)/);
@@ -151,6 +157,16 @@ test("includes the complete plan-builder and private persistence model", async (
   ]) {
     assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} должен уйти в Note`);
     assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} должен уйти в Note`);
+  }
+
+  for (const dead of [
+    "onboarding-welcome", "onboarding-guide", "onboarding-visual", "visual-card",
+    "visual-dish", "onboarding-time", "guide-progress", "result-card",
+    "prep-offer", "prep-float", "prep-topic-row", "prep-checklist",
+    "prep-guide-card", "prep-step-icon", "prep-tutorial-entry",
+  ]) {
+    assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} не пережил редизайн экранов`);
+    assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил редизайн экранов`);
   }
 
   // Число теней не растёт: стекло описано уровнями, а не по месту.

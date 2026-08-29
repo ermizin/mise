@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import {
   NotificationSetupPanel,
@@ -8,6 +8,7 @@ import {
 } from "./notification-setup";
 import { Icon, type IconName } from "./ui/icon";
 import { Note } from "./ui/note";
+import { ActionBar } from "./ui/action-bar";
 import { plural, withPlural, FORMS } from "@/lib/plural";
 import { MacroNumberInput } from "@/components/macro-number-input";
 import {
@@ -191,10 +192,19 @@ type BuilderDraft = {
 };
 type OnboardingStep =
   | "welcome"
-  | "guide"
-  | "prep-offer"
-  | "prep-guide"
+  | "batches"
+  | "reminders"
+  /* Инструктаж: не блокирует, открывается из профиля и из карточки готовки. */
+  | "rules"
+  | "kitchen"
   | "done";
+/* Какие напоминания человек выбрал ещё в онбординге. Разрешение здесь не
+   запрашивается — это только дефолты для панели напоминаний готового плана. */
+type ReminderDefaults = {
+  cooking: boolean;
+  thaw: boolean;
+  "next-plan": boolean;
+};
 type ClientAnalyticsEvent =
   | "first_open"
   | "onboarding_completed"
@@ -219,8 +229,8 @@ type ClientAnalyticsFields = {
   pilotEligible?: boolean;
 };
 
-const onboardingStorageKey = "mise-onboarding-v2";
-const prepGuideStorageKey = "mise-prep-guide-offer-v1";
+const onboardingStorageKey = "mise-onboarding-v3";
+const reminderDefaultsKey = "mise-reminder-defaults-v1";
 const builderDraftKey = "mise-builder-draft-v3";
 const analyticsStoragePrefix = "mise-analytics-v1";
 
@@ -3666,6 +3676,23 @@ for (const style of Object.keys(generatedTitles) as MenuStyle[])
       ),
     );
 
+/* Порции плана: по одному контейнеру на человека, приём пищи и день партии. */
+function totalPlanPortions(plan: ActivePlan) {
+  return plan.batches.reduce(
+    (sum, batch) =>
+      sum +
+      batch.days *
+        plan.mealSlots.reduce(
+          (slotSum, slot) =>
+            slotSum +
+            plan.people.filter((person) => person.includedSlots.includes(slot))
+              .length,
+          0,
+        ),
+    0,
+  );
+}
+
 const recipesById = Object.fromEntries(
   recipes.map((recipe) => [recipe.id, recipe]),
 ) as Record<string, Recipe>;
@@ -4315,6 +4342,9 @@ export default function Home() {
   const [onboardingReturnTab, setOnboardingReturnTab] = useState<Tab | null>(
     null,
   );
+  /* Инструктаж, открытый из онбординга, возвращает на его первый экран,
+     а не завершает онбординг. */
+  const [guideOrigin, setGuideOrigin] = useState<"welcome" | null>(null);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
@@ -4350,8 +4380,6 @@ export default function Home() {
     let mounted = true;
     if (!localStorage.getItem(onboardingStorageKey))
       setOnboardingStep("welcome");
-    else if (!localStorage.getItem(prepGuideStorageKey))
-      setOnboardingStep("prep-offer");
     if ("serviceWorker" in navigator)
       navigator.serviceWorker.register("/sw.js").catch(() => undefined);
     const params = new URLSearchParams(location.search);
@@ -4454,18 +4482,12 @@ export default function Home() {
     setBuilderEntry({ step: 3, returnTab: "profile", mode: "settings" });
     setTab("builder");
   }
-  function completeCoreOnboarding() {
+  function finishOnboarding(reminders?: ReminderDefaults) {
     localStorage.setItem(onboardingStorageKey, "complete");
-    void trackAnalytics(
-      "onboarding_completed",
-      {},
-      "onboarding-completed",
-    );
-    setOnboardingStep("prep-offer");
-  }
-  function finishOnboarding() {
-    localStorage.setItem(onboardingStorageKey, "complete");
-    localStorage.setItem(prepGuideStorageKey, "complete");
+    if (reminders)
+      localStorage.setItem(reminderDefaultsKey, JSON.stringify(reminders));
+    void trackAnalytics("onboarding_completed", {}, "onboarding-completed");
+    setGuideOrigin(null);
     setOnboardingStep("done");
     const destination =
       onboardingReturnTab ?? (activePlan ? "week" : "builder");
@@ -4476,16 +4498,22 @@ export default function Home() {
     return (
       <OnboardingScreen
         step={onboardingStep}
+        plan={activePlan}
         hasPlan={Boolean(activePlan)}
-        onNext={() => setOnboardingStep("guide")}
-        onCoreComplete={completeCoreOnboarding}
-        onShowPrepGuide={() => setOnboardingStep("prep-guide")}
-        onBack={() =>
-          setOnboardingStep(
-            onboardingStep === "prep-guide" ? "prep-offer" : "welcome",
-          )
-        }
+        onGo={(next) => {
+          if (next === "rules" && onboardingStep === "welcome")
+            setGuideOrigin("welcome");
+          setOnboardingStep(next);
+        }}
         onFinish={finishOnboarding}
+        onCloseGuide={() => {
+          if (guideOrigin) {
+            setGuideOrigin(null);
+            setOnboardingStep("welcome");
+            return;
+          }
+          finishOnboarding();
+        }}
       />
     );
   if (recipeContext)
@@ -4565,6 +4593,10 @@ export default function Home() {
           onEditPeriod={editPeriod}
           onEditMenu={editDayMenu}
           onOpenRecipe={setRecipeContext}
+          onOpenGuide={() => {
+            setOnboardingReturnTab("week");
+            setOnboardingStep("rules");
+          }}
         />
       )}
       {tab === "recipes" && (
@@ -4601,7 +4633,7 @@ export default function Home() {
           }}
           onOpenPrepGuide={() => {
             setOnboardingReturnTab("profile");
-            setOnboardingStep("prep-guide");
+            setOnboardingStep("rules");
           }}
           onNotifications={() => setNotificationSetupOpen(true)}
         />
@@ -4626,162 +4658,700 @@ export default function Home() {
   );
 }
 
+/* Онбординг и инструктаж · SCREENS.md, макеты 7a / 8a / 8b / 8c / 8d.
+
+   Онбординг — три экрана (обещание, партии, напоминания), свайп и точки.
+   Инструктаж — два экрана (пять правил, чек-лист), не блокирует и открывается
+   из «Профиля» и из карточки готовки.
+
+   Числа на плитках 7a настоящие: если план уже есть, берём его дни и порции. */
+
+const onboardingFlow = ["welcome", "batches", "reminders"] as const;
+
+const promiseForms = {
+  days: [
+    "день меню за один вечер",
+    "дня меню за один вечер",
+    "дней меню за один вечер",
+  ],
+  portions: [
+    "порция уже взвешена",
+    "порции уже взвешены",
+    "порций уже взвешено",
+  ],
+} as const;
+
+const batchWeek: { day: string; cook?: boolean; second?: boolean; frost?: boolean }[] = [
+  { day: "ср", cook: true },
+  { day: "чт" },
+  { day: "пт" },
+  { day: "сб", cook: true, second: true },
+  { day: "вс", second: true },
+  { day: "пн", second: true },
+  { day: "вт", second: true, frost: true },
+];
+
+const prepRules: { tone: string; title: string; text: string }[] = [
+  {
+    tone: "tone-accent",
+    title: "Остудить за 2 часа",
+    text: "Горячее в холодильник не ставим: разложите по контейнерам и дайте остыть до тёплого, потом крышка и полка.",
+  },
+  {
+    tone: "tone-mint",
+    title: "3–4 дня в холодильнике",
+    text: "При ≤4 °C. Рыба и готовые салаты — меньше. Всё, что дальше по плану, сразу отправляем в морозилку.",
+  },
+  {
+    tone: "tone-lilac",
+    title: "Разморозка — в холодильнике",
+    text: "Переложите порцию вечером накануне: 8–10 часов. Не на столе и не в горячей воде.",
+  },
+  {
+    tone: "tone-amber",
+    title: "Подписывать каждую крышку",
+    text: "Имя, дата, приём пищи. Mise готовит подписи сам — остаётся переписать или наклеить.",
+  },
+  {
+    tone: "tone-accent",
+    title: "Разогревать до горячего",
+    text: "2–3 минуты в микроволновке, перемешать в середине. Зелень и соусы добавляем после.",
+  },
+];
+
+const kitchenChecklist: { title: string; note: string }[] = [
+  { title: "Кухонные весы", note: "Нужны один раз — на готовке" },
+  { title: "Два сотейника и противень", note: "Иначе партия растянется по времени" },
+  { title: "Место в морозилке", note: "Хотя бы на четыре контейнера" },
+  { title: "Маркер или наклейки", note: "Для подписей на крышках" },
+];
+
+function deckDishes(plan: ActivePlan | null) {
+  const chosen = plan
+    ? Object.values(plan.selections).map((id) => recipesById[id])
+    : [];
+  return (["breakfast", "lunch", "dinner"] as MealSlot[]).map((slot) => ({
+    slot,
+    recipe:
+      chosen.find((recipe) => recipe?.slot === slot) ??
+      recipes.find((recipe) => recipe.slot === slot),
+  }));
+}
+
+function DeckCard({
+  slot,
+  recipe,
+  index,
+  main = false,
+}: {
+  slot: MealSlot;
+  recipe: Recipe | undefined;
+  index: number;
+  main?: boolean;
+}) {
+  if (!recipe) return null;
+  const photo =
+    recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
+  return (
+    <div
+      className={`deck-card glass-2 ${main ? "deck-main" : index === 0 ? "deck-left" : "deck-right"}`}
+    >
+      <div className={`deck-thumb art-${index % 5}`}>
+        {photo ? (
+          // Фото рецепта — удалённый ассет источника, не сборочная картинка.
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={photo} alt="" loading="lazy" referrerPolicy="no-referrer" />
+        ) : (
+          recipe.emoji
+        )}
+        {main && (
+          <span className="deck-kcal">{recipe.macros.kcal} ккал</span>
+        )}
+      </div>
+      <div className="deck-slot">
+        {mealMeta[slot].label}
+        {main ? ` · ${recipe.servingWeight} г` : ""}
+      </div>
+      <div className="deck-title">{recipe.title}</div>
+    </div>
+  );
+}
+
+function OnboardingShell({
+  guide = false,
+  underBar = false,
+  header,
+  bar,
+  onNext,
+  onBack,
+  children,
+}: {
+  guide?: boolean;
+  underBar?: boolean;
+  header?: ReactNode;
+  bar: ReactNode;
+  onNext?: () => void;
+  onBack?: () => void;
+  children: ReactNode;
+}) {
+  const swipeFrom = useRef<{ x: number; y: number } | null>(null);
+  return (
+    <main
+      className={`onboarding-shell${guide ? " is-guide" : ""}`}
+      onTouchStart={(event) => {
+        const touch = event.touches[0];
+        swipeFrom.current = touch
+          ? { x: touch.clientX, y: touch.clientY }
+          : null;
+      }}
+      onTouchEnd={(event) => {
+        const from = swipeFrom.current;
+        const touch = event.changedTouches[0];
+        swipeFrom.current = null;
+        if (!from || !touch) return;
+        const dx = touch.clientX - from.x;
+        const dy = touch.clientY - from.y;
+        if (Math.abs(dx) < 60 || Math.abs(dx) <= Math.abs(dy)) return;
+        if (dx < 0) onNext?.();
+        else onBack?.();
+      }}
+    >
+      {header}
+      <div className={`onboarding-scroll${underBar ? " under-bar" : ""}`}>
+        {children}
+      </div>
+      {bar}
+    </main>
+  );
+}
+
 function OnboardingScreen({
   step,
+  plan,
   hasPlan,
-  onNext,
-  onCoreComplete,
-  onShowPrepGuide,
-  onBack,
-  onFinish: onDone,
+  onGo,
+  onFinish,
+  onCloseGuide,
 }: {
   step: Exclude<OnboardingStep, "done">;
+  plan: ActivePlan | null;
   hasPlan: boolean;
-  onNext: () => void;
-  onCoreComplete: () => void;
-  onShowPrepGuide: () => void;
-  onBack: () => void;
-  onFinish: () => void;
+  onGo: (step: Exclude<OnboardingStep, "done">) => void;
+  onFinish: (reminders?: ReminderDefaults) => void;
+  onCloseGuide: () => void;
 }) {
-  if (step === "prep-offer")
+  if (step === "rules")
+    return <PrepRulesScreen onClose={onCloseGuide} onNext={() => onGo("kitchen")} />;
+  if (step === "kitchen")
     return (
-      <PrepGuideOffer
+      <PrepKitchenScreen
+        plan={plan}
         hasPlan={hasPlan}
-        onShow={onShowPrepGuide}
-        onSkip={onDone}
+        onBack={() => onGo("rules")}
+        onDone={onCloseGuide}
       />
     );
-  if (step === "prep-guide")
+  if (step === "batches")
     return (
-      <MealPrepGuide hasPlan={hasPlan} onBack={onBack} onFinish={onDone} />
+      <OnboardingBatches
+        onBack={() => onGo("welcome")}
+        onNext={() => onGo("reminders")}
+        onSkip={() => onFinish()}
+      />
     );
-  const onFinish = onCoreComplete;
+  if (step === "reminders")
+    return (
+      <OnboardingReminders
+        onBack={() => onGo("batches")}
+        onFinish={onFinish}
+      />
+    );
   return (
-    <main className="app-shell onboarding-shell">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <div className="ambient ambient-three" />
-      <header className="onboarding-header">
-        <div className="mise-mark" aria-label="Mise">
-          M
-        </div>
-        <span>mise</span>
-        {step === "guide" && (
-          <button className="text-button" onClick={onFinish}>
-            Пропустить
+    <OnboardingWelcome
+      plan={plan}
+      hasPlan={hasPlan}
+      onNext={() => onGo("batches")}
+      onSkip={() => onFinish()}
+      onOpenGuide={() => onGo("rules")}
+    />
+  );
+}
+
+function OnboardingWelcome({
+  plan,
+  hasPlan,
+  onNext,
+  onSkip,
+  onOpenGuide,
+}: {
+  plan: ActivePlan | null;
+  hasPlan: boolean;
+  onNext: () => void;
+  onSkip: () => void;
+  onOpenGuide: () => void;
+}) {
+  const days = plan?.periodDays ?? 7;
+  const portions = plan ? totalPlanPortions(plan) : 21;
+  const deck = deckDishes(plan);
+  return (
+    <OnboardingShell
+      onNext={onNext}
+      bar={
+        <ActionBar step={0} steps={onboardingFlow.length}>
+          <button className="btn btn-primary action-primary" onClick={onNext}>
+            <span>Начать — это 5 минут</span>
+            <Icon name="chevron" size={16} />
           </button>
-        )}
-      </header>
-      {step === "welcome" ? (
-        <section className="onboarding-welcome">
-          <div className="onboarding-visual" aria-hidden>
-            <div className="visual-card visual-week">
-              <Icon name="calendar" />
-              <small>7 дней</small>
+          <button className="btn action-link" onClick={onSkip}>
+            {hasPlan ? "Вернуться к плану" : "Составить план сразу"}
+          </button>
+        </ActionBar>
+      }
+    >
+      <div className="onboarding-top">
+        <div className="onboarding-brand">
+          <span className="mise-mark glass-3" aria-hidden>
+            M
+          </span>
+          <span className="onboarding-wordmark">Mise</span>
+        </div>
+        <button className="pill-button" onClick={onOpenGuide}>
+          Как это работает
+        </button>
+      </div>
+      <h1 className="onboarding-title">
+        Готовим раз —<br />
+        едим всю неделю
+      </h1>
+      <p className="onboarding-lead">
+        Вы отвечаете на шесть вопросов. Дальше считает Mise: меню, покупки,
+        порции и подписи на контейнеры.
+      </p>
+      <div className="dish-deck" aria-hidden>
+        <DeckCard slot={deck[0].slot} recipe={deck[0].recipe} index={0} />
+        <DeckCard slot={deck[2].slot} recipe={deck[2].recipe} index={1} />
+        <DeckCard slot={deck[1].slot} recipe={deck[1].recipe} index={2} main />
+      </div>
+      <div className="promise-grid">
+        <div className="promise-tile tone-accent">
+          <div className="promise-number">{days}</div>
+          <div className="promise-text">{plural(days, promiseForms.days)}</div>
+        </div>
+        <div className="promise-tile tone-mint">
+          <div className="promise-number">{portions}</div>
+          <div className="promise-text">
+            {plural(portions, promiseForms.portions)}
+          </div>
+        </div>
+        <div className="promise-tile tone-amber">
+          <div className="promise-number">1</div>
+          <div className="promise-text">список покупок на всех</div>
+        </div>
+        <div className="promise-tile tone-lilac">
+          <div className="promise-number">0</div>
+          <div className="promise-text">расчётов в голове</div>
+        </div>
+      </div>
+      <Note tone="mint" icon={<Icon name="snowflake" />}>
+        Если порция не доживёт до своего дня — Mise предложит заморозить её
+        заранее.
+      </Note>
+      <p className="onboarding-fineprint">
+        КБЖУ и сроки хранения — ориентиры, а не медицинская гарантия.
+      </p>
+    </OnboardingShell>
+  );
+}
+
+function OnboardingBatches({
+  onBack,
+  onNext,
+  onSkip,
+}: {
+  onBack: () => void;
+  onNext: () => void;
+  onSkip: () => void;
+}) {
+  return (
+    <OnboardingShell
+      onNext={onNext}
+      onBack={onBack}
+      bar={
+        <ActionBar step={1} steps={onboardingFlow.length}>
+          <button className="btn btn-primary action-primary" onClick={onNext}>
+            <span>Дальше</span>
+            <Icon name="chevron" size={16} />
+          </button>
+        </ActionBar>
+      }
+    >
+      <div className="onboarding-top">
+        <button className="text-link" onClick={onBack}>
+          Назад
+        </button>
+        <button className="text-link" onClick={onSkip}>
+          Пропустить
+        </button>
+      </div>
+      <h1 className="onboarding-title">
+        Готовка партиями —<br />
+        это два вечера
+      </h1>
+      <p className="onboarding-lead">
+        Mise делит неделю на партии по 3–4 дня: столько порций спокойно живёт в
+        холодильнике. Всё, что не доживает, уходит в морозилку.
+      </p>
+      <section className="onboarding-card glass-card">
+        <div className="card-head">
+          <span>Неделя на {withPlural(2, FORMS.person)}</span>
+          <span>{withPlural(2, FORMS.batch)}</span>
+        </div>
+        <div
+          className="batch-bars"
+          role="img"
+          aria-label="Пример недели: две готовки, между ними дни, когда едим из готовой партии; последнюю порцию достаём из морозилки"
+        >
+          {batchWeek.map((day) => (
+            <div
+              key={day.day}
+              className={`batch-day${day.cook ? " is-cook" : ""}${day.second ? " is-second" : ""}`}
+            >
+              <span>
+                {day.frost && (
+                  <i className="frost">
+                    <Icon name="snowflake" size={12} />
+                  </i>
+                )}
+              </span>
+              <small>{day.day}</small>
             </div>
-            <div className="visual-card visual-shopping">
-              <Icon name="basket" />
-              <small>покупки</small>
-            </div>
-            <div className="visual-dish">
-              <span>🍲</span>
-            </div>
-            <div className="visual-card visual-prep">
-              <Icon name="pot" />
-              <small>готовка</small>
-            </div>
+          ))}
+        </div>
+        <div className="batch-legend">
+          <span>
+            <i />
+            день готовки
+          </span>
+          <span>
+            <i />
+            едим из партии
+          </span>
+          <span>
+            <i />
+            вторая партия
+          </span>
+        </div>
+      </section>
+      <div className="onb-rows">
+        <div className="onb-row glass-3">
+          <span className="onb-num">1</span>
+          <div>
+            <b>~90 минут на партию</b>
+            <small>Из них активных — около 40, остальное варится само.</small>
           </div>
-          <p className="kicker">Милпреп без ежедневных расчётов</p>
-          <h1>
-            Питаться легко,
-            <br />
-            когда есть план
-          </h1>
-          <p className="onboarding-lead">
-            Mise рассчитает меню, покупки и порции на несколько дней — под цели
-            каждого человека.
-          </p>
-          <div className="onboarding-time glass-card">
-            <Icon name="clock" />
-            <p>
-              <b>Первый план — около 5–10 минут</b>
-              <small>
-                Потом можно идти в магазин и готовить без новой арифметики.
-              </small>
-            </p>
+        </div>
+        <div className="onb-row glass-3">
+          <span className="onb-num is-mint">2</span>
+          <div>
+            <b>3–4 блюда на всех</b>
+            <small>Порции разные, готовка общая — считает Mise, не вы.</small>
           </div>
-          <div className="onboarding-actions">
-            <button className="primary-button" onClick={onNext}>
-              Показать, что получится <Icon name="chevron" size={16} />
-            </button>
-            <button className="text-button" onClick={onFinish}>
-              {hasPlan ? "Вернуться к плану" : "Составить план сразу"}
-            </button>
+        </div>
+        <div className="onb-row glass-3">
+          <span className="onb-num is-lilac">3</span>
+          <div>
+            <b>Подписал — забыл</b>
+            <small>
+              Имя, дата и приём пищи на крышке: утром ничего не решаете.
+            </small>
           </div>
-        </section>
-      ) : (
-        <section className="onboarding-guide">
-          <div className="guide-progress" aria-label="Шаг 2 из 2">
-            <span />
-            <span className="active" />
-          </div>
-          <p className="kicker">Один план · три результата</p>
-          <h1>Всё нужное для цикла милпрепа</h1>
-          <p className="onboarding-lead">
-            Mise ведёт от решения «что есть» до подписанных готовых порций.
-          </p>
-          <div className="result-cards">
-            <article className="result-card glass-card">
-              <span className="result-number">1</span>
-              <div className="result-icon result-week">
-                <Icon name="calendar" />
-              </div>
-              <div>
-                <h2>План недели</h2>
-                <p>Что есть каждый день и когда готовить следующую партию.</p>
-              </div>
-            </article>
-            <article className="result-card glass-card">
-              <span className="result-number">2</span>
-              <div className="result-icon result-shopping">
-                <Icon name="basket" />
-              </div>
-              <div>
-                <h2>Общие покупки</h2>
-                <p>Один список с количествами для всех людей и всех блюд.</p>
-              </div>
-            </article>
-            <article className="result-card glass-card">
-              <span className="result-number">3</span>
-              <div className="result-icon result-prep">
-                <Icon name="pot" />
-              </div>
-              <div>
-                <h2>Готовка и контейнеры</h2>
-                <p>Шаги, порции и подписи: имя, дата и приём пищи.</p>
-              </div>
-            </article>
-          </div>
-          <Note
-            tone="warn"
-            icon={<Icon name="info" />}
-            label="Без ложной точности"
+        </div>
+      </div>
+    </OnboardingShell>
+  );
+}
+
+function OnboardingReminders({
+  onBack,
+  onFinish,
+}: {
+  onBack: () => void;
+  onFinish: (reminders?: ReminderDefaults) => void;
+}) {
+  const [wanted, setWanted] = useState<ReminderDefaults>({
+    cooking: true,
+    thaw: true,
+    "next-plan": true,
+  });
+  const rows: { kind: keyof ReminderDefaults; title: string; note: string }[] = [
+    {
+      kind: "cooking",
+      title: "День готовки",
+      note: "В день партии, во сколько скажете",
+    },
+    {
+      kind: "thaw",
+      title: "Разморозка накануне",
+      note: "Вечером накануне, в 21:00",
+    },
+    {
+      kind: "next-plan",
+      title: "Пора собрать новый план",
+      note: "За два дня до конца плана",
+    },
+  ];
+  return (
+    <OnboardingShell
+      onBack={onBack}
+      bar={
+        <ActionBar step={2} steps={onboardingFlow.length}>
+          <button
+            className="btn btn-primary action-primary"
+            onClick={() => onFinish(wanted)}
           >
-            КБЖУ и сроки хранения — полезные ориентиры, а не медицинская или
-            лабораторная гарантия.
-          </Note>
-          <div className="onboarding-actions">
-            <button className="primary-button" onClick={onFinish}>
-              {hasPlan ? "Вернуться к плану" : "Составить первый план"}{" "}
-              <Icon name="chevron" size={16} />
-            </button>
-            <button className="text-button" onClick={onBack}>
-              Назад
-            </button>
+            <span>Начать</span>
+            <Icon name="chevron" size={16} />
+          </button>
+          <button
+            className="btn action-link"
+            onClick={() =>
+              onFinish({ cooking: false, thaw: false, "next-plan": false })
+            }
+          >
+            Без напоминаний
+          </button>
+        </ActionBar>
+      }
+    >
+      <div className="onboarding-top">
+        <button className="text-link" onClick={onBack}>
+          Назад
+        </button>
+        <button className="text-link" onClick={() => onFinish()}>
+          Пропустить
+        </button>
+      </div>
+      <h1 className="onboarding-title">
+        Два напоминания,<br />и план не развалится
+      </h1>
+      <p className="onboarding-lead">
+        Милпреп ломается в двух местах: забыли начать готовку и забыли
+        переложить порцию из морозилки. Об этом Mise и напомнит.
+      </p>
+      <section className="onboarding-card glass-card">
+        <div className="push-preview">
+          <div className="push-card glass-3">
+            <span className="onb-num" aria-hidden>
+              M
+            </span>
+            <div>
+              <div className="push-head">
+                <b>Mise</b>
+                <span>сб, 10:00</span>
+              </div>
+              <p className="push-text">
+                Партия 2: 4 блюда, 12 порций. Начнём — активных 40 минут.
+              </p>
+            </div>
           </div>
-        </section>
-      )}
-    </main>
+          <div className="push-card glass-3 is-mint">
+            <span className="onb-num is-mint" aria-hidden>
+              <Icon name="snowflake" size={16} />
+            </span>
+            <div>
+              <div className="push-head">
+                <b>Mise</b>
+                <span>пт, 21:00</span>
+              </div>
+              <p className="push-text">
+                Переложите 2 порции тефтелей в холодильник — на ужин завтра.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="toggle-list glass-2">
+        {rows.map((row) => (
+          <button
+            key={row.kind}
+            className="toggle-row"
+            role="switch"
+            aria-checked={wanted[row.kind]}
+            onClick={() =>
+              setWanted((current) => ({
+                ...current,
+                [row.kind]: !current[row.kind],
+              }))
+            }
+          >
+            <span>
+              <b>{row.title}</b>
+              <small>{row.note}</small>
+            </span>
+            <span className="toggle" aria-hidden />
+          </button>
+        ))}
+      </section>
+      <p className="onboarding-fineprint">
+        Разрешение на уведомления Mise запросит вместе с готовым планом — здесь
+        только выбираем, какие из них нужны. Всё можно поменять в профиле.
+      </p>
+    </OnboardingShell>
+  );
+}
+
+function PrepRulesScreen({
+  onClose,
+  onNext,
+}: {
+  onClose: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <OnboardingShell
+      guide
+      underBar
+      onNext={onNext}
+      header={
+        <div className="guide-bar glass-1">
+          <button className="text-link" onClick={onClose}>
+            Закрыть
+          </button>
+          <div className="guide-bar-title">
+            <b>Инструктаж</b>
+            <small>5 правил · 2 минуты</small>
+          </div>
+          <button className="text-link" onClick={onNext}>
+            Дальше
+          </button>
+        </div>
+      }
+      bar={
+        <ActionBar>
+          <button className="btn btn-primary action-primary" onClick={onNext}>
+            <span>Что нужно на кухне</span>
+            <Icon name="chevron" size={16} />
+          </button>
+        </ActionBar>
+      }
+    >
+      <h1 className="onboarding-title">
+        Пять правил,<br />
+        которые решают всё
+      </h1>
+      <p className="onboarding-lead">
+        Дальше Mise будет напоминать про них сам — но лучше знать заранее.
+      </p>
+      <div className="rule-list">
+        {prepRules.map((rule, index) => (
+          <article className={`rule-card ${rule.tone}`} key={rule.title}>
+            <div className="rule-head">
+              <span className="rule-num">{index + 1}</span>
+              <h2>{rule.title}</h2>
+            </div>
+            <p>{rule.text}</p>
+          </article>
+        ))}
+      </div>
+      <p className="onboarding-fineprint">
+        Сроки и температуры — ориентиры для домашней кухни, а не лабораторная
+        норма.
+      </p>
+    </OnboardingShell>
+  );
+}
+
+function PrepKitchenScreen({
+  plan,
+  hasPlan,
+  onBack,
+  onDone,
+}: {
+  plan: ActivePlan | null;
+  hasPlan: boolean;
+  onBack: () => void;
+  onDone: () => void;
+}) {
+  const [ready, setReady] = useState<string[]>([]);
+  const portions = plan ? totalPlanPortions(plan) : 0;
+  return (
+    <OnboardingShell
+      guide
+      onBack={onBack}
+      bar={
+        <ActionBar>
+          <button className="btn btn-primary action-primary" onClick={onDone}>
+            <span>{hasPlan ? "Готово — к плану" : "Готово — составить план"}</span>
+            <Icon name="chevron" size={16} />
+          </button>
+        </ActionBar>
+      }
+    >
+      <div className="onboarding-top">
+        <button className="text-link" onClick={onBack}>
+          Назад
+        </button>
+        <span className="pill-button">Шаг 2 из 2</span>
+      </div>
+      <h1 className="onboarding-title">
+        Перед первой<br />
+        готовкой
+      </h1>
+      <p className="onboarding-lead">
+        Ничего специального не нужно. Проверьте, что есть под рукой — Mise
+        учтёт это в плане.
+      </p>
+      <section className="onboarding-card glass-card">
+        <div className="card-head">
+          <span>Контейнеры</span>
+          <span>{portions ? `нужно ${portions}` : "по числу порций"}</span>
+        </div>
+        {portions > 0 && (
+          <div className="kit-grid" aria-hidden>
+            {Array.from({ length: Math.min(portions, 24) }, (_, index) => (
+              <i key={index} />
+            ))}
+          </div>
+        )}
+        <p className="kit-note">
+          {portions
+            ? `По одному контейнеру на порцию: в этом плане ${withPlural(portions, FORMS.portion)}. Чего не хватит — уйдёт в морозилку в общей упаковке.`
+            : "По одному контейнеру на порцию. Точное число Mise посчитает вместе с планом."}
+        </p>
+      </section>
+      <section className="kit-list glass-2">
+        {kitchenChecklist.map((item) => {
+          const checked = ready.includes(item.title);
+          return (
+            <button
+              key={item.title}
+              className="kit-row"
+              role="checkbox"
+              aria-checked={checked}
+              onClick={() =>
+                setReady((current) =>
+                  checked
+                    ? current.filter((title) => title !== item.title)
+                    : [...current, item.title],
+                )
+              }
+            >
+              <span className="check-box">
+                <Icon name="check" size={14} />
+              </span>
+              <span>
+                <b>{item.title}</b>
+                <small>{item.note}</small>
+              </span>
+              <span className="kit-state">{checked ? "есть" : "отметить"}</span>
+            </button>
+          );
+        })}
+      </section>
+      <Note tone="mint" icon={<Icon name="info" />}>
+        Инструктаж всегда под рукой: в профиле, «Инструкция по милпрепу».
+      </Note>
+    </OnboardingShell>
   );
 }
 
@@ -4840,159 +5410,6 @@ function InstallInline() {
         {prompt ? "Добавить" : "Как добавить"}
       </button>
     </section>
-  );
-}
-
-function PrepGuideOffer({
-  hasPlan,
-  onShow,
-  onSkip,
-}: {
-  hasPlan: boolean;
-  onShow: () => void;
-  onSkip: () => void;
-}) {
-  return (
-    <main className="app-shell onboarding-shell prep-offer-shell">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <div className="ambient ambient-three" />
-      <header className="onboarding-header">
-        <div className="mise-mark" aria-label="Mise">
-          M
-        </div>
-        <span>mise</span>
-        <button className="text-button" onClick={onSkip}>
-          Не сейчас
-        </button>
-      </header>
-      <section className="prep-offer">
-        <div className="prep-offer-visual" aria-hidden>
-          <div className="prep-offer-main">🥣</div>
-          <span className="prep-float prep-float-containers">
-            <Icon name="container" /> Контейнеры
-          </span>
-          <span className="prep-float prep-float-cooking">
-            <Icon name="pot" /> Готовка
-          </span>
-          <span className="prep-float prep-float-labels">
-            <Icon name="edit" /> Подписи
-          </span>
-        </div>
-        <p className="kicker">Перед первым милпрепом</p>
-        <h1>
-          Нужна инструкция
-          <br />
-          по милпрепу?
-        </h1>
-        <p className="onboarding-lead">
-          За пару минут покажем, как подготовить контейнеры, организовать
-          готовку, разложить порции и хранить их.
-        </p>
-        <div className="prep-topic-row">
-          <span>Контейнеры</span>
-          <span>Готовка</span>
-          <span>Раскладка</span>
-          <span>Хранение</span>
-        </div>
-        <div className="onboarding-actions">
-          <button className="primary-button" onClick={onShow}>
-            Да, показать <Icon name="chevron" size={16} />
-          </button>
-          <button className="text-button" onClick={onSkip}>
-            {hasPlan ? "Вернуться к плану" : "Нет, составить план"}
-          </button>
-        </div>
-      </section>
-    </main>
-  );
-}
-
-function MealPrepGuide({
-  hasPlan,
-  onBack,
-  onFinish,
-}: {
-  hasPlan: boolean;
-  onBack: () => void;
-  onFinish: () => void;
-}) {
-  const steps: { icon: IconName; title: string; text: string }[] = [
-    {
-      icon: "container",
-      title: "Подготовьте контейнеры",
-      text: "По одному контейнеру на каждую порцию, подходящие крышки и наклейки или маркер для подписей.",
-    },
-    {
-      icon: "pot",
-      title: "Готовьте партиями",
-      text: "Сверьтесь со списком покупок, начните с самых долгих блюд и следуйте шагам в карточках рецептов.",
-    },
-    {
-      icon: "fridge",
-      title: "Охладите и разложите",
-      text: "Не держите готовую еду надолго в тепле. Разделите её по рассчитанным Mise порциям.",
-    },
-    {
-      icon: "snowflake",
-      title: "Подпишите и уберите",
-      text: "Укажите имя, дату и приём пищи. Ближние порции храните в холодильнике, остальные заморозьте по подсказке плана.",
-    },
-  ];
-  return (
-    <main className="app-shell onboarding-shell">
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
-      <div className="ambient ambient-three" />
-      <header className="onboarding-header">
-        <div className="mise-mark" aria-label="Mise">
-          M
-        </div>
-        <span>mise</span>
-        <button className="text-button" onClick={onFinish}>
-          Закрыть
-        </button>
-      </header>
-      <section className="onboarding-guide prep-guide">
-        <p className="kicker">Практическая инструкция</p>
-        <h1>От продуктов до готовых контейнеров</h1>
-        <p className="onboarding-lead">
-          Простой порядок, чтобы не считать и не вспоминать всё во время
-          готовки.
-        </p>
-        <div className="prep-checklist">
-          {steps.map((item, index) => (
-            <article className="prep-guide-card glass-card" key={item.title}>
-              <span className="prep-step-number">{index + 1}</span>
-              <div className="prep-step-icon">
-                <Icon name={item.icon} />
-              </div>
-              <div>
-                <h2>{item.title}</h2>
-                <p>{item.text}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-        <Note
-          tone="warn"
-          icon={<Icon name="info" />}
-          label="Для каждого блюда — свои условия"
-        >
-          Проверьте срок, способ хранения и разморозку в карточке конкретного
-          рецепта.
-        </Note>
-        <div className="onboarding-actions">
-          <button className="primary-button" onClick={onFinish}>
-            {hasPlan ? "Вернуться к плану" : "Составить первый план"}{" "}
-            <Icon name="chevron" size={16} />
-          </button>
-          <button className="text-button" onClick={onBack}>
-            Назад
-          </button>
-        </div>
-      </section>
-    </main>
   );
 }
 
@@ -5105,6 +5522,7 @@ function WeekScreen({
   onEditPeriod,
   onEditMenu,
   onOpenRecipe,
+  onOpenGuide,
 }: {
   plan: ActivePlan | null;
   loading: boolean;
@@ -5114,6 +5532,7 @@ function WeekScreen({
   onEditPeriod: () => void;
   onEditMenu: (batchId: string) => void;
   onOpenRecipe: (context: RecipeContext) => void;
+  onOpenGuide: () => void;
 }) {
   const today = isoDate(new Date());
   const [selectedDate, setSelectedDate] = useState(
@@ -5388,8 +5807,7 @@ function WeekScreen({
             {formatDate(batch.start)} — {formatDate(batch.end)}
           </h3>
           <p>
-            {batch.days}{" "}
-            {batch.days === 1 ? "день" : batch.days < 5 ? "дня" : "дней"} ·{" "}
+            {withPlural(batch.days, FORMS.day)} ·{" "}
             {withPlural(dayMeals.length, FORMS.dish)}
           </p>
         </div>
@@ -5441,6 +5859,16 @@ function WeekScreen({
           попробуйте ещё раз.
         </Note>
       )}
+      <button className="tutorial-entry glass-card" onClick={onOpenGuide}>
+        <span>
+          <Icon name="label" />
+        </span>
+        <div>
+          <b>Как готовить партиями</b>
+          <small>Пять правил и чек-лист перед готовкой</small>
+        </div>
+        <Icon name="chevron" className="entry-chevron" />
+      </button>
       <div className="section-heading">
         <div>
           <p className="kicker">
@@ -5886,21 +6314,22 @@ function ProfileScreen({
         </button>
       )}
       <button className="tutorial-entry glass-card" onClick={onOpenTutorial}>
-        <span>?</span>
+        <span>
+          <Icon name="info" />
+        </span>
         <div>
           <b>Как работает Mise</b>
           <small>Ещё раз открыть короткий онбординг</small>
         </div>
         <Icon name="chevron" className="entry-chevron" />
       </button>
-      <button
-        className="tutorial-entry prep-tutorial-entry glass-card"
-        onClick={onOpenPrepGuide}
-      >
-        <Icon name="pot" />
+      <button className="tutorial-entry glass-card" onClick={onOpenPrepGuide}>
+        <span>
+          <Icon name="pot" />
+        </span>
         <div>
           <b>Инструкция по милпрепу</b>
-          <small>Контейнеры, готовка, раскладка и хранение</small>
+          <small>Пять правил и чек-лист перед первой готовкой</small>
         </div>
         <Icon name="chevron" className="entry-chevron" />
       </button>
@@ -7589,19 +8018,7 @@ function ReviewStep({
   onEdit: (step: number) => void;
 }) {
   const recipeIds = new Set(Object.values(plan.selections));
-  const totalPortions = plan.batches.reduce(
-    (sum, batch) =>
-      sum +
-      batch.days *
-        plan.mealSlots.reduce(
-          (slotSum, slot) =>
-            slotSum +
-            plan.people.filter((person) => person.includedSlots.includes(slot))
-              .length,
-          0,
-        ),
-    0,
-  );
+  const totalPortions = totalPlanPortions(plan);
   return (
     <>
       <StepIntro

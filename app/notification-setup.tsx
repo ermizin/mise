@@ -29,6 +29,27 @@ type ScheduledJob = {
 
 const defaultToggles: ReminderToggles = { shopping: true, cooking: true, thaw: true, "next-plan": true };
 
+/* Что человек выбрал на третьем экране онбординга. Разрешения там не просят —
+   это только стартовое положение переключателей для готового плана. */
+const reminderDefaultsKey = "mise-reminder-defaults-v1";
+
+function seededToggles(): ReminderToggles {
+  if (typeof window === "undefined") return defaultToggles;
+  try {
+    const saved = window.localStorage.getItem(reminderDefaultsKey);
+    if (!saved) return defaultToggles;
+    const parsed = JSON.parse(saved) as Partial<ReminderToggles>;
+    return {
+      ...defaultToggles,
+      cooking: parsed.cooking ?? defaultToggles.cooking,
+      thaw: parsed.thaw ?? defaultToggles.thaw,
+      "next-plan": parsed["next-plan"] ?? defaultToggles["next-plan"],
+    };
+  } catch {
+    return defaultToggles;
+  }
+}
+
 function parseDate(value: string) {
   return new Date(`${value}T12:00:00`);
 }
@@ -99,7 +120,7 @@ function buildJobs(plan: NotificationPlan, preferences: StoredPreferences) {
 
 export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCancel }: { plan: NotificationPlan; clientId: string; deviceId: string; onDone: () => void; onCancel: () => void }) {
   const defaultCookTimes = useMemo(() => Object.fromEntries(plan.batches.map((batch) => [batch.id, "18:00"])), [plan.batches]);
-  const [toggles, setToggles] = useState<ReminderToggles>(defaultToggles);
+  const [toggles, setToggles] = useState<ReminderToggles>(seededToggles);
   const [cookTimes, setCookTimes] = useState<Record<string, string>>(defaultCookTimes);
   const [thawTime, setThawTime] = useState("21:00");
   const [enabled, setEnabled] = useState(false);
