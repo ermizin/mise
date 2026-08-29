@@ -842,6 +842,10 @@ p {
 }
 .primary-button {
   padding: 14px 19px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   color: #fff;
   background: linear-gradient(
     145deg,
@@ -851,6 +855,16 @@ p {
   box-shadow:
     0 13px 25px rgba(226, 80, 36, 0.25),
     inset 0 1px rgba(255, 255, 255, 0.42);
+  transition: transform 0.12s ease, box-shadow 0.16s ease, background 0.16s ease;
+}
+.primary-button:active:not(:disabled) {
+  transform: scale(0.985);
+}
+.primary-button:disabled {
+  color: var(--ink-muted);
+  background: rgba(42, 29, 20, 0.12);
+  box-shadow: none;
+  opacity: 1;
 }
 .primary-button span {
   margin-left: 10px;
@@ -2521,6 +2535,13 @@ p {
 }
 .builder-actions button {
   width: 100%;
+}
+.builder-actions .primary-button {
+  padding-inline: 14px;
+  white-space: nowrap;
+}
+.builder-actions .primary-button .icon {
+  flex: none;
 }
 .step-intro {
   margin: 2px 2px 22px;
@@ -4303,6 +4324,13 @@ p {
 .person-tabs {
   margin: 0 0 var(--space-3);
 }
+.people-step-lead {
+  max-width: 520px;
+  margin: 0 2px var(--space-4);
+  color: var(--ink-muted);
+  font-size: var(--text-body);
+  line-height: 1.5;
+}
 .chip.is-add {
   display: inline-flex;
   align-items: center;
@@ -4382,6 +4410,14 @@ p {
   font-size: var(--text-min);
   font-style: normal;
   font-weight: var(--weight-medium);
+}
+.field-box:focus-within {
+  border-color: rgba(242, 87, 26, 0.5);
+  outline: 3px solid rgba(242, 87, 26, 0.12);
+}
+.field-box input:focus-visible,
+.field-box select:focus-visible {
+  box-shadow: none !important;
 }
 .field-hint {
   color: var(--ink-muted);
@@ -4512,4 +4548,44 @@ p {
   border-color: var(--tint-warn-border);
   color: var(--accent-text);
   box-shadow: none;
+}
+
+/* В мастере хром и панель действий уже дают два GPU-слоя.
+   Карточки сохраняют стеклянную плотность без дорогого backdrop-filter. */
+.builder-shell .builder-content .glass-card {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .primary-button:not(:disabled):hover {
+    transform: translateY(-1px);
+  }
+  .secondary-button:not(:disabled):hover,
+  .chip:not(:disabled):hover,
+  .seg button:not(:disabled):hover {
+    background-color: rgba(255, 255, 255, 0.78);
+  }
+}
+
+@media (max-width: 380px) {
+  .field-row,
+  .norm-macros {
+    gap: 4px;
+  }
+  .field-row-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  .field-box {
+    padding-inline: 9px;
+    gap: 4px;
+  }
+  .norm-head {
+    flex-direction: column;
+  }
+  .norm-head .pill-button {
+    align-self: flex-start;
+  }
 }

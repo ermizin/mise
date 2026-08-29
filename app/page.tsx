@@ -7322,7 +7322,7 @@ function PlanBuilder({
         <div>
           {mode === "onboarding" && (
             <p className="kicker">
-              Шаг {step + 1} из {steps.length}
+              {step === 3 && <>Кто ест · </>}Шаг {step + 1} из {steps.length}
             </p>
           )}
           <h1>{steps[step]}</h1>
@@ -7824,12 +7824,10 @@ function PeopleStep({
 
   return (
     <>
-      <StepIntro
-        icon={<Icon name="person" />}
-        kicker="Кто ест"
-        title="Люди и цели"
-        text="Норма задаёт размер порции. «Не люблю» влияет на рекомендации, «Аллергия / мне нельзя» полностью запрещает блюдо."
-      />
+      <p className="people-step-lead">
+        Норма задаёт размер порции. «Не люблю» влияет на
+        рекомендации, «Аллергия / мне нельзя» полностью запрещает блюдо.
+      </p>
 
       <div className="chip-row person-tabs" role="tablist" aria-label="Люди">
         {people.map((item) => (
