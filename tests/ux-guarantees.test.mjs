@@ -7,8 +7,8 @@ const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 test("the wizard keeps the user's work", async () => {
   const page = await read("app/page.tsx");
   assert.match(page, /const builderDraftKey = "mise-builder-draft/, "the draft has a storage key");
-  assert.match(page, /localStorage\.setItem\(builderDraftKey/, "the draft is written while the wizard is open");
-  assert.match(page, /localStorage\.getItem\(builderDraftKey/, "the draft is restored on the next open");
+  assert.match(page, /localStorage\.setItem\(activeBuilderDraftKey/, "the active new-plan or settings draft is written while the wizard is open");
+  assert.match(page, /localStorage\.getItem\(activeBuilderDraftKey/, "the active new-plan or settings draft is restored on the next open");
   assert.match(page, /selectionAssignments/, "personal slot assignments are durable");
   assert.match(page, /menuMode/, "the selected menu-building path is durable");
   assert.doesNotMatch(page, /setSelections\(\{\}\)/, "editing a plan never wipes every menu pick");
@@ -46,7 +46,7 @@ test("the hardware back button stays inside the app", async () => {
   const page = await read("app/page.tsx");
   const listeners = page.match(/addEventListener\("popstate"/g) ?? [];
   assert.ok(listeners.length >= 2, "the wizard and the recipe card both trap back");
-  assert.match(page, /history\.pushState\(\{ mise: "builder" \}/);
+  assert.match(page, /history\.pushState\(\{ mise: "builder", mode \}/);
   assert.match(page, /history\.pushState\(\{ mise: "recipe" \}/);
 });
 
@@ -168,10 +168,8 @@ test("profile presents the real household goals and keeps its actions connected"
   assert.match(profile, /profileGoalLabels\[person\.estimate\.goal\]/, "the person goal is shown");
   assert.match(profile, /person\.includedSlots[\s\S]*?mealMeta\[slot\]/, "the included meal slots are shown");
   assert.match(profile, /plannedTargetsFor\(person\)/, "the plan summary derives from current targets");
-  assert.ok(
-    (profile.match(/onClick=\{onConfigure\}/g) ?? []).length >= 2,
-    "editing a person and adding one share the configuration flow",
-  );
+  assert.match(profile, /onClick=\{onConfigure\}/, "editing a person opens settings");
+  assert.match(profile, /onClick=\{onAddPerson\}/, "adding a person creates a new form instead of pretending to add one");
   assert.match(profile, /\{hasPlan && \([\s\S]*?onClick=\{onNotifications\}/, "reminders are available only with a plan");
   assert.match(profile, /onClick=\{onOpenTutorial\}/, "onboarding can be reopened");
   assert.match(profile, /onClick=\{onOpenPrepGuide\}/, "prep guidance can be reopened");

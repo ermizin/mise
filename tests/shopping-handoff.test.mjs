@@ -10,7 +10,7 @@ const shopping = page.slice(shoppingStart, shoppingEnd === -1 ? undefined : shop
 
 test("shopping follows the handoff header and controls", () => {
   assert.match(shopping, /Покупки/);
-  assert.match(shopping, /дн|дата|человек/);
+  assert.match(shopping, /withPlural\(plan\.people\.length, FORMS\.person\)/);
   assert.match(shopping, /share|поделиться|⇪/i);
   assert.match(shopping, /Куплено/);
   assert.match(shopping, /Осталось групп/);
