@@ -49,6 +49,16 @@ test("recipe cards keep photos and cooking measurements actionable", async () =>
   assert.match(page, /function RecipeMedia/, "one media component owns the photo fallback");
   assert.match(page, /onError=\{\(\) => setFailedPhoto\(photo\)\}/, "a failed source photo falls back instead of leaving a blank card");
   assert.match(page, /<RecipeMedia recipe=\{recipe\} eager \/>/, "the opened recipe uses its photo too");
+  assert.match(
+    css,
+    /\.recipe-media \{[\s\S]*?height: 100px;[\s\S]*?overflow: hidden;/,
+    "catalog photos cannot paint over the recipe text",
+  );
+  assert.match(
+    css,
+    /\.recipe-media img \{[\s\S]*?position: absolute;[\s\S]*?inset: 0;[\s\S]*?height: 100%;/,
+    "catalog photos stay inside the fixed media frame",
+  );
   assert.match(css, /\.detail-food img \{[\s\S]*?object-fit: cover;/, "the detail photo fills the existing hero frame");
   assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
   assert.match(page, /cookingAmounts\[ingredient\.id\]/, "ingredients and cooking read the same calculated amounts");
