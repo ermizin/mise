@@ -46,6 +46,11 @@ test("batch cooking follows screen 5b without inventing a parallel schedule", as
   assert.match(page, /Продукты шага/, "calculated products stay available in context");
   assert.match(page, /Активное время · ориентир/, "time is not presented as an exact schedule");
   assert.match(page, /history\.pushState\(\{ mise: "batch-cooking" \}/, "hardware back closes cooking mode");
+  assert.match(
+    page,
+    /function BatchCookingView[\s\S]*?window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/,
+    "batch cooking always opens from its summary",
+  );
   assert.match(page, /localStorage\.setItem\(progressKey/, "progress survives an accidental close");
   assert.match(page, /localStorage\.removeItem\(progressKey\)/, "completed progress is cleared");
   assert.match(css, /\.cooking-batch-header/, "screen 5b owns its glass header");

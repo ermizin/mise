@@ -10050,6 +10050,9 @@ function BatchCookingView({
     backRef.current = onClose;
   });
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
+  useEffect(() => {
     history.pushState({ mise: "batch-cooking" }, "");
     const onPop = () => backRef.current();
     window.addEventListener("popstate", onPop);
