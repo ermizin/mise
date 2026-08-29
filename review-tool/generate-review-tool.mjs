@@ -274,8 +274,9 @@ const html = `<!doctype html>
       document.addEventListener('keydown', (event) => { if (event.key === '/' && document.activeElement?.tagName !== 'TEXTAREA' && document.activeElement?.tagName !== 'INPUT') { event.preventDefault(); search.focus(); } });
       el('export').addEventListener('click', () => { const json = JSON.stringify(exportPayload(), null, 2); const link = document.createElement('a'); link.href = URL.createObjectURL(new Blob([json], { type:'application/json' })); link.download = 'mise-recipe-review-decisions.json'; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1000); });
       el('copy').addEventListener('click', async () => { const button = el('copy'); try { await navigator.clipboard.writeText(JSON.stringify(exportPayload(), null, 2)); button.textContent = 'Скопировано'; } catch { button.textContent = 'Копирование недоступно'; } setTimeout(() => { button.textContent = 'Копировать JSON'; }, 1800); });
-      el('generated').textContent = 'Снимок аудита: ' + new Date(data.generatedAt).toLocaleString('ru-RU') + ' · готово ' + (data.auditCounts.ready ?? 0) + ' из ' + (data.auditCounts.ready + data.auditCounts.review_required + data.auditCounts.blocked);
-      summary.innerHTML = '<span class="pill">Локальные решения: localStorage</span><span class="pill">Данные: release audit + candidates + editorial</span><span class="pill">Карточек с вопросами: ' + data.records.length + '</span>';
+      const auditedTotal = Object.values(data.auditCounts).reduce((total, count) => total + count, 0);
+      el('generated').textContent = 'Снимок аудита: ' + new Date(data.generatedAt).toLocaleString('ru-RU') + ' · готово ' + (data.auditCounts.ready ?? 0) + ' из ' + auditedTotal;
+      summary.innerHTML = '<span class="pill">Локальные решения: localStorage</span><span class="pill">Данные: release audit + candidates + editorial</span><span class="pill">Карточек с вопросами: ' + data.records.length + '</span><span class="pill">В бэклоге: ' + (data.auditCounts.backlog ?? 0) + '</span>';
       renderFilters(); renderCards();
     })();
   </script>
