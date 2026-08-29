@@ -218,7 +218,15 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "chicken-thigh": fdcReference("173627", "Chicken thigh, meat only, raw"),
   corn: fdcReference("168401", "Corn, sweet, yellow, frozen, cooked, boiled, drained, without salt"),
   cottage: fdcReference("172179", "Cheese, cottage, creamed", "Ближайший профиль к творогу 4–5%; сверить этикетку."),
-  cream: fdcReference("171308", "Cream, half and half, lowfat", "Прокси для сливок 10%."),
+  cream: {
+    provider: "Простоквашино, карточка продукта",
+    checkedAt,
+    note: "Расчётный профиль сливок 10%; конкретную упаковку сверить по этикетке.",
+    sourceUrl: "https://prostokvashino.ru/product/slivki-10--500-g/",
+    recordId: "prostokvashino:cream-10-500",
+    dataType: "label_required",
+    description: "Сливки 10%: 120 ккал, белки 2,9 г, жиры 10 г, углеводы 4,5 г на 100 г",
+  },
   "cream-cheese": fdcReference("173418", "Cheese, cream", "Творожный сыр зависит от марки; сверить этикетку."),
   cucumber: fdcReference("168409", "Cucumber, with peel, raw"),
   egg: fdcReference("171287", "Egg, whole, raw, fresh"),
@@ -292,7 +300,7 @@ const ingredientSeeds: IngredientSeed[] = [
   ["chicken-thigh", "Куриное бедро без кожи", "meat", "raw", n(121, 19.66, 4.12, 0)],
   ["corn", "Кукуруза", "vegetable", "cooked", n(94, 3.11, 0.74, 22.33)],
   ["cottage", "Творог 4–5%", "dairy", "processed", n(98, 11.12, 4.3, 3.38), 1, ["milk"]],
-  ["cream", "Сливки 10%", "dairy", "processed", n(72, 3.33, 5, 3.33), 1, ["milk"]],
+  ["cream", "Сливки 10%", "dairy", "processed", n(120, 2.9, 10, 4.5), 1, ["milk"]],
   ["cream-cheese", "Творожный сыр", "dairy", "processed", n(350, 6.15, 34.44, 5.52), 1, ["milk"]],
   ["cucumber", "Огурец", "vegetable", "raw", n(15, 0.65, 0.11, 3.63), 200],
   ["egg", "Куриное яйцо", "egg", "raw", n(143, 12.56, 9.51, 0.72), 50, ["egg"]],
@@ -648,13 +656,24 @@ export function nutritionForFamily(family: Pick<RecipeFamily, "ingredients">, am
 
 function parameterizedInstructions(recipe: LegacyRecipeForEngine): RecipeInstruction[] {
   const names = recipe.ingredients.map((item) => [item.id, item.name.toLowerCase()] as const);
-  return recipe.steps.map((source, index) => {
-    const ingredientIds = index === 0 ? recipe.ingredients.map((item) => item.id) : names.filter(([, name]) => source.toLowerCase().includes(name)).map(([id]) => id);
-    const text = index === 0
-      ? "Отмерьте рассчитанные Mise количества ингредиентов, указанные для этой порции или всей партии."
-      : source.replace(/\b\d+(?:[.,]\d+)?\s*(?:г|мл|шт\.?)(?!\p{L})/giu, "рассчитанное количество");
-    return { id: `step-${index + 1}`, text, ingredientIds, dependsOn: index ? [`step-${index}`] : [] };
-  });
+  const measurementStep: RecipeInstruction = {
+    id: "step-measure",
+    text: "Отмерьте рассчитанные Mise количества ингредиентов для всей готовки.",
+    ingredientIds: recipe.ingredients.map((item) => item.id),
+    action: "measure",
+    dependsOn: [],
+  };
+  const cookingSteps = recipe.steps
+    .filter((source) => !/^На одну базовую порцию отмерьте:/iu.test(source))
+    .map((source, index) => ({
+      id: `step-${index + 1}`,
+      text: source.replace(/\b\d+(?:[.,]\d+)?\s*(?:г|мл|шт\.?)(?!\p{L})/giu, "рассчитанное количество"),
+      ingredientIds: names
+        .filter(([, name]) => source.toLowerCase().includes(name))
+        .map(([id]) => id),
+      dependsOn: [index ? `step-${index}` : measurementStep.id],
+    }));
+  return [measurementStep, ...cookingSteps];
 }
 
 export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | null {
@@ -877,13 +896,36 @@ export function solveRecipeBatch(family: RecipeFamily, portions: { id: string; t
   };
 }
 
-export function materializeInstructions(family: RecipeFamily, amounts: Record<string, number>) {
-  return family.miseInstructions.map((step, index) => {
-    if (index !== 0) return step.text;
+export function aggregateCookingAmounts(
+  ingredients: Pick<RecipeFamilyIngredient, "sourceIngredientId" | "baseAmount" | "role">[],
+  portionAmounts: Record<string, number>[],
+  days = 1,
+) {
+  return Object.fromEntries(
+    ingredients.map((ingredient) => {
+      if (ingredient.role === "fat_cooking")
+        return [ingredient.sourceIngredientId, portionAmounts.length ? ingredient.baseAmount : 0];
+      const total = portionAmounts.reduce(
+        (sum, amounts) => sum + (amounts[ingredient.sourceIngredientId] ?? 0),
+        0,
+      );
+      return [ingredient.sourceIngredientId, round(total * Math.max(0, days))];
+    }),
+  );
+}
+
+export function materializeInstructions(
+  family: RecipeFamily,
+  amounts: Record<string, number>,
+  displayNames: Record<string, string> = {},
+) {
+  return family.miseInstructions.map((step) => {
+    if (step.action !== "measure") return step.text;
     const lines = family.ingredients.map((ingredient) => {
       const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
       const unit = ingredient.unit === "piece" ? "шт." : ingredient.unit === "ml" ? "мл" : "г";
-      return `${canonical.canonicalName.toLowerCase()} — ${round(amounts[ingredient.sourceIngredientId] ?? ingredient.baseAmount)} ${unit}`;
+      const name = displayNames[ingredient.sourceIngredientId] ?? canonical.canonicalName;
+      return `${name} — ${round(amounts[ingredient.sourceIngredientId] ?? ingredient.baseAmount)} ${unit}`;
     });
     return `${step.text} ${lines.join("; ")}.`;
   });

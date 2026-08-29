@@ -12,7 +12,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -31,12 +31,13 @@ async function loadRecipeCatalog() {
     solveRecipeFamily: engine.solveRecipeFamily,
     solveRecipeBatch: engine.solveRecipeBatch,
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
+    aggregateCookingAmounts: engine.aggregateCookingAmounts,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
 }
 
-const { recipes, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, solveRecipeFamily, solveRecipeBatch, materializeInstructions, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -132,6 +133,21 @@ test("source photos and localization notes are attached to imported recipes", ()
     assert.equal(item.localization.fit, "adapted");
     assert.ok(item.localization.note.length > 0);
   }
+});
+
+test("production fat-sensitive ingredients expose an honest fat note", () => {
+  const fatSensitiveIds = new Set([
+    "beef", "beef-mince", "pork-mince", "tuna", "salmon", "milk", "cottage", "cream",
+    "yogurt", "butter", "kefir", "cream-cheese", "cheese", "parmesan", "feta",
+    "mozzarella",
+  ]);
+  const ingredients = productionRecipes.flatMap((item) => item.ingredients)
+    .filter((item) => fatSensitiveIds.has(item.id));
+  assert.ok(ingredients.length > 0);
+  assert.ok(ingredients.every((item) => item.fatNote?.length > 0));
+  assert.ok(ingredients.filter((item) => item.id === "milk").every((item) => item.name === "Молоко 2%" && item.fatNote === "2%"));
+  assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
+  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "label_required");
 });
 
 test("editorial promotion fixes unit-sized macros and obvious slot mistakes", () => {
@@ -271,10 +287,14 @@ test("keeps the approved ingredients and excludes pasta salads from the first po
 });
 
 test("catalog shows every matching recipe while the plan builder keeps five choices", () => {
-  const catalog = candidateRecipes("lunch", "protein", [], 1, { origin: "generated", limit: "all" });
-  const builder = candidateRecipes("lunch", "protein", [], 1, { origin: "generated" });
-  assert.ok(catalog.length > 5);
-  assert.equal(builder.length, 5);
+  const catalog = candidateRecipes("lunch", "protein", [], 1, { origin: "parsed", limit: "all" });
+  const builder = candidateRecipes("lunch", "protein", [], 1, { origin: "parsed" });
+  assert.ok(catalog.length > 0);
+  assert.equal(builder.length, Math.min(5, catalog.length));
+  assert.equal(
+    JSON.stringify(builder.map((item) => item.id)),
+    JSON.stringify(catalog.slice(0, 5).map((item) => item.id)),
+  );
 });
 
 test("hard exclusions cannot be bypassed while dislikes stay reversible", () => {
@@ -289,7 +309,7 @@ test("hard exclusions cannot be bypassed while dislikes stay reversible", () => 
   assert.ok(hardSafe.length > 0);
   assert.ok(hardSafe.every((item) => !item.allergens.includes("fish")));
 
-  const softPerson = { ...basePerson, dislikes: ["fish"] };
+  const softPerson = { ...basePerson, dislikes: ["broccoli"] };
   const preferred = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all" });
   const allAllowed = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all", includeDisliked: true });
   assert.ok(preferred.every((item) => dislikeMatches(item, softPerson).length === 0));
@@ -416,6 +436,50 @@ test("review-required families stay out of automatic menu candidates", () => {
   assert.equal(lunchIds.includes("src-taco-mac"), true);
 });
 
+test("production catalog contains only explicitly reviewed complete recipes", () => {
+  const blockedIds = Object.values(recipeFamiliesById)
+    .filter((family) => family.reviewStatus === "review_required")
+    .map((family) => family.id)
+    .sort();
+  const visibleIds = new Set(productionRecipes.map((item) => item.id));
+
+  assert.equal(blockedIds.length, 8);
+  const expectedReadyIds = recipes
+    .filter(
+      (item) =>
+        (item.provenance.kind === "parsed" ||
+          item.provenance.editoriallyApproved === true) &&
+        item.ingredients.length >= 3 &&
+        recipeFamiliesById[item.id]?.reviewStatus !== "review_required",
+    )
+    .map((item) => item.id)
+    .sort();
+
+  assert.equal(productionRecipes.length, expectedReadyIds.length);
+  assert.equal(productionRecipes.length, 30);
+  assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
+  assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
+  assert.ok(
+    productionRecipes.every(
+      (item) =>
+        item.provenance.kind === "parsed" ||
+        item.provenance.editoriallyApproved === true,
+    ),
+    "generated placeholders require explicit editorial approval",
+  );
+  assert.ok(productionRecipes.every((item) => item.ingredients.length >= 3));
+  assert.ok(productionRecipes.every(isProductionReadyRecipe));
+
+  for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"])
+    for (const style of ["protein", "budget", "paleo", "keto"])
+      assert.ok(
+        candidateRecipes(slot, style, [], 1, { limit: "all" }).every((item) =>
+          visibleIds.has(item.id),
+        ),
+        `${style}/${slot} candidates stay inside the production catalog`,
+      );
+});
+
 test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {
   for (const family of Object.values(recipeFamiliesById)) {
     for (const targetCalories of [450, 600, 750]) {
@@ -537,10 +601,55 @@ test("two-person solver sums 600 and 450 kcal portions into one batch and parame
     const id = ingredient.sourceIngredientId;
     assert.equal(batch.totals[id], Math.round((batch.portions[0].variant.amounts[id] + batch.portions[1].variant.amounts[id]) * 10) / 10);
   }
-  const steps = materializeInstructions(family, batch.totals);
+  const displayNames = Object.fromEntries(
+    family.ingredients.map((ingredient) => [ingredient.sourceIngredientId, `Покупательское имя ${ingredient.sourceIngredientId}`]),
+  );
+  const steps = materializeInstructions(family, batch.totals, displayNames);
   assert.equal(steps.length, family.miseInstructions.length);
-  assert.match(steps[0], /куриное бедро|рис|батат/i);
+  assert.match(steps[0], /Покупательское имя chicken-thigh/i);
   assert.match(steps[0], /г/);
+  assert.equal(family.miseInstructions[0].action, "measure");
+  assert.equal(family.miseInstructions.length, recipes.find((item) => item.id === family.id).steps.length);
+  assert.equal(
+    family.miseInstructions.filter((step) => step.action !== "measure").length,
+    recipes.find((item) => item.id === family.id).steps.length - 1,
+  );
+  assert.equal(
+    family.miseInstructions[1].text,
+    recipes.find((item) => item.id === family.id).steps[1],
+  );
+});
+
+test("cooking amounts count pan fat once and all other ingredients for every day", () => {
+  const family = recipeFamiliesById["src-cottage-bake"];
+  const onePortion = Object.fromEntries(
+    family.ingredients.map((ingredient) => [ingredient.sourceIngredientId, ingredient.baseAmount]),
+  );
+  const totals = aggregateCookingAmounts(family.ingredients, [onePortion, onePortion], 3);
+  for (const ingredient of family.ingredients) {
+    const expected = ingredient.role === "fat_cooking"
+      ? ingredient.baseAmount
+      : ingredient.baseAmount * 2 * 3;
+    assert.equal(totals[ingredient.sourceIngredientId], expected);
+  }
+});
+
+test("recipe view and shopping helper use solved family amounts for a multi-day batch", () => {
+  const item = recipes.find((candidate) => candidate.id === "src-taco-mac");
+  const family = recipeFamiliesById[item.id];
+  const people = [
+    { id: "a", name: "А", daily: { kcal: 2000, protein: 150, fat: 65, carbs: 210 }, includedSlots: ["lunch"] },
+    { id: "b", name: "Б", daily: { kcal: 1600, protein: 120, fat: 55, carbs: 165 }, includedSlots: ["lunch"] },
+  ];
+  const portions = people.map((person) => portionFor(person, "lunch", item));
+  assert.ok(portions.every((portion) => portion.engine === "recipe-family-v1"));
+  const amounts = recipeCookingAmounts(item, portions, 3);
+  for (const ingredient of family.ingredients) {
+    const expected = ingredient.role === "fat_cooking"
+      ? ingredient.baseAmount
+      : Math.round(portions.reduce((sum, portion) => sum + portion.solvedAmounts[ingredient.sourceIngredientId], 0) * 3 * 10) / 10;
+    assert.equal(amounts[ingredient.sourceIngredientId], expected);
+  }
 });
 
 test("portion adapter uses Recipe Engine for migrated recipes and legacy math elsewhere", () => {
