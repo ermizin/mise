@@ -57,3 +57,14 @@ export async function POST(request: Request) {
     return Response.json({ error: messageFor(error) }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request) {
+  const clientId = clientIdFor(request);
+  if (!clientId) return Response.json({ error: "client id is required" }, { status: 400 });
+  try {
+    await getDb().delete(mealPlans).where(eq(mealPlans.clientId, clientId));
+    return Response.json({ deleted: true });
+  } catch (error) {
+    return Response.json({ error: messageFor(error) }, { status: 500 });
+  }
+}

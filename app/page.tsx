@@ -163,7 +163,11 @@ type Batch = {
   end: string;
   days: number;
 };
-type ShoppingItem = Ingredient & { key: string; checked: boolean };
+type ShoppingItem = Ingredient & {
+  key: string;
+  checked: boolean;
+  batchIds?: string[];
+};
 type ActivePlan = {
   id: string;
   createdAt: string;
@@ -4381,9 +4385,19 @@ function buildShopping(
         const key = `${ingredient.id}:${ingredient.unit}`;
         const existing = aggregate.get(key);
         const quantity = cookingAmounts[ingredient.id] ?? 0;
-        if (existing) existing.quantity += quantity;
+        if (existing) {
+          existing.quantity += quantity;
+          if (!existing.batchIds?.includes(batch.id))
+            existing.batchIds = [...(existing.batchIds ?? []), batch.id];
+        }
         else
-          aggregate.set(key, { ...ingredient, key, quantity, checked: false });
+          aggregate.set(key, {
+            ...ingredient,
+            key,
+            quantity,
+            checked: false,
+            batchIds: [batch.id],
+          });
       }
     }
   return [...aggregate.values()]
@@ -4474,6 +4488,31 @@ function candidateRecipes(
     );
   return filters.limit === "all" ? sorted : sorted.slice(0, filters.limit ?? 5);
 }
+function recipeCoverageFor(
+  person: Person,
+  style: MenuStyle,
+  batchDays: number,
+) {
+  const possible = recipes.filter(
+    (recipe) =>
+      person.includedSlots.includes(recipe.slot) &&
+      recipe.tags.includes(style) &&
+      isProductionReadyRecipe(recipe) &&
+      (recipe.storageDays >= batchDays || recipe.freezable),
+  );
+  const viable = possible.filter(
+    (recipe) =>
+      hardConflicts(recipe, person).length === 0 &&
+      recipeFamilyViableFor(recipe, person, recipe.slot),
+  );
+  return {
+    viable: viable.length,
+    total: possible.length,
+    percent: possible.length
+      ? Math.round((viable.length / possible.length) * 100)
+      : 0,
+  };
+}
 function fitScore(recipe: Recipe, people: Person[], slot: MealSlot) {
   const eaters = people.filter((person) => person.includedSlots.includes(slot));
   if (!eaters.length) return 0;
@@ -4529,6 +4568,13 @@ function normalizePerson(person: Person): Person {
   };
 }
 function normalizePlan(plan: ActivePlan): ActivePlan {
+  const normalizedPeople = plan.people.map(normalizePerson);
+  const rebuiltShopping = new Map(
+    buildShopping({ ...plan, people: normalizedPeople }).map((item) => [
+      item.key,
+      item,
+    ]),
+  );
   const normalized = {
     ...plan,
     pinnedSelectionKeys: Array.isArray(plan.pinnedSelectionKeys)
@@ -4536,15 +4582,17 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
           (key): key is string => typeof key === "string" && Boolean(plan.selections[key]),
         )
       : [],
-    people: plan.people.map(normalizePerson),
+    people: normalizedPeople,
     shopping: plan.shopping.map((item) => {
       const name = normalizedIngredientName(item.id, item.name);
+      const rebuilt = rebuiltShopping.get(item.key);
       return {
         ...item,
         name,
         fatNote: ingredientFatNote(item.id, name),
         allergens: [...(ingredientAllergens[item.id] ?? [])],
         checkLabel: packagedIngredientIds.has(item.id),
+        batchIds: rebuilt?.batchIds ?? item.batchIds ?? [],
       };
     }),
   };
@@ -4687,6 +4735,23 @@ export default function Home() {
     await persistQueue.current;
     setActivePlan(plan);
   }
+  async function deletePlan() {
+    try {
+      await persistQueue.current.catch(() => undefined);
+      const response = await fetch("/api/plans", {
+        method: "DELETE",
+        headers: { "X-Mise-Client": clientId() },
+      });
+      if (!response.ok) throw new Error("Не удалось удалить план");
+      localStorage.removeItem(builderDraftKey);
+      setNotificationSetupOpen(false);
+      setActivePlan(null);
+      setTab("week");
+      return true;
+    } catch {
+      return false;
+    }
+  }
   function startPlanFlow(repeat: boolean) {
     const flowId = crypto.randomUUID();
     setRecipeContext(null);
@@ -4819,6 +4884,7 @@ export default function Home() {
       <div className="app-bg" aria-hidden />
       {tab !== "recipes" &&
         tab !== "profile" &&
+        tab !== "shopping" &&
         (tab !== "week" || !activePlan) && (
       <header className="app-header">
         <div>
@@ -4896,6 +4962,8 @@ export default function Home() {
           people={activePlan?.people ?? [newPerson()]}
           hasPlan={Boolean(activePlan)}
           onConfigure={editPeople}
+          onBuild={() => startPlanFlow(Boolean(activePlan))}
+          onDeletePlan={deletePlan}
           onOpenTutorial={() => {
             setOnboardingReturnTab("profile");
             setOnboardingStep("welcome");
@@ -7118,6 +7186,12 @@ function ShoppingScreen({
 }) {
   const [failed, setFailed] = useState(false);
   const [undoItems, setUndoItems] = useState<ShoppingItem[] | null>(null);
+  const [filter, setFilter] = useState<"all" | "unchecked" | "batch-1">(
+    "all",
+  );
+  const [shareState, setShareState] = useState<"idle" | "copied" | "error">(
+    "idle",
+  );
   const shoppingPlanId = plan?.id;
   useEffect(() => {
     if (shoppingPlanId) void trackAnalytics("shopping_opened");
@@ -7133,8 +7207,22 @@ function ShoppingScreen({
       </section>
     );
   const currentPlan = plan;
-  const groups = groupedShopping(plan.shopping);
+  const allGroups = groupedShopping(plan.shopping);
   const checked = plan.shopping.filter((item) => item.checked).length;
+  const progress = Math.round(
+    (checked / Math.max(plan.shopping.length, 1)) * 100,
+  );
+  const totalGroups = Object.keys(allGroups).length;
+  const remainingGroups = Object.values(allGroups).filter((items) =>
+    items.some((item) => !item.checked),
+  ).length;
+  const firstBatchId = plan.batches[0]?.id;
+  const visibleShopping = plan.shopping.filter((item) => {
+    if (filter === "unchecked") return !item.checked;
+    if (filter === "batch-1") return Boolean(firstBatchId && item.batchIds?.includes(firstBatchId));
+    return true;
+  });
+  const groups = groupedShopping(visibleShopping);
   async function apply(
     shopping: ShoppingItem[],
     undoTo: ShoppingItem[] | null,
@@ -7167,32 +7255,97 @@ function ShoppingScreen({
     const restore = undoItems;
     if (restore) void apply(restore, null);
   }
+  async function shareList() {
+    const text = currentPlan.shopping
+      .map(
+        (item) =>
+          `${item.checked ? "✓" : "○"} ${item.name} — ${item.quantity.toLocaleString("ru-RU")} ${item.unit}`,
+      )
+      .join("\n");
+    try {
+      if (navigator.share)
+        await navigator.share({ title: "Покупки Mise", text });
+      else {
+        await navigator.clipboard.writeText(text);
+        setShareState("copied");
+      }
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") return;
+      setShareState("error");
+    }
+  }
   return (
     <section className="screen shopping-screen">
-      <section className="shopping-summary glass-card">
+      <header className="shopping-header">
         <div>
           <p className="kicker">
-            Куплено {checked} из {plan.shopping.length}
+            {formatDate(plan.start)} — {formatDate(plan.end)} ·{" "}
+            {plan.people.length}{" "}
+            {plan.people.length === 1 ? "человек" : "человека"}
           </p>
-          <h2>
-            {Math.round((checked / Math.max(plan.shopping.length, 1)) * 100)}%
-          </h2>
-          {checked > 0 && (
-            <button className="text-button" onClick={clearChecks}>
-              Снять отметки
+          <h1>Покупки</h1>
+        </div>
+        <button
+          className="shopping-share glass"
+          aria-label="Поделиться списком покупок"
+          onClick={() => void shareList()}
+        >
+          <Icon name="share" />
+        </button>
+      </header>
+      <section className="shopping-summary glass-card">
+        <div className="shopping-summary-stats">
+          <div>
+            <p className="kicker">Куплено</p>
+            <h2>
+              {checked}<span> / {plan.shopping.length}</span>
+            </h2>
+          </div>
+          <div>
+            <p className="kicker">Осталось групп</p>
+            <b>{remainingGroups} из {totalGroups}</b>
+          </div>
+        </div>
+        <div
+          className="shopping-progress-track"
+          role="progressbar"
+          aria-label="Прогресс покупок"
+          aria-valuemin={0}
+          aria-valuemax={plan.shopping.length}
+          aria-valuenow={checked}
+        >
+          <span style={{ width: `${progress}%` }} />
+        </div>
+        <div className="shopping-filter-row" role="group" aria-label="Фильтр покупок">
+          <button
+            className={filter === "all" ? "selected" : ""}
+            aria-pressed={filter === "all"}
+            onClick={() => setFilter("all")}
+          >
+            Все
+          </button>
+          <button
+            className={filter === "unchecked" ? "selected" : ""}
+            aria-pressed={filter === "unchecked"}
+            onClick={() => setFilter("unchecked")}
+          >
+            Не куплено
+          </button>
+          {firstBatchId && (
+            <button
+              className={filter === "batch-1" ? "selected" : ""}
+              aria-pressed={filter === "batch-1"}
+              onClick={() => setFilter("batch-1")}
+            >
+              Партия 1
             </button>
           )}
         </div>
-        <div
-          className="progress-ring"
-          style={
-            {
-              "--progress": `${Math.round((checked / Math.max(plan.shopping.length, 1)) * 100) * 3.6}deg`,
-            } as React.CSSProperties
-          }
-        >
-          <Icon name="check" />
-        </div>
+        {checked > 0 && (
+          <button className="text-button shopping-clear" onClick={clearChecks}>
+            Снять отметки
+          </button>
+        )}
       </section>
       {failed && (
         <Note tone="warn" role="alert" className="note-toast">
@@ -7207,21 +7360,28 @@ function ShoppingScreen({
           </button>
         </div>
       )}
-      <section className="label-reminder glass-card">
-        <span>i</span>
-        <p>
-          <b>Проверяйте этикетку</b>
-          <small>
-            Состав и предупреждение о возможных следах зависят от конкретного
-            продукта и упаковки.
-          </small>
-        </p>
-      </section>
+      {shareState === "copied" && (
+        <div className="undo-bar" role="status">
+          <span>Список скопирован</span>
+          <button className="text-button" onClick={() => setShareState("idle")}>
+            Хорошо
+          </button>
+        </div>
+      )}
+      {shareState === "error" && (
+        <Note tone="warn" role="alert">
+          Не получилось поделиться списком. Попробуйте ещё раз.
+        </Note>
+      )}
       {Object.entries(groups).map(([group, items]) => (
         <section className="shopping-group glass-card" key={group}>
           <div className="group-title">
             <h3>{group}</h3>
-            <span>{items.length}</span>
+            <span>
+              {(allGroups[group] ?? items).filter((item) => item.checked).length}
+              {" / "}
+              {(allGroups[group] ?? items).length}
+            </span>
           </div>
           {items.map((item) => (
             <button
@@ -7236,8 +7396,6 @@ function ShoppingScreen({
               </span>
               <span className="grocery-name">
                 {item.name}
-                {item.fatNote && <small>Жирность: {item.fatNote}</small>}
-                {item.checkLabel && <small>Проверить состав и следы</small>}
               </span>
               <b>
                 {item.quantity.toLocaleString("ru-RU")} {item.unit}
@@ -7246,6 +7404,13 @@ function ShoppingScreen({
           ))}
         </section>
       ))}
+      {visibleShopping.length === 0 && (
+        <section className="shopping-empty glass-card">
+          <Icon name="check" />
+          <h3>Здесь всё куплено</h3>
+          <p>Переключите фильтр на «Все», чтобы увидеть весь список.</p>
+        </section>
+      )}
     </section>
   );
 }
@@ -7254,6 +7419,8 @@ function ProfileScreen({
   people,
   hasPlan,
   onConfigure,
+  onBuild,
+  onDeletePlan,
   onOpenTutorial,
   onOpenPrepGuide,
   onNotifications,
@@ -7261,10 +7428,16 @@ function ProfileScreen({
   people: Person[];
   hasPlan: boolean;
   onConfigure: () => void;
+  onBuild: () => void;
+  onDeletePlan: () => Promise<boolean>;
   onOpenTutorial: () => void;
   onOpenPrepGuide: () => void;
   onNotifications: () => void;
 }) {
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteState, setDeleteState] = useState<"idle" | "deleting" | "error">(
+    "idle",
+  );
   const profileMacroRows = [
     { key: "protein", label: "Белки" },
     { key: "fat", label: "Жиры" },
@@ -7308,7 +7481,7 @@ function ProfileScreen({
           );
           return (
             <section
-              className={`person-summary profile-person-card glass-card${index === 0 ? " person-summary-primary" : ""}`}
+              className="person-summary profile-person-card glass-card"
               key={person.id}
             >
               <div className="profile-person-head">
@@ -7329,49 +7502,32 @@ function ProfileScreen({
                   Изменить
                 </button>
               </div>
-              {index === 0 ? (
-                <div className="profile-macro-focus">
-                  <div
-                    className="profile-kcal-ring"
-                    aria-label={`${person.daily.kcal} килокалорий в день`}
-                  >
-                    <b>{person.daily.kcal}</b>
-                    <small>ккал в день</small>
-                  </div>
-                  <div className="profile-bars">
-                    {profileMacroRows.map(({ key, label }) => (
-                      <div className={`profile-bar macro-${key}`} key={key}>
-                        <p>
-                          <span>{label}</span>
-                          <b>{person.daily[key]} г</b>
-                        </p>
-                        <i>
-                          <span
-                            style={{
-                              width: `${Math.max(18, Math.round((person.daily[key] / maxMacroGrams) * 100))}%`,
-                            }}
-                          />
-                        </i>
-                      </div>
-                    ))}
-                  </div>
+              <div className="profile-macro-focus">
+                <div
+                  className="profile-kcal-ring"
+                  aria-label={`${person.daily.kcal} килокалорий в день`}
+                >
+                  <b>{person.daily.kcal}</b>
+                  <small>ккал в день</small>
                 </div>
-              ) : (
-                <div className="profile-compact-macros">
-                  <div>
-                    <b>{person.daily.kcal} ккал</b>
-                    <small>
-                      Б {person.daily.protein} · Ж {person.daily.fat} · У{" "}
-                      {person.daily.carbs}
-                    </small>
-                  </div>
-                  <span className="profile-mini-columns" aria-hidden>
-                    <i className="macro-protein" />
-                    <i className="macro-fat" />
-                    <i className="macro-carbs" />
-                  </span>
+                <div className="profile-bars">
+                  {profileMacroRows.map(({ key, label }) => (
+                    <div className={`profile-bar macro-${key}`} key={key}>
+                      <p>
+                        <span>{label}</span>
+                        <b>{person.daily[key]} г</b>
+                      </p>
+                      <i>
+                        <span
+                          style={{
+                            width: `${Math.max(18, Math.round((person.daily[key] / maxMacroGrams) * 100))}%`,
+                          }}
+                        />
+                      </i>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
               <p className="profile-plan-summary">
                 {person.includedSlots.length} {positionLabel} из Mise ·{" "}
                 {difference.kcal > 50
@@ -7408,6 +7564,9 @@ function ProfileScreen({
         <span className="profile-add-person-icon" aria-hidden>
           +
         </span>
+      </button>
+      <button className="primary-button profile-plan-action" onClick={onBuild}>
+        <Icon name="plus" /> Составить план
       </button>
       <InstallInline />
       <section
@@ -7456,6 +7615,56 @@ function ProfileScreen({
           <Icon name="chevron" className="entry-chevron" />
         </button>
       </section>
+      {hasPlan && (
+        <button
+          className="profile-delete-plan"
+          onClick={() => {
+            setDeleteState("idle");
+            setDeleteOpen(true);
+          }}
+        >
+          Удалить план
+        </button>
+      )}
+      {deleteOpen && (
+        <Sheet
+          titleId="delete-plan-title"
+          onClose={() => setDeleteOpen(false)}
+          className="delete-plan-sheet glass"
+        >
+          <h2 id="delete-plan-title">Удалить план?</h2>
+          <p>
+            Неделя, покупки и отметки текущего плана будут удалены. Это нельзя
+            отменить.
+          </p>
+          {deleteState === "error" && (
+            <Note tone="warn" role="alert">
+              Не получилось удалить план. Проверьте связь и попробуйте ещё раз.
+            </Note>
+          )}
+          <button
+            className="primary-button delete-plan-confirm"
+            disabled={deleteState === "deleting"}
+            onClick={async () => {
+              setDeleteState("deleting");
+              if (await onDeletePlan()) {
+                setDeleteOpen(false);
+                return;
+              }
+              setDeleteState("error");
+            }}
+          >
+            {deleteState === "deleting" ? "Удаляем…" : "Удалить план"}
+          </button>
+          <button
+            className="secondary-button"
+            disabled={deleteState === "deleting"}
+            onClick={() => setDeleteOpen(false)}
+          >
+            Оставить план
+          </button>
+        </Sheet>
+      )}
     </section>
   );
 }
@@ -7949,8 +8158,11 @@ function PlanBuilder({
     }
     const plan: ActivePlan = {
       ...draftPlan,
-      id: initialPlan?.id ?? crypto.randomUUID(),
-      createdAt: initialPlan?.createdAt ?? new Date().toISOString(),
+      id: repeat ? crypto.randomUUID() : (initialPlan?.id ?? crypto.randomUUID()),
+      createdAt:
+        repeat || !initialPlan
+          ? new Date().toISOString()
+          : initialPlan.createdAt,
     };
     if (validateHardExclusions(plan).length > 0) {
       setSaveState("error");
@@ -8094,6 +8306,8 @@ function PlanBuilder({
           <PeopleStep
             people={people}
             availableMealSlots={mode === "settings" ? allMealSlots : mealSlots}
+            menuStyle={menuStyle}
+            batchDays={cookEveryDays}
             onUpdate={updatePerson}
             onMealSlotToggle={togglePersonMealSlot}
             onMacro={updateMacro}
@@ -8425,8 +8639,8 @@ function StyleStep({
 
    Один человек на экране, переключение вкладками. Норма считается по Миффлину —
    Сан-Жеору из тех же параметров, что и раньше (lib/nutrition-engine-v2), но
-   пересчёт живёт прямо в карточке, а не за кнопкой «Рассчитать мою норму».
-   Ручной ввод перебивает расчёт: пока он включён, правки тела норму не трогают. */
+   пересчёт выполняется только по явной кнопке «Рассчитать».
+   Ручной ввод имеет приоритет, пока человек сам не запросит новый расчёт. */
 
 /* Цвета те же, что на «Неделе»: один код КБЖУ на всё приложение. */
 const macroFieldMeta: {
@@ -8483,6 +8697,8 @@ function estimateOf(person: Person): NutritionWizardInput {
 function PeopleStep({
   people,
   availableMealSlots,
+  menuStyle,
+  batchDays,
   onUpdate,
   onMealSlotToggle,
   onMacro,
@@ -8492,6 +8708,8 @@ function PeopleStep({
 }: {
   people: Person[];
   availableMealSlots: MealSlot[];
+  menuStyle: MenuStyle;
+  batchDays: number;
   onUpdate: (id: string, patch: Partial<Person>) => void;
   onMealSlotToggle: (id: string, slot: MealSlot) => void;
   onMacro: (id: string, key: MacroKey, value: number) => void;
@@ -8507,25 +8725,23 @@ function PeopleStep({
   const draft = estimateOf(person);
   const calculation = calculateNutritionTarget(draft);
   const computed = "target" in calculation ? calculation.target : null;
+  const coverage = recipeCoverageFor(person, menuStyle, batchDays);
   const fromMacros = macroCalories(person.daily);
   const gap = Math.abs(fromMacros - person.daily.kcal);
   const converges = gap / Math.max(person.daily.kcal, 1) <= 0.03;
 
   function patchBody(patch: Partial<NutritionWizardInput>) {
     const next = { ...draft, ...patch };
-    const result = calculateNutritionTarget(next);
-    const target = "target" in result ? result.target : null;
-    onUpdate(
-      person.id,
-      manual || !target
-        ? { estimate: next, nutritionTargetMode: "manual" }
-        : {
-            estimate: next,
-            daily: target,
-            macroPreset: "custom",
-            nutritionTargetMode: "auto",
-          },
-    );
+    onUpdate(person.id, { estimate: next });
+  }
+  function onCalculate() {
+    if (!computed) return;
+    onUpdate(person.id, {
+      estimate: draft,
+      daily: computed,
+      macroPreset: "custom",
+      nutritionTargetMode: "auto",
+    });
   }
 
   return (
@@ -8677,6 +8893,13 @@ function PeopleStep({
           </span>
           <span>Тренируюсь, важно сохранить мышцы</span>
         </button>
+        <button
+          className="primary-button nutrition-calculate-button"
+          disabled={!computed}
+          onClick={() => onCalculate()}
+        >
+          Рассчитать
+        </button>
       </section>
 
       <section className="glass-card norm-card">
@@ -8690,26 +8913,6 @@ function PeopleStep({
               <b>{person.daily.kcal}</b> <span>ккал/день</span>
             </p>
           </div>
-          <button
-            className="pill-button"
-            aria-pressed={manual}
-            disabled={manual && !computed}
-            onClick={() => {
-              if (!manual) {
-                onUpdate(person.id, { nutritionTargetMode: "manual" });
-                return;
-              }
-              if (!computed) return;
-              onUpdate(person.id, {
-                estimate: draft,
-                daily: computed,
-                macroPreset: "custom",
-                nutritionTargetMode: "auto",
-              });
-            }}
-          >
-            {manual ? "Вернуть расчёт Mise" : "Ввести своё"}
-          </button>
         </div>
 
         <label className="field" htmlFor={`macro-${person.id}-kcal`}>
@@ -8761,7 +8964,7 @@ function PeopleStep({
         </div>
 
         <div className="field">
-          <span className="field-label">Автоматическое распределение</span>
+          <span className="field-label">Как распределить БЖУ</span>
           <div
             className="chip-row wrap-chips"
             role="radiogroup"
@@ -8808,6 +9011,14 @@ function PeopleStep({
             </>
           )}
         </p>
+
+        {manual && coverage.percent < 50 && (
+          <Note tone="warn" label="Мало вариантов">
+            Под введённую цель по калорийности выбранных приёмов подходит{" "}
+            {coverage.viable} из {coverage.total} рецептов — меньше 50%
+            каталога. БЖУ уточнятся размером порции.
+          </Note>
+        )}
 
         {calculation.issues.map((issue) => (
           <Note tone="warn" key={issue.code}>
@@ -8896,8 +9107,7 @@ function PeopleStep({
             })}
           </div>
           <small className="field-hint">
-            Для настоящей аллергии всё равно проверяйте состав и возможные следы
-            на конкретной упаковке.
+            При аллергии сверяйте состав и возможные следы на упаковке.
           </small>
         </div>
       </section>
@@ -8909,8 +9119,7 @@ function PeopleStep({
       />
 
       <p className="onboarding-fineprint">
-        Расчёт по формуле Миффлина — Сан-Жеора. Это ориентир, а не медицинская
-        рекомендация.
+        Расчёт — ориентир, а не медицинская рекомендация.
       </p>
 
       <div className="chip-row menu-actions">
@@ -8931,14 +9140,16 @@ function PeopleStep({
         )}
         {people.length > 1 && (
           <button
-            className="chip"
+            type="button"
+            className="chip person-delete-button"
+            aria-label={`Удалить человека: ${person.name || "без имени"}`}
             onClick={() => {
               const next = people.find((item) => item.id !== person.id);
               onRemove(person.id);
               if (next) setActiveId(next.id);
             }}
           >
-            Удалить {person.name || "человека"}
+            <Icon name="close" size={14} /> Удалить {person.name || "человека"}
           </button>
         )}
       </div>
@@ -9297,9 +9508,6 @@ function MenuReviewStep({
         <button className="chip" role="checkbox" aria-checked={false} onClick={onReassemble}>
           Собрать заново
         </button>
-        <button className="chip" disabled title="Ручной режим появится позже">
-          Выбрать вручную
-        </button>
       </div>
 
       {replacing && (
@@ -9336,8 +9544,7 @@ function MenuReviewStep({
                   <div>
                     <b>{recipe.title}</b>
                     <small>
-                      {recipe.macros.kcal} ккал · {recipe.time} мин · совпадение{" "}
-                      {fitScore(recipe, people, replacing.slot)}%
+                      {recipe.macros.kcal} ккал · {recipe.time} мин
                     </small>
                   </div>
                   {active && <Icon name="check" size={16} />}
@@ -9864,9 +10071,6 @@ function RecipeView({
               <span key={allergen}>{allergenMeta[allergen].label}</span>
             ))}
           </div>
-          <p>
-            Эти метки не учитывают возможные следы в конкретной упаковке.
-          </p>
         </section>
       )}
       {contactWarnings.length > 0 && (
@@ -10061,17 +10265,11 @@ function RecipeView({
                 <p>
                   {ingredient.name}
                   <small>
-                    {ingredient.fatNote
-                      ? `Жирность: ${ingredient.fatNote} · `
-                      : ""}
                     {ingredient.group}
                     {ingredient.allergens.length > 0
                       ? ` · ${ingredient.allergens
                           .map((allergen) => allergenMeta[allergen].short)
                           .join(", ")}`
-                      : ""}
-                    {ingredient.checkLabel
-                      ? " · проверить этикетку/следы"
                       : ""}
                   </small>
                 </p>
@@ -10103,9 +10301,6 @@ function RecipeView({
                     <div key={ingredient.id}>
                       <span>
                         {ingredient.name}
-                        {ingredient.fatNote && (
-                          <small>Жирность: {ingredient.fatNote}</small>
-                        )}
                       </span>
                       <b>
                         {ingredientAmountLabel(
@@ -10174,16 +10369,6 @@ function RecipeView({
           </div>
         )}
       </section>
-      <section className="label-reminder glass-card">
-        <span>i</span>
-        <p>
-          <b>Проверьте конкретный продукт</b>
-          <small>
-            Сверьте состав и пометку «может содержать следы» на каждой
-            упаковке. Mise не заявляет медицинскую безопасность блюда.
-          </small>
-        </p>
-      </section>
       <section className="recipe-storage glass-card">
         <p className="kicker">Ориентиры хранения</p>
         <h2>
@@ -10233,16 +10418,11 @@ function RecipeView({
             {recipe.provenance.adaptation && (
               <p>Адаптация для Mise: {recipe.provenance.adaptation}</p>
             )}
-            <small>Найдено по запросу «{recipe.provenance.sourceQuery}».</small>
           </>
         ) : (
           <>
             <p>Рецепт собран для курированного каталога Mise.</p>
-            <small>
-              {recipe.provenance.basedOn?.length
-                ? `Опирается на ${recipe.provenance.basedOn.length} отобранных источника.`
-                : "Без внешнего рецепта-прототипа."}
-            </small>
+            <small>Проверен редакцией Mise.</small>
           </>
         )}
       </section>

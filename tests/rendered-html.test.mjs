@@ -74,7 +74,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /aria-label="Настроить людей и цели"\s+onClick=\{onConfigure\}/);
   assert.match(page, /navigate\(builderEntry\.returnTab \?\? "week"\)/);
   for (const preset of ["Сбалансировано", "Больше белка", "Больше углеводов", "Больше жиров"]) assert.match(page, new RegExp(preset));
-  assert.match(page, /Автоматическое распределение/);
+  assert.match(page, /Как распределить БЖУ/);
   assert.match(page, /recalculateDailyMacros/);
   assert.match(page, /macroPreset: "custom"/);
   assert.doesNotMatch(page, /mealsPerDay|Приёмов пищи в день/);
@@ -82,8 +82,7 @@ test("includes the complete plan-builder and private persistence model", async (
     "Аллергия / мне нельзя",
     "Показать варианты из «не люблю»",
     "Риск перекрёстного контакта",
-    "Проверяйте этикетку",
-    "Mise не заявляет медицинскую безопасность блюда",
+    "При аллергии сверяйте состав и возможные следы на упаковке",
   ]) assert.match(page, new RegExp(allergyCopy));
   assert.match(page, /role="checkbox"/);
   assert.match(page, /aria-checked=\{active\}/);
@@ -214,7 +213,9 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /nutritionTargetMode: normalizeNutritionTargetMode/);
   assert.match(page, /nutritionTargetMode: "manual"/);
   assert.match(page, /nutritionTargetMode: "auto"/);
-  assert.match(page, /Вернуть расчёт Mise/);
+  assert.match(page, /function onCalculate\(\)/);
+  assert.match(page, />\s*Рассчитать\s*</);
+  assert.doesNotMatch(page, /Ввести своё|Вернуть расчёт Mise/);
   assert.doesNotMatch(page, /manualIds/);
   // Пошаговый выбор по слотам ушёл вместе со своей разметкой.
   for (const dead of [
@@ -233,9 +234,9 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(css, /\.field-box \{/);
   assert.match(page, /const manual = person\.nutritionTargetMode !== "auto"/);
   assert.doesNotMatch(page, /manualIds/);
-  assert.match(page, /manual \|\| !target/);
-  assert.match(page, /\{manual \? "Вернуть расчёт Mise" : "Ввести своё"\}/);
-  assert.match(page, /Вернуть расчёт Mise/);
+  assert.match(page, /onUpdate\(person\.id, \{ estimate: next \}\)/);
+  assert.match(page, /function onCalculate\(\)[\s\S]*?nutritionTargetMode: "auto"/);
+  assert.doesNotMatch(page, /manual \|\| !target/);
   assert.match(page, /className=\{`norm-check \$\{converges \? "is-ok" : "is-off"\}`\} role="status"/);
   assert.match(page, /Сумма макросов/);
   assert.match(page, /Скопировать цели у/);

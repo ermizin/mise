@@ -84,7 +84,8 @@ test("automatic and manual goals are both durable", async () => {
   assert.match(nutrition, /10\s*\*\s*input\.weight\s*\+\s*6\.25\s*\*\s*input\.height\s*-\s*5\s*\*\s*input\.age/, "Mifflin-St Jeor");
   assert.match(nutrition, /energyPerKgWeightChange: 7_700/, "monthly weight change uses an explicit energy conversion");
   assert.match(page, /nutritionTargetMode/, "the chosen target source is persisted with the person");
-  assert.match(page, /Вернуть расчёт Mise/, "manual targets can be replaced by a fresh calculation");
+  assert.match(page, />\s*Рассчитать\s*</, "manual targets can be replaced only by an explicit calculation");
+  assert.match(page, /function onCalculate\(\)[\s\S]*?nutritionTargetMode: "auto"/);
   assert.doesNotMatch(page, /manualIds/, "manual mode is not ephemeral component state");
   assert.match(page, /Ориентир|Ориентировочный/, "the estimate is framed as an orientation");
 });
@@ -126,9 +127,12 @@ test("profile presents the real household goals and keeps its actions connected"
   assert.match(profile, /onClick=\{onOpenTutorial\}/, "onboarding can be reopened");
   assert.match(profile, /onClick=\{onOpenPrepGuide\}/, "prep guidance can be reopened");
   assert.match(profile, /className="profile-settings-list glass-card"/, "settings remain grouped");
-  for (const className of ["profile-kcal-ring", "profile-bars", "profile-compact-macros"]) {
+  for (const className of ["profile-kcal-ring", "profile-bars"]) {
     assert.match(profile, new RegExp(`className="${className}`), `${className} remains in the profile`);
   }
+  assert.doesNotMatch(profile, /profile-compact-macros/, "every person uses the same expanded macro layout");
+  assert.match(profile, /Составить план/, "profile exposes the plan creation action");
+  assert.match(profile, /Удалить план/, "profile exposes a connected plan deletion action");
 });
 
 test("the interface stays legible", async () => {

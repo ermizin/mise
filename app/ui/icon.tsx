@@ -23,6 +23,7 @@ export type IconName =
   | "close"
   | "edit"
   | "repeat"
+  | "share"
   | "search"
   | "filter"
   // предметная область
@@ -75,6 +76,11 @@ const iconPaths: Record<IconName, string[]> = {
     "M19.5 12a7.5 7.5 0 0 1-12.9 5.2",
     "m17.4 3.4v3.4h-3.4",
     "m6.6 20.6v-3.4h3.4",
+  ],
+  share: [
+    "M12 15.5v-12",
+    "m7.5 8 4.5-4.5L16.5 8",
+    "M5 12.5v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6",
   ],
   search: ["M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z", "m16 16 4.5 4.5"],
   filter: ["M4 7h16", "M7 12h10", "M10 17h4"],
