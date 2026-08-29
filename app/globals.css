@@ -142,6 +142,7 @@
   --r-chrome: 30px;
   --r-card: 26px;
   --r-row: 22px;
+  --r-nav: 24px;
   --r-nested: 18px;
   --r-tile: 12px;
   --r-chip-sq: 9px;
@@ -940,6 +941,14 @@ p {
     var(--accent-grad-b)
   );
   box-shadow: 0 14px 28px rgba(154, 52, 18, 0.34);
+  animation: mise-fab-in 380ms var(--motion-spring) 120ms backwards;
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease;
+}
+.compose-fab:active:not(:disabled) {
+  transform: scale(0.965);
+  box-shadow: 0 7px 16px rgba(154, 52, 18, 0.24);
 }
 .compose-fab .icon {
   width: 22px;
@@ -6362,24 +6371,42 @@ p {
 .bottom-nav {
   isolation: isolate;
   overflow: hidden;
+  padding: 8px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: var(--r-nav);
+  background: rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  box-shadow:
+    0 -2px 26px rgba(122, 72, 32, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 .bottom-nav-indicator {
   position: absolute;
   z-index: 0;
   top: 8px;
   bottom: 8px;
-  left: 7px;
-  width: calc((100% - 14px) / 4);
+  left: 6px;
+  width: calc((100% - 12px) / 4);
   border-radius: var(--r-nested);
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 3px 10px rgba(122, 72, 32, 0.12);
+  transform: translateX(calc(var(--tab) * 100%));
   transition: transform 280ms var(--motion-segment);
 }
 .bottom-nav button {
   position: relative;
   z-index: 1;
+  color: rgba(42, 29, 20, 0.45);
+  transition: color 200ms linear;
+}
+.bottom-nav button > .icon,
+.bottom-nav button > small {
+  transition: color 200ms linear;
 }
 .bottom-nav button.is-active {
   background: transparent;
+  color: #c7410e;
 }
 .bottom-nav button.has-nav-effect-a > .icon {
   animation: mise-nav-icon-a 340ms var(--motion-spring) both;
@@ -6387,10 +6414,43 @@ p {
 .bottom-nav button.has-nav-effect-b > .icon {
   animation: mise-nav-icon-b 340ms var(--motion-spring) both;
 }
-.app-shell.is-tab-forward > .screen {
+.tab-panel {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  overflow-x: clip;
+  contain: paint;
+}
+.app-shell.is-catalog > .tab-panel {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.app-shell.is-catalog > .tab-panel > .catalog-screen {
+  flex: 1;
+}
+.tab-panel-body {
+  min-width: 0;
+  overflow-x: clip;
+  contain: paint;
+}
+.week-tab-body {
+  display: grid;
+  gap: var(--space-3);
+}
+.app-shell.is-tab-forward .tab-panel > :not(.has-stable-tab-header),
+.app-shell.is-tab-forward
+  .tab-panel
+  > .has-stable-tab-header
+  > .tab-panel-body {
   animation: mise-tab-forward 320ms var(--motion-settled) both;
 }
-.app-shell.is-tab-backward > .screen {
+.app-shell.is-tab-backward .tab-panel > :not(.has-stable-tab-header),
+.app-shell.is-tab-backward
+  .tab-panel
+  > .has-stable-tab-header
+  > .tab-panel-body {
   animation: mise-tab-backward 320ms var(--motion-settled) both;
 }
 
@@ -6549,10 +6609,11 @@ p {
 @keyframes mise-onb-deck-right { from { opacity: 0; transform: translateY(14px) scale(0.92) rotate(9deg); } to { opacity: 1; transform: rotate(6deg); } }
 @keyframes mise-onb-bar { from { opacity: 0.35; transform: scaleY(0.16); } to { opacity: 1; transform: scaleY(1); } }
 @keyframes mise-onb-toggle { from { opacity: 0.6; transform: translateX(0) scale(0.9); } to { opacity: 1; transform: translateX(19px); } }
-@keyframes mise-nav-icon-a { 0% { transform: none; } 55% { transform: translateY(-4px) scale(1.1); } 100% { transform: none; } }
-@keyframes mise-nav-icon-b { 0% { transform: none; } 55% { transform: translateY(-4px) scale(1.1); } 100% { transform: none; } }
+@keyframes mise-nav-icon-a { 0% { transform: translateY(0); } 40% { transform: translateY(-4px) scale(1.1); } 100% { transform: translateY(0); } }
+@keyframes mise-nav-icon-b { 0% { transform: translateY(0); } 40% { transform: translateY(-4px) scale(1.1); } 100% { transform: translateY(0); } }
 @keyframes mise-tab-forward { from { opacity: 0.25; transform: translateX(34px); } to { opacity: 1; transform: none; } }
 @keyframes mise-tab-backward { from { opacity: 0.25; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-fab-in { from { opacity: 0; transform: translateY(10px) scale(0.94); } to { opacity: 1; transform: none; } }
 @keyframes mise-catalog-result-a { from { opacity: 0.35; } to { opacity: 1; } }
 @keyframes mise-catalog-result-b { from { opacity: 0.35; } to { opacity: 1; } }
 @keyframes mise-catalog-grid-a { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
@@ -6595,8 +6656,17 @@ p {
   .onboarding-shell:not(.is-guide) .push-card,
   .onboarding-shell:not(.is-guide) .toggle-list,
   .onboarding-shell:not(.is-guide) .onboarding-fineprint,
-  .app-shell.is-tab-forward > .screen,
-  .app-shell.is-tab-backward > .screen,
+  .app-shell.is-tab-forward .tab-panel > :not(.has-stable-tab-header),
+  .app-shell.is-tab-forward
+    .tab-panel
+    > .has-stable-tab-header
+    > .tab-panel-body,
+  .app-shell.is-tab-backward .tab-panel > :not(.has-stable-tab-header),
+  .app-shell.is-tab-backward
+    .tab-panel
+    > .has-stable-tab-header
+    > .tab-panel-body,
+  .compose-fab,
   .catalog-sort-row.has-grid-effect-a,
   .catalog-sort-row.has-grid-effect-b,
   .recipe-card.has-grid-effect-a,
@@ -6628,7 +6698,7 @@ p {
   }
   .bottom-nav button.has-nav-effect-a > .icon,
   .bottom-nav button.has-nav-effect-b > .icon {
-    animation: mise-motion-fade 160ms ease both !important;
+    animation: none !important;
   }
   .week-loading-heading i,
   .week-loading-macro i,

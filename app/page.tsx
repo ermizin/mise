@@ -2,9 +2,12 @@
 
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
+  type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
@@ -63,6 +66,53 @@ import {
 } from "../lib/nutrition-engine-v2";
 
 type Tab = "week" | "recipes" | "builder" | "shopping" | "profile";
+type PrimaryTab = Exclude<Tab, "builder">;
+
+const primaryTabs: {
+  id: PrimaryTab;
+  label: string;
+  full: string;
+  icon: IconName;
+}[] = [
+  { id: "week", label: "Неделя", full: "План на неделю", icon: "calendar" },
+  { id: "recipes", label: "Рецепты", full: "Рецепты", icon: "pot" },
+  { id: "shopping", label: "Покупки", full: "Покупки", icon: "basket" },
+  { id: "profile", label: "Профиль", full: "Профиль", icon: "person" },
+];
+
+const primaryTabIds = primaryTabs.map((item) => item.id);
+
+function isPrimaryTab(value: unknown): value is PrimaryTab {
+  return primaryTabIds.includes(value as PrimaryTab);
+}
+
+type TabScrollPosition = { windowY: number; innerY: number };
+
+function captureTabScroll(
+  tab: PrimaryTab,
+  positions: Record<PrimaryTab, TabScrollPosition>,
+) {
+  const panel = document.getElementById(`tab-panel-${tab}`);
+  positions[tab] = {
+    windowY: window.scrollY,
+    innerY:
+      panel?.querySelector<HTMLElement>("[data-tab-scroll]")?.scrollTop ?? 0,
+  };
+}
+
+function restoreTabScroll(
+  tab: PrimaryTab,
+  positions: Record<PrimaryTab, TabScrollPosition>,
+) {
+  const position = positions[tab];
+  const panel = document.getElementById(`tab-panel-${tab}`);
+  panel?.querySelector<HTMLElement>("[data-tab-scroll]")?.scrollTo({
+    top: position.innerY,
+    left: 0,
+    behavior: "auto",
+  });
+  window.scrollTo({ top: position.windowY, left: 0, behavior: "auto" });
+}
 type MenuStyle = "protein" | "budget" | "paleo" | "keto";
 type RecipeOrigin = "parsed" | "generated";
 type Allergen =
@@ -5063,8 +5113,11 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("week");
   const [tabMotion, setTabMotion] = useState<{
     direction: -1 | 1;
-    epoch: number;
-  }>({ direction: 1, epoch: 0 });
+    bump: Record<PrimaryTab, number>;
+  }>({
+    direction: 1,
+    bump: { week: 0, recipes: 0, shopping: 0, profile: 0 },
+  });
   const [activePlan, setActivePlan] = useState<ActivePlan | null>(null);
   const [recipeContext, setRecipeContext] = useState<RecipeContext | null>(
     null,
@@ -5086,6 +5139,43 @@ export default function Home() {
   const [loadError, setLoadError] = useState(false);
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
   const persistQueue = useRef<Promise<void>>(Promise.resolve());
+  const currentTabRef = useRef<Tab>("week");
+  const tabScrollPositions = useRef<Record<PrimaryTab, TabScrollPosition>>({
+    week: { windowY: 0, innerY: 0 },
+    recipes: { windowY: 0, innerY: 0 },
+    shopping: { windowY: 0, innerY: 0 },
+    profile: { windowY: 0, innerY: 0 },
+  });
+  useLayoutEffect(() => {
+    currentTabRef.current = tab;
+    if (isPrimaryTab(tab)) restoreTabScroll(tab, tabScrollPositions.current);
+  }, [tab]);
+  useEffect(() => {
+    const onPopState = (event: PopStateEvent) => {
+      const next = event.state?.miseTab;
+      const current = currentTabRef.current;
+      if (!isPrimaryTab(next) || next === current) return;
+      if (isPrimaryTab(current))
+        captureTabScroll(current, tabScrollPositions.current);
+      const currentIndex = isPrimaryTab(current)
+        ? primaryTabIds.indexOf(current)
+        : 0;
+      const nextIndex = primaryTabIds.indexOf(next);
+      setRecipeContext(null);
+      setBatchCookingContext(null);
+      setTabMotion((motion) => ({
+        direction: nextIndex >= currentIndex ? 1 : -1,
+        bump: {
+          ...motion.bump,
+          [next]: motion.bump[next] + 1,
+        },
+      }));
+      currentTabRef.current = next;
+      setTab(next);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
   useEffect(() => {
     void trackAnalytics("first_open", {}, "first-open");
     const onRemindersEnabled = () => {
@@ -5135,7 +5225,11 @@ export default function Home() {
     if ("serviceWorker" in navigator)
       navigator.serviceWorker.register("/sw.js").catch(() => undefined);
     const params = new URLSearchParams(location.search);
-    if (params.get("tab") === "shopping") setTab("shopping");
+    const requestedTab = params.get("tab");
+    const entryTab = isPrimaryTab(requestedTab) ? requestedTab : "week";
+    currentTabRef.current = entryTab;
+    setTab(entryTab);
+    history.replaceState({ ...history.state, miseTab: entryTab }, "");
     if (params.get("new-plan") === "1") {
       const flowId = crypto.randomUUID();
       setBuilderEntry({
@@ -5200,7 +5294,7 @@ export default function Home() {
       localStorage.removeItem(builderDraftKey);
       setNotificationSetupOpen(false);
       setActivePlan(null);
-      setTab("week");
+      navigate("week");
       return true;
     } catch {
       return false;
@@ -5218,30 +5312,41 @@ export default function Home() {
       startedAt: Date.now(),
       isNextPlan: Boolean(activePlan),
     });
+    currentTabRef.current = "builder";
     setTab("builder");
     void trackAnalytics("plan_create_started", { flowId });
   }
   function navigate(next: Tab) {
-    setRecipeContext(null);
-    setBatchCookingContext(null);
+    const current = currentTabRef.current;
+    if (next === current) return;
     if (next === "builder") {
       startPlanFlow(false);
       return;
     }
-    if (next !== tab) {
-      const order: Exclude<Tab, "builder">[] = [
-        "week",
-        "recipes",
-        "shopping",
-        "profile",
-      ];
-      const currentIndex = order.indexOf(tab as Exclude<Tab, "builder">);
-      const nextIndex = order.indexOf(next as Exclude<Tab, "builder">);
-      setTabMotion((current) => ({
-        direction: nextIndex >= currentIndex ? 1 : -1,
-        epoch: current.epoch + 1,
-      }));
-    }
+    if (isPrimaryTab(current))
+      captureTabScroll(current, tabScrollPositions.current);
+    const currentIndex = isPrimaryTab(current)
+      ? primaryTabIds.indexOf(current)
+      : 0;
+    const nextIndex = primaryTabIds.indexOf(next);
+    setRecipeContext(null);
+    setBatchCookingContext(null);
+    setTabMotion((motion) => ({
+      direction: nextIndex >= currentIndex ? 1 : -1,
+      bump: {
+        ...motion.bump,
+        [next]: motion.bump[next] + 1,
+      },
+    }));
+    const url = new URL(location.href);
+    if (next === "week") url.searchParams.delete("tab");
+    else url.searchParams.set("tab", next);
+    url.searchParams.delete("new-plan");
+    const href = `${url.pathname}${url.search}${url.hash}`;
+    if (isPrimaryTab(current))
+      history.pushState({ ...history.state, miseTab: next }, "", href);
+    else history.replaceState({ ...history.state, miseTab: next }, "", href);
+    currentTabRef.current = next;
     setTab(next);
   }
   function repeatPlan() {
@@ -5369,7 +5474,8 @@ export default function Home() {
     },
     profile: { kicker: "Люди и цели", title: "Профиль" },
   };
-  const currentTitle = titles[tab as Exclude<Tab, "builder">];
+  const currentTab = tab as PrimaryTab;
+  const currentTitle = titles[currentTab];
   return (
     <main
       className={`app-shell${tab === "recipes" ? " is-catalog" : ""}${
@@ -5395,6 +5501,13 @@ export default function Home() {
         </button>
       </header>
       )}
+      <div
+        key={tab}
+        className="tab-panel"
+        id={`tab-panel-${currentTab}`}
+        role="tabpanel"
+        aria-labelledby={`tab-${currentTab}`}
+      >
       {tab === "week" && (
         <WeekScreen
           key={activePlan?.id ?? "empty"}
@@ -5471,6 +5584,7 @@ export default function Home() {
           onNotifications={() => setNotificationSetupOpen(true)}
         />
       )}
+      </div>
       {activePlan && notificationSetupOpen && (
         <Sheet
           titleId="notifications-title"
@@ -5487,10 +5601,10 @@ export default function Home() {
         </Sheet>
       )}
       <BottomNav
-        tab={tab}
+        tab={currentTab}
         onNavigate={navigate}
-        showCompose={!activePlan}
-        motionEpoch={tabMotion.epoch}
+        showCompose={tab === "week" && !activePlan}
+        bump={tabMotion.bump}
       />
     </main>
   );
@@ -6317,28 +6431,34 @@ function BottomNav({
   tab,
   onNavigate,
   showCompose,
-  motionEpoch,
+  bump,
 }: {
-  tab: Tab;
+  tab: PrimaryTab;
   onNavigate: (tab: Tab) => void;
   showCompose: boolean;
-  motionEpoch: number;
+  bump: Record<PrimaryTab, number>;
 }) {
-  const items: {
-    id: Exclude<Tab, "builder">;
-    label: string;
-    full: string;
-    icon: IconName;
-  }[] = [
-    { id: "week", label: "Неделя", full: "План на неделю", icon: "calendar" },
-    { id: "recipes", label: "Рецепты", full: "Рецепты", icon: "pot" },
-    { id: "shopping", label: "Покупки", full: "Покупки", icon: "basket" },
-    { id: "profile", label: "Профиль", full: "Профиль", icon: "person" },
-  ];
   const activeIndex = Math.max(
     0,
-    items.findIndex((item) => item.id === tab),
+    primaryTabs.findIndex((item) => item.id === tab),
   );
+  function handleKeyDown(
+    event: ReactKeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) {
+    let nextIndex: number | null = null;
+    if (event.key === "ArrowRight")
+      nextIndex = (index + 1) % primaryTabs.length;
+    if (event.key === "ArrowLeft")
+      nextIndex = (index - 1 + primaryTabs.length) % primaryTabs.length;
+    if (event.key === "Home") nextIndex = 0;
+    if (event.key === "End") nextIndex = primaryTabs.length - 1;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    const next = primaryTabs[nextIndex].id;
+    onNavigate(next);
+    window.requestAnimationFrame(() => document.getElementById(`tab-${next}`)?.focus());
+  }
   return (
     <>
       {showCompose && (
@@ -6351,29 +6471,44 @@ function BottomNav({
           <small>Составить</small>
         </button>
       )}
-      <nav className="bottom-nav glass" aria-label="Основная навигация">
+      <div
+        className="bottom-nav glass"
+        role="tablist"
+        aria-label="Разделы"
+        style={{ "--tab": activeIndex } as CSSProperties}
+      >
         <span
           className="bottom-nav-indicator"
-          style={{ transform: `translateX(${activeIndex * 100}%)` }}
           aria-hidden
         />
-        {items.map((item) => (
+        {primaryTabs.map((item, index) => {
+          const selected = tab === item.id;
+          const effect = bump[item.id];
+          return (
           <button
             key={item.id}
-            className={
-              tab === item.id
-                ? `is-active${motionEpoch ? (motionEpoch % 2 ? " has-nav-effect-a" : " has-nav-effect-b") : ""}`
+            id={`tab-${item.id}`}
+            role="tab"
+            className={`${selected ? "is-active" : ""}${
+              selected && effect
+                ? effect % 2
+                  ? " has-nav-effect-a"
+                  : " has-nav-effect-b"
                 : ""
-            }
+            }`}
             aria-label={item.full}
-            aria-current={tab === item.id ? "page" : undefined}
+            aria-selected={selected}
+            aria-controls={`tab-panel-${item.id}`}
+            tabIndex={selected ? 0 : -1}
             onClick={() => onNavigate(item.id)}
+            onKeyDown={(event) => handleKeyDown(event, index)}
           >
             <Icon name={item.icon} />
             <small>{item.label}</small>
           </button>
-        ))}
-      </nav>
+          );
+        })}
+      </div>
     </>
   );
 }
@@ -6896,7 +7031,7 @@ function WeekScreen({
     } else setCookingConfirmError(true);
   }
   return (
-    <section className="screen week-screen">
+    <section className="screen week-screen has-stable-tab-header">
       <header className="week-screen-header">
         <div>
           <button
@@ -6918,6 +7053,7 @@ function WeekScreen({
           М
         </button>
       </header>
+      <div className="tab-panel-body week-tab-body">
       {planEnded ? (
         <section className="today-card glass-card ended" role="status">
           <p className="kicker">План завершён</p>
@@ -7374,6 +7510,7 @@ function WeekScreen({
           </button>
         </div>
       )}
+      </div>
     </section>
   );
 }
@@ -7599,7 +7736,7 @@ function RecipesScreen({
     : null;
 
   return (
-    <section className="screen catalog-screen">
+    <section className="screen catalog-screen has-stable-tab-header">
       <header className="catalog-header glass-1" ref={headerRef}>
         <div className="catalog-head-row">
           <div>
@@ -7694,7 +7831,11 @@ function RecipesScreen({
         )}
       </header>
 
-      <div className="catalog-scroll" ref={scrollRef}>
+      <div
+        className="catalog-scroll tab-panel-body"
+        ref={scrollRef}
+        data-tab-scroll
+      >
         <div
           className={`catalog-sort-row${
             gridMotionEpoch
@@ -8067,7 +8208,7 @@ function ShoppingScreen({
     }
   }
   return (
-    <section className="screen shopping-screen">
+    <section className="screen shopping-screen has-stable-tab-header">
       <header className="shopping-header">
         <div>
           <p className="kicker">
@@ -8085,6 +8226,7 @@ function ShoppingScreen({
           <Icon name="share" />
         </button>
       </header>
+      <div className="tab-panel-body shopping-tab-body">
       <section className="shopping-summary glass-card">
         <div className="shopping-summary-stats">
           <div>
@@ -8203,6 +8345,7 @@ function ShoppingScreen({
           <p>Переключите фильтр на «Все», чтобы увидеть весь список.</p>
         </section>
       )}
+      </div>
     </section>
   );
 }
@@ -8241,7 +8384,7 @@ function ProfileScreen({
     gain: "Набор",
   };
   return (
-    <section className="screen profile-screen">
+    <section className="screen profile-screen has-stable-tab-header">
       <header className="profile-header">
         <p className="kicker">
           Профиль · {people.length}{" "}
@@ -8249,6 +8392,7 @@ function ProfileScreen({
         </p>
         <h1>Цели и порции</h1>
       </header>
+      <div className="tab-panel-body profile-tab-body">
       <div className="profile-people-list">
         {people.map((person, index) => {
           const planned = plannedTargetsFor(person);
@@ -8457,6 +8601,7 @@ function ProfileScreen({
           </button>
         </Sheet>
       )}
+      </div>
     </section>
   );
 }
