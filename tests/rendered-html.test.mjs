@@ -169,6 +169,31 @@ test("includes the complete plan-builder and private persistence model", async (
     assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил редизайн экранов`);
   }
 
+  // Каталог 9a: девять полос фильтров заменены одной кнопкой со счётчиком.
+  assert.match(page, /Рецепт, продукт или «что убрать»/);
+  assert.match(page, /Сначала те, где меньше докупать/);
+  assert.match(page, /Фильтры, активно \$\{active\.length\}/);
+  // «Докупить N» не рендерится без плана: пустой бейдж хуже отсутствующего.
+  assert.match(page, /missing !== null &&/);
+  // Отступ скролла под фиксированной шапкой ведёт наблюдатель, а не константа,
+  // и меряет border-box — иначе собственный padding шапки теряется.
+  assert.match(page, /new ResizeObserver/);
+  assert.match(page, /borderBoxSize\?\.\[0\]\?\.blockSize/);
+  assert.doesNotMatch(css, /padding-top: 222px/);
+  // У карточек сетки блюра нет намеренно: на двадцати карточках он роняет скролл.
+  const recipeCardRule = css.slice(css.indexOf("\n.recipe-card {"));
+  assert.doesNotMatch(
+    recipeCardRule.slice(0, recipeCardRule.indexOf("}")),
+    /backdrop-filter/,
+    "карточка каталога не несёт backdrop-filter",
+  );
+  for (const dead of [
+    "meal-segment", "catalog-art", "catalog-card", "recipe-badges", "round-arrow",
+  ]) {
+    assert.doesNotMatch(css, new RegExp(`\\.${dead}\\b`), `${dead} не пережил каталог 9a`);
+    assert.doesNotMatch(page, new RegExp(`"${dead}`), `${dead} не пережил каталог 9a`);
+  }
+
   // Число теней не растёт: стекло описано уровнями, а не по месту.
   assert.ok(
     (css.match(/box-shadow:/g) ?? []).length <= 44,

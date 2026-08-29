@@ -4606,10 +4606,11 @@ export default function Home() {
   };
   const currentTitle = titles[tab as Exclude<Tab, "builder">];
   return (
-    <main className="app-shell">
+    <main className={`app-shell${tab === "recipes" ? " is-catalog" : ""}`}>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <div className="ambient ambient-three" />
+      {tab !== "recipes" && (
       <header className="app-header">
         <div>
           <p className="kicker">{currentTitle.kicker}</p>
@@ -4623,6 +4624,7 @@ export default function Home() {
           М
         </button>
       </header>
+      )}
       {tab === "week" && (
         <WeekScreen
           key={activePlan?.id ?? "empty"}
@@ -6147,7 +6149,12 @@ function RecipesScreen({
     const scroll = scrollRef.current;
     if (!header || !scroll) return;
     const observer = new ResizeObserver(([entry]) => {
-      scroll.style.paddingTop = `${entry.contentRect.height + 8}px`;
+      /* Именно border-box: у шапки большой собственный padding, и contentRect
+         из сниппета хэндофа занижает высоту на него — контент уезжает под блюр. */
+      const height =
+        entry.borderBoxSize?.[0]?.blockSize ??
+        entry.target.getBoundingClientRect().height;
+      scroll.style.paddingTop = `${height + 8}px`;
     });
     observer.observe(header);
     return () => observer.disconnect();
@@ -6186,7 +6193,7 @@ function RecipesScreen({
           </div>
           <div className="catalog-head-actions">
             <button
-              className="catalog-sort-button"
+              className="btn btn-icon catalog-sort-button"
               aria-label={`Сортировка: ${catalogSortLabels[state.sort]}`}
               onClick={() =>
                 onState({

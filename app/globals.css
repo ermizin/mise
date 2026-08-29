@@ -1762,7 +1762,6 @@ p {
   scrollbar-width: none;
 }
 .date-strip::-webkit-scrollbar,
-.meal-segment::-webkit-scrollbar,
 .position-strip::-webkit-scrollbar {
   display: none;
 }
@@ -1908,7 +1907,6 @@ p {
   overflow: hidden;
 }
 .food-art span,
-.catalog-art span,
 .candidate-art span {
   filter: drop-shadow(0 8px 12px rgba(63, 57, 46, 0.14));
 }
@@ -1957,91 +1955,12 @@ p {
   font-size: var(--text-link);
 }
 
-.meal-segment,
 .position-strip {
   display: flex;
   gap: 8px;
   overflow-x: auto;
   scrollbar-width: none;
 }
-.meal-segment {
-  padding: 5px;
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  border-radius: var(--r-nested);
-  background: rgba(255, 255, 255, 0.4);
-}
-.meal-segment button {
-  flex: 0 0 auto;
-  min-height: 44px;
-  padding: 0 14px;
-  border-radius: var(--r-tile);
-  color: var(--muted);
-  background: transparent;
-  font-size: var(--text-link);
-}
-.meal-segment button.selected {
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 7px 16px rgba(72, 86, 80, 0.1);
-  font-weight: var(--weight-semibold);
-}
-.catalog-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-.catalog-filters {
-  margin: 12px 0 2px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 9px;
-}
-.catalog-filters label {
-  color: var(--muted);
-  font-size: var(--text-min);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.65px;
-  text-transform: uppercase;
-}
-.catalog-filters select {
-  width: 100%;
-  min-height: 44px;
-  font-size: var(--text-input);
-  margin-top: 5px;
-  padding: 0 30px 0 11px;
-  border: 1px solid rgba(255, 255, 255, 0.78);
-  border-radius: var(--r-tile);
-  color: var(--ink-soft);
-  background: rgba(255, 255, 255, 0.58);
-  text-transform: none;
-}
-.catalog-card {
-  position: relative;
-  min-height: 286px;
-  padding: var(--space-2) var(--space-2) var(--pad-nested);
-  text-align: left;
-}
-.catalog-art {
-  position: relative;
-  height: 132px;
-  display: grid;
-  place-items: center;
-  border-radius: var(--r-nested);
-}
-.catalog-art span {
-  font-size: var(--glyph-l);
-}
-.catalog-art.has-photo {
-  overflow: hidden;
-  background: #eee9df;
-}
-.catalog-art.has-photo img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-}
-.catalog-art em,
 .candidate-art em {
   position: absolute;
   top: 8px;
@@ -2055,60 +1974,319 @@ p {
   font-style: normal;
   font-weight: var(--weight-semibold);
 }
-.catalog-card h3 {
-  margin: 13px 30px 7px 3px;
-  font-size: var(--text-h3);
-  line-height: 1.15;
+
+/* ============================================================
+   Каталог «Рецепты» · макет 9a
+
+   Колонка во всю высоту: фиксированная шапка сверху, свой скролл под ней.
+   Отступ скролла ведёт ResizeObserver в page.tsx — считать высоту шапки
+   руками нельзя, она растёт от длины чисел и от числа активных чипов.
+
+   У карточек сетки backdrop-filter НЕТ намеренно (FRONTEND.md §4):
+   в макете он проставлен всем, но на двадцати карточках роняет скролл.
+   ============================================================ */
+
+.app-shell.is-catalog {
+  height: 100dvh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
-.catalog-card > p {
-  margin: 0 3px;
-  color: var(--muted);
+.catalog-screen {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.catalog-header {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(10px + max(44px, env(safe-area-inset-top)))
+    max(14px, env(safe-area-inset-right)) 11px
+    max(14px, env(safe-area-inset-left));
+  border-width: 0 0 1px;
+  border-radius: 0;
+  /* Без этого плита мерцает на инерционном скролле в iOS Safari. */
+  transform: translateZ(0);
+}
+.catalog-head-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 4px;
+}
+.catalog-kicker {
+  margin: 0;
+  color: var(--ink-muted);
   font-size: var(--text-min);
-  line-height: 1.35;
+  font-weight: var(--weight-label);
+  line-height: 1.3;
+  /* Перенос в две строки растит шапку и роняет первую строку контента. */
+  white-space: nowrap;
 }
-.recipe-badges {
-  margin: 9px 32px 0 2px;
+.catalog-header h1 {
+  margin: 3px 0 0;
+  font-size: var(--text-h1);
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  letter-spacing: var(--tracking-h1);
+}
+.catalog-head-actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.catalog-sort-button {
+  border-radius: var(--r-tile);
+}
+.catalog-filter-button {
+  min-height: var(--hit-icon);
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: var(--r-tile);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+/* Акцент — только когда есть что сбросить. */
+.catalog-filter-button.is-active {
+  background: var(--accent-grad);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: var(--shadow-accent-s), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+}
+.catalog-filter-count {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--r-chip-sq);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-bold);
+  line-height: 18px;
+  text-align: center;
+}
+.catalog-search {
+  margin: 11px 4px 0;
+  min-height: var(--hit-min);
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 1px 3px rgba(122, 72, 32, 0.09);
+  color: var(--ink-muted);
+}
+.catalog-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  /* Ниже 16px Safari зумит страницу при фокусе. */
+  font-size: var(--text-input);
+  outline: none;
+}
+.catalog-search input::placeholder {
+  color: var(--ink-muted);
+}
+.catalog-chips {
+  margin: 10px 4px 0;
+}
+.catalog-chips .chip {
+  gap: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.catalog-scroll {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-bottom: calc(152px + env(safe-area-inset-bottom));
+  padding-left: max(16px, env(safe-area-inset-left));
+}
+.catalog-sort-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 2px 10px;
+  color: var(--ink-muted);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-label);
+}
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.recipe-card {
+  padding: 0;
+  overflow: hidden;
+  border-radius: var(--r-row);
+  background: rgba(255, 255, 255, 0.56);
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  box-shadow: 0 12px 28px rgba(122, 72, 32, 0.12), var(--glint);
+  text-align: left;
+}
+.recipe-media {
+  position: relative;
+  height: 100px;
+  display: grid;
+  place-items: center;
+  font-size: var(--glyph-m);
+}
+.recipe-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.recipe-batch-badge,
+.recipe-kcal {
+  position: absolute;
+  left: 8px;
+  padding: 4px 9px;
+  border-radius: var(--r-pill);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.recipe-batch-badge {
+  top: 8px;
+  background: rgba(46, 156, 124, 0.92);
+  color: #fff;
+}
+.recipe-kcal {
+  bottom: 8px;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--accent-text);
+}
+.recipe-body {
+  padding: 11px 12px 13px;
+}
+.recipe-body h2 {
+  margin: 0;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-h2);
+}
+.recipe-meta {
+  margin: 6px 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.recipe-chips {
+  margin-top: 9px;
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
 }
-.recipe-badges span {
-  padding: 4px 6px;
-  border-radius: var(--r-chip-sq);
-  color: var(--accent-dark);
-  background: rgba(65, 158, 132, 0.1);
+.recipe-chip,
+.missing-badge {
+  padding: 4px 8px;
+  border-radius: var(--r-pill);
   font-size: var(--text-min);
   font-weight: var(--weight-semibold);
 }
+.recipe-chip {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  color: var(--ink-muted);
+  font-weight: var(--weight-label);
+}
+/* Единственный порог, который считает клиент: 0 — мятный, больше — оранжевый. */
+.missing-badge.is-ready {
+  background: rgba(228, 244, 236, 0.9);
+  border: 1px solid var(--tint-mint-border);
+  color: var(--mint-text);
+}
+.missing-badge.is-short {
+  background: rgba(255, 244, 236, 0.95);
+  border: 1px solid rgba(242, 87, 26, 0.28);
+  color: var(--accent-text-strong);
+}
+
+.catalog-filters-sheet {
+  width: min(580px, 100%);
+  padding: 24px 20px calc(20px + env(safe-area-inset-bottom));
+  border-radius: var(--r-chrome) var(--r-chrome) 0 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.sheet-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sheet-head h2 {
+  margin: 0;
+  font-size: var(--text-h2);
+  letter-spacing: var(--tracking-h2);
+}
+.filter-group {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.filter-group legend {
+  padding: 0;
+}
+.filter-group .chip-row {
+  flex-wrap: wrap;
+  overflow: visible;
+  mask-image: none;
+}
+.catalog-filters-apply {
+  width: 100%;
+}
+
 .catalog-empty {
+  margin-top: var(--space-6);
   padding: var(--space-7) var(--pad-card);
+  display: grid;
+  justify-items: center;
+  gap: 10px;
   text-align: center;
 }
-.catalog-empty > span {
-  display: block;
+.catalog-empty > .icon {
   color: var(--accent);
-  font-size: var(--glyph-m);
+  width: 26px;
+  height: 26px;
 }
 .catalog-empty h3 {
-  margin: 9px 0 7px;
+  margin: 0;
+  font-size: var(--text-h2);
+  letter-spacing: var(--tracking-h2);
 }
 .catalog-empty p {
   margin: 0;
-  color: var(--muted);
+  color: var(--ink-muted);
   font-size: var(--text-link);
   line-height: 1.45;
-}
-.round-arrow {
-  position: absolute;
-  right: 12px;
-  bottom: 13px;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: #fff;
-  background: var(--accent);
 }
 
 .shopping-summary {
@@ -4167,18 +4345,6 @@ p {
     border-color: rgba(255, 255, 255, 0.12);
     background: rgba(24, 33, 31, 0.94);
   }
-  .meal-segment {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(24, 33, 31, 0.68);
-  }
-  .meal-segment button.selected {
-    background: rgba(24, 33, 31, 0.94);
-  }
-  .catalog-filters select {
-    border-color: rgba(255, 255, 255, 0.12);
-    background: rgba(24, 33, 31, 0.86);
-  }
-  .catalog-art em,
   .candidate-art em {
     border-color: rgba(255, 255, 255, 0.12);
     background: rgba(24, 33, 31, 0.94);
