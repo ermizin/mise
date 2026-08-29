@@ -104,6 +104,46 @@ test("moving an eaten base portion transfers its state to the move", () => {
   assert.deepEqual(plain(execution.toggleBaseEaten(plan, moved, base)), plain(moved));
 });
 
+test("a personal slot resolves the recipe assigned to that person", () => {
+  const personalPlan = {
+    ...plan,
+    selectionAssignments: {
+      "first:lunch": [
+        { recipeId: "chicken", personIds: ["me"] },
+        { recipeId: "tofu", personIds: ["sasha"] },
+      ],
+    },
+  };
+  const moved = execution.moveOccurrence(personalPlan, undefined, {
+    kind: "base",
+    id: "personal-move",
+    personId: "sasha",
+    date: "2026-08-02",
+    slot: "lunch",
+    toDate: "2026-08-03",
+    createdAt: "2026-08-01T10:00:00.000Z",
+  });
+  assert.equal(moved.moves.length, 1);
+  assert.equal(moved.moves[0].recipeId, "tofu");
+  assert.equal(moved.moves[0].sourceBatchId, "first");
+});
+
+test("an interrupted assignments rollout keeps the legacy recipe", () => {
+  const transitionalPlan = {
+    ...plan,
+    selectionAssignments: { "first:lunch": [] },
+  };
+  const moved = execution.moveOccurrence(transitionalPlan, undefined, {
+    kind: "base",
+    id: "legacy-fallback",
+    ...base,
+    toDate: "2026-08-03",
+    createdAt: "2026-08-01T10:00:00.000Z",
+  });
+  assert.equal(moved.moves.length, 1);
+  assert.equal(moved.moves[0].recipeId, "chicken");
+});
+
 test("retargeting an existing move changes only its target, and moved eating is reversible", () => {
   const moved = execution.moveOccurrence(plan, undefined, {
     kind: "base",

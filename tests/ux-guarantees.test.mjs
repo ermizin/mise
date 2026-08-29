@@ -9,11 +9,36 @@ test("the wizard keeps the user's work", async () => {
   assert.match(page, /const builderDraftKey = "mise-builder-draft/, "the draft has a storage key");
   assert.match(page, /localStorage\.setItem\(builderDraftKey/, "the draft is written while the wizard is open");
   assert.match(page, /localStorage\.getItem\(builderDraftKey/, "the draft is restored on the next open");
+  assert.match(page, /selectionAssignments/, "personal slot assignments are durable");
+  assert.match(page, /menuMode/, "the selected menu-building path is durable");
   assert.doesNotMatch(page, /setSelections\(\{\}\)/, "editing a plan never wipes every menu pick");
   assert.match(page, /const validSelections =/, "picks are pruned to what still fits");
   assert.ok(
     page.indexOf("const validSelections =") < page.indexOf("const allSelected ="),
     "selection validity is initialized before the wizard reads it",
+  );
+});
+
+test("the wizard offers manual menu building without skipping required answers", async () => {
+  const [page, product] = await Promise.all([
+    read("app/page.tsx"),
+    read("PRODUCT.md"),
+  ]);
+  assert.match(page, /Составить самому/);
+  assert.match(page, /Собрать с Mise/);
+  assert.match(page, /function ManualMenuStep/);
+  assert.match(page, /function automaticAssignmentsFor/);
+  assert.match(page, /Подобрать персональные варианты/);
+  assert.match(page, /Собрать остальные \{remaining\} за меня/);
+  assert.match(product, /Обязательные вопросы нельзя пропустить/);
+  const automaticAssembly = page.slice(
+    page.indexOf("function assembleMenu"),
+    page.indexOf("function replaceSelection"),
+  );
+  assert.doesNotMatch(
+    automaticAssembly,
+    /includeDisliked:\s*true/,
+    "automatic assembly never bypasses a person's dislikes",
   );
 });
 

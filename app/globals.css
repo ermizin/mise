@@ -2886,12 +2886,27 @@ p {
   position: relative;
   z-index: 3;
   display: grid;
-  grid-template-columns: 48px 1fr;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
   align-items: center;
   gap: 13px;
 }
 .builder-header h1 {
   font-size: var(--text-h1);
+}
+.builder-manual-link {
+  min-height: var(--hit-min);
+  max-width: 142px;
+  padding: 6px 8px;
+  border-radius: var(--r-tile);
+  background: transparent;
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-label);
+  line-height: 1.2;
+  text-align: right;
+}
+.builder-manual-link[aria-pressed="true"] {
+  color: var(--mint-text);
 }
 .progress-track {
   position: relative;
@@ -2907,7 +2922,7 @@ p {
   display: block;
   border-radius: inherit;
   background: linear-gradient(90deg, #4cb594, #ff8250);
-  transition: width 0.35s ease;
+  transition: width 520ms cubic-bezier(0.22, 0.9, 0.28, 1);
 }
 .builder-content {
   position: relative;
@@ -4535,8 +4550,8 @@ p {
 /* ============================================================
    Шаг «Выбор меню» · макет 9b
 
-   Меню приходит собранным, шаг — проверка. Пошаговый выбор по слотам
-   (9c) отложен в P2, место под него оставлено чипом в панели действий.
+   Меню можно принять собранным или пройти по слотам вручную.
+   Оба пути делят одну модель назначений и одинаково уважают жёсткие исключения.
 
    Новых стеклянных поверхностей здесь нет намеренно: на шаге уже блюрятся
    шапка, панель действий и карточки партий, а FRONTEND.md §4 держит потолок
@@ -4561,6 +4576,18 @@ p {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-2);
+}
+.menu-summary.is-updated.motion-a .summary-tile b {
+  animation: ms-pop-a 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 160ms both;
+}
+.menu-summary.is-updated.motion-b .summary-tile b {
+  animation: ms-pop-b 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 160ms both;
+}
+.freeze-note.is-updated.motion-a {
+  animation: ms-pop-a 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 240ms both;
+}
+.freeze-note.is-updated.motion-b {
+  animation: ms-pop-b 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 240ms both;
 }
 .summary-tile {
   padding: 12px 13px;
@@ -4627,6 +4654,15 @@ p {
   border-radius: var(--r-nested);
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.85);
+  transition:
+    background-color 320ms linear,
+    border-color 320ms linear;
+}
+.menu-row.is-replaced-anim.motion-a > div {
+  animation: ms-swap-a 380ms cubic-bezier(0.22, 0.9, 0.28, 1) both;
+}
+.menu-row.is-replaced-anim.motion-b > div {
+  animation: ms-swap-b 380ms cubic-bezier(0.22, 0.9, 0.28, 1) both;
 }
 /* Заменённое вручную видно и не перетирается пересборкой. */
 .menu-row.is-pinned {
@@ -4649,6 +4685,7 @@ p {
   color: var(--ink-muted);
   font-size: var(--text-min);
   font-weight: var(--weight-medium);
+  transition: color 320ms linear;
 }
 .menu-row b {
   display: block;
@@ -4675,6 +4712,20 @@ p {
   position: absolute;
   inset: -5px;
 }
+.menu-row.is-replaced-anim.motion-a .menu-swap svg {
+  animation: ms-spin-a 420ms cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.menu-row.is-replaced-anim.motion-b .menu-swap svg {
+  animation: ms-spin-b 420ms cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.menu-swap,
+.manual-menu-option {
+  transition: transform 130ms ease;
+}
+.menu-swap:active,
+.manual-menu-option:active {
+  transform: scale(0.94);
+}
 .batch-menu-more {
   width: 100%;
   min-height: var(--hit-min);
@@ -4696,6 +4747,228 @@ p {
   flex-wrap: wrap;
   overflow: visible;
   mask-image: none;
+}
+
+.manual-progress {
+  display: flex;
+  gap: 4px;
+  margin-bottom: var(--space-4);
+}
+.manual-progress-segment {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 4px;
+  height: 5px;
+  padding: 0;
+  border-radius: var(--r-chip-sq);
+  background: rgba(72, 60, 51, 0.14);
+}
+.manual-progress-segment.is-complete {
+  background: var(--accent);
+}
+.manual-progress-segment.is-current {
+  background: rgba(242, 87, 26, 0.3);
+  outline: 2px solid rgba(242, 87, 26, 0.18);
+}
+.manual-slot-heading {
+  margin-bottom: var(--space-4);
+}
+.manual-slot-heading h2 {
+  margin: 6px 0 7px;
+  font-size: var(--text-h2);
+  letter-spacing: var(--tracking-h2);
+}
+.manual-slot-heading > p:last-child {
+  margin: 0;
+  color: var(--ink-muted);
+  line-height: 1.45;
+}
+.manual-menu-options {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+.manual-menu-option {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr) 28px;
+  align-items: center;
+  gap: 13px;
+  min-height: 94px;
+  padding: 8px;
+  color: var(--ink);
+  text-align: left;
+}
+.builder-shell .builder-content .manual-menu-option.is-selected {
+  border: 1.5px solid rgba(242, 87, 26, 0.55);
+  background:
+    linear-gradient(
+      150deg,
+      rgba(255, 129, 67, 0.16),
+      rgba(238, 76, 19, 0.1)
+    ),
+    rgba(255, 255, 255, 0.66);
+}
+.manual-menu-art {
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-nested);
+  font-size: var(--glyph-s);
+}
+.manual-menu-option b,
+.manual-menu-option small {
+  display: block;
+}
+.manual-menu-option b {
+  font-size: var(--text-link);
+  font-weight: var(--weight-label);
+  line-height: 1.25;
+}
+.manual-menu-option small {
+  margin-top: 4px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.manual-menu-option i {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1.8px solid rgba(42, 29, 20, 0.2);
+  border-radius: var(--r-pill);
+  color: transparent;
+}
+.manual-menu-option.is-selected i {
+  border-color: transparent;
+  color: #fff;
+  background: var(--accent-grad);
+}
+.manual-menu-more,
+.manual-assist {
+  width: 100%;
+  min-height: var(--hit-min);
+  margin-top: var(--space-2);
+}
+.manual-menu-more {
+  padding: 8px 12px;
+  border-radius: var(--r-nested);
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.manual-split-button {
+  width: 100%;
+  margin-top: var(--space-3);
+}
+
+@keyframes ms-swap-a {
+  0% {
+    opacity: 0.2;
+    transform: translateY(9px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ms-swap-b {
+  0% {
+    opacity: 0.2;
+    transform: translateY(9px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ms-spin-a {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+@keyframes ms-spin-b {
+  from {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ms-pop-a {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes ms-pop-b {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.94);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes wizard-state-fade {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-row.is-replaced-anim > div,
+  .menu-summary.is-updated .summary-tile b,
+  .freeze-note.is-updated,
+  .menu-row.is-replaced-anim .menu-swap svg {
+    animation: wizard-state-fade 160ms ease both !important;
+  }
+  .menu-row {
+    transition-duration: 320ms !important;
+  }
+  .menu-swap,
+  .manual-menu-option {
+    transition-duration: 130ms !important;
+  }
+  .progress-track span {
+    transition-duration: 520ms !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .builder-header {
+    gap: 8px;
+  }
+  .builder-manual-link {
+    max-width: 100px;
+    padding-inline: 4px;
+  }
+  .menu-summary {
+    gap: 5px;
+  }
+  .summary-tile {
+    padding-inline: 9px;
+  }
+  .manual-menu-option {
+    grid-template-columns: 66px minmax(0, 1fr) 24px;
+    gap: 9px;
+  }
+  .manual-menu-art {
+    width: 66px;
+    height: 66px;
+  }
 }
 
 .replace-sheet {
@@ -5516,6 +5789,7 @@ p {
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
 }
+
 
 @media (max-width: 380px) {
   .week-macro-card {

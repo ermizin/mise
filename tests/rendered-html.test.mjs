@@ -29,6 +29,11 @@ test("server-renders the Russian Mise shell and navigation", async () => {
   const positions = labels.map((label) => html.indexOf(`aria-label="${label}"`));
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual([...positions].sort((a, b) => a - b), positions);
+  assert.doesNotMatch(
+    html,
+    />\s*Добавить план\s*</,
+    "the redesign keeps Compose as a separate action, not the old add-plan button",
+  );
 });
 
 test("includes the complete plan-builder and private persistence model", async () => {
@@ -207,6 +212,14 @@ test("includes the complete plan-builder and private persistence model", async (
   // «Собрать заново» обязано дать другое меню, а не то же самое.
   assert.match(page, /avoidPerSlot/);
   assert.match(page, /setPinned\(/);
+  // 9c вернулся как явный ручной путь, а не как пропуск обязательных вопросов.
+  assert.match(page, /function ManualMenuStep/);
+  assert.match(page, /className="builder-manual-link"/);
+  assert.match(page, /selectionAssignments\?: Record<string, RecipeAssignment\[\]>/);
+  assert.match(page, /function automaticAssignmentsFor/);
+  assert.match(css, /\.manual-progress \{/);
+  assert.match(css, /@keyframes ms-swap-a/);
+  assert.match(css, /@keyframes ms-swap-b/);
   // Ручная норма хранит режим вместе с человеком и не перезаписывается после
   // повторного открытия настроек.
   assert.match(page, /nutritionTargetMode\?: NutritionTargetMode/);

@@ -1,6 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import {
   NotificationSetupPanel,
@@ -169,6 +175,11 @@ type ShoppingItem = Ingredient & {
   checked: boolean;
   batchIds?: string[];
 };
+type RecipeAssignment = {
+  recipeId: string;
+  personIds: string[];
+};
+type MenuBuildMode = "auto" | "manual";
 type ActivePlan = {
   id: string;
   createdAt: string;
@@ -181,6 +192,7 @@ type ActivePlan = {
   people: Person[];
   batches: Batch[];
   selections: Record<string, string>;
+  selectionAssignments?: Record<string, RecipeAssignment[]>;
   pinnedSelectionKeys?: string[];
   tuning?: Record<string, RecipeTuning>;
   shopping: ShoppingItem[];
@@ -212,7 +224,7 @@ type BatchCookingStep = {
   products: string[];
 };
 type BatchCookingModel = {
-  dishes: { recipe: Recipe; slot: MealSlot }[];
+  dishes: { recipe: Recipe; slot: MealSlot; personIds: string[] }[];
   steps: BatchCookingStep[];
   totalPortions: number;
   activeMinutes: number;
@@ -243,7 +255,9 @@ type BuilderDraft = {
   people: Person[];
   cookEveryDays: number;
   remainderDecision: "separate" | "extend" | "shorten" | null;
+  menuMode?: MenuBuildMode;
   selections: Record<string, string>;
+  selectionAssignments?: Record<string, RecipeAssignment[]>;
   pinnedSelectionKeys?: string[];
 };
 type OnboardingStep =
@@ -4335,15 +4349,15 @@ function buildBatchCookingModel(
   batch: Batch,
 ): BatchCookingModel {
   const dishes = plan.mealSlots.flatMap((slot) => {
-    const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
-    return recipe ? [{ recipe, slot }] : [];
+    return assignmentGroupsFor(plan, batch, slot).flatMap((assignment) => {
+      const recipe = recipesById[assignment.recipeId];
+      return recipe ? [{ recipe, slot, personIds: assignment.personIds }] : [];
+    });
   });
   const steps: BatchCookingStep[] = [];
   let freezePortions = 0;
-  for (const { recipe, slot } of dishes) {
-    const eaters = plan.people.filter((person) =>
-      person.includedSlots.includes(slot),
-    );
+  for (const { recipe, slot, personIds } of dishes) {
+    const eaters = plan.people.filter((person) => personIds.includes(person.id));
     const portions = eaters.map((person) =>
       portionFor(
         person,
@@ -4366,7 +4380,7 @@ function buildBatchCookingModel(
       Math.round(recipe.effort.activeMinutes / Math.max(1, displaySteps.length + 1)),
     );
     steps.push({
-      id: `${slot}:${recipe.id}:measure`,
+      id: `${slot}:${recipe.id}:${personIds.join("-")}:measure`,
       recipeId: recipe.id,
       title: `Отмерьте продукты для «${recipe.title}»`,
       detail: `${mealMeta[slot].label} · ${withPlural(batch.days * eaters.length, FORMS.portion)}`,
@@ -4375,7 +4389,7 @@ function buildBatchCookingModel(
     });
     displaySteps.forEach((text, index) => {
       steps.push({
-        id: `${slot}:${recipe.id}:${index}`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:${index}`,
         recipeId: recipe.id,
         title: text,
         detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
@@ -4391,11 +4405,7 @@ function buildBatchCookingModel(
     dishes,
     steps,
     totalPortions: dishes.reduce(
-      (sum, { slot }) =>
-        sum +
-        batch.days *
-          plan.people.filter((person) => person.includedSlots.includes(slot))
-            .length,
+      (sum, { personIds }) => sum + batch.days * personIds.length,
       0,
     ),
     activeMinutes: dishes.reduce(
@@ -4409,7 +4419,7 @@ function buildBatchCookingModel(
       name: person.name,
       count:
         batch.days *
-        dishes.filter(({ slot }) => person.includedSlots.includes(slot)).length,
+        dishes.filter(({ personIds }) => personIds.includes(person.id)).length,
     })),
   };
 }
@@ -4441,9 +4451,12 @@ function notificationPlanFor(plan: ActivePlan): NotificationPlan {
     }))
       .filter(({ dayIndex }) =>
         plan.mealSlots.some((slot) => {
-          const recipe =
-            recipesById[plan.selections[selectionKey(batch, slot)]];
-          return Boolean(recipe?.freezable && dayIndex >= recipe.storageDays);
+          return assignmentGroupsFor(plan, batch, slot).some((assignment) => {
+            const recipe = recipesById[assignment.recipeId];
+            return Boolean(
+              recipe?.freezable && dayIndex >= recipe.storageDays,
+            );
+          });
         }),
       )
       .map(({ date }) => date),
@@ -4457,6 +4470,113 @@ function notificationPlanFor(plan: ActivePlan): NotificationPlan {
 }
 function selectionKey(batch: Batch, slot: MealSlot) {
   return `${batch.id}:${slot}`;
+}
+function assignmentPinKey(key: string, personIds: string[]) {
+  return `${key}::${[...personIds].sort().join(",")}`;
+}
+function assignmentGroupsFor(
+  plan: Pick<
+    ActivePlan,
+    "people" | "selections" | "selectionAssignments"
+  >,
+  batch: Batch,
+  slot: MealSlot,
+) {
+  const key = selectionKey(batch, slot);
+  const eaterIds = new Set(
+    relevantPeople(plan.people, slot).map((person) => person.id),
+  );
+  const hasExplicitAssignments = Object.prototype.hasOwnProperty.call(
+    plan.selectionAssignments ?? {},
+    key,
+  );
+  function normalizedGroups(rawGroups: RecipeAssignment[]) {
+    const assigned = new Set<string>();
+    return rawGroups.flatMap((group) => {
+      if (
+        !group ||
+        typeof group.recipeId !== "string" ||
+        !recipesById[group.recipeId]
+      )
+        return [];
+      const personIds = (
+        Array.isArray(group.personIds) ? group.personIds : []
+      ).filter((personId): personId is string => {
+        if (
+          typeof personId !== "string" ||
+          !eaterIds.has(personId) ||
+          assigned.has(personId)
+        )
+          return false;
+        assigned.add(personId);
+        return true;
+      });
+      return personIds.length ? [{ recipeId: group.recipeId, personIds }] : [];
+    });
+  }
+  const explicit = normalizedGroups(plan.selectionAssignments?.[key] ?? []);
+  const explicitCoverage = new Set(
+    explicit.flatMap((assignment) => assignment.personIds),
+  ).size;
+  const legacy = plan.selections[key]
+    ? normalizedGroups([
+        { recipeId: plan.selections[key], personIds: [...eaterIds] },
+      ])
+    : [];
+  /* An interrupted rollout may have persisted an empty/partial assignments key.
+     Until it fully covers the slot, keep the legacy recipe instead of making a
+     previously valid meal disappear from week, shopping and cooking. */
+  const normalized =
+    hasExplicitAssignments && explicitCoverage === eaterIds.size
+      ? explicit
+      : legacy.length
+        ? legacy
+        : explicit;
+  return normalized.reduce<RecipeAssignment[]>((groups, assignment) => {
+    const existing = groups.find(
+      (group) => group.recipeId === assignment.recipeId,
+    );
+    if (existing) existing.personIds.push(...assignment.personIds);
+    else groups.push({ ...assignment, personIds: [...assignment.personIds] });
+    return groups;
+  }, []);
+}
+function assignmentCoverageComplete(
+  people: Person[],
+  slot: MealSlot,
+  groups: RecipeAssignment[],
+) {
+  const expected = relevantPeople(people, slot).map((person) => person.id);
+  const assigned = groups.flatMap((group) => group.personIds);
+  return (
+    expected.length > 0 &&
+    assigned.length === expected.length &&
+    new Set(assigned).size === expected.length &&
+    expected.every((personId) => assigned.includes(personId))
+  );
+}
+function recipeForPerson(
+  plan: Pick<
+    ActivePlan,
+    "people" | "selections" | "selectionAssignments"
+  >,
+  batch: Batch,
+  slot: MealSlot,
+  person: Person,
+) {
+  const group = assignmentGroupsFor(plan, batch, slot).find((assignment) =>
+    assignment.personIds.includes(person.id),
+  );
+  return group ? recipesById[group.recipeId] : undefined;
+}
+function selectionRecipeIds(plan: ActivePlan) {
+  const ids = new Set<string>();
+  for (const batch of plan.batches)
+    for (const slot of plan.mealSlots)
+      assignmentGroupsFor(plan, batch, slot).forEach((assignment) =>
+        ids.add(assignment.recipeId),
+      );
+  return ids;
 }
 function mealExecutionFor(plan: ActivePlan): MealExecution {
   return normalizeMealExecution(executionPlanFor(plan), plan.mealExecution);
@@ -4484,7 +4604,14 @@ function relevantPeople(people: Person[], slot: MealSlot) {
   return people.filter((person) => person.includedSlots.includes(slot));
 }
 function validateHardExclusions(
-  plan: Pick<ActivePlan, "batches" | "mealSlots" | "people" | "selections">,
+  plan: Pick<
+    ActivePlan,
+    | "batches"
+    | "mealSlots"
+    | "people"
+    | "selections"
+    | "selectionAssignments"
+  >,
 ) {
   const conflicts: {
     batch: Batch;
@@ -4495,24 +4622,38 @@ function validateHardExclusions(
   }[] = [];
   for (const batch of plan.batches)
     for (const slot of plan.mealSlots) {
-      const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
-      if (!recipe) continue;
-      for (const person of relevantPeople(plan.people, slot)) {
-        const allergens = hardConflicts(recipe, person);
-        if (allergens.length)
-          conflicts.push({ batch, slot, person, recipe, allergens });
+      for (const assignment of assignmentGroupsFor(plan, batch, slot)) {
+        const recipe = recipesById[assignment.recipeId];
+        if (!recipe) continue;
+        for (const person of plan.people.filter((item) =>
+          assignment.personIds.includes(item.id),
+        )) {
+          const allergens = hardConflicts(recipe, person);
+          if (allergens.length)
+            conflicts.push({ batch, slot, person, recipe, allergens });
+        }
       }
     }
   return conflicts;
 }
 function crossContactWarnings(
-  plan: Pick<ActivePlan, "batches" | "mealSlots" | "people" | "selections">,
+  plan: Pick<
+    ActivePlan,
+    | "batches"
+    | "mealSlots"
+    | "people"
+    | "selections"
+    | "selectionAssignments"
+  >,
   batch: Batch,
 ) {
   const prepared = new Set<Allergen>();
   for (const slot of plan.mealSlots) {
-    const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
-    recipe?.allergens.forEach((allergen) => prepared.add(allergen));
+    assignmentGroupsFor(plan, batch, slot).forEach((assignment) =>
+      recipesById[assignment.recipeId]?.allergens.forEach((allergen) =>
+        prepared.add(allergen),
+      ),
+    );
   }
   return plan.people.flatMap((person) =>
     (person.hardExclusions ?? [])
@@ -4521,41 +4662,54 @@ function crossContactWarnings(
   );
 }
 function buildShopping(
-  plan: Pick<ActivePlan, "batches" | "selections" | "people" | "tuning">,
+  plan: Pick<
+    ActivePlan,
+    | "batches"
+    | "mealSlots"
+    | "selections"
+    | "selectionAssignments"
+    | "people"
+    | "tuning"
+  >,
 ): ShoppingItem[] {
   const aggregate = new Map<string, ShoppingItem>();
   for (const batch of plan.batches)
-    for (const slot of Object.keys(mealMeta) as MealSlot[]) {
-      const recipe = recipesById[plan.selections[selectionKey(batch, slot)]];
-      if (!recipe) continue;
-      const portions = plan.people
-        .filter((person) => person.includedSlots.includes(slot))
-        .map((person) =>
-          portionFor(
-            person,
-            slot,
-            recipe,
-            plan.tuning?.[tuningKey(batch, slot, person)],
-          ),
+    for (const slot of plan.mealSlots) {
+      for (const assignment of assignmentGroupsFor(plan, batch, slot)) {
+        const recipe = recipesById[assignment.recipeId];
+        if (!recipe) continue;
+        const portions = plan.people
+          .filter((person) => assignment.personIds.includes(person.id))
+          .map((person) =>
+            portionFor(
+              person,
+              slot,
+              recipe,
+              plan.tuning?.[tuningKey(batch, slot, person)],
+            ),
+          );
+        const cookingAmounts = recipeCookingAmounts(
+          recipe,
+          portions,
+          batch.days,
         );
-      const cookingAmounts = recipeCookingAmounts(recipe, portions, batch.days);
-      for (const ingredient of recipe.ingredients) {
-        const key = `${ingredient.id}:${ingredient.unit}`;
-        const existing = aggregate.get(key);
-        const quantity = cookingAmounts[ingredient.id] ?? 0;
-        if (existing) {
-          existing.quantity += quantity;
-          if (!existing.batchIds?.includes(batch.id))
-            existing.batchIds = [...(existing.batchIds ?? []), batch.id];
+        for (const ingredient of recipe.ingredients) {
+          const key = `${ingredient.id}:${ingredient.unit}`;
+          const existing = aggregate.get(key);
+          const quantity = cookingAmounts[ingredient.id] ?? 0;
+          if (existing) {
+            existing.quantity += quantity;
+            if (!existing.batchIds?.includes(batch.id))
+              existing.batchIds = [...(existing.batchIds ?? []), batch.id];
+          } else
+            aggregate.set(key, {
+              ...ingredient,
+              key,
+              quantity,
+              checked: false,
+              batchIds: [batch.id],
+            });
         }
-        else
-          aggregate.set(key, {
-            ...ingredient,
-            key,
-            quantity,
-            checked: false,
-            batchIds: [batch.id],
-          });
       }
     }
   return [...aggregate.values()]
@@ -4646,6 +4800,124 @@ function candidateRecipes(
     );
   return filters.limit === "all" ? sorted : sorted.slice(0, filters.limit ?? 5);
 }
+function combinationBonus(recipe: Recipe, selectedRecipes: Recipe[]) {
+  const selectedIngredients = new Set(
+    selectedRecipes.flatMap((item) =>
+      item.ingredients.map((ingredient) => ingredient.id),
+    ),
+  );
+  const shared = recipe.ingredients.filter((ingredient) =>
+    selectedIngredients.has(ingredient.id),
+  ).length;
+  const newProducts = recipe.ingredients.length - shared;
+  return shared * 18 - newProducts * 2;
+}
+function chooseMenuCandidate(
+  options: Recipe[],
+  used: Set<string>,
+  avoid: Set<string>,
+  selectedRecipes: Recipe[],
+) {
+  return [...options]
+    .map((recipe, index) => ({
+      recipe,
+      score:
+        -index * 8 +
+        combinationBonus(recipe, selectedRecipes) -
+        (used.has(recipe.id) ? 240 : 0) -
+        (avoid.has(recipe.id) ? 1_000 : 0),
+    }))
+    .sort(
+      (left, right) =>
+        right.score - left.score || left.recipe.id.localeCompare(right.recipe.id),
+    )[0]?.recipe;
+}
+function automaticAssignmentsFor(
+  slot: MealSlot,
+  style: MenuStyle,
+  people: Person[],
+  batchDays: number,
+  used: Set<string>,
+  avoid: Set<string>,
+  selectedRecipes: Recipe[],
+) {
+  const eaters = relevantPeople(people, slot);
+  if (!eaters.length) return [];
+  const sharedOptions = candidateRecipes(slot, style, people, batchDays, {
+    limit: "all",
+  });
+  const shared = chooseMenuCandidate(
+    sharedOptions,
+    used,
+    avoid,
+    selectedRecipes,
+  );
+  if (shared)
+    return [{ recipeId: shared.id, personIds: eaters.map((person) => person.id) }];
+
+  const optionsByPerson = new Map(
+    eaters.map((person) => [
+      person.id,
+      candidateRecipes(slot, style, [person], batchDays, { limit: "all" }),
+    ]),
+  );
+  const uncovered = new Set(eaters.map((person) => person.id));
+  const assignments: RecipeAssignment[] = [];
+  while (uncovered.size) {
+    const candidates = new Map<
+      string,
+      { recipe: Recipe; personIds: string[]; rank: number }
+    >();
+    for (const personId of uncovered) {
+      for (const [index, recipe] of (optionsByPerson.get(personId) ?? []).entries()) {
+        const current = candidates.get(recipe.id) ?? {
+          recipe,
+          personIds: [],
+          rank: 0,
+        };
+        current.personIds.push(personId);
+        current.rank += index;
+        candidates.set(recipe.id, current);
+      }
+    }
+    const picked = [...candidates.values()].sort((left, right) => {
+      const leftScore =
+        left.personIds.length * 1_000 -
+        left.rank * 8 +
+        combinationBonus(left.recipe, [
+          ...selectedRecipes,
+          ...assignments.flatMap((assignment) =>
+            recipesById[assignment.recipeId]
+              ? [recipesById[assignment.recipeId]]
+              : [],
+          ),
+        ]) -
+        (used.has(left.recipe.id) ? 240 : 0) -
+        (avoid.has(left.recipe.id) ? 1_000 : 0);
+      const rightScore =
+        right.personIds.length * 1_000 -
+        right.rank * 8 +
+        combinationBonus(right.recipe, [
+          ...selectedRecipes,
+          ...assignments.flatMap((assignment) =>
+            recipesById[assignment.recipeId]
+              ? [recipesById[assignment.recipeId]]
+              : [],
+          ),
+        ]) -
+        (used.has(right.recipe.id) ? 240 : 0) -
+        (avoid.has(right.recipe.id) ? 1_000 : 0);
+      return rightScore - leftScore || left.recipe.id.localeCompare(right.recipe.id);
+    })[0];
+    if (!picked) return [];
+    assignments.push({
+      recipeId: picked.recipe.id,
+      personIds: picked.personIds,
+    });
+    picked.personIds.forEach((personId) => uncovered.delete(personId));
+  }
+  return assignments;
+}
 function recipeCoverageFor(
   person: Person,
   style: MenuStyle,
@@ -4727,20 +4999,32 @@ function normalizePerson(person: Person): Person {
 }
 function normalizePlan(plan: ActivePlan): ActivePlan {
   const normalizedPeople = plan.people.map(normalizePerson);
+  const assignmentSource = { ...plan, people: normalizedPeople };
+  const selectionAssignments: Record<string, RecipeAssignment[]> = {};
+  for (const batch of plan.batches)
+    for (const slot of plan.mealSlots) {
+      const groups = assignmentGroupsFor(assignmentSource, batch, slot);
+      if (assignmentCoverageComplete(normalizedPeople, slot, groups))
+        selectionAssignments[selectionKey(batch, slot)] = groups;
+    }
+  const normalizedPlan = {
+    ...plan,
+    people: normalizedPeople,
+    selectionAssignments,
+  };
   const rebuiltShopping = new Map(
-    buildShopping({ ...plan, people: normalizedPeople }).map((item) => [
+    buildShopping(normalizedPlan).map((item) => [
       item.key,
       item,
     ]),
   );
   const normalized = {
-    ...plan,
+    ...normalizedPlan,
     pinnedSelectionKeys: Array.isArray(plan.pinnedSelectionKeys)
       ? plan.pinnedSelectionKeys.filter(
-          (key): key is string => typeof key === "string" && Boolean(plan.selections[key]),
+          (key): key is string => typeof key === "string",
         )
       : [],
-    people: normalizedPeople,
     shopping: plan.shopping.map((item) => {
       const name = normalizedIngredientName(item.id, item.name);
       const rebuilt = rebuiltShopping.get(item.key);
@@ -5282,7 +5566,7 @@ const kitchenChecklist: { title: string; note: string }[] = [
 
 function deckDishes(plan: ActivePlan | null) {
   const chosen = plan
-    ? Object.values(plan.selections).map((id) => recipesById[id])
+    ? [...selectionRecipeIds(plan)].map((id) => recipesById[id])
     : [];
   return (["breakfast", "lunch", "dinner"] as MealSlot[]).map((slot) => ({
     slot,
@@ -6346,8 +6630,7 @@ function WeekScreen({
       if (!person.includedSlots.includes(slot)) return [];
       const key = mealOccurrenceKey(person.id, date, slot);
       if (movedSources.has(key)) return [];
-      const recipe =
-        recipesById[activePlan.selections[selectionKey(dateBatch, slot)]];
+      const recipe = recipeForPerson(activePlan, dateBatch, slot, person);
       return recipe
         ? [{ key, kind: "base" as const, slot, recipe, sourceBatch: dateBatch }]
         : [];
@@ -6430,18 +6713,19 @@ function WeekScreen({
   const tomorrowRows = tomorrowDate ? rowsFor(tomorrowDate) : [];
   const nextCookRecipes = nextCook
     ? activePlan.mealSlots.flatMap((slot) => {
-        const recipe =
-          recipesById[activePlan.selections[selectionKey(nextCook, slot)]];
-        return recipe ? [{ slot, recipe }] : [];
+        return assignmentGroupsFor(activePlan, nextCook, slot).flatMap(
+          (assignment) => {
+            const recipe = recipesById[assignment.recipeId];
+            return recipe
+              ? [{ slot, recipe, personIds: assignment.personIds }]
+              : [];
+          },
+        );
       })
     : [];
   const nextCookPortions = nextCook
     ? nextCookRecipes.reduce(
-        (sum, { slot }) =>
-          sum +
-          activePlan.people.filter((item) => item.includedSlots.includes(slot))
-            .length *
-            nextCook.days,
+        (sum, { personIds }) => sum + personIds.length * nextCook.days,
         0,
       )
     : 0;
@@ -7008,13 +7292,13 @@ function WeekScreen({
             <b>Готовить партию по шагам</b>
             <small>
               {withPlural(
-                activePlan.mealSlots.filter((slot) =>
-                  Boolean(
-                    recipesById[
-                      activePlan.selections[selectionKey(batch, slot)]
-                    ],
+                new Set(
+                  activePlan.mealSlots.flatMap((slot) =>
+                    assignmentGroupsFor(activePlan, batch, slot).map(
+                      (assignment) => assignment.recipeId,
+                    ),
                   ),
-                ).length,
+                ).size,
                 FORMS.dish,
               )} · подсказки, продукты и таймер
             </small>
@@ -7168,7 +7452,11 @@ function batchNumberFor(recipe: Recipe, plan: ActivePlan | null) {
   if (!plan) return null;
   for (const batch of plan.batches)
     for (const slot of Object.keys(mealMeta) as MealSlot[])
-      if (plan.selections[selectionKey(batch, slot)] === recipe.id)
+      if (
+        assignmentGroupsFor(plan, batch, slot).some(
+          (assignment) => assignment.recipeId === recipe.id,
+        )
+      )
         return batch.index + 1;
   return null;
 }
@@ -8243,6 +8531,10 @@ function PlanBuilder({
   const [selections, setSelections] = useState<Record<string, string>>(
     initialPlan?.selections ?? {},
   );
+  const [selectionAssignments, setSelectionAssignments] = useState<
+    Record<string, RecipeAssignment[]>
+  >(initialPlan?.selectionAssignments ?? {});
+  const [menuMode, setMenuMode] = useState<MenuBuildMode>("auto");
   const [choiceIndex, setChoiceIndex] = useState(initialChoiceIndex);
   /* Ключи позиций, где блюдо выбрано вручную. Автосборка их не трогает —
      источник сохраняется вместе с планом и черновиком. */
@@ -8296,6 +8588,8 @@ function PlanBuilder({
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(null);
     setSelections(initialPlan?.selections ?? {});
+    setSelectionAssignments(initialPlan?.selectionAssignments ?? {});
+    setMenuMode("auto");
     setPinned(initialPlan?.pinnedSelectionKeys ?? []);
     setChoiceIndex(initialChoiceIndex);
   }
@@ -8318,6 +8612,8 @@ function PlanBuilder({
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
           setSelections(draft.selections);
+          setSelectionAssignments(draft.selectionAssignments ?? {});
+          setMenuMode(draft.menuMode ?? "auto");
           setPinned(
             draft.pinnedSelectionKeys ?? initialPlan?.pinnedSelectionKeys ?? [],
           );
@@ -8369,45 +8665,78 @@ function PlanBuilder({
   const unassignedSlots = mealSlots.filter(
     (slot) => !people.some((person) => person.includedSlots.includes(slot)),
   );
-  const validSelections = ((): Record<string, string> => {
-    const valid: Record<string, string> = {};
+  const validSelectionAssignments = (() => {
+    const valid: Record<string, RecipeAssignment[]> = {};
+    const assignmentPlan = {
+      people,
+      selections,
+      selectionAssignments,
+    };
     for (const batch of batches)
       for (const slot of mealSlots) {
         const key = selectionKey(batch, slot);
-        const recipe = recipesById[selections[key]];
-        if (
-          recipe &&
-          isProductionReadyRecipe(recipe) &&
-          recipe.slot === slot &&
-          recipe.tags.includes(menuStyle) &&
-          (recipe.storageDays >= batch.days || recipe.freezable) &&
-          relevantPeople(people, slot).every(
-            (person) => hardConflicts(recipe, person).length === 0,
-          )
-        )
-          valid[key] = recipe.id;
+        const groups = assignmentGroupsFor(
+          assignmentPlan,
+          batch,
+          slot,
+        ).filter((assignment) => {
+          const recipe = recipesById[assignment.recipeId];
+          const eaters = people.filter((person) =>
+            assignment.personIds.includes(person.id),
+          );
+          return Boolean(
+            recipe &&
+              isProductionReadyRecipe(recipe) &&
+              recipe.slot === slot &&
+              recipe.tags.includes(menuStyle) &&
+              (recipe.storageDays >= batch.days || recipe.freezable) &&
+              eaters.length === assignment.personIds.length &&
+              eaters.every(
+                (person) =>
+                  hardConflicts(recipe, person).length === 0 &&
+                  recipeFamilyViableFor(recipe, person, slot),
+              ),
+          );
+        });
+        if (groups.length) valid[key] = groups;
       }
     return valid;
   })();
+  const validSelections = Object.fromEntries(
+    Object.entries(validSelectionAssignments).flatMap(([key, assignments]) => {
+      const primary = [...assignments].sort(
+        (left, right) => right.personIds.length - left.personIds.length,
+      )[0];
+      return primary ? [[key, primary.recipeId]] : [];
+    }),
+  );
   const allSelected = positions.every(({ batch, slot }) =>
-    Boolean(validSelections[selectionKey(batch, slot)]),
+    assignmentCoverageComplete(
+      people,
+      slot,
+      validSelectionAssignments[selectionKey(batch, slot)] ?? [],
+    ),
   );
   const staleCount = positions.filter(
-    ({ batch, slot }) =>
-      selections[selectionKey(batch, slot)] &&
-      !validSelections[selectionKey(batch, slot)],
+    ({ batch, slot }) => {
+      const key = selectionKey(batch, slot);
+      const hadSelection = Boolean(
+        selections[key] || selectionAssignments[key]?.length,
+      );
+      return (
+        hadSelection &&
+        !assignmentCoverageComplete(
+          people,
+          slot,
+          validSelectionAssignments[key] ?? [],
+        )
+      );
+    },
   ).length;
-  const validPinned = pinned.filter((key) => Boolean(validSelections[key]));
-  /* Шаг «Выбор меню» открывается уже собранным: PRODUCT.md §4 п.7 обещает
-     автоматически собранное меню, а не набор из девяти-пятнадцати выборов. */
-  useEffect(() => {
-    if (step !== 5) return;
-    const missing = positions.some(
-      ({ batch, slot }) => !validSelections[selectionKey(batch, slot)],
-    );
-    if (missing) assembleMenu("fill");
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- пересобирать на каждый рендер нельзя: validSelections пересчитывается всегда
-  }, [step, positions]);
+  const validPinned = pinned.filter((pinKey) => {
+    const slotKey = pinKey.split("::")[0];
+    return Boolean(validSelectionAssignments[slotKey]?.length);
+  });
   useEffect(() => {
     if (successPlan || mode === "settings") return;
     const draft: BuilderDraft = {
@@ -8422,7 +8751,9 @@ function PlanBuilder({
       people,
       cookEveryDays,
       remainderDecision,
+      menuMode,
       selections,
+      selectionAssignments,
       pinnedSelectionKeys: pinned,
     };
     try {
@@ -8440,7 +8771,9 @@ function PlanBuilder({
     people,
     cookEveryDays,
     remainderDecision,
+    menuMode,
     selections,
+    selectionAssignments,
     pinned,
     successPlan,
     initialPlan,
@@ -8459,6 +8792,7 @@ function PlanBuilder({
       people,
       batches,
       selections: validSelections,
+      selectionAssignments: validSelectionAssignments,
       pinnedSelectionKeys: validPinned,
       shopping: [],
     };
@@ -8572,7 +8906,20 @@ function PlanBuilder({
       return (
         resolvedPeriodValid && (remainder === 0 || remainderDecision !== null)
       );
-    if (index === 5) return allSelected;
+    if (index === 5) {
+      if (menuMode === "auto") return allSelected;
+      const current = positions[choiceIndex];
+      return Boolean(
+        current &&
+          assignmentCoverageComplete(
+            people,
+            current.slot,
+            validSelectionAssignments[
+              selectionKey(current.batch, current.slot)
+            ] ?? [],
+          ),
+      );
+    }
     return true;
   }
   function next() {
@@ -8585,9 +8932,22 @@ function PlanBuilder({
     if (step === 4) {
       const firstMissing = positions.findIndex(
         (position) =>
-          !validSelections[selectionKey(position.batch, position.slot)],
+          !assignmentCoverageComplete(
+            people,
+            position.slot,
+            validSelectionAssignments[
+              selectionKey(position.batch, position.slot)
+            ] ?? [],
+          ),
       );
       setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
+    }
+    if (step === 5 && menuMode === "manual") {
+      if (choiceIndex < positions.length - 1) {
+        setChoiceIndex((value) => value + 1);
+        return;
+      }
+      if (!allSelected) return;
     }
     setStep((value) => Math.min(6, value + 1));
   }
@@ -8595,7 +8955,16 @@ function PlanBuilder({
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
      Внутри одного приёма пищи блюда по партиям стараемся не повторять. */
   function assembleMenu(mode: "fill" | "reset" = "fill") {
-    const updated = { ...validSelections };
+    const updatedSelections = { ...validSelections };
+    const updatedAssignments = Object.fromEntries(
+      Object.entries(validSelectionAssignments).map(([key, assignments]) => [
+        key,
+        assignments.map((assignment) => ({
+          ...assignment,
+          personIds: [...assignment.personIds],
+        })),
+      ]),
+    );
     const usedPerSlot = new Map<MealSlot, Set<string>>();
     /* «Собрать заново» должно давать другое меню, а не то же самое:
        прошлый выбор уходит в отказ, следующий берётся по убыванию fitScore. */
@@ -8608,47 +8977,187 @@ function PlanBuilder({
       for (const { batch, slot } of positions) {
         const key = selectionKey(batch, slot);
         if (pinned.includes(key)) continue;
-        if (updated[key]) avoidPerSlot.get(slot)?.add(updated[key]);
-        delete updated[key];
+        for (const assignment of updatedAssignments[key] ?? [])
+          avoidPerSlot.get(slot)?.add(assignment.recipeId);
+        delete updatedSelections[key];
+        delete updatedAssignments[key];
       }
     for (const { batch, slot } of positions) {
       const key = selectionKey(batch, slot);
       const used = usedPerSlot.get(slot) ?? new Set<string>();
-      if (updated[key]) {
-        used.add(updated[key]);
+      const existing = updatedAssignments[key] ?? [];
+      if (assignmentCoverageComplete(people, slot, existing)) {
+        existing.forEach((assignment) => used.add(assignment.recipeId));
         continue;
       }
-      const options = candidateRecipes(slot, menuStyle, people, batch.days, {
-        limit: "all",
-      });
       const avoid = avoidPerSlot.get(slot) ?? new Set<string>();
-      const pick =
-        options.find(
-          (recipe) => !used.has(recipe.id) && !avoid.has(recipe.id),
-        ) ??
-        options.find((recipe) => !used.has(recipe.id)) ??
-        options[0] ??
-        candidateRecipes(slot, menuStyle, people, batch.days, {
-          limit: 1,
-          includeDisliked: true,
-        })[0];
-      if (!pick) continue;
-      updated[key] = pick.id;
-      used.add(pick.id);
+      const selectedRecipes = Object.values(updatedAssignments).flatMap(
+        (assignments) =>
+          assignments.flatMap((assignment) =>
+            recipesById[assignment.recipeId]
+              ? [recipesById[assignment.recipeId]]
+              : [],
+          ),
+      );
+      const assignments = automaticAssignmentsFor(
+        slot,
+        menuStyle,
+        people,
+        batch.days,
+        used,
+        avoid,
+        selectedRecipes,
+      );
+      if (!assignmentCoverageComplete(people, slot, assignments)) continue;
+      updatedAssignments[key] = assignments;
+      const primary = [...assignments].sort(
+        (left, right) => right.personIds.length - left.personIds.length,
+      )[0];
+      if (primary) updatedSelections[key] = primary.recipeId;
+      assignments.forEach((assignment) => used.add(assignment.recipeId));
     }
-    setSelections(updated);
+    setSelections(updatedSelections);
+    setSelectionAssignments(updatedAssignments);
+    return { selections: updatedSelections, assignments: updatedAssignments };
   }
-  function replaceSelection(key: string, recipeId: string) {
-    setSelections({ ...validSelections, [key]: recipeId });
-    setPinned((current) =>
-      current.includes(key) ? current : [...current, key],
+  /* Автоматический путь открывает шаг с уже собранным меню.
+     Ручной путь намеренно оставляет незаполненные слоты человеку. */
+  useEffect(() => {
+    if (step !== 5 || menuMode !== "auto") return;
+    const missing = positions.some(
+      ({ batch, slot }) =>
+        !assignmentCoverageComplete(
+          people,
+          slot,
+          validSelectionAssignments[selectionKey(batch, slot)] ?? [],
+        ),
     );
+    if (missing) {
+      const frame = window.requestAnimationFrame(() => assembleMenu("fill"));
+      return () => window.cancelAnimationFrame(frame);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- пересобирать на каждый рендер нельзя: производные карты создаются заново
+  }, [step, positions, menuMode]);
+  function replaceSelection(
+    key: string,
+    personIds: string[],
+    recipeId: string,
+  ) {
+    const position = positions.find(
+      ({ batch, slot }) => selectionKey(batch, slot) === key,
+    );
+    if (!position) return null;
+    const moving = new Set(personIds);
+    const nextGroups = (validSelectionAssignments[key] ?? []).flatMap(
+      (assignment) => {
+        const remaining = assignment.personIds.filter(
+          (personId) => !moving.has(personId),
+        );
+        return remaining.length
+          ? [{ ...assignment, personIds: remaining }]
+          : [];
+      },
+    );
+    const sameRecipe = nextGroups.find(
+      (assignment) => assignment.recipeId === recipeId,
+    );
+    if (sameRecipe) sameRecipe.personIds.push(...personIds);
+    else nextGroups.push({ recipeId, personIds: [...personIds] });
+    const replacedGroup = sameRecipe ?? nextGroups[nextGroups.length - 1];
+    const nextAssignments = {
+      ...validSelectionAssignments,
+      [key]: nextGroups,
+    };
+    const primary = [...nextGroups].sort(
+      (left, right) => right.personIds.length - left.personIds.length,
+    )[0];
+    setSelectionAssignments(nextAssignments);
+    setSelections({
+      ...validSelections,
+      ...(primary ? { [key]: primary.recipeId } : {}),
+    });
+    const groupPin = assignmentPinKey(key, personIds);
+    setPinned((current) => [
+      ...new Set([...current, key, groupPin]),
+    ]);
+    return replacedGroup
+      ? assignmentPinKey(key, replacedGroup.personIds)
+      : null;
+  }
+  function assembleCurrentPosition() {
+    const position = positions[choiceIndex];
+    if (!position) return false;
+    const key = selectionKey(position.batch, position.slot);
+    const used = new Set(
+      positions
+        .filter(({ slot }) => slot === position.slot)
+        .flatMap(({ batch, slot }) =>
+          (validSelectionAssignments[selectionKey(batch, slot)] ?? []).map(
+            (assignment) => assignment.recipeId,
+          ),
+        ),
+    );
+    const selectedRecipes = Object.values(validSelectionAssignments).flatMap(
+      (assignments) =>
+        assignments.flatMap((assignment) =>
+          recipesById[assignment.recipeId]
+            ? [recipesById[assignment.recipeId]]
+            : [],
+        ),
+    );
+    const assignments = automaticAssignmentsFor(
+      position.slot,
+      menuStyle,
+      people,
+      position.batch.days,
+      used,
+      new Set(),
+      selectedRecipes,
+    );
+    if (!assignmentCoverageComplete(people, position.slot, assignments))
+      return false;
+    const primary = [...assignments].sort(
+      (left, right) => right.personIds.length - left.personIds.length,
+    )[0];
+    setSelectionAssignments({
+      ...validSelectionAssignments,
+      [key]: assignments,
+    });
+    if (primary)
+      setSelections({ ...validSelections, [key]: primary.recipeId });
+    return true;
+  }
+  function assembleRemainingAndReview() {
+    const result = assembleMenu("fill");
+    const complete = positions.every(({ batch, slot }) =>
+      assignmentCoverageComplete(
+        people,
+        slot,
+        result.assignments[selectionKey(batch, slot)] ?? [],
+      ),
+    );
+    if (complete) {
+      setSaveState("idle");
+      setSaveMessage("");
+      setStep(6);
+    } else {
+      setSaveState("error");
+      setSaveMessage(
+        "Для одной из позиций нет подходящего варианта без ваших «не люблю». Выберите блюдо вручную или измените настройки.",
+      );
+    }
   }
   async function save() {
     if (!allSelected) {
       const firstMissing = positions.findIndex(
         (position) =>
-          !validSelections[selectionKey(position.batch, position.slot)],
+          !assignmentCoverageComplete(
+            people,
+            position.slot,
+            validSelectionAssignments[
+              selectionKey(position.batch, position.slot)
+            ] ?? [],
+          ),
       );
       setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
       setStep(5);
@@ -8682,6 +9191,7 @@ function PlanBuilder({
       if (flowIdRef.current) {
         const analyticsFields = {
           flowId: flowIdRef.current,
+          // eslint-disable-next-line react-hooks/purity -- duration is sampled only after the explicit save action
           durationMs: Math.max(0, Date.now() - builderStartedAt),
           pilotEligible: plan.periodDays >= 3 && plan.periodDays <= 7,
         };
@@ -8746,6 +9256,31 @@ function PlanBuilder({
           )}
           <h1>{steps[step]}</h1>
         </div>
+        {mode === "onboarding" && (
+          <button
+            className="builder-manual-link"
+            aria-pressed={menuMode === "manual"}
+            onClick={() => {
+              const nextMode = menuMode === "manual" ? "auto" : "manual";
+              setMenuMode(nextMode);
+              if (nextMode === "manual") {
+                const firstMissing = positions.findIndex(
+                  ({ batch, slot }) =>
+                    !assignmentCoverageComplete(
+                      people,
+                      slot,
+                      validSelectionAssignments[
+                        selectionKey(batch, slot)
+                      ] ?? [],
+                    ),
+                );
+                setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
+              } else if (step === 5) assembleMenu("fill");
+            }}
+          >
+            {menuMode === "manual" ? "Собрать с Mise" : "Составить самому"}
+          </button>
+        )}
       </header>
       {mode === "onboarding" && (
         <div className="progress-track">
@@ -8862,17 +9397,37 @@ function PlanBuilder({
             }}
           />
         )}
-        {step === 5 && (
+        {step === 5 && menuMode === "auto" && (
           <MenuReviewStep
             batches={batches}
             mealSlots={mealSlots}
             people={people}
             style={menuStyle}
             selections={validSelections}
+            selectionAssignments={validSelectionAssignments}
             pinned={validPinned}
             shopping={draftPlan.shopping}
             onReplace={replaceSelection}
             onReassemble={() => assembleMenu("reset")}
+            onManual={() => {
+              setMenuMode("manual");
+              setChoiceIndex(0);
+            }}
+          />
+        )}
+        {step === 5 && menuMode === "manual" && (
+          <ManualMenuStep
+            key={choiceIndex}
+            positions={positions}
+            choiceIndex={choiceIndex}
+            people={people}
+            style={menuStyle}
+            selections={validSelections}
+            selectionAssignments={validSelectionAssignments}
+            onSelect={replaceSelection}
+            onSplit={assembleCurrentPosition}
+            onAssist={assembleRemainingAndReview}
+            onGo={setChoiceIndex}
           />
         )}
         {step === 6 && (
@@ -8883,7 +9438,9 @@ function PlanBuilder({
         <button
           className="secondary-button"
           onClick={
-            step === initialStep
+            step === 5 && menuMode === "manual" && choiceIndex > 0
+              ? () => setChoiceIndex((value) => Math.max(0, value - 1))
+              : step === initialStep
               ? closeBuilder
               : () => setStep((value) => value - 1)
           }
@@ -8908,7 +9465,14 @@ function PlanBuilder({
             disabled={!stepIsValid()}
             onClick={next}
           >
-            {step === 5 ? "Проверить план" : "Продолжить"} <Icon name="chevron" size={16} />
+            {step === 5 && menuMode === "manual"
+              ? choiceIndex < positions.length - 1
+                ? `Дальше: ${mealMeta[positions[choiceIndex + 1]?.slot ?? positions[choiceIndex]?.slot ?? "lunch"].label.toLowerCase()}`
+                : "Проверить план"
+              : step === 5
+                ? "Проверить план"
+                : "Продолжить"}{" "}
+            <Icon name="chevron" size={16} />
           </button>
         ) : (
           <button
@@ -9811,21 +10375,232 @@ function freezeSummary(
   mealSlots: MealSlot[],
   people: Person[],
   selections: Record<string, string>,
+  selectionAssignments: Record<string, RecipeAssignment[]>,
 ) {
   let portions = 0;
   let shortest: Recipe | null = null;
+  const plan = { people, selections, selectionAssignments };
   for (const batch of batches)
     for (const slot of mealSlots) {
-      const recipe = recipesById[selections[selectionKey(batch, slot)]];
-      if (!recipe?.freezable) continue;
-      const eaters = relevantPeople(people, slot).length;
-      const frozenDays = Math.max(0, batch.days - recipe.storageDays);
-      if (!frozenDays || !eaters) continue;
-      portions += frozenDays * eaters;
-      if (!shortest || recipe.storageDays < shortest.storageDays)
-        shortest = recipe;
+      for (const assignment of assignmentGroupsFor(plan, batch, slot)) {
+        const recipe = recipesById[assignment.recipeId];
+        if (!recipe?.freezable) continue;
+        const frozenDays = Math.max(0, batch.days - recipe.storageDays);
+        if (!frozenDays || !assignment.personIds.length) continue;
+        portions += frozenDays * assignment.personIds.length;
+        if (!shortest || recipe.storageDays < shortest.storageDays)
+          shortest = recipe;
+      }
     }
   return { portions, shortest };
+}
+
+function ManualMenuStep({
+  positions,
+  choiceIndex,
+  people,
+  style,
+  selections,
+  selectionAssignments,
+  onSelect,
+  onSplit,
+  onAssist,
+  onGo,
+}: {
+  positions: { batch: Batch; slot: MealSlot }[];
+  choiceIndex: number;
+  people: Person[];
+  style: MenuStyle;
+  selections: Record<string, string>;
+  selectionAssignments: Record<string, RecipeAssignment[]>;
+  onSelect: (key: string, personIds: string[], recipeId: string) => void;
+  onSplit: () => boolean;
+  onAssist: () => void;
+  onGo: (index: number) => void;
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const [includeDisliked, setIncludeDisliked] = useState(false);
+  const [splitError, setSplitError] = useState(false);
+  const current = positions[choiceIndex];
+  if (!current)
+    return (
+      <Note tone="warn" role="alert">
+        Добавьте хотя бы одну позицию меню и участника плана.
+      </Note>
+    );
+  const key = selectionKey(current.batch, current.slot);
+  const eaterIds = relevantPeople(people, current.slot).map(
+    (person) => person.id,
+  );
+  const groups = assignmentGroupsFor(
+    { people, selections, selectionAssignments },
+    current.batch,
+    current.slot,
+  );
+  const selectedCount = positions.filter(({ batch, slot }) =>
+    assignmentCoverageComplete(
+      people,
+      slot,
+      selectionAssignments[selectionKey(batch, slot)] ??
+        assignmentGroupsFor(
+          { people, selections, selectionAssignments },
+          batch,
+          slot,
+        ),
+    ),
+  ).length;
+  const allOptions = candidateRecipes(
+    current.slot,
+    style,
+    people,
+    current.batch.days,
+    { limit: "all", includeDisliked },
+  );
+  const preferredCount = candidateRecipes(
+    current.slot,
+    style,
+    people,
+    current.batch.days,
+    { limit: "all" },
+  ).length;
+  const options = showAll ? allOptions : allOptions.slice(0, 3);
+  const hiddenDisliked = Math.max(
+    0,
+    candidateRecipes(current.slot, style, people, current.batch.days, {
+      limit: "all",
+      includeDisliked: true,
+    }).length - preferredCount,
+  );
+  const remaining = Math.max(0, positions.length - selectedCount);
+  return (
+    <>
+      <div
+        className="manual-progress"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={positions.length}
+        aria-valuenow={selectedCount}
+        aria-valuetext={`Выбрано ${selectedCount} из ${positions.length}`}
+      >
+        {positions.map(({ batch, slot }, index) => {
+          const complete = assignmentCoverageComplete(
+            people,
+            slot,
+            assignmentGroupsFor(
+              { people, selections, selectionAssignments },
+              batch,
+              slot,
+            ),
+          );
+          return (
+            <button
+              key={selectionKey(batch, slot)}
+              className={`manual-progress-segment${complete ? " is-complete" : ""}${index === choiceIndex ? " is-current" : ""}`}
+              aria-label={`Слот ${index + 1}: ${complete ? "выбран" : "не выбран"}`}
+              aria-current={index === choiceIndex ? "step" : undefined}
+              onClick={() => onGo(index)}
+            />
+          );
+        })}
+      </div>
+      <div className="manual-slot-heading">
+        <p className="kicker">
+          Слот {choiceIndex + 1} · партия {current.batch.index + 1}
+        </p>
+        <h2>
+          {mealMeta[current.slot].label} на {formatDate(current.batch.start)} —{" "}
+          {formatDate(current.batch.end)}
+        </h2>
+        <p>
+          Выберите общее блюдо. Если оно не подходит всем, Mise разделит только
+          этот слот на персональные назначения.
+        </p>
+      </div>
+      {groups.length > 1 && (
+        <Note tone="mint" label="Персональный слот">
+          {groups
+            .map((assignment) => {
+              const names = people
+                .filter((person) => assignment.personIds.includes(person.id))
+                .map((person) => person.name)
+                .join(", ");
+              return `${names}: ${recipesById[assignment.recipeId]?.title ?? "блюдо"}`;
+            })
+            .join(" · ")}
+        </Note>
+      )}
+      <div className="manual-menu-options" role="radiogroup" aria-label="Выбор блюда">
+        {options.map((recipe, index) => {
+          const active =
+            groups.length === 1 &&
+            groups[0].recipeId === recipe.id &&
+            assignmentCoverageComplete(people, current.slot, groups);
+          return (
+            <button
+              key={recipe.id}
+              className={`manual-menu-option glass-card${active ? " is-selected" : ""}`}
+              role="radio"
+              aria-checked={active}
+              onClick={() => onSelect(key, eaterIds, recipe.id)}
+            >
+              <span className={`manual-menu-art art-${index % 5}`} aria-hidden>
+                {recipe.emoji}
+              </span>
+              <span>
+                <b>{recipe.title}</b>
+                <small>
+                  {recipe.macros.kcal} ккал · {recipe.time} мин · Б {recipe.macros.protein}
+                </small>
+              </span>
+              <i>{active ? <Icon name="check" size={15} /> : null}</i>
+            </button>
+          );
+        })}
+      </div>
+      {!options.length && (
+        <Note tone="warn" role="status" label="Общего блюда не нашлось">
+          Подберём отдельный вариант только тем, кому общее блюдо не подходит.
+        </Note>
+      )}
+      {!showAll && allOptions.length > 3 && (
+        <button className="manual-menu-more glass-3" onClick={() => setShowAll(true)}>
+          Показать ещё {allOptions.length - 3} подходящих
+        </button>
+      )}
+      {hiddenDisliked > 0 && (
+        <button
+          className="manual-menu-more glass-3"
+          aria-pressed={includeDisliked}
+          onClick={() => setIncludeDisliked((value) => !value)}
+        >
+          {includeDisliked
+            ? "Скрыть варианты из «не люблю»"
+            : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
+        </button>
+      )}
+      {!options.length && (
+        <button
+          className="secondary-button manual-split-button"
+          onClick={() => {
+            setSplitError(!onSplit());
+          }}
+        >
+          Подобрать персональные варианты
+        </button>
+      )}
+      {splitError && (
+        <Note tone="warn" role="alert">
+          Подходящих вариантов без жёстких исключений и «не люблю» пока нет.
+          Измените ограничения или ритм готовки.
+        </Note>
+      )}
+      {remaining > 0 && (
+        <button className="text-button manual-assist" onClick={onAssist}>
+          Собрать остальные {remaining} за меня
+        </button>
+      )}
+    </>
+  );
 }
 
 function MenuReviewStep({
@@ -9834,35 +10609,57 @@ function MenuReviewStep({
   people,
   style,
   selections,
+  selectionAssignments,
   pinned,
   shopping,
   onReplace,
   onReassemble,
+  onManual,
 }: {
   batches: Batch[];
   mealSlots: MealSlot[];
   people: Person[];
   style: MenuStyle;
   selections: Record<string, string>;
+  selectionAssignments: Record<string, RecipeAssignment[]>;
   pinned: string[];
   shopping: ShoppingItem[];
-  onReplace: (key: string, recipeId: string) => void;
+  onReplace: (
+    key: string,
+    personIds: string[],
+    recipeId: string,
+  ) => string | null;
   onReassemble: () => void;
+  onManual: () => void;
 }) {
   const [replacing, setReplacing] = useState<{
     key: string;
     batch: Batch;
     slot: MealSlot;
+    personIds: string[];
   } | null>(null);
   const [expanded, setExpanded] = useState<string[]>([]);
+  const [lastReplaced, setLastReplaced] = useState<string | null>(null);
+  const [replacementCycle, setReplacementCycle] = useState(0);
   /* «Не люблю» — мягкое исключение: блюдо прячется из первых рекомендаций,
      но остаётся доступным явно (PRODUCT.md §5). */
   const [includeDisliked, setIncludeDisliked] = useState(false);
+  const replacementMotion = replacementCycle % 2 ? "motion-a" : "motion-b";
+  useEffect(() => {
+    if (!lastReplaced) return;
+    const timer = window.setTimeout(() => setLastReplaced(null), 620);
+    return () => window.clearTimeout(timer);
+  }, [lastReplaced]);
 
+  const plan = { people, selections, selectionAssignments };
   const chosen = batches.flatMap((batch) =>
-    mealSlots
-      .map((slot) => recipesById[selections[selectionKey(batch, slot)]])
-      .filter(Boolean),
+    mealSlots.flatMap((slot) =>
+      assignmentGroupsFor(plan, batch, slot).flatMap((assignment) =>
+        recipesById[assignment.recipeId]
+          ? [recipesById[assignment.recipeId]]
+          : [],
+      ),
+    ),
   );
   const ingredientUse = new Map<string, number>();
   for (const recipe of new Set(chosen))
@@ -9872,7 +10669,13 @@ function MenuReviewStep({
         (ingredientUse.get(ingredient.id) ?? 0) + 1,
       );
   const shared = [...ingredientUse.values()].filter((count) => count > 1).length;
-  const freeze = freezeSummary(batches, mealSlots, people, selections);
+  const freeze = freezeSummary(
+    batches,
+    mealSlots,
+    people,
+    selections,
+    selectionAssignments,
+  );
   const dishes = new Set(chosen.map((recipe) => recipe.id)).size;
   const portions = batches.reduce(
     (sum, batch) =>
@@ -9895,7 +10698,9 @@ function MenuReviewStep({
         Посмотрите — что не нравится, заменю.
       </p>
 
-      <div className="menu-summary">
+      <div
+        className={`menu-summary${lastReplaced ? ` is-updated ${replacementMotion}` : ""}`}
+      >
         <div className="summary-tile">
           <b className="tone-accent-num">{batches.length}</b>
           <span>{plural(batches.length, eveningForms)}</span>
@@ -9911,13 +10716,24 @@ function MenuReviewStep({
       </div>
 
       {batches.map((batch) => {
-        const rows = mealSlots
-          .map((slot) => ({
-            slot,
-            key: selectionKey(batch, slot),
-            recipe: recipesById[selections[selectionKey(batch, slot)]],
-          }))
-          .filter((row) => row.recipe);
+        const rows = mealSlots.flatMap((slot) => {
+          const key = selectionKey(batch, slot);
+          const allEaters = relevantPeople(people, slot);
+          return assignmentGroupsFor(plan, batch, slot).flatMap((assignment) => {
+            const recipe = recipesById[assignment.recipeId];
+            return recipe
+              ? [
+                  {
+                    slot,
+                    key,
+                    recipe,
+                    personIds: assignment.personIds,
+                    personal: assignment.personIds.length < allEaters.length,
+                  },
+                ]
+              : [];
+          });
+        });
         const open = expanded.includes(batch.id);
         const visible = open ? rows : rows.slice(0, 3);
         return (
@@ -9939,29 +10755,39 @@ function MenuReviewStep({
               </span>
             </div>
             <div className="batch-menu-rows">
-              {visible.map(({ slot, key, recipe }, index) => {
-                const isPinned = pinned.includes(key);
+              {visible.map(({ slot, key, recipe, personIds, personal }, index) => {
+                const rowKey = assignmentPinKey(key, personIds);
+                const isPinned = pinned.includes(key) || pinned.includes(rowKey);
+                const personNames = people
+                  .filter((person) => personIds.includes(person.id))
+                  .map((person) => person.name)
+                  .join(", ");
                 return (
                   <div
-                    className={`menu-row${isPinned ? " is-pinned" : ""}`}
-                    key={key}
+                    className={`menu-row${isPinned ? " is-pinned" : ""}${lastReplaced === rowKey ? ` is-replaced-anim ${replacementMotion}` : ""}`}
+                    key={rowKey}
                   >
                     <span className={`menu-row-art art-${index % 5}`} aria-hidden>
                       {recipe.emoji}
                     </span>
                     <div>
                       <small>
-                        {mealMeta[slot].label}
+                        {personal
+                          ? `Отдельно для ${personNames}`
+                          : mealMeta[slot].label}
                         {isPinned
                           ? " · заменено вами"
-                          : ` · ${withPlural(batch.days * relevantPeople(people, slot).length, FORMS.portion)}`}
+                          : ` · ${withPlural(batch.days * personIds.length, FORMS.portion)}`}
                       </small>
                       <b>{recipe.title}</b>
                     </div>
                     <button
-                      className="menu-swap"
-                      aria-label={`Заменить блюдо: ${mealMeta[slot].label}, ${recipe.title}`}
-                      onClick={() => setReplacing({ key, batch, slot })}
+                      className={`menu-swap${lastReplaced === rowKey ? " is-rotating" : ""}`}
+                      aria-label={`Заменить блюдо: ${personal ? `для ${personNames}` : mealMeta[slot].label}, ${recipe.title}`}
+                      onClick={() => {
+                        setIncludeDisliked(false);
+                        setReplacing({ key, batch, slot, personIds });
+                      }}
                     >
                       <Icon name="repeat" size={16} />
                     </button>
@@ -9995,7 +10821,15 @@ function MenuReviewStep({
       })}
 
       {freeze.portions > 0 && freeze.shortest && (
-        <Note tone="mint" icon={<Icon name="snowflake" />}>
+        <Note
+          tone="mint"
+          icon={<Icon name="snowflake" />}
+          className={
+            lastReplaced
+              ? `freeze-note is-updated ${replacementMotion}`
+              : "freeze-note"
+          }
+        >
           {freeze.shortest.title} хранится {withPlural(
             freeze.shortest.storageDays,
             FORMS.day,
@@ -10012,6 +10846,9 @@ function MenuReviewStep({
         <button className="chip" role="checkbox" aria-checked={false} onClick={onReassemble}>
           Собрать заново
         </button>
+        <button className="chip" onClick={onManual}>
+          Выбрать вручную
+        </button>
       </div>
 
       {replacing && (
@@ -10026,11 +10863,27 @@ function MenuReviewStep({
             </h2>
           </div>
           <div className="replace-list" role="radiogroup" aria-label="Чем заменить">
-            {candidateRecipes(replacing.slot, style, people, replacing.batch.days, {
+            {candidateRecipes(
+              replacing.slot,
+              style,
+              people.filter((person) => replacing.personIds.includes(person.id)),
+              replacing.batch.days,
+              {
               limit: 6,
               includeDisliked,
-            }).map((recipe, index) => {
-              const active = selections[replacing.key] === recipe.id;
+              },
+            ).map((recipe, index) => {
+              const active = assignmentGroupsFor(
+                plan,
+                replacing.batch,
+                replacing.slot,
+              ).some(
+                (assignment) =>
+                  assignment.recipeId === recipe.id &&
+                  replacing.personIds.every((personId) =>
+                    assignment.personIds.includes(personId),
+                  ),
+              );
               return (
                 <button
                   key={recipe.id}
@@ -10038,7 +10891,13 @@ function MenuReviewStep({
                   role="radio"
                   aria-checked={active}
                   onClick={() => {
-                    onReplace(replacing.key, recipe.id);
+                    const replacedRowKey = onReplace(
+                      replacing.key,
+                      replacing.personIds,
+                      recipe.id,
+                    );
+                    setLastReplaced(replacedRowKey);
+                    setReplacementCycle((value) => value + 1);
                     setReplacing(null);
                   }}
                 >
@@ -10059,11 +10918,11 @@ function MenuReviewStep({
           {(() => {
             const hidden = Math.max(
               0,
-              candidateRecipes(replacing.slot, style, people, replacing.batch.days, {
+              candidateRecipes(replacing.slot, style, people.filter((person) => replacing.personIds.includes(person.id)), replacing.batch.days, {
                 limit: "all",
                 includeDisliked: true,
               }).length -
-                candidateRecipes(replacing.slot, style, people, replacing.batch.days, {
+                candidateRecipes(replacing.slot, style, people.filter((person) => replacing.personIds.includes(person.id)), replacing.batch.days, {
                   limit: "all",
                 }).length,
             );
@@ -10093,7 +10952,7 @@ function ReviewStep({
   plan: ActivePlan;
   onEdit: (step: number) => void;
 }) {
-  const recipeIds = new Set(Object.values(plan.selections));
+  const recipeIds = new Set(selectionRecipeIds(plan));
   const totalPortions = totalPlanPortions(plan);
   return (
     <>
@@ -10303,7 +11162,7 @@ function SuccessSheet({
           <h2 id="success-title">План готов!</h2>
           <p>
             Дней: {plan.periodDays} · готовок: {plan.batches.length} ·
-            рецептов: {new Set(Object.values(plan.selections)).size} ·
+            рецептов: {new Set(selectionRecipeIds(plan)).size} ·
             продуктов: {plan.shopping.length}
           </p>
           <InstallInline />
@@ -10348,9 +11207,17 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
 
 function batchCookingProgressKey(plan: ActivePlan, batch: Batch) {
   const selectionSignature = plan.mealSlots
-    .map((slot) => plan.selections[selectionKey(batch, slot)] ?? "")
+    .map((slot) =>
+      assignmentGroupsFor(plan, batch, slot)
+        .map(
+          (assignment) =>
+            `${assignment.recipeId}@${[...assignment.personIds].sort().join(",")}`,
+        )
+        .sort()
+        .join("+"),
+    )
     .join(":");
-  return `mise-batch-cooking-v1:${plan.id}:${batch.id}:${selectionSignature}`;
+  return `mise-batch-cooking-v2:${plan.id}:${batch.id}:${selectionSignature}`;
 }
 
 function BatchCookingView({

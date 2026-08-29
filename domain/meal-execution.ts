@@ -23,6 +23,10 @@ export type ExecutionPlan = {
   people: ExecutionPerson[];
   batches: ExecutionBatch[];
   selections: Record<string, string>;
+  selectionAssignments?: Record<
+    string,
+    { recipeId: string; personIds: string[] }[]
+  >;
   /** Optional during rollout: plans without recipe metadata retain prior behavior. */
   recipeStorage?: Record<string, RecipeStoragePolicy>;
 };
@@ -136,7 +140,11 @@ function sourceFor(
       dateInRange(item.end, plan.start, plan.end),
   );
   if (!batch) return null;
-  const recipeId = plan.selections[selectionKey(batch.id, occurrence.slot)];
+  const key = selectionKey(batch.id, occurrence.slot);
+  const assignedRecipeId = plan.selectionAssignments?.[key]?.find(
+    (assignment) => assignment.personIds.includes(occurrence.personId),
+  )?.recipeId;
+  const recipeId = assignedRecipeId ?? plan.selections[key];
   return typeof recipeId === "string" && recipeId ? { batch, recipeId } : null;
 }
 

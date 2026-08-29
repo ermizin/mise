@@ -12,7 +12,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -38,7 +38,7 @@ async function loadRecipeCatalog() {
   return sandbox.__catalog;
 }
 
-const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -360,6 +360,67 @@ test("plan validation catches an existing selection that conflicts with a person
   assert.equal(conflicts.length, 1);
   assert.equal(conflicts[0].person.id, person.id);
   assert.equal(conflicts[0].recipe.id, tuna.id);
+});
+
+test("a personal assignment isolates an incompatible eater and feeds shopping", () => {
+  const tuna = recipe("Тунец с зелёной фасолью");
+  const allergic = {
+    id: "allergic",
+    name: "Аллергия на рыбу",
+    daily: { kcal: 2100, protein: 150, fat: 70, carbs: 210 },
+    includedSlots: [tuna.slot],
+    hardExclusions: ["fish"],
+  };
+  const other = {
+    ...allergic,
+    id: "other",
+    name: "Без ограничений",
+    hardExclusions: [],
+  };
+  const safe = candidateRecipes(tuna.slot, "protein", [allergic], 1, {
+    limit: "all",
+  }).find((item) => item.id !== tuna.id);
+  assert.ok(safe, "the incompatible eater has a safe personal dish");
+  const batch = {
+    id: "batch-0",
+    index: 0,
+    start: "2026-08-28",
+    end: "2026-08-28",
+    days: 1,
+  };
+  const key = `${batch.id}:${tuna.slot}`;
+  const personalPlan = {
+    batches: [batch],
+    mealSlots: [tuna.slot],
+    people: [allergic, other],
+    selections: { [key]: tuna.id },
+    selectionAssignments: {
+      [key]: [
+        { recipeId: safe.id, personIds: [allergic.id] },
+        { recipeId: tuna.id, personIds: [other.id] },
+      ],
+    },
+  };
+  assert.deepEqual([...validateHardExclusions(personalPlan)], []);
+  const shopping = buildShopping(personalPlan);
+  assert.ok(shopping.length > 0);
+  assert.ok(
+    safe.ingredients.some((ingredient) =>
+      shopping.some((item) => item.id === ingredient.id),
+    ),
+    "shopping includes the personal dish",
+  );
+  assert.ok(
+    tuna.ingredients.some((ingredient) =>
+      shopping.some((item) => item.id === ingredient.id),
+    ),
+    "shopping includes the shared-slot counterpart",
+  );
+  assert.deepEqual(
+    [...buildShopping({ ...personalPlan, mealSlots: [] })],
+    [],
+    "a removed slot cannot leak stale selections back into shopping",
+  );
 });
 
 test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing the legacy catalog", () => {
