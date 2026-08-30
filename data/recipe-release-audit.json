@@ -1,24 +1,22 @@
 {
   "schemaVersion": 1,
-  "total": 217,
+  "total": 221,
   "counts": {
-    "ready": 210,
-    "review_required": 3,
-    "blocked": 4
+    "ready": 209,
+    "review_required": 6,
+    "blocked": 6
   },
   "reasonCounts": {
-    "editorial:extreme_kcal": 23,
+    "editorial:extreme_kcal": 18,
     "editorial:invalid_yield": 2,
-    "editorial:label_dependent_ingredient": 83,
     "editorial:missing_yield": 2,
     "editorial:niche_localization": 9,
-    "nutrition:ignored_component_not_calculable": 183,
-    "nutrition:independent_calculation_complete": 113,
+    "editorial:procedure_review_required": 2,
+    "nutrition:ignored_component_not_calculable": 189,
+    "nutrition:independent_calculation_complete": 110,
     "nutrition:invalid_yield": 4,
-    "nutrition:label_required": 83,
-    "nutrition:missing_ingredient_amount": 1,
-    "nutrition:nutrition_delta_outside_tolerance": 100,
-    "nutrition:nutrition_delta_within_tolerance": 113
+    "nutrition:nutrition_delta_outside_tolerance": 107,
+    "nutrition:nutrition_delta_within_tolerance": 110
   },
   "cards": [
     {
@@ -447,7 +445,7 @@
       "title": "Crispy Chili Beef Noodles",
       "sourceUrl": "https://mealprepmanual.com/crispy-chili-beef-noodles/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 625.8,
@@ -456,17 +454,6 @@
         "carbs": 57.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "gochujang"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -481,16 +468,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "paprika"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "gochujang",
-            "canonicalId": "gochujang_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -894,7 +871,7 @@
       "title": "One Pot Sausage and Pepper Pasta",
       "sourceUrl": "https://mealprepmanual.com/one-pot-sausage-and-pepper-pasta/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 698.3,
@@ -903,17 +880,6 @@
         "carbs": 59.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "half and half"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -984,16 +950,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "water"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "half and half",
-            "canonicalId": "cream_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -2082,7 +2038,7 @@
       "title": "Pumpkin Pie Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/pumpkin-pie-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 442.3,
@@ -2091,27 +2047,6 @@
         "carbs": 53.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2287,7 +2222,7 @@
       "id": "tmpm-26566",
       "title": "Sausage Egg and Cheese Savory Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/sausage-egg-and-cheese-savory-baked-oatmeal/",
-      "verdict": "ready",
+      "verdict": "review_required",
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -2300,12 +2235,12 @@
         {
           "gate": "editorial",
           "code": "niche_localization",
-          "severity": "info",
+          "severity": "review_required",
           "detail": {
             "fit": "niche",
             "availability": "common",
             "excludeSuggested": true,
-            "documented": true
+            "documented": false
           }
         },
         {
@@ -2503,17 +2438,6 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "buffalo sauce"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
@@ -2547,16 +2471,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "buffalo sauce",
-            "canonicalId": "buffalo_sauce_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -2585,7 +2499,7 @@
       "id": "tmpm-26489",
       "title": "Mediterranean Chicken Pasta Salad",
       "sourceUrl": "https://mealprepmanual.com/mediterranean-chicken-pasta-salad/",
-      "verdict": "ready",
+      "verdict": "review_required",
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -2598,12 +2512,12 @@
         {
           "gate": "editorial",
           "code": "niche_localization",
-          "severity": "info",
+          "severity": "review_required",
           "detail": {
             "fit": "niche",
             "availability": "common",
             "excludeSuggested": true,
-            "documented": true
+            "documented": false
           }
         },
         {
@@ -2690,7 +2604,7 @@
       "title": "Peanut Turkey Stir Fry",
       "sourceUrl": "https://mealprepmanual.com/peanut-turkey-stir-fry/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 679.4,
@@ -2699,27 +2613,6 @@
         "carbs": 65
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "frozen stir fry vegetables"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen stir fry vegetables",
-            "canonicalId": "mixed_vegetables_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2754,7 +2647,7 @@
       "title": "Poblano Chicken Harvest Bowls",
       "sourceUrl": "https://mealprepmanual.com/poblano-chicken-harvest-bowls/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 695.9,
@@ -2763,17 +2656,6 @@
         "carbs": 58
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "roasted pumpkin seeds"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2824,16 +2706,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "roasted pumpkin seeds",
-            "canonicalId": "seed_mix_raw",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
@@ -2851,7 +2723,7 @@
       "title": "Cinnamon Protein Waffle French Toast",
       "sourceUrl": "https://mealprepmanual.com/cinnamon-protein-waffle-french-toast/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 437.6,
@@ -2860,28 +2732,6 @@
         "carbs": 54.9
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "protein pancake mix",
-              "fat free whipped cream"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "protein pancake mix",
-            "canonicalId": "protein_pancake_mix_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2904,16 +2754,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "cinnamon"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "fat free whipped cream",
-            "canonicalId": "whipped_cream_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -3116,7 +2956,7 @@
       "title": "Gochujang Glazed Beef & Vegetables",
       "sourceUrl": "https://mealprepmanual.com/gochujang-glazed-beef-vegetables/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 609.8,
@@ -3125,27 +2965,6 @@
         "carbs": 59.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "gochujang"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "gochujang",
-            "canonicalId": "gochujang_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3179,46 +2998,25 @@
       "id": "tmpm-25475",
       "title": "Tikka Masala Meatballs",
       "sourceUrl": "https://mealprepmanual.com/tikka-masala-meatballs/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 392.6,
-        "protein": 16.5,
-        "fat": 12.5,
-        "carbs": 55.3
+        "kcal": 794.1,
+        "protein": 43.8,
+        "fat": 39.6,
+        "carbs": 71.8
       },
       "reasons": [
         {
           "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
+          "code": "procedure_review_required",
+          "severity": "blocked",
           "detail": {
-            "ingredients": [
-              "high protein beef meatballs",
-              "tikka masala sauce"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "high protein beef meatballs",
-            "canonicalId": "beef_meatballs_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "tikka masala sauce",
-            "canonicalId": "tikka_sauce_processed",
-            "policy": "editorial_average_with_check_label"
+            "blockers": [
+              "requires_verified_component_recipe: high_protein_beef_meatballs",
+              "requires_verified_component_recipe: tikka_masala_sauce"
+            ]
           }
         },
         {
@@ -3228,7 +3026,7 @@
           "detail": {
             "fields": [
               "kcal",
-              "protein"
+              "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -3241,47 +3039,15 @@
       "title": "Teriyaki Beef Meatballs",
       "sourceUrl": "https://mealprepmanual.com/teriyaki-beef-meatballs/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 405.2,
-        "protein": 17.5,
-        "fat": 9.9,
-        "carbs": 61.2
+        "kcal": 581.5,
+        "protein": 40.5,
+        "fat": 11.6,
+        "carbs": 74.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "high protein beef meatballs",
-              "frozen stir fry blend vegetables"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "high protein beef meatballs",
-            "canonicalId": "beef_meatballs_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen stir fry blend vegetables",
-            "canonicalId": "mixed_vegetables_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -3289,7 +3055,7 @@
           "detail": {
             "fields": [
               "kcal",
-              "protein"
+              "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -3301,8 +3067,8 @@
       "id": "tmpm-25461",
       "title": "Meatball Sub",
       "sourceUrl": "https://mealprepmanual.com/meatball-sub/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 514.5,
@@ -3313,24 +3079,13 @@
       "reasons": [
         {
           "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
+          "code": "procedure_review_required",
+          "severity": "blocked",
           "detail": {
-            "ingredients": [
-              "bread",
-              "high protein beef meatballs"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "bread",
-            "canonicalId": "bread_processed",
-            "policy": "editorial_average_with_check_label"
+            "blockers": [
+              "requires_verified_component_recipe: high_protein_beef_meatballs",
+              "requires_verified_component_recipe: marinara_sauce"
+            ]
           }
         },
         {
@@ -3339,16 +3094,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "garlic powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "high protein beef meatballs",
-            "canonicalId": "beef_meatballs_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -3514,27 +3259,6 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
@@ -3693,7 +3417,7 @@
       "title": "Hot Honey Pork Stir Fry",
       "sourceUrl": "https://mealprepmanual.com/hot-honey-pork-stir-fry/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 622.8,
@@ -3702,27 +3426,6 @@
         "carbs": 54.9
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "crunchy chili garlic oil"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "crunchy chili garlic oil",
-            "canonicalId": "chili_garlic_oil_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
@@ -3860,7 +3563,7 @@
       "title": "Double Dark Chocolate Granola",
       "sourceUrl": "https://mealprepmanual.com/double-dark-chocolate-granola/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 323.5,
@@ -3869,17 +3572,6 @@
         "carbs": 34.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "dark chocolate chips"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3894,16 +3586,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dark chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -3924,7 +3606,7 @@
       "title": "Peanut Butter Protein Cluster Granola",
       "sourceUrl": "https://mealprepmanual.com/peanut-butter-protein-cluster-granola/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 258.6,
@@ -3934,32 +3616,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "vanilla extract"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -4098,7 +3759,7 @@
       "title": "Chicken Bowls with Rice and Lentils",
       "sourceUrl": "https://mealprepmanual.com/chicken-bowls-with-rice-and-lentils/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 608,
@@ -4107,17 +3768,6 @@
         "carbs": 53.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "italian dressing"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4144,16 +3794,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "italian dressing",
-            "canonicalId": "dressing_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -4170,7 +3810,7 @@
       "title": "Korean Beef and Rice Cakes (Tteokbokki)",
       "sourceUrl": "https://mealprepmanual.com/korean-beef-and-rice-cakes/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 710.9,
@@ -4179,60 +3819,6 @@
         "carbs": 107.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "kimchi",
-              "rice cakes",
-              "gochujang",
-              "rice cake water"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "kimchi",
-            "canonicalId": "kimchi_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "rice cakes",
-            "canonicalId": "rice_cake_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "gochujang",
-            "canonicalId": "gochujang_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "rice cake water",
-            "canonicalId": "rice_cake_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4261,7 +3847,7 @@
       "title": "Meal Prepped Protein Pancakes",
       "sourceUrl": "https://mealprepmanual.com/meal-prepped-protein-pancakes/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 250.9,
@@ -4270,38 +3856,6 @@
         "carbs": 23.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla whey protein",
-              "vanilla casein protein"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla whey protein",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla casein protein",
-            "canonicalId": "casein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4340,19 +3894,27 @@
       "resolvedReasons": []
     },
     {
-      "id": "tmpm-25006",
-      "title": "Quick and Easy Snack Ideas",
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
+      "title": "Five-Minute Hash Brown Breakfast Bowl",
       "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
       "verdict": "ready",
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 318.7,
-        "protein": 24.2,
-        "fat": 11.4,
-        "carbs": 28.3
+        "kcal": 338.5,
+        "protein": 22.9,
+        "fat": 14.5,
+        "carbs": 29
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "seasoned salt to taste"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -4361,6 +3923,140 @@
             "fields": [
               "kcal",
               "fat"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "title": "Avocado and White Bean Rice Cakes",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 440.5,
+        "protein": 14.6,
+        "fat": 16.1,
+        "carbs": 63.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt and pepper to taste"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "everything bagel seasoning"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "title": "Egg, Chicken and Cheese Quesadilla",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 364.2,
+        "protein": 25,
+        "fat": 16,
+        "carbs": 28.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "title": "Apple Yogurt Granola Bowl",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 397.4,
+        "protein": 18.5,
+        "fat": 9.2,
+        "carbs": 64.2
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "tmpm-25006-strawberry-lime-sorbet",
+      "title": "Strawberry Lime Sorbet",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 280.4,
+        "protein": 2.2,
+        "fat": 1,
+        "carbs": 72
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "water"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "kcal",
+              "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -4598,7 +4294,7 @@
       "title": "Hidden Vegetable Breakfast Muffins",
       "sourceUrl": "https://mealprepmanual.com/hidden-vegetable-breakfast-muffins/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 247.9,
@@ -4607,17 +4303,6 @@
         "carbs": 36.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "chocolate chips ⁣⁣"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4660,16 +4345,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "chocolate chips ⁣⁣",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -4686,7 +4361,7 @@
       "title": "Easy Ground Chicken Curry",
       "sourceUrl": "https://mealprepmanual.com/easy-ground-chicken-curry/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 652.3,
@@ -4695,29 +4370,6 @@
         "carbs": 66.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "ghee",
-              "ghee",
-              "frozen peas and carrots"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ghee",
-            "canonicalId": "ghee_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4776,30 +4428,10 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ghee",
-            "canonicalId": "ghee_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "cumin"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen peas and carrots",
-            "canonicalId": "mixed_vegetables_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -4912,7 +4544,7 @@
       "id": "tmpm-24866",
       "title": "Dijon Chicken and Pasta Salad",
       "sourceUrl": "https://mealprepmanual.com/dijon-chicken-and-pasta-salad/",
-      "verdict": "ready",
+      "verdict": "review_required",
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
@@ -4925,12 +4557,12 @@
         {
           "gate": "editorial",
           "code": "niche_localization",
-          "severity": "info",
+          "severity": "review_required",
           "detail": {
             "fit": "niche",
             "availability": "common",
             "excludeSuggested": true,
-            "documented": true
+            "documented": false
           }
         },
         {
@@ -5456,7 +5088,7 @@
       "title": "Jalapeño Cheddar Broccoli Bites",
       "sourceUrl": "https://mealprepmanual.com/jalapeno-cheddar-broccoli-bites/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 154.6,
@@ -5466,32 +5098,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "maseca"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "jalapeños"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "maseca",
-            "canonicalId": "maseca_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -5770,7 +5381,7 @@
       "title": "Protein Waffles",
       "sourceUrl": "https://mealprepmanual.com/protein-waffles/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 231.6,
@@ -5779,38 +5390,6 @@
         "carbs": 21.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla whey protein",
-              "vanilla casein protein"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla whey protein",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla casein protein",
-            "canonicalId": "casein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -5936,7 +5515,7 @@
       "title": "Banana Cinnamon Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/banana-cinnamon-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 358.9,
@@ -5945,27 +5524,6 @@
         "carbs": 55.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6043,44 +5601,15 @@
       "title": "Protein Pumpkin Muffins",
       "sourceUrl": "https://mealprepmanual.com/protein-pumpkin-muffins/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 176,
-        "protein": 8.2,
-        "fat": 6.9,
-        "carbs": 22.4
+        "kcal": 352,
+        "protein": 16.4,
+        "fat": 13.8,
+        "carbs": 44.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "info",
-          "detail": {
-            "kcal": 91,
-            "expectedRange": [
-              150,
-              800
-            ],
-            "adaptation": {
-              "miseServing": "2 исходных маффина",
-              "reason": "Один маффин 91 ккал объединяется в завтрак/перекус."
-            }
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla whey protein powder",
-              "vanilla casein protein powder",
-              "whipped cream cheese frosting"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6115,40 +5644,10 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla whey protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla casein protein powder",
-            "canonicalId": "casein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "vanilla"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "whipped cream cheese frosting",
-            "canonicalId": "cream_cheese_frosting_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -6209,7 +5708,7 @@
       "title": "Peaches and Cream Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/peaches-and-cream-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 395.1,
@@ -6218,27 +5717,6 @@
         "carbs": 48.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6273,7 +5751,7 @@
       "title": "Teriyaki Rotisserie Chicken Bowls",
       "sourceUrl": "https://mealprepmanual.com/teriyaki-rotisserie-chicken-bowls/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 427.6,
@@ -6282,38 +5760,6 @@
         "carbs": 47.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "crunchy chili garlic oil",
-              "crunchy chili garlic oil"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "crunchy chili garlic oil",
-            "canonicalId": "chili_garlic_oil_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "crunchy chili garlic oil",
-            "canonicalId": "chili_garlic_oil_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -6388,7 +5834,7 @@
       "title": "Double Chocolate Brownie Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/double-chocolate-brownie-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 383.2,
@@ -6398,43 +5844,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder",
-              "mini chocolate chips"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "baking powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "mini chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -6597,31 +6011,15 @@
       "title": "Nashville Hot Chicken Nuggets",
       "sourceUrl": "https://mealprepmanual.com/nashville-hot-chicken-nuggets/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 38.9,
-        "protein": 3.1,
-        "fat": 1.8,
-        "carbs": 2.5
+        "kcal": 194.6,
+        "protein": 15.7,
+        "fat": 9,
+        "carbs": 12.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "info",
-          "detail": {
-            "kcal": 32,
-            "expectedRange": [
-              150,
-              800
-            ],
-            "adaptation": {
-              "miseServing": "5 исходных наггетсов",
-              "reason": "Один наггетс 32 ккал объединяется в порцию перекуса."
-            }
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6696,7 +6094,7 @@
       "title": "Sweet Chili Noodle Bowls",
       "sourceUrl": "https://mealprepmanual.com/sweet-chili-noodle-bowls/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 494.4,
@@ -6705,27 +6103,6 @@
         "carbs": 34.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "gochujang"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "gochujang",
-            "canonicalId": "gochujang_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6836,7 +6213,7 @@
       "title": "Breakfast Burritos",
       "sourceUrl": "https://mealprepmanual.com/breakfast-burritos/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 365.4,
@@ -6845,17 +6222,6 @@
         "carbs": 39.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "frozen shredded hash browns"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6918,16 +6284,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "rubbed sage"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen shredded hash browns",
-            "canonicalId": "hash_browns_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -7066,7 +6422,7 @@
       "title": "Orange Creamsicle Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/orange-creamsicle-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 375.9,
@@ -7075,27 +6431,6 @@
         "carbs": 46.2
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7138,7 +6473,7 @@
       "title": "Stir Fry Meal Prep",
       "sourceUrl": "https://mealprepmanual.com/stir-fry-meal-prep/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 270.7,
@@ -7147,17 +6482,6 @@
         "carbs": 11.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "gochujang"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7180,16 +6504,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "water"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "gochujang",
-            "canonicalId": "gochujang_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -7220,31 +6534,15 @@
       "title": "Chicken Meatballs",
       "sourceUrl": "https://mealprepmanual.com/chicken-meatballs/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 44.6,
-        "protein": 5.1,
-        "fat": 2.4,
-        "carbs": 0.7
+        "kcal": 217.7,
+        "protein": 24.8,
+        "fat": 11.7,
+        "carbs": 3.2
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "info",
-          "detail": {
-            "kcal": 36,
-            "expectedRange": [
-              150,
-              800
-            ],
-            "adaptation": {
-              "miseServing": "5 исходных фрикаделек",
-              "reason": "Одна фрикаделька 36 ккал объединяется в порцию."
-            }
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7287,13 +6585,14 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "fat"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -7419,7 +6718,7 @@
       "title": "PB and J Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/pb-and-j-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 397.2,
@@ -7429,43 +6728,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder",
-              "splenda"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "baking powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "splenda",
-            "canonicalId": "splenda_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -7679,7 +6946,7 @@
       "title": "Spicy Popcorn Chicken",
       "sourceUrl": "https://mealprepmanual.com/spicy-popcorn-chicken/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 217.6,
@@ -7688,27 +6955,6 @@
         "carbs": 16.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "corn chex"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "corn chex",
-            "canonicalId": "corn_chex_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7767,7 +7013,7 @@
       "title": "Honey Miso Noodles",
       "sourceUrl": "https://mealprepmanual.com/honey-miso-noodles/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 572.6,
@@ -7776,27 +7022,6 @@
         "carbs": 63
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "red miso paste"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "red miso paste",
-            "canonicalId": "miso_paste_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7832,7 +7057,7 @@
       "title": "Chocolate Chip Protein Crescent Rolls",
       "sourceUrl": "https://mealprepmanual.com/chocolate-chip-protein-crescent-rolls/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 52.2,
@@ -7842,43 +7067,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla casein protein powder",
-              "chocolate chips"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla casein protein powder",
-            "canonicalId": "casein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "baking powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -7903,7 +7096,7 @@
       "title": "Thai Coconut Chicken Red Curry",
       "sourceUrl": "https://mealprepmanual.com/thai-coconut-chicken-red-curry/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 740.3,
@@ -7912,38 +7105,6 @@
         "carbs": 62.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "red Thai curry paste",
-              "light coconut milk"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "red Thai curry paste",
-            "canonicalId": "curry_paste_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "light coconut milk",
-            "canonicalId": "coconut_milk_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7981,7 +7142,7 @@
       "title": "Broccoli Bites",
       "sourceUrl": "https://mealprepmanual.com/broccoli-bites/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 157.1,
@@ -7990,27 +7151,6 @@
         "carbs": 32.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "maseca"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "maseca",
-            "canonicalId": "maseca_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8069,7 +7209,7 @@
       "title": "Dark Chocolate Cherry Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/dark-chocolate-cherry-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 383.6,
@@ -8079,54 +7219,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder",
-              "dark chocolate chips",
-              "dark chocolate chips"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "baking powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dark chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dark chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -8349,7 +7446,7 @@
       "title": "Korean Chicken Stew – Dakdoritang",
       "sourceUrl": "https://mealprepmanual.com/korean-chicken-stew-dakdoritang/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 507.7,
@@ -8359,32 +7456,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "gochujang"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "minced ginger"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "gochujang",
-            "canonicalId": "gochujang_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -8422,27 +7498,6 @@
         "carbs": 45.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "frozen shredded hash browns"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen shredded hash browns",
-            "canonicalId": "hash_browns_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8493,7 +7548,7 @@
       "title": "Spicy Chicken Sandwich",
       "sourceUrl": "https://mealprepmanual.com/spicy-chicken-sandwich/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 563.2,
@@ -8502,28 +7557,6 @@
         "carbs": 46.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "ground corn chex",
-              "hamburger buns"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "ground corn chex",
-            "canonicalId": "corn_chex_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8574,16 +7607,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "hamburger buns",
-            "canonicalId": "bread_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -8600,7 +7623,7 @@
       "title": "Apple and Greek Yogurt",
       "sourceUrl": "https://mealprepmanual.com/apple-and-greek-yogurt/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 296.5,
@@ -8609,38 +7632,6 @@
         "carbs": 33.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "splenda",
-              "mini chocolate chips"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "splenda",
-            "canonicalId": "splenda_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "mini chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -8660,7 +7651,7 @@
       "title": "Air Fryer Boneless Buffalo Chicken Wings",
       "sourceUrl": "https://mealprepmanual.com/air-fryer-boneless-buffalo-chicken-wings/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 724.3,
@@ -8669,38 +7660,6 @@
         "carbs": 49.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "popcorn chicken",
-              "buffalo sauce"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "popcorn chicken",
-            "canonicalId": "popcorn_chicken_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "buffalo sauce",
-            "canonicalId": "buffalo_sauce_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -8722,7 +7681,7 @@
       "title": "Maple Sriracha Boneless Wings",
       "sourceUrl": "https://mealprepmanual.com/maple-sriracha-boneless-wings/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 768.3,
@@ -8731,27 +7690,6 @@
         "carbs": 69.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "popcorn chicken"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "popcorn chicken",
-            "canonicalId": "popcorn_chicken_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -8773,7 +7711,7 @@
       "title": "Sweets & Sausage Skillet",
       "sourceUrl": "https://mealprepmanual.com/sweets-sausage-skillet/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 459,
@@ -8782,27 +7720,6 @@
         "carbs": 46.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "chicken sausage"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "chicken sausage",
-            "canonicalId": "chicken_sausage_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8959,7 +7876,7 @@
       "title": "Air Fryer Chicken Fingers",
       "sourceUrl": "https://mealprepmanual.com/air-fryer-chicken-fingers/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 199.4,
@@ -8968,27 +7885,6 @@
         "carbs": 13.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "corn chex"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "corn chex",
-            "canonicalId": "corn_chex_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9083,7 +7979,7 @@
       "title": "Lemon Blueberry Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/lemon-blueberry-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 408.4,
@@ -9093,43 +7989,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder",
-              "splenda"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "baking powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "splenda",
-            "canonicalId": "splenda_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -9158,52 +8022,15 @@
       "title": "Stuffed Hash Browns",
       "sourceUrl": "https://mealprepmanual.com/stuffed-hash-browns/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 92.2,
-        "protein": 2.8,
-        "fat": 3.6,
-        "carbs": 12.5
+        "kcal": 276.5,
+        "protein": 8.4,
+        "fat": 10.9,
+        "carbs": 37.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "info",
-          "detail": {
-            "kcal": 62,
-            "expectedRange": [
-              150,
-              800
-            ],
-            "adaptation": {
-              "miseServing": "4 исходные рёшти",
-              "reason": "Мелкие рёшти объединяются в порцию."
-            }
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "frozen shredded hash browns"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen shredded hash browns",
-            "canonicalId": "hash_browns_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9222,13 +8049,15 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "kcal",
+              "fat"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -9238,63 +8067,15 @@
       "title": "Double Chocolate Chip Pancake Bites",
       "sourceUrl": "https://mealprepmanual.com/double-chocolate-chip-pancake-bites/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 37.4,
-        "protein": 2.4,
-        "fat": 1.1,
-        "carbs": 4.8
+        "kcal": 179.4,
+        "protein": 11.6,
+        "fat": 5.1,
+        "carbs": 23.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "extreme_kcal",
-          "severity": "info",
-          "detail": {
-            "kcal": 36,
-            "expectedRange": [
-              150,
-              800
-            ],
-            "adaptation": {
-              "miseServing": "4 исходных панкейк-болла",
-              "reason": "Мелкие панкейк-боллы объединяются в порцию."
-            }
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla casein protein powder",
-              "mini chocolate chips"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla casein protein powder",
-            "canonicalId": "casein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "mini chocolate chips",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9329,7 +8110,7 @@
       "title": "Carrot Cake Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/carrot-cake-baked-oatmeal/",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 422.7,
@@ -9338,28 +8119,6 @@
         "carbs": 53.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "vanilla protein powder",
-              "splenda"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "vanilla protein powder",
-            "canonicalId": "protein_powder_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9390,16 +8149,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "nutmeg"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "splenda",
-            "canonicalId": "splenda_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -9457,7 +8206,7 @@
       "title": "Chicken pasta bake",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-pasta-bake",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 579.7,
@@ -9467,32 +8216,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "mascarpone"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "chilli flakes"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "mascarpone",
-            "canonicalId": "mascarpone_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -9521,53 +8249,24 @@
       "title": "Sweet potato & peanut curry",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/satay-sweet-potato-curry",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 353.4,
-        "protein": 5.9,
-        "fat": 31.3,
-        "carbs": 17.8
+        "kcal": 616,
+        "protein": 12.2,
+        "fat": 35.4,
+        "carbs": 67.2
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "Thai red curry paste (check the label to make sure it’s vegetarian/ vegan)",
-              "can coconut milk"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "Thai red curry paste (check the label to make sure it’s vegetarian/ vegan)",
-            "canonicalId": "curry_paste_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "can coconut milk",
-            "canonicalId": "coconut_milk_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
+              "protein",
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -9581,36 +8280,15 @@
       "title": "Slow cooker chicken tikka masala",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-chicken-tikka-masala",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 492.8,
+        "kcal": 493.8,
         "protein": 43.3,
         "fat": 25.9,
-        "carbs": 22.1
+        "carbs": 22.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "tikka curry paste"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "tikka curry paste",
-            "canonicalId": "curry_paste_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9653,36 +8331,15 @@
       "title": "Family meals: Easy fish pie recipe",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie-recipe",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 534.5,
-        "protein": 34.6,
-        "fat": 13.1,
-        "carbs": 72.1
+        "kcal": 529.1,
+        "protein": 34.2,
+        "fat": 12.3,
+        "carbs": 73.2
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "x pack fish pie mix (cod, salmon, smoked haddock etc, weight around 320g-400g depending on pack size)"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "x pack fish pie mix (cod, salmon, smoked haddock etc, weight around 320g-400g depending on pack size)",
-            "canonicalId": "fish_pie_mix_raw",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9704,26 +8361,15 @@
       "title": "Chickpea curry",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/kadala-curry",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 473.1,
-        "protein": 14.2,
-        "fat": 27.1,
-        "carbs": 46.7
+        "kcal": 693.1,
+        "protein": 18.5,
+        "fat": 27.5,
+        "carbs": 94.9
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "creamed coconut"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9758,20 +8404,11 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "creamed coconut",
-            "canonicalId": "creamed_coconut_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -9785,36 +8422,15 @@
       "title": "Slow cooker lamb curry",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-lamb-curry",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 555.5,
-        "protein": 43.7,
-        "fat": 15,
-        "carbs": 66.6
+        "kcal": 774.5,
+        "protein": 47.9,
+        "fat": 15.4,
+        "carbs": 114.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "Madras curry paste"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "Madras curry paste",
-            "canonicalId": "curry_paste_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9837,6 +8453,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -9850,7 +8467,7 @@
       "title": "Sausage & leek mash pie",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/sausage-leek-mash-pie",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 647.5,
@@ -9859,27 +8476,6 @@
         "carbs": 44.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "pork sausages"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pork sausages",
-            "canonicalId": "sausage_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9899,7 +8495,7 @@
       "title": "10-minute couscous salad",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/10minute-couscous-salad",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 449.6,
@@ -9908,27 +8504,6 @@
         "carbs": 59.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "pesto"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pesto",
-            "canonicalId": "pesto_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9948,36 +8523,15 @@
       "title": "Big-batch bolognese",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/big-batch-bolognese",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 341.3,
-        "protein": 30.5,
-        "fat": 18.9,
-        "carbs": 13.1
+        "kcal": 380.5,
+        "protein": 34.1,
+        "fat": 21.4,
+        "carbs": 13.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "smoked bacon rashers, chopped"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "smoked bacon rashers, chopped",
-            "canonicalId": "bacon_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10000,6 +8554,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -10013,26 +8568,15 @@
       "title": "Slow cooker beef bourguignon",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-beef-bourguignon",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 511.7,
-        "protein": 43.1,
-        "fat": 22.6,
-        "carbs": 19.6
+        "kcal": 588.7,
+        "protein": 45.1,
+        "fat": 22.7,
+        "carbs": 37.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "unsmoked bacon lardons"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10051,23 +8595,15 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
+          "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
-            "sourceName": "unsmoked bacon lardons",
-            "canonicalId": "bacon_processed",
-            "policy": "editorial_average_with_check_label"
+            "fields": [
+              "kcal",
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -10077,42 +8613,21 @@
       "title": "Meal prep: pasta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/power-packed-pasta-boxes",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 751.3,
-        "protein": 47.9,
-        "fat": 24.3,
-        "carbs": 87.1
+        "kcal": 755,
+        "protein": 48.3,
+        "fat": 24.4,
+        "carbs": 87.6
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "pesto"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "pack basil chopped, stems and all"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pesto",
-            "canonicalId": "pesto_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -10139,10 +8654,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 493.5,
+        "kcal": 494.4,
         "protein": 25.7,
         "fat": 24.9,
-        "carbs": 43.4
+        "carbs": 43.6
       },
       "reasons": [
         {
@@ -10169,10 +8684,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 396.3,
-        "protein": 13.6,
+        "kcal": 402,
+        "protein": 13.7,
         "fat": 10.1,
-        "carbs": 68
+        "carbs": 69.5
       },
       "reasons": [
         {
@@ -10213,6 +8728,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -10226,36 +8742,15 @@
       "title": "Vegetarian bolognese",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegetarian-bolognese",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 406.5,
-        "protein": 25.4,
-        "fat": 14.5,
-        "carbs": 47.2
+        "kcal": 445.7,
+        "protein": 29,
+        "fat": 17,
+        "carbs": 47.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "frozen vegetarian mince"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "frozen vegetarian mince",
-            "canonicalId": "vegetarian_mince_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10278,6 +8773,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -10291,7 +8787,7 @@
       "title": "Slow-cooker sausage casserole",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-sausage-casserole",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 677.4,
@@ -10300,27 +8796,6 @@
         "carbs": 29.3
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "chipolatas each halved"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "chipolatas each halved",
-            "canonicalId": "sausage_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10358,7 +8833,7 @@
       "title": "Italian vegetable soup",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/italian-vegetable-soup",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 272.2,
@@ -10367,27 +8842,6 @@
         "carbs": 41.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "each of onions and carrots, chopped"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "each of onions and carrots, chopped",
-            "canonicalId": "mixed_vegetables_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10432,7 +8886,7 @@
       "title": "Aubergine, tomato & halloumi pie",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/aubergine-tomato-halloumi-pie",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 665.5,
@@ -10441,19 +8895,6 @@
         "carbs": 45.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "pomegranate molasses or good balsamic vinegar",
-              "block halloumi cut into 8 slices",
-              "block all-butter puff pastry"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10464,40 +8905,10 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pomegranate molasses or good balsamic vinegar",
-            "canonicalId": "pomegranate_molasses_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "small bunch mint leaves chopped"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "block halloumi cut into 8 slices",
-            "canonicalId": "halloumi_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "block all-butter puff pastry",
-            "canonicalId": "puff_pastry_raw",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -10523,10 +8934,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 450,
-        "protein": 34,
-        "fat": 6,
-        "carbs": 66.1
+        "kcal": 539,
+        "protein": 35.6,
+        "fat": 6.1,
+        "carbs": 85.9
       },
       "reasons": [
         {
@@ -10560,21 +8971,22 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 430.7,
-        "protein": 16,
-        "fat": 15.1,
-        "carbs": 61.4
+        "kcal": 472.7,
+        "protein": 18.6,
+        "fat": 15.2,
+        "carbs": 69.2
       },
       "reasons": [
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -10587,10 +8999,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 162.7,
+        "kcal": 162.5,
         "protein": 7.3,
         "fat": 2.6,
-        "carbs": 32.4
+        "carbs": 32.3
       },
       "reasons": [
         {
@@ -10647,9 +9059,9 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 352,
+        "kcal": 364,
         "protein": 37.5,
-        "fat": 10.4,
+        "fat": 11.8,
         "carbs": 28.8
       },
       "reasons": [
@@ -10731,10 +9143,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 235.8,
-        "protein": 23.7,
-        "fat": 10.8,
-        "carbs": 11.7
+        "kcal": 497.6,
+        "protein": 35.1,
+        "fat": 14.2,
+        "carbs": 56.8
       },
       "reasons": [
         {
@@ -10755,13 +9167,24 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "basil"
+          }
         },
         {
           "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -10774,19 +9197,35 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 537.5,
-        "protein": 25.8,
-        "fat": 10.4,
-        "carbs": 86.2
+        "kcal": 499.5,
+        "protein": 22,
+        "fat": 8,
+        "carbs": 86.1
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "water or vegetable broth"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "parsley"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
             "fields": [
-              "protein"
+              "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -10802,10 +9241,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 177.6,
-        "protein": 9.4,
-        "fat": 5.2,
-        "carbs": 27.7
+        "kcal": 442.6,
+        "protein": 18.4,
+        "fat": 8.4,
+        "carbs": 76.7
       },
       "reasons": [
         {
@@ -10823,6 +9262,8 @@
           "detail": {
             "fields": [
               "kcal",
+              "protein",
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -10868,10 +9309,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 347.2,
-        "protein": 26.8,
+        "kcal": 347.7,
+        "protein": 26.9,
         "fat": 15.2,
-        "carbs": 28.4
+        "carbs": 28.5
       },
       "reasons": [
         {
@@ -10896,10 +9337,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 712.7,
-        "protein": 42.2,
-        "fat": 28.6,
-        "carbs": 73.6
+        "kcal": 666.3,
+        "protein": 37.8,
+        "fat": 31.3,
+        "carbs": 60.2
       },
       "reasons": [
         {
@@ -10917,7 +9358,7 @@
           "detail": {
             "fields": [
               "kcal",
-              "protein",
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -10934,10 +9375,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 517.1,
-        "protein": 33.4,
-        "fat": 17.1,
-        "carbs": 59.8
+        "kcal": 516,
+        "protein": 32.8,
+        "fat": 17.3,
+        "carbs": 59.7
       },
       "reasons": [
         {
@@ -11135,7 +9576,7 @@
       "title": "Vegan breakfast muffins",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegan-breakfast-muffins",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 229.5,
@@ -11145,43 +9586,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "muesli mix",
-              "sweetened soy milk"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "muesli mix",
-            "canonicalId": "granola_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "baking powder"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "sweetened soy milk",
-            "canonicalId": "soy_milk_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -11202,7 +9611,7 @@
       "title": "Tuna Niçoise protein pot",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/tuna-nicoise-protein-pots",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 325.9,
@@ -11211,27 +9620,6 @@
         "carbs": 13.4
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "French dressing"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "French dressing",
-            "canonicalId": "dressing_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -11251,34 +9639,29 @@
       "title": "Coconut rice with prawn stir-fry",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/coconut-rice-with-prawn-stir-fry",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 410.1,
-        "protein": 18.9,
-        "fat": 13.9,
-        "carbs": 54.3
+        "kcal": 406.3,
+        "protein": 19.5,
+        "fat": 8.8,
+        "carbs": 63.4
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "ingredients": [
-              "coconut-milk"
-            ],
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "red chilli deseeded and finely chopped"
           }
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "sourceName": "coconut-milk",
-            "canonicalId": "coconut_milk_processed",
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "coriander"
           }
         },
         {
@@ -11295,7 +9678,7 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "fat"
+              "protein"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -11362,34 +9745,29 @@
       "title": "Chickpea & spinach gratin with salsa verde",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/chickpea-spinach-gratin-with-salsa-verde",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 673.7,
-        "protein": 39.1,
-        "fat": 22.5,
-        "carbs": 83
+        "kcal": 632,
+        "protein": 34.9,
+        "fat": 19.9,
+        "carbs": 82.9
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "ingredients": [
-              "crème fraîche"
-            ],
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "water or vegetable broth"
           }
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "sourceName": "crème fraîche",
-            "canonicalId": "creme_fraiche_processed",
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "parsley"
           }
         },
         {
@@ -11400,6 +9778,7 @@
             "fields": [
               "kcal",
               "protein",
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -11416,10 +9795,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 728.5,
-        "protein": 41,
-        "fat": 32.7,
-        "carbs": 66.7
+        "kcal": 589.8,
+        "protein": 36.9,
+        "fat": 31,
+        "carbs": 40.4
       },
       "reasons": [
         {
@@ -11436,9 +9815,9 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "protein",
-              "fat",
-              "carbs"
+              "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -11451,36 +9830,15 @@
       "title": "Family meals: Easy fish cakes",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-cakes",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 344.1,
-        "protein": 28.9,
-        "fat": 9.9,
-        "carbs": 36.1
+        "kcal": 385.2,
+        "protein": 28.7,
+        "fat": 13.3,
+        "carbs": 38.9
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "x pack fish pie mix (cod, salmon, smoked haddock etc, weight around 320g-400g depending on pack size)"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "x pack fish pie mix (cod, salmon, smoked haddock etc, weight around 320g-400g depending on pack size)",
-            "canonicalId": "fish_pie_mix_raw",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -11505,19 +9863,29 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 762.3,
-        "protein": 20.6,
-        "fat": 36.8,
-        "carbs": 88.4
+        "kcal": 435.3,
+        "protein": 13.8,
+        "fat": 20.4,
+        "carbs": 49.9
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "pepper"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "protein",
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -11534,10 +9902,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 431.8,
-        "protein": 33,
-        "fat": 5.5,
-        "carbs": 62.6
+        "kcal": 488.3,
+        "protein": 34,
+        "fat": 5.6,
+        "carbs": 75.3
       },
       "reasons": [
         {
@@ -11546,6 +9914,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -11587,15 +9956,6 @@
           "severity": "blocked",
           "detail": {
             "servings": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "missing_ingredient_amount",
-          "severity": "blocked",
-          "detail": {
-            "sourceName": "juice of 2 lemons",
-            "unit": null
           }
         },
         {
@@ -11684,18 +10044,6 @@
       "reasons": [
         {
           "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "pesto",
-              "sundried tomatoes chopped"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "editorial",
           "code": "niche_localization",
           "severity": "review_required",
           "detail": {
@@ -11703,26 +10051,6 @@
             "availability": "common",
             "excludeSuggested": true,
             "documented": false
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pesto",
-            "canonicalId": "pesto_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "sundried tomatoes chopped",
-            "canonicalId": "sun_dried_tomatoes_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -11803,36 +10131,15 @@
       "title": "Picnic quiches",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/roasted-tomato-pancetta-picnic-quiches",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 336,
+        "kcal": 339.1,
         "protein": 8.8,
-        "fat": 26.4,
+        "fat": 26.7,
         "carbs": 16.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "pack thin pancetta rashers"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pack thin pancetta rashers",
-            "canonicalId": "bacon_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11851,14 +10158,13 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "kcal"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -11891,18 +10197,6 @@
               800
             ],
             "adaptation": null
-          }
-        },
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "review_required",
-          "detail": {
-            "ingredients": [
-              "can coconut milk",
-              "fish sauce (optional)"
-            ],
-            "policy": null
           }
         },
         {
@@ -11975,26 +10269,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "ground cumin"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "review_required",
-          "detail": {
-            "sourceName": "can coconut milk",
-            "canonicalId": "coconut_milk_processed",
-            "policy": null
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "review_required",
-          "detail": {
-            "sourceName": "fish sauce (optional)",
-            "canonicalId": "fish_sauce_processed",
-            "policy": null
           }
         }
       ],
@@ -12094,34 +10368,61 @@
       "title": "Meatball & chickpea yellow coconut curry with rice & pickled red cabbage",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 696,
-        "protein": 30.6,
-        "fat": 27,
-        "carbs": 84.6
+        "kcal": 718.9,
+        "protein": 32.2,
+        "fat": 30.7,
+        "carbs": 81.8
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "ingredients": [
-              "coconut-milk"
-            ],
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "lemon zest"
           }
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "sourceName": "coconut-milk",
-            "canonicalId": "coconut_milk_processed",
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "parsley"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "red chilli deseeded and finely chopped"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "coriander"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "mint"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "parsley"
           }
         },
         {
@@ -12155,10 +10456,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 567.1,
-        "protein": 17.3,
+        "kcal": 568.5,
+        "protein": 17.4,
         "fat": 12.3,
-        "carbs": 95.5
+        "carbs": 95.8
       },
       "reasons": [
         {
@@ -12218,26 +10519,15 @@
       "title": "Roasted lemony broccoli & mascarpone flatbreads",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/roasted-lemony-broccoli-mascarpone-flatbreads",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 724.2,
-        "protein": 13.5,
-        "fat": 53.4,
-        "carbs": 50
+        "kcal": 683.9,
+        "protein": 16.7,
+        "fat": 29.5,
+        "carbs": 88.2
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "mascarpone"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -12248,12 +10538,18 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
+          "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "sourceName": "mascarpone",
-            "canonicalId": "mascarpone_processed",
-            "policy": "editorial_average_with_check_label"
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "pepper"
           }
         },
         {
@@ -12270,10 +10566,7 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "kcal",
-              "protein",
-              "fat",
-              "carbs"
+              "kcal"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -12440,10 +10733,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 410,
-        "protein": 13,
-        "fat": 8.2,
-        "carbs": 73
+        "kcal": 446.5,
+        "protein": 13.7,
+        "fat": 8.3,
+        "carbs": 81
       },
       "reasons": [
         {
@@ -12492,10 +10785,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 244.9,
-        "protein": 9.5,
-        "fat": 7.7,
-        "carbs": 38.5
+        "kcal": 323.8,
+        "protein": 14.5,
+        "fat": 13.1,
+        "carbs": 41.7
       },
       "reasons": [
         {
@@ -12521,6 +10814,8 @@
           "detail": {
             "fields": [
               "kcal",
+              "protein",
+              "fat",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -12537,10 +10832,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 641.5,
-        "protein": 30.1,
-        "fat": 29,
-        "carbs": 65.8
+        "kcal": 780.5,
+        "protein": 36,
+        "fat": 40.3,
+        "carbs": 70.7
       },
       "reasons": [
         {
@@ -12565,6 +10860,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "protein",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -12625,7 +10921,7 @@
       "title": "Crunchy broccoli & cranberry salad",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/crunchy-broccoli-cranberry-salad",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 527.8,
@@ -12635,54 +10931,11 @@
       },
       "reasons": [
         {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "halloumi cut into 1cm thick slices",
-              "dried cranberries",
-              "mixed seeds"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
             "sourceName": "garlic granules"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "halloumi cut into 1cm thick slices",
-            "canonicalId": "halloumi_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dried cranberries",
-            "canonicalId": "dried_cranberries_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "mixed seeds",
-            "canonicalId": "seed_mix_raw",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -12706,10 +10959,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 431.7,
-        "protein": 34.5,
-        "fat": 18.6,
-        "carbs": 34.2
+        "kcal": 460.8,
+        "protein": 35.8,
+        "fat": 21.1,
+        "carbs": 35.1
       },
       "reasons": [
         {
@@ -12722,12 +10975,19 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "coriander"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
             "fields": [
-              "kcal",
-              "protein"
+              "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -12939,26 +11199,15 @@
       "title": "Sausage & egg muffins",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/sausage-egg-muffins",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 464.4,
+        "kcal": 467.8,
         "protein": 33.9,
         "fat": 21,
-        "carbs": 32.9
+        "carbs": 33.8
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "English muffins toasted"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -12973,16 +11222,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "mixed dried herbs"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "English muffins toasted",
-            "canonicalId": "bread_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -13006,9 +11245,9 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 630.8,
-        "protein": 55.4,
-        "fat": 29.6,
+        "kcal": 657.7,
+        "protein": 55.5,
+        "fat": 32.6,
         "carbs": 41.4
       },
       "reasons": [
@@ -13034,36 +11273,15 @@
       "title": "Black bean & spicy beef pasta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/black-bean-spicy-beef-pasta",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 660,
-        "protein": 31.7,
-        "fat": 17.2,
-        "carbs": 98.5
+        "kcal": 715.7,
+        "protein": 34.1,
+        "fat": 21.7,
+        "carbs": 100.5
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "taco seasoning"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "taco seasoning",
-            "canonicalId": "taco_seasoning_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13078,7 +11296,7 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "fat"
+              "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -13094,10 +11312,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 517.2,
-        "protein": 31.1,
-        "fat": 13.9,
-        "carbs": 74.7
+        "kcal": 676.1,
+        "protein": 39.6,
+        "fat": 25.6,
+        "carbs": 81.2
       },
       "reasons": [
         {
@@ -13130,6 +11348,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "protein",
               "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -13143,7 +11362,7 @@
       "title": "Turmeric granola",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/turmeric-granola",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 490.7,
@@ -13152,49 +11371,6 @@
         "carbs": 49.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "bran flakes",
-              "mixed seeds",
-              "raisin & nut mix"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "bran flakes",
-            "canonicalId": "bread_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "mixed seeds",
-            "canonicalId": "seed_mix_raw",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "raisin & nut mix",
-            "canonicalId": "trail_mix_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13271,10 +11447,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 436.8,
-        "protein": 34.3,
-        "fat": 26.8,
-        "carbs": 13.7
+        "kcal": 655.8,
+        "protein": 38.5,
+        "fat": 27.2,
+        "carbs": 61.7
       },
       "reasons": [
         {
@@ -13332,7 +11508,9 @@
           "detail": {
             "fields": [
               "kcal",
-              "fat"
+              "protein",
+              "fat",
+              "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -13420,26 +11598,15 @@
       "title": "Indian rice salad with chicken",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/indian-rice-salad-chicken",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 449.1,
-        "protein": 15,
-        "fat": 8.8,
-        "carbs": 77.8
+        "kcal": 685.8,
+        "protein": 21.2,
+        "fat": 9.5,
+        "carbs": 127.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "mango chutney"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13458,31 +11625,15 @@
         },
         {
           "gate": "nutrition",
-          "code": "label_required",
+          "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
-            "sourceName": "mango chutney",
-            "canonicalId": "mango_chutney_processed",
-            "policy": "editorial_average_with_check_label"
+            "fields": [
+              "kcal",
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
           }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "medium curry powder plus 1 tsp for the rice"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -13492,7 +11643,7 @@
       "title": "Chicken, squash & pesto lasagne",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-squash-pesto-lasagne",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 740.3,
@@ -13501,38 +11652,6 @@
         "carbs": 37
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "tub mascarpone",
-              "jar pesto"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "tub mascarpone",
-            "canonicalId": "mascarpone_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "jar pesto",
-            "canonicalId": "pesto_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13570,10 +11689,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 303.4,
-        "protein": 17.3,
-        "fat": 5.4,
-        "carbs": 46.6
+        "kcal": 582.6,
+        "protein": 23.1,
+        "fat": 5.9,
+        "carbs": 108
       },
       "reasons": [
         {
@@ -13594,13 +11713,16 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "kcal",
+              "protein",
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -13613,24 +11735,12 @@
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 497.9,
-        "protein": 19.6,
+        "kcal": 499.2,
+        "protein": 19.7,
         "fat": 13.7,
-        "carbs": 75.9
+        "carbs": 76.1
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "sundried tomatoes in oil",
-              "pack prosciutto or salami"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -13640,26 +11750,6 @@
             "availability": "common",
             "excludeSuggested": true,
             "documented": false
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "sundried tomatoes in oil",
-            "canonicalId": "sun_dried_tomatoes_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pack prosciutto or salami",
-            "canonicalId": "charcuterie_processed",
-            "policy": "editorial_average_with_check_label"
           }
         },
         {
@@ -13721,7 +11811,7 @@
       "title": "Orange & dark chocolate yogurt bowls",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/orange-dark-chocolate-yogurt-bowls",
       "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 483.5,
@@ -13730,38 +11820,6 @@
         "carbs": 63.7
       },
       "reasons": [
-        {
-          "gate": "editorial",
-          "code": "label_dependent_ingredient",
-          "severity": "info",
-          "detail": {
-            "ingredients": [
-              "soya milk",
-              "dark chocolate"
-            ],
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "soya milk",
-            "canonicalId": "soy_milk_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "label_required",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dark chocolate",
-            "canonicalId": "dark_chocolate_processed",
-            "policy": "editorial_average_with_check_label"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13932,10 +11990,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 516.9,
-        "protein": 38,
+        "kcal": 507.7,
+        "protein": 37.8,
         "fat": 9.4,
-        "carbs": 69.2
+        "carbs": 67.2
       },
       "reasons": [
         {
@@ -14036,9 +12094,9 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 575.1,
+        "kcal": 563,
         "protein": 32.9,
-        "fat": 20.3,
+        "fat": 18.9,
         "carbs": 68
       },
       "reasons": [

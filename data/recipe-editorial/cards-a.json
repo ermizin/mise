@@ -3327,6 +3327,24 @@
           "meal_prep_container"
         ],
         "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "рис мягкий, без твёрдой сердцевины"
       }
     ],
     "proceduralStatus": "review_required",
@@ -3341,25 +3359,64 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разложите по контейнерам готовый или замороженный рис, овощную смесь для стир-фрая, по пять готовых белковых тефтелей и соус терияки. Закройте и храните охлаждёнными.",
+        "text": "Разогрейте духовку до 200 °C. Смешайте фарш, овсяную муку, яйцо, чесночный и луковый порошок, соль и перец; сформуйте 10 одинаковых фрикаделек и запекайте 17–20 минут до полной готовности.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4"
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
         ],
-        "action": "portion",
+        "action": "bake",
+        "dependsOn": [],
+        "temperatureC": 200,
+        "duration": "17–20 мин",
         "equipment": [
-          "meal_prep_container"
+          "oven",
+          "baking_sheet"
         ],
-        "dependsOn": []
+        "donenessCue": "фрикадельки полностью готовы внутри"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Промойте сухой рис и сварите по инструкции на упаковке. Прогрейте овощную смесь до мягкости.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "cook",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "pot",
+          "frying_pan"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Разложите рис и овощи по двум контейнерам, добавьте по пять фрикаделек и соус терияки. Остудите и закройте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
       }
     ],
-    "proceduralStatus": "review_required",
-    "proceduralBlockers": [
-      "requires_verified_component_recipe: high_protein_beef_meatballs",
-      "requires_verified_component_recipe: teriyaki_sauce"
-    ]
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
   },
   {
     "id": "tmpm-25461",
@@ -3488,7 +3545,7 @@
       },
       {
         "id": "editorial-step-2",
-        "text": "Запекайте до полной готовности, затем приподнимите один край противня, чтобы жидкость стекла в сторону, и остудите, пока мясо перестанет парить. Переложите на меньший противень, заморозьте открытыми одним слоем до твёрдости, затем упакуйте герметично. Пищевая порция — 100 г готовой курицы.",
+        "text": "Запекайте при 204 °C 8–9 минут, пока самый толстый кусочек не достигнет 74 °C внутри. Приподнимите один край противня, чтобы жидкость стекла в сторону, и остудите, пока мясо перестанет парить. Переложите на меньший противень, заморозьте открытыми одним слоем до твёрдости, затем упакуйте герметично. Пищевая порция — 100 г готовой курицы.",
         "ingredientIds": [
           "source-ingredient-1"
         ],
@@ -3498,16 +3555,16 @@
           "sheet_pan",
           "freezer"
         ],
-        "donenessCue": "курица полностью непрозрачна и не выделяет розовый сок",
+        "donenessCue": "74 °C в центре самого толстого кусочка",
         "dependsOn": [
           "editorial-step-1"
-        ]
+        ],
+        "temperatureC": 204,
+        "duration": "8–9 мин"
       }
     ],
-    "proceduralStatus": "review_required",
-    "proceduralBlockers": [
-      "source_bake_duration_not_extracted"
-    ]
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
   },
   {
     "id": "tmpm-25290",
@@ -4230,13 +4287,202 @@
     "proceduralBlockers": []
   },
   {
-    "id": "tmpm-25006",
-    "titleRu": "Быстрые идеи для перекусов",
-    "paraphrasedInstructionDraft": [],
-    "proceduralStatus": "review_required",
-    "proceduralBlockers": [
-      "несколько_независимых_перекусов_в_одной_исходной_карточке: требуется разделить на отдельные рецепты"
-    ]
+    "id": "tmpm-25006-hash-brown-breakfast-bowl",
+    "titleRu": "Завтрак с хэшбрауном и яичным белком",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разогрейте хэшбраун в миске в микроволновке 1 минуту. Добавьте яичный белок, перемешайте и прогревайте короткими интервалами, пока белок полностью не схватится.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "microwave",
+        "dependsOn": [],
+        "duration": "1 мин",
+        "equipment": [
+          "microwave"
+        ],
+        "donenessCue": "яичный белок полностью схватился"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Добавьте йогурт, чеддер, зелёный лук и по желанию хрустящее масло с чили. Приправьте и подавайте.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25006-avocado-bean-rice-cakes",
+    "titleRu": "Рисовые хлебцы с авокадо и белой фасолью",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Разомните авокадо с белой фасолью и лимонным соком, посолите и поперчите.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "mash",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Распределите смесь по четырём рисовым хлебцам и посыпьте приправой для бейглов.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25006-breakfast-quesadilla",
+    "titleRu": "Кесадилья с яйцом, курицей и сыром",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "На сковороде приготовьте яйцо до полного схватывания белка.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "cook",
+        "dependsOn": [],
+        "equipment": [
+          "frying_pan"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Положите на половину тортильи яйцо, куриную нарезку и сыр, накройте второй половиной и подрумяньте с двух сторон, пока сыр не расплавится.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "toast",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "frying_pan"
+        ],
+        "donenessCue": "сыр расплавился, тортилья подрумянилась"
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25006-apple-yogurt-granola",
+    "titleRu": "Йогурт с яблоком, гранолой и мёдом",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Нарежьте яблоко небольшими кусочками.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "slice",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Выложите в миску йогурт, яблоко и гранолу, полейте мёдом. Гранолу добавляйте прямо перед едой, чтобы она оставалась хрустящей.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
+  },
+  {
+    "id": "tmpm-25006-strawberry-lime-sorbet",
+    "titleRu": "Клубнично-лаймовый сорбет",
+    "paraphrasedInstructionDraft": [
+      {
+        "id": "editorial-step-1",
+        "text": "Пробейте замороженную клубнику с кленовым сиропом, водой и соком лайма до гладкой густой массы.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "blend",
+        "dependsOn": [],
+        "equipment": [
+          "food_processor"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Подавайте сразу как мягкий сорбет или заморозьте в закрытом контейнере до более плотной консистенции.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-4"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "freezer"
+        ]
+      }
+    ],
+    "proceduralStatus": "ready",
+    "proceduralBlockers": []
   },
   {
     "id": "tmpm-24974",

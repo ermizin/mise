@@ -27,6 +27,7 @@ test("plan edits survive offline and replay without mixing client caches", async
   assert.match(worker, /PLAN_CACHE_NAME = "mise-plan-v2"/);
   assert.match(worker, /planCacheKey\(clientId\)/);
   assert.match(worker, /mise:clear-plan-cache/);
+  assert.match(worker, /mise-client=\$\{encodeURIComponent\(clientId \|\| "anonymous"\)\}/);
   assert.match(worker, /JSON\.stringify\(\{ error: "offline", plan: null \}\)/);
 });
 
@@ -42,19 +43,25 @@ test("settings have a separate restorable draft and hardware back trap", async (
 });
 
 test("audit accessibility and daily-use regressions stay fixed", async () => {
-  const [page, css] = await Promise.all([
+  const [page, css, icons] = await Promise.all([
     read("app/page.tsx"),
     read("app/globals.css"),
+    read("app/ui/icon.tsx"),
   ]);
   assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--accent-grad-aa\)/);
-  assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, person\.daily\.kcal\)/);
+  assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, plannedMacros\.kcal\)/);
   assert.match(page, /setUnassignedConfirmOpen\(true\)/);
   assert.match(page, /Mise не будет удалять их молча/);
   assert.match(page, /timerEndsAt - Date\.now\(\)/);
   assert.match(page, /wakeLock[\s\S]{0,40}\?\.request\("screen"\)/);
   assert.match(page, /navigator\.vibrate/);
-  assert.doesNotMatch(page, /<Icon name="next-day"/);
-  assert.doesNotMatch(page, /className="week-move-reason"/);
+  const exposesNextDayMove = /<Icon name="next-day"/.test(page);
+  if (exposesNextDayMove) {
+    assert.match(page, /className="week-move-reason"/);
+    assert.match(icons, /\| "next-day"/);
+  } else {
+    assert.doesNotMatch(page, /className="week-move-reason"/);
+  }
   assert.match(page, /Number\(left\.checked\) - Number\(right\.checked\)/);
   assert.match(page, /setUndoLabel\(previous\.checked \? "Отметка снята" : "Отмечено купленным"\)/);
   assert.match(page, /Собрать следующий заранее/);
@@ -113,7 +120,7 @@ test("visual release blockers and high-impact P1 regressions stay fixed", async 
   assert.match(css, /--accent-text: #b3380a/);
   assert.match(css, /--mint-text: #1c7359/);
   assert.match(css, /\.secondary-button\.btn-danger \{[\s\S]*?color: var\(--danger-text\)/);
-  assert.doesNotMatch(page, /className="compose-fab"/, "empty week keeps only its in-card CTA");
+  assert.match(page, /showCompose=\{tab === "week" && !activePlan && !loadingPlan\}/, "compose action is limited to an empty loaded week");
   assert.match(
     page,
     /className=\{`manual-menu-art[\s\S]{0,160}<RecipeMedia recipe=\{recipe\} \/>/,

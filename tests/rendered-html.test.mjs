@@ -274,9 +274,9 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(css, /@media \(max-width: 380px\) \{[\s\S]*?\.field-row-2 \{[^}]*grid-template-columns: 1fr/);
 
   // Число теней не растёт: стекло описано уровнями, а не по месту.
-  // Три дополнительных слоя принадлежат единому движущемуся bottom-nav.
+  // Дополнительные слои принадлежат единому движущемуся bottom-nav и compose-действию.
   assert.ok(
-    (css.match(/box-shadow:/g) ?? []).length <= 47,
+    (css.match(/box-shadow:/g) ?? []).length <= 48,
     "тени задаются уровнями стекла, а не по месту",
   );
 });

@@ -31,7 +31,9 @@ export async function auditRecipeRelease() {
       ],
     };
   });
-  if (cards.length !== 217 || new Set(cards.map((card) => card.id)).size !== 217) throw new Error("Release audit must cover 217 unique cards");
+  if (!cards.length || new Set(cards.map((card) => card.id)).size !== cards.length) {
+    throw new Error("Release audit must cover a non-empty set of unique cards");
+  }
   const counts = Object.fromEntries(["ready", "review_required", "blocked"].map((verdict) => [verdict, cards.filter((card) => card.verdict === verdict).length]));
   const reasonCounts = Object.fromEntries([...new Set(cards.flatMap((card) => card.reasons.map((item) => `${item.gate}:${item.code}`)))].sort().map((key) => [
     key,

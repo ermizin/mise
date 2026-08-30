@@ -187,7 +187,12 @@ function releaseTags(macros, costTier) {
 
 function effortFor(candidate, steps) {
   const total = Number(candidate.time?.totalMinutes ?? 0);
-  const cookware = new Set(steps.flatMap((step) => step.equipment ?? [])).size;
+  // Even a no-cook snack needs one working vessel or serving container. Keep
+  // the effort indicator honest without showing an impossible “0 посуды”.
+  const cookware = Math.max(
+    1,
+    new Set(steps.flatMap((step) => step.equipment ?? [])).size,
+  );
   const knifeActions = steps.filter((step) => /нареж|измельч|натр|поруб/i.test(step.text ?? "")).length;
   const activeActions = steps.length + knifeActions;
   return {

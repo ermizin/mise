@@ -50,8 +50,10 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(page, /behavior: "auto"/);
   assert.match(page, /history\.pushState\([\s\S]*?miseTab: next/);
   assert.match(page, /window\.addEventListener\("popstate"/);
-  assert.doesNotMatch(page, /showCompose=/);
-  assert.doesNotMatch(page, /className="compose-fab"/);
+  assert.match(
+    page,
+    /showCompose=\{tab === "week" && !activePlan && !loadingPlan\}/,
+  );
   assert.match(page, /className="bottom-nav-indicator"/);
   assert.match(page, /const \[gridMotionEpoch, setGridMotionEpoch\] = useState\(0\)/);
   assert.match(page, /animationDelay: `\$\{index \* 40\}ms`/);
@@ -59,8 +61,8 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(css, /transform: translateX\(calc\(var\(--tab\) \* 100%\)\)/);
   assert.match(css, /transition: color 200ms linear/);
   assert.match(css, /mise-tab-forward 320ms/);
-  assert.doesNotMatch(css, /\.compose-fab/);
-  assert.doesNotMatch(css, /@keyframes mise-fab-in/);
+  assert.match(css, /mise-fab-in 380ms var\(--motion-spring\) 120ms backwards/);
+  assert.match(css, /compose-fab:active[\s\S]*?scale\(0\.965\)/);
   assert.match(css, /mise-catalog-grid-a 320ms/);
 });
 

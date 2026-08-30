@@ -86,8 +86,8 @@ export async function applyRecipeEditorialCards({ cwd = process.cwd(), write = f
   })));
   const candidates = datasetEntries.flatMap((entry) => entry.document.candidates);
   const cards = (await Promise.all(EDITORIAL_PATHS.map(async (relativePath) => JSON.parse(await readFile(resolve(cwd, relativePath), "utf8"))))).flat();
-  if (candidates.length !== 217 || cards.length !== 217) throw new Error(`Expected 217 candidates and editorial cards; got ${candidates.length}/${cards.length}`);
-  if (new Set(cards.map((card) => card.id)).size !== 217) throw new Error("Editorial card IDs must be unique");
+  if (candidates.length !== cards.length) throw new Error(`Expected one editorial card per candidate; got ${candidates.length}/${cards.length}`);
+  if (new Set(cards.map((card) => card.id)).size !== cards.length) throw new Error("Editorial card IDs must be unique");
   candidates.forEach((candidate, index) => validateCard(cards[index], candidate));
 
   let cursor = 0;

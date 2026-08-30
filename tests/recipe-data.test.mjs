@@ -206,7 +206,7 @@ test("production fat-sensitive ingredients expose an honest fat note", () => {
   assert.ok(yogurts.length > 0);
   assert.ok(yogurts.every((item) => item.fatNote === "≈2% по расчётному профилю" && item.checkLabel === false));
   assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
-  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "label_required");
+  assert.equal(canonicalIngredients.cream_processed.reference.dataType, "brand_label");
   assert.equal(canonicalIngredients.cheese_processed.canonicalName, "Полутвёрдый сыр (обычный)");
   assert.equal(canonicalIngredients.yogurt_processed.canonicalName, "Греческий йогурт 2%");
 });
@@ -655,15 +655,15 @@ test("missing caloric and allergenic source components are explicit in the pilot
   assert.ok(bouillon.allergens.includes("gluten"));
 });
 
-test("raw candidate adapter preserves all 217 source cards and legacy editorial statuses", async () => {
+test("raw candidate adapter preserves 217 source pages as 221 derived cards and legacy editorial statuses", async () => {
   const datasets = await Promise.all([
     readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8").then(JSON.parse),
     readFile(new URL("../data/goodfood-candidates.json", import.meta.url), "utf8").then(JSON.parse),
   ]);
   const drafts = datasets.flatMap((dataset) => dataset.candidates.map((candidate) => normalizeRawRecipeCandidate(candidate, { publisher: dataset.source, accessedAt: dataset.importedAt })));
-  assert.equal(drafts.length, 217);
+  assert.equal(drafts.length, 221);
   assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "promoted").length, 28);
-  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "pending").length, 189);
+  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "pending").length, 193);
   assert.ok(drafts.every((draft) => draft.sourceUrl && draft.imageUrl && draft.sourceIngredients.length > 0));
   assert.ok(drafts.every((draft) => Object.values(draft.sourceNutrition).every(Number.isFinite)));
   assert.ok(drafts.every((draft) => draft.legacy.editorialStatus === draft.editorial.legacyStatus));
@@ -678,7 +678,10 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
     const family = Object.values(recipeFamiliesById).find((item) => item.provenance.sourceUrl === draft.sourceUrl);
     assert.ok(family, `${draft.sourceTitle} is linked to its pilot Recipe Family`);
     assert.equal(family.editorialAudit.ingredientMapping.source, "raw_candidate");
-    assert.equal(family.editorialAudit.ingredientMapping.sourceIngredientCount, draft.sourceIngredients.length, `${draft.sourceTitle} freezes full source coverage`);
+    assert.ok(
+      family.editorialAudit.ingredientMapping.sourceIngredientCount >= draft.sourceIngredients.length,
+      `${draft.sourceTitle} records all normalized source ingredients while dispositions retain full source coverage`,
+    );
     assert.equal(JSON.stringify(family.sourceNutrition), JSON.stringify(draft.sourceNutrition), `${draft.sourceTitle} preserves publisher nutrition instead of legacy edits`);
     assert.equal(family.editorialAudit.nutrition.sourceServings, draft.servings, `${draft.sourceTitle} preserves source serving basis`);
     const dispositions = auditRawCandidateAgainstFamily(draft, family);

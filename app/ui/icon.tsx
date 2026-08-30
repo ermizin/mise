@@ -23,6 +23,7 @@ export type IconName =
   | "close"
   | "edit"
   | "repeat"
+  | "next-day"
   | "share"
   | "search"
   | "filter"
@@ -76,6 +77,12 @@ const iconPaths: Record<IconName, string[]> = {
     "M19.5 12a7.5 7.5 0 0 1-12.9 5.2",
     "m17.4 3.4v3.4h-3.4",
     "m6.6 20.6v-3.4h3.4",
+  ],
+  "next-day": [
+    "M4.5 6.5h10a3 3 0 0 1 3 3v8",
+    "m14.5 15 3 3 3-3",
+    "M7 3.5v6",
+    "M4 6.5h6",
   ],
   share: [
     "M12 15.5v-12",

@@ -1,25 +1,25 @@
 {
   "schemaVersion": 2,
   "releaseAuditCounts": {
-    "ready": 210,
-    "review_required": 3,
-    "blocked": 4
+    "ready": 209,
+    "review_required": 6,
+    "blocked": 6
   },
-  "auditedReadyCards": 210,
-  "runtimeReleaseableCards": 210,
+  "auditedReadyCards": 209,
+  "runtimeReleaseableCards": 209,
   "recommendedReleaseBehavior": "runtime_projection_ready",
   "failureCounts": {},
   "coverage": {
     "bySlot": {
-      "breakfast": 26,
-      "dinner": 93,
-      "lunch": 84,
-      "snack1": 7,
+      "breakfast": 25,
+      "dinner": 90,
+      "lunch": 83,
+      "snack1": 11,
       "snack2": 0
     },
     "byReleaseMenuTag": {
-      "budget": 210,
-      "protein": 145
+      "budget": 209,
+      "protein": 141
     }
   },
   "cards": [
@@ -294,15 +294,6 @@
       "media": "source_preview"
     },
     {
-      "id": "tmpm-26566",
-      "slot": "breakfast",
-      "title": "Солёная запечённая овсянка с колбасой, яйцом и сыром",
-      "recipeFamilyId": "raw-tmpm-26566",
-      "shoppingIngredientCount": 12,
-      "procedureIngredientCount": 10,
-      "media": "source_preview"
-    },
-    {
       "id": "tmpm-26528",
       "slot": "lunch",
       "title": "Картофель с говядиной и соусом кесо",
@@ -318,15 +309,6 @@
       "recipeFamilyId": "raw-tmpm-26514",
       "shoppingIngredientCount": 7,
       "procedureIngredientCount": 4,
-      "media": "source_preview"
-    },
-    {
-      "id": "tmpm-26489",
-      "slot": "dinner",
-      "title": "Средиземноморский салат с курицей и пастой",
-      "recipeFamilyId": "raw-tmpm-26489",
-      "shoppingIngredientCount": 13,
-      "procedureIngredientCount": 8,
       "media": "source_preview"
     },
     {
@@ -384,30 +366,12 @@
       "media": "source_preview"
     },
     {
-      "id": "tmpm-25475",
-      "slot": "dinner",
-      "title": "Тефтели тикка-масала",
-      "recipeFamilyId": "raw-tmpm-25475",
-      "shoppingIngredientCount": 4,
-      "procedureIngredientCount": 0,
-      "media": "source_preview"
-    },
-    {
       "id": "tmpm-25463",
       "slot": "dinner",
       "title": "Тефтели терияки из говядины",
       "recipeFamilyId": "raw-tmpm-25463",
-      "shoppingIngredientCount": 4,
+      "shoppingIngredientCount": 6,
       "procedureIngredientCount": 0,
-      "media": "source_preview"
-    },
-    {
-      "id": "tmpm-25461",
-      "slot": "dinner",
-      "title": "Сэндвич с тефтелями",
-      "recipeFamilyId": "raw-tmpm-25461",
-      "shoppingIngredientCount": 5,
-      "procedureIngredientCount": 1,
       "media": "source_preview"
     },
     {
@@ -537,12 +501,48 @@
       "media": "source_preview"
     },
     {
-      "id": "tmpm-25006",
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
       "slot": "snack1",
-      "title": "Кесадилья с белками, курицей и сыром",
-      "recipeFamilyId": "raw-tmpm-25006",
+      "title": "Завтрак с хэшбрауном и яичным белком",
+      "recipeFamilyId": "raw-tmpm-25006-hash-brown-breakfast-bowl",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "slot": "snack1",
+      "title": "Рисовые хлебцы с авокадо и белой фасолью",
+      "recipeFamilyId": "raw-tmpm-25006-avocado-bean-rice-cakes",
+      "shoppingIngredientCount": 4,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "slot": "snack1",
+      "title": "Кесадилья с яйцом, курицей и сыром",
+      "recipeFamilyId": "raw-tmpm-25006-breakfast-quesadilla",
       "shoppingIngredientCount": 4,
       "procedureIngredientCount": 0,
+      "media": "source_preview"
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "slot": "snack1",
+      "title": "Йогурт с яблоком, гранолой и мёдом",
+      "recipeFamilyId": "raw-tmpm-25006-apple-yogurt-granola",
+      "shoppingIngredientCount": 4,
+      "procedureIngredientCount": 0,
+      "media": "source_preview"
+    },
+    {
+      "id": "tmpm-25006-strawberry-lime-sorbet",
+      "slot": "snack1",
+      "title": "Клубнично-лаймовый сорбет",
+      "recipeFamilyId": "raw-tmpm-25006-strawberry-lime-sorbet",
+      "shoppingIngredientCount": 3,
+      "procedureIngredientCount": 1,
       "media": "source_preview"
     },
     {
@@ -597,15 +597,6 @@
       "recipeFamilyId": "raw-tmpm-24899",
       "shoppingIngredientCount": 10,
       "procedureIngredientCount": 7,
-      "media": "source_preview"
-    },
-    {
-      "id": "tmpm-24866",
-      "slot": "lunch",
-      "title": "Салат с курицей, пастой и дижонской заправкой",
-      "recipeFamilyId": "raw-tmpm-24866",
-      "shoppingIngredientCount": 13,
-      "procedureIngredientCount": 6,
       "media": "source_preview"
     },
     {
@@ -1180,7 +1171,7 @@
       "slot": "dinner",
       "title": "Карри с бататом и арахисом",
       "recipeFamilyId": "raw-goodfood-satay-sweet-potato-curry",
-      "shoppingIngredientCount": 10,
+      "shoppingIngredientCount": 12,
       "procedureIngredientCount": 0,
       "media": "source_preview"
     },
@@ -1207,7 +1198,7 @@
       "slot": "dinner",
       "title": "Карри с нутом",
       "recipeFamilyId": "raw-goodfood-kadala-curry",
-      "shoppingIngredientCount": 9,
+      "shoppingIngredientCount": 10,
       "procedureIngredientCount": 4,
       "media": "source_preview"
     },
@@ -1216,7 +1207,7 @@
       "slot": "dinner",
       "title": "Карри с ягнёнком в медленноварке",
       "recipeFamilyId": "raw-goodfood-slow-cooker-lamb-curry",
-      "shoppingIngredientCount": 9,
+      "shoppingIngredientCount": 10,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1243,7 +1234,7 @@
       "slot": "lunch",
       "title": "Большая порция болоньезе",
       "recipeFamilyId": "raw-goodfood-big-batch-bolognese",
-      "shoppingIngredientCount": 12,
+      "shoppingIngredientCount": 13,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1252,7 +1243,7 @@
       "slot": "dinner",
       "title": "Беф-бургиньон в медленноварке",
       "recipeFamilyId": "raw-goodfood-slow-cooker-beef-bourguignon",
-      "shoppingIngredientCount": 13,
+      "shoppingIngredientCount": 14,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1279,7 +1270,7 @@
       "slot": "lunch",
       "title": "Веганский пастуший пирог",
       "recipeFamilyId": "raw-goodfood-vegan-shepherds-pie",
-      "shoppingIngredientCount": 16,
+      "shoppingIngredientCount": 17,
       "procedureIngredientCount": 4,
       "media": "source_preview"
     },
@@ -1288,7 +1279,7 @@
       "slot": "dinner",
       "title": "Вегетарианская болоньезе",
       "recipeFamilyId": "raw-goodfood-vegetarian-bolognese",
-      "shoppingIngredientCount": 10,
+      "shoppingIngredientCount": 11,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1333,7 +1324,7 @@
       "slot": "dinner",
       "title": "Мини-пастушьи пироги с чечевицей",
       "recipeFamilyId": "raw-goodfood-mini-lentil-shepherds-pies",
-      "shoppingIngredientCount": 12,
+      "shoppingIngredientCount": 13,
       "procedureIngredientCount": 0,
       "media": "source_preview"
     },
@@ -1369,8 +1360,8 @@
       "slot": "lunch",
       "title": "Большая порция болоньезе в скороварке",
       "recipeFamilyId": "raw-goodfood-big-batch-pressure-cooker-bolognese",
-      "shoppingIngredientCount": 10,
-      "procedureIngredientCount": 2,
+      "shoppingIngredientCount": 12,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -1378,8 +1369,8 @@
       "slot": "dinner",
       "title": "Паста со сливочной фасолью и кейлом",
       "recipeFamilyId": "raw-goodfood-creamy-bean-kale-pasta",
-      "shoppingIngredientCount": 9,
-      "procedureIngredientCount": 0,
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {
@@ -1387,7 +1378,7 @@
       "slot": "lunch",
       "title": "Суп из кабачка и томатов",
       "recipeFamilyId": "raw-goodfood-courgette-tomato-soup",
-      "shoppingIngredientCount": 6,
+      "shoppingIngredientCount": 7,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -1414,7 +1405,7 @@
       "slot": "lunch",
       "title": "Копчёный чили с чёрной фасолью",
       "recipeFamilyId": "raw-goodfood-smoky-black-bean-chilli",
-      "shoppingIngredientCount": 14,
+      "shoppingIngredientCount": 16,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -1486,8 +1477,8 @@
       "slot": "dinner",
       "title": "Кокосовый рис со стир-фраем из креветок",
       "recipeFamilyId": "raw-goodfood-coconut-rice-with-prawn-stir-fry",
-      "shoppingIngredientCount": 14,
-      "procedureIngredientCount": 1,
+      "shoppingIngredientCount": 19,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -1504,8 +1495,8 @@
       "slot": "dinner",
       "title": "Гратен из нута и шпината с сальса-верде",
       "recipeFamilyId": "raw-goodfood-chickpea-spinach-gratin-with-salsa-verde",
-      "shoppingIngredientCount": 11,
-      "procedureIngredientCount": 0,
+      "shoppingIngredientCount": 8,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {
@@ -1513,7 +1504,7 @@
       "slot": "lunch",
       "title": "Маринованная курица с орзо, томатами и фетой",
       "recipeFamilyId": "raw-goodfood-marinated-chicken-with-orzo-tomato-feta",
-      "shoppingIngredientCount": 15,
+      "shoppingIngredientCount": 17,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -1531,8 +1522,8 @@
       "slot": "dinner",
       "title": "Лимонное орзо с форелью, пряной брокколи и пеперонатой",
       "recipeFamilyId": "raw-goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
-      "shoppingIngredientCount": 22,
-      "procedureIngredientCount": 0,
+      "shoppingIngredientCount": 24,
+      "procedureIngredientCount": 1,
       "media": "source_preview"
     },
     {
@@ -1585,8 +1576,8 @@
       "slot": "dinner",
       "title": "Карри с фрикадельками, нутом, рисом и маринованной капустой",
       "recipeFamilyId": "raw-goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
-      "shoppingIngredientCount": 18,
-      "procedureIngredientCount": 1,
+      "shoppingIngredientCount": 20,
+      "procedureIngredientCount": 7,
       "media": "source_preview"
     },
     {
@@ -1612,8 +1603,8 @@
       "slot": "lunch",
       "title": "Лепёшки с запечённой лимонной брокколи и маскарпоне",
       "recipeFamilyId": "raw-goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
-      "shoppingIngredientCount": 19,
-      "procedureIngredientCount": 2,
+      "shoppingIngredientCount": 21,
+      "procedureIngredientCount": 4,
       "media": "source_preview"
     },
     {
@@ -1648,7 +1639,7 @@
       "slot": "lunch",
       "title": "Пряный суп из чечевицы и тыквы баттернат",
       "recipeFamilyId": "raw-goodfood-spiced-lentil-butternut-squash-soup",
-      "shoppingIngredientCount": 6,
+      "shoppingIngredientCount": 8,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1657,7 +1648,7 @@
       "slot": "dinner",
       "title": "Бефстроганов с грибами и марсалой с травяным пюре",
       "recipeFamilyId": "raw-goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash",
-      "shoppingIngredientCount": 17,
+      "shoppingIngredientCount": 23,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1684,8 +1675,8 @@
       "slot": "dinner",
       "title": "Куриное рагу с бататом и арахисом",
       "recipeFamilyId": "raw-goodfood-chicken-sweet-potato-peanut-stew",
-      "shoppingIngredientCount": 10,
-      "procedureIngredientCount": 1,
+      "shoppingIngredientCount": 11,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {
@@ -1738,7 +1729,7 @@
       "slot": "breakfast",
       "title": "Маффины с колбасками и яйцом",
       "recipeFamilyId": "raw-goodfood-sausage-egg-muffins",
-      "shoppingIngredientCount": 6,
+      "shoppingIngredientCount": 7,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -1756,7 +1747,7 @@
       "slot": "lunch",
       "title": "Острая паста с говядиной и чёрной фасолью",
       "recipeFamilyId": "raw-goodfood-black-bean-spicy-beef-pasta",
-      "shoppingIngredientCount": 16,
+      "shoppingIngredientCount": 22,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -1765,7 +1756,7 @@
       "slot": "dinner",
       "title": "Булгур с говядиной, хариссой и томатами",
       "recipeFamilyId": "raw-goodfood-harissa-beef-tomato-bulgur",
-      "shoppingIngredientCount": 15,
+      "shoppingIngredientCount": 23,
       "procedureIngredientCount": 3,
       "media": "source_preview"
     },
@@ -1792,7 +1783,7 @@
       "slot": "dinner",
       "title": "Томлёная свинина с апельсином и орегано",
       "recipeFamilyId": "raw-goodfood-orange-oregano-pulled-pork",
-      "shoppingIngredientCount": 9,
+      "shoppingIngredientCount": 10,
       "procedureIngredientCount": 6,
       "media": "source_preview"
     },
@@ -1819,8 +1810,8 @@
       "slot": "lunch",
       "title": "Индийский рисовый салат с курицей",
       "recipeFamilyId": "raw-goodfood-indian-rice-salad-chicken",
-      "shoppingIngredientCount": 11,
-      "procedureIngredientCount": 3,
+      "shoppingIngredientCount": 14,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {

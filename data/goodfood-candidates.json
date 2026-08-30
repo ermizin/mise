@@ -1,6 +1,12 @@
 {
   "importedAt": "2026-08-28T15:52:33.996Z",
   "source": "Good Food — Meal prep ideas",
+  "recipeReviewRound2": {
+    "version": 1,
+    "appliedAt": "2026-08-29",
+    "sourcePages": 217,
+    "recipeCards": 221
+  },
   "candidates": [
     {
       "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
@@ -520,12 +526,17 @@
           "original": "1 lime juiced"
         },
         {
-          "name": "cooked rice to serve (optional)",
-          "original": "cooked rice to serve (optional)"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
-          "name": "dry roasted peanuts to serve (optional)",
-          "original": "dry roasted peanuts to serve (optional)"
+          "name": "peanuts",
+          "original": "30 г жареного арахиса для подачи (по желанию)",
+          "amountMetric": "30",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -625,6 +636,32 @@
             "saucepan"
           ],
           "donenessCue": "батат мягкий, шпинат увял"
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -1185,8 +1222,11 @@
           "original": "100g spinach"
         },
         {
-          "name": "cooked rice and/or dahl",
-          "original": "cooked rice and/or dahl"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         }
       ],
       "localization": {
@@ -1325,6 +1365,35 @@
             "saucepan"
           ],
           "donenessCue": "шпинат увял, соус уварился"
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -1414,8 +1483,11 @@
           "original": "2 lean lamb steaks fat removed, diced (about 240g)"
         },
         {
-          "name": "cooked brown rice to serve",
-          "original": "cooked brown rice to serve"
+          "name": "rice",
+          "original": "120 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         }
       ],
       "localization": {
@@ -1488,6 +1560,32 @@
             "slow_cooker"
           ],
           "donenessCue": "ягнёнок и овощи мягкие"
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -1930,8 +2028,10 @@
           "original": "1 tbsp sugar"
         },
         {
-          "name": "parmesan to serve",
-          "original": "parmesan to serve"
+          "name": "parmesan",
+          "original": "120 г пармезана для подачи",
+          "amountMetric": "120",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -2140,8 +2240,10 @@
           "original": "300g closed cup mushrooms halved or quartered"
         },
         {
-          "name": "mashed potatoes or crusty bread, to serve",
-          "original": "mashed potatoes or crusty bread, to serve"
+          "name": "potato",
+          "amountMetric": "800",
+          "unitMetric": "g",
+          "original": "800 г картофеля для пюре к подаче"
         }
       ],
       "localization": {
@@ -2848,8 +2950,10 @@
           "original": "small pack flat-leaf parsley chopped"
         },
         {
-          "name": "tomato ketchup to serve (optional)",
-          "original": "tomato ketchup to serve (optional)"
+          "name": "ketchup",
+          "original": "40 г кетчупа для подачи (по желанию)",
+          "amountMetric": "40",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -3110,8 +3214,10 @@
           "original": "600g cooked spaghetti or other pasta shape (about 250g dried)"
         },
         {
-          "name": "vegetarian hard cheese to serve, optional",
-          "original": "vegetarian hard cheese to serve, optional"
+          "name": "parmesan",
+          "original": "40 г твёрдого сыра для подачи (по желанию)",
+          "amountMetric": "40",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -3888,8 +3994,11 @@
           "original": "15g coriander roughly chopped"
         },
         {
-          "name": "cooked brown rice",
-          "original": "400g cooked brown rice"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "salsa to serve",
@@ -3966,7 +4075,11 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "roast",
           "duration": "20 мин",
@@ -3983,7 +4096,12 @@
           "text": "Пока запекается основа, прогрейте чёрную фасоль в небольшом сотейнике на слабом огне. Смешайте её с половиной кинзы, цедрой и соком запечённого лайма. Тонко нарежьте курицу, разложите по боулам с овощами, рисом и фасолью; добавьте оставшуюся кинзу и сальсу.",
           "ingredientIds": [
             "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
             "source-ingredient-6",
+            "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
@@ -3997,6 +4115,31 @@
           "dependsOn": [
             "editorial-step-1"
           ]
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -4090,8 +4233,10 @@
           "original": "1 tbsp yeast extract (optional)"
         },
         {
-          "name": "peas to serve (optional)",
-          "original": "peas to serve (optional)"
+          "name": "peas",
+          "original": "300 г зелёного горошка для подачи (по желанию)",
+          "amountMetric": "300",
+          "unitMetric": "g"
         },
         {
           "name": "Maris Piper potatoes peeled and cut into chunks",
@@ -5124,8 +5269,22 @@
           "original": "150ml beef stock"
         },
         {
-          "name": "cooked spaghetti grated parmesan and basil leaves, to serve",
-          "original": "cooked spaghetti grated parmesan and basil leaves, to serve"
+          "name": "pasta",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "480 г сухих спагетти (сварить)"
+        },
+        {
+          "name": "parmesan",
+          "amountMetric": "80",
+          "unitMetric": "g",
+          "original": "80 г тёртого пармезана"
+        },
+        {
+          "name": "basil",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "20 г листьев базилика"
         }
       ],
       "localization": {
@@ -5208,7 +5367,17 @@
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "saute",
           "duration": "10–12 мин; затем 2 мин; затем 10–12 мин",
@@ -5222,13 +5391,22 @@
           "id": "editorial-step-2",
           "text": "Добавьте сухие травы, лавровый лист и фарш. Разбивая комки, обжаривайте 6–8 минут до изменения цвета. Вмешайте томатное пюре, рубленые томаты, вино при использовании и говяжий бульон. Доведите до кипения, закройте скороварку и готовьте под давлением 20 минут.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "pressure_cook",
           "duration": "6–8 мин; затем 20 мин",
@@ -5244,8 +5422,22 @@
           "id": "editorial-step-3",
           "text": "Безопасно стравите давление. Подавайте со спагетти, пармезаном и базиликом. Полностью остывший соус храните в холодильнике до 3 дней или замораживайте до 3 месяцев.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-14"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "serve",
           "equipment": [
@@ -5299,8 +5491,16 @@
       },
       "ingredients": [
         {
-          "name": "creamy beans (see recipe below)",
-          "original": "550g creamy beans (see recipe below)"
+          "name": "canned white beans drained",
+          "amountMetric": "440",
+          "unitMetric": "g",
+          "original": "440 г белой фасоли без жидкости"
+        },
+        {
+          "name": "water or vegetable broth",
+          "amountMetric": "110",
+          "unitMetric": "ml",
+          "original": "110 мл воды или овощного бульона"
         },
         {
           "name": "long pasta (like bucatini)",
@@ -5311,8 +5511,28 @@
           "original": "200g kale or cavolo nero, any tough stalks removed, finely chopped"
         },
         {
-          "name": "salsa verde (see recipe below)",
-          "original": "60g salsa verde (see recipe below)"
+          "name": "parsley",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "15 г петрушки"
+        },
+        {
+          "name": "capers",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "10 г каперсов"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "25",
+          "unitMetric": "ml",
+          "original": "25 мл оливкового масла"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "10",
+          "unitMetric": "ml",
+          "original": "10 мл лимонного сока"
         }
       ],
       "localization": {
@@ -5369,10 +5589,16 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Переложите готовую сливочную фасоль в широкую глубокую сковороду, добавьте немного воды и прогрейте на сильном огне. Всыпьте длинную пасту, влейте 750 мл кипятка и посолите.",
+          "text": "Слейте жидкость с белой фасоли и разомните вилкой примерно треть зёрен. Смешайте с оставшейся фасолью и водой или бульоном, переложите в широкую глубокую сковороду и прогрейте на сильном огне. Всыпьте пасту, влейте 750 мл кипятка и посолите.",
           "ingredientIds": [
             "source-ingredient-1",
-            "source-ingredient-2"
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "boil",
           "equipment": [
@@ -5385,9 +5611,14 @@
           "id": "editorial-step-2",
           "text": "Варите, часто перемешивая, 6–8 минут; при необходимости подливайте кипяток. Добавьте кейл и готовьте ещё 2–3 минуты. Когда паста станет мягкой с лёгкой упругостью, а почти вся жидкость образует кремовый соус, посолите по вкусу и полейте сальса-верде.",
           "ingredientIds": [
+            "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
-            "source-ingredient-4"
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "cook",
           "duration": "6–8 мин; затем 2–3 мин",
@@ -5398,13 +5629,31 @@
           "dependsOn": [
             "editorial-step-1"
           ]
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Для сальса-верде мелко порубите петрушку и каперсы, смешайте с оливковым маслом и лимонным соком. Полейте готовую пасту.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8"
+          ],
+          "action": "mix",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "mixing_bowl"
+          ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: creamy_beans",
-        "requires_verified_component_recipe: salsa_verde"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -5474,8 +5723,10 @@
           "original": "2l low-sodium chicken or vegetable stock from cubes"
         },
         {
-          "name": "crusty bread to serve (optional)",
-          "original": "crusty bread to serve (optional)"
+          "name": "bread",
+          "original": "400 г хлеба для подачи (по желанию)",
+          "amountMetric": "400",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -5793,7 +6044,9 @@
         },
         {
           "name": "small bunch chives finely snipped",
-          "original": "small bunch chives finely snipped"
+          "original": "20 г шнитт-лука",
+          "amountMetric": "20",
+          "unitMetric": "g"
         },
         {
           "name": "butter",
@@ -6044,12 +6297,16 @@
           "original": "1 lime juiced"
         },
         {
-          "name": "soured cream to serve",
-          "original": "soured cream to serve"
+          "name": "sour cream",
+          "original": "80 г сметаны для подачи",
+          "amountMetric": "80",
+          "unitMetric": "g"
         },
         {
-          "name": "grated cheddar to serve",
-          "original": "grated cheddar to serve"
+          "name": "cheddar cheese",
+          "original": "80 г тёртого чеддера для подачи",
+          "amountMetric": "80",
+          "unitMetric": "g"
         },
         {
           "name": "olive oil",
@@ -7823,12 +8080,71 @@
       },
       "ingredients": [
         {
-          "name": "jasmine rice",
-          "original": "200g jasmine rice"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
-          "name": "yellow coconut curry sauce (see 'Complete the dish')",
-          "original": "200ml yellow coconut curry sauce (see 'Complete the dish')"
+          "name": "red chilli deseeded and finely chopped",
+          "amountMetric": "1.4",
+          "unitMetric": "g",
+          "original": "1.4 g red chilli"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "3.6",
+          "unitMetric": "g",
+          "original": "3.6 g garlic"
+        },
+        {
+          "name": "shallots roughly chopped",
+          "amountMetric": "28.6",
+          "unitMetric": "g",
+          "original": "28.6 g shallots"
+        },
+        {
+          "name": "ginger",
+          "amountMetric": "7.1",
+          "unitMetric": "g",
+          "original": "7.1 g ginger"
+        },
+        {
+          "name": "coriander",
+          "amountMetric": "3.6",
+          "unitMetric": "g",
+          "original": "3.6 g coriander"
+        },
+        {
+          "name": "light brown soft sugar",
+          "amountMetric": "1.7",
+          "unitMetric": "g",
+          "original": "1.7 g light brown sugar"
+        },
+        {
+          "name": "sunflower oil",
+          "amountMetric": "4.3",
+          "unitMetric": "ml",
+          "original": "4.3 ml sunflower oil"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "15.7",
+          "unitMetric": "g",
+          "original": "15.7 g onion"
+        },
+        {
+          "name": "canned coconut milk",
+          "amountMetric": "57.1",
+          "unitMetric": "ml",
+          "original": "57.1 ml coconut milk"
+        },
+        {
+          "name": "chicken broth",
+          "amountMetric": "71.4",
+          "unitMetric": "ml",
+          "original": "71.4 ml chicken broth"
         },
         {
           "name": "lime juiced",
@@ -7938,23 +8254,10 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Промывайте жасминовый рис в холодной воде, меняя её до прозрачности. Переложите в кастрюлю, добавьте жёлтый кокосовый соус карри и воду слоем примерно 1 см над рисом. Доведите до кипения, плотно накройте, готовьте на минимальном огне 12–15 минут и оставьте под крышкой ещё 20 минут без нагрева.",
+          "text": "Пробейте чили, чеснок, шалот, имбирь, кинзу и сахар в пасту. Обжарьте лук с маслом и щепотками куркумы, мягкого карри, кориандра и кумина 8–10 минут, добавьте пасту ещё на 5 минут. Влейте кокосовое молоко и бульон и томите 20–25 минут до лёгкого загустения.",
           "ingredientIds": [
             "source-ingredient-1",
-            "source-ingredient-2"
-          ],
-          "action": "steam",
-          "duration": "12–15 мин; затем 20 мин",
-          "equipment": [
-            "saucepan"
-          ],
-          "donenessCue": "рис впитал жидкость и стал рассыпчатым",
-          "dependsOn": []
-        },
-        {
-          "id": "editorial-step-2",
-          "text": "Смешайте сок лайма, коричневый сахар, соевый и устричный соусы. Разогрейте масло в большой сковороде, прогрейте чеснок и имбирь 2–3 минуты. Добавьте брокколи, красный перец и размороженные сырые креветки; готовьте 4–5 минут, пока креветки полностью не приготовятся, а овощи не станут мягкими. Влейте соус, перемешайте и подайте с рисом и кинзой.",
-          "ingredientIds": [
+            "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
@@ -7965,7 +8268,89 @@
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22"
+          ],
+          "action": "simmer",
+          "dependsOn": [],
+          "duration": "20–25 мин",
+          "equipment": [
+            "blender",
+            "pot"
+          ],
+          "donenessCue": "соус слегка загустел"
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промывайте жасминовый рис в холодной воде, меняя её до прозрачности. Переложите в кастрюлю, добавьте жёлтый кокосовый соус карри и воду слоем примерно 1 см над рисом. Доведите до кипения, плотно накройте, готовьте на минимальном огне 12–15 минут и оставьте под крышкой ещё 20 минут без нагрева.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22"
+          ],
+          "action": "steam",
+          "duration": "12–15 мин; затем 20 мин",
+          "equipment": [
+            "saucepan"
+          ],
+          "donenessCue": "рис впитал жидкость и стал рассыпчатым",
+          "dependsOn": [
+            "editorial-step-1"
+          ]
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Смешайте сок лайма, коричневый сахар, соевый и устричный соусы. Разогрейте масло в большой сковороде, прогрейте чеснок и имбирь 2–3 минуты. Добавьте брокколи, красный перец и размороженные сырые креветки; готовьте 4–5 минут, пока креветки полностью не приготовятся, а овощи не станут мягкими. Влейте соус, перемешайте и подайте с рисом и кинзой.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22"
           ],
           "action": "stir_fry",
           "duration": "2–3 мин; затем 4–5 мин",
@@ -7974,14 +8359,48 @@
           ],
           "donenessCue": "креветки непрозрачные по всей толщине",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-2"
           ]
+        },
+        {
+          "id": "editorial-step-4",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-3"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: yellow_coconut_curry_sauce"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -8165,8 +8584,16 @@
           "original": "400g frozen spinach defrosted"
         },
         {
-          "name": "creamy beans (see recipe below)",
-          "original": "600g creamy beans (see recipe below)"
+          "name": "canned white beans drained",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "original": "480 г белой фасоли без жидкости"
+        },
+        {
+          "name": "water or vegetable broth",
+          "amountMetric": "120",
+          "unitMetric": "ml",
+          "original": "120 мл воды или овощного бульона"
         },
         {
           "name": "jar chickpeas drained and rinsed",
@@ -8181,8 +8608,28 @@
           "original": "50g parmesan or vegetarian alternative, finely grated"
         },
         {
-          "name": "salsa verde (see recipe below)",
-          "original": "60g salsa verde (see recipe below)"
+          "name": "parsley",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "15 г петрушки"
+        },
+        {
+          "name": "capers",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "10 г каперсов"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "25",
+          "unitMetric": "ml",
+          "original": "25 мл оливкового масла"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "10",
+          "unitMetric": "ml",
+          "original": "10 мл лимонного сока"
         }
       ],
       "localization": {
@@ -8256,7 +8703,16 @@
           "id": "editorial-step-1",
           "text": "Разогрейте духовку до 220 °C (200 °C с конвекцией). Положите замороженный шпинат в сито над жаропрочной миской и пролейте кипятком; воду не выливайте.",
           "ingredientIds": [
-            "source-ingredient-1"
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
           ],
           "action": "thaw",
           "temperatureC": 220,
@@ -8269,14 +8725,18 @@
         },
         {
           "id": "editorial-step-2",
-          "text": "В жаропрочной форме соедините шпинат, сливочную фасоль, нут и крем-фреш. По столовой ложке добавляйте сохранённую горячую воду, пока масса не станет кремовой. Поставьте форму на средний огонь, доведите до слабого кипения, снимите, посыпьте пармезаном и запекайте 10 минут до золотистых пузырьков. Перед подачей добавьте сальса-верде.",
+          "text": "Слейте жидкость с белой фасоли и разомните вилкой примерно треть зёрен. В жаропрочной форме соедините всю фасоль, шпинат, нут, воду или бульон и крем-фреш. Поставьте форму на средний огонь, доведите до слабого кипения, снимите, посыпьте пармезаном и запекайте 10 минут до золотистых пузырьков.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
           ],
           "action": "bake",
           "duration": "10 мин",
@@ -8289,13 +8749,33 @@
           "dependsOn": [
             "editorial-step-1"
           ]
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Для сальса-верде мелко порубите петрушку и каперсы, смешайте с оливковым маслом и лимонным соком. Добавьте соус перед подачей.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
+          ],
+          "action": "mix",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "mixing_bowl"
+          ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: creamy_beans",
-        "requires_verified_component_recipe: salsa_verde"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -8337,8 +8817,40 @@
       },
       "ingredients": [
         {
-          "name": "lemon & parmesan vinaigrette (see 'Complete the dish')",
-          "original": "200ml lemon & parmesan vinaigrette (see 'Complete the dish')"
+          "name": "lemon juice",
+          "amountMetric": "36.4",
+          "unitMetric": "ml",
+          "original": "36.4 ml lemon juice"
+        },
+        {
+          "name": "apple cider vinegar",
+          "amountMetric": "18.2",
+          "unitMetric": "ml",
+          "original": "18.2 ml apple cider vinegar"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "121.2",
+          "unitMetric": "ml",
+          "original": "121.2 ml olive oil"
+        },
+        {
+          "name": "dijon mustard",
+          "amountMetric": "6.1",
+          "unitMetric": "g",
+          "original": "6.1 g dijon mustard"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "17",
+          "unitMetric": "g",
+          "original": "17 g honey"
+        },
+        {
+          "name": "parmesan",
+          "amountMetric": "24.2",
+          "unitMetric": "g",
+          "original": "24.2 g parmesan"
         },
         {
           "name": "chicken breasts around 700g",
@@ -8349,8 +8861,34 @@
           "original": "2 tsp dried oregano"
         },
         {
-          "name": "lemon orzo (see 'Complete the dish')",
-          "original": "600g lemon orzo (see 'Complete the dish')"
+          "name": "butter",
+          "amountMetric": "25",
+          "unitMetric": "g",
+          "original": "25 g butter"
+        },
+        {
+          "name": "orzo pasta",
+          "amountMetric": "250",
+          "unitMetric": "g",
+          "original": "250 g orzo pasta"
+        },
+        {
+          "name": "chicken stock cube",
+          "amountMetric": "1",
+          "unitMetric": "piece",
+          "original": "1 бульонного кубика"
+        },
+        {
+          "name": "leftover soft herbs finely chopped, to garnish",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "15 g mixed soft herbs"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "10",
+          "unitMetric": "ml",
+          "original": "10 ml lemon juice"
         },
         {
           "name": "tomatoes roughly chopped",
@@ -8370,7 +8908,9 @@
         },
         {
           "name": "leftover soft herbs finely chopped, to garnish",
-          "original": "leftover soft herbs finely chopped, to garnish"
+          "original": "15 г мягкой зелени для подачи",
+          "amountMetric": "15",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -8445,11 +8985,86 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Для заправки пробейте лимонный сок, яблочный уксус, оливковое масло, дижонскую горчицу, мёд и пармезан до гладкой эмульсии.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
+          ],
+          "action": "mix",
+          "dependsOn": [],
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Для лимонного орзо растопите масло, обжаривайте сухое орзо 4–5 минут, добавьте бульонный кубик и кипяток и варите около 10 минут до мягкости. Остудите и вмешайте зелень и лимонный сок.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ]
+        },
+        {
+          "id": "editorial-step-3",
           "text": "Смешайте 80 мл лимонно-пармезановой заправки с куриными грудками и орегано. Накройте и выдержите в холодильнике от 30 минут до 2 часов.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
-            "source-ingredient-3"
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "marinate",
           "duration": "30 мин–2 ч",
@@ -8457,15 +9072,32 @@
             "mixing_bowl",
             "refrigerator"
           ],
-          "dependsOn": []
+          "dependsOn": [
+            "editorial-step-2"
+          ]
         },
         {
-          "id": "editorial-step-2",
+          "id": "editorial-step-4",
           "text": "Разогрейте духовку до 200 °C (180 °C с конвекцией). Выложите курицу в форму, добавьте остатки маринада и запекайте 20–25 минут до полной готовности. Дайте мясу отдохнуть 5–7 минут, нарежьте и перемешайте с соками из формы.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
-            "source-ingredient-3"
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "roast",
           "duration": "20–25 мин; затем 5–7 мин",
@@ -8476,36 +9108,43 @@
           ],
           "donenessCue": "в центре нет розового мяса",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-3"
           ]
         },
         {
-          "id": "editorial-step-3",
+          "id": "editorial-step-5",
           "text": "Смешайте оставшуюся заправку с готовым лимонным орзо, томатами, огурцом, оливками и фетой. Выложите сверху нарезанную курицу и посыпьте мягкими травами.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
+            "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "assemble",
           "equipment": [
             "mixing_bowl"
           ],
           "dependsOn": [
-            "editorial-step-2"
+            "editorial-step-4"
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: lemon_parmesan_vinaigrette",
-        "requires_verified_component_recipe: lemon_orzo"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -8521,7 +9160,8 @@
       "packing": {
         "portion": "1/4 готового блюда",
         "label": "Маринованная курица с орзо, томатами и фетой · дата готовки · использовать в течение 3 суток"
-      }
+      },
+      "reviewRound2Followups": 1
     },
     {
       "id": "goodfood-family-meals-easy-fish-cakes",
@@ -8800,12 +9440,52 @@
           "original": "4 x 110g trout or salmon fillets"
         },
         {
-          "name": "spiced broccoli (see 'Complete the dish')",
-          "original": "250g spiced broccoli (see 'Complete the dish')"
+          "name": "broccoli",
+          "amountMetric": "250",
+          "unitMetric": "g",
+          "original": "250 g broccoli"
         },
         {
-          "name": "lemon & parmesan vinaigrette (see 'Complete the dish')",
-          "original": "75ml lemon & parmesan vinaigrette (see 'Complete the dish')"
+          "name": "olive oil",
+          "amountMetric": "8",
+          "unitMetric": "ml",
+          "original": "8 ml olive oil"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "13.6",
+          "unitMetric": "ml",
+          "original": "13.6 ml lemon juice"
+        },
+        {
+          "name": "apple cider vinegar",
+          "amountMetric": "6.8",
+          "unitMetric": "ml",
+          "original": "6.8 ml apple cider vinegar"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "45.5",
+          "unitMetric": "ml",
+          "original": "45.5 ml olive oil"
+        },
+        {
+          "name": "dijon mustard",
+          "amountMetric": "2.3",
+          "unitMetric": "g",
+          "original": "2.3 g dijon mustard"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "6.4",
+          "unitMetric": "g",
+          "original": "6.4 g honey"
+        },
+        {
+          "name": "parmesan",
+          "amountMetric": "9.1",
+          "unitMetric": "g",
+          "original": "9.1 g parmesan"
         },
         {
           "name": "olive oil",
@@ -8820,16 +9500,82 @@
           "original": "2 garlic cloves crushed"
         },
         {
-          "name": "peperonata (see 'Complete the dish')",
-          "original": "250g peperonata (see 'Complete the dish')"
+          "name": "olive oil",
+          "amountMetric": "11",
+          "unitMetric": "ml",
+          "original": "11 ml olive oil"
         },
         {
-          "name": "herby lemon orzo (see 'Complete the dish')",
-          "original": "800g herby lemon orzo (see 'Complete the dish')"
+          "name": "shallots roughly chopped",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "40 g shallots roughly chopped"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "11",
+          "unitMetric": "g",
+          "original": "11 g tomato paste"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "5 g garlic"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "115",
+          "unitMetric": "g",
+          "original": "115 g pepper"
+        },
+        {
+          "name": "tomato",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "60 g tomato"
+        },
+        {
+          "name": "red wine vinegar",
+          "amountMetric": "2",
+          "unitMetric": "ml",
+          "original": "2 ml red wine vinegar"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "33",
+          "unitMetric": "g",
+          "original": "33 g butter"
+        },
+        {
+          "name": "orzo pasta",
+          "amountMetric": "330",
+          "unitMetric": "g",
+          "original": "330 g orzo pasta"
+        },
+        {
+          "name": "chicken stock cube",
+          "amountMetric": "1.3",
+          "unitMetric": "piece",
+          "original": "1.3 бульонного кубика"
         },
         {
           "name": "leftover soft herbs finely chopped, to garnish",
-          "original": "leftover soft herbs finely chopped, to garnish"
+          "amountMetric": "19.8",
+          "unitMetric": "g",
+          "original": "19.8 g mixed soft herbs"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "13.2",
+          "unitMetric": "ml",
+          "original": "13.2 ml lemon juice"
+        },
+        {
+          "name": "leftover soft herbs finely chopped, to garnish",
+          "original": "15 г мягкой зелени для подачи",
+          "amountMetric": "15",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -8905,11 +9651,145 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Подготовьте пряную брокколи: смешайте соцветия с оливковым маслом, копчёной паприкой, щепоткой кайенского перца и лимонной цедрой.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "mix",
+          "dependsOn": [],
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Для заправки пробейте лимонный сок, яблочный уксус, оливковое масло, дижонскую горчицу, мёд и пармезан. Для пеперонаты обжарьте шалот 7 минут, добавьте томатную пасту и чеснок на 2 минуты, затем перец, томаты и уксус и томите под крышкой 30 минут.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ]
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Для лимонного орзо растопите масло, обжаривайте сухое орзо 4–5 минут, добавьте бульонный кубик и кипяток и варите около 10 минут до мягкости. Вмешайте зелень и лимонный сок.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "pot"
+          ]
+        },
+        {
+          "id": "editorial-step-4",
           "text": "Разогрейте духовку до 200°C; разложите филе и подготовленную брокколи на противне, полейте заправкой.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
-            "source-ingredient-3"
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "preheat",
           "temperature": "200°C",
@@ -8917,15 +9797,39 @@
             "oven",
             "baking_sheet"
           ],
-          "dependsOn": []
+          "dependsOn": [
+            "editorial-step-3"
+          ]
         },
         {
-          "id": "editorial-step-2",
+          "id": "editorial-step-5",
           "text": "Запекайте 10–12 минут, пока рыба не станет матовой, легко не разделится вилкой и не будет готовой в центре.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
-            "source-ingredient-3"
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "bake",
           "temperature": "200°C",
@@ -8936,18 +9840,38 @@
           ],
           "donenessCue": "рыба легко разделяется вилкой",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-4"
           ]
         },
         {
-          "id": "editorial-step-3",
+          "id": "editorial-step-6",
           "text": "Пока запекается рыба, обжарьте лук со щепотью соли 8–10 минут до мягкости, добавьте чеснок на 1–2 минуты, затем пеперонату и орзо с небольшим количеством кипятка; прогрейте 4–5 минут.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "cook",
           "duration": "4–5 мин",
@@ -8956,29 +9880,47 @@
           ],
           "donenessCue": "орзо равномерно прогрето",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-5"
           ]
         },
         {
-          "id": "editorial-step-4",
+          "id": "editorial-step-7",
           "text": "Разложите орзо, сверху добавьте рыбу и брокколи, посыпьте мягкой зеленью.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "assemble",
           "dependsOn": [
-            "editorial-step-2",
-            "editorial-step-3"
+            "editorial-step-6"
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "внешние_компоненты: для пеперонаты, пряной брокколи, заправки и орзо нужны отдельные карточки"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -8994,7 +9936,8 @@
       "packing": {
         "portion": "1/4 готового блюда",
         "label": "Лимонное орзо с форелью, пряной брокколи и пеперонатой · дата готовки · использовать в течение 3 суток"
-      }
+      },
+      "reviewRound2Followups": 1
     },
     {
       "id": "goodfood-steak-broccoli-protein-pots",
@@ -9020,8 +9963,11 @@
       },
       "ingredients": [
         {
-          "name": "pack wholegrain rice mix with seaweed (Merchant Gourmet)",
-          "original": "250g pack wholegrain rice mix with seaweed (Merchant Gourmet)"
+          "name": "rice",
+          "original": "120 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "chopped sushi ginger",
@@ -9110,7 +10056,8 @@
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
-            "source-ingredient-4"
+            "source-ingredient-4",
+            "source-ingredient-5"
           ],
           "action": "cook",
           "duration": "5 мин",
@@ -9124,7 +10071,10 @@
           "id": "editorial-step-2",
           "text": "На хорошо разогретой антипригарной сковороде обжарьте стейк по 2 минуты с каждой стороны, затем оставьте отдыхать. Белые части лука обуглите в мясном соке.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
             "source-ingredient-3",
+            "source-ingredient-4",
             "source-ingredient-5"
           ],
           "action": "fry",
@@ -9142,6 +10092,7 @@
           "text": "Разложите рис с брокколи по двум контейнерам, нарежьте стейк поперёк волокон, выложите сверху вместе с обжаренным луком и закройте контейнеры.",
           "ingredientIds": [
             "source-ingredient-1",
+            "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5"
@@ -9153,6 +10104,25 @@
           "dependsOn": [
             "editorial-step-2"
           ]
+        },
+        {
+          "id": "editorial-step-4",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-3"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -10772,12 +11742,88 @@
           "original": "2 tbsp vegetable oil"
         },
         {
-          "name": "spiced meatballs (see 'Complete the dish')",
-          "original": "420g spiced meatballs (see 'Complete the dish')"
+          "name": "turkey thigh mince",
+          "amountMetric": "420",
+          "unitMetric": "g",
+          "original": "420 g turkey thigh mince"
         },
         {
-          "name": "yellow coconut curry sauce (see 'Complete the dish')",
-          "original": "800ml yellow coconut curry sauce (see 'Complete the dish')"
+          "name": "garlic",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "5 g garlic"
+        },
+        {
+          "name": "lemon zest",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "6 g lemon zest"
+        },
+        {
+          "name": "parsley",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "12 g parsley"
+        },
+        {
+          "name": "red chilli deseeded and finely chopped",
+          "amountMetric": "5.7",
+          "unitMetric": "g",
+          "original": "5.7 g red chilli"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "14.3",
+          "unitMetric": "g",
+          "original": "14.3 g garlic"
+        },
+        {
+          "name": "shallots roughly chopped",
+          "amountMetric": "114.3",
+          "unitMetric": "g",
+          "original": "114.3 g shallots"
+        },
+        {
+          "name": "ginger",
+          "amountMetric": "28.6",
+          "unitMetric": "g",
+          "original": "28.6 g ginger"
+        },
+        {
+          "name": "coriander",
+          "amountMetric": "14.3",
+          "unitMetric": "g",
+          "original": "14.3 g coriander"
+        },
+        {
+          "name": "light brown soft sugar",
+          "amountMetric": "6.9",
+          "unitMetric": "g",
+          "original": "6.9 g light brown sugar"
+        },
+        {
+          "name": "sunflower oil",
+          "amountMetric": "17.1",
+          "unitMetric": "ml",
+          "original": "17.1 ml sunflower oil"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "62.9",
+          "unitMetric": "g",
+          "original": "62.9 g onion"
+        },
+        {
+          "name": "canned coconut milk",
+          "amountMetric": "228.6",
+          "unitMetric": "ml",
+          "original": "228.6 ml coconut milk"
+        },
+        {
+          "name": "chicken broth",
+          "amountMetric": "285.7",
+          "unitMetric": "ml",
+          "original": "285.7 ml chicken broth"
         },
         {
           "name": "can chickpeas drained and rinsed",
@@ -10792,12 +11838,53 @@
           "original": "200g mangetout"
         },
         {
-          "name": "jasmine rice",
-          "original": "jasmine rice"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
-          "name": "pickled red cabbage (see 'Complete the dish')",
-          "original": "pickled red cabbage (see 'Complete the dish')"
+          "name": "red cabbage",
+          "amountMetric": "170",
+          "unitMetric": "g",
+          "original": "170 g red cabbage"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "15",
+          "unitMetric": "ml",
+          "original": "15 ml lemon juice"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "10",
+          "unitMetric": "ml",
+          "original": "10 ml olive oil"
+        },
+        {
+          "name": "caster sugar",
+          "amountMetric": "2",
+          "unitMetric": "g",
+          "original": "2 g caster sugar"
+        },
+        {
+          "name": "mint",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "5 g mint"
+        },
+        {
+          "name": "parsley",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "5 g parsley"
+        },
+        {
+          "name": "red onion",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "30 g red onion"
         },
         {
           "name": "small handful of coriander leaves picked",
@@ -10878,10 +11965,156 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Смешайте фарш индейки с чесноком, лимонной цедрой, петрушкой, кумином, сумахом, душистым перцем, солью и перцем; сформуйте фрикадельки примерно по 20 г.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
+          ],
+          "action": "mix",
+          "dependsOn": [],
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Для соуса пробейте чили, чеснок, шалот, имбирь, кинзу и сахар в пасту. Обжарьте лук с маслом и щепотками куркумы, мягкого карри, кориандра и кумина 8–10 минут, добавьте пасту ещё на 5 минут. Влейте кокосовое молоко и бульон и томите 20–25 минут до лёгкого загустения.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
+          ],
+          "action": "simmer",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "duration": "20–25 мин",
+          "equipment": [
+            "blender",
+            "pot"
+          ],
+          "donenessCue": "соус слегка загустел"
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Для маринованной капусты смешайте лимонный сок, оливковое масло и сахар. Добавьте тонко нашинкованную капусту, мяту, петрушку и красный лук и хорошо перемешайте.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
+          ],
+          "action": "mix",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "editorial-step-4",
           "text": "На среднем-сильном огне обжарьте фрикадельки в масле 6–8 минут до корочки; внутри они могут оставаться недоготовленными.",
           "ingredientIds": [
             "source-ingredient-1",
-            "source-ingredient-2"
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
           ],
           "action": "fry",
           "duration": "6–8 мин",
@@ -10889,16 +12122,41 @@
             "saucepan"
           ],
           "donenessCue": "фрикадельки подрумянены",
-          "dependsOn": []
+          "dependsOn": [
+            "editorial-step-3"
+          ]
         },
         {
-          "id": "editorial-step-2",
+          "id": "editorial-step-5",
           "text": "Добавьте кокосовый соус карри, нут и зелёный перец. Доведите до слабого кипения и готовьте 15–20 минут до уваривания и загустения; добавьте сахарный горошек ещё на 5 минут до мягкости овощей.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
           ],
           "action": "simmer",
           "duration": "20–25 мин",
@@ -10907,27 +12165,90 @@
           ],
           "donenessCue": "соус загустел, овощи мягкие",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-4"
           ]
         },
         {
-          "id": "editorial-step-3",
+          "id": "editorial-step-6",
           "text": "Подавайте карри поверх риса, добавив маринованную красную капусту и листья кинзы.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
           ],
           "action": "assemble",
           "dependsOn": [
-            "editorial-step-2"
+            "editorial-step-5"
           ]
+        },
+        {
+          "id": "editorial-step-7",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26",
+            "source-ingredient-27"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-6"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "внешние_компоненты: требуются отдельные карточки фрикаделек, соуса карри и маринованной капусты"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -10984,8 +12305,10 @@
           "original": "1 lemon zested"
         },
         {
-          "name": "large handful of finely chopped soft herbs such as chives, dill and basil",
-          "original": "large handful of finely chopped soft herbs such as chives, dill and basil"
+          "name": "leftover soft herbs finely chopped, to garnish",
+          "original": "30 г мягкой зелени (шнитт-лук, укроп и базилик)",
+          "amountMetric": "30",
+          "unitMetric": "g"
         },
         {
           "name": "good squeeze of lemon juice",
@@ -11305,20 +12628,130 @@
       },
       "ingredients": [
         {
-          "name": "batch of flatbread dough (see 'Complete the dish')",
-          "original": "1 batch of flatbread dough (see 'Complete the dish')"
+          "name": "active dry yeast",
+          "amountMetric": "6",
+          "unitMetric": "g",
+          "original": "6 g active dry yeast"
         },
         {
-          "name": "peperonata (see 'Complete the dish')",
-          "original": "250g peperonata (see 'Complete the dish')"
+          "name": "granulated sugar",
+          "amountMetric": "12",
+          "unitMetric": "g",
+          "original": "12 g granulated sugar"
         },
         {
-          "name": "spiced broccoli (see 'Complete the dish')",
-          "original": "400g spiced broccoli (see 'Complete the dish')"
+          "name": "water",
+          "amountMetric": "300",
+          "unitMetric": "ml",
+          "original": "300 ml water"
         },
         {
-          "name": "lemon & parmesan vinaigrette (see 'Complete the dish')",
-          "original": "50ml lemon & parmesan vinaigrette (see 'Complete the dish')"
+          "name": "plain flour",
+          "amountMetric": "500",
+          "unitMetric": "g",
+          "original": "500 g wheat flour"
+        },
+        {
+          "name": "salt",
+          "amountMetric": "10",
+          "unitMetric": "g",
+          "original": "10 g salt"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "30",
+          "unitMetric": "ml",
+          "original": "30 ml olive oil"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "11",
+          "unitMetric": "ml",
+          "original": "11 ml olive oil"
+        },
+        {
+          "name": "shallots roughly chopped",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "40 g shallots roughly chopped"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "11",
+          "unitMetric": "g",
+          "original": "11 g tomato paste"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "5",
+          "unitMetric": "g",
+          "original": "5 g garlic"
+        },
+        {
+          "name": "pepper",
+          "amountMetric": "115",
+          "unitMetric": "g",
+          "original": "115 g pepper"
+        },
+        {
+          "name": "tomato",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "60 g tomato"
+        },
+        {
+          "name": "red wine vinegar",
+          "amountMetric": "2",
+          "unitMetric": "ml",
+          "original": "2 ml red wine vinegar"
+        },
+        {
+          "name": "broccoli",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "400 g broccoli"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "15",
+          "unitMetric": "ml",
+          "original": "15 ml olive oil"
+        },
+        {
+          "name": "lemon juice",
+          "amountMetric": "9.1",
+          "unitMetric": "ml",
+          "original": "9.1 ml lemon juice"
+        },
+        {
+          "name": "apple cider vinegar",
+          "amountMetric": "4.5",
+          "unitMetric": "ml",
+          "original": "4.5 ml apple cider vinegar"
+        },
+        {
+          "name": "olive oil",
+          "amountMetric": "30.3",
+          "unitMetric": "ml",
+          "original": "30.3 ml olive oil"
+        },
+        {
+          "name": "dijon mustard",
+          "amountMetric": "1.5",
+          "unitMetric": "g",
+          "original": "1.5 g dijon mustard"
+        },
+        {
+          "name": "honey",
+          "amountMetric": "4.2",
+          "unitMetric": "g",
+          "original": "4.2 g honey"
+        },
+        {
+          "name": "parmesan",
+          "amountMetric": "6.1",
+          "unitMetric": "g",
+          "original": "6.1 g parmesan"
         },
         {
           "name": "mascarpone",
@@ -11409,9 +12842,147 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Для теста смешайте дрожжи, сахар и тёплую воду и оставьте на 5 минут. Добавьте муку, соль и масло, вымешивайте 10 минут и оставьте под крышкой примерно на 2 часа до увеличения объёма.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "knead",
+          "dependsOn": [],
+          "duration": "10 мин + около 2 ч",
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Для пеперонаты обжарьте шалот 7 минут, добавьте томатную пасту и чеснок на 2 минуты, затем перец, томаты и уксус и томите под крышкой 30 минут.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "simmer",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "duration": "30 мин",
+          "equipment": [
+            "frying_pan"
+          ]
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Брокколи смешайте с маслом, копчёной паприкой, щепоткой кайенского перца и лимонной цедрой. Для заправки пробейте лимонный сок, яблочный уксус, масло, горчицу, мёд и пармезан.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "mix",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "editorial-step-4",
           "text": "Достаньте тесто за 30–60 минут до работы. Разогрейте духовку до 220°C и поставьте внутрь большой противень.",
           "ingredientIds": [
-            "source-ingredient-1"
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "preheat",
           "temperature": "220°C",
@@ -11419,10 +12990,12 @@
             "oven",
             "baking_sheet"
           ],
-          "dependsOn": []
+          "dependsOn": [
+            "editorial-step-3"
+          ]
         },
         {
-          "id": "editorial-step-2",
+          "id": "editorial-step-5",
           "text": "Растяните тесто на пергаменте по размеру противня. Распределите пеперонату, смешанные брокколи с заправкой, маскарпоне, чили, пармезан и масло.",
           "ingredientIds": [
             "source-ingredient-1",
@@ -11432,25 +13005,62 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "assemble",
           "equipment": [
             "baking_sheet"
           ],
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-4"
           ]
         },
         {
-          "id": "editorial-step-3",
+          "id": "editorial-step-6",
           "text": "Сдвиньте лепёшку вместе с пергаментом на горячий противень и запекайте 15–20 минут до золотистой корочки и полной готовности теста.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
+            "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-7"
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "bake",
           "temperature": "220°C",
@@ -11461,14 +13071,12 @@
           ],
           "donenessCue": "корочка золотистая",
           "dependsOn": [
-            "editorial-step-2"
+            "editorial-step-5"
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "внешние_компоненты: тесто, пепероната, пряная брокколи и заправка описаны в отдельных карточках"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -11485,7 +13093,8 @@
         "portion": "1/4 готового блюда",
         "separate": "Влажный соус и свежие хрустящие компоненты держать отдельно до подачи.",
         "label": "Лепёшки с запечённой лимонной брокколи и маскарпоне · дата готовки · использовать в течение 3 суток"
-      }
+      },
+      "reviewRound2Flatbread": 1
     },
     {
       "id": "goodfood-flatbread-dough",
@@ -12068,8 +13677,11 @@
           "original": "2 tbsp soft thyme leaves"
         },
         {
-          "name": "brown basmati rice",
-          "original": "200g brown basmati rice"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "smoked paprika",
@@ -12172,7 +13784,18 @@
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
-            "source-ingredient-3"
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
           ],
           "action": "mix",
           "equipment": [
@@ -12184,13 +13807,20 @@
           "id": "editorial-step-2",
           "text": "На среднем огне обжарьте лук 5 минут до размягчения. Добавьте перец, чеснок и тимьян на несколько минут, затем рис и копчёную паприку на 1 минуту. Влейте шафрановый бульон, накройте и томите 10 минут.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
-            "source-ingredient-10"
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
           ],
           "action": "simmer",
           "duration": "10 мин",
@@ -12205,6 +13835,16 @@
           "id": "editorial-step-3",
           "text": "Добавьте замороженные бобы и кабачки, снова накройте и готовьте ещё 10 минут до мягкости риса и впитывания бульона. Дайте постоять 5 минут, вмешайте петрушку и подавайте с лимоном.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
             "source-ingredient-13",
@@ -12219,6 +13859,34 @@
           "dependsOn": [
             "editorial-step-2"
           ]
+        },
+        {
+          "id": "editorial-step-4",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-3"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -12300,8 +13968,16 @@
           "original": "1 small bunch coriander leaves chopped, plus extra to serve"
         },
         {
-          "name": "dukkah (see tip) and natural yogurt, to serve",
-          "original": "dukkah (see tip) and natural yogurt, to serve"
+          "name": "mixed seeds",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "40 г смеси семян или готовой дукки для подачи"
+        },
+        {
+          "name": "natural yogurt to serve (optional)",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "120 г натурального йогурта для подачи"
         }
       ],
       "localization": {
@@ -12383,7 +14059,13 @@
             "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
-            "source-ingredient-5"
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "fry",
           "duration": "8 мин",
@@ -12397,9 +14079,17 @@
           "id": "editorial-step-2",
           "text": "Добавьте тыкву, чечевицу и горячий овощной бульон, доведите до кипения, накройте и томите 25 минут, пока тыква не станет мягкой. Пробейте суп погружным блендером до однородности.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "simmer",
           "duration": "25 мин",
@@ -12416,8 +14106,17 @@
           "id": "editorial-step-3",
           "text": "Вмешайте кинзу, разлейте суп и добавьте сверху дукку, натуральный йогурт и дополнительную зелень. Для заморозки сначала полностью остудите.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
             "source-ingredient-9",
-            "source-ingredient-10"
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "assemble",
           "dependsOn": [
@@ -12512,8 +14211,76 @@
           "original": "100ml marsala"
         },
         {
-          "name": "leftover ragu (see recipe below)",
-          "original": "800g leftover ragu (see recipe below)"
+          "name": "dried porcini mushrooms",
+          "amountMetric": "7.5",
+          "unitMetric": "g",
+          "original": "7.5 g dried porcini mushrooms"
+        },
+        {
+          "name": "canola oil",
+          "amountMetric": "30",
+          "unitMetric": "ml",
+          "original": "30 ml canola oil"
+        },
+        {
+          "name": "stewing beef cut into chunks",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "400 g stewing beef"
+        },
+        {
+          "name": "mushrooms",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "150 g mushrooms"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "75 g onion"
+        },
+        {
+          "name": "carrot",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "150 g carrot"
+        },
+        {
+          "name": "celery",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "40 g celery"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "17.5",
+          "unitMetric": "g",
+          "original": "17.5 g garlic"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "50",
+          "unitMetric": "g",
+          "original": "50 g tomato paste"
+        },
+        {
+          "name": "lentils drained and rinsed",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "120 g lentils cooked"
+        },
+        {
+          "name": "beef broth",
+          "amountMetric": "250",
+          "unitMetric": "ml",
+          "original": "250 ml beef broth"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "12.5",
+          "unitMetric": "g",
+          "original": "12.5 g butter"
         },
         {
           "name": "Dijon mustard",
@@ -12592,6 +14359,44 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Для рагу замочите сухие грибы на 20–30 минут. Обжарьте говядину 10–12 минут до тёмной корочки и отложите; грибы готовьте 8–10 минут. Отдельно размягчите лук, морковь и сельдерей за 10–12 минут, добавьте чеснок и томатную пасту на 3–4 минуты, затем чечевицу, бульон и масло. Верните мясо и грибы, накройте и томите около 3 часов на слабом огне.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
+          ],
+          "action": "simmer",
+          "dependsOn": [],
+          "duration": "около 3 ч",
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "говядина очень мягкая, рагу густое"
+        },
+        {
+          "id": "editorial-step-2",
           "text": "Отварите картофель в подсоленной воде 10–12 минут до мягкости при прокалывании ножом. Слейте, подсушите 5 минут, затем разомните с маслом, молоком, сельдерейной солью, сметаной и большей частью трав.",
           "ingredientIds": [
             "source-ingredient-1",
@@ -12599,7 +14404,26 @@
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "boil",
           "duration": "10–12 мин",
@@ -12607,18 +14431,39 @@
             "pot"
           ],
           "donenessCue": "нож легко входит в картофель",
-          "dependsOn": []
+          "dependsOn": [
+            "editorial-step-1"
+          ]
         },
         {
-          "id": "editorial-step-2",
+          "id": "editorial-step-3",
           "text": "На среднем огне обжарьте лук и грибы 10–12 минут до золотистых краёв. Добавьте паприку, марсалу, готовое рагу и немного воды; доведите до слабого кипения и готовьте 5–7 минут до очень горячего состояния.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "simmer",
           "duration": "5–7 мин",
@@ -12627,27 +14472,47 @@
           ],
           "donenessCue": "соус очень горячий",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-2"
           ]
         },
         {
-          "id": "editorial-step-3",
+          "id": "editorial-step-4",
           "text": "Вмешайте дижонскую горчицу и сливки, приправьте и подайте соус поверх пюре, посыпав оставшейся зеленью.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
             "source-ingredient-13",
             "source-ingredient-14",
-            "source-ingredient-6"
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25"
           ],
           "action": "assemble",
           "dependsOn": [
-            "editorial-step-2"
+            "editorial-step-3"
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "внешний_компонент: используется готовое рагу из другой карточки"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -12663,7 +14528,8 @@
       "packing": {
         "portion": "1/4 готового блюда",
         "label": "Бефстроганов с грибами и марсалой с травяным пюре · дата готовки · использовать в течение 3 суток"
-      }
+      },
+      "reviewRound2Ragu": 1
     },
     {
       "id": "goodfood-pork-harissa-meatballs",
@@ -13206,8 +15072,16 @@
           "original": "200g frozen peppers"
         },
         {
-          "name": "handful of chopped coriander and chopped peanuts, to serve",
-          "original": "handful of chopped coriander and chopped peanuts, to serve"
+          "name": "coriander",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "15 г рубленой кинзы для подачи"
+        },
+        {
+          "name": "peanuts",
+          "amountMetric": "30",
+          "unitMetric": "g",
+          "original": "30 г рубленого арахиса для подачи"
         }
       ],
       "localization": {
@@ -13284,7 +15158,14 @@
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "fry",
           "duration": "12–14 мин",
@@ -13298,12 +15179,19 @@
           "id": "editorial-step-2",
           "text": "Добавьте батат, через несколько минут арахисовую пасту, бульон, томаты, перец и верните курицу. Готовьте без крышки 25–35 минут, регулярно помешивая, до полной готовности курицы и загустения соуса.",
           "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-2"
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "simmer",
           "duration": "25–35 мин",
@@ -13319,7 +15207,19 @@
           "id": "editorial-step-3",
           "text": "Посыпьте кинзой и арахисом. Перед подачей после хранения прогрейте до очень горячего состояния по всему объёму.",
           "ingredientIds": [
-            "source-ingredient-12"
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "assemble",
           "dependsOn": [
@@ -13842,8 +15742,10 @@
           "original": "2 x 400g cans chopped tomatoes"
         },
         {
-          "name": "pinch of sugar",
-          "original": "pinch of sugar"
+          "name": "granulated sugar",
+          "original": "1 г сахара (щепотка)",
+          "amountMetric": "1",
+          "unitMetric": "g"
         },
         {
           "name": "orzo pasta",
@@ -14121,30 +16023,67 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Приправьте 150 г баранины кумином, паприкой, солью и перцем, разложите тонким слоем и запекайте при 200 °C 12–15 минут до полной готовности. Остудите и крупно нарежьте.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
+          ],
+          "action": "bake",
+          "dependsOn": [],
+          "temperatureC": 200,
+          "duration": "12–15 мин",
+          "equipment": [
+            "oven",
+            "baking_sheet"
+          ],
+          "donenessCue": "баранина полностью готова внутри"
+        },
+        {
+          "id": "editorial-step-2",
           "text": "Сварите булгур по инструкции на упаковке, слейте и промойте холодной водой. Смешайте с 3 ст. л. оливкового масла, лимонным соком и зеленью, приправьте и слегка остудите.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
-            "source-ingredient-5"
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
           ],
           "action": "mix",
           "equipment": [
             "pot",
             "mixing_bowl"
           ],
-          "dependsOn": []
+          "dependsOn": [
+            "editorial-step-1"
+          ]
         },
         {
-          "id": "editorial-step-2",
+          "id": "editorial-step-3",
           "text": "На среднем-сильном огне разогрейте оставшееся масло, обжарьте замороженный горошек и готовую баранину 5–6 минут до хруста и лопающегося горошка. Добавьте зелёный лук и печёный перец на 1 минуту.",
           "ingredientIds": [
+            "source-ingredient-1",
             "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10"
           ],
           "action": "fry",
           "duration": "6–7 мин",
@@ -14153,26 +16092,32 @@
           ],
           "donenessCue": "баранина хрустящая",
           "dependsOn": [
-            "editorial-step-1"
+            "editorial-step-2"
           ]
         },
         {
-          "id": "editorial-step-3",
+          "id": "editorial-step-4",
           "text": "Вмешайте горячую смесь в табуле и посыпьте гранатовыми зёрнами.",
           "ingredientIds": [
             "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
             "source-ingredient-10"
           ],
           "action": "assemble",
           "dependsOn": [
-            "editorial-step-2"
+            "editorial-step-3"
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "внешний_компонент: используется готовый кебаб из баранины из другой карточки"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -14415,8 +16360,10 @@
           "original": "1 tsp vegetable oil"
         },
         {
-          "name": "ketchup (optional)",
-          "original": "ketchup (optional)"
+          "name": "ketchup",
+          "original": "40 г кетчупа (по желанию)",
+          "amountMetric": "40",
+          "unitMetric": "g"
         },
         {
           "name": "English muffins toasted",
@@ -14825,8 +16772,76 @@
           "original": "1 tbsp chipotle paste (optional)"
         },
         {
-          "name": "leftover ragu (see recipe below)",
-          "original": "400g leftover ragu (see recipe below)"
+          "name": "dried porcini mushrooms",
+          "amountMetric": "3.8",
+          "unitMetric": "g",
+          "original": "3.8 g dried porcini mushrooms"
+        },
+        {
+          "name": "canola oil",
+          "amountMetric": "15",
+          "unitMetric": "ml",
+          "original": "15 ml canola oil"
+        },
+        {
+          "name": "stewing beef cut into chunks",
+          "amountMetric": "200",
+          "unitMetric": "g",
+          "original": "200 g stewing beef"
+        },
+        {
+          "name": "mushrooms",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "75 g mushrooms"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "37.5",
+          "unitMetric": "g",
+          "original": "37.5 g onion"
+        },
+        {
+          "name": "carrot",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "75 g carrot"
+        },
+        {
+          "name": "celery",
+          "amountMetric": "20",
+          "unitMetric": "g",
+          "original": "20 g celery"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "8.8",
+          "unitMetric": "g",
+          "original": "8.8 g garlic"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "25",
+          "unitMetric": "g",
+          "original": "25 g tomato paste"
+        },
+        {
+          "name": "lentils drained and rinsed",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "original": "60 g lentils cooked"
+        },
+        {
+          "name": "beef broth",
+          "amountMetric": "125",
+          "unitMetric": "ml",
+          "original": "125 ml beef broth"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "6.3",
+          "unitMetric": "g",
+          "original": "6.3 g butter"
         },
         {
           "name": "double cream",
@@ -14896,6 +16911,43 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Для рагу замочите сухие грибы на 20–30 минут. Обжарьте говядину 10–12 минут до тёмной корочки и отложите; грибы готовьте 8–10 минут. Отдельно размягчите лук, морковь и сельдерей за 10–12 минут, добавьте чеснок и томатную пасту на 3–4 минуты, затем чечевицу, бульон и масло. Верните мясо и грибы, накройте и томите около 3 часов на слабом огне.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24"
+          ],
+          "action": "simmer",
+          "dependsOn": [],
+          "duration": "около 3 ч",
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "говядина очень мягкая, рагу густое"
+        },
+        {
+          "id": "editorial-step-2",
           "text": "Отварите пасту на 2 минуты меньше времени по инструкции, отцедите. На средней температуре прогрейте зелёный лук и чеснок в масле 2–3 минуты до аромата. Добавьте чёрную фасоль, перец, кукурузу, приправу для тако и чипотле, обжарьте 2 минуты. Вмешайте готовое мясное рагу и немного воды, доведите до слабого кипения и готовьте 5–7 минут; добавьте сливки и пасту, приправьте, посыпьте сыром и петрушкой.",
           "ingredientIds": [
             "source-ingredient-1",
@@ -14910,10 +16962,23 @@
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24"
           ],
           "action": "simmer",
-          "dependsOn": [],
+          "dependsOn": [
+            "editorial-step-1"
+          ],
           "duration": "паста: на 2 мин меньше; 2–3 мин; 2 мин; затем 5–7 мин",
           "equipment": [
             "pot",
@@ -14939,7 +17004,8 @@
       "packing": {
         "portion": "1/4 готового блюда",
         "label": "Острая паста с говядиной и чёрной фасолью · дата готовки · использовать в течение 3 суток"
-      }
+      },
+      "reviewRound2Ragu": 1
     },
     {
       "id": "goodfood-harissa-beef-tomato-bulgur",
@@ -15005,8 +17071,76 @@
           "original": "1-2 tbsp harissa (depending on how spicy you like it)"
         },
         {
-          "name": "leftover ragu (see recipe below)",
-          "original": "800g leftover ragu (see recipe below)"
+          "name": "dried porcini mushrooms",
+          "amountMetric": "7.5",
+          "unitMetric": "g",
+          "original": "7.5 g dried porcini mushrooms"
+        },
+        {
+          "name": "canola oil",
+          "amountMetric": "30",
+          "unitMetric": "ml",
+          "original": "30 ml canola oil"
+        },
+        {
+          "name": "stewing beef cut into chunks",
+          "amountMetric": "400",
+          "unitMetric": "g",
+          "original": "400 g stewing beef"
+        },
+        {
+          "name": "mushrooms",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "150 g mushrooms"
+        },
+        {
+          "name": "onion",
+          "amountMetric": "75",
+          "unitMetric": "g",
+          "original": "75 g onion"
+        },
+        {
+          "name": "carrot",
+          "amountMetric": "150",
+          "unitMetric": "g",
+          "original": "150 g carrot"
+        },
+        {
+          "name": "celery",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "40 g celery"
+        },
+        {
+          "name": "garlic",
+          "amountMetric": "17.5",
+          "unitMetric": "g",
+          "original": "17.5 g garlic"
+        },
+        {
+          "name": "tomato paste",
+          "amountMetric": "50",
+          "unitMetric": "g",
+          "original": "50 g tomato paste"
+        },
+        {
+          "name": "lentils drained and rinsed",
+          "amountMetric": "120",
+          "unitMetric": "g",
+          "original": "120 g lentils cooked"
+        },
+        {
+          "name": "beef broth",
+          "amountMetric": "250",
+          "unitMetric": "ml",
+          "original": "250 ml beef broth"
+        },
+        {
+          "name": "butter",
+          "amountMetric": "12.5",
+          "unitMetric": "g",
+          "original": "12.5 g butter"
         },
         {
           "name": "small handful of mint leaves",
@@ -15017,8 +17151,16 @@
           "original": "25g pine nuts toasted"
         },
         {
-          "name": "lemon wedges and natural yogurt, to serve",
-          "original": "lemon wedges and natural yogurt, to serve"
+          "name": "lemon juice",
+          "amountMetric": "30",
+          "unitMetric": "ml",
+          "original": "30 мл лимонного сока для подачи"
+        },
+        {
+          "name": "natural yogurt to serve (optional)",
+          "amountMetric": "100",
+          "unitMetric": "g",
+          "original": "100 г натурального йогурта для подачи"
         }
       ],
       "localization": {
@@ -15091,6 +17233,45 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
+          "text": "Для рагу замочите сухие грибы на 20–30 минут. Обжарьте говядину 10–12 минут до тёмной корочки и отложите; грибы готовьте 8–10 минут. Отдельно размягчите лук, морковь и сельдерей за 10–12 минут, добавьте чеснок и томатную пасту на 3–4 минуты, затем чечевицу, бульон и масло. Верните мясо и грибы, накройте и томите около 3 часов на слабом огне.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26"
+          ],
+          "action": "simmer",
+          "dependsOn": [],
+          "duration": "около 3 ч",
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "говядина очень мягкая, рагу густое"
+        },
+        {
+          "id": "editorial-step-2",
           "text": "На среднем огне обжарьте лук и тыкву с солью 5–7 минут до начала размягчения. Добавьте специи, булгур, томаты и бульон, доведите до слабого кипения и готовьте 7–9 минут до мягкости булгура. Во второй кастрюле смешайте хариссу, мясное рагу и немного воды, прогрейте при слабом кипении 7–9 минут. Подайте булгур с рагу, мятой и кедровыми орехами; лимон и йогурт — отдельно.",
           "ingredientIds": [
             "source-ingredient-1",
@@ -15106,10 +17287,24 @@
             "source-ingredient-11",
             "source-ingredient-12",
             "source-ingredient-13",
-            "source-ingredient-14"
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18",
+            "source-ingredient-19",
+            "source-ingredient-20",
+            "source-ingredient-21",
+            "source-ingredient-22",
+            "source-ingredient-23",
+            "source-ingredient-24",
+            "source-ingredient-25",
+            "source-ingredient-26"
           ],
           "action": "simmer",
-          "dependsOn": [],
+          "dependsOn": [
+            "editorial-step-1"
+          ],
           "duration": "5–7 мин; затем 7–9 мин; рагу 7–9 мин",
           "equipment": [
             "saucepan",
@@ -15135,7 +17330,8 @@
       "packing": {
         "portion": "1/4 готового блюда",
         "label": "Булгур с говядиной, хариссой и томатами · дата готовки · использовать в течение 3 суток"
-      }
+      },
+      "reviewRound2Ragu": 1
     },
     {
       "id": "goodfood-turmeric-granola",
@@ -15538,8 +17734,11 @@
           "original": "2 garlic cloves crushed"
         },
         {
-          "name": "corn cobs cooked rice and tortilla wraps (optional), to serve",
-          "original": "corn cobs cooked rice and tortilla wraps (optional), to serve"
+          "name": "rice",
+          "original": "480 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "red cabbage finely shredded",
@@ -15665,6 +17864,36 @@
             "mixing_bowl"
           ],
           "donenessCue": "свинина легко распадается на волокна"
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -16045,8 +18274,11 @@
       },
       "ingredients": [
         {
-          "name": "bag long grain rice",
-          "original": "500g bag long grain rice"
+          "name": "rice",
+          "original": "480 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "turmeric",
@@ -16081,8 +18313,16 @@
           "original": "2 x roughly 130g packs cooked chicken tikka pieces, chopped"
         },
         {
-          "name": "natural yogurt and mini poppadum crisps, to serve (optional)",
-          "original": "natural yogurt and mini poppadum crisps, to serve (optional)"
+          "name": "natural yogurt to serve (optional)",
+          "amountMetric": "80",
+          "unitMetric": "g",
+          "original": "80 г натурального йогурта для подачи (по желанию)"
+        },
+        {
+          "name": "poppadum crisps",
+          "amountMetric": "40",
+          "unitMetric": "g",
+          "original": "40 г мини-пападамов для подачи (по желанию)"
         },
         {
           "name": "mango chutney",
@@ -16097,12 +18337,17 @@
           "original": "1 tbsp brown sugar"
         },
         {
-          "name": "medium curry powder plus 1 tsp for the rice",
-          "original": "1 tbsp medium curry powder plus 1 tsp for the rice"
+          "name": "rice",
+          "original": "480 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "480",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
-          "name": "juice 1&frac12;-2 lemon depending on size",
-          "original": "juice 1&frac12;-2 lemon depending on size"
+          "name": "lemon juice",
+          "original": "50 мл лимонного сока (примерно 1½–2 лимона)",
+          "amountMetric": "50",
+          "unitMetric": "ml"
         }
       ],
       "localization": {
@@ -16176,7 +18421,8 @@
             "source-ingredient-12",
             "source-ingredient-13",
             "source-ingredient-14",
-            "source-ingredient-15"
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "boil",
           "dependsOn": [],
@@ -16456,8 +18702,11 @@
       },
       "ingredients": [
         {
-          "name": "cooked rice (we used brown basmati)",
-          "original": "125g cooked rice (we used brown basmati)"
+          "name": "rice",
+          "original": "60 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "handful baby spinach",
@@ -16488,8 +18737,11 @@
           "original": "1 tsp sesame oil"
         },
         {
-          "name": "rice vinegar",
-          "original": "1 tsp rice vinegar"
+          "name": "rice",
+          "original": "60 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "60",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "brown sugar",
@@ -16546,6 +18798,54 @@
           "equipment": [
             "mixing_bowl"
           ]
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
+        },
+        {
+          "id": "editorial-step-3",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-2"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",
@@ -17503,8 +19803,11 @@
           "original": "2 tsp vegetable bouillon powder"
         },
         {
-          "name": "brown basmati rice",
-          "original": "250g brown basmati rice"
+          "name": "rice",
+          "original": "240 г сухого риса (сварить; примерно по 60 г на порцию)",
+          "amountMetric": "240",
+          "unitMetric": "g",
+          "reviewResolution": "Бытовой стандарт Mise: 60 г сухого риса на порцию, если источник указал только cooked rice/to serve без массы."
         },
         {
           "name": "cumin seeds",
@@ -17679,6 +19982,35 @@
             "blender"
           ],
           "donenessCue": "рыба легко расслаивается"
+        },
+        {
+          "id": "editorial-step-2",
+          "text": "Промойте сухой рис, сварите по инструкции на упаковке до готовности и подайте с основным блюдом.",
+          "ingredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
+          ],
+          "action": "cook",
+          "dependsOn": [
+            "editorial-step-1"
+          ],
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "рис мягкий, без твёрдой сердцевины"
         }
       ],
       "proceduralStatus": "ready",

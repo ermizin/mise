@@ -1,0 +1,727 @@
+{
+  "schemaVersion": 1,
+  "sourceExport": {
+    "exportedAt": "2026-08-29T17:27:52.874Z",
+    "sourceAuditGeneratedAt": "2026-08-29T17:22:56.123Z",
+    "fileName": "mise-recipe-review-decisions (1).json"
+  },
+  "exclusions": [
+    {
+      "id": "tmpm-28492",
+      "note": "Исключено владельцем после проверки низкой калорийности."
+    },
+    {
+      "id": "tmpm-25475",
+      "note": "Исключено владельцем: неопределённые составные фрикадельки и соус."
+    },
+    {
+      "id": "tmpm-25461",
+      "note": "Исключено владельцем: покупные фрикадельки и маринара остаются внешними компонентами."
+    },
+    {
+      "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+      "note": "Исключено владельцем."
+    },
+    {
+      "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+      "note": "Исключено владельцем."
+    },
+    {
+      "id": "goodfood-deli-pasta-salad",
+      "note": "Исключено владельцем."
+    },
+    {
+      "id": "goodfood-slow-cooker-chicken-tikka-masala",
+      "note": "Исключено владельцем; slow cooker локализуется как мультиварка в отдельной задаче по кухонной утвари."
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-pie-recipe",
+      "note": "Исключено владельцем."
+    },
+    {
+      "id": "goodfood-spiced-broccoli",
+      "note": "Исключено из самостоятельных блюд: это подрецепт-компонент, который встраивается в основные карточки."
+    },
+    {
+      "id": "goodfood-lemon-parmesan-vinaigrette",
+      "note": "Исключено из самостоятельных блюд: это заправка-компонент."
+    },
+    {
+      "id": "goodfood-spiced-meatballs",
+      "note": "Исключено из самостоятельных блюд: это заготовка-компонент без отдельной подачи."
+    },
+    {
+      "id": "goodfood-pickled-red-cabbage-salad",
+      "note": "Исключено из самостоятельных блюд: это компонент для основных карточек."
+    },
+    {
+      "id": "goodfood-yellow-coconut-curry-sauce",
+      "note": "Исключено из самостоятельных блюд: это соус-компонент."
+    },
+    {
+      "id": "goodfood-lemon-orzo",
+      "note": "Исключено из самостоятельных блюд: это базовый гарнир-компонент."
+    },
+    {
+      "id": "goodfood-flatbread-dough",
+      "note": "Исключено из самостоятельных блюд: это тесто-компонент."
+    },
+    {
+      "id": "goodfood-peperonata",
+      "note": "Исключено из самостоятельных блюд: это овощной компонент для основных карточек."
+    },
+    {
+      "id": "tmpm-26566",
+      "note": "Исключено владельцем после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-26489",
+      "note": "Исключено владельцем после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-24866",
+      "note": "Исключено владельцем после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-storecupboard-pasta-salad",
+      "note": "Исключено владельцем после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-salmon-pasta-salad-lemon-capers",
+      "note": "Исключено владельцем после второго прохода ревью."
+    }
+  ],
+  "backlog": [
+    {
+      "id": "tmpm-26895",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-26746",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-26720",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-26583",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-26429",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-26232",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-25463",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-25304",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-25159",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-25044",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-25006-strawberry-lime-sorbet",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-24968",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-24909",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-24619",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-24608",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-24018",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-23554",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-23518",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-23501",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-23431",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-23405",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-23194",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22968",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22884",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22550",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22571",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22278",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22261",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-22144",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-21841",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-21839",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-19895",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-18874",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-18065",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-17409",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-17393",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-17381",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-17115",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-16861",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-16454",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "tmpm-16283",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-satay-sweet-potato-curry",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-kadala-curry",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-slow-cooker-lamb-curry",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-sausage-leek-mash-pie",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-10minute-couscous-salad",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-big-batch-bolognese",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-slow-cooker-beef-bourguignon",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-power-packed-pasta-boxes",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-tuna-pasta-bake",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-vegan-shepherds-pie",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-vegetarian-bolognese",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-slow-cooker-sausage-casserole",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-italian-vegetable-soup",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-aubergine-tomato-halloumi-pie",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-mini-lentil-shepherds-pies",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-freezer-ratatouille",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-family-meals-chicken-veg-casserole",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-big-batch-pressure-cooker-bolognese",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-creamy-bean-kale-pasta",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-courgette-tomato-soup",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-banana-overnight-oats",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-creamy-chicken-sweetcorn-soup",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-smoky-black-bean-chilli",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-family-meals-mild-chicken-curry",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-beef-red-wine-potato-pie",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-tuna-nicoise-protein-pots",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-coconut-rice-with-prawn-stir-fry",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-cakes",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-steak-broccoli-protein-pots",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-vegan-ragu",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-summery-beans-herby-green-aioli",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-bulgur-quinoa-lunch-bowls",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-vegan-paella",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-spiced-lentil-butternut-squash-soup",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-pork-harissa-meatballs",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-chicken-sweet-potato-peanut-stew",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-mozzarella-pepper-aubergine-calzone",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-freeze-ahead-roasties",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-lentil-kofta-orzo-feta",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-crispy-lamb-pea-tabbouleh",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-apple-penne-slaw-walnuts",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-mushroom-lentil-beef-ragu",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-black-bean-spicy-beef-pasta",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-harissa-beef-tomato-bulgur",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-turmeric-granola",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-orange-oregano-pulled-pork",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-tomato-pepper-bean-one-pot",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-scandi-beetroot-salmon-pasta",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-indian-rice-salad-chicken",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-chicken-squash-pesto-lasagne",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-prawn-rice-mango-jar-salad",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-black-bean-soup-with-chunky-raita",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-wild-salmon-with-radish-orange-slaw",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-veggie-nuggets-with-summer-slaw",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    },
+    {
+      "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+      "note": "Отложено владельцем в бэклог после второго прохода ревью."
+    }
+  ],
+  "resolvedReasons": [
+    {
+      "id": "tmpm-25290",
+      "gate": "editorial",
+      "code": "extreme_kcal",
+      "resolution": "Владелец подтвердил исходные 980 ккал на порцию; рецепт рассчитан для набора массы."
+    },
+    {
+      "id": "tmpm-26746",
+      "gate": "editorial",
+      "code": "niche_localization",
+      "resolution": "Владелец оставил карточку: продукты доступны и отдельной локализационной замены не требуется."
+    },
+    {
+      "id": "tmpm-26514",
+      "gate": "editorial",
+      "code": "niche_localization",
+      "resolution": "Владелец подтвердил: карточка не требует локализационной замены."
+    },
+    {
+      "id": "tmpm-18065",
+      "gate": "editorial",
+      "code": "niche_localization",
+      "resolution": "Владелец подтвердил: карточка не требует локализационной замены."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "tmpm-28584",
+      "option": "round_yield",
+      "category": "yield",
+      "note": ""
+    },
+    {
+      "id": "tmpm-28492",
+      "option": "exclude_card",
+      "category": "kcal",
+      "note": ""
+    },
+    {
+      "id": "tmpm-28247",
+      "note": "не понял"
+    },
+    {
+      "id": "tmpm-26965",
+      "option": "adjust_servings",
+      "category": "kcal",
+      "note": "получились скорее всего ккал на шт"
+    },
+    {
+      "id": "tmpm-26689",
+      "option": "rewrite_procedure",
+      "category": "procedure",
+      "note": "расчет скорее всего на шт. Уточнить время запекания. Это панкейки на противне; готовность определяется по схватившемуся центру."
+    },
+    {
+      "id": "tmpm-26528",
+      "option": "rewrite_procedure",
+      "category": "procedure",
+      "note": "жарка до готовности фарша"
+    },
+    {
+      "id": "tmpm-25475",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": ""
+    },
+    {
+      "id": "tmpm-25461",
+      "option": "exclude_card",
+      "category": "procedure",
+      "note": "соус маринара покупной; покупные фрикадельки в блок"
+    },
+    {
+      "id": "tmpm-25304",
+      "note": "до готовности; добавить примерные ориентиры по запеканию одной куриной грудки"
+    },
+    {
+      "id": "tmpm-25290",
+      "option": "confirm_kcal",
+      "category": "kcal",
+      "note": ""
+    },
+    {
+      "id": "tmpm-25006",
+      "note": "дели на рецепты"
+    },
+    {
+      "id": "goodfood-creamy-bean-kale-pasta",
+      "note": "рецепты ингредиентов встроить в рецепт блюда"
+    },
+    {
+      "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": ""
+    },
+    {
+      "id": "goodfood-coconut-rice-with-prawn-stir-fry",
+      "note": "проверить, спарсен ли рецепт целиком"
+    },
+    {
+      "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+      "note": "Встроить сальса-верде. Creamy beans — белая фасоль; примерно треть размять вилкой."
+    },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "note": "Встроить подрецепты фрикаделек, жёлтого кокосового соуса и маринованной капусты из того же источника."
+    },
+    {
+      "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": ""
+    },
+    {
+      "id": "tmpm-26746",
+      "option": "keep_specialty",
+      "category": "localization",
+      "note": ""
+    },
+    {
+      "id": "tmpm-26514",
+      "option": "keep_specialty",
+      "category": "localization",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:06.167Z"
+    },
+    {
+      "id": "tmpm-26489",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:10.168Z"
+    },
+    {
+      "id": "tmpm-18065",
+      "option": "keep_specialty",
+      "category": "localization",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:22.267Z"
+    },
+    {
+      "id": "goodfood-deli-pasta-salad",
+      "option": "exclude_card",
+      "category": "amount",
+      "note": ""
+    },
+    {
+      "id": "goodfood-satay-sweet-potato-curry",
+      "note": "переводи и пользуйся здравым смыслом"
+    },
+    {
+      "id": "goodfood-slow-cooker-chicken-tikka-masala",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": "медленноварка = мультиварка; поддержку кухонной утвари добавить в бэклог"
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-pie-recipe",
+      "option": "exclude_card",
+      "category": "amount",
+      "note": "хм, ну щедро"
+    },
+    {
+      "id": "goodfood-kadala-curry",
+      "option": "set_verified_weight",
+      "category": "amount",
+      "note": "Cooked rice нужно приготовить. Для подачи — примерно 240 г сухого риса на 4 порции; так переделывать везде."
+    },
+    {
+      "id": "tmpm-26566",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:01.135Z"
+    },
+    {
+      "id": "tmpm-24866",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:13.867Z"
+    },
+    {
+      "id": "goodfood-storecupboard-pasta-salad",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:26.060Z"
+    },
+    {
+      "id": "goodfood-salmon-pasta-salad-lemon-capers",
+      "option": "exclude_card",
+      "category": "ambiguity",
+      "note": "",
+      "updatedAt": "2026-08-29T17:27:37.993Z"
+    }
+  ]
+}

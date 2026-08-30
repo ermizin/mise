@@ -6493,6 +6493,7 @@ export default function Home() {
       <BottomNav
         tab={currentTab}
         onNavigate={navigate}
+        showCompose={tab === "week" && !activePlan && !loadingPlan}
         bump={tabMotion.bump}
       />
     </main>
@@ -7319,10 +7320,12 @@ function InstallInline() {
 function BottomNav({
   tab,
   onNavigate,
+  showCompose,
   bump,
 }: {
   tab: PrimaryTab;
   onNavigate: (tab: Tab) => void;
+  showCompose: boolean;
   bump: Record<PrimaryTab, number>;
 }) {
   const activeIndex = Math.max(
@@ -7348,6 +7351,16 @@ function BottomNav({
   }
   return (
     <>
+      {showCompose && (
+        <button
+          className="compose-fab"
+          onClick={() => onNavigate("builder")}
+          aria-label="Составить план"
+        >
+          <Icon name="plus" />
+          <small>Составить</small>
+        </button>
+      )}
       <div
         className="bottom-nav glass"
         role="tablist"
@@ -7680,7 +7693,7 @@ function WeekScreen({
   const ringCircumference = 2 * Math.PI * 44;
   const ringProgress = Math.min(
     1,
-    eatenMacros.kcal / Math.max(1, person.daily.kcal),
+    eatenMacros.kcal / Math.max(1, plannedMacros.kcal),
   );
   const contactWarnings = crossContactWarnings(plan, batch);
   const planEnded = today > plan.end;
