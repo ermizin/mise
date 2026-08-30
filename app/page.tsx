@@ -9489,6 +9489,7 @@ function PlanBuilder({
   const stepRef = useRef(step);
   const closeRef = useRef(onClose);
   const chatQuestionRef = useRef<HTMLDivElement | null>(null);
+  const menuAssemblyRef = useRef<HTMLDivElement | null>(null);
   const chatTimersRef = useRef<number[]>([]);
   useEffect(() => {
     stepRef.current = step;
@@ -9635,6 +9636,23 @@ function PlanBuilder({
     });
     return () => window.cancelAnimationFrame(frame);
   }, [step]);
+  useEffect(() => {
+    if (
+      chatTransition?.kind !== "menu" ||
+      !chatTransition.thinking ||
+      chatTransition.assemblyStage !== -1
+    )
+      return;
+    const frame = window.requestAnimationFrame(() => {
+      menuAssemblyRef.current?.scrollIntoView({
+        block: "center",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [chatTransition]);
   const rawDays = daysInclusive(start, end);
   const validPeriod = rawDays >= 1 && rawDays <= 14;
   const remainder = validPeriod ? rawDays % cookEveryDays : 0;
@@ -9922,8 +9940,21 @@ function PlanBuilder({
     ).matches;
     const thinkingDelay = reducedMotion ? 30 : 80;
     if (kind === "menu") {
+      const menuRevealDelay = reducedMotion ? 60 : 220;
+      const menuStageStartDelay =
+        menuRevealDelay + (reducedMotion ? 80 : 320);
       const stageDuration = reducedMotion ? 140 : 420;
       chatTimersRef.current = [
+        window.setTimeout(
+          () =>
+            setChatTransition({
+              answer,
+              thinking: true,
+              kind,
+              assemblyStage: -1,
+            }),
+          menuRevealDelay,
+        ),
         ...menuAssemblyStages.map((_, assemblyStage) =>
           window.setTimeout(
             () =>
@@ -9933,7 +9964,7 @@ function PlanBuilder({
                 kind,
                 assemblyStage,
               }),
-            thinkingDelay + assemblyStage * stageDuration,
+            menuStageStartDelay + assemblyStage * stageDuration,
           ),
         ),
         window.setTimeout(
@@ -9944,14 +9975,14 @@ function PlanBuilder({
               kind,
               assemblyStage: menuAssemblyStages.length,
             }),
-          thinkingDelay + menuAssemblyStages.length * stageDuration,
+          menuStageStartDelay + menuAssemblyStages.length * stageDuration,
         ),
         window.setTimeout(
           () => {
             setChatTransition(null);
             changeStep(nextStep);
           },
-          thinkingDelay +
+          menuStageStartDelay +
             menuAssemblyStages.length * stageDuration +
             (reducedMotion ? 120 : 160),
         ),
@@ -10515,7 +10546,9 @@ function PlanBuilder({
                 </button>
               </div>
             ))}
-          <div className="builder-chat-current">
+          <div
+            className={`builder-chat-current${chatTransition?.kind === "menu" ? " is-assembling-menu" : ""}`}
+          >
             {step === 5 && menuMode === "auto" && allSelected ? (
               <div
                 className="builder-chat-menu-ready tint-mint"
@@ -10548,6 +10581,7 @@ function PlanBuilder({
                 chatTransition.kind === "menu" ? (
                   <div
                     className="builder-menu-assembly glass-3"
+                    ref={menuAssemblyRef}
                     role="status"
                     aria-label="Mise собирает меню по этапам"
                   >

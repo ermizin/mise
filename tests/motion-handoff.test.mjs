@@ -106,6 +106,21 @@ test("the last questionnaire answer runs the supplied staged menu assembly", asy
     builder,
     /step === 4 && menuMode === "auto" \? "menu" : "step"/,
   );
+  assert.match(builder, /const menuAssemblyRef = useRef<HTMLDivElement/);
+  assert.match(builder, /const menuRevealDelay = reducedMotion \? 60 : 220/);
+  assert.match(
+    builder,
+    /const menuStageStartDelay =\s*menuRevealDelay \+ \(reducedMotion \? 80 : 320\)/,
+  );
+  assert.match(
+    builder,
+    /menuAssemblyRef\.current\?\.scrollIntoView\(\{[\s\S]*?block: "center"[\s\S]*?"smooth"/,
+  );
+  assert.match(
+    builder,
+    /menuStageStartDelay \+ assemblyStage \* stageDuration/,
+  );
+  assert.match(builder, /builder-chat-current\$\{chatTransition\?\.kind === "menu"/);
   assert.match(builder, /const stageDuration = reducedMotion \? 140 : 420/);
   assert.match(builder, /const questionDelay = reducedMotion \? 140 : 560/);
   assert.match(builder, /className="builder-menu-assembly glass-3"/);
@@ -122,6 +137,10 @@ test("the last questionnaire answer runs the supplied staged menu assembly", asy
   );
   assert.match(css, /mise-builder-stage-spin 900ms linear infinite/);
   assert.match(css, /mise-builder-stage-tick 300ms var\(--motion-spring\)/);
+  assert.match(
+    css,
+    /\.builder-chat-current\.is-assembling-menu \{[\s\S]*?padding-bottom: clamp\(140px, 22vh, 200px\)/,
+  );
   assert.match(
     css,
     /\.builder-chat-menu-ready \{[\s\S]*?mise-builder-menu-ready 460ms var\(--motion-settled\) 160ms/,

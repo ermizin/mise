@@ -3136,6 +3136,9 @@ p {
   display: grid;
   gap: 10px;
 }
+.builder-chat-current.is-assembling-menu {
+  padding-bottom: clamp(140px, 22vh, 200px);
+}
 .builder-chat-question {
   width: fit-content;
   max-width: min(88%, 520px);
