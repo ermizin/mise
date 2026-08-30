@@ -223,7 +223,22 @@ test("frozen berry recipes name the berry explicitly", () => {
   assert.equal(canonicalIngredients.berries_raw.canonicalName, "Черника");
   assert.match(canonicalIngredients.berries_raw.reference.description, /Blueberries/u);
   assert.ok(recipes.some((item) => item.id === "src-protein-oats" && /черник/u.test(item.title)));
+  const proteinOats = recipes.find((item) => item.id === "src-protein-oats");
+  assert.ok(proteinOats, "overnight oats stay in the catalog");
+  assert.ok(proteinOats.ingredients.some((ingredient) => ingredient.id === "protein-powder"));
+  assert.equal(proteinOats.ingredients.some((ingredient) => ingredient.id === "cottage"), false);
   assert.ok(recipes.some((item) => item.id === "src-frozen-yogurt" && /черник/u.test(item.title)));
+});
+
+test("owner product decisions keep explicit alternatives and remove rejected turkey meatballs", () => {
+  const beanBowl = recipes.find((item) => item.id === "src-chicken-bean-bowl");
+  const pasta = recipes.find((item) => item.id === "src-sausage-pepper-pasta");
+  assert.ok(beanBowl);
+  assert.ok(beanBowl.ingredients.some((ingredient) => ingredient.id === "salsa" && /протёртые томаты 1:1/iu.test(ingredient.name)));
+  assert.ok(recipeFamiliesById["src-chicken-bean-bowl"].ingredients.some((ingredient) => ingredient.sourceIngredientId === "salsa"));
+  assert.ok(pasta.ingredients.some((ingredient) => ingredient.id === "cream" && ingredient.name === "Сливки 10%"));
+  assert.equal(recipes.some((item) => item.id === "src-turkey-meatballs"), false);
+  assert.equal(recipeFamiliesById["src-turkey-meatballs"], undefined);
 });
 
 test("editorial promotion fixes unit-sized macros and obvious slot mistakes", () => {
@@ -559,10 +574,10 @@ test("shopping counts only true piece products and keeps cheese, pasta, and brot
   assert.ok(limeLine.pieceEstimate >= 1, "a source piece is shown as grams plus an approximate count");
 });
 
-test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing the legacy catalog", () => {
-  assert.equal(Object.keys(recipeFamiliesById).length, 18);
+test("Recipe Engine v1 migrates 17 existing reviewed recipes without replacing the legacy catalog", () => {
+  assert.equal(Object.keys(recipeFamiliesById).length, 17);
   assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "pilot").length, 10);
-  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "review_required").length, 8);
+  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "review_required").length, 7);
   assert.ok(recipes.length > Object.keys(recipeFamiliesById).length);
   for (const family of Object.values(recipeFamiliesById)) {
     assert.equal(family.id.startsWith("src-"), true, `${family.title} reuses an existing recipe`);
@@ -598,7 +613,7 @@ test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing t
   }
 });
 
-test("every canonical ingredient used by the 18 pilot families has an auditable nutrition reference", () => {
+test("every canonical ingredient used by the 17 pilot families has an auditable nutrition reference", () => {
   const used = new Set(Object.values(recipeFamiliesById).flatMap((family) => family.ingredients.map((ingredient) => ingredient.canonicalIngredientId)));
   for (const id of used) {
     const ingredient = canonicalIngredients[id];
@@ -609,10 +624,10 @@ test("every canonical ingredient used by the 18 pilot families has an auditable 
   }
 });
 
-test("the seven source-audited adaptations resolve every legacy source ingredient explicitly", () => {
+test("the six source-audited adaptations resolve every legacy source ingredient explicitly", () => {
   const curatedFamilies = Object.values(recipeFamiliesById).filter((family) => family.editorialAudit.ingredientMapping.source === "curated_source_audit");
-  assert.equal(curatedFamilies.length, 7);
-  assert.equal(curatedFamilies.reduce((sum, family) => sum + family.editorialAudit.ingredientMapping.sourceIngredientCount, 0), 55);
+  assert.equal(curatedFamilies.length, 6);
+  assert.equal(curatedFamilies.reduce((sum, family) => sum + family.editorialAudit.ingredientMapping.sourceIngredientCount, 0), 47);
   let hasUnavailableSourceAmount = false;
   for (const family of curatedFamilies) {
     const audit = family.editorialAudit.ingredientMapping;
@@ -646,7 +661,6 @@ test("the seven source-audited adaptations resolve every legacy source ingredien
 
 test("missing caloric and allergenic source components are explicit in the pilot families", () => {
   const expected = {
-    "src-turkey-meatballs": ["egg", "olive-oil"],
     "src-taco-mac": ["broth", "olive-oil"],
     "src-teriyaki-tray": ["olive-oil", "brown-sugar", "vinegar", "garlic"],
     "src-halal-chicken": ["butter", "olive-oil", "lemon", "vinegar"],
@@ -806,7 +820,7 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
     .sort();
   const visibleIds = new Set(productionRecipes.map((item) => item.id));
 
-  assert.equal(blockedIds.length, 8);
+  assert.equal(blockedIds.length, 7);
   const expectedReadyIds = recipes
     .filter(
       (item) =>
@@ -854,7 +868,11 @@ test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd i
       for (const ingredient of family.ingredients) {
         const amount = solved.amounts[ingredient.sourceIngredientId];
         assert.ok(amount >= ingredient.minAmount - 0.51 && amount <= ingredient.maxAmount + 0.51, `${family.title}: ${ingredient.sourceIngredientId} stays bounded`);
-        if (ingredient.role === "protein" && ingredient.unit !== "piece") assert.ok(amount >= 45, `${family.title}: protein does not collapse`);
+        if (
+          ingredient.role === "protein"
+          && ingredient.unit !== "piece"
+          && !["protein-powder", "casein-powder"].includes(ingredient.sourceIngredientId)
+        ) assert.ok(amount >= 45, `${family.title}: protein does not collapse`);
         if (ingredient.role === "vegetable") assert.ok(amount > 0, `${family.title}: vegetables remain`);
         if (ingredient.unit !== "piece" && ingredient.scalable) assert.equal(amount, Math.round(amount), `${family.title}: scalable gram amounts are practical`);
         if (!ingredient.scalable) assert.equal(amount, ingredient.baseAmount, `${family.title}: fixed ingredients keep their editorial amount`);
@@ -878,7 +896,6 @@ test("audited pan and form fats stay fixed across personal calorie targets", () 
       "src-honey-lime-steak:olive-oil",
       "src-sausage-pepper-pasta:olive-oil",
       "src-taco-mac:olive-oil",
-      "src-turkey-meatballs:olive-oil",
     ],
     "only audited pan and form fats are fixed; marinade and coating fats remain edible recipe components",
   );

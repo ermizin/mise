@@ -1731,7 +1731,7 @@ export function normalizeRawRecipeCandidate(
 
 export const PILOT_RECIPE_IDS = [
   "src-cottage-bake", "src-protein-oats", "src-chicken-buckwheat", "src-chicken-rice-veg",
-  "src-chicken-bean-bowl", "src-salmon-rice-veg", "src-turkey-meatballs", "src-taco-mac",
+  "src-chicken-bean-bowl", "src-salmon-rice-veg", "src-taco-mac",
   "src-teriyaki-tray", "src-halal-chicken", "src-crispy-beef-noodles", "src-mediterranean-wrap",
   "src-creamy-chicken-pasta", "src-light-stroganoff", "src-bbq-burger-bowl", "src-red-pepper-chicken-dip",
   "src-sausage-pepper-pasta", "src-honey-lime-steak",
@@ -1771,7 +1771,7 @@ const pilotNutritionRecords: Record<string, PilotNutritionRecord> = {
     quantitativeCoverage: "incomplete",
     comparableToMise: false,
     reviewedAt: editorialReviewedAt,
-    note: "BBC Good Food даёт КБЖУ одной из четырёх порций исходного рецепта; Mise заменяет протеин творогом и исключает несколько калорийных компонентов.",
+    note: "BBC Good Food даёт КБЖУ одной из четырёх порций исходного рецепта; Mise сохраняет протеин, но меняет количества и исключает несколько калорийных компонентов.",
     declaredNutrition: { kcal: 349, protein: 17, fat: 11, carbs: 41 },
   },
   "src-chicken-buckwheat": {
@@ -1808,14 +1808,6 @@ const pilotNutritionRecords: Record<string, PilotNutritionRecord> = {
     reviewedAt: editorialReviewedAt,
     note: "На доступной первичной странице MyProtein числовые КБЖУ отсутствуют; кускус заменён рисом, а веса рыбы и овощей заданы редакционно.",
     declaredNutrition: null,
-  },
-  "src-turkey-meatballs": {
-    scope: "per_100g_raw",
-    quantitativeCoverage: "incomplete",
-    comparableToMise: false,
-    reviewedAt: editorialReviewedAt,
-    note: "Food.ru публикует КБЖУ на 100 г сырьевых продуктов; Mise выносит гарнир отдельно и заменяет рис, томатную пасту и количества жира.",
-    declaredNutrition: { kcal: 186.46, protein: 11.05, fat: 9.96, carbs: 12.29 },
   },
   "src-taco-mac": comparableRawNutrition(5),
   "src-teriyaki-tray": comparableRawNutrition(5, "Источник даёт КБЖУ на одну из пяти порций; переход от 563 г готового риса в партии к сухому рису Mise отмечен отдельно и остаётся редакционным блокером."),
@@ -1880,7 +1872,7 @@ const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]
     retained("Масло для формы", "butter", "Компонент источника сохранён и редакционно нормирован до 2 г на базовую порцию."),
   ],
   "src-protein-oats": [
-    replacedMeasured("Протеиновый порошок", ["cottage"], 30, "g", "Заменён мягким творогом по зафиксированной адаптации Mise."),
+    retainedMeasured("Протеиновый порошок", "protein-powder", 30, "g", "Сохранён по решению владельца; Mise использует 30 г на базовую порцию."),
     retainedMeasured("Овсяные хлопья", "oats", 200, "g"), retainedMeasured("Молоко", "milk", 400, "ml"), retainedMeasured("Ягоды", "berries", 75, "g"),
     omittedMeasured("Семена чиа", 2, "tbsp", "Исключены из упрощённой адаптации Mise."), omittedMeasured("Кленовый сироп", 2, "tsp", "Исключён из адаптации Mise."),
     omittedMeasured("Арахисовая паста", 2, "tbsp", "Исключена из адаптации Mise; исходный аллерген не переносится в адаптированный состав."),
@@ -1903,7 +1895,7 @@ const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]
     retainedMeasured("Оливковое масло", "olive-oil", 1, "tbsp"), retainedMeasured("Лук", "onion", 1, "piece"), omittedMeasured("Чеснок", 2, "clove", "Исключён из адаптации Mise."),
     retainedMeasured("Куриные грудки", "chicken", 2, "breast", "Сохранены с редакционно заданной массой."),
     replacedMeasured("Чёрная фасоль", ["red-beans"], 2, "can", "Заменена красной фасолью по зафиксированной адаптации Mise."),
-    replacedMeasured("Сальса", ["tomato-passata"], 1, "jar", "Заменена протёртыми томатами по зафиксированной адаптации Mise."),
+    retainedMeasured("Сальса", "salsa", 1, "jar", "Сохранена по решению владельца; протёртые томаты допустимы как альтернатива 1:1."),
     replacedMeasured("Бурый рис", ["rice"], 200, "g", "Локализован как обычный сухой рис с отдельно заданной массой."),
     omitted("Лайм", "Исключён из адаптации Mise."), omitted("Кориандр", "Исключён из адаптации Mise."),
   ],
@@ -1914,12 +1906,6 @@ const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]
     omittedMeasured("Каджунская смесь", 1.5, "tbsp", "Заменена в инструкции паприкой и сухими травами; микрокомпонент не участвует в вариативном КБЖУ."),
     retained("Брокколи", "broccoli", "Источник не задаёт массу; Mise задаёт измеримое количество."),
     retainedMeasured("Кабачки", "zucchini", 2, "piece", "Источник задаёт штуки; Mise задаёт измеримую массу."),
-  ],
-  "src-turkey-meatballs": [
-    retainedMeasured("Фарш индейки", "turkey-mince", 400, "g"), replacedMeasured("Рис внутри тефтелей", ["buckwheat"], 100, "g", "Заменён отдельным гарниром из гречки."),
-    retainedMeasured("Лук", "onion", 160, "g"), retainedMeasured("Морковь", "carrot", 100, "g"), retainedMeasured("Растительное масло", "olive-oil", 50, "g", "Сохранено и нормировано до фактического количества."),
-    retainedMeasured("Яйцо", "egg", 60, "g", "Сохранено как связующий и аллергенный компонент."),
-    replacedMeasured("Томатная паста", ["tomato-passata"], 30, "g", "Заменена протёртыми томатами с отдельной массой."), ignoredNoncaloric("Вода"),
   ],
 };
 
@@ -2101,12 +2087,11 @@ function familyRoles(groups: Partial<Record<RecipeIngredientRole, string[]>>) {
 
 const pilotRoleOverrides: Record<string, Record<string, RecipeIngredientRole>> = {
   "src-cottage-bake": familyRoles({ protein: ["cottage", "egg"], sauce: ["milk"], fat_cooking: ["butter"] }),
-  "src-protein-oats": familyRoles({ protein: ["cottage"], carb: ["oats"], sauce: ["milk"], vegetable: ["berries"] }),
+  "src-protein-oats": familyRoles({ protein: ["protein-powder"], carb: ["oats"], sauce: ["milk"], vegetable: ["berries"] }),
   "src-chicken-buckwheat": familyRoles({ protein: ["chicken"], carb: ["buckwheat"], vegetable: ["carrot"], garnish: ["greens"] }),
   "src-chicken-rice-veg": familyRoles({ protein: ["chicken"], carb: ["rice"], vegetable: ["carrot", "pepper", "peas"] }),
-  "src-chicken-bean-bowl": familyRoles({ protein: ["chicken"], carb: ["rice", "red-beans"], vegetable: ["onion"], sauce: ["tomato-passata"], fat_cooking: ["olive-oil"] }),
+  "src-chicken-bean-bowl": familyRoles({ protein: ["chicken"], carb: ["rice", "red-beans"], vegetable: ["onion"], sauce: ["salsa"], fat_cooking: ["olive-oil"] }),
   "src-salmon-rice-veg": familyRoles({ protein: ["salmon"], carb: ["rice"], vegetable: ["broccoli", "zucchini"], fat: ["olive-oil"], flavour_fixed: ["garlic"] }),
-  "src-turkey-meatballs": familyRoles({ protein: ["turkey-mince"], carb: ["buckwheat"], vegetable: ["onion", "carrot"], sauce: ["tomato-passata"], fat_cooking: ["olive-oil"], flavour_fixed: ["egg"] }),
   "src-taco-mac": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["pepper"], sauce: ["tomato-passata", "milk"], fat: ["cheese"], fat_cooking: ["olive-oil"], flavour: ["broth"] }),
   "src-teriyaki-tray": familyRoles({ protein: ["chicken-thigh"], carb: ["rice", "sweet-potato"], vegetable: ["broccoli"], fat: ["olive-oil"], flavour_fixed: ["soy", "brown-sugar", "vinegar", "garlic"] }),
   "src-halal-chicken": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["cucumber", "tomato", "onion"], fat: ["mayonnaise", "butter", "olive-oil"], sauce: ["yogurt"], flavour_fixed: ["lemon", "vinegar"] }),
@@ -2244,7 +2229,6 @@ export const familyGeometryLimits: Readonly<Record<string, number>> = Object.fre
   "src-chicken-rice-veg": 1,
   "src-chicken-bean-bowl": 4,
   "src-salmon-rice-veg": 3,
-  "src-turkey-meatballs": 1,
   "src-taco-mac": 5,
   "src-teriyaki-tray": 5,
   "src-halal-chicken": 6,

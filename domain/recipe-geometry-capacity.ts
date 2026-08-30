@@ -51,11 +51,6 @@ export const RECIPE_GEOMETRY_CAPACITY: Readonly<
     evidence: "source_batch",
     sourceServings: 3,
   },
-  "src-turkey-meatballs": {
-    maxBaseServingsPerRun: 1,
-    constraint: "pan_surface",
-    evidence: "conservative_single_serving",
-  },
   "src-taco-mac": {
     maxBaseServingsPerRun: 5,
     constraint: "pot_volume",
