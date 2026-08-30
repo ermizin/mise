@@ -371,7 +371,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
         sourceIngredientIndex: index + 1,
         sourceIngredientId,
         canonicalIngredientId: canonical.id,
-        nameRu: canonical.canonicalName,
+        nameRu: sourceIngredient.displayNameRu?.trim() || canonical.canonicalName,
         group: groupFor(canonical),
         quantityGrams: mass.grams,
         sourceMeasurement: { amount: mass.sourceAmount, unit: mass.sourceUnit },

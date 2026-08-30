@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-08-30",
+  "decisions": [
+    {
+      "recipeId": "tmpm-28247",
+      "kind": "mirin_optional_alternative",
+      "sourceIngredient": "mirin",
+      "sourceAmountGrams": 60,
+      "displayNameRu": "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)",
+      "alternative": [
+        { "name": "water", "grams": 45 },
+        { "name": "brown sugar", "grams": 15 }
+      ],
+      "instructionNoteRu": "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость."
+    },
+    {
+      "recipeId": "tmpm-22884",
+      "kind": "mirin_optional_alternative",
+      "sourceIngredient": "mirin",
+      "sourceAmountGrams": 35,
+      "displayNameRu": "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)",
+      "alternative": [
+        { "name": "water", "grams": 26 },
+        { "name": "brown sugar", "grams": 9 }
+      ],
+      "instructionNoteRu": "Оставьте в соусе 35 г мирина; если его нет, смешайте 26 г воды и 9 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость."
+    },
+    {
+      "recipeId": "tmpm-26414",
+      "kind": "compound_ingredient_breakdown",
+      "sourceIngredient": "protein pancake mix",
+      "displayNameRu": "Смесь для вафли: 12,5 г сывороточного протеина + 12,5 г казеина + 20 г овсяной муки + 10 г кукурузного крахмала + 1 г разрыхлителя",
+      "instructionNoteRu": "На одну порцию заранее смешайте 12,5 г сывороточного протеина, 12,5 г казеина, 20 г овсяной муки, 10 г кукурузного крахмала и 1 г разрыхлителя."
+    }
+  ]
+}

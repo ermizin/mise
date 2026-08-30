@@ -4,6 +4,7 @@ import test from "node:test";
 import vm from "node:vm";
 import ts from "typescript";
 import { loadTypeScriptModule } from "./typescript-module.mjs";
+import { loadRecipeCorpusWithOverlays } from "../scripts/recipe-corpus-overlay.mjs";
 
 async function loadRecipeCatalog() {
   const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
@@ -245,10 +246,18 @@ test("frozen berry recipes name the berry explicitly", () => {
 test("owner product decisions keep explicit alternatives and remove rejected turkey meatballs", () => {
   const beanBowl = recipes.find((item) => item.id === "src-chicken-bean-bowl");
   const pasta = recipes.find((item) => item.id === "src-sausage-pepper-pasta");
+  const teriyaki = recipes.find((item) => item.id === "src-teriyaki-tray");
+  const waffle = recipes.find((item) => item.id === "src-waffle-french-toast");
   assert.ok(beanBowl);
   assert.ok(beanBowl.ingredients.some((ingredient) => ingredient.id === "salsa" && /протёртые томаты 1:1/iu.test(ingredient.name)));
   assert.ok(recipeFamiliesById["src-chicken-bean-bowl"].ingredients.some((ingredient) => ingredient.sourceIngredientId === "salsa"));
   assert.ok(pasta.ingredients.some((ingredient) => ingredient.id === "cream" && ingredient.name === "Сливки 10%"));
+  assert.ok(teriyaki.ingredients.some((ingredient) => ingredient.id === "mirin" && ingredient.quantity === 12 && /3:1/u.test(ingredient.name)));
+  assert.ok(teriyaki.steps.some((step) => /9 г воды и 3 г сахара/iu.test(step)));
+  assert.deepEqual(
+    Object.fromEntries(waffle.ingredients.filter((ingredient) => ["protein-powder", "casein-powder", "oats", "starch", "baking-powder"].includes(ingredient.id)).map((ingredient) => [ingredient.id, ingredient.quantity])),
+    { oats: 20, "protein-powder": 12.5, "casein-powder": 12.5, starch: 10, "baking-powder": 1 },
+  );
   assert.equal(recipes.some((item) => item.id === "src-turkey-meatballs"), false);
   assert.equal(recipeFamiliesById["src-turkey-meatballs"], undefined);
 });
@@ -696,10 +705,7 @@ test("missing caloric and allergenic source components are explicit in the pilot
 });
 
 test("raw candidate adapter preserves 217 source pages as 221 derived cards and legacy editorial statuses", async () => {
-  const datasets = await Promise.all([
-    readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8").then(JSON.parse),
-    readFile(new URL("../data/goodfood-candidates.json", import.meta.url), "utf8").then(JSON.parse),
-  ]);
+  const { documents: datasets } = await loadRecipeCorpusWithOverlays();
   const drafts = datasets.flatMap((dataset) => dataset.candidates.map((candidate) => normalizeRawRecipeCandidate(candidate, { publisher: dataset.source, accessedAt: dataset.importedAt })));
   assert.equal(drafts.length, 221);
   assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "promoted").length, 28);
@@ -758,18 +764,12 @@ test("raw candidate adapter preserves 217 source pages as 221 derived cards and 
     teriyaki.ingredientMappings.some(
       (mapping) => mapping.sourceName.toLowerCase() === "mirin",
     ),
-    false,
-    "the owner-reviewed mirin replacement is stored as measured vinegar and sugar",
+    true,
+    "the owner-reviewed source retains mirin instead of hiding it behind a replacement",
   );
   assert.equal(
-    teriyaki.ingredientMappings.filter(
-      (mapping) =>
-        mapping.status === "mapped" &&
-        ["brown_sugar_processed", "vinegar_processed"].includes(
-          mapping.canonicalIngredientId,
-        ),
-    ).length,
-    4,
+    teriyaki.ingredientMappings.filter((mapping) => mapping.status === "mapped" && mapping.canonicalIngredientId === "mirin_processed").length,
+    1,
   );
   const omittedFoods = allDispositions.filter((decision) => decision.disposition === "omitted_by_adaptation");
   assert.equal(omittedFoods.length, 9, "all real source foods omitted from raw-backed adaptations are explicit");
@@ -784,7 +784,7 @@ test("raw candidate adapter preserves 217 source pages as 221 derived cards and 
     counts[mapping.status] = (counts[mapping.status] ?? 0) + 1;
     return counts;
   }, {});
-  assert.equal(rawMappingCounts.mapped, 130);
+  assert.equal(rawMappingCounts.mapped, 129);
   assert.equal((rawMappingCounts.ignored_noncaloric ?? 0) + (rawMappingCounts.ignored_microcomponent ?? 0), 68);
   assert.ok(rawMappingCounts.ignored_noncaloric > 0);
   assert.ok(rawMappingCounts.ignored_microcomponent > 0);

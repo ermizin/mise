@@ -499,10 +499,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 544.4,
+        "kcal": 560.3,
         "protein": 43.6,
         "fat": 14.3,
-        "carbs": 58.9
+        "carbs": 61.1
       },
       "reasons": [
         {
@@ -6476,10 +6476,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 270.7,
+        "kcal": 273.9,
         "protein": 41.4,
         "fat": 5.1,
-        "carbs": 11.1
+        "carbs": 11.6
       },
       "reasons": [
         {

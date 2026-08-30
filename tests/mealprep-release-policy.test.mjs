@@ -2,12 +2,15 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { auditRecipeRelease } from "../scripts/audit-recipe-release.mjs";
+import { loadRecipeCorpusWithOverlays } from "../scripts/recipe-corpus-overlay.mjs";
 
-const [report, corpus, policy] = await Promise.all([
+const [report, corpusWithOverlays, policy] = await Promise.all([
   auditRecipeRelease(),
-  readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8").then(JSON.parse),
+  loadRecipeCorpusWithOverlays(),
   readFile(new URL("../data/mealprep-release-policy.json", import.meta.url), "utf8").then(JSON.parse),
 ]);
+const corpus = corpusWithOverlays.documents.find((document) => document.source === "The Meal Prep Manual");
+assert.ok(corpus);
 const mealPrepIds = new Set(corpus.candidates.map((candidate) => candidate.id));
 const mealPrepCards = report.cards.filter((card) => mealPrepIds.has(card.id));
 
@@ -39,12 +42,17 @@ test("every extreme source serving has a concrete Mise adaptation", () => {
   }
 });
 
-test("two source mirin substitutions are distributed into auditable measured replacement ingredients", () => {
+test("owner-approved mirin alternatives retain mirin and expose measured water-sugar ratios", () => {
   for (const id of ["tmpm-28247", "tmpm-22884"]) {
     const candidate = corpus.candidates.find((item) => item.id === id);
-    assert.equal(candidate.miseAdaptation?.kind, "distributed_ingredient_replacement");
-    assert.ok(candidate.ingredients.some((ingredient) => ingredient.name === "white vinegar" && Number(ingredient.amountMetric) > 0));
-    assert.ok(candidate.ingredients.some((ingredient) => ingredient.name === "brown sugar" && Number(ingredient.amountMetric) > 0));
-    assert.ok(!candidate.ingredients.some((ingredient) => ingredient.name === "mirin"));
+    assert.equal(candidate.miseAdaptation?.kind, "mirin_optional_alternative");
+    assert.ok(candidate.ingredients.some((ingredient) => ingredient.name === "mirin" && Number(ingredient.amountMetric) > 0));
+    assert.ok(candidate.ingredients.every((ingredient) => !/replacing mirin/iu.test(ingredient.original ?? "")));
+    const [water, sugar] = candidate.miseAdaptation.alternative;
+    assert.equal(water.name, "water");
+    assert.equal(sugar.name, "brown sugar");
+    assert.ok(Math.abs(water.grams / sugar.grams - 3) < 0.15);
+    assert.match(candidate.ingredients.find((ingredient) => ingredient.name === "mirin").displayNameRu, /3:1/u);
+    assert.match(candidate.paraphrasedInstructionDraft[0].text, /несколько капель рисового уксуса/iu);
   }
 });

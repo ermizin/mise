@@ -71,6 +71,19 @@ test("cheese and pasta stay in grams while liquid broth uses millilitres", () =>
   }
 });
 
+test("owner product decisions are visible in production recipe ingredients", () => {
+  for (const id of ["tmpm-28247", "tmpm-22884"]) {
+    const recipe = catalog.recipes.find((item) => item.id === id);
+    assert.ok(recipe, `${id} remains in the runtime catalog`);
+    assert.ok(recipe.shoppingIngredients.some((ingredient) => ingredient.canonicalIngredientId === "mirin_processed" && /3:1/u.test(ingredient.nameRu)));
+    assert.ok(recipe.steps.some((step) => /несколько капель рисового уксуса/iu.test(step)));
+  }
+  const waffle = catalog.recipes.find((item) => item.id === "tmpm-26414");
+  assert.ok(waffle);
+  assert.ok(waffle.shoppingIngredients.some((ingredient) => /12,5 г сывороточного протеина.*12,5 г казеина.*20 г овсяной муки.*10 г кукурузного крахмала.*1 г разрыхлителя/iu.test(ingredient.nameRu)));
+  assert.ok(waffle.steps.some((step) => /заранее смешайте 12,5 г сывороточного протеина/iu.test(step)));
+});
+
 test("the 200-recipe release gate is enforceable without hard-coding today's count", () => {
   if (catalog.recipes.length >= 200) {
     assert.doesNotThrow(() => assertRuntimeCatalogMinimum(catalog, 200));

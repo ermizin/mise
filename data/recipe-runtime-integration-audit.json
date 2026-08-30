@@ -100,7 +100,7 @@
       "slot": "dinner",
       "title": "Курица терияки с овощами на противне",
       "recipeFamilyId": "raw-tmpm-28247",
-      "shoppingIngredientCount": 13,
+      "shoppingIngredientCount": 12,
       "procedureIngredientCount": 3,
       "media": "source_preview"
     },
@@ -856,7 +856,7 @@
       "slot": "lunch",
       "title": "Милпреп-стир-фрай",
       "recipeFamilyId": "raw-tmpm-22884",
-      "shoppingIngredientCount": 28,
+      "shoppingIngredientCount": 27,
       "procedureIngredientCount": 4,
       "media": "source_preview"
     },

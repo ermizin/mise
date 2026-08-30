@@ -5178,10 +5178,10 @@
       "slot": "dinner",
       "title": "Курица терияки с овощами на противне",
       "macros": {
-        "kcal": 544.4,
+        "kcal": 560.3,
         "protein": 43.6,
         "fat": 14.3,
-        "carbs": 58.9
+        "carbs": 61.1
       },
       "timeMinutes": 60,
       "menuTags": [
@@ -5334,12 +5334,12 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "canonicalIngredientId": "vinegar_processed",
-          "nameRu": "Уксус",
+          "canonicalIngredientId": "mirin_processed",
+          "nameRu": "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)",
           "group": "Соусы и специи",
-          "quantityGrams": 45,
+          "quantityGrams": 60,
           "sourceMeasurement": {
-            "amount": 45,
+            "amount": 60,
             "unit": "g"
           },
           "allergens": [],
@@ -5347,11 +5347,11 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 12,
-          "sourceIngredientId": "source-ingredient-12",
-          "canonicalIngredientId": "brown_sugar_processed",
-          "nameRu": "Коричневый сахар",
-          "group": "Бакалея",
+          "sourceIngredientIndex": 13,
+          "sourceIngredientId": "source-ingredient-13",
+          "canonicalIngredientId": "vinegar_processed",
+          "nameRu": "Уксус",
+          "group": "Соусы и специи",
           "quantityGrams": 15,
           "sourceMeasurement": {
             "amount": 15,
@@ -5364,21 +5364,6 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "canonicalIngredientId": "vinegar_processed",
-          "nameRu": "Уксус",
-          "group": "Соусы и специи",
-          "quantityGrams": 15,
-          "sourceMeasurement": {
-            "amount": 15,
-            "unit": "g"
-          },
-          "allergens": [],
-          "checkLabel": false,
-          "massStatus": "source_metric"
-        },
-        {
-          "sourceIngredientIndex": 15,
-          "sourceIngredientId": "source-ingredient-15",
           "canonicalIngredientId": "brown_sugar_processed",
           "nameRu": "Коричневый сахар",
           "group": "Бакалея",
@@ -5392,8 +5377,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 16,
-          "sourceIngredientId": "source-ingredient-16",
+          "sourceIngredientIndex": 15,
+          "sourceIngredientId": "source-ingredient-15",
           "canonicalIngredientId": "garlic_raw",
           "nameRu": "Чеснок",
           "group": "Овощи и фрукты",
@@ -5429,8 +5414,8 @@
           "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ."
         },
         {
-          "sourceIngredientIndex": 13,
-          "sourceIngredientId": "source-ingredient-13",
+          "sourceIngredientIndex": 12,
+          "sourceIngredientId": "source-ingredient-12",
           "nameRu": "Вода",
           "sourceName": "water",
           "classification": "pantry",
@@ -5439,6 +5424,8 @@
         }
       ],
       "steps": [
+        "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара.",
+        "Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость.",
         "Сварите рис до 3¾ чашек готового.",
         "Разогрейте духовку до 218°C; нарежьте брокколи на соцветия, батат крупными кусочками.",
         "В маленьком сотейнике соедините компоненты терияки и чеснок.",
@@ -5643,36 +5630,21 @@
           },
           {
             "sourceIngredientId": "source-ingredient-11",
-            "canonicalIngredientId": "vinegar_processed",
-            "baseAmount": 9,
+            "canonicalIngredientId": "mirin_processed",
+            "baseAmount": 11.428571428571427,
             "unit": "ml",
             "role": "sauce",
-            "minAmount": 4.5,
-            "preferredMin": 7.2,
-            "preferredMax": 11.25,
-            "maxAmount": 14.4,
+            "minAmount": 5.7142857142857135,
+            "preferredMin": 9.142857142857142,
+            "preferredMax": 14.285714285714285,
+            "maxAmount": 18.285714285714285,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-12",
-            "canonicalIngredientId": "brown_sugar_processed",
-            "baseAmount": 3.2608695652173916,
-            "unit": "ml",
-            "role": "flavour",
-            "minAmount": 2.445652173913044,
-            "preferredMin": 2.9347826086956523,
-            "preferredMax": 3.75,
-            "maxAmount": 4.239130434782609,
-            "scalable": true,
-            "scalingPriority": 6,
-            "substitutions": [],
-            "optional": false
-          },
-          {
-            "sourceIngredientId": "source-ingredient-14",
+            "sourceIngredientId": "source-ingredient-13",
             "canonicalIngredientId": "vinegar_processed",
             "baseAmount": 3,
             "unit": "ml",
@@ -5687,7 +5659,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-15",
+            "sourceIngredientId": "source-ingredient-14",
             "canonicalIngredientId": "brown_sugar_processed",
             "baseAmount": 5.217391304347826,
             "unit": "ml",
@@ -5702,7 +5674,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-16",
+            "sourceIngredientId": "source-ingredient-15",
             "canonicalIngredientId": "garlic_raw",
             "baseAmount": 2,
             "unit": "g",
@@ -5717,8 +5689,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 375,
-        "maxViableCalories": 861,
+        "minViableCalories": 388,
+        "maxViableCalories": 886,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -5740,23 +5712,23 @@
           "carbs": 62
         },
         "miseCalculatedNutrition": {
-          "kcal": 544.4,
+          "kcal": 560.3,
           "protein": 43.6,
           "fat": 14.3,
-          "carbs": 58.9
+          "carbs": 61.1
         },
         "nutritionDelta": {
-          "kcal": -5.6,
+          "kcal": 10.3,
           "protein": -0.4,
           "fat": 0.3,
-          "carbs": -3.1
+          "carbs": -0.9
         },
-        "nutritionDeltaKcal": -5.6,
+        "nutritionDeltaKcal": 10.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
             "reviewedAt": "2026-08-28T15:51:22.695Z",
-            "sourceIngredientCount": 16,
+            "sourceIngredientCount": 15,
             "sourceSlug": "tmpm-28247"
           },
           "nutrition": {
@@ -5783,17 +5755,16 @@
               "source-ingredient-9",
               "source-ingredient-10",
               "source-ingredient-11",
-              "source-ingredient-12",
+              "source-ingredient-13",
               "source-ingredient-14",
-              "source-ingredient-15",
-              "source-ingredient-16"
+              "source-ingredient-15"
             ],
             "action": "measure",
             "dependsOn": []
           },
           {
             "id": "editorial-step-1-part-1",
-            "text": "Сварите рис до 3¾ чашек готового.",
+            "text": "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -5824,7 +5795,7 @@
           },
           {
             "id": "editorial-step-1-part-2",
-            "text": "Разогрейте духовку до 218°C; нарежьте брокколи на соцветия, батат крупными кусочками.",
+            "text": "Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -5855,7 +5826,7 @@
           },
           {
             "id": "editorial-step-1-part-3",
-            "text": "В маленьком сотейнике соедините компоненты терияки и чеснок.",
+            "text": "Сварите рис до 3¾ чашек готового.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -5876,6 +5847,68 @@
             "action": "prepare",
             "dependsOn": [
               "editorial-step-1-part-2"
+            ],
+            "temperature": "218°C",
+            "equipment": [
+              "oven",
+              "saucepan",
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-1-part-4",
+            "text": "Разогрейте духовку до 218°C; нарежьте брокколи на соцветия, батат крупными кусочками.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-2",
+              "source-ingredient-3",
+              "source-ingredient-4",
+              "source-ingredient-5",
+              "source-ingredient-6",
+              "source-ingredient-7",
+              "source-ingredient-8",
+              "source-ingredient-9",
+              "source-ingredient-10",
+              "source-ingredient-11",
+              "source-ingredient-12",
+              "source-ingredient-13",
+              "source-ingredient-14",
+              "source-ingredient-15"
+            ],
+            "action": "prepare",
+            "dependsOn": [
+              "editorial-step-1-part-3"
+            ],
+            "temperature": "218°C",
+            "equipment": [
+              "oven",
+              "saucepan",
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-1-part-5",
+            "text": "В маленьком сотейнике соедините компоненты терияки и чеснок.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-2",
+              "source-ingredient-3",
+              "source-ingredient-4",
+              "source-ingredient-5",
+              "source-ingredient-6",
+              "source-ingredient-7",
+              "source-ingredient-8",
+              "source-ingredient-9",
+              "source-ingredient-10",
+              "source-ingredient-11",
+              "source-ingredient-12",
+              "source-ingredient-13",
+              "source-ingredient-14",
+              "source-ingredient-15"
+            ],
+            "action": "prepare",
+            "dependsOn": [
+              "editorial-step-1-part-4"
             ],
             "temperature": "218°C",
             "equipment": [
@@ -5906,7 +5939,7 @@
             ],
             "action": "roast",
             "dependsOn": [
-              "editorial-step-1-part-3"
+              "editorial-step-1-part-5"
             ],
             "temperature": "218°C",
             "duration": "курица 25 мин; овощи 10 мин + 8–10 мин; соус 8–10 мин",
@@ -26658,7 +26691,7 @@
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
           "canonicalIngredientId": "protein_pancake_mix_processed",
-          "nameRu": "Протеиновая смесь для блинов",
+          "nameRu": "Смесь для вафли: 12,5 г сывороточного протеина + 12,5 г казеина + 20 г овсяной муки + 10 г кукурузного крахмала + 1 г разрыхлителя",
           "group": "Крупы и макароны",
           "quantityGrams": 56,
           "sourceMeasurement": {
@@ -26822,6 +26855,7 @@
         }
       ],
       "steps": [
+        "На одну порцию заранее смешайте 12,5 г сывороточного протеина, 12,5 г казеина, 20 г овсяной муки, 10 г кукурузного крахмала и 1 г разрыхлителя.",
         "Если клубника заморожена, разморозьте её 15–20 секунд в микроволновке, добавьте кленовый сироп и оставьте выделить сок.",
         "Смешайте протеиновую смесь для панкейков, йогурт, жидкие белки и воду.",
         "В разогретой и смазанной вафельнице диаметром около 20 см выпекайте до румяной плотной вафли.",
@@ -27094,7 +27128,7 @@
           },
           {
             "id": "editorial-step-1-part-1",
-            "text": "Если клубника заморожена, разморозьте её 15–20 секунд в микроволновке, добавьте кленовый сироп и оставьте выделить сок.",
+            "text": "На одну порцию заранее смешайте 12,5 г сывороточного протеина, 12,5 г казеина, 20 г овсяной муки, 10 г кукурузного крахмала и 1 г разрыхлителя.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -27117,7 +27151,7 @@
           },
           {
             "id": "editorial-step-1-part-2",
-            "text": "Смешайте протеиновую смесь для панкейков, йогурт, жидкие белки и воду.",
+            "text": "Если клубника заморожена, разморозьте её 15–20 секунд в микроволновке, добавьте кленовый сироп и оставьте выделить сок.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -27140,7 +27174,7 @@
           },
           {
             "id": "editorial-step-1-part-3",
-            "text": "В разогретой и смазанной вафельнице диаметром около 20 см выпекайте до румяной плотной вафли.",
+            "text": "Смешайте протеиновую смесь для панкейков, йогурт, жидкие белки и воду.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -27159,6 +27193,29 @@
             "donenessCue": "вафля подрумянена и схватилась",
             "dependsOn": [
               "editorial-step-1-part-2"
+            ]
+          },
+          {
+            "id": "editorial-step-1-part-4",
+            "text": "В разогретой и смазанной вафельнице диаметром около 20 см выпекайте до румяной плотной вафли.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-2",
+              "source-ingredient-3",
+              "source-ingredient-4",
+              "source-ingredient-9",
+              "source-ingredient-10"
+            ],
+            "action": "waffle",
+            "duration": "15–20 сек разморозки",
+            "equipment": [
+              "microwave",
+              "mixing_bowl",
+              "waffle_iron"
+            ],
+            "donenessCue": "вафля подрумянена и схватилась",
+            "dependsOn": [
+              "editorial-step-1-part-3"
             ]
           },
           {
@@ -27185,7 +27242,7 @@
             ],
             "donenessCue": "образовалась корочка, края не влажные",
             "dependsOn": [
-              "editorial-step-1-part-3"
+              "editorial-step-1-part-4"
             ]
           },
           {
@@ -66212,10 +66269,10 @@
       "slot": "lunch",
       "title": "Милпреп-стир-фрай",
       "macros": {
-        "kcal": 270.7,
+        "kcal": 273.9,
         "protein": 41.4,
         "fat": 5.1,
-        "carbs": 11.1
+        "carbs": 11.6
       },
       "timeMinutes": 55,
       "menuTags": [
@@ -66404,12 +66461,12 @@
         {
           "sourceIngredientIndex": 13,
           "sourceIngredientId": "source-ingredient-13",
-          "canonicalIngredientId": "vinegar_processed",
-          "nameRu": "Уксус",
+          "canonicalIngredientId": "mirin_processed",
+          "nameRu": "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)",
           "group": "Соусы и специи",
-          "quantityGrams": 26,
+          "quantityGrams": 35,
           "sourceMeasurement": {
-            "amount": 26,
+            "amount": 35,
             "unit": "g"
           },
           "allergens": [],
@@ -66417,23 +66474,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 14,
-          "sourceIngredientId": "source-ingredient-14",
-          "canonicalIngredientId": "brown_sugar_processed",
-          "nameRu": "Коричневый сахар",
-          "group": "Бакалея",
-          "quantityGrams": 9,
-          "sourceMeasurement": {
-            "amount": 9,
-            "unit": "g"
-          },
-          "allergens": [],
-          "checkLabel": false,
-          "massStatus": "source_metric"
-        },
-        {
-          "sourceIngredientIndex": 16,
-          "sourceIngredientId": "source-ingredient-16",
+          "sourceIngredientIndex": 15,
+          "sourceIngredientId": "source-ingredient-15",
           "canonicalIngredientId": "starch_processed",
           "nameRu": "Кукурузный крахмал",
           "group": "Крупы и макароны",
@@ -66447,8 +66489,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 17,
-          "sourceIngredientId": "source-ingredient-17",
+          "sourceIngredientIndex": 16,
+          "sourceIngredientId": "source-ingredient-16",
           "canonicalIngredientId": "chicken_raw",
           "nameRu": "Куриная грудка",
           "group": "Мясо и птица",
@@ -66464,8 +66506,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 18,
-          "sourceIngredientId": "source-ingredient-18",
+          "sourceIngredientIndex": 17,
+          "sourceIngredientId": "source-ingredient-17",
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
@@ -66481,8 +66523,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 19,
-          "sourceIngredientId": "source-ingredient-19",
+          "sourceIngredientIndex": 18,
+          "sourceIngredientId": "source-ingredient-18",
           "canonicalIngredientId": "ginger_raw",
           "nameRu": "Имбирь",
           "group": "Овощи и фрукты",
@@ -66498,8 +66540,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 20,
-          "sourceIngredientId": "source-ingredient-20",
+          "sourceIngredientIndex": 19,
+          "sourceIngredientId": "source-ingredient-19",
           "canonicalIngredientId": "garlic_raw",
           "nameRu": "Чеснок",
           "group": "Овощи и фрукты",
@@ -66510,6 +66552,23 @@
           },
           "averagePieceWeightGrams": 5,
           "pieceEstimate": 3,
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric"
+        },
+        {
+          "sourceIngredientIndex": 20,
+          "sourceIngredientId": "source-ingredient-20",
+          "canonicalIngredientId": "pepper_raw",
+          "nameRu": "Сладкий перец",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 35,
+          "sourceMeasurement": {
+            "amount": 35,
+            "unit": "g"
+          },
+          "averagePieceWeightGrams": 150,
+          "pieceEstimate": 0.23,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric"
@@ -66534,23 +66593,6 @@
         {
           "sourceIngredientIndex": 22,
           "sourceIngredientId": "source-ingredient-22",
-          "canonicalIngredientId": "pepper_raw",
-          "nameRu": "Сладкий перец",
-          "group": "Овощи и фрукты",
-          "quantityGrams": 35,
-          "sourceMeasurement": {
-            "amount": 35,
-            "unit": "g"
-          },
-          "averagePieceWeightGrams": 150,
-          "pieceEstimate": 0.23,
-          "allergens": [],
-          "checkLabel": false,
-          "massStatus": "source_metric"
-        },
-        {
-          "sourceIngredientIndex": 23,
-          "sourceIngredientId": "source-ingredient-23",
           "canonicalIngredientId": "cabbage_raw",
           "nameRu": "Капуста",
           "group": "Овощи и фрукты",
@@ -66564,8 +66606,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 24,
-          "sourceIngredientId": "source-ingredient-24",
+          "sourceIngredientIndex": 23,
+          "sourceIngredientId": "source-ingredient-23",
           "canonicalIngredientId": "zucchini_raw",
           "nameRu": "Кабачок",
           "group": "Овощи и фрукты",
@@ -66581,8 +66623,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 25,
-          "sourceIngredientId": "source-ingredient-25",
+          "sourceIngredientIndex": 24,
+          "sourceIngredientId": "source-ingredient-24",
           "canonicalIngredientId": "olive_oil_processed",
           "nameRu": "Оливковое масло",
           "group": "Масла и соусы",
@@ -66596,8 +66638,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 26,
-          "sourceIngredientId": "source-ingredient-26",
+          "sourceIngredientIndex": 25,
+          "sourceIngredientId": "source-ingredient-25",
           "canonicalIngredientId": "gochujang_processed",
           "nameRu": "Паста кочудян",
           "group": "Соусы и специи",
@@ -66614,8 +66656,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 28,
-          "sourceIngredientId": "source-ingredient-28",
+          "sourceIngredientIndex": 27,
+          "sourceIngredientId": "source-ingredient-27",
           "canonicalIngredientId": "teriyaki_sauce_processed",
           "nameRu": "Соус терияки",
           "group": "Соусы и специи",
@@ -66632,8 +66674,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 29,
-          "sourceIngredientId": "source-ingredient-29",
+          "sourceIngredientIndex": 28,
+          "sourceIngredientId": "source-ingredient-28",
           "canonicalIngredientId": "rice_cooked_cooked",
           "nameRu": "Рис готовый",
           "group": "Крупы и макароны",
@@ -66647,8 +66689,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 30,
-          "sourceIngredientId": "source-ingredient-30",
+          "sourceIngredientIndex": 29,
+          "sourceIngredientId": "source-ingredient-29",
           "canonicalIngredientId": "carrot_raw",
           "nameRu": "Морковь",
           "group": "Овощи и фрукты",
@@ -66664,8 +66706,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 31,
-          "sourceIngredientId": "source-ingredient-31",
+          "sourceIngredientIndex": 30,
+          "sourceIngredientId": "source-ingredient-30",
           "canonicalIngredientId": "cucumber_raw",
           "nameRu": "Огурец",
           "group": "Овощи и фрукты",
@@ -66681,8 +66723,8 @@
           "massStatus": "source_metric"
         },
         {
-          "sourceIngredientIndex": 32,
-          "sourceIngredientId": "source-ingredient-32",
+          "sourceIngredientIndex": 31,
+          "sourceIngredientId": "source-ingredient-31",
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
@@ -66718,8 +66760,8 @@
           "reason": "Некалорийный технологический компонент: сохранён в source audit, но не используется для вариативного расчёта КБЖУ."
         },
         {
-          "sourceIngredientIndex": 15,
-          "sourceIngredientId": "source-ingredient-15",
+          "sourceIngredientIndex": 14,
+          "sourceIngredientId": "source-ingredient-14",
           "nameRu": "Вода",
           "sourceName": "water",
           "classification": "pantry",
@@ -66727,8 +66769,8 @@
           "reason": "Некалорийный технологический компонент: сохранён в source audit, но не используется для вариативного расчёта КБЖУ."
         },
         {
-          "sourceIngredientIndex": 27,
-          "sourceIngredientId": "source-ingredient-27",
+          "sourceIngredientIndex": 26,
+          "sourceIngredientId": "source-ingredient-26",
           "nameRu": "Острый перец",
           "sourceName": "gochugaru",
           "classification": "to_taste",
@@ -66737,6 +66779,8 @@
         }
       ],
       "steps": [
+        "Оставьте в соусе 35 г мирина; если его нет, смешайте 26 г воды и 9 г сахара.",
+        "Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость.",
         "Подморозьте курицу около часа, нарежьте тонкими полосками, смешайте с белками, соевым соусом и крахмалом и маринуйте 30 минут.",
         "Готовьте курицу в слабо кипящей воде 2–3 минуты до исчезновения розового цвета, обсушите и заморозьте в один слой.",
         "Для подачи обжарьте овощи в воке, добавьте замороженную курицу на 1–2 минуты, вмешайте острые пасты, затем соус и рис; сверху добавьте маринованную морковь, огурец и зелёный лук."
@@ -66966,36 +67010,21 @@
           },
           {
             "sourceIngredientId": "source-ingredient-13",
-            "canonicalIngredientId": "vinegar_processed",
-            "baseAmount": 1.8571428571428572,
+            "canonicalIngredientId": "mirin_processed",
+            "baseAmount": 2.3809523809523805,
             "unit": "ml",
             "role": "sauce",
-            "minAmount": 0.9285714285714286,
-            "preferredMin": 1.4857142857142858,
-            "preferredMax": 2.3214285714285716,
-            "maxAmount": 2.9714285714285715,
+            "minAmount": 1.1904761904761902,
+            "preferredMin": 1.9047619047619044,
+            "preferredMax": 2.9761904761904754,
+            "maxAmount": 3.809523809523809,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-14",
-            "canonicalIngredientId": "brown_sugar_processed",
-            "baseAmount": 0.6987577639751553,
-            "unit": "ml",
-            "role": "flavour",
-            "minAmount": 0.5240683229813665,
-            "preferredMin": 0.6288819875776398,
-            "preferredMax": 0.8035714285714286,
-            "maxAmount": 0.908385093167702,
-            "scalable": true,
-            "scalingPriority": 6,
-            "substitutions": [],
-            "optional": false
-          },
-          {
-            "sourceIngredientId": "source-ingredient-16",
+            "sourceIngredientId": "source-ingredient-15",
             "canonicalIngredientId": "starch_processed",
             "baseAmount": 1.1428571428571428,
             "unit": "g",
@@ -67010,7 +67039,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-17",
+            "sourceIngredientId": "source-ingredient-16",
             "canonicalIngredientId": "chicken_raw",
             "baseAmount": 8.571428571428571,
             "unit": "g",
@@ -67025,7 +67054,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-18",
+            "sourceIngredientId": "source-ingredient-17",
             "canonicalIngredientId": "onion_raw",
             "baseAmount": 2.5,
             "unit": "g",
@@ -67040,7 +67069,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-19",
+            "sourceIngredientId": "source-ingredient-18",
             "canonicalIngredientId": "ginger_raw",
             "baseAmount": 0.7142857142857143,
             "unit": "g",
@@ -67055,7 +67084,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-20",
+            "sourceIngredientId": "source-ingredient-19",
             "canonicalIngredientId": "garlic_raw",
             "baseAmount": 1.0714285714285714,
             "unit": "g",
@@ -67064,6 +67093,21 @@
             "preferredMin": 1.0178571428571428,
             "preferredMax": 1.2857142857142856,
             "maxAmount": 1.5535714285714284,
+            "scalable": true,
+            "scalingPriority": 5,
+            "substitutions": [],
+            "optional": false
+          },
+          {
+            "sourceIngredientId": "source-ingredient-20",
+            "canonicalIngredientId": "pepper_raw",
+            "baseAmount": 2.5,
+            "unit": "g",
+            "role": "vegetable",
+            "minAmount": 2,
+            "preferredMin": 2.375,
+            "preferredMax": 3,
+            "maxAmount": 3.625,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -67086,21 +67130,6 @@
           },
           {
             "sourceIngredientId": "source-ingredient-22",
-            "canonicalIngredientId": "pepper_raw",
-            "baseAmount": 2.5,
-            "unit": "g",
-            "role": "vegetable",
-            "minAmount": 2,
-            "preferredMin": 2.375,
-            "preferredMax": 3,
-            "maxAmount": 3.625,
-            "scalable": true,
-            "scalingPriority": 5,
-            "substitutions": [],
-            "optional": false
-          },
-          {
-            "sourceIngredientId": "source-ingredient-23",
             "canonicalIngredientId": "cabbage_raw",
             "baseAmount": 7.142857142857143,
             "unit": "g",
@@ -67115,7 +67144,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-24",
+            "sourceIngredientId": "source-ingredient-23",
             "canonicalIngredientId": "zucchini_raw",
             "baseAmount": 5.357142857142857,
             "unit": "g",
@@ -67130,7 +67159,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-25",
+            "sourceIngredientId": "source-ingredient-24",
             "canonicalIngredientId": "olive_oil_processed",
             "baseAmount": 0.3968253968253968,
             "unit": "ml",
@@ -67145,7 +67174,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-26",
+            "sourceIngredientId": "source-ingredient-25",
             "canonicalIngredientId": "gochujang_processed",
             "baseAmount": 0.7142857142857143,
             "unit": "g",
@@ -67160,7 +67189,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-28",
+            "sourceIngredientId": "source-ingredient-27",
             "canonicalIngredientId": "teriyaki_sauce_processed",
             "baseAmount": 3.078817733990148,
             "unit": "ml",
@@ -67175,7 +67204,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-29",
+            "sourceIngredientId": "source-ingredient-28",
             "canonicalIngredientId": "rice_cooked_cooked",
             "baseAmount": 9.157509157509157,
             "unit": "ml",
@@ -67190,7 +67219,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-30",
+            "sourceIngredientId": "source-ingredient-29",
             "canonicalIngredientId": "carrot_raw",
             "baseAmount": 2.142857142857143,
             "unit": "g",
@@ -67205,7 +67234,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-31",
+            "sourceIngredientId": "source-ingredient-30",
             "canonicalIngredientId": "cucumber_raw",
             "baseAmount": 2.142857142857143,
             "unit": "g",
@@ -67220,7 +67249,7 @@
             "optional": false
           },
           {
-            "sourceIngredientId": "source-ingredient-32",
+            "sourceIngredientId": "source-ingredient-31",
             "canonicalIngredientId": "onion_raw",
             "baseAmount": 0.35714285714285715,
             "unit": "g",
@@ -67235,8 +67264,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 205,
-        "maxViableCalories": 390,
+        "minViableCalories": 209,
+        "maxViableCalories": 393,
         "geometryLockedMax": 14,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -67258,23 +67287,23 @@
           "carbs": 1
         },
         "miseCalculatedNutrition": {
-          "kcal": 270.7,
+          "kcal": 273.9,
           "protein": 41.4,
           "fat": 5.1,
-          "carbs": 11.1
+          "carbs": 11.6
         },
         "nutritionDelta": {
-          "kcal": 104.7,
+          "kcal": 107.9,
           "protein": 4.4,
           "fat": 3.6,
-          "carbs": 10.1
+          "carbs": 10.6
         },
-        "nutritionDeltaKcal": 104.7,
+        "nutritionDeltaKcal": 107.9,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
             "reviewedAt": "2026-08-28T15:51:22.695Z",
-            "sourceIngredientCount": 32,
+            "sourceIngredientCount": 31,
             "sourceSlug": "tmpm-22884"
           },
           "nutrition": {
@@ -67303,7 +67332,7 @@
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13",
-              "source-ingredient-14",
+              "source-ingredient-15",
               "source-ingredient-16",
               "source-ingredient-17",
               "source-ingredient-18",
@@ -67314,19 +67343,18 @@
               "source-ingredient-23",
               "source-ingredient-24",
               "source-ingredient-25",
-              "source-ingredient-26",
+              "source-ingredient-27",
               "source-ingredient-28",
               "source-ingredient-29",
               "source-ingredient-30",
-              "source-ingredient-31",
-              "source-ingredient-32"
+              "source-ingredient-31"
             ],
             "action": "measure",
             "dependsOn": []
           },
           {
             "id": "editorial-step-1-part-1",
-            "text": "Подморозьте курицу около часа, нарежьте тонкими полосками, смешайте с белками, соевым соусом и крахмалом и маринуйте 30 минут.",
+            "text": "Оставьте в соусе 35 г мирина; если его нет, смешайте 26 г воды и 9 г сахара.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -67374,7 +67402,7 @@
           },
           {
             "id": "editorial-step-1-part-2",
-            "text": "Готовьте курицу в слабо кипящей воде 2–3 минуты до исчезновения розового цвета, обсушите и заморозьте в один слой.",
+            "text": "Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -67422,7 +67450,7 @@
           },
           {
             "id": "editorial-step-1-part-3",
-            "text": "Для подачи обжарьте овощи в воке, добавьте замороженную курицу на 1–2 минуты, вмешайте острые пасты, затем соус и рис; сверху добавьте маринованную морковь, огурец и зелёный лук.",
+            "text": "Подморозьте курицу около часа, нарежьте тонкими полосками, смешайте с белками, соевым соусом и крахмалом и маринуйте 30 минут.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -67459,6 +67487,102 @@
             "action": "boil",
             "dependsOn": [
               "editorial-step-1-part-2"
+            ],
+            "duration": "маринование 30 мин; курица 2–3 мин; в воке 1–2 мин",
+            "equipment": [
+              "pot",
+              "wok",
+              "baking_sheet"
+            ],
+            "donenessCue": "курица без розовых участков, соус загустел"
+          },
+          {
+            "id": "editorial-step-1-part-4",
+            "text": "Готовьте курицу в слабо кипящей воде 2–3 минуты до исчезновения розового цвета, обсушите и заморозьте в один слой.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-2",
+              "source-ingredient-3",
+              "source-ingredient-4",
+              "source-ingredient-5",
+              "source-ingredient-6",
+              "source-ingredient-7",
+              "source-ingredient-8",
+              "source-ingredient-9",
+              "source-ingredient-10",
+              "source-ingredient-11",
+              "source-ingredient-12",
+              "source-ingredient-13",
+              "source-ingredient-14",
+              "source-ingredient-15",
+              "source-ingredient-16",
+              "source-ingredient-17",
+              "source-ingredient-18",
+              "source-ingredient-19",
+              "source-ingredient-20",
+              "source-ingredient-21",
+              "source-ingredient-22",
+              "source-ingredient-23",
+              "source-ingredient-24",
+              "source-ingredient-25",
+              "source-ingredient-26",
+              "source-ingredient-27",
+              "source-ingredient-28",
+              "source-ingredient-29",
+              "source-ingredient-30",
+              "source-ingredient-31"
+            ],
+            "action": "boil",
+            "dependsOn": [
+              "editorial-step-1-part-3"
+            ],
+            "duration": "маринование 30 мин; курица 2–3 мин; в воке 1–2 мин",
+            "equipment": [
+              "pot",
+              "wok",
+              "baking_sheet"
+            ],
+            "donenessCue": "курица без розовых участков, соус загустел"
+          },
+          {
+            "id": "editorial-step-1-part-5",
+            "text": "Для подачи обжарьте овощи в воке, добавьте замороженную курицу на 1–2 минуты, вмешайте острые пасты, затем соус и рис; сверху добавьте маринованную морковь, огурец и зелёный лук.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-2",
+              "source-ingredient-3",
+              "source-ingredient-4",
+              "source-ingredient-5",
+              "source-ingredient-6",
+              "source-ingredient-7",
+              "source-ingredient-8",
+              "source-ingredient-9",
+              "source-ingredient-10",
+              "source-ingredient-11",
+              "source-ingredient-12",
+              "source-ingredient-13",
+              "source-ingredient-14",
+              "source-ingredient-15",
+              "source-ingredient-16",
+              "source-ingredient-17",
+              "source-ingredient-18",
+              "source-ingredient-19",
+              "source-ingredient-20",
+              "source-ingredient-21",
+              "source-ingredient-22",
+              "source-ingredient-23",
+              "source-ingredient-24",
+              "source-ingredient-25",
+              "source-ingredient-26",
+              "source-ingredient-27",
+              "source-ingredient-28",
+              "source-ingredient-29",
+              "source-ingredient-30",
+              "source-ingredient-31"
+            ],
+            "action": "boil",
+            "dependsOn": [
+              "editorial-step-1-part-4"
             ],
             "duration": "маринование 30 мин; курица 2–3 мин; в воке 1–2 мин",
             "equipment": [

@@ -1911,7 +1911,7 @@ const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]
 
 const rawPilotIngredientAudits: Record<string, { sourceSlug: string; sourceIngredientCount: number }> = {
   "src-crispy-beef-noodles": { sourceSlug: "crispy-chili-beef-noodles", sourceIngredientCount: 16 },
-  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 16 },
+  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 15 },
   "src-taco-mac": { sourceSlug: "taco-mac", sourceIngredientCount: 16 },
   "src-mediterranean-wrap": { sourceSlug: "mediterranean-chicken-wraps", sourceIngredientCount: 24 },
   "src-creamy-chicken-pasta": { sourceSlug: "easy-dump-and-bake-creamy-chicken-pasta", sourceIngredientCount: 17 },
@@ -1942,10 +1942,6 @@ const pilotAdaptationReplacementTargets: Record<string, Record<string, { legacyI
     "cooked rice": {
       legacyIds: ["rice"],
       reason: "Источник задаёт 563 г готового риса на пять порций, а Mise хранит сухой рис; конверсия состояния отмечена явно и требует отдельной проверки количества.",
-    },
-    mirin: {
-      legacyIds: ["vinegar", "brown-sugar"],
-      reason: "В текущей pilot-адаптации мирин заменён отмеренными уксусом и коричневым сахаром; в остальных карточках используется отдельный средний профиль мирина.",
     },
   },
   "src-bbq-burger-bowl": {
@@ -2093,7 +2089,7 @@ const pilotRoleOverrides: Record<string, Record<string, RecipeIngredientRole>> =
   "src-chicken-bean-bowl": familyRoles({ protein: ["chicken"], carb: ["rice", "red-beans"], vegetable: ["onion"], sauce: ["salsa"], fat_cooking: ["olive-oil"] }),
   "src-salmon-rice-veg": familyRoles({ protein: ["salmon"], carb: ["rice"], vegetable: ["broccoli", "zucchini"], fat: ["olive-oil"], flavour_fixed: ["garlic"] }),
   "src-taco-mac": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["pepper"], sauce: ["tomato-passata", "milk"], fat: ["cheese"], fat_cooking: ["olive-oil"], flavour: ["broth"] }),
-  "src-teriyaki-tray": familyRoles({ protein: ["chicken-thigh"], carb: ["rice", "sweet-potato"], vegetable: ["broccoli"], fat: ["olive-oil"], flavour_fixed: ["soy", "brown-sugar", "vinegar", "garlic"] }),
+  "src-teriyaki-tray": familyRoles({ protein: ["chicken-thigh"], carb: ["rice", "sweet-potato"], vegetable: ["broccoli"], fat: ["olive-oil"], flavour_fixed: ["soy", "brown-sugar", "vinegar", "mirin", "garlic"] }),
   "src-halal-chicken": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["cucumber", "tomato", "onion"], fat: ["mayonnaise", "butter", "olive-oil"], sauce: ["yogurt"], flavour_fixed: ["lemon", "vinegar"] }),
   "src-crispy-beef-noodles": familyRoles({ protein: ["beef-mince"], carb: ["pasta"], vegetable: ["broccoli", "cabbage", "carrot", "onion"], fat_cooking: ["olive-oil"], sauce: ["gochujang"], flavour_fixed: ["soy", "honey", "oyster-sauce", "garlic"] }),
   "src-mediterranean-wrap": familyRoles({ protein: ["chicken-thigh"], carb: ["tortilla"], vegetable: ["cucumber", "tomato", "lettuce", "onion"], fat: ["feta", "olive-oil"], sauce: ["hummus"], flavour_fixed: ["lemon", "vinegar"] }),
