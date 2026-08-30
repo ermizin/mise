@@ -99,12 +99,12 @@ test("the last questionnaire answer runs the supplied staged menu assembly", asy
   assert.match(builder, /kind: "step" \| "menu"[\s\S]*?assemblyStage: number/);
   assert.match(
     builder,
-    /if \(menuMode === "auto"\) assembleMenu\("fill"\)/,
+    /if \(step === 4\) \{[\s\S]*?setMenuMode\("auto"\);[\s\S]*?assembleMenu\("fill"\);/,
     "the menu is assembled while the staged working state covers the form",
   );
   assert.match(
     builder,
-    /step === 4 && menuMode === "auto" \? "menu" : "step"/,
+    /step === 4 \? "menu" : "step"/,
   );
   assert.match(builder, /const menuAssemblyRef = useRef<HTMLDivElement/);
   assert.match(builder, /const menuRevealDelay = reducedMotion \? 60 : 220/);

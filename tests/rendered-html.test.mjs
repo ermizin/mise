@@ -214,9 +214,11 @@ test("includes the complete plan-builder and private persistence model", async (
   // «Собрать заново» обязано дать другое меню, а не то же самое.
   assert.match(page, /avoidPerSlot/);
   assert.match(page, /setPinned\(/);
-  // 9c вернулся как явный ручной путь, а не как пропуск обязательных вопросов.
+  // 9c доступен после автоматической сборки как основной ответ чата, а не как
+  // пропуск обязательных вопросов до готового меню.
   assert.match(page, /function ManualMenuStep/);
-  assert.match(page, /className="builder-menu-mode-options"/);
+  assert.match(page, /className="builder-chat-alternative"/);
+  assert.match(page, /Выбрать вручную/);
   assert.match(page, /selectionAssignments\?: Record<string, RecipeAssignment\[\]>/);
   assert.match(page, /function automaticAssignmentsFor/);
   assert.match(css, /\.manual-progress \{/);

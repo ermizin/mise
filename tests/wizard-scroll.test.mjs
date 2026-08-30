@@ -33,17 +33,19 @@ test("wizard keeps its chat history in a touch-scrollable viewport", async () =>
     /content\.scrollTo\(\{[\s\S]*?questionBox\.top - contentBox\.top - 22/,
   );
   assert.match(page, /menuAssemblyRef\.current\?\.scrollIntoView\(/);
-  assert.match(page, /className="builder-menu-mode-options"/);
-  assert.match(page, /role="radiogroup"[\s\S]*?aria-label="Как собрать меню"/);
-  assert.match(page, /<b>Составить самому<\/b>/);
+  assert.doesNotMatch(page, /className="builder-menu-mode-options"/);
+  assert.match(page, /const showManualMenuChoice =/);
+  assert.match(page, /className="builder-chat-alternative"/);
+  assert.match(page, />\s*Выбрать вручную\s*<\/button>/);
   assert.match(
     css,
-    /\.builder-menu-mode-options > button \{[\s\S]*?min-height: 78px;/,
+    /\.builder-chat-alternative \{[\s\S]*?min-height: 56px;/,
   );
   const menuReview = page.slice(
     page.indexOf("function MenuReviewStep("),
     page.indexOf("function ReviewStep("),
   );
+  assert.doesNotMatch(menuReview, /Выбрать вручную/);
   assert.equal(
     [...menuReview.matchAll(/<RecipeMedia recipe=\{recipe\} \/>/g)].length,
     2,

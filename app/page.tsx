@@ -10144,6 +10144,7 @@ function PlanBuilder({
       return;
     }
     if (step === 4) {
+      setMenuMode("auto");
       const firstMissing = positions.findIndex(
         (position) =>
           !assignmentCoverageComplete(
@@ -10155,7 +10156,7 @@ function PlanBuilder({
           ),
       );
       setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
-      if (menuMode === "auto") assembleMenu("fill");
+      assembleMenu("fill");
     }
     if (step === 5 && menuMode === "manual") {
       if (choiceIndex < positions.length - 1) {
@@ -10166,8 +10167,13 @@ function PlanBuilder({
     }
     beginChatAdvance(
       step + 1,
-      step === 4 && menuMode === "auto" ? "menu" : "step",
+      step === 4 ? "menu" : "step",
     );
+  }
+  function chooseManualMenu() {
+    setMenuMode("manual");
+    setManualMotionDirection(1);
+    setChoiceIndex(0);
   }
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
@@ -10438,8 +10444,15 @@ function PlanBuilder({
       );
     }
   }
+  const showManualMenuChoice =
+    mode === "onboarding" &&
+    step === 5 &&
+    menuMode === "auto" &&
+    !chatTransition;
   return (
-    <main className="app-shell builder-shell">
+    <main
+      className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}`}
+    >
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <header
@@ -10710,78 +10723,22 @@ function PlanBuilder({
               </Note>
             )}
             {step === 4 && (
-              <>
-                {mode === "onboarding" && (
-                  <div
-                    className="builder-menu-mode-options"
-                    role="radiogroup"
-                    aria-label="Как собрать меню"
-                  >
-                    <p className="kicker">Как собрать меню</p>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={menuMode === "auto"}
-                      className={menuMode === "auto" ? "is-selected" : ""}
-                      onClick={() => setMenuMode("auto")}
-                    >
-                      <span className="builder-menu-mode-icon">
-                        <Icon name="pot" size={20} />
-                      </span>
-                      <span>
-                        <b>Собрать с Mise</b>
-                        <small>
-                          Получить готовое меню и заменить только то, что не
-                          подходит
-                        </small>
-                      </span>
-                      <i>
-                        {menuMode === "auto" ? (
-                          <Icon name="check" size={16} />
-                        ) : null}
-                      </i>
-                    </button>
-                    <button
-                      type="button"
-                      role="radio"
-                      aria-checked={menuMode === "manual"}
-                      className={menuMode === "manual" ? "is-selected" : ""}
-                      onClick={() => setMenuMode("manual")}
-                    >
-                      <span className="builder-menu-mode-icon">
-                        <Icon name="edit" size={20} />
-                      </span>
-                      <span>
-                        <b>Составить самому</b>
-                        <small>
-                          Выбирать блюда по одному, не пропуская параметры плана
-                        </small>
-                      </span>
-                      <i>
-                        {menuMode === "manual" ? (
-                          <Icon name="check" size={16} />
-                        ) : null}
-                      </i>
-                    </button>
-                  </div>
-                )}
-                <CookingStep
-                  periodDays={rawDays}
-                  cookEveryDays={cookEveryDays}
-                  remainder={remainder}
-                  decision={remainderDecision}
-                  start={start}
-                  resolvedDays={resolvedDays}
-                  canExtend={rawDays + cookEveryDays - remainder <= 14}
-                  onDays={(value) => {
-                    setCookEveryDays(value);
-                    setRemainderDecision(null);
-                  }}
-                  onDecision={(value) => {
-                    setRemainderDecision(value);
-                  }}
-                />
-              </>
+              <CookingStep
+                periodDays={rawDays}
+                cookEveryDays={cookEveryDays}
+                remainder={remainder}
+                decision={remainderDecision}
+                start={start}
+                resolvedDays={resolvedDays}
+                canExtend={rawDays + cookEveryDays - remainder <= 14}
+                onDays={(value) => {
+                  setCookEveryDays(value);
+                  setRemainderDecision(null);
+                }}
+                onDecision={(value) => {
+                  setRemainderDecision(value);
+                }}
+              />
             )}
             {step === 5 && menuMode === "auto" && (
               <>
@@ -10796,11 +10753,6 @@ function PlanBuilder({
                   shopping={draftPlan.shopping}
                   onReplace={replaceSelection}
                   onReassemble={() => assembleMenu("reset")}
-                  onManual={() => {
-                    setMenuMode("manual");
-                    setManualMotionDirection(1);
-                    setChoiceIndex(0);
-                  }}
                 />
                 {!allSelected && (
                   <Note
@@ -10847,23 +10799,36 @@ function PlanBuilder({
           </div>
         )}
       </section>
-      <div className="builder-chat-composer glass" aria-label="Ответ в чате">
-        <div>
-          <span>
-            {chatTransition
-              ? chatTransition.kind === "menu"
-                ? "Mise собирает меню"
-                : "Mise думает"
-              : "Ваш ответ готов"}
-          </span>
-          <small>
-            {chatTransition
-              ? chatTransition.kind === "menu"
-                ? "Подбираем блюда и считаем порции"
-                : "Следующий вопрос появится здесь"
-              : "Можно вернуться к любому ответу выше"}
-          </small>
-        </div>
+      <div
+        className={`builder-chat-composer glass${showManualMenuChoice ? " has-menu-choice" : ""}`}
+        aria-label="Ответ в чате"
+      >
+        {showManualMenuChoice ? (
+          <button
+            type="button"
+            className="builder-chat-alternative"
+            onClick={chooseManualMenu}
+          >
+            Выбрать вручную
+          </button>
+        ) : (
+          <div>
+            <span>
+              {chatTransition
+                ? chatTransition.kind === "menu"
+                  ? "Mise собирает меню"
+                  : "Mise думает"
+                : "Ваш ответ готов"}
+            </span>
+            <small>
+              {chatTransition
+                ? chatTransition.kind === "menu"
+                  ? "Подбираем блюда и считаем порции"
+                  : "Следующий вопрос появится здесь"
+                : "Можно вернуться к любому ответу выше"}
+            </small>
+          </div>
+        )}
         {mode === "settings" ? (
           <button
             className="builder-chat-send"
@@ -12170,7 +12135,6 @@ function MenuReviewStep({
   shopping,
   onReplace,
   onReassemble,
-  onManual,
 }: {
   batches: Batch[];
   mealSlots: MealSlot[];
@@ -12186,7 +12150,6 @@ function MenuReviewStep({
     recipeId: string,
   ) => string | null;
   onReassemble: () => void;
-  onManual: () => void;
 }) {
   const [replacing, setReplacing] = useState<{
     key: string;
@@ -12382,9 +12345,6 @@ function MenuReviewStep({
       <div className="chip-row menu-actions">
         <button className="chip" onClick={onReassemble}>
           Собрать заново
-        </button>
-        <button className="chip" onClick={onManual}>
-          Выбрать вручную
         </button>
       </div>
 

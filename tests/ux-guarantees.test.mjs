@@ -24,8 +24,10 @@ test("the wizard offers manual menu building without skipping required answers",
     read("app/page.tsx"),
     read("PRODUCT.md"),
   ]);
-  assert.match(page, /Составить самому/);
-  assert.match(page, /Собрать с Mise/);
+  assert.match(page, /className="builder-chat-alternative"/);
+  assert.match(page, /Выбрать вручную/);
+  assert.doesNotMatch(page, /className="builder-menu-mode-options"/);
+  assert.match(page, /step === 4 \? "menu" : "step"/);
   assert.match(page, /function ManualMenuStep/);
   assert.match(page, /const initialManualRecipeCount = 5/);
   assert.match(page, /allOptions\.slice\(0, initialManualRecipeCount\)/);
