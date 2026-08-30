@@ -13267,9 +13267,7 @@ function RecipeView({
   onChangePlan?: (plan: ActivePlan) => Promise<void>;
 }) {
   const { recipe, batch, slot, plan } = context;
-  const [section, setSection] = useState<"steps" | "portion">(
-    batch ? "portion" : "steps",
-  );
+  const [section, setSection] = useState<"steps" | "portion">("steps");
   const [sectionMotion, setSectionMotion] = useState<{
     direction: -1 | 1;
     epoch: number;

@@ -159,7 +159,7 @@ test("recipe cards keep photos and cooking measurements actionable", async () =>
   assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
   assert.match(page, /cookingAmounts\[ingredient\.id\]/, "cooking reads the calculated batch amount");
   assert.doesNotMatch(page, /setSection\("ingredients"\)/, "ingredients are not duplicated in a separate recipe tab");
-  assert.match(page, /useState<"steps" \| "portion">\([\s\S]*?batch \? "portion" : "steps"/, "a standalone recipe opens directly on cooking");
+  assert.match(page, /useState<"steps" \| "portion">\("steps"\)/, "every recipe opens directly on cooking, including recipes from a batch");
   assert.doesNotMatch(page, /function totalIngredientScale/, "the obsolete divergent scale path is gone");
 });
 
