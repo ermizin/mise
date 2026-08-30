@@ -6,6 +6,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "predev": "node scripts/local-d1.mjs bootstrap",
     "dev": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext dev",
     "build": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build",
     "start": "WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext start",
@@ -20,7 +21,9 @@
     "recipes:audit:nutrition": "node scripts/audit-recipe-nutrition.mjs",
     "recipes:audit:release": "node scripts/audit-recipe-release.mjs",
     "recipes:audit:release:write": "node scripts/audit-recipe-release.mjs --output data/recipe-release-audit.json",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "db:local:bootstrap": "node scripts/local-d1.mjs bootstrap",
+    "db:local:check": "node scripts/local-d1.mjs check"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

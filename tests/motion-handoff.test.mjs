@@ -20,19 +20,17 @@ test("onboarding follows the supplied directional and staggered motion", async (
   assert.match(css, /mise-onb-breathe-a 13s/);
 });
 
-test("week execution animates the real optimistic actions", async () => {
+test("week execution animates the remaining optimistic eating action", async () => {
   const [page, css] = await Promise.all([
     read("app/page.tsx"),
     read("app/globals.css"),
   ]);
-  assert.match(page, /kind: "tick-in" \| "tick-out" \| "moving" \| "restoring"/);
-  assert.match(page, /await waitForMotion\(260\)/);
+  assert.match(page, /kind: "tick-in" \| "tick-out"/);
   assert.match(page, /className="week-loading-macro glass-card"/);
   assert.match(page, /function AnimatedNumber/);
   assert.match(css, /mise-week-tick-in-a 300ms/);
-  assert.match(css, /mise-week-row-out-a 260ms/);
-  assert.match(css, /mise-toast-in-a 320ms/);
   assert.match(css, /stroke-dashoffset 520ms/);
+  assert.doesNotMatch(page, /week-move-button/);
 });
 
 test("catalog and tab navigation replay their supplied transitions", async () => {
@@ -52,10 +50,8 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(page, /behavior: "auto"/);
   assert.match(page, /history\.pushState\([\s\S]*?miseTab: next/);
   assert.match(page, /window\.addEventListener\("popstate"/);
-  assert.match(
-    page,
-    /showCompose=\{tab === "week" && !activePlan && !loadingPlan\}/,
-  );
+  assert.doesNotMatch(page, /showCompose=/);
+  assert.doesNotMatch(page, /className="compose-fab"/);
   assert.match(page, /className="bottom-nav-indicator"/);
   assert.match(page, /const \[gridMotionEpoch, setGridMotionEpoch\] = useState\(0\)/);
   assert.match(page, /animationDelay: `\$\{index \* 40\}ms`/);
@@ -63,8 +59,8 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(css, /transform: translateX\(calc\(var\(--tab\) \* 100%\)\)/);
   assert.match(css, /transition: color 200ms linear/);
   assert.match(css, /mise-tab-forward 320ms/);
-  assert.match(css, /mise-fab-in 380ms var\(--motion-spring\) 120ms backwards/);
-  assert.match(css, /compose-fab:active[\s\S]*?scale\(0\.965\)/);
+  assert.doesNotMatch(css, /\.compose-fab/);
+  assert.doesNotMatch(css, /@keyframes mise-fab-in/);
   assert.match(css, /mise-catalog-grid-a 320ms/);
 });
 
@@ -74,6 +70,8 @@ test("reduced motion keeps change visible without spatial movement", async () =>
   assert.match(reduced, /mise-motion-fade 160ms ease both !important/);
   assert.match(reduced, /bottom-nav-indicator[\s\S]*?transition: none !important/);
   assert.match(reduced, /bottom-nav button\.has-nav-effect-a[\s\S]*?animation: none !important/);
-  assert.match(reduced, /mise-skeleton-breathe 1\.4s ease-in-out infinite !important/);
+  assert.match(reduced, /week-loading-ring[\s\S]*?animation: none !important/);
+  assert.match(reduced, /background-image: none/);
+  assert.doesNotMatch(reduced, /mise-skeleton-breathe/);
   assert.match(reduced, /transition-duration: 520ms !important/);
 });

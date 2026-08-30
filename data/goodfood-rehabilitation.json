@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Editorial rehabilitation overlay for the saved BBC Good Food corpus. It preserves each source card and generates a measured, locally executable Mise baseline without mutating the imported source dataset.",
+  "methodology": {
+    "sourceEvidence": "Amounts, yield, timing and component references are taken from the stored Good Food candidate cards. Optional serving suggestions are deliberately outside a plated production baseline unless a card explicitly supplies a measured amount.",
+    "measurementPolicy": "Ambiguous household descriptions use the documented average-mass ledger in the apply script; the generated ingredient keeps the original wording in provenance.",
+    "nutritionPolicy": "The apply script retains publisher nutrition in sourceNutrition and derives Mise macros from the complete measured baseline. It never relabels publisher figures as independently verified.",
+    "procedurePolicy": "Existing Russian paraphrases are retained only after every referenced component has been replaced by a measured local equivalent. No publisher procedure text is copied."
+  },
+  "recipes": [
+    { "id": "goodfood-satay-sweet-potato-curry", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-slow-cooker-chicken-tikka-masala", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-family-meals-easy-fish-pie-recipe", "action": "rehabilitate" },
+    { "id": "goodfood-kadala-curry", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-slow-cooker-lamb-curry", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-big-batch-bolognese", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-slow-cooker-beef-bourguignon", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-power-packed-pasta-boxes", "action": "rehabilitate", "servings": 2, "yieldEvidence": "The stored ingredient list combines two separately packed protein pasta boxes; the Mise baseline labels two containers." },
+    { "id": "goodfood-tuna-pasta-bake", "action": "rehabilitate" },
+    { "id": "goodfood-vegan-shepherds-pie", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-vegetarian-bolognese", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-mini-lentil-shepherds-pies", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-freezer-ratatouille", "action": "rehabilitate" },
+    { "id": "goodfood-family-meals-chicken-veg-casserole", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-big-batch-pressure-cooker-bolognese", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-creamy-bean-kale-pasta", "action": "rehabilitate", "components": ["creamy_beans", "salsa_verde"] },
+    { "id": "goodfood-courgette-tomato-soup", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 4, "yieldEvidence": "The source's eight small starter bowls are normalized into four meal-prep soup portions." },
+    { "id": "goodfood-creamy-chicken-sweetcorn-soup", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-smoky-black-bean-chilli", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping", "action": "rehabilitate" },
+    { "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy", "action": "rehabilitate", "components": ["roasted_spiced_cauliflower", "creamy_beans", "red_onion_gravy"] },
+    { "id": "goodfood-coconut-rice-with-prawn-stir-fry", "action": "rehabilitate", "components": ["yellow_coconut_curry_sauce"] },
+    { "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde", "action": "rehabilitate", "components": ["creamy_beans", "salsa_verde"] },
+    { "id": "goodfood-marinated-chicken-with-orzo-tomato-feta", "action": "rehabilitate", "components": ["lemon_parmesan_vinaigrette", "lemon_orzo"], "servings": 6, "yieldEvidence": "The measured chicken-and-orzo tray is divided into six labelled meal-prep containers instead of four oversized plates." },
+    { "id": "goodfood-family-meals-easy-fish-cakes", "action": "rehabilitate" },
+    { "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata", "action": "rehabilitate", "components": ["spiced_broccoli", "lemon_parmesan_vinaigrette", "peperonata", "lemon_orzo"], "servings": 6, "yieldEvidence": "Four 110 g fish fillets are portioned as six smaller fish-and-orzo meal-prep servings; the component weights are retained in the container label." },
+    { "id": "goodfood-spiced-meatballs", "action": "rehabilitate", "fullDish": true },
+    { "id": "goodfood-roasted-tomato-pancetta-picnic-quiches", "action": "rehabilitate" },
+    { "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage", "action": "rehabilitate", "components": ["spiced_meatballs", "yellow_coconut_curry_sauce", "pickled_red_cabbage"], "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The 420 g meatball component plus chickpeas and rice is packed into five labelled portions." },
+    { "id": "goodfood-lemon-orzo", "action": "rehabilitate", "servings": 4, "yieldEvidence": "500 g dry orzo is normalized to four meal-prep side portions; the source card did not publish a yield." },
+    { "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage", "action": "rehabilitate", "components": ["spiced_meatballs", "pickled_red_cabbage"] },
+    { "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads", "action": "rehabilitate", "components": ["flatbread_dough", "peperonata", "spiced_broccoli", "lemon_parmesan_vinaigrette"] },
+    { "id": "goodfood-spiced-lentil-butternut-squash-soup", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash", "action": "rehabilitate", "components": ["mushroom_lentil_beef_ragu"] },
+    { "id": "goodfood-chicken-sweet-potato-peanut-stew", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-lentil-kofta-orzo-feta", "action": "rehabilitate" },
+    { "id": "goodfood-crispy-lamb-pea-tabbouleh", "action": "rehabilitate", "components": ["lamb_kebab"] },
+    { "id": "goodfood-sausage-egg-muffins", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-mushroom-lentil-beef-ragu", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 4, "yieldEvidence": "The ragu is packed as four main-meal portions rather than the source's three large servings." },
+    { "id": "goodfood-black-bean-spicy-beef-pasta", "action": "rehabilitate", "components": ["mushroom_lentil_beef_ragu"], "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The completed pasta bake is divided into five containers after the measured ragu substitution." },
+    { "id": "goodfood-harissa-beef-tomato-bulgur", "action": "rehabilitate", "components": ["mushroom_lentil_beef_ragu"], "excludeOptionalServing": true },
+    { "id": "goodfood-orange-oregano-pulled-pork", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-indian-rice-salad-chicken", "action": "rehabilitate", "excludeOptionalServing": true },
+    { "id": "goodfood-chicken-squash-pesto-lasagne", "action": "rehabilitate", "servings": 8, "yieldEvidence": "The source tray has twelve pasta sheets and is normalized to eight practical meal-prep squares." },
+    { "id": "goodfood-prawn-rice-mango-jar-salad", "action": "rehabilitate" },
+    { "id": "goodfood-deli-pasta-salad", "action": "rehabilitate" },
+    { "id": "goodfood-pork-with-cucumber-apricot-couscous", "action": "rehabilitate" }
+    ,{ "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-chicken-pasta-bake", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-sausage-leek-mash-pie", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-10minute-couscous-salad", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-slow-cooker-sausage-casserole", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The cooked casserole is portioned into five containers rather than four oversized bowls." }
+    ,{ "id": "goodfood-italian-vegetable-soup", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-aubergine-tomato-halloumi-pie", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-quinoa-salad-with-shredded-greens-raisins", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-banana-overnight-oats", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-family-meals-mild-chicken-curry", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-beef-red-wine-potato-pie", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 9, "yieldEvidence": "The tray is divided into nine practical squares instead of eight heavy portions." }
+    ,{ "id": "goodfood-vegan-breakfast-muffins", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-tuna-nicoise-protein-pots", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-spiced-broccoli", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 3, "yieldEvidence": "The source side-dish yield is normalized to three meal-prep vegetable portions." }
+    ,{ "id": "goodfood-steak-broccoli-protein-pots", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-storecupboard-pasta-salad", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-vegan-ragu", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-summery-beans-herby-green-aioli", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 8, "yieldEvidence": "The bean tray is split into eight labelled side-to-main portions instead of three oversized servings." }
+    ,{ "id": "goodfood-bulgur-quinoa-lunch-bowls", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-vegan-paella", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-pork-harissa-meatballs", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The batch is packed into five portions after cooking rather than three oversized servings." }
+    ,{ "id": "goodfood-crunchy-broccoli-cranberry-salad", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-mozzarella-pepper-aubergine-calzone", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-freeze-ahead-roasties", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-apple-penne-slaw-walnuts", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-turmeric-granola", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 8, "yieldEvidence": "The imported 750 g batch weight was incorrectly stored as servings; Mise uses eight breakfast portions." }
+    ,{ "id": "goodfood-tomato-pepper-bean-one-pot", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-scandi-beetroot-salmon-pasta", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-salmon-pasta-salad-lemon-capers", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-orange-dark-chocolate-yogurt-bowls", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-black-bean-soup-with-chunky-raita", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-wild-salmon-with-radish-orange-slaw", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-veggie-nuggets-with-summer-slaw", "action": "rehabilitate", "excludeOptionalServing": true }
+    ,{ "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce", "action": "rehabilitate", "excludeOptionalServing": true }
+  ],
+  "deferredStandaloneComponents": [
+    "goodfood-lemon-parmesan-vinaigrette",
+    "goodfood-yellow-coconut-curry-sauce",
+    "goodfood-pickled-red-cabbage-salad",
+    "goodfood-peperonata"
+  ]
+}

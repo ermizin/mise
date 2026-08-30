@@ -23,14 +23,14 @@ test("blocked recipes are never treated as production ready", () => {
   }
 });
 
-test("audit keeps required editorial exception flags machine-readable", () => {
+test("audit retains only the active editorial exception flags after corpus completion", () => {
   const reasonCodes = new Set(report.verdicts.flatMap((item) => item.reasons.map((reason) => reason.code)));
   for (const code of [
     AUDIT_REASON.MISSING_YIELD, AUDIT_REASON.INVALID_YIELD, AUDIT_REASON.EXTREME_KCAL,
-    AUDIT_REASON.UNRESOLVED_INGREDIENT_MAPPING,
-    AUDIT_REASON.MISSING_PARAPHRASED_INSTRUCTIONS, AUDIT_REASON.FRACTIONAL_SERVINGS,
     AUDIT_REASON.LABEL_DEPENDENT_INGREDIENT,
     AUDIT_REASON.NICHE_LOCALIZATION,
   ]) assert.ok(reasonCodes.has(code), `reason code is exercised: ${code}`);
+  assert.equal(reasonCodes.has(AUDIT_REASON.UNRESOLVED_INGREDIENT_MAPPING), false, "the completed corpus has no unresolved ingredient mappings");
+  assert.equal(reasonCodes.has(AUDIT_REASON.MISSING_PARAPHRASED_INSTRUCTIONS), false, "every retained source card has an editorial procedure");
   assert.equal(reasonCodes.has(AUDIT_REASON.MISSING_INSTRUCTIONS), false, "all fixed source URLs have structured instruction facts");
 });

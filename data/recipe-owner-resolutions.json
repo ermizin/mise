@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "sourceReviewCommit": "bbfc6e1",
+  "resolutions": [
+    {
+      "id": "tmpm-25290",
+      "gate": "editorial",
+      "code": "extreme_kcal",
+      "resolution": "Владелец подтвердил исходные 980 ккал на порцию; рецепт рассчитан для набора массы."
+    },
+    {
+      "id": "tmpm-26746",
+      "gate": "editorial",
+      "code": "niche_localization",
+      "resolution": "Владелец оставил карточку: продукты доступны и отдельной локализационной замены не требуется."
+    },
+    {
+      "id": "tmpm-26514",
+      "gate": "editorial",
+      "code": "niche_localization",
+      "resolution": "Владелец подтвердил: карточка не требует локализационной замены."
+    },
+    {
+      "id": "tmpm-18065",
+      "gate": "editorial",
+      "code": "niche_localization",
+      "resolution": "Владелец подтвердил: карточка не требует локализационной замены."
+    }
+  ],
+  "backlogPolicy": "All unlisted review_required and blocked reasons remain blocking; this registry never promotes a card wholesale."
+}

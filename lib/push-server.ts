@@ -1,4 +1,4 @@
-import { and, eq, isNull, lt, lte } from "drizzle-orm";
+import { and, eq, isNull, lt, lte, or } from "drizzle-orm";
 import { env } from "cloudflare:workers";
 import { getDb } from "../db";
 import { pushJobs, pushPreferences, pushSubscriptions } from "../db/schema";
@@ -127,29 +127,46 @@ export function publicVapidKey() {
   return pushEnv().VAPID_PUBLIC_KEY ?? null;
 }
 
-export async function processDueNotifications(now = Date.now()) {
+const JOB_LEASE_MS = 60_000;
+
+export async function processDueNotifications(now = Date.now(), options: { jobId?: string } = {}) {
   const db = getDb();
-  const jobs = await db.select().from(pushJobs).where(and(isNull(pushJobs.sentAt), lte(pushJobs.dueAt, now), lt(pushJobs.attempts, 5))).limit(50);
+  const dueConditions = [isNull(pushJobs.sentAt), lte(pushJobs.dueAt, now), lt(pushJobs.attempts, 5)];
+  if (options.jobId) dueConditions.push(eq(pushJobs.id, options.jobId));
+  const jobs = await db.select().from(pushJobs).where(and(...dueConditions)).limit(options.jobId ? 1 : 50);
   let sent = 0;
   let failed = 0;
 
   for (const job of jobs) {
-    const [subscription] = await db.select().from(pushSubscriptions).where(eq(pushSubscriptions.id, job.subscriptionId)).limit(1);
+    // The conditional update is the claim. Other cron invocations skip a leased job;
+    // a crashed worker's lease expires so the job can be retried later.
+    const [claimed] = await db.update(pushJobs).set({
+      leaseUntil: now + JOB_LEASE_MS,
+      attempts: job.attempts + 1,
+    }).where(and(
+      eq(pushJobs.id, job.id),
+      isNull(pushJobs.sentAt),
+      lt(pushJobs.attempts, 5),
+      or(isNull(pushJobs.leaseUntil), lt(pushJobs.leaseUntil, now)),
+    )).returning();
+    if (!claimed) continue;
+
+    const [subscription] = await db.select().from(pushSubscriptions).where(eq(pushSubscriptions.id, claimed.subscriptionId)).limit(1);
     const [preference] = await db.select().from(pushPreferences).where(and(
-      eq(pushPreferences.subscriptionId, job.subscriptionId),
-      eq(pushPreferences.planId, job.planId),
+      eq(pushPreferences.subscriptionId, claimed.subscriptionId),
+      eq(pushPreferences.planId, claimed.planId),
       eq(pushPreferences.enabled, true),
     )).limit(1);
     if (!subscription || !preference) {
-      await db.update(pushJobs).set({ sentAt: now, lastError: "disabled" }).where(eq(pushJobs.id, job.id));
+      await db.update(pushJobs).set({ sentAt: now, leaseUntil: null, lastError: "disabled" }).where(eq(pushJobs.id, claimed.id));
       continue;
     }
 
     try {
-      const response = await sendWebPush(subscription, { title: job.title, body: job.body, url: job.url, kind: job.kind });
+      const response = await sendWebPush(subscription, { title: claimed.title, body: claimed.body, url: claimed.url, kind: claimed.kind });
       if (response.ok) {
         sent += 1;
-        await db.update(pushJobs).set({ sentAt: now, attempts: job.attempts + 1, lastError: null }).where(eq(pushJobs.id, job.id));
+        await db.update(pushJobs).set({ sentAt: now, leaseUntil: null, lastError: null }).where(eq(pushJobs.id, claimed.id));
       } else if (response.status === 404 || response.status === 410) {
         failed += 1;
         await db.delete(pushSubscriptions).where(eq(pushSubscriptions.id, subscription.id));
@@ -157,12 +174,12 @@ export async function processDueNotifications(now = Date.now()) {
         await db.delete(pushPreferences).where(eq(pushPreferences.subscriptionId, subscription.id));
       } else {
         failed += 1;
-        await db.update(pushJobs).set({ attempts: job.attempts + 1, lastError: `push ${response.status}` }).where(eq(pushJobs.id, job.id));
+        await db.update(pushJobs).set({ leaseUntil: null, lastError: `push ${response.status}` }).where(eq(pushJobs.id, claimed.id));
       }
     } catch (error) {
       failed += 1;
       const message = error instanceof Error ? error.message.slice(0, 300) : "push failed";
-      await db.update(pushJobs).set({ attempts: job.attempts + 1, lastError: message }).where(eq(pushJobs.id, job.id));
+      await db.update(pushJobs).set({ leaseUntil: null, lastError: message }).where(eq(pushJobs.id, claimed.id));
     }
   }
 

@@ -70,10 +70,10 @@ function allocateWeight(
   allocatedWeightG: number;
   unallocatedWeightG: number;
 } {
-  const available = Math.max(0, Math.floor(cookedWeightG));
   if (!Number.isFinite(cookedWeightG) || cookedWeightG < 0)
     throw new Error("Cooked weight must be a non-negative number.");
   assertPeople(people);
+  const available = Math.max(0, Math.floor(cookedWeightG));
   const weights = people.map((person) => Math.max(0, shareFor(person)));
   const totalShare = weights.reduce((sum, value) => sum + value, 0);
   if (totalShare <= 0)
@@ -104,6 +104,9 @@ function allocateWeight(
   return {
     allocations,
     allocatedWeightG,
+    // Largest-remainder hands out every whole gram, so this is 0 by
+    // construction; it exists to make that guarantee checkable, not to report
+    // a loss. The fractional gram dropped by the floor above is the only gap.
     unallocatedWeightG: available - allocatedWeightG,
   };
 }

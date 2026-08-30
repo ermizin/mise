@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Mise runtime recipe catalog projection",
+  "type": "object",
+  "required": ["schemaVersion", "constraints", "coverage", "recipes", "failures"],
+  "properties": {
+    "schemaVersion": { "const": 1 },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "releaseMenuTags": { "const": ["protein", "budget"] },
+        "mediaOptional": { "const": true },
+        "servingMass": { "const": "estimated_not_verified_cooked_yield" },
+        "cost": { "const": "relative_tier_not_rubles" }
+      },
+      "required": ["releaseMenuTags", "mediaOptional", "servingMass", "cost"]
+    },
+    "recipes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "slot", "title", "macros", "timeMinutes", "menuTags", "costTier", "servingMass", "shoppingIngredients", "steps", "storage", "packing", "provenance", "visualFallback", "recipeFamily", "adapter"],
+        "properties": {
+          "slot": { "enum": ["breakfast", "lunch", "dinner", "snack1", "snack2"] },
+          "menuTags": { "type": "array", "minItems": 1, "items": { "enum": ["protein", "budget"] } },
+          "costTier": { "type": "object", "properties": { "value": { "minimum": 1, "maximum": 3 }, "basis": { "const": "relative_editorial_ingredient_complexity_not_rubles" } }, "required": ["value", "basis"] },
+          "servingMass": { "type": "object", "properties": { "status": { "const": "estimated_not_verified_cooked_yield" } }, "required": ["grams", "status", "method"] },
+          "shoppingIngredients": { "type": "array", "items": { "type": "object", "required": ["sourceIngredientIndex", "sourceIngredientId", "canonicalIngredientId", "nameRu", "quantityGrams"] } },
+          "recipeFamily": { "type": "object", "required": ["id", "ingredients", "miseCalculatedNutrition", "miseInstructions"] },
+          "provenance": { "type": "object", "required": ["sourceUrl", "preview"] },
+          "visualFallback": { "type": "object", "required": ["emoji", "reserveAspectRatio"] }
+        }
+      }
+    }
+  }
+}

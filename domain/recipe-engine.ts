@@ -3,7 +3,7 @@ export type RecipeIngredientRole =
   | "carb"
   | "vegetable"
   | "fat"
-  | "fat_cooking" // Fixed against personal calorie targeting; batch cookware geometry is not modeled yet.
+  | "fat_cooking" // Fixed against personal calorie targeting; counted once per physical cooking run.
   | "sauce"
   | "flavour"
   | "flavour_fixed"
@@ -83,12 +83,22 @@ export type RecipeFamilyEditorialAudit = {
         reviewedAt: string;
         sourceIngredientCount: number;
         sourceSlug: string;
+        /** Deliberately absent from solver quantities, never silently dropped. */
+        skippedOptionalSourceIngredients?: string[];
+        /** Non-metric source quantities that were converted under a stated basis. */
+        inferredMeasurements?: { sourceName: string; amount: number; unit: RecipeUnit; basis: string }[];
       }
     | {
         source: "curated_source_audit";
         reviewedAt: string;
         sourceIngredientCount: number;
         decisions: SourceIngredientDisposition[];
+      }
+    | {
+        source: "recipe_catalog";
+        reviewedAt: string;
+        sourceIngredientCount: number;
+        note: string;
       };
   nutrition: SourceNutritionEvidence;
 };
@@ -107,7 +117,13 @@ export type CanonicalIngredient = {
   state: "raw" | "cooked" | "processed";
   nutritionPer100g: Nutrition;
   allergens: string[];
-  unit: { sensibleUnit: RecipeUnit; gramsPerUnit: number; roundTo: number };
+  unit: {
+    sensibleUnit: RecipeUnit;
+    gramsPerUnit: number;
+    roundTo: number;
+    /** A count whose partial unit would make the recipe structurally unsound. */
+    structuralDiscrete?: boolean;
+  };
   densityGPerMl?: number;
   reference: {
     provider: string;
@@ -169,6 +185,11 @@ export type RecipeFamily = {
   ingredients: RecipeFamilyIngredient[];
   minViableCalories: number;
   maxViableCalories: number;
+  /**
+   * Largest safe multiple of the editorial base recipe that can be cooked in
+   * one vessel. Values require an editor-confirmed vessel/geometry mapping.
+   */
+  geometryLockedMax?: number;
   minimumProtein: number;
   sourceNutrition: Nutrition | null;
   comparisonNutrition: Nutrition | null;
@@ -193,6 +214,8 @@ export type SolvedRecipeVariant = {
   familyId: string;
   targetCalories: number;
   targetProtein?: number;
+  targetCarbs?: number;
+  targetFat?: number;
   amounts: Record<string, number>;
   nutrition: Nutrition;
   viable: boolean;
@@ -484,6 +507,12 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
 
 type IngredientSeed = [string, string, string, CanonicalIngredient["state"], Nutrition, number?, string[]?];
 const n = (kcal: number, protein: number, fat: number, carbs: number): Nutrition => ({ kcal, protein, fat, carbs });
+const structuralDiscreteIngredientIds = new Set([
+  "egg",
+  "egg-yolk",
+  "tortilla",
+  "corn-tortilla",
+]);
 const ingredientSeeds: IngredientSeed[] = [
   ["bbq-sauce", "Соус BBQ", "sauce", "processed", n(172, 0.82, 0.63, 40.77)],
   ["beef", "Говядина постная", "meat", "raw", n(131, 22.09, 4.08, 0)],
@@ -783,7 +812,12 @@ export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.
       state,
       nutritionPer100g: nutrition,
       allergens,
-      unit: { sensibleUnit: gramsPerUnit > 1 ? "piece" : densityByLegacyId[legacyId] ? "ml" : "g", gramsPerUnit, roundTo: gramsPerUnit > 1 ? 0.1 : 5 },
+      unit: {
+        sensibleUnit: gramsPerUnit > 1 ? "piece" : densityByLegacyId[legacyId] ? "ml" : "g",
+        gramsPerUnit,
+        roundTo: gramsPerUnit > 1 ? 0.1 : 5,
+        structuralDiscrete: structuralDiscreteIngredientIds.has(legacyId),
+      },
       densityGPerMl: densityByLegacyId[legacyId],
       reference: referenceProfile,
     } satisfies CanonicalIngredient];
@@ -1691,8 +1725,6 @@ export const PILOT_RECIPE_IDS = [
   "src-creamy-chicken-pasta", "src-light-stroganoff", "src-bbq-burger-bowl", "src-red-pepper-chicken-dip",
   "src-sausage-pepper-pasta", "src-honey-lime-steak",
 ] as const;
-const pilotIds = new Set<string>(PILOT_RECIPE_IDS);
-
 const editorialReviewedAt = "2026-08-29";
 
 type PilotNutritionRecord = SourceNutritionEvidence & { declaredNutrition?: Nutrition | null };
@@ -1882,7 +1914,7 @@ const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]
 
 const rawPilotIngredientAudits: Record<string, { sourceSlug: string; sourceIngredientCount: number }> = {
   "src-crispy-beef-noodles": { sourceSlug: "crispy-chili-beef-noodles", sourceIngredientCount: 16 },
-  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 15 },
+  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 16 },
   "src-taco-mac": { sourceSlug: "taco-mac", sourceIngredientCount: 16 },
   "src-mediterranean-wrap": { sourceSlug: "mediterranean-chicken-wraps", sourceIngredientCount: 24 },
   "src-creamy-chicken-pasta": { sourceSlug: "easy-dump-and-bake-creamy-chicken-pasta", sourceIngredientCount: 17 },
@@ -2073,6 +2105,19 @@ const pilotRoleOverrides: Record<string, Record<string, RecipeIngredientRole>> =
   "src-red-pepper-chicken-dip": familyRoles({ protein: ["chicken", "cottage"], vegetable: ["roasted-pepper"], sauce: ["milk", "hot-sauce"], fat: ["cream-cheese", "parmesan"] }),
 };
 
+// These recipes already passed the production-catalog gate and have complete
+// Mise ingredient quantities. They are deliberately limited to modular meals:
+// every ingredient has a canonical mapping and a role that is safe to vary.
+// Recipes with baking geometry or unknown packaged components stay legacy-only.
+const catalogRoleOverrides: Record<string, Record<string, RecipeIngredientRole>> = {
+  "src-lemon-chicken": familyRoles({ protein: ["chicken-thigh"], carb: ["potato"], vegetable: ["carrot"], fat: ["butter"], sauce: ["milk", "mustard"] }),
+  "src-curry-fried-rice": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["onion", "pepper", "zucchini"], sauce: ["yogurt"] }),
+  "src-fajita-rice": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["onion", "pepper"], flavour_fixed: ["lime"] }),
+  "src-japanese-beef-curry": familyRoles({ protein: ["beef-mince"], carb: ["rice", "potato"], vegetable: ["carrot", "onion", "peas"], sauce: ["soy"] }),
+  "src-gochujang-beef": familyRoles({ protein: ["beef-mince"], carb: ["rice"], vegetable: ["cabbage", "carrot", "pepper"], sauce: ["gochujang", "soy"] }),
+  "src-beefy-cheese-potatoes": familyRoles({ protein: ["beef-mince", "cottage"], carb: ["potato"], vegetable: ["zucchini", "onion", "pepper", "mushrooms"], fat: ["cheese"], sauce: ["tomato-passata", "milk"] }),
+};
+
 function unitFor(unit: LegacyIngredient["unit"]): RecipeUnit {
   return unit === "мл" ? "ml" : unit === "шт." ? "piece" : "g";
 }
@@ -2144,14 +2189,82 @@ function parameterizedInstructions(recipe: LegacyRecipeForEngine): RecipeInstruc
   return [measurementStep, ...cookingSteps];
 }
 
-export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | null {
-  if (!pilotIds.has(recipe.id)) return null;
+export type RecipeFamilyDerivationIssue = {
+  recipeId: string;
+  source: "pilot" | "catalog" | "raw";
+  ingredientId?: string;
+  reason: string;
+};
+
+const derivationIssues = new Map<string, RecipeFamilyDerivationIssue>();
+
+function noteDerivationIssue(
+  recipeId: string,
+  source: "pilot" | "catalog" | "raw",
+  ingredientId: string | undefined,
+  reason: string,
+): null {
+  derivationIssues.set(`${source}:${recipeId}:${ingredientId ?? ""}`, { recipeId, source, ingredientId, reason });
+  return null;
+}
+
+/**
+ * Why a recipe ended up without a Recipe Family. `recipeToFamily` used to
+ * return a bare `null`, so one unmapped ingredient silently dropped a whole
+ * recipe out of the deterministic engine with nothing to look at.
+ */
+export function recipeFamilyDerivationIssues(): RecipeFamilyDerivationIssue[] {
+  return [...derivationIssues.values()];
+}
+
+/**
+ * Largest safe multiple of the editorial base recipe that fits in one vessel.
+ * Every entry needs an editor-confirmed vessel/geometry mapping — an absent
+ * entry means "not modelled yet", and `solveRecipeBatch` reports it as such
+ * instead of quietly claiming one pan is enough.
+ */
+export const familyGeometryLimits: Readonly<Record<string, number>> = Object.freeze({
+  "src-cottage-bake": 1,
+  "src-chicken-buckwheat": 1,
+  "src-chicken-rice-veg": 1,
+  "src-chicken-bean-bowl": 4,
+  "src-salmon-rice-veg": 3,
+  "src-turkey-meatballs": 1,
+  "src-taco-mac": 5,
+  "src-teriyaki-tray": 5,
+  "src-halal-chicken": 6,
+  "src-crispy-beef-noodles": 5,
+  "src-mediterranean-wrap": 6,
+  "src-creamy-chicken-pasta": 5,
+  "src-sausage-pepper-pasta": 5,
+  "src-honey-lime-steak": 5,
+  "src-light-stroganoff": 10,
+  "src-bbq-burger-bowl": 5,
+  "src-red-pepper-chicken-dip": 5,
+  "src-lemon-chicken": 5,
+  "src-curry-fried-rice": 5,
+  "src-fajita-rice": 5,
+  "src-japanese-beef-curry": 5,
+  "src-gochujang-beef": 5,
+  "src-beefy-cheese-potatoes": 5,
+});
+
+export function recipeToFamily(
+  recipe: LegacyRecipeForEngine,
+  source: "pilot" | "catalog" = "pilot",
+): RecipeFamily | null {
+  const roleOverrides = source === "pilot"
+    ? pilotRoleOverrides[recipe.id]
+    : catalogRoleOverrides[recipe.id];
+  if (!roleOverrides) return noteDerivationIssue(recipe.id, source, undefined, "Нет карты ролей ингредиентов для рецепта.");
   const ingredients: RecipeFamilyIngredient[] = [];
   for (const ingredient of recipe.ingredients) {
-    const canonical = canonicalByAlias.get(ingredient.id);
-    if (!canonical) return null;
-    const role = pilotRoleOverrides[recipe.id]?.[ingredient.id];
-    if (!role) return null;
+    // canonicalByAlias is keyed by normalized aliases; looking up a raw id
+    // happened to work only while every legacy id was already lower-case.
+    const canonical = canonicalByAlias.get(normalizedAlias(ingredient.id));
+    if (!canonical) return noteDerivationIssue(recipe.id, source, ingredient.id, "Ингредиент не сопоставлен с каноническим справочником.");
+    const role = roleOverrides[ingredient.id];
+    if (!role) return noteDerivationIssue(recipe.id, source, ingredient.id, "Для ингредиента не задана роль в семействе.");
     ingredients.push({
       sourceIngredientId: ingredient.id,
       canonicalIngredientId: canonical.id,
@@ -2163,12 +2276,43 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
       optional: role === "garnish",
     });
   }
+  for (const item of ingredients) {
+    if (!item.scalable) continue;
+    const step = amountStep(item);
+    const gridMin = Math.ceil(item.minAmount / step) * step;
+    const gridMax = canonicalIngredients[item.canonicalIngredientId].unit.structuralDiscrete
+      ? Math.ceil(item.maxAmount / step) * step
+      : Math.floor(item.maxAmount / step) * step;
+    // No rounding step lands inside the allowed range, so the amount can never
+    // move. Reporting it as scalable made the search churn on it and told the
+    // UI the dish had flexibility it does not have.
+    if (gridMin > gridMax) item.scalable = false;
+  }
   const calculated = nutritionForFamily({ ingredients });
-  const nutritionRecord = pilotNutritionRecords[recipe.id];
-  const editorialAudit = editorialAuditFor(recipe.id, ingredients);
-  const sourceNutrition = nutritionRecord.declaredNutrition === undefined ? recipe.macros : nutritionRecord.declaredNutrition;
-  const sourceServingRatio = nutritionRecord.miseServingToSourceServingRatio ?? 1;
-  const comparisonNutrition = nutritionRecord.comparableToMise && nutritionRecord.quantitativeCoverage === "verified" && sourceNutrition
+  const reach = nutritionReachForIngredients(ingredients);
+  const nutritionRecord = source === "pilot" ? pilotNutritionRecords[recipe.id] : undefined;
+  const editorialAudit: RecipeFamilyEditorialAudit = nutritionRecord
+    ? editorialAuditFor(recipe.id, ingredients)
+    : {
+        ingredientMapping: {
+          source: "recipe_catalog",
+          reviewedAt: editorialReviewedAt,
+          sourceIngredientCount: ingredients.length,
+          note: "Recipe Family derived from the production catalog's existing Mise quantities; it is not a replacement for source-level editorial mapping.",
+        },
+        nutrition: {
+          scope: "unavailable",
+          quantitativeCoverage: "incomplete",
+          comparableToMise: false,
+          reviewedAt: editorialReviewedAt,
+          note: "Current Mise recipe data is sufficient for deterministic portions, but no source-serving comparison is asserted here.",
+        },
+      };
+  const sourceNutrition = nutritionRecord
+    ? nutritionRecord.declaredNutrition === undefined ? recipe.macros : nutritionRecord.declaredNutrition
+    : null;
+  const sourceServingRatio = nutritionRecord?.miseServingToSourceServingRatio ?? 1;
+  const comparisonNutrition = nutritionRecord?.comparableToMise && nutritionRecord.quantitativeCoverage === "verified" && sourceNutrition
     ? {
         kcal: round(sourceNutrition.kcal * sourceServingRatio),
         protein: round(sourceNutrition.protein * sourceServingRatio),
@@ -2192,22 +2336,35 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
         carbs: Math.max(8, comparisonNutrition.carbs * 0.15),
       }
     : null;
-  const needsNutritionReview = !nutritionDelta || !nutritionThresholds ||
+  const needsNutritionReview = Boolean(nutritionRecord) && (!nutritionDelta || !nutritionThresholds ||
     (Object.keys(nutritionDelta) as (keyof Nutrition)[])
-      .some((key) => Math.abs(nutritionDelta[key]) > nutritionThresholds[key]);
+      .some((key) => Math.abs(nutritionDelta[key]) > nutritionThresholds[key]));
   const sourceUrl = typeof recipe.provenance.sourceUrl === "string" ? recipe.provenance.sourceUrl : undefined;
   const imageUrl = typeof recipe.provenance.imageUrl === "string" ? recipe.provenance.imageUrl : undefined;
   const mealLike = recipe.slot === "lunch" || recipe.slot === "dinner";
+  // The working range is what the ingredient bounds can actually reach, not an
+  // editorial band. A hard-coded 400–780 declared targets the solver could not
+  // hit (so they failed as `constraints_unsatisfied` instead of an honest
+  // `outside_calorie_range`) and cut off every target outside the band even
+  // when the dish scaled there perfectly well.
+  const minViableCalories = Math.ceil(reach.minKcal);
+  const maxViableCalories = Math.floor(Math.max(reach.maxKcal + 12, reach.maxKcal / 0.975));
+  const desiredProteinFloor = mealLike
+    ? Math.min(35, Math.max(24, Math.floor(recipe.macros.protein * 0.68)))
+    : Math.max(16, Math.floor(recipe.macros.protein * 0.65));
+  // A floor the dish physically cannot reach turns every target non-viable.
+  const minimumProtein = Math.min(desiredProteinFloor, Math.floor(reach.maxProtein));
   return {
     id: recipe.id,
     title: recipe.title,
     mealSlots: [recipe.slot],
     provenance: recipe.provenance,
-    image: { imageUrl, source: recipe.provenance.sourceTitle, sourceUrl, usageStatus: imageUrl ? "reference_only" : "unknown", license: undefined, fetchedAt: undefined, confidenceMatch: imageUrl ? 1 : 0, manuallyApproved: Boolean(imageUrl), photoType: imageUrl ? "source" : "fallback" },
+    image: { imageUrl, source: recipe.provenance.sourceTitle, sourceUrl, usageStatus: imageUrl ? "reference_only" : "unknown", license: undefined, fetchedAt: undefined, confidenceMatch: imageUrl ? 1 : 0, manuallyApproved: false, photoType: imageUrl ? "source" : "fallback" },
     ingredients,
-    minViableCalories: mealLike ? 400 : Math.max(180, Math.floor(calculated.kcal * 0.72 / 10) * 10),
-    maxViableCalories: mealLike ? 780 : Math.ceil(calculated.kcal * 1.45 / 10) * 10,
-    minimumProtein: mealLike ? Math.min(35, Math.max(24, Math.floor(recipe.macros.protein * 0.68))) : Math.max(16, Math.floor(recipe.macros.protein * 0.65)),
+    minViableCalories,
+    maxViableCalories,
+    geometryLockedMax: familyGeometryLimits[recipe.id],
+    minimumProtein,
     sourceNutrition,
     comparisonNutrition,
     legacyEditorialNutrition: recipe.macros,
@@ -2219,7 +2376,9 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
     storage: recipe.storage,
     freezing: { freezable: recipe.freezable, storageDays: recipe.storageDays },
     complexity: recipe.effort,
-    activeTime: Number(recipe.effort.activeMinutes ?? recipe.time),
+    activeTime: Number.isFinite(Number(recipe.effort.activeMinutes))
+      ? Number(recipe.effort.activeMinutes)
+      : recipe.time,
     totalTime: recipe.time,
     equipment: [...new Set(recipe.steps.flatMap((step) => [
       /духовк|запек/i.test(step) ? "духовка" : "",
@@ -2233,94 +2392,581 @@ export function recipeToFamily(recipe: LegacyRecipeForEngine): RecipeFamily | nu
   };
 }
 
-function normalizedAmount(ingredient: RecipeFamilyIngredient, value: number) {
-  if (!ingredient.scalable) return ingredient.baseAmount;
-  const step = ingredient.unit === "piece" ? 0.1 : 1;
-  return round(Math.max(ingredient.minAmount, Math.min(ingredient.maxAmount, Math.round(value / step) * step)), ingredient.unit === "piece" ? 1 : 0);
+export function deriveRecipeFamilyFromCatalog(recipe: LegacyRecipeForEngine) {
+  return recipeToFamily(recipe, "catalog");
 }
 
-function objective(family: RecipeFamily, amounts: Record<string, number>, targetCalories: number, targetProtein?: number) {
-  const nutrition = nutritionForFamily(family, amounts);
-  const proteinFloor = Math.max(family.minimumProtein, targetProtein ?? 0);
-  const shortfall = Math.max(0, proteinFloor - nutrition.protein);
-  const proteinError = targetProtein ? Math.abs(targetProtein - nutrition.protein) : 0;
-  const deviation = family.ingredients.reduce((sum, ingredient) => {
-    const center = (ingredient.preferredMin + ingredient.preferredMax) / 2;
-    const relative =
-      (amounts[ingredient.sourceIngredientId] - center) /
-      Math.max(1, ingredient.baseAmount);
-    return sum + relative * relative * ingredient.scalingPriority;
-  }, 0);
-  return Math.abs(targetCalories - nutrition.kcal) * 10 + shortfall * 150 + proteinError * 2 + deviation * 50;
+/**
+ * Converts an audit-ready parsed source card to a solver family without
+ * pretending it is one of the hand-authored pilot families. Every measured,
+ * mapped source ingredient is retained; unresolved/replaced or unmeasured
+ * caloric components reject the derivation and leave a visible issue.
+ */
+function rawRoleForCanonical(canonical: CanonicalIngredient): RecipeIngredientRole {
+  const { category, nutritionPer100g, id } = canonical;
+  if (/(?:oil|butter|ghee|coconut_oil)/.test(id)) return "fat_cooking";
+  if (
+    category === "meat" ||
+    category === "fish" ||
+    category === "seafood" ||
+    category === "egg" ||
+    category === "legume" ||
+    category === "protein"
+  )
+    return "protein";
+  if (category === "grain") return "carb";
+  if (category === "vegetable" || category === "fruit") return "vegetable";
+  if (category === "dairy") return nutritionPer100g.protein >= nutritionPer100g.fat ? "protein" : "fat";
+  if (category === "fat" || category === "nut") return "fat";
+  if (category === "sweetener") return "flavour";
+  if (category === "dairy-alternative")
+    return nutritionPer100g.protein >= nutritionPer100g.fat ? "protein" : "fat";
+  if (category === "sauce") return "sauce";
+  // A mapped caloric component must stay adjustable rather than being frozen
+  // as if it were salt or a bay leaf. This catches documented supplements and
+  // packaged components whose taxonomy is more specific than the role list.
+  if (nutritionPer100g.kcal >= 50) return "flavour";
+  return "flavour_fixed";
 }
 
-function hillClimb(family: RecipeFamily, seed: "min" | "base" | "preferred", targetCalories: number, targetProtein?: number) {
-  const amounts = Object.fromEntries(family.ingredients.map((ingredient) => {
-    const value = seed === "min" ? ingredient.minAmount : seed === "preferred" ? (ingredient.preferredMin + ingredient.preferredMax) / 2 : ingredient.baseAmount;
-    return [ingredient.sourceIngredientId, normalizedAmount(ingredient, value)];
-  }));
-  let score = objective(family, amounts, targetCalories, targetProtein);
+// These source recipes explicitly yield divisible gram-based portions. A
+// smaller container is therefore a portion-size change, not an ingredient
+// substitution. Keep the exception narrow and auditable instead of lowering
+// every recipe's role bounds globally.
+const rawPortionFloorRatios: Readonly<Record<string, number>> = Object.freeze({
+  "tmpm-26965": 0.45,
+});
+
+type RawFamilyMeasurement = { amount: number; unit: RecipeUnit; basis: string };
+
+const rawFamilyCupWeights: Record<string, number> = {
+  // These source cards state a volume only. The factor is a declared
+  // household conversion, backed by metric examples elsewhere in the same
+  // corpus (rather than a made-up finished serving weight).
+  oat_flour_raw: 90,
+  cheese_processed: 112,
+};
+
+function rawFamilyNumber(value: string): number | null {
+  const compact = value.trim().replace(",", ".");
+  if (/^\d+(?:\.\d+)?$/.test(compact)) return Number(compact);
+  const glyphs: Record<string, number> = { "¼": .25, "½": .5, "¾": .75, "⅓": 1 / 3, "⅔": 2 / 3, "⅛": .125, "⅜": .375, "⅝": .625, "⅞": .875 };
+  const mixed = compact.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+  if (mixed) return Number(mixed[1]) + Number(mixed[2]) / Number(mixed[3]);
+  const fraction = compact.match(/^(\d+)\/(\d+)$/);
+  if (fraction) return Number(fraction[1]) / Number(fraction[2]);
+  let remaining = compact;
+  let total = 0;
+  for (const [glyph, amount] of Object.entries(glyphs)) {
+    if (remaining.includes(glyph)) {
+      total += amount;
+      remaining = remaining.replaceAll(glyph, "");
+    }
+  }
+  const whole = remaining.match(/\d+(?:\.\d+)?/)?.[0];
+  if (whole) total += Number(whole);
+  return total > 0 ? total : null;
+}
+
+/**
+ * Converts only source quantities that have an explicit metric, a standard
+ * household conversion, or a count supported by the canonical ingredient.
+ * It intentionally returns null for a volume with no documented mass basis.
+ */
+function rawFamilyMeasurement(source: { original?: unknown }, canonical: CanonicalIngredient): RawFamilyMeasurement | null {
+  const original = String(source.original ?? "").replaceAll(" ", " ").trim();
+  const metric = [...original.matchAll(/([\d\s.,/¼½¾⅓⅔⅛⅜⅝⅞]+)\s*(kg|g|ml|l|lbs?|pounds?|oz|ounces?)\b/gi)].at(-1);
+  if (metric) {
+    const amount = rawFamilyNumber(metric[1]);
+    if (!amount) return null;
+    const unit = metric[2].toLowerCase();
+    if (unit === "kg") return { amount: amount * 1000, unit: "g", basis: "source_metric" };
+    if (unit === "l") return { amount: amount * 1000, unit: "ml", basis: "source_metric" };
+    if (/^(?:lb|lbs|pound|pounds)$/.test(unit)) return { amount: amount * 453.59237, unit: "g", basis: "standard_imperial" };
+    if (/^(?:oz|ounce|ounces)$/.test(unit)) return { amount: amount * 28.3495, unit: "g", basis: "standard_imperial" };
+    return { amount, unit: unit === "ml" ? "ml" : "g", basis: "source_metric" };
+  }
+  // Some source pages expose a parenthesised metric number but the importer
+  // loses the trailing `g`; its placement after a household measure is still
+  // an explicit source fact (for example: "5 tbsp (70) butter").
+  const parenthesised = original.match(/\(\s*([\d.]+)\s*\)/)?.[1];
+  if (parenthesised && /\b(?:cup|cups|tbsp|tablespoons?|tsp|teaspoons?)\b/i.test(original)) {
+    const amount = Number(parenthesised);
+    if (Number.isFinite(amount) && amount > 0) return { amount, unit: "g", basis: "source_parenthesised_metric" };
+  }
+  const leading = original.match(/^([\d\s.,/¼½¾⅓⅔⅛⅜⅝⅞-]+)/)?.[1];
+  const amount = leading ? rawFamilyNumber(leading) : null;
+  if (!amount) return null;
+  if (/\b(?:tbsp|tablespoons?|tsp|teaspoons?)\b/i.test(original)) {
+    const millilitres = amount * (/\b(?:tbsp|tablespoons?)\b/i.test(original) ? 15 : 5);
+    if (canonical.densityGPerMl) return { amount: millilitres, unit: "ml", basis: "standard_household_volume" };
+    const gramsPerCup = rawFamilyCupWeights[canonical.id];
+    if (gramsPerCup) return { amount: gramsPerCup * (millilitres / 240), unit: "g", basis: "documented_household_mass" };
+    return null;
+  }
+  if (/\b(?:cup|cups?)\b/i.test(original)) {
+    const gramsPerCup = rawFamilyCupWeights[canonical.id];
+    if (gramsPerCup) return { amount: gramsPerCup * amount, unit: "g", basis: "documented_household_mass" };
+    if (canonical.densityGPerMl) return { amount: amount * 240, unit: "ml", basis: "standard_household_volume" };
+    return null;
+  }
+  if (/\b(?:egg|eggs|tortillas?|lime|lemon|jalape(?:ñ|n)o|onion|peppers?|potato|stalks?)\b/i.test(original) && canonical.unit.gramsPerUnit > 0) {
+    return { amount, unit: "piece", basis: "source_count" };
+  }
+  return null;
+}
+
+function rawOptionalSourceIngredient(source: { original?: unknown }): boolean {
+  return /\b(?:optional|for garnish)\b/i.test(String(source.original ?? ""));
+}
+
+function rawRecipeInstructions(candidate: Record<string, unknown>, ingredientIds: string[]): RecipeInstruction[] {
+  const supplied = Array.isArray(candidate.paraphrasedInstructionDraft)
+    ? candidate.paraphrasedInstructionDraft as RecipeInstruction[]
+    : [];
+  return [
+    { id: "step-measure", text: "Отмерьте рассчитанные Mise количества ингредиентов для всей готовки.", ingredientIds, action: "measure", dependsOn: [] },
+    ...supplied.map((step, index) => ({
+      ...step,
+      id: step.id || `source-step-${index + 1}`,
+      ingredientIds: step.ingredientIds?.length ? step.ingredientIds : ingredientIds,
+      dependsOn: step.dependsOn?.length ? step.dependsOn : [index ? (supplied[index - 1].id || `source-step-${index}`) : "step-measure"],
+    })),
+  ];
+}
+
+export function deriveRecipeFamilyFromAuditedCandidate(
+  candidate: Record<string, unknown> & { id: string; sourceUrl: string },
+  context: { publisher: string; accessedAt: string },
+): RecipeFamily | null {
+  const draft = normalizeRawRecipeCandidate(candidate, context);
+  const servings = Number(candidate.servings);
+  if (!Number.isFinite(servings) || servings <= 0) return noteDerivationIssue(candidate.id, "raw", undefined, "Нет положительного выхода исходной карточки.");
+  const ingredients: RecipeFamilyIngredient[] = [];
+  const skippedOptionalSourceIngredients: string[] = [];
+  const inferredMeasurements: { sourceName: string; amount: number; unit: RecipeUnit; basis: string }[] = [];
+  for (const [index, mapping] of draft.ingredientMappings.entries()) {
+    if (mapping.status === "ignored_microcomponent" || mapping.status === "ignored_noncaloric") continue;
+    if (mapping.status !== "mapped" || !mapping.canonicalIngredientId) {
+      return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Исходный компонент не имеет прямого измеримого canonical mapping.");
+    }
+    const sourceIngredient = draft.sourceIngredients[index] as { amountMetric?: unknown; unitMetric?: unknown; original?: unknown };
+    if (rawOptionalSourceIngredient(sourceIngredient) && !mapping.sourceAmount) {
+      skippedOptionalSourceIngredients.push(mapping.sourceName);
+      continue;
+    }
+    const canonical = canonicalIngredients[mapping.canonicalIngredientId];
+    if (!canonical) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Canonical ingredient отсутствует в Recipe Family.");
+    const original = String(sourceIngredient?.original ?? "");
+    const originalMetric = original.match(/(\d+(?:\.\d+)?)\s*(g|ml)\b/i);
+    const inferredMeasurement = rawFamilyMeasurement(sourceIngredient, canonical);
+    const sourceAmount = mapping.sourceAmount ?? (originalMetric ? Number(originalMetric[1]) : inferredMeasurement?.amount ?? null);
+    const sourceUnit = mapping.sourceUnit ?? (originalMetric ? originalMetric[2].toLowerCase() : inferredMeasurement?.unit ?? null);
+    if (!sourceAmount || sourceAmount <= 0 || !sourceUnit) {
+      return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Для исходного компонента нет положительного измеримого количества.");
+    }
+    const unit = sourceUnit === "ml" ? "ml" : sourceUnit === "piece" || sourceUnit === "шт." ? "piece" : sourceUnit === "g" || sourceUnit === "г" ? "g" : null;
+    if (!unit) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Единица исходного компонента не поддерживается Recipe Family.");
+    if (!mapping.sourceAmount && !originalMetric && inferredMeasurement) {
+      inferredMeasurements.push({ sourceName: mapping.sourceName, amount: sourceAmount, unit, basis: inferredMeasurement.basis });
+    }
+    const baseAmount = sourceAmount / servings;
+    const sourceIngredientId = `source-ingredient-${index + 1}`;
+    const role = rawRoleForCanonical(canonical);
+    const ingredientBounds = bounds(baseAmount, role);
+    const portionFloor = rawPortionFloorRatios[candidate.id];
+    if (portionFloor && role !== "fat_cooking")
+      ingredientBounds.minAmount = Math.min(
+        ingredientBounds.minAmount,
+        baseAmount * portionFloor,
+      );
+    ingredients.push({
+      sourceIngredientId,
+      canonicalIngredientId: canonical.id,
+      baseAmount,
+      unit,
+      role,
+      ...ingredientBounds,
+      substitutions: [],
+      optional: false,
+    });
+  }
+  if (!ingredients.length) return noteDerivationIssue(candidate.id, "raw", undefined, "Для Recipe Family нужен хотя бы один измеримый компонент.");
+  const calculated = nutritionForFamily({ ingredients });
+  const reach = nutritionReachForIngredients(ingredients);
+  const macros = (candidate.macros ?? candidate.sourceNutrition ?? {}) as Partial<Nutrition>;
+  const sourceNutritionKeys: (keyof Nutrition)[] = ["kcal", "protein", "fat", "carbs"];
+  const sourceNutrition: Nutrition | null = sourceNutritionKeys.every((key) => Number.isFinite(Number(macros[key])))
+    ? { kcal: Number(macros.kcal), protein: Number(macros.protein), fat: Number(macros.fat), carbs: Number(macros.carbs) }
+    : null;
+  const nutritionDelta = sourceNutrition
+    ? { kcal: round(calculated.kcal - sourceNutrition.kcal), protein: round(calculated.protein - sourceNutrition.protein), fat: round(calculated.fat - sourceNutrition.fat), carbs: round(calculated.carbs - sourceNutrition.carbs) }
+    : null;
+  const title = String(candidate.titleRu ?? candidate.title ?? candidate.sourceTitle ?? candidate.id);
+  const time = (candidate.time ?? candidate.sourceTimes ?? {}) as Record<string, unknown>;
+  const totalTime = Number(time.totalMinutes);
+  const storage = (candidate.storage ?? {}) as Record<string, unknown>;
+  const sourceTitle = typeof candidate.sourceTitle === "string" ? candidate.sourceTitle : undefined;
+  const imageUrl = typeof candidate.imageUrl === "string" ? candidate.imageUrl : undefined;
+  return {
+    id: `raw-${candidate.id}`,
+    title,
+    mealSlots: [String(candidate.slot ?? "lunch")],
+    provenance: { sourceTitle, sourceUrl: candidate.sourceUrl, publisher: context.publisher, parsedCandidateId: candidate.id },
+    image: { imageUrl, source: sourceTitle, sourceUrl: candidate.sourceUrl, usageStatus: imageUrl ? "reference_only" : "unknown", license: undefined, fetchedAt: context.accessedAt, confidenceMatch: imageUrl ? 1 : 0, manuallyApproved: false, photoType: imageUrl ? "source" : "fallback" },
+    ingredients,
+    minViableCalories: Math.ceil(reach.minKcal),
+    maxViableCalories: Math.floor(Math.max(reach.maxKcal + 12, reach.maxKcal / 0.975)),
+    // The publisher's demonstrated batch is the largest vessel load we can
+    // defend without inventing cookware dimensions. Larger Mise sessions are
+    // split into repeated physical runs by the cooking-run planner.
+    geometryLockedMax: servings,
+    // Parsed source cards include side dishes and condiments. Enforcing a
+    // meal-level protein floor here would make a well-defined low-protein
+    // family falsely unsatisfiable; the caller can add a separate protein dish.
+    minimumProtein: 0,
+    sourceNutrition,
+    comparisonNutrition: sourceNutrition,
+    legacyEditorialNutrition: sourceNutrition ?? calculated,
+    miseCalculatedNutrition: calculated,
+    nutritionDelta,
+    nutritionDeltaKcal: nutritionDelta?.kcal ?? null,
+    editorialAudit: {
+      ingredientMapping: {
+        source: "raw_candidate",
+        reviewedAt: context.accessedAt,
+        sourceIngredientCount: draft.sourceIngredients.length,
+        sourceSlug: candidate.id,
+        ...(skippedOptionalSourceIngredients.length ? { skippedOptionalSourceIngredients } : {}),
+        ...(inferredMeasurements.length ? { inferredMeasurements } : {}),
+      },
+      nutrition: { scope: "per_serving", sourceServings: servings, miseServingToSourceServingRatio: 1, quantitativeCoverage: "verified", comparableToMise: true, reviewedAt: context.accessedAt, note: "Все измеримые mapped-компоненты исходной карточки входят в вычисляемую Recipe Family; source delta хранится как audit fact." },
+    },
+    miseInstructions: rawRecipeInstructions(candidate, ingredients.map((ingredient) => ingredient.sourceIngredientId)),
+    storage,
+    freezing: { freezable: Boolean(storage.freezable), storageDays: Number(storage.refrigeratorDays) || 0 },
+    complexity: {},
+    activeTime: Number.isFinite(totalTime) ? totalTime : 0,
+    totalTime: Number.isFinite(totalTime) ? totalTime : 0,
+    equipment: [],
+    localization: (candidate.localization ?? {}) as Record<string, unknown>,
+    substitutions: {},
+    reviewStatus: "pilot",
+  };
+}
+
+function amountStep(ingredient: RecipeFamilyIngredient) {
+  const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+  if (canonical.unit.structuralDiscrete) return 1;
+  return ingredient.unit === "piece" ? 0.1 : Math.max(1, canonical.unit.roundTo);
+}
+
+type SolverIngredientView = {
+  id: string;
+  perUnit: Nutrition;
+  center: number;
+  scale: number;
+  priority: number;
+  step: number;
+  gridMin: number;
+  gridMax: number;
+  baseAmount: number;
+  minAmount: number;
+  maxAmount: number;
+  scalable: boolean;
+};
+
+/**
+ * Flattens a family into the numeric form the search actually needs. Building
+ * it once per solve removes a canonical-ingredient lookup and an object
+ * allocation from every candidate evaluation.
+ */
+function solverView(family: Pick<RecipeFamily, "ingredients">): SolverIngredientView[] {
+  return family.ingredients.map((ingredient) => {
+    const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+    const step = amountStep(ingredient);
+    const gridMin = Math.ceil(ingredient.minAmount / step) * step;
+    // Structural whole units cannot be safely truncated (2.9 eggs is three
+    // eggs in practice); ordinary measured ingredients remain hard-clamped.
+    const gridMax = canonical.unit.structuralDiscrete
+      ? Math.ceil(ingredient.maxAmount / step) * step
+      : Math.floor(ingredient.maxAmount / step) * step;
+    return {
+      id: ingredient.sourceIngredientId,
+      perUnit: nutritionForAmount(ingredient, 1),
+      center: (ingredient.preferredMin + ingredient.preferredMax) / 2,
+      scale: 1 / Math.max(1, ingredient.baseAmount),
+      priority: ingredient.scalingPriority,
+      step,
+      gridMin,
+      gridMax,
+      baseAmount: ingredient.baseAmount,
+      minAmount: ingredient.minAmount,
+      maxAmount: ingredient.maxAmount,
+      // An ingredient whose rounding grid holds no point inside its own bounds
+      // cannot move at all. Treating it as scalable made the search waste
+      // every iteration on it and reported a flexibility the dish never had.
+      scalable: ingredient.scalable && gridMin <= gridMax,
+    };
+  });
+}
+
+function normalizedForView(view: SolverIngredientView, value: number) {
+  if (!view.scalable) return view.baseAmount;
+  return round(
+    Math.max(view.gridMin, Math.min(view.gridMax, Math.round(value / view.step) * view.step)),
+    view.step < 1 ? 1 : 0,
+  );
+}
+
+function totalsForView(views: SolverIngredientView[], amounts: number[]) {
+  const totals = { kcal: 0, protein: 0, fat: 0, carbs: 0 };
+  for (let index = 0; index < views.length; index += 1) {
+    const { perUnit } = views[index];
+    const amount = amounts[index];
+    totals.kcal += perUnit.kcal * amount;
+    totals.protein += perUnit.protein * amount;
+    totals.fat += perUnit.fat * amount;
+    totals.carbs += perUnit.carbs * amount;
+  }
+  return totals;
+}
+
+function deviationTerm(view: SolverIngredientView, amount: number) {
+  const relative = (amount - view.center) * view.scale;
+  return relative * relative * view.priority;
+}
+
+function deviationForView(views: SolverIngredientView[], amounts: number[]) {
+  let deviation = 0;
+  for (let index = 0; index < views.length; index += 1)
+    deviation += deviationTerm(views[index], amounts[index]);
+  return deviation;
+}
+
+type SolveTargets = {
+  minimumProtein: number;
+  targetCalories: number;
+  targetProtein?: number;
+  targetCarbs?: number;
+  targetFat?: number;
+};
+
+function scoreFor(totals: Nutrition, deviation: number, targets: SolveTargets) {
+  const kcal = round(totals.kcal);
+  const protein = round(totals.protein);
+  const fat = round(totals.fat);
+  const carbs = round(totals.carbs);
+  const proteinFloor = Math.max(targets.minimumProtein, targets.targetProtein ?? 0);
+  const shortfall = Math.max(0, proteinFloor - protein);
+  // A target of exactly 0 g of protein is a target, not an absent one.
+  const proteinError = targets.targetProtein === undefined ? 0 : Math.abs(targets.targetProtein - protein);
+  const carbError = targets.targetCarbs === undefined ? 0 : Math.abs(targets.targetCarbs - carbs);
+  const fatError = targets.targetFat === undefined ? 0 : Math.abs(targets.targetFat - fat);
+  // Calories are a ceiling. A candidate above the target is never selected as
+  // a viable portion, so crossing it must be substantially worse than a
+  // similarly sized deficit while the search is moving through local states.
+  const calorieError = kcal > targets.targetCalories
+    ? (kcal - targets.targetCalories) * 1000
+    : targets.targetCalories - kcal;
+  return calorieError * 10 + shortfall * 150 + proteinError * 2 + carbError * 8 + fatError * 10 + deviation * 50;
+}
+
+export function nutritionReachForIngredients(ingredients: RecipeFamilyIngredient[]) {
+  const views = solverView({ ingredients });
+  const low = totalsForView(views, views.map((view) => normalizedForView(view, view.minAmount)));
+  const high = totalsForView(views, views.map((view) => normalizedForView(view, view.maxAmount)));
+  return {
+    minKcal: round(low.kcal),
+    maxKcal: round(high.kcal),
+    maxProtein: round(high.protein),
+  };
+}
+
+function hillClimb(
+  family: RecipeFamily,
+  seed: "min" | "base" | "preferred",
+  targets: SolveTargets,
+) {
+  const views = solverView(family);
+  const amounts = views.map((view) =>
+    normalizedForView(view, seed === "min" ? view.minAmount : seed === "preferred" ? view.center : view.baseAmount),
+  );
+  let totals = totalsForView(views, amounts);
+  let deviation = deviationForView(views, amounts);
+  let score = scoreFor(totals, deviation, targets);
+
+  type Move = { indexes: number[]; values: number[]; score: number };
+  const moveScore = (indexes: number[], values: number[]) => {
+    let kcal = totals.kcal, protein = totals.protein, fat = totals.fat, carbs = totals.carbs;
+    let nextDeviation = deviation;
+    for (let slot = 0; slot < indexes.length; slot += 1) {
+      const view = views[indexes[slot]];
+      const delta = values[slot] - amounts[indexes[slot]];
+      kcal += view.perUnit.kcal * delta;
+      protein += view.perUnit.protein * delta;
+      fat += view.perUnit.fat * delta;
+      carbs += view.perUnit.carbs * delta;
+      nextDeviation += deviationTerm(view, values[slot]) - deviationTerm(view, amounts[indexes[slot]]);
+    }
+    return scoreFor({ kcal, protein, fat, carbs }, nextDeviation, targets);
+  };
+
   for (let iteration = 0; iteration < 2000; iteration += 1) {
-    let best: { changes: Record<string, number>; score: number } | null = null;
-    for (const ingredient of family.ingredients) {
-      if (!ingredient.scalable) continue;
-      const id = ingredient.sourceIngredientId;
-      const step = ingredient.unit === "piece" ? 0.1 : Math.max(1, canonicalIngredients[ingredient.canonicalIngredientId].unit.roundTo);
+    let best: Move | null = null;
+    for (let index = 0; index < views.length; index += 1) {
+      const view = views[index];
+      if (!view.scalable) continue;
       for (const direction of [-1, 1]) {
-        const next = normalizedAmount(ingredient, amounts[id] + direction * step);
-        if (next === amounts[id]) continue;
-        const candidate = { ...amounts, [id]: next };
-        const nextScore = objective(family, candidate, targetCalories, targetProtein);
-        if (nextScore + 0.0001 < (best?.score ?? score)) best = { changes: { [id]: next }, score: nextScore };
+        const next = normalizedForView(view, amounts[index] + direction * view.step);
+        if (next === amounts[index]) continue;
+        const nextScore = moveScore([index], [next]);
+        if (nextScore + 0.0001 < (best?.score ?? score)) best = { indexes: [index], values: [next], score: nextScore };
       }
     }
-    for (let leftIndex = 0; leftIndex < family.ingredients.length; leftIndex += 1) {
-      const left = family.ingredients[leftIndex];
+    for (let leftIndex = 0; leftIndex < views.length; leftIndex += 1) {
+      const left = views[leftIndex];
       if (!left.scalable) continue;
-      for (let rightIndex = leftIndex + 1; rightIndex < family.ingredients.length; rightIndex += 1) {
-        const right = family.ingredients[rightIndex];
-        if (!right.scalable || right.role !== left.role) continue;
-        const leftStep = left.unit === "piece" ? 0.1 : Math.max(1, canonicalIngredients[left.canonicalIngredientId].unit.roundTo);
-        const rightStep = right.unit === "piece" ? 0.1 : Math.max(1, canonicalIngredients[right.canonicalIngredientId].unit.roundTo);
-        const leftCalories = nutritionForAmount(left, 1).kcal;
-        const rightCalories = nutritionForAmount(right, 1).kcal;
+      for (let rightIndex = leftIndex + 1; rightIndex < views.length; rightIndex += 1) {
+        const right = views[rightIndex];
+        if (!right.scalable) continue;
+        const leftCalories = left.perUnit.kcal;
+        const rightCalories = right.perUnit.kcal;
         if (leftCalories <= 0 || rightCalories <= 0) continue;
         for (const direction of [-1, 1]) {
-          const leftAmount = normalizedAmount(left, amounts[left.sourceIngredientId] + direction * leftStep);
-          const leftDelta = leftAmount - amounts[left.sourceIngredientId];
+          const leftAmount = normalizedForView(left, amounts[leftIndex] + direction * left.step);
+          const leftDelta = leftAmount - amounts[leftIndex];
           if (!leftDelta) continue;
           const desiredRightDelta = -(leftDelta * leftCalories) / rightCalories;
-          const rightAmount = normalizedAmount(right, amounts[right.sourceIngredientId] + Math.round(desiredRightDelta / rightStep) * rightStep);
-          if (rightAmount === amounts[right.sourceIngredientId]) continue;
-          const candidate = { ...amounts, [left.sourceIngredientId]: leftAmount, [right.sourceIngredientId]: rightAmount };
-          const nextScore = objective(family, candidate, targetCalories, targetProtein);
-          if (nextScore + 0.0001 < (best?.score ?? score)) best = { changes: { [left.sourceIngredientId]: leftAmount, [right.sourceIngredientId]: rightAmount }, score: nextScore };
+          const rightAmount = normalizedForView(
+            right,
+            amounts[rightIndex] + Math.round(desiredRightDelta / right.step) * right.step,
+          );
+          if (rightAmount === amounts[rightIndex]) continue;
+          const nextScore = moveScore([leftIndex, rightIndex], [leftAmount, rightAmount]);
+          if (nextScore + 0.0001 < (best?.score ?? score))
+            best = { indexes: [leftIndex, rightIndex], values: [leftAmount, rightAmount], score: nextScore };
         }
       }
     }
     if (!best) break;
-    Object.assign(amounts, best.changes);
-    score = best.score;
+    for (let slot = 0; slot < best.indexes.length; slot += 1) amounts[best.indexes[slot]] = best.values[slot];
+    // Recomputed from scratch once per accepted move so the incremental
+    // candidate arithmetic cannot accumulate drift across 2000 iterations.
+    totals = totalsForView(views, amounts);
+    deviation = deviationForView(views, amounts);
+    score = scoreFor(totals, deviation, targets);
   }
-  return { amounts, nutrition: nutritionForFamily(family, amounts), score };
+
+  const solvedAmounts: Record<string, number> = {};
+  for (let index = 0; index < views.length; index += 1) solvedAmounts[views[index].id] = amounts[index];
+  return { amounts: solvedAmounts, nutrition: nutritionForFamily(family, solvedAmounts), score };
 }
 
-export function solveRecipeFamily(family: RecipeFamily, input: { targetCalories: number; targetProtein?: number; hardExclusions?: string[] }): SolvedRecipeVariant {
+export type SolveRecipeFamilyInput = {
+  targetCalories: number;
+  targetProtein?: number;
+  targetCarbs?: number;
+  targetFat?: number;
+  hardExclusions?: string[];
+  /**
+   * Share of the recipe's pan/form fat that belongs to THIS portion. Cooking
+   * fat is bought and used once per cooking session, so a portion that is one
+   * of N carries 1/N of it. Leaving it at 1 makes every portion of a batch
+   * claim the whole pan's oil, which is the default only for a lone portion.
+   */
+  cookingFatShare?: number;
+};
+
+const solveCache = new Map<string, SolvedRecipeVariant>();
+const SOLVE_CACHE_LIMIT = 4000;
+const familyFingerprints = new WeakMap<object, string>();
+
+function familyFingerprint(family: RecipeFamily) {
+  const cached = familyFingerprints.get(family);
+  if (cached) return cached;
+  const fingerprint = [
+    family.id,
+    family.minViableCalories,
+    family.maxViableCalories,
+    family.minimumProtein,
+    family.ingredients
+      .map((ingredient) => `${ingredient.sourceIngredientId}:${ingredient.canonicalIngredientId}:${ingredient.baseAmount}:${ingredient.minAmount}:${ingredient.maxAmount}:${ingredient.scalable ? 1 : 0}`)
+      .join(","),
+  ].join("|");
+  familyFingerprints.set(family, fingerprint);
+  return fingerprint;
+}
+
+function cloneVariant(variant: SolvedRecipeVariant): SolvedRecipeVariant {
+  return { ...variant, amounts: { ...variant.amounts }, explanation: [...variant.explanation] };
+}
+
+/** Clears the memoized solutions. Only needed by tests and hot reloads. */
+export function resetRecipeSolverCache() {
+  solveCache.clear();
+}
+
+export function solveRecipeFamily(
+  family: RecipeFamily,
+  input: SolveRecipeFamilyInput,
+): SolvedRecipeVariant {
   const targetCalories = Math.round(input.targetCalories);
+  const cookingFatShare = input.cookingFatShare === undefined
+    ? 1
+    : Math.min(1, Math.max(0, input.cookingFatShare));
+  const exclusions = [...new Set(input.hardExclusions ?? [])].sort().join(",");
+  // The solve is deterministic in these inputs, so memoizing it is safe and
+  // removes the repeated full search the catalog filter used to run per render.
+  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${cookingFatShare}|${exclusions}`;
+  const cached = solveCache.get(cacheKey);
+  if (cached) return cloneVariant(cached);
+  const solved = solveRecipeFamilyUncached(family, input, targetCalories, cookingFatShare);
+  if (solveCache.size >= SOLVE_CACHE_LIMIT) solveCache.clear();
+  solveCache.set(cacheKey, solved);
+  return cloneVariant(solved);
+}
+
+function solveRecipeFamilyUncached(
+  family: RecipeFamily,
+  input: SolveRecipeFamilyInput,
+  targetCalories: number,
+  cookingFatShare: number,
+): SolvedRecipeVariant {
   if (targetCalories < family.minViableCalories || targetCalories > family.maxViableCalories) return { familyId: family.id, targetCalories, targetProtein: input.targetProtein, amounts: {}, nutrition: n(0, 0, 0, 0), viable: false, reason: "outside_calorie_range", explanation: [`Цель ${targetCalories} ккал вне рабочего диапазона ${family.minViableCalories}–${family.maxViableCalories} ккал.`] };
   const exclusions = new Set(input.hardExclusions ?? []);
   const conflict = family.ingredients.find((ingredient) => canonicalIngredients[ingredient.canonicalIngredientId].allergens.some((allergen) => exclusions.has(allergen)));
   if (conflict) return { familyId: family.id, targetCalories, targetProtein: input.targetProtein, amounts: {}, nutrition: n(0, 0, 0, 0), viable: false, reason: "hard_exclusion", explanation: [`Ингредиент ${conflict.canonicalIngredientId} конфликтует с жёстким исключением.`] };
-  const candidates = (["min", "base", "preferred"] as const).map((seed) => hillClimb(family, seed, targetCalories, input.targetProtein)).sort((a, b) => a.score - b.score);
-  const best = candidates[0];
+  const solvedFamily = cookingFatShare === 1 || !family.ingredients.some((ingredient) => ingredient.role === "fat_cooking")
+    ? family
+    : familyWithCookingFatShare(family, cookingFatShare);
+  const targets: SolveTargets = {
+    minimumProtein: family.minimumProtein,
+    targetCalories,
+    targetProtein: input.targetProtein,
+    targetCarbs: input.targetCarbs,
+    targetFat: input.targetFat,
+  };
+  const candidates = (["min", "base", "preferred"] as const)
+    .map((seed) => hillClimb(solvedFamily, seed, targets))
+    .sort((a, b) => a.score - b.score);
+  // Prefer an under-ceiling candidate even if the unconstrained score would
+  // have selected an overage. This remains deterministic for a non-viable
+  // result too, so the explanation can show the closest constrained attempt.
+  const best = candidates.find((candidate) => candidate.nutrition.kcal <= targetCalories) ?? candidates[0];
   const calorieTolerance = Math.max(12, targetCalories * 0.025);
   const proteinFloor = Math.max(family.minimumProtein, input.targetProtein ?? 0);
-  const viable = Math.abs(best.nutrition.kcal - targetCalories) <= calorieTolerance && best.nutrition.protein + 0.2 >= proteinFloor;
-  const changed = family.ingredients.filter((ingredient) => Math.abs(best.amounts[ingredient.sourceIngredientId] - ingredient.baseAmount) > (ingredient.unit === "piece" ? 0.05 : 0.5)).sort((a, b) => a.scalingPriority - b.scalingPriority);
+  const viable =
+    best.nutrition.kcal <= targetCalories &&
+    targetCalories - best.nutrition.kcal <= calorieTolerance &&
+    best.nutrition.protein + 0.2 >= proteinFloor;
+  const changed = solvedFamily.ingredients.filter((ingredient) => Math.abs(best.amounts[ingredient.sourceIngredientId] - ingredient.baseAmount) > (amountStep(ingredient) < 1 ? 0.05 : 0.5)).sort((a, b) => a.scalingPriority - b.scalingPriority);
   return {
     familyId: family.id,
     targetCalories,
     targetProtein: input.targetProtein,
+    targetCarbs: input.targetCarbs,
+    targetFat: input.targetFat,
     amounts: best.amounts,
     nutrition: best.nutrition,
     viable,
@@ -2329,6 +2975,26 @@ export function solveRecipeFamily(family: RecipeFamily, input: { targetCalories:
       ? [`Получено ${best.nutrition.kcal} ккал и ${best.nutrition.protein} г белка.`, ...changed.slice(0, 4).map((ingredient) => `${ingredient.role}: ${ingredient.sourceIngredientId} ${ingredient.baseAmount} → ${best.amounts[ingredient.sourceIngredientId]} ${ingredient.unit}.`)]
       : [`В пределах ингредиентных ограничений получено ${best.nutrition.kcal} ккал и ${best.nutrition.protein} г белка; блюдо не деформируется ради цели.`],
   };
+}
+
+export function requiredGeometryBatches(
+  family: Pick<RecipeFamily, "geometryLockedMax" | "ingredients">,
+  portionAmounts: Record<string, number>[],
+) {
+  const lockedMax = family.geometryLockedMax;
+  if (!lockedMax || lockedMax <= 0 || !portionAmounts.length) return 1;
+  const largestScale = Math.max(
+    1,
+    ...family.ingredients
+      .filter((ingredient) => ingredient.role !== "fat_cooking" && ingredient.baseAmount > 0)
+      .map((ingredient) =>
+        portionAmounts.reduce(
+          (sum, amounts) => sum + (amounts[ingredient.sourceIngredientId] ?? 0),
+          0,
+        ) / ingredient.baseAmount,
+      ),
+  );
+  return Math.ceil(largestScale / lockedMax);
 }
 
 function familyWithCookingFatShare(family: RecipeFamily, share: number): RecipeFamily {
@@ -2349,7 +3015,10 @@ function familyWithCookingFatShare(family: RecipeFamily, share: number): RecipeF
   };
 }
 
-export function solveRecipeBatch(family: RecipeFamily, portions: { id: string; targetCalories: number; targetProtein?: number; hardExclusions?: string[] }[]) {
+export function solveRecipeBatch(
+  family: RecipeFamily,
+  portions: { id: string; targetCalories: number; targetProtein?: number; targetCarbs?: number; targetFat?: number; hardExclusions?: string[] }[],
+) {
   const cookingFats = family.ingredients.filter((ingredient) => ingredient.role === "fat_cooking");
   const totalTargetCalories = portions.reduce((sum, portion) => sum + Math.max(0, portion.targetCalories), 0);
   const equalShare = portions.length ? 1 / portions.length : 0;
@@ -2357,12 +3026,26 @@ export function solveRecipeBatch(family: RecipeFamily, portions: { id: string; t
     const share = totalTargetCalories > 0
       ? Math.max(0, portion.targetCalories) / totalTargetCalories
       : equalShare;
-    const portionFamily = cookingFats.length
-      ? familyWithCookingFatShare(family, share)
-      : family;
-    return { id: portion.id, variant: solveRecipeFamily(portionFamily, portion) };
+    return {
+      id: portion.id,
+      variant: solveRecipeFamily(family, {
+        ...portion,
+        cookingFatShare: cookingFats.length ? share : 1,
+      }),
+    };
   });
-  const viable = solved.every((item) => item.variant.viable);
+  const portionsViable = solved.every((item) => item.variant.viable);
+  const geometryBatchCount = portionsViable
+    ? requiredGeometryBatches(family, solved.map((item) => item.variant.amounts))
+    : 1;
+  // Until the caller turns `geometryBatchCount` into separately scheduled
+  // cooking runs, reject an over-capacity batch rather than silently giving
+  // one pan/form unsafe scaled quantities.
+  const geometryFits = geometryBatchCount === 1;
+  // `geometryLockedMax` is editorial data most families do not have yet, so an
+  // unmodelled family must not read as a confirmed "one pan is enough".
+  const geometryModelled = typeof family.geometryLockedMax === "number" && family.geometryLockedMax > 0;
+  const viable = portionsViable && geometryFits;
   const totals: Record<string, number> = {};
   if (viable) for (const { variant } of solved) for (const [id, amount] of Object.entries(variant.amounts)) totals[id] = round((totals[id] ?? 0) + amount);
   const sharedCookingTotals = viable && portions.length
@@ -2373,6 +3056,9 @@ export function solveRecipeBatch(family: RecipeFamily, portions: { id: string; t
   return {
     familyId: family.id,
     viable,
+    reason: !portionsViable ? "constraints_unsatisfied" : geometryFits ? undefined : "geometry_capacity_exceeded",
+    geometryBatchCount,
+    geometryStatus: !geometryModelled ? "unmodelled" as const : geometryFits ? "fits" as const : "exceeded" as const,
     portions: solved,
     totals,
     sharedCookingTotals,
@@ -2391,6 +3077,10 @@ export function aggregateCookingAmounts(
 ) {
   return Object.fromEntries(
     ingredients.map((ingredient) => {
+      // Pan and form fat is used once per cooking session regardless of how
+      // many days the session covers. The matching half of that rule lives in
+      // `SolveRecipeFamilyInput.cookingFatShare`: a portion that is one of N
+      // must carry 1/N of this amount, or the plan counts the oil N times.
       if (ingredient.role === "fat_cooking")
         return [ingredient.sourceIngredientId, portionAmounts.length ? ingredient.baseAmount : 0];
       const total = portionAmounts.reduce(
@@ -2414,7 +3104,12 @@ export function materializeInstructions(
       const name = displayNames[ingredient.sourceIngredientId] ?? canonical.canonicalName;
       const amount = round(amounts[ingredient.sourceIngredientId] ?? ingredient.baseAmount);
       if (ingredient.unit === "piece") {
-        return `${name} — ${round(amount * canonical.unit.gramsPerUnit)} г (${amount} шт.)`;
+        const grams = round(amount * canonical.unit.gramsPerUnit);
+        // "0.4 шт." is not a measurement anyone can act on; below a whole unit
+        // the weight is the only usable instruction.
+        return canonical.unit.structuralDiscrete || amount >= 1
+          ? `${name} — ${grams} г (${amount} шт.)`
+          : `${name} — ${grams} г`;
       }
       const unit = ingredient.unit === "ml" ? "мл" : "г";
       return `${name} — ${amount} ${unit}`;

@@ -22,5 +22,24 @@ test("deleting plans requires the owner client id and scopes the deletion to it"
     /delete\(mealPlans\)\.where\(eq\(mealPlans\.clientId, clientId\)\)/,
     "DELETE removes only plans belonging to the validated requesting client",
   );
+  assert.match(
+    handler,
+    /select\(\{ id: pushSubscriptions\.id \}\)[\s\S]*?where\(eq\(pushSubscriptions\.clientId, clientId\)\)/,
+    "DELETE resolves subscriptions through the same client before cleaning push state",
+  );
+  assert.match(
+    handler,
+    /delete\(pushJobs\)\.where\(and\(eq\(pushJobs\.subscriptionId, subscriptionId\), eq\(pushJobs\.planId, planId\)\)\)/,
+    "DELETE removes scheduled push jobs only for that client's deleted plan",
+  );
+  assert.match(
+    handler,
+    /delete\(pushPreferences\)\.where\(and\(eq\(pushPreferences\.subscriptionId, subscriptionId\), eq\(pushPreferences\.planId, planId\)\)\)/,
+    "DELETE removes matching push preferences as well",
+  );
+  assert.ok(
+    handler.indexOf("delete(pushJobs)") < handler.indexOf("delete(mealPlans)"),
+    "reminder cleanup happens before the plan disappears, so a failed request remains safely retryable",
+  );
   assert.match(handler, /Response\.json\(\{ deleted: true \}\)/);
 });

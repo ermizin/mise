@@ -6,7 +6,7 @@ export type NumericEditState = {
 export function normalizeIntegerEdit(raw: string): NumericEditState {
   const digits = raw.replace(/\D/g, "");
   if (!digits) return { text: "", value: null };
-  const text = digits.replace(/^0+(?=\d)/, "");
+  const text = digits.replace(/^0+(?=\d)/, "").slice(0, 4);
   return { text, value: Number(text) };
 }
 

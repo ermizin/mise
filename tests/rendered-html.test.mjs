@@ -47,7 +47,8 @@ test("includes the complete plan-builder and private persistence model", async (
   ]);
 
   for (const step of ["Период", "Приёмы пищи", "Вид меню", "Люди и цели", "Готовка", "Выбор меню", "Проверка"]) assert.match(page, new RegExp(step));
-  for (const style of ["Высокобелковое", "Бюджетное", "Палео", "Кето"]) assert.match(page, new RegExp(style));
+  for (const style of ["Высокобелковое", "Бюджетное"]) assert.match(page, new RegExp(style));
+  assert.match(page, /const releaseMenuStyles: readonly MenuStyle\[\] = \["protein", "budget"\]/);
   assert.match(page, /Приготовить остаток отдельно/);
   assert.match(page, /Сначала взвесьте готовую еду/);
   assert.match(page, /Фактический вес готового блюда/);
@@ -58,8 +59,9 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /mise-reminder-defaults-v1/);
   // Онбординг — три экрана: обещание, партии, напоминания (SCREENS.md 7a/8a/8b).
   assert.match(page, /Готовим раз —/);
-  assert.match(page, /Готовка партиями —/);
-  assert.match(page, /Два напоминания,/);
+  assert.match(page, /Готовка партиями/);
+  assert.match(page, /— это два вечера/);
+  assert.match(page, /Три напоминания/);
   for (const promise of ["список покупок на всех", "расчётов в голове"]) assert.match(page, new RegExp(promise));
   // Инструктаж — два экрана, не блокирует и открывается из профиля и из недели.
   for (const rule of ["Остудить за 2 часа", "3–4 дня в холодильнике", "Разморозка — в холодильнике", "Подписывать каждую крышку", "Разогревать до горячего"]) assert.match(page, new RegExp(rule));
@@ -107,7 +109,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /Отметить, что партия приготовлена/);
 
   assert.match(route, /where\(eq\(mealPlans\.clientId, clientId\)\)/);
-  assert.match(route, /id: `\$\{clientId\}:\$\{body\.plan\.id\}`/);
+  assert.match(route, /id: `\$\{clientId\}:\$\{plan\.id\}`/);
   assert.match(schema, /clientId: text\("client_id"\)\.notNull\(\)/);
   assert.match(schema, /analyticsEvents = sqliteTable\("analytics_events"/);
   assert.match(layout, /images: \[\{ url: "\/og\.png"/);

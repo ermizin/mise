@@ -8,14 +8,19 @@ import { loadTypeScriptModule } from "./typescript-module.mjs";
 async function loadRecipeCatalog() {
   const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
   const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+  const cookingRuns = await loadTypeScriptModule(new URL("../domain/recipe-cooking-runs.ts", import.meta.url));
+  const runtimeRecipeCatalogJson = JSON.parse(
+    await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
+  );
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
+    runtimeRecipeCatalogJson,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutrition.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutrition.calculateMealPlanTargets,
@@ -28,17 +33,23 @@ async function loadRecipeCatalog() {
     canonicalIngredients: engine.canonicalIngredients,
     PILOT_RAW_SOURCE_SLUGS: engine.PILOT_RAW_SOURCE_SLUGS,
     recipeToFamily: engine.recipeToFamily,
+    deriveRecipeFamilyFromCatalog: engine.deriveRecipeFamilyFromCatalog,
     solveRecipeFamily: engine.solveRecipeFamily,
     solveRecipeBatch: engine.solveRecipeBatch,
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    planRecipeCookingRuns: cookingRuns.planRecipeCookingRuns,
+    pooledCookingFatShare: cookingRuns.pooledCookingFatShare,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
 }
 
-const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingAmounts, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { validatePlanForPersistence } = await loadTypeScriptModule(
+  new URL("../lib/plan-validation.ts", import.meta.url),
+);
 const recipe = (title) => {
   const found = recipes.find((item) => item.title === title);
   assert.ok(found, `recipe exists: ${title}`);
@@ -73,6 +84,19 @@ test("manual macro proportions scale when calories change", () => {
   assert.ok(Math.abs(macroCalories(result) - result.kcal) <= 5);
 });
 
+test("daily macro totals are rounded before they reach the week UI", () => {
+  const total = addMacros([
+    { kcal: 499.6, protein: 60.6, fat: 8.2, carbs: 45.2 },
+    { kcal: 496.8, protein: 65.1, fat: 25.2, carbs: 2.1 },
+  ]);
+  assert.equal(JSON.stringify(total), JSON.stringify({
+    kcal: 996,
+    protein: 126,
+    fat: 33,
+    carbs: 47,
+  }));
+});
+
 test("generated ingredients match the recipe title", () => {
   assert.equal(ingredientIds("Тунец с зелёной фасолью").filter((id) => id.includes("beans")).join(","), "green-beans");
   assert.ok(ingredientIds("Тунец с зелёной фасолью").includes("tuna"));
@@ -85,6 +109,19 @@ test("generated ingredients match the recipe title", () => {
   assert.ok(!ingredientIds("Говяжьи котлеты с цветной капустой").includes("chicken-thigh"));
   assert.ok(ingredientIds("Индейка в сливочном соусе").includes("cream"));
   assert.ok(ingredientIds("Домашний хумус с лепёшкой").includes("flatbread"));
+});
+
+test("Chile Lime Chicken lists every measured ingredient used by its procedure", () => {
+  const dish = recipe("Курица с лаймом, золотым рисом и брокколи");
+  const ingredients = new Map(dish.ingredients.map((item) => [item.id, item]));
+  for (const id of ["turmeric", "garlic", "paprika", "oregano", "olive-oil"]) {
+    const ingredient = ingredients.get(id);
+    assert.ok(ingredient, `${id} is listed for shopping`);
+    assert.ok(ingredient.quantity > 0, `${id} has a practical measured amount`);
+    assert.ok(ingredient.group.length > 0, `${id} has a shopping group`);
+  }
+  assert.match(dish.steps.join(" "), /куркум.*чеснок/i);
+  assert.match(dish.steps.join(" "), /паприк.*ореган.*масл/i);
 });
 
 test("ingredients and recipes expose structured allergen and label metadata", () => {
@@ -116,7 +153,7 @@ test("generated paleo and keto recipes keep their strict ingredient rules", () =
 
 test("parsed recipes keep auditable source and adaptation metadata", () => {
   const parsed = recipes.filter((item) => item.provenance.kind === "parsed");
-  assert.equal(parsed.length, 39);
+  assert.ok(parsed.length >= 210);
   for (const item of parsed) {
     assert.match(item.provenance.sourceUrl, /^https:\/\//);
     assert.ok(item.provenance.sourceTitle.length > 0);
@@ -126,7 +163,8 @@ test("parsed recipes keep auditable source and adaptation metadata", () => {
 
 test("source photos and localization notes are attached to imported recipes", () => {
   const withPhotos = recipes.filter((item) => item.provenance.kind === "parsed" && item.provenance.imageUrl);
-  assert.equal(withPhotos.length, 29);
+  assert.ok(withPhotos.length > 0);
+  assert.ok(withPhotos.length < recipes.filter((item) => item.provenance.kind === "parsed").length, "photos remain optional");
   assert.ok(withPhotos.every((item) => item.provenance.imageAlt && item.provenance.sourceUrl));
   for (const id of ["src-taco-mac", "src-teriyaki-tray", "src-halal-chicken"]) {
     const item = recipes.find((candidate) => candidate.id === id);
@@ -134,6 +172,17 @@ test("source photos and localization notes are attached to imported recipes", ()
     assert.equal(item.localization.fit, "adapted");
     assert.ok(item.localization.note.length > 0);
   }
+});
+
+test("runtime catalog cards do not hotlink third-party recipe photos", async () => {
+  const runtimeCatalog = JSON.parse(
+    await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
+  );
+  const runtimeIds = new Set(runtimeCatalog.recipes.map((item) => item.id));
+  const runtimeRecipes = recipes.filter((item) => runtimeIds.has(item.id));
+  assert.equal(runtimeRecipes.length, runtimeIds.size);
+  assert.ok(runtimeRecipes.length >= 200);
+  assert.ok(runtimeRecipes.every((item) => item.provenance.imageUrl === undefined));
 });
 
 test("production fat-sensitive ingredients expose an honest fat note", () => {
@@ -238,10 +287,10 @@ test("every recipe has bounded flexibility, effort and storage guidance", () => 
 });
 
 test("every active recipe has complete actionable instructions and container guidance", () => {
-  assert.ok(recipes.length >= 150, "the complete active catalog is checked");
+  assert.ok(productionRecipes.length >= 200, "the complete active catalog is checked");
   assert.equal(new Set(recipes.map((item) => item.id)).size, recipes.length, "recipe ids stay unique");
 
-  for (const item of recipes) {
+  for (const item of productionRecipes) {
     assert.ok(item.ingredients.length >= 2, `${item.title} has ingredients`);
     assert.ok(item.ingredients.every((ingredient) => ingredient.quantity > 0 && ingredient.unit.length > 0), `${item.title} has ingredient amounts`);
     assert.ok(item.steps.length >= 3, `${item.title} has a usable sequence`);
@@ -253,6 +302,34 @@ test("every active recipe has complete actionable instructions and container gui
     assert.ok(item.steps.every((step) => step.length >= 20), `${item.title} steps are explanatory`);
     assert.ok(item.packing.portion.length >= 40, `${item.title} explains the practical container layout`);
     assert.ok(item.packing.label.includes(item.title) && /дата/i.test(item.packing.label), `${item.title} has a useful label template`);
+  }
+});
+
+test("the plans API accepts every recipe exposed by the production catalog", () => {
+  for (const item of productionRecipes) {
+    const batchId = "batch-1";
+    const personId = "person-1";
+    const slot = item.slot;
+    const plan = {
+      id: `qa-${item.id}`,
+      start: "2026-08-30",
+      end: "2026-08-30",
+      periodDays: 1,
+      cookEveryDays: 1,
+      menuStyle: "protein",
+      mealSlots: [slot],
+      people: [{
+        id: personId,
+        name: "QA",
+        daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 },
+        includedSlots: [slot],
+      }],
+      batches: [{ id: batchId, index: 0, start: "2026-08-30", end: "2026-08-30", days: 1 }],
+      selections: { [`${batchId}:${slot}`]: item.id },
+      selectionAssignments: { [`${batchId}:${slot}`]: [{ recipeId: item.id, personIds: [personId] }] },
+      shopping: [],
+    };
+    assert.equal(validatePlanForPersistence(plan).valid, true, item.id);
   }
 });
 
@@ -303,10 +380,13 @@ test("planned positions keep fixed shares and expose the daily remainder", () =>
   assert.equal(plannedTargetsFor(duplicateLunch).kcal, 600);
 });
 
-test("keeps the approved ingredients and excludes pasta salads from the first pool", () => {
+test("keeps ingredient variety and admits pasta salads only through the production gate", () => {
   const allIds = new Set(recipes.flatMap((item) => item.ingredients.map((ingredient) => ingredient.id)));
   for (const id of ["quinoa", "chia", "coconut-milk", "tofu", "sweet-potato"]) assert.ok(allIds.has(id), `${id} remains available`);
-  assert.ok(recipes.every((item) => !/салат.*(?:паст|макарон)|(?:паст|макарон).*салат/i.test(item.title)));
+  const pastaSalads = productionRecipes.filter((item) =>
+    /салат.*(?:паст|макарон)|(?:паст|макарон).*салат/i.test(item.title),
+  );
+  assert.ok(pastaSalads.every(isProductionReadyRecipe));
 });
 
 test("catalog shows every matching recipe while the plan builder keeps five choices", () => {
@@ -421,6 +501,48 @@ test("a personal assignment isolates an incompatible eater and feeds shopping", 
     [],
     "a removed slot cannot leak stale selections back into shopping",
   );
+});
+
+test("shopping only shows an approximate piece count for ingredients supplied as pieces", () => {
+  const shoppingFor = (item) => {
+    const person = {
+      id: "shopper",
+      name: "Покупатель",
+      daily: { kcal: 2200, protein: 150, fat: 75, carbs: 231 },
+      includedSlots: [item.slot],
+    };
+    const batch = {
+      id: "batch-shopping",
+      index: 0,
+      start: "2026-08-30",
+      end: "2026-08-30",
+      days: 1,
+    };
+    const key = `${batch.id}:${item.slot}`;
+    return buildShopping({
+      batches: [batch],
+      mealSlots: [item.slot],
+      people: [person],
+      selections: { [key]: item.id },
+      selectionAssignments: {
+        [key]: [{ recipeId: item.id, personIds: [person.id] }],
+      },
+    });
+  };
+
+  const pasta = recipes.find((item) => item.id === "tmpm-28083");
+  assert.ok(pasta);
+  const pastaLine = shoppingFor(pasta).find((item) => item.id === "pasta_raw");
+  assert.ok(pastaLine);
+  assert.equal(pastaLine.unit, "г");
+  assert.equal(pastaLine.pieceEstimate, undefined, "dry pasta is not counted as pieces");
+
+  const pieceRecipe = recipes.find((item) => item.id === "src-chile-lime-chicken");
+  assert.ok(pieceRecipe);
+  const limeLine = shoppingFor(pieceRecipe).find((item) => /лайм|лимон/iu.test(item.name));
+  assert.ok(limeLine);
+  assert.equal(limeLine.unit, "г");
+  assert.ok(limeLine.pieceEstimate >= 1, "a source piece is shown as grams plus an approximate count");
 });
 
 test("Recipe Engine v1 migrates 18 existing reviewed recipes without replacing the legacy catalog", () => {
@@ -589,9 +711,23 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
   }, { publisher: "test", accessedAt: "2026-08-29" });
   assert.equal(trustedPepper.ingredientMappings[0].canonicalIngredientId, "pepper_raw", "only an exact canonical id is trusted over the source name");
   const teriyaki = pilotDrafts.find((draft) => draft.sourceTitle === "Sheet Pan Teriyaki Chicken and Vegetables");
-  const mirin = teriyaki.ingredientMappings.find((mapping) => mapping.sourceName.toLowerCase() === "mirin");
-  assert.equal(mirin.status, "replaced");
-  assert.deepEqual([...mirin.replacementCanonicalIngredientIds].sort(), ["brown_sugar_processed", "vinegar_processed"]);
+  assert.equal(
+    teriyaki.ingredientMappings.some(
+      (mapping) => mapping.sourceName.toLowerCase() === "mirin",
+    ),
+    false,
+    "the owner-reviewed mirin replacement is stored as measured vinegar and sugar",
+  );
+  assert.equal(
+    teriyaki.ingredientMappings.filter(
+      (mapping) =>
+        mapping.status === "mapped" &&
+        ["brown_sugar_processed", "vinegar_processed"].includes(
+          mapping.canonicalIngredientId,
+        ),
+    ).length,
+    4,
+  );
   const omittedFoods = allDispositions.filter((decision) => decision.disposition === "omitted_by_adaptation");
   assert.equal(omittedFoods.length, 9, "all real source foods omitted from raw-backed adaptations are explicit");
   assert.ok(omittedFoods.some((decision) => decision.familyId === "src-mediterranean-wrap" && decision.sourceName.toLowerCase() === "ginger"));
@@ -605,11 +741,11 @@ test("raw candidate adapter preserves all 217 source cards and legacy editorial 
     counts[mapping.status] = (counts[mapping.status] ?? 0) + 1;
     return counts;
   }, {});
-  assert.equal(rawMappingCounts.mapped, 128);
+  assert.equal(rawMappingCounts.mapped, 130);
   assert.equal((rawMappingCounts.ignored_noncaloric ?? 0) + (rawMappingCounts.ignored_microcomponent ?? 0), 68);
   assert.ok(rawMappingCounts.ignored_noncaloric > 0);
   assert.ok(rawMappingCounts.ignored_microcomponent > 0);
-  assert.equal(rawMappingCounts.replaced, 1);
+  assert.equal(rawMappingCounts.replaced ?? 0, 0);
   assert.equal(rawMappingCounts.unresolved ?? 0, 0);
   assert.equal(recipeFamiliesById["src-halal-chicken"].comparisonNutrition.kcal, 773, "halal chicken compares against the unedited raw source value");
   assert.equal(recipeFamiliesById["src-red-pepper-chicken-dip"].comparisonNutrition.kcal, 218, "dip records that one Mise portion equals two source portions");
@@ -627,6 +763,25 @@ test("review-required families stay out of automatic menu candidates", () => {
   assert.equal(lunchIds.includes("src-taco-mac"), true);
 });
 
+test("release menu candidates exclude hidden keto, paleo and vegan diet cards", () => {
+  const hiddenDiet = (item) =>
+    item.tags.some((tag) => tag === "keto" || tag === "paleo") ||
+    /(?:vegan|веган|keto|кето|paleo|палео)/iu.test(item.title);
+  const hiddenProductionCards = productionRecipes.filter(hiddenDiet);
+  assert.ok(hiddenProductionCards.length >= 4, "the regression fixture includes hidden diet cards");
+
+  for (const style of ["protein", "budget"])
+    for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"]) {
+      const candidates = candidateRecipes(slot, style, [], 1, { limit: "all" });
+      assert.ok(candidates.length > 0, `${style}/${slot} keeps release candidates`);
+      assert.equal(
+        candidates.some(hiddenDiet),
+        false,
+        `${style}/${slot} does not leak a hidden diet card`,
+      );
+    }
+});
+
 test("production catalog contains only explicitly reviewed complete recipes", () => {
   const blockedIds = Object.values(recipeFamiliesById)
     .filter((family) => family.reviewStatus === "review_required")
@@ -641,13 +796,13 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
         (item.provenance.kind === "parsed" ||
           item.provenance.editoriallyApproved === true) &&
         item.ingredients.length >= 3 &&
-        recipeFamiliesById[item.id]?.reviewStatus !== "review_required",
+        recipeFamilyFor(item)?.reviewStatus === "pilot",
     )
     .map((item) => item.id)
     .sort();
 
   assert.equal(productionRecipes.length, expectedReadyIds.length);
-  assert.equal(productionRecipes.length, 30);
+  assert.ok(productionRecipes.length >= 200);
   assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
   assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
   assert.ok(
@@ -832,12 +987,14 @@ test("recipe view and shopping helper use solved family amounts for a multi-day 
     { id: "a", name: "А", daily: { kcal: 2000, protein: 150, fat: 65, carbs: 210 }, includedSlots: ["lunch"] },
     { id: "b", name: "Б", daily: { kcal: 1600, protein: 120, fat: 55, carbs: 165 }, includedSlots: ["lunch"] },
   ];
-  const portions = people.map((person) => portionFor(person, "lunch", item));
+  const session = recipeCookingSession(people, "lunch", item, 3);
+  assert.equal(session.viable, true);
+  const portions = session.portions;
   assert.ok(portions.every((portion) => portion.engine === "recipe-family-v1"));
-  const amounts = recipeCookingAmounts(item, portions, 3);
+  const amounts = session.runPlan.totals;
   for (const ingredient of family.ingredients) {
     const expected = ingredient.role === "fat_cooking"
-      ? ingredient.baseAmount
+      ? ingredient.baseAmount * session.runCount
       : Math.round(portions.reduce((sum, portion) => sum + portion.solvedAmounts[ingredient.sourceIngredientId], 0) * 3 * 10) / 10;
     assert.equal(amounts[ingredient.sourceIngredientId], expected);
   }

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Fragment,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -20,26 +21,30 @@ import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
 import { plural, withPlural, FORMS } from "@/lib/plural";
 import { MacroNumberInput } from "@/components/macro-number-input";
+import runtimeRecipeCatalogJson from "@/data/recipe-runtime-catalog.json";
 import {
   allocateComponentDish,
   allocateMixedDish,
   type PersonAllocation,
 } from "@/domain/portion-allocation";
 import {
-  aggregateCookingAmounts,
+  canonicalIngredients,
+  deriveRecipeFamilyFromCatalog,
   recipeToFamily,
   solveRecipeFamily,
   type RecipeFamily,
 } from "@/domain/recipe-engine";
 import {
+  planRecipeCookingRuns,
+  pooledCookingFatShare,
+  type CookingRunPlan,
+} from "@/domain/recipe-cooking-runs";
+import {
   mealOccurrenceKey,
-  moveOccurrence,
   normalizeMealExecution,
   reconcileMealExecution,
   toggleBaseEaten,
-  toggleMovedEaten,
   type MealExecution,
-  type MealMove,
 } from "@/domain/meal-execution";
 import {
   ACTIVITY_FACTORS,
@@ -120,6 +125,7 @@ type Allergen =
   | "egg"
   | "gluten"
   | "fish"
+  | "crustaceans"
   | "soy"
   | "peanut"
   | "treeNuts"
@@ -129,6 +135,7 @@ type Allergen =
 
 type Ingredient = {
   id: string;
+  canonicalIngredientId?: string;
   name: string;
   fatNote?: string;
   cheeseVariant?: "regular" | "light" | "either";
@@ -200,6 +207,62 @@ type Recipe = {
   flex: RecipeFlex;
   effort: RecipeEffort;
   localization: RecipeLocalization;
+  procedureIngredients?: {
+    id: string;
+    name: string;
+    note: string;
+    allergens: Allergen[];
+  }[];
+};
+type RuntimeRecipeRecord = {
+  id: string;
+  slot: MealSlot;
+  title: string;
+  macros: Macros;
+  timeMinutes: number;
+  menuTags: ("protein" | "budget")[];
+  costTier: { value: number };
+  servingMass: { grams: number };
+  shoppingIngredients: {
+    sourceIngredientId: string;
+    canonicalIngredientId: string;
+    nameRu: string;
+    group: string;
+    allergens: string[];
+    checkLabel: boolean;
+  }[];
+  procedureIngredients: {
+    sourceIngredientId: string;
+    nameRu: string;
+    reason: string;
+    allergens?: string[];
+  }[];
+  steps: string[];
+  storage: {
+    refrigerator: string;
+    freezer: string;
+    thaw: string;
+    refrigeratorDays?: number;
+    freezerDays?: number;
+    freezable: boolean;
+  };
+  packing: { portion: string; separate?: string; label: string };
+  localization: {
+    fit: "familiar" | "adapted" | "niche";
+    availability: "common" | "specialty";
+    reviewNote?: string;
+  };
+  effort: RecipeEffort;
+  provenance: {
+    sourceTitle: string;
+    sourceUrl: string;
+    sourceQuery: string;
+    preview:
+      | { kind: "source_preview"; imageUrl: string }
+      | { kind: "graphic_fallback"; emoji: string };
+  };
+  visualFallback: { emoji: string };
+  recipeFamily: RecipeFamily;
 };
 type RecipeTuning = { protein: number; fat: number; carbs: number };
 type CookedWeights = Record<string, number>;
@@ -225,6 +288,8 @@ type ShoppingItem = Ingredient & {
   key: string;
   checked: boolean;
   batchIds?: string[];
+  averagePieceWeightGrams?: number;
+  pieceEstimate?: number;
 };
 type RecipeAssignment = {
   recipeId: string;
@@ -247,16 +312,16 @@ type ActivePlan = {
   pinnedSelectionKeys?: string[];
   tuning?: Record<string, RecipeTuning>;
   cookedWeights?: Record<string, CookedWeights>;
+  cookedBatchIds?: string[];
   shopping: ShoppingItem[];
   mealExecution?: MealExecution;
+  catalogMigration?: { removedRecipeIds: string[] };
 };
 type WeekMealRow = {
   key: string;
-  kind: "base" | "moved";
   slot: MealSlot;
   recipe: Recipe;
   sourceBatch: Batch;
-  move?: MealMove;
 };
 type RecipeContext = {
   recipe: Recipe;
@@ -299,6 +364,10 @@ type BuilderEntry = {
 type BuilderDraft = {
   planId: string | null;
   savedAt: number;
+  repeat?: boolean;
+  flowId?: string;
+  startedAt?: number;
+  isNextPlan?: boolean;
   step: number;
   choiceIndex: number;
   start: string;
@@ -411,6 +480,7 @@ const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
     description: "Меньше углеводов, больше полезных жиров",
   },
 };
+const releaseMenuStyles: readonly MenuStyle[] = ["protein", "budget"];
 const macroLabels: Record<MacroKey, string> = {
   kcal: "К",
   protein: "Б",
@@ -487,6 +557,7 @@ const allergenMeta: Record<Allergen, { label: string; short: string }> = {
   egg: { label: "Яйца", short: "Яйца" },
   gluten: { label: "Глютен", short: "Глютен" },
   fish: { label: "Рыба", short: "Рыба" },
+  crustaceans: { label: "Ракообразные", short: "Ракообразные" },
   soy: { label: "Соя", short: "Соя" },
   peanut: { label: "Арахис", short: "Арахис" },
   treeNuts: { label: "Орехи", short: "Орехи" },
@@ -3186,7 +3257,7 @@ recipes.push(
   ], 3, true, { provenance: mealPrepManualParsed("Honey Lime Steak Burrito Bowls", "honey-lime-steak-burrito-bowls", "https://mealprepmanual.com/wp-content/uploads/2025/08/Honey-Lime-Steak-Burrito-Bowls.jpg", "Говядина с цитрусовым рисом, фасолью и кукурузой", "Jalapeño и кинза сделаны необязательными; чёрная фасоль заменяется любой консервированной фасолью."), localization: { fit: "adapted", availability: "common", note: "Формат боула оставлен, но все компоненты знакомы и хранятся раздельно." }, storage: { refrigerator: "Мясо, рис, фасоль и приготовленные овощи при ≤4 °C — ориентировочно до 3 суток; сальсу хранить отдельно.", freezerDays: 30, freezeParts: "Замораживать мясо, рис, фасоль и приготовленные овощи. Сальсу и свежую зелень не замораживать." }, packing: { separate: "Сальса и свежая зелень — в маленькую ёмкость; добавлять после разогрева." }, effort: { knifeActions: 4, cookware: 3, activeActions: 13, activeMinutes: 30, level: "high" } }),
 
   r("src-chile-lime-chicken", "lunch", "Курица с лаймом, золотым рисом и брокколи", "🍋", 65, { kcal: 537, protein: 46, fat: 17, carbs: 50 }, 470, 215, ["protein", "budget"], [
-    i("chicken-thigh", "Филе куриного бедра", 182, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 36, "г", "Крупы"), i("pasta", "Вермишель, сухой вес", 20, "г", "Крупы"), i("broccoli", "Брокколи", 45, "г", "Овощи и фрукты"), i("butter", "Сливочное масло", 6, "г", "Молочное"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("broth", "Куриный бульон", 96, "мл", "Бакалея"),
+    i("chicken-thigh", "Филе куриного бедра", 182, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 36, "г", "Крупы"), i("pasta", "Вермишель, сухой вес", 20, "г", "Крупы"), i("broccoli", "Брокколи", 45, "г", "Овощи и фрукты"), i("butter", "Сливочное масло", 6, "г", "Молочное"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("broth", "Куриный бульон", 96, "мл", "Бакалея"), i("turmeric", "Куркума", 1, "г", "Бакалея"), i("garlic", "Чеснок", 3, "г", "Овощи и фрукты"), i("paprika", "Паприка", 1, "г", "Бакалея"), i("oregano", "Сушёный орегано", 0.5, "г", "Бакалея"), i("olive-oil", "Растительное масло", 5, "г", "Бакалея"),
   ], [
     "Поломайте вермишель на короткие кусочки и слегка подрумяньте её в масле, не допуская потемнения.",
     "Добавьте промытый рис, куркуму, чеснок и бульон; доведите до активного кипения, затем готовьте под плотной крышкой и дайте настояться.",
@@ -3957,6 +4028,193 @@ for (const style of Object.keys(generatedTitles) as MenuStyle[])
       ),
     );
 
+const runtimeRecipeCatalog = runtimeRecipeCatalogJson as unknown as {
+  recipes: RuntimeRecipeRecord[];
+};
+const runtimeAllergenMap: Record<string, Allergen | undefined> = {
+  crustaceans: "crustaceans",
+  shrimp: "crustaceans",
+  egg: "egg",
+  fish: "fish",
+  gluten: "gluten",
+  milk: "milk",
+  molluscs: "molluscs",
+  mustard: "mustard",
+  nuts: "treeNuts",
+  peanuts: "peanut",
+  sesame: "sesame",
+  soy: "soy",
+};
+function runtimeAllergens(values: string[]): Allergen[] {
+  return [
+    ...new Set(
+      values.flatMap((value) => {
+        const mapped = runtimeAllergenMap[value];
+        return mapped ? [mapped] : [];
+      }),
+    ),
+  ];
+}
+function runtimeFlexFor(
+  family: RecipeFamily,
+  roles: string[],
+): [number, number] {
+  const adjustable = family.ingredients.filter(
+    (ingredient) =>
+      ingredient.scalable &&
+      ingredient.baseAmount > 0 &&
+      roles.includes(ingredient.role),
+  );
+  if (!adjustable.length) return [1, 1];
+  return [
+    Math.max(
+      0.5,
+      Math.min(
+        1,
+        ...adjustable.map(
+          (ingredient) => ingredient.minAmount / ingredient.baseAmount,
+        ),
+      ),
+    ),
+    Math.min(
+      1.5,
+      Math.max(
+        1,
+        ...adjustable.map(
+          (ingredient) => ingredient.maxAmount / ingredient.baseAmount,
+        ),
+      ),
+    ),
+  ];
+}
+function runtimeBaseAmount(value: number) {
+  if (value >= 1) return round(value, 1);
+  if (value >= 0.1) return round(value, 2);
+  return Math.max(0.001, round(value, 3));
+}
+function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
+  const shoppingBySourceId = new Map(
+    record.shoppingIngredients.map((ingredient) => [
+      ingredient.sourceIngredientId,
+      ingredient,
+    ]),
+  );
+  const ingredients = record.recipeFamily.ingredients.map((familyIngredient) => {
+    const source = shoppingBySourceId.get(familyIngredient.sourceIngredientId);
+    if (!source)
+      throw new Error(
+        `Runtime recipe ${record.id} is missing ${familyIngredient.sourceIngredientId}`,
+      );
+    return {
+      id: familyIngredient.sourceIngredientId,
+      canonicalIngredientId: source.canonicalIngredientId,
+      name: source.nameRu,
+      quantity: runtimeBaseAmount(familyIngredient.baseAmount),
+      unit:
+        familyIngredient.unit === "piece"
+          ? ("шт." as const)
+          : familyIngredient.unit === "ml"
+            ? ("мл" as const)
+            : ("г" as const),
+      group: source.group,
+      allergens: runtimeAllergens(source.allergens),
+      checkLabel: source.checkLabel,
+    };
+  });
+  const allergens = runtimeAllergens([
+    ...record.shoppingIngredients.flatMap((ingredient) => ingredient.allergens),
+    ...record.procedureIngredients.flatMap(
+      (ingredient) => ingredient.allergens ?? [],
+    ),
+  ]);
+  const preview = record.provenance.preview;
+  return {
+    id: record.id,
+    slot: record.slot,
+    title: record.title,
+    emoji:
+      preview.kind === "graphic_fallback"
+        ? preview.emoji
+        : record.visualFallback.emoji,
+    time: record.timeMinutes,
+    macros: record.macros,
+    servingWeight: Math.max(1, round(record.servingMass.grams)),
+    // Internal ranking only: no rouble amount is shown to the user.
+    cost: Math.max(1, record.costTier.value) * 100,
+    tags: record.menuTags,
+    ingredients,
+    allergens,
+    steps: [
+      `На одну базовую порцию отмерьте: ${ingredients
+        .map(
+          (ingredient) =>
+            `${ingredient.name} — ${ingredient.quantity} ${ingredient.unit}`,
+        )
+        .join("; ")}.`,
+      ...record.steps,
+    ],
+    storageDays: Math.max(1, record.storage.refrigeratorDays ?? 3),
+    freezable: record.storage.freezable,
+    provenance: {
+      kind: "parsed",
+      sourceTitle: record.provenance.sourceTitle,
+      sourceUrl: record.provenance.sourceUrl,
+      sourceQuery: record.provenance.sourceQuery,
+      // Runtime cards deliberately use the local graphic fallback. Third-party
+      // previews are provenance, not release assets: hotlinking them makes the
+      // plan depend on a remote image host and creates broken requests offline.
+      imageAlt: record.title,
+    },
+    storage: {
+      refrigerator: record.storage.refrigerator,
+      freezer: record.storage.freezable
+        ? record.storage.freezer
+        : `Не замораживать: ${record.storage.freezer}`,
+      thaw: record.storage.freezable
+        ? record.storage.thaw
+        : `Разморозка не предусмотрена: ${record.storage.thaw}`,
+      freezerDays: record.storage.freezerDays,
+      freezeParts: record.storage.freezable
+        ? "Замораживать готовую порцию согласно шагам рецепта."
+        : "Заморозка не предусмотрена.",
+    },
+    packing: {
+      ...record.packing,
+      portion:
+        record.packing.portion.length >= 40
+          ? record.packing.portion
+          : `${record.packing.portion}. После готовки взвесьте общий выход и разделите его между подписанными контейнерами.`,
+      label:
+        record.packing.label.includes(record.title) &&
+        /дата/iu.test(record.packing.label)
+          ? record.packing.label
+          : `${record.title} · дата готовки · приём пищи`,
+    },
+    flex: {
+      protein: runtimeFlexFor(record.recipeFamily, ["protein"]),
+      fat: runtimeFlexFor(record.recipeFamily, ["fat", "fat_cooking", "sauce"]),
+      carbs: runtimeFlexFor(record.recipeFamily, ["carb"]),
+    },
+    effort: record.effort,
+    localization: {
+      fit: record.localization.fit,
+      availability: record.localization.availability,
+      note: record.localization.reviewNote,
+    },
+    procedureIngredients: record.procedureIngredients.map((ingredient) => ({
+      id: ingredient.sourceIngredientId,
+      name: ingredient.nameRu,
+      note: ingredient.reason,
+      allergens: runtimeAllergens(ingredient.allergens ?? []),
+    })),
+  };
+}
+const runtimeRecipes = runtimeRecipeCatalog.recipes.map(runtimeRecipe);
+recipes.push(...runtimeRecipes);
+const runtimeRecipeFamiliesById = Object.fromEntries(
+  runtimeRecipeCatalog.recipes.map((record) => [record.id, record.recipeFamily]),
+) as Record<string, RecipeFamily>;
+
 /* Порции плана: по одному контейнеру на человека, приём пищи и день партии. */
 function totalPlanPortions(plan: ActivePlan) {
   return plan.batches.reduce(
@@ -3977,28 +4235,47 @@ function totalPlanPortions(plan: ActivePlan) {
 const recipesById = Object.fromEntries(
   recipes.map((recipe) => [recipe.id, recipe]),
 ) as Record<string, Recipe>;
-const executionRecipeStorage = Object.fromEntries(
-  recipes.map((recipe) => [
-    recipe.id,
-    { storageDays: recipe.storageDays, freezable: recipe.freezable },
-  ]),
-);
 function executionPlanFor(plan: ActivePlan) {
-  return { ...plan, recipeStorage: executionRecipeStorage };
+  return plan;
 }
 const recipeFamiliesById = Object.fromEntries(
   recipes
+    .filter((recipe) => !runtimeRecipeFamiliesById[recipe.id])
     .map((recipe) => [recipe.id, recipeToFamily(recipe)] as const)
     .filter((entry): entry is readonly [string, RecipeFamily] => Boolean(entry[1])),
 ) as Record<string, RecipeFamily>;
+const catalogRecipeFamiliesById = Object.fromEntries(
+  recipes
+    .filter(
+      (recipe) =>
+        !runtimeRecipeFamiliesById[recipe.id] && !recipeFamiliesById[recipe.id],
+    )
+    .map((recipe) => [recipe.id, deriveRecipeFamilyFromCatalog(recipe)] as const)
+    .filter((entry): entry is readonly [string, RecipeFamily] => Boolean(entry[1])),
+) as Record<string, RecipeFamily>;
+function recipeFamilyFor(recipe: Recipe) {
+  return (
+    runtimeRecipeFamiliesById[recipe.id] ??
+    recipeFamiliesById[recipe.id] ??
+    catalogRecipeFamiliesById[recipe.id]
+  );
+}
+function recipeSupportsSlot(recipe: Recipe, slot: MealSlot) {
+  return (
+    recipe.slot === slot ||
+    (recipe.slot === "snack1" && slot === "snack2") ||
+    (recipe.slot === "snack2" && slot === "snack1")
+  );
+}
 function isProductionReadyRecipe(recipe: Recipe) {
+  const family = recipeFamilyFor(recipe);
   const editoriallyReady =
     recipe.provenance.kind === "parsed" ||
     recipe.provenance.editoriallyApproved === true;
   return (
     editoriallyReady &&
     recipe.ingredients.length >= 3 &&
-    recipeFamiliesById[recipe.id]?.reviewStatus !== "review_required"
+    family?.reviewStatus === "pilot"
   );
 }
 const productionRecipes = recipes.filter(isProductionReadyRecipe);
@@ -4151,7 +4428,7 @@ function scaleMacros(macros: Macros, factor: number): Macros {
   };
 }
 function addMacros(values: Macros[]): Macros {
-  return values.reduce<Macros>(
+  const total = values.reduce<Macros>(
     (sum, item) => ({
       kcal: sum.kcal + item.kcal,
       protein: sum.protein + item.protein,
@@ -4160,6 +4437,12 @@ function addMacros(values: Macros[]): Macros {
     }),
     { kcal: 0, protein: 0, fat: 0, carbs: 0 },
   );
+  return {
+    kcal: round(total.kcal),
+    protein: round(total.protein),
+    fat: round(total.fat),
+    carbs: round(total.carbs),
+  };
 }
 function targetFor(person: Person, slot: MealSlot): Macros {
   return person.includedSlots.includes(slot)
@@ -4240,6 +4523,9 @@ type PortionComponent = {
   label: string;
   ingredients: Ingredient[];
 };
+function canonicalIdForIngredient(ingredient: Ingredient) {
+  return ingredient.canonicalIngredientId ?? ingredient.id;
+}
 function portionComponents(recipe: Recipe): PortionComponent[] {
   const text = recipe.title.toLowerCase();
   const mixed =
@@ -4248,16 +4534,16 @@ function portionComponents(recipe: Recipe): PortionComponent[] {
     );
   if (mixed) return [];
   const protein = recipe.ingredients.filter((ingredient) =>
-    proteinIngredientIds.has(ingredient.id),
+    proteinIngredientIds.has(canonicalIdForIngredient(ingredient)),
   );
   const carbs = recipe.ingredients.filter((ingredient) =>
-    carbIngredientIds.has(ingredient.id),
+    carbIngredientIds.has(canonicalIdForIngredient(ingredient)),
   );
   const vegetables = recipe.ingredients.filter(
     (ingredient) =>
       ingredient.group === "Овощи и фрукты" &&
-      !proteinIngredientIds.has(ingredient.id) &&
-      !carbIngredientIds.has(ingredient.id),
+      !proteinIngredientIds.has(canonicalIdForIngredient(ingredient)) &&
+      !carbIngredientIds.has(canonicalIdForIngredient(ingredient)),
   );
   const components: PortionComponent[] = [];
   if (protein.length)
@@ -4276,14 +4562,103 @@ function portionComponents(recipe: Recipe): PortionComponent[] {
     });
   return components.length >= 2 ? components : [];
 }
+/**
+ * A cooking session yields `people × days` containers. Pan/form fat is used
+ * once per physical run; after all runs, equal components are pooled, weighed
+ * and allocated across the whole session, so every promised portion carries
+ * `runCount / portionCount` of that total fat.
+ */
+function cookingPortionCount(personCount: number, days: number) {
+  return Math.max(1, personCount) * Math.max(1, days);
+}
+/**
+ * A very high daily target can legitimately make one meal equal to two or
+ * more ordinary servings of the same dish. Keep the Recipe Family variant
+ * itself inside its audited bounds, then repeat that complete variant instead
+ * of stretching individual ingredients into an unrecognisable recipe.
+ */
+function solveRecipeFamilyMeal(
+  family: RecipeFamily,
+  input: Parameters<typeof solveRecipeFamily>[1],
+) {
+  const direct = solveRecipeFamily(family, input);
+  if (direct.viable || direct.reason === "hard_exclusion") return direct;
+  const maxRepeats = Math.max(
+    1,
+    Math.min(8, Math.floor(family.geometryLockedMax ?? 8)),
+  );
+  const repeated = [];
+  for (let repeat = 2; repeat <= maxRepeats; repeat += 1) {
+    // The engine solves integer calorie ceilings. Flooring here prevents a
+    // half-calorie sub-target from rounding up and crossing the original meal
+    // ceiling after the complete serving is repeated.
+    const targetCalories = Math.floor(input.targetCalories / repeat);
+    if (
+      targetCalories < family.minViableCalories ||
+      targetCalories > family.maxViableCalories
+    )
+      continue;
+    const variant = solveRecipeFamily(family, {
+      ...input,
+      targetCalories,
+      targetProtein:
+        input.targetProtein === undefined
+          ? undefined
+          : input.targetProtein / repeat,
+      targetFat:
+        input.targetFat === undefined ? undefined : input.targetFat / repeat,
+      targetCarbs:
+        input.targetCarbs === undefined
+          ? undefined
+          : input.targetCarbs / repeat,
+      // The complete logical meal owns one pooled share of the physical
+      // cooking fat, however many ordinary servings it contains.
+      cookingFatShare: (input.cookingFatShare ?? 1) / repeat,
+    });
+    if (!variant.viable) continue;
+    const nutrition = Object.fromEntries(
+      Object.entries(variant.nutrition).map(([key, value]) => [
+        key,
+        round(value * repeat, 1),
+      ]),
+    ) as Macros;
+    if (nutrition.kcal > input.targetCalories + 0.2) continue;
+    repeated.push({
+      ...variant,
+      targetCalories: input.targetCalories,
+      targetProtein: input.targetProtein,
+      targetFat: input.targetFat,
+      targetCarbs: input.targetCarbs,
+      amounts: Object.fromEntries(
+        Object.entries(variant.amounts).map(([id, amount]) => [
+          id,
+          round(amount * repeat, 3),
+        ]),
+      ),
+      nutrition,
+      explanation: [
+        `Одна порция этого приёма пищи состоит из ${repeat} обычных порций рецепта.`,
+        ...variant.explanation,
+      ],
+      repeat,
+    });
+  }
+  return (
+    repeated.sort(
+      (left, right) =>
+        right.nutrition.kcal - left.nutrition.kcal,
+    )[0] ?? direct
+  );
+}
 function portionFor(
   person: Person,
   slot: MealSlot,
   recipe: Recipe,
   tuning?: RecipeTuning,
+  cooking?: { portionCount?: number; runCount?: number },
 ) {
   const target = targetFor(person, slot);
-  const family = recipeFamiliesById[recipe.id];
+  const family = recipeFamilyFor(recipe);
   if (family) {
     const ratios = tuning
       ? {
@@ -4292,13 +4667,19 @@ function portionFor(
           carbs: clamp(tuning.carbs, ...recipe.flex.carbs),
         }
       : { protein: 1, fat: 1, carbs: 1 };
-    const solved = solveRecipeFamily(family, {
+    const solved = solveRecipeFamilyMeal(family, {
       targetCalories: target.kcal,
       targetProtein: Math.min(
         target.kcal / 8,
         target.protein * ratios.protein,
       ),
+      targetFat: target.fat * ratios.fat,
+      targetCarbs: target.carbs * ratios.carbs,
       hardExclusions: person.hardExclusions,
+      cookingFatShare: pooledCookingFatShare(
+        cooking?.runCount ?? 1,
+        cooking?.portionCount ?? 1,
+      ),
     });
     if (solved.viable) {
       const baseAmount = family.ingredients.reduce(
@@ -4366,9 +4747,10 @@ function portionFor(
   };
 }
 function ingredientRatioFor(ingredient: Ingredient, ratios: RecipeTuning) {
-  if (proteinIngredientIds.has(ingredient.id)) return ratios.protein;
-  if (carbIngredientIds.has(ingredient.id)) return ratios.carbs;
-  if (fatIngredientIds.has(ingredient.id)) return ratios.fat;
+  const canonicalId = canonicalIdForIngredient(ingredient);
+  if (proteinIngredientIds.has(canonicalId)) return ratios.protein;
+  if (carbIngredientIds.has(canonicalId)) return ratios.carbs;
+  if (fatIngredientIds.has(canonicalId)) return ratios.fat;
   return 1;
 }
 function ingredientScaleFor(
@@ -4380,38 +4762,127 @@ function ingredientScaleFor(
     return solvedAmount / Math.max(ingredient.quantity, 0.0001);
   return portion.factor * ingredientRatioFor(ingredient, portion.ratios);
 }
-function recipeCookingAmounts(
+function recipeCookingRunPlan(
   recipe: Recipe,
   portions: ReturnType<typeof portionFor>[],
   days: number,
-) {
-  const family = recipeFamiliesById[recipe.id];
-  if (family) {
-    const portionAmounts = portions.map((portion) =>
-      Object.fromEntries(
-        recipe.ingredients.map((ingredient) => [
-          ingredient.id,
-          portion.solvedAmounts?.[ingredient.id] ??
-            ingredient.quantity * ingredientScaleFor(ingredient, portion),
-        ]),
-      ),
+  portionIds?: string[],
+): CookingRunPlan {
+  const family = recipeFamilyFor(recipe);
+  const cookingFamily = family ?? {
+    ingredients: recipe.ingredients.map((ingredient) => ({
+      sourceIngredientId: ingredient.id,
+      baseAmount: ingredient.quantity,
+      role: "ingredient",
+    })),
+  };
+  const portionAmounts = portions.map((portion, index) => ({
+    id: portionIds?.[index] ?? String(index),
+    amounts: Object.fromEntries(
+      recipe.ingredients.map((ingredient) => [
+        ingredient.id,
+        portion.solvedAmounts?.[ingredient.id] ??
+          ingredient.quantity * ingredientScaleFor(ingredient, portion),
+      ]),
+    ),
+  }));
+  return planRecipeCookingRuns(cookingFamily, portionAmounts, days);
+}
+type RecipeCookingSession = {
+  viable: boolean;
+  portionCount: number;
+  runCount: number;
+  portions: ReturnType<typeof portionFor>[];
+  runPlan: CookingRunPlan;
+};
+function recipeCookingSession(
+  eaters: Person[],
+  slot: MealSlot,
+  recipe: Recipe,
+  days: number,
+  tuningFor: (person: Person) => RecipeTuning | undefined = () => undefined,
+): RecipeCookingSession {
+  const portionCount = cookingPortionCount(eaters.length, days);
+  const family = recipeFamilyFor(recipe);
+  let runCount = family?.geometryLockedMax
+    ? Math.max(1, Math.ceil(portionCount / family.geometryLockedMax))
+    : 1;
+  let portions: ReturnType<typeof portionFor>[] = [];
+  let runPlan: CookingRunPlan = {
+    viable: true,
+    runs: [],
+    runCount,
+    totals: {},
+  };
+  const seen = new Set<number>();
+  for (let attempt = 0; attempt < 8; attempt += 1) {
+    seen.add(runCount);
+    portions = eaters.map((person) =>
+      portionFor(person, slot, recipe, tuningFor(person), {
+        portionCount,
+        runCount,
+      }),
     );
-    return aggregateCookingAmounts(family.ingredients, portionAmounts, days);
+    runPlan = recipeCookingRunPlan(
+      recipe,
+      portions,
+      days,
+      eaters.map((person) => person.id),
+    );
+    if (!runPlan.viable)
+      return { viable: false, portionCount, runCount: 0, portions, runPlan };
+    if (runPlan.runCount === runCount) {
+      const usesFamily =
+        !family ||
+        portions.every((portion) => portion.engine === "recipe-family-v1");
+      return {
+        viable: usesFamily,
+        portionCount,
+        runCount,
+        portions,
+        runPlan,
+      };
+    }
+    if (seen.has(runPlan.runCount))
+      return {
+        viable: false,
+        portionCount,
+        runCount: runPlan.runCount,
+        portions,
+        runPlan,
+      };
+    runCount = runPlan.runCount;
   }
-  return Object.fromEntries(
-    recipe.ingredients.map((ingredient) => [
-      ingredient.id,
-      ingredient.quantity *
-        portions.reduce(
-          (sum, portion) => sum + ingredientScaleFor(ingredient, portion),
-          0,
-        ) *
-        days,
-    ]),
+  return { viable: false, portionCount, runCount, portions, runPlan };
+}
+function recipeCookingSessionForAssignment(
+  plan: Pick<
+    ActivePlan,
+    "people" | "selections" | "selectionAssignments" | "tuning"
+  >,
+  batch: Batch,
+  slot: MealSlot,
+  recipe: Recipe,
+) {
+  const assignment = assignmentGroupsFor(plan, batch, slot).find(
+    (item) => item.recipeId === recipe.id,
   );
+  const eaters = plan.people.filter((person) =>
+    assignment?.personIds.includes(person.id),
+  );
+  return {
+    eaters,
+    session: recipeCookingSession(
+      eaters,
+      slot,
+      recipe,
+      batch.days,
+      (person) => plan.tuning?.[tuningKey(batch, slot, person)],
+    ),
+  };
 }
 function recipeDisplaySteps(recipe: Recipe) {
-  const family = recipeFamiliesById[recipe.id];
+  const family = recipeFamilyFor(recipe);
   return family
     ? family.miseInstructions
         .filter((step) => step.action !== "measure")
@@ -4436,47 +4907,82 @@ function buildBatchCookingModel(
   });
   const steps: BatchCookingStep[] = [];
   let freezePortions = 0;
+  let activeMinutes = 0;
+  let totalMinutes = 0;
   for (const { recipe, slot, personIds } of dishes) {
     const eaters = plan.people.filter((person) => personIds.includes(person.id));
-    const portions = eaters.map((person) =>
-      portionFor(
-        person,
-        slot,
-        recipe,
-        plan.tuning?.[tuningKey(batch, slot, person)],
-      ),
-    );
-    const amounts = recipeCookingAmounts(recipe, portions, batch.days);
-    const products = recipe.ingredients.map(
-      (ingredient) =>
-        `${ingredient.name} — ${ingredientAmountLabel(
-          ingredient,
-          amounts[ingredient.id] ?? ingredient.quantity,
-        )}`,
+    const session = recipeCookingSession(
+      eaters,
+      slot,
+      recipe,
+      batch.days,
+      (person) => plan.tuning?.[tuningKey(batch, slot, person)],
     );
     const displaySteps = recipeDisplaySteps(recipe);
     const fallbackMinutes = Math.max(
       1,
       Math.round(recipe.effort.activeMinutes / Math.max(1, displaySteps.length + 1)),
     );
-    steps.push({
-      id: `${slot}:${recipe.id}:${personIds.join("-")}:measure`,
-      recipeId: recipe.id,
-      title: `Отмерьте продукты для «${recipe.title}»`,
-      detail: `${mealMeta[slot].label} · ${withPlural(batch.days * eaters.length, FORMS.portion)}`,
-      minutes: fallbackMinutes,
-      products,
-    });
-    displaySteps.forEach((text, index) => {
+    if (!session.viable || session.runPlan.runs.length === 0) {
       steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:${index}`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:capacity`,
         recipeId: recipe.id,
-        title: text,
-        detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
-        minutes: minutesInStep(text, fallbackMinutes),
+        title: `Пересоберите «${recipe.title}»`,
+        detail:
+          "Одна порция превышает подтверждённую вместимость посуды — безопасный план готовки не получился.",
+        minutes: 1,
+        products: [],
+      });
+      continue;
+    }
+    activeMinutes += recipe.effort.activeMinutes * session.runCount;
+    totalMinutes += recipe.time * session.runCount;
+    for (const run of session.runPlan.runs) {
+      const runLabel =
+        session.runCount > 1
+          ? `Заход ${run.index + 1} из ${session.runCount}`
+          : mealMeta[slot].label;
+      const products = recipe.ingredients.map(
+        (ingredient) =>
+          `${ingredient.name} — ${ingredientAmountLabel(
+            ingredient,
+            run.totals[ingredient.id] ?? 0,
+          )}`,
+      );
+      products.push(
+        ...(recipe.procedureIngredients ?? []).map(
+          (ingredient) => `${ingredient.name} — по шагам рецепта`,
+        ),
+      );
+      steps.push({
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:run-${run.index}:measure`,
+        recipeId: recipe.id,
+        title: `Отмерьте продукты для «${recipe.title}»`,
+        detail: `${runLabel} · ${withPlural(run.portions.length, FORMS.portion)}`,
+        minutes: fallbackMinutes,
         products,
       });
-    });
+      displaySteps.forEach((text, index) => {
+        steps.push({
+          id: `${slot}:${recipe.id}:${personIds.join("-")}:run-${run.index}:${index}`,
+          recipeId: recipe.id,
+          title: text,
+          detail: `${recipe.title} · ${runLabel.toLowerCase()}`,
+          minutes: minutesInStep(text, fallbackMinutes),
+          products,
+        });
+      });
+    }
+    if (session.runCount > 1) {
+      steps.push({
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:combine-runs`,
+        recipeId: recipe.id,
+        title: "Сведите результаты всех заходов перед раскладкой",
+        detail: `${recipe.title} · ${session.runCount} захода`,
+        minutes: 2,
+        products: [],
+      });
+    }
     if (recipe.freezable)
       freezePortions +=
         Math.max(0, batch.days - recipe.storageDays) * eaters.length;
@@ -4488,11 +4994,8 @@ function buildBatchCookingModel(
       (sum, { personIds }) => sum + batch.days * personIds.length,
       0,
     ),
-    activeMinutes: dishes.reduce(
-      (sum, { recipe }) => sum + recipe.effort.activeMinutes,
-      0,
-    ),
-    totalMinutes: dishes.reduce((sum, { recipe }) => sum + recipe.time, 0),
+    activeMinutes,
+    totalMinutes,
     freezePortions,
     personPortions: plan.people.map((person) => ({
       id: person.id,
@@ -4659,7 +5162,9 @@ function selectionRecipeIds(plan: ActivePlan) {
   return ids;
 }
 function mealExecutionFor(plan: ActivePlan): MealExecution {
-  return normalizeMealExecution(executionPlanFor(plan), plan.mealExecution);
+  return normalizeMealExecution(executionPlanFor(plan), {
+    eaten: plan.mealExecution?.eaten ?? [],
+  });
 }
 function tuningKey(batch: Batch, slot: MealSlot, person: Person) {
   return `${batch.id}:${slot}:${person.id}`;
@@ -4675,20 +5180,23 @@ function allocationPeopleForDish(
   personIds: string[],
 ) {
   const components = portionComponents(recipe);
-  return plan.people
-    .filter((person) => personIds.includes(person.id))
-    .map<PersonAllocation>((person) => {
-      const portion = portionFor(
-        person,
-        slot,
-        recipe,
-        plan.tuning?.[tuningKey(batch, slot, person)],
-      );
+  const dishEaters = plan.people.filter((person) => personIds.includes(person.id));
+  const session = recipeCookingSession(
+    dishEaters,
+    slot,
+    recipe,
+    batch.days,
+    (person) => plan.tuning?.[tuningKey(batch, slot, person)],
+  );
+  return dishEaters
+    .map<PersonAllocation>((person, index) => {
+      const portion = session.portions[index];
+      if (!portion) throw new Error(`Не рассчитана порция ${recipe.id}:${person.id}`);
       return {
         personId: person.id,
         label: person.name,
         portionCount: batch.days,
-        nutritionShare: Math.max(1, portion.grams * batch.days),
+        nutritionShare: Math.max(1, portion.actual.kcal * batch.days),
         componentShares: Object.fromEntries(
           components.map((component) => [
             component.id,
@@ -4718,7 +5226,9 @@ function dislikeMatches(recipe: Recipe, person: Person) {
       (option) =>
         selected.has(option.id) &&
         option.ingredientIds.some((id) =>
-          recipe.ingredients.some((ingredient) => ingredient.id === id),
+          recipe.ingredients.some(
+            (ingredient) => canonicalIdForIngredient(ingredient) === id,
+          ),
         ),
     )
     .map((option) => option.label);
@@ -4801,54 +5311,90 @@ function buildShopping(
       for (const assignment of assignmentGroupsFor(plan, batch, slot)) {
         const recipe = recipesById[assignment.recipeId];
         if (!recipe) continue;
-        const portions = plan.people
-          .filter((person) => assignment.personIds.includes(person.id))
-          .map((person) =>
-            portionFor(
-              person,
-              slot,
-              recipe,
-              plan.tuning?.[tuningKey(batch, slot, person)],
-            ),
-          );
-        const cookingAmounts = recipeCookingAmounts(
-          recipe,
-          portions,
-          batch.days,
+        const dishEaters = plan.people.filter((person) =>
+          assignment.personIds.includes(person.id),
         );
+        const session = recipeCookingSession(
+          dishEaters,
+          slot,
+          recipe,
+          batch.days,
+          (person) => plan.tuning?.[tuningKey(batch, slot, person)],
+        );
+        if (!session.viable) continue;
+        const cookingAmounts = session.runPlan.totals;
         for (const ingredient of recipe.ingredients) {
-          const key = `${ingredient.id}:${ingredient.unit}`;
+          const canonicalIngredientId = canonicalIdForIngredient(ingredient);
+          const canonical = Object.values(canonicalIngredients).find(
+            (candidate) =>
+              candidate.id === canonicalIngredientId ||
+              candidate.aliases.includes(canonicalIngredientId),
+          );
+          const averagePieceWeightGrams =
+            ingredient.unit === "шт." &&
+            canonical?.unit.sensibleUnit === "piece" &&
+            canonical.unit.gramsPerUnit > 1
+              ? canonical.unit.gramsPerUnit
+              : undefined;
+          const unit = averagePieceWeightGrams ? "г" : ingredient.unit;
+          const key = `${canonicalIngredientId}:${unit}`;
           const existing = aggregate.get(key);
-          const quantity = cookingAmounts[ingredient.id] ?? 0;
+          const sourceQuantity = cookingAmounts[ingredient.id] ?? 0;
+          const quantity =
+            averagePieceWeightGrams && ingredient.unit === "шт."
+            ? sourceQuantity * averagePieceWeightGrams
+            : sourceQuantity;
           if (existing) {
             existing.quantity += quantity;
+            if (
+              !existing.averagePieceWeightGrams &&
+              averagePieceWeightGrams
+            )
+              existing.averagePieceWeightGrams = averagePieceWeightGrams;
             if (!existing.batchIds?.includes(batch.id))
               existing.batchIds = [...(existing.batchIds ?? []), batch.id];
           } else
             aggregate.set(key, {
               ...ingredient,
+              id: canonicalIngredientId,
               key,
+              unit,
               quantity,
               checked: false,
               batchIds: [batch.id],
+              averagePieceWeightGrams,
             });
         }
       }
     }
   return [...aggregate.values()]
     .filter((item) => item.quantity > 0)
-    .map((item) => ({
-      ...item,
-      quantity:
+    .map((item) => {
+      const quantity =
         item.unit === "шт."
           ? Math.ceil(item.quantity)
-          : Math.ceil(item.quantity / 10) * 10,
-    }))
+          : Math.ceil(item.quantity / 10) * 10;
+      return {
+        ...item,
+        quantity,
+        pieceEstimate: item.averagePieceWeightGrams
+          ? Math.ceil(quantity / item.averagePieceWeightGrams)
+          : undefined,
+      };
+    })
     .sort(
       (a, b) =>
         a.group.localeCompare(b.group, "ru") ||
         a.name.localeCompare(b.name, "ru"),
     );
+}
+function shoppingAmountLabel(item: ShoppingItem) {
+  const amount = `${item.quantity.toLocaleString("ru-RU")} ${item.unit}`;
+  return item.pieceEstimate
+    ? `${amount} (≈${item.pieceEstimate.toLocaleString("ru-RU", {
+        maximumFractionDigits: 1,
+      })} шт.)`
+    : amount;
 }
 function styleScore(recipe: Recipe, style: MenuStyle) {
   if (style === "protein")
@@ -4879,15 +5425,38 @@ type CatalogFilters = {
 function timeBand(recipe: Recipe): NonNullable<CatalogFilters["time"]> {
   return recipe.time <= 20 ? "quick" : recipe.time <= 40 ? "medium" : "long";
 }
-function recipeFamilyViableFor(recipe: Recipe, person: Person, slot: MealSlot) {
-  const family = recipeFamiliesById[recipe.id];
+/**
+ * A family still awaiting nutrition review is not releasable, whoever eats it.
+ * This used to ride on `eaters.every(...)`, which is vacuously true for an
+ * empty plan — so the same recipe appeared before anyone was added and
+ * vanished as soon as the first person existed.
+ */
+function recipeFamilyReleased(recipe: Recipe) {
+  const family = recipeFamilyFor(recipe);
+  return family?.reviewStatus === "pilot";
+}
+const hiddenDietRecipePattern = /(?:vegan|веган|keto|кето|paleo|палео)/iu;
+function belongsToHiddenDietPlan(recipe: Recipe) {
+  return (
+    recipe.tags.some((tag) => tag === "keto" || tag === "paleo") ||
+    hiddenDietRecipePattern.test(recipe.title)
+  );
+}
+function recipeFamilyViableFor(
+  recipe: Recipe,
+  person: Person,
+  slot: MealSlot,
+  portionCount = 1,
+) {
+  const family = recipeFamilyFor(recipe);
   if (!family) return true;
   if (family.reviewStatus !== "pilot") return false;
-  const target = targetFor(person, slot);
-  return solveRecipeFamily(family, {
-    targetCalories: target.kcal,
-    hardExclusions: person.hardExclusions,
-  }).viable;
+  return recipeCookingSession(
+    [person],
+    slot,
+    recipe,
+    Math.max(1, portionCount),
+  ).viable;
 }
 function candidateRecipes(
   slot: MealSlot,
@@ -4898,39 +5467,53 @@ function candidateRecipes(
 ) {
   const eaters = relevantPeople(people, slot);
   const sorted = recipes
-    .filter(
-      (recipe) =>
-        recipe.slot === slot &&
-        recipe.tags.includes(style) &&
-        isProductionReadyRecipe(recipe) &&
-        (recipe.storageDays >= batchDays || recipe.freezable) &&
-        eaters.every((person) => hardConflicts(recipe, person).length === 0) &&
-        eaters.every((person) => recipeFamilyViableFor(recipe, person, slot)) &&
-        (filters.includeDisliked ||
-          eaters.every((person) => dislikeMatches(recipe, person).length === 0)) &&
-        (!filters.origin || recipe.provenance.kind === filters.origin) &&
-        (!filters.effort || recipe.effort.level === filters.effort) &&
-        (!filters.time || timeBand(recipe) === filters.time),
-    )
+    .flatMap((recipe) => {
+      if (
+        !recipeSupportsSlot(recipe, slot) ||
+        !recipe.tags.includes(style) ||
+        belongsToHiddenDietPlan(recipe) ||
+        !isProductionReadyRecipe(recipe) ||
+        (recipe.storageDays < batchDays && !recipe.freezable) ||
+        !recipeFamilyReleased(recipe) ||
+        !eaters.every((person) => hardConflicts(recipe, person).length === 0) ||
+        (!filters.includeDisliked &&
+          !eaters.every((person) => dislikeMatches(recipe, person).length === 0)) ||
+        (filters.origin && recipe.provenance.kind !== filters.origin) ||
+        (filters.effort && recipe.effort.level !== filters.effort) ||
+        (filters.time && timeBand(recipe) !== filters.time)
+      )
+        return [];
+      const session = eaters.length
+        ? recipeCookingSession(eaters, slot, recipe, batchDays)
+        : null;
+      if (session && !session.viable) return [];
+      return [
+        {
+          recipe,
+          fit: session ? fitScoreForSession(session) : 0,
+        },
+      ];
+    })
     .sort(
       (a, b) =>
-        fitScore(b, people, slot) * 4 +
-        styleScore(b, style) +
-        (b.provenance.kind === "parsed" ? 12 : 0) -
-        (fitScore(a, people, slot) * 4 +
-          styleScore(a, style) +
-          (a.provenance.kind === "parsed" ? 12 : 0)),
-    );
+        b.fit * 4 +
+        styleScore(b.recipe, style) +
+        (b.recipe.provenance.kind === "parsed" ? 12 : 0) -
+        (a.fit * 4 +
+          styleScore(a.recipe, style) +
+          (a.recipe.provenance.kind === "parsed" ? 12 : 0)),
+    )
+    .map(({ recipe }) => recipe);
   return filters.limit === "all" ? sorted : sorted.slice(0, filters.limit ?? 5);
 }
 function combinationBonus(recipe: Recipe, selectedRecipes: Recipe[]) {
   const selectedIngredients = new Set(
     selectedRecipes.flatMap((item) =>
-      item.ingredients.map((ingredient) => ingredient.id),
+      item.ingredients.map(canonicalIdForIngredient),
     ),
   );
   const shared = recipe.ingredients.filter((ingredient) =>
-    selectedIngredients.has(ingredient.id),
+    selectedIngredients.has(canonicalIdForIngredient(ingredient)),
   ).length;
   const newProducts = recipe.ingredients.length - shared;
   return shared * 18 - newProducts * 2;
@@ -5048,7 +5631,7 @@ function recipeCoverageFor(
 ) {
   const possible = recipes.filter(
     (recipe) =>
-      person.includedSlots.includes(recipe.slot) &&
+      person.includedSlots.some((slot) => recipeSupportsSlot(recipe, slot)) &&
       recipe.tags.includes(style) &&
       isProductionReadyRecipe(recipe) &&
       (recipe.storageDays >= batchDays || recipe.freezable),
@@ -5056,7 +5639,11 @@ function recipeCoverageFor(
   const viable = possible.filter(
     (recipe) =>
       hardConflicts(recipe, person).length === 0 &&
-      recipeFamilyViableFor(recipe, person, recipe.slot),
+      person.includedSlots.some(
+        (slot) =>
+          recipeSupportsSlot(recipe, slot) &&
+          recipeFamilyViableFor(recipe, person, slot, batchDays),
+      ),
   );
   return {
     viable: viable.length,
@@ -5066,11 +5653,9 @@ function recipeCoverageFor(
       : 0,
   };
 }
-function fitScore(recipe: Recipe, people: Person[], slot: MealSlot) {
-  const eaters = people.filter((person) => person.includedSlots.includes(slot));
-  if (!eaters.length) return 0;
-  const scores = eaters.map((person) => {
-    const { target, actual } = portionFor(person, slot, recipe);
+function fitScoreForSession(session: RecipeCookingSession) {
+  if (!session.viable || !session.portions.length) return 0;
+  const scores = session.portions.map(({ target, actual }) => {
     if (target.kcal <= 0) return 0;
     const p =
       Math.abs(actual.protein - target.protein) / Math.max(target.protein, 1);
@@ -5122,7 +5707,37 @@ function normalizePerson(person: Person): Person {
 }
 function normalizePlan(plan: ActivePlan): ActivePlan {
   const normalizedPeople = plan.people.map(normalizePerson);
-  const assignmentSource = { ...plan, people: normalizedPeople };
+  const removedRecipeIds = new Set(plan.catalogMigration?.removedRecipeIds ?? []);
+  const selections = Object.fromEntries(
+    Object.entries(plan.selections ?? {}).flatMap(([key, recipeId]) => {
+      const recipe = recipesById[recipeId];
+      if (recipe && isProductionReadyRecipe(recipe)) return [[key, recipeId]];
+      if (typeof recipeId === "string") removedRecipeIds.add(recipeId);
+      return [];
+    }),
+  );
+  const sourceAssignments = Object.fromEntries(
+    Object.entries(plan.selectionAssignments ?? {}).flatMap(
+      ([key, assignments]) => {
+        const retained = (Array.isArray(assignments) ? assignments : []).filter(
+          (assignment) => {
+            const recipe = recipesById[assignment.recipeId];
+            const ready = Boolean(recipe && isProductionReadyRecipe(recipe));
+            if (!ready && typeof assignment.recipeId === "string")
+              removedRecipeIds.add(assignment.recipeId);
+            return ready;
+          },
+        );
+        return retained.length ? [[key, retained]] : [];
+      },
+    ),
+  ) as Record<string, RecipeAssignment[]>;
+  const assignmentSource = {
+    ...plan,
+    people: normalizedPeople,
+    selections,
+    selectionAssignments: sourceAssignments,
+  };
   const selectionAssignments: Record<string, RecipeAssignment[]> = {};
   for (const batch of plan.batches)
     for (const slot of plan.mealSlots) {
@@ -5132,8 +5747,15 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
     }
   const normalizedPlan = {
     ...plan,
+    menuStyle: releaseMenuStyles.includes(plan.menuStyle)
+      ? plan.menuStyle
+      : "protein",
     people: normalizedPeople,
+    selections,
     selectionAssignments,
+    catalogMigration: removedRecipeIds.size
+      ? { removedRecipeIds: [...removedRecipeIds] }
+      : undefined,
   };
   const rebuiltShopping = new Map(
     buildShopping(normalizedPlan).map((item) => [
@@ -5148,22 +5770,29 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
           (key): key is string => typeof key === "string",
         )
       : [],
-    shopping: plan.shopping.map((item) => {
-      const name = normalizedIngredientName(item.id, item.name);
-      const rebuilt = rebuiltShopping.get(item.key);
+    cookedBatchIds: Array.isArray(plan.cookedBatchIds)
+      ? plan.cookedBatchIds.filter((id) =>
+          normalizedPlan.batches.some((batch) => batch.id === id),
+        )
+      : [],
+    shopping: [...rebuiltShopping.values()].map((rebuilt) => {
+      const previous = (plan.shopping ?? []).find(
+        (item) => item.key === rebuilt.key || item.id === rebuilt.id,
+      );
+      const name = normalizedIngredientName(rebuilt.id, rebuilt.name);
       const cheeseVariant = cheeseVariantFor(
-        item.id,
+        rebuilt.id,
         name,
-        item.cheeseVariant,
+        rebuilt.cheeseVariant,
       );
       return {
-        ...item,
+        ...rebuilt,
+        checked: previous?.checked ?? false,
         name,
-        fatNote: ingredientFatNote(item.id, name, cheeseVariant),
+        fatNote: ingredientFatNote(rebuilt.id, name, cheeseVariant),
         cheeseVariant,
-        allergens: [...(ingredientAllergens[item.id] ?? [])],
-        checkLabel: packagedIngredientIds.has(item.id),
-        batchIds: rebuilt?.batchIds ?? item.batchIds ?? [],
+        allergens: [...(ingredientAllergens[rebuilt.id] ?? [])],
+        checkLabel: packagedIngredientIds.has(rebuilt.id),
       };
     }),
   };
@@ -5171,7 +5800,7 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
     ...normalized,
     mealExecution: normalizeMealExecution(
       executionPlanFor(normalized),
-      plan.mealExecution,
+      { eaten: plan.mealExecution?.eaten ?? [] },
     ),
   };
 }
@@ -5293,6 +5922,22 @@ export default function Home() {
       return next;
     });
   }
+  function openRecipe(context: RecipeContext) {
+    const url = new URL(location.href);
+    url.searchParams.set("recipe", context.recipe.id);
+    const href = `${url.pathname}${url.search}${url.hash}`;
+    history.pushState(
+      {
+        ...history.state,
+        mise: "recipe",
+        miseTab: currentTabRef.current,
+        recipeId: context.recipe.id,
+      },
+      "",
+      href,
+    );
+    setRecipeContext(context);
+  }
   /* eslint-disable react-hooks/set-state-in-effect -- bootstraps onboarding state and the stored plan on mount */
   useEffect(() => {
     let mounted = true;
@@ -5310,11 +5955,61 @@ export default function Home() {
       navigator.serviceWorker.register("/sw.js").catch(() => undefined);
     const params = new URLSearchParams(location.search);
     const requestedTab = params.get("tab");
+    const requestedRecipe = params.get("recipe");
     const entryTab = isPrimaryTab(requestedTab) ? requestedTab : "week";
     currentTabRef.current = entryTab;
     setTab(entryTab);
     history.replaceState({ ...history.state, miseTab: entryTab }, "");
-    if (params.get("new-plan") === "1") {
+    if (requestedRecipe && recipesById[requestedRecipe]) {
+      const detailUrl = new URL(location.href);
+      const baseUrl = new URL(location.href);
+      baseUrl.searchParams.delete("recipe");
+      history.replaceState(
+        { ...history.state, miseTab: entryTab },
+        "",
+        `${baseUrl.pathname}${baseUrl.search}${baseUrl.hash}`,
+      );
+      history.pushState(
+        {
+          ...history.state,
+          mise: "recipe",
+          miseTab: entryTab,
+          recipeId: requestedRecipe,
+        },
+        "",
+        `${detailUrl.pathname}${detailUrl.search}${detailUrl.hash}`,
+      );
+      setRecipeContext({ recipe: recipesById[requestedRecipe] });
+    }
+    const shouldStartNewPlan = params.get("new-plan") === "1";
+    if (!shouldStartNewPlan && !requestedTab && !requestedRecipe) {
+      try {
+        const rawDraft = localStorage.getItem(builderDraftKey);
+        if (rawDraft) {
+          const draft = JSON.parse(rawDraft) as BuilderDraft;
+          const currentPlan = pendingPlan
+            ? normalizePlan(pendingPlan)
+            : cachedPlan;
+          const fresh = Date.now() - draft.savedAt < 7 * 86_400_000;
+          const sameTarget = draft.planId === (currentPlan?.id ?? null);
+          if (fresh && sameTarget) {
+            setBuilderEntry({
+              step: draft.step,
+              repeat: draft.repeat,
+              mode: "onboarding",
+              flowId: draft.flowId,
+              startedAt: draft.startedAt,
+              isNextPlan: draft.isNextPlan,
+            });
+            currentTabRef.current = "builder";
+            setTab("builder");
+          } else if (!fresh) localStorage.removeItem(builderDraftKey);
+        }
+      } catch {
+        // A malformed local draft must not prevent the saved plan from opening.
+      }
+    }
+    if (shouldStartNewPlan) {
       const flowId = crypto.randomUUID();
       setBuilderEntry({
         step: 0,
@@ -5324,6 +6019,7 @@ export default function Home() {
         startedAt: Date.now(),
         isNextPlan: true,
       });
+      currentTabRef.current = "builder";
       setTab("builder");
       void trackAnalytics("plan_create_started", { flowId });
     }
@@ -5439,14 +6135,26 @@ export default function Home() {
   async function deletePlan() {
     try {
       await persistQueue.current.catch(() => undefined);
+      const id = clientId();
       const response = await fetch("/api/plans", {
         method: "DELETE",
-        headers: { "X-Mise-Client": clientId() },
+        headers: { "X-Mise-Client": id },
       });
       if (!response.ok) throw new Error("Не удалось удалить план");
+      if ("serviceWorker" in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+          (navigator.serviceWorker.controller ?? registration.active)?.postMessage({
+            type: "mise:clear-plan-cache",
+            clientId: id,
+          });
+        } catch {
+          // Server and local deletion already succeeded; stale cache cleanup is best effort.
+        }
+      }
       localStorage.removeItem(builderDraftKey);
-      localStorage.removeItem(localPlanKey());
-      localStorage.removeItem(pendingPlanKey());
+      localStorage.removeItem(localPlanKey(id));
+      localStorage.removeItem(pendingPlanKey(id));
       setNotificationSetupOpen(false);
       setActivePlan(null);
       navigate("week");
@@ -5510,6 +6218,7 @@ export default function Home() {
   function editPeriod() {
     setRecipeContext(null);
     setBuilderEntry({ step: 0, returnTab: "week", mode: "settings" });
+    currentTabRef.current = "builder";
     setTab("builder");
   }
   function editDayMenu(batchId: string) {
@@ -5520,11 +6229,13 @@ export default function Home() {
       returnTab: "week",
       mode: "onboarding",
     });
+    currentTabRef.current = "builder";
     setTab("builder");
   }
   function editPeople() {
     setRecipeContext(null);
     setBuilderEntry({ step: 3, returnTab: "profile", mode: "settings" });
+    currentTabRef.current = "builder";
     setTab("builder");
   }
   function addPerson() {
@@ -5535,6 +6246,7 @@ export default function Home() {
       mode: "settings",
       addPerson: true,
     });
+    currentTabRef.current = "builder";
     setTab("builder");
   }
   function finishOnboarding(reminders?: ReminderDefaults) {
@@ -5695,7 +6407,7 @@ export default function Home() {
           onRepeat={repeatPlan}
           onEditPeriod={editPeriod}
           onEditMenu={editDayMenu}
-          onOpenRecipe={setRecipeContext}
+          onOpenRecipe={openRecipe}
           onOpenCooking={(batchId) => setBatchCookingContext({ batchId })}
           onOpenProfile={() => navigate("profile")}
           onChange={async (next) => {
@@ -5722,7 +6434,7 @@ export default function Home() {
           onState={setCatalogState}
           favoriteRecipeIds={favoriteRecipeIds}
           onToggleFavorite={toggleFavoriteRecipe}
-          onOpenRecipe={(recipe) => setRecipeContext({ recipe })}
+          onOpenRecipe={(recipe) => openRecipe({ recipe })}
         />
       )}
       {tab === "shopping" && (
@@ -5781,7 +6493,6 @@ export default function Home() {
       <BottomNav
         tab={currentTab}
         onNavigate={navigate}
-        showCompose={tab === "week" && !activePlan && !loadingPlan}
         bump={tabMotion.bump}
       />
     </main>
@@ -5864,7 +6575,7 @@ function deckDishes(plan: ActivePlan | null) {
     slot,
     recipe:
       chosen.find((recipe) => recipe?.slot === slot) ??
-      productionRecipes.find((recipe) => recipe.slot === slot),
+      productionRecipes.find((recipe) => recipeSupportsSlot(recipe, slot)),
   }));
 }
 
@@ -6183,8 +6894,8 @@ function OnboardingBatches({
         </button>
       </div>
       <h1 className="onboarding-title">
-        Готовка партиями —<br />
-        это два вечера
+        Готовка партиями
+        <br />— это два вечера
       </h1>
       <p className="onboarding-lead">
         Mise делит неделю на партии по 3–4 дня: столько порций спокойно живёт в
@@ -6324,11 +7035,11 @@ function OnboardingReminders({
         </button>
       </div>
       <h1 className="onboarding-title">
-        Два напоминания,<br />и план не развалится
+        Три напоминания,<br />и план не развалится
       </h1>
       <p className="onboarding-lead">
-        Милпреп ломается в двух местах: забыли начать готовку и забыли
-        переложить порцию из морозилки. Об этом Mise и напомнит.
+        Mise напомнит начать готовку, переложить порцию из морозилки и вовремя
+        собрать следующий план.
       </p>
       <section className="onboarding-card glass-card">
         <div className="push-preview">
@@ -6608,12 +7319,10 @@ function InstallInline() {
 function BottomNav({
   tab,
   onNavigate,
-  showCompose,
   bump,
 }: {
   tab: PrimaryTab;
   onNavigate: (tab: Tab) => void;
-  showCompose: boolean;
   bump: Record<PrimaryTab, number>;
 }) {
   const activeIndex = Math.max(
@@ -6639,16 +7348,6 @@ function BottomNav({
   }
   return (
     <>
-      {showCompose && (
-        <button
-          className="compose-fab"
-          onClick={() => onNavigate("builder")}
-          aria-label="Составить план"
-        >
-          <Icon name="plus" />
-          <small>Составить</small>
-        </button>
-      )}
       <div
         className="bottom-nav glass"
         role="tablist"
@@ -6768,13 +7467,6 @@ function AnimatedNumber({ value, step = 1 }: { value: number; step?: number }) {
   return <span ref={nodeRef}>{value}</span>;
 }
 
-function waitForMotion(duration: number) {
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  return new Promise<void>((resolve) =>
-    window.setTimeout(resolve, reduced ? 160 : duration),
-  );
-}
-
 function WeekScreen({
   plan,
   loading,
@@ -6808,33 +7500,17 @@ function WeekScreen({
   );
   const [personId, setPersonId] = useState(plan?.people[0]?.id ?? "");
   const [confirmedBatchIds, setConfirmedBatchIds] = useState<string[]>(() =>
-    typeof window === "undefined" || !plan
-      ? []
-      : plan.batches
-          .filter((item) =>
-            analyticsWasSent(`cooking-confirmed:${plan.id}:${item.id}`),
-          )
-          .map((item) => item.id),
+    plan?.cookedBatchIds ?? [],
   );
   const [cookingConfirmError, setCookingConfirmError] = useState(false);
   const [executionError, setExecutionError] = useState("");
   const [savingExecution, setSavingExecution] = useState(false);
   const [executionMotion, setExecutionMotion] = useState<{
-    kind: "tick-in" | "tick-out" | "moving" | "restoring";
+    kind: "tick-in" | "tick-out";
     rowKey: string;
     epoch: number;
   } | null>(null);
   const [motionEpoch, setMotionEpoch] = useState(0);
-  const [toastLeaving, setToastLeaving] = useState(false);
-  const [lastMove, setLastMove] = useState<{
-    token: string;
-    previousPlan: ActivePlan;
-    title: string;
-    toDate: string;
-    rowKey: string;
-    moveId: string;
-    epoch: number;
-  } | null>(null);
   const stripRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const strip = stripRef.current;
@@ -6845,15 +7521,6 @@ function WeekScreen({
       selected.offsetLeft - (strip.clientWidth - selected.offsetWidth) / 2,
     );
   }, [selectedDate]);
-  useEffect(() => {
-    if (!lastMove) return;
-    const leaveTimer = window.setTimeout(() => setToastLeaving(true), 5_000);
-    const removeTimer = window.setTimeout(() => setLastMove(null), 5_260);
-    return () => {
-      window.clearTimeout(leaveTimer);
-      window.clearTimeout(removeTimer);
-    };
-  }, [lastMove]);
   if (loading)
     return (
       <section
@@ -6862,26 +7529,56 @@ function WeekScreen({
         aria-label="Загружаем сохранённый план"
       >
         <p className="week-loading-copy">Ищем сохранённый план…</p>
-        <div className="week-loading-heading">
-          <i />
-          <i />
+        <div className="week-loading-header" aria-hidden>
+          <div className="week-loading-heading">
+            <i className="week-loading-placeholder" />
+            <i className="week-loading-placeholder" />
+          </div>
+          <i className="week-loading-avatar week-loading-placeholder" />
+        </div>
+        <div className="week-loading-dates" aria-hidden>
+          {Array.from({ length: 7 }, (_, index) => (
+            <i className="week-loading-placeholder" key={index} />
+          ))}
         </div>
         <div className="week-loading-macro glass-card">
-          <span className="week-loading-ring" />
-          <div>
-            <i />
-            <i />
-            <i />
+          <div className="week-loading-macro-head" aria-hidden>
+            <div>
+              <i className="week-loading-placeholder" />
+              <i className="week-loading-placeholder" />
+            </div>
+            <i className="week-loading-person week-loading-placeholder" />
           </div>
+          <div className="week-loading-macro-body" aria-hidden>
+            <span className="week-loading-ring week-loading-placeholder" />
+            <div className="week-loading-bars">
+              {[0, 1, 2].map((item) => (
+                <span key={item}>
+                  <i className="week-loading-placeholder" />
+                  <i className="week-loading-placeholder" />
+                </span>
+              ))}
+            </div>
+          </div>
+          <i className="week-loading-balance week-loading-placeholder" aria-hidden />
+        </div>
+        <div className="week-loading-section-heading" aria-hidden>
+          <div>
+            <i className="week-loading-placeholder" />
+            <i className="week-loading-placeholder" />
+          </div>
+          <i className="week-loading-placeholder" />
         </div>
         <div className="week-loading-list">
           {[0, 1, 2].map((item) => (
             <div className="week-loading-row glass-card" key={item}>
-              <span />
+              <i className="week-loading-check week-loading-placeholder" />
+              <span className="week-loading-thumb week-loading-placeholder" />
               <div>
-                <i />
-                <i />
+                <i className="week-loading-placeholder" />
+                <i className="week-loading-placeholder" />
               </div>
+              <i className="week-loading-chevron week-loading-placeholder" />
             </div>
           ))}
         </div>
@@ -6932,59 +7629,39 @@ function WeekScreen({
       />
     );
   const execution = mealExecutionFor(activePlan);
-  const movedSources = new Set(
-    execution.moves.map((move) =>
-      mealOccurrenceKey(move.personId, move.fromDate, move.slot),
-    ),
-  );
   function rowsFor(date: string): WeekMealRow[] {
     const dateBatch = batchFor(date);
-    const baseRows = activePlan.mealSlots.flatMap((slot) => {
+    return activePlan.mealSlots.flatMap((slot) => {
       if (!person.includedSlots.includes(slot)) return [];
       const key = mealOccurrenceKey(person.id, date, slot);
-      if (movedSources.has(key)) return [];
       const recipe = recipeForPerson(activePlan, dateBatch, slot, person);
       return recipe
-        ? [{ key, kind: "base" as const, slot, recipe, sourceBatch: dateBatch }]
+        ? [{ key, slot, recipe, sourceBatch: dateBatch }]
         : [];
-    });
-    const movedRows = execution.moves.flatMap((move) => {
-      if (move.personId !== person.id || move.toDate !== date) return [];
-      const sourceBatch = activePlan.batches.find(
-        (item) => item.id === move.sourceBatchId,
-      );
-      const recipe = recipesById[move.recipeId];
-      return sourceBatch && recipe
-        ? [
-            {
-              key: `move:${move.id}`,
-              kind: "moved" as const,
-              slot: move.slot,
-              recipe,
-              sourceBatch,
-              move,
-            },
-          ]
-        : [];
-    });
-    return [...baseRows, ...movedRows].sort(
-      (left, right) =>
-        allMealSlots.indexOf(left.slot) - allMealSlots.indexOf(right.slot) ||
-        Number(left.kind === "moved") - Number(right.kind === "moved"),
+    }).sort(
+      (left, right) => allMealSlots.indexOf(left.slot) - allMealSlots.indexOf(right.slot),
     );
   }
   const mealRows = rowsFor(selectedDate);
-  const portionForRow = (row: WeekMealRow) =>
-    portionFor(
-      person,
+  const portionForRow = (row: WeekMealRow) => {
+    const { eaters, session } = recipeCookingSessionForAssignment(
+      activePlan,
+      row.sourceBatch,
       row.slot,
       row.recipe,
-      activePlan.tuning?.[tuningKey(row.sourceBatch, row.slot, person)],
     );
-  const rowIsEaten = (row: WeekMealRow) =>
-    row.kind === "moved"
-      ? Boolean(row.move?.wasEaten)
-      : execution.eaten.includes(row.key);
+    const index = eaters.findIndex((eater) => eater.id === person.id);
+    return (
+      session.portions[index] ??
+      portionFor(
+        person,
+        row.slot,
+        row.recipe,
+        activePlan.tuning?.[tuningKey(row.sourceBatch, row.slot, person)],
+      )
+    );
+  };
+  const rowIsEaten = (row: WeekMealRow) => execution.eaten.includes(row.key);
   const plannedMacros = addMacros(
     mealRows.map((row) => portionForRow(row).actual),
   );
@@ -7003,7 +7680,7 @@ function WeekScreen({
   const ringCircumference = 2 * Math.PI * 44;
   const ringProgress = Math.min(
     1,
-    eatenMacros.kcal / Math.max(1, plannedMacros.kcal),
+    eatenMacros.kcal / Math.max(1, person.daily.kcal),
   );
   const contactWarnings = crossContactWarnings(plan, batch);
   const planEnded = today > plan.end;
@@ -7056,32 +7733,12 @@ function WeekScreen({
     { key: "fat", label: "Жиры" },
     { key: "carbs", label: "Углеводы" },
   ];
-  function moveBlockReason(row: WeekMealRow) {
-    if (selectedDate >= activePlan.end) return "Это последний день плана";
-    const targetDate = addDays(selectedDate, 1);
-    const targetIndex = daysInclusive(row.sourceBatch.start, targetDate) - 1;
-    if (!row.recipe.freezable && targetIndex >= row.recipe.storageDays)
-      return "Эта порция не хранится до завтра и не подходит для заморозки";
-    return null;
-  }
   async function saveExecution(
     nextExecution: MealExecution,
     failureMessage: string,
-    undo?: {
-      title: string;
-      toDate: string;
-      rowKey: string;
-      moveId: string;
-      epoch: number;
-    },
   ) {
-    const previousPlan = activePlan;
     setSavingExecution(true);
     setExecutionError("");
-    if (!undo) {
-      setToastLeaving(false);
-      setLastMove(null);
-    }
     const nextPlan = {
       ...activePlan,
       mealExecution: reconcileMealExecution(
@@ -7089,30 +7746,9 @@ function WeekScreen({
         nextExecution,
       ),
     };
-    if (undo) {
-      setToastLeaving(false);
-      setLastMove({
-        token: crypto.randomUUID(),
-        previousPlan,
-        title: undo.title,
-        toDate: undo.toDate,
-        rowKey: undo.rowKey,
-        moveId: undo.moveId,
-        epoch: undo.epoch,
-      });
-    }
     const saved = await onChange(nextPlan);
     setSavingExecution(false);
     if (!saved) {
-      if (undo) {
-        setLastMove(null);
-        setExecutionMotion({
-          kind: "restoring",
-          rowKey: undo.rowKey,
-          epoch: undo.epoch,
-        });
-        window.setTimeout(() => setExecutionMotion(null), 320);
-      }
       setExecutionError(failureMessage);
       return false;
     }
@@ -7128,86 +7764,24 @@ function WeekScreen({
       epoch,
     });
     window.setTimeout(() => setExecutionMotion(null), 320);
-    const nextExecution =
-      row.kind === "moved" && row.move
-        ? toggleMovedEaten(executionPlanFor(activePlan), execution, row.move.id)
-        : toggleBaseEaten(executionPlanFor(activePlan), execution, {
-            personId: person.id,
-            date: selectedDate,
-            slot: row.slot,
-          });
+    const nextExecution = toggleBaseEaten(executionPlanFor(activePlan), execution, {
+      personId: person.id,
+      date: selectedDate,
+      slot: row.slot,
+    });
     await saveExecution(
       nextExecution,
       "Отметка не сохранилась. Проверьте соединение и попробуйте ещё раз.",
     );
   }
-  async function moveToTomorrow(row: WeekMealRow) {
-    const reason = moveBlockReason(row);
-    if (reason) {
-      setExecutionError(reason);
-      return;
-    }
-    const toDate = addDays(selectedDate, 1);
-    const epoch = motionEpoch + 1;
-    const moveId = row.move?.id ?? crypto.randomUUID();
-    setMotionEpoch(epoch);
-    setExecutionMotion({ kind: "moving", rowKey: row.key, epoch });
-    await waitForMotion(260);
-    const nextExecution = row.move
-      ? moveOccurrence(executionPlanFor(activePlan), execution, {
-          kind: "moved",
-          id: moveId,
-          toDate,
-        })
-      : moveOccurrence(executionPlanFor(activePlan), execution, {
-          kind: "base",
-          id: moveId,
-          personId: person.id,
-          date: selectedDate,
-          slot: row.slot,
-          toDate,
-          createdAt: new Date().toISOString(),
-        });
-    await saveExecution(
-      nextExecution,
-      "Перенос не сохранился. Проверьте соединение и попробуйте ещё раз.",
-      { title: row.recipe.title, toDate, rowKey: row.key, moveId, epoch },
-    );
-    setExecutionMotion(null);
-  }
-  async function undoMove() {
-    if (!lastMove) return;
-    const undoing = lastMove;
-    const epoch = motionEpoch + 1;
-    setMotionEpoch(epoch);
-    setExecutionMotion({
-      kind: "restoring",
-      rowKey: undoing.rowKey,
-      epoch,
-    });
-    setToastLeaving(true);
-    setSavingExecution(true);
-    setExecutionError("");
-    const restored = await onChange(undoing.previousPlan);
-    setSavingExecution(false);
-    if (restored) {
-      await waitForMotion(260);
-      setLastMove(null);
-      setExecutionMotion(null);
-    } else {
-      setToastLeaving(false);
-      setExecutionMotion(null);
-      setExecutionError(
-        "Не удалось вернуть порцию. Проверьте соединение и попробуйте ещё раз.",
-      );
-    }
-  }
   async function confirmBatch() {
     if (confirmedBatchIds.includes(batch.id)) return;
     setCookingConfirmError(false);
     const dedupeKey = `cooking-confirmed:${activePlan.id}:${batch.id}`;
-    if (await trackAnalytics("cooking_confirmed", {}, dedupeKey)) {
+    const nextBatchIds = [...new Set([...(activePlan.cookedBatchIds ?? []), batch.id])];
+    if (await onChange({ ...activePlan, cookedBatchIds: nextBatchIds })) {
       setConfirmedBatchIds((current) => [...current, batch.id]);
+      void trackAnalytics("cooking_confirmed", {}, dedupeKey);
     } else setCookingConfirmError(true);
   }
   return (
@@ -7234,6 +7808,13 @@ function WeekScreen({
         </button>
       </header>
       <div className="tab-panel-body week-tab-body">
+      {plan.catalogMigration?.removedRecipeIds.length ? (
+        <Note tone="warn" role="status">
+          Некоторые блюда старого плана больше не проходят проверку каталога и
+          были убраны. Откройте «Изменить меню партии», чтобы выбрать безопасную
+          замену.
+        </Note>
+      ) : null}
       {planEnded ? (
         <section className="today-card glass-card ended" role="status">
           <p className="kicker">План завершён</p>
@@ -7407,14 +7988,10 @@ function WeekScreen({
             row.recipe.provenance.kind === "parsed"
               ? row.recipe.provenance.imageUrl
               : undefined;
-          const movedFrom = row.move
-            ? `Перенесено с ${formatDate(row.move.fromDate, true)}`
-            : null;
           const frozen =
             row.recipe.freezable &&
             daysInclusive(row.sourceBatch.start, selectedDate) - 1 >=
               row.recipe.storageDays;
-          const moveReason = moveBlockReason(row);
           const rowMotion = executionMotion?.rowKey === row.key
             ? `${executionMotion.epoch % 2 ? " motion-a" : " motion-b"} is-${executionMotion.kind}`
             : "";
@@ -7477,15 +8054,7 @@ function WeekScreen({
                 aria-label={`Открыть рецепт ${row.recipe.title}`}
               >
                 <span className="week-meal-topline">
-                  <span
-                    className={
-                      row.move && lastMove?.moveId === row.move.id
-                        ? `week-moved-chip${lastMove.epoch % 2 ? " has-pop-a" : " has-pop-b"}`
-                        : undefined
-                    }
-                  >
-                    {movedFrom ?? mealMeta[row.slot].label}
-                  </span>
+                  <span>{mealMeta[row.slot].label}</span>
                   <b>{portion.actual.kcal} ккал</b>
                 </span>
                 <strong>{row.recipe.title}</strong>
@@ -7499,27 +8068,13 @@ function WeekScreen({
                   </span>
                 )}
               </button>
-              <button
-                className="week-move-button"
-                disabled={savingExecution || Boolean(moveReason)}
-                title={moveReason ?? undefined}
-                aria-label={
-                  moveReason
-                    ? `${row.recipe.title}: ${moveReason}`
-                    : `Перенести ${row.recipe.title} на завтра`
-                }
-                onClick={() => void moveToTomorrow(row)}
-              >
-                <Icon name="next-day" size={18} />
-              </button>
-              {moveReason && <p className="week-move-reason">{moveReason}</p>}
             </article>
           );
         })}
       </div>
       {mealRows.length === 0 && (
         <p className="week-no-portions glass-3">
-          На этот день порций нет: они перенесены или не входят в меню {person.name}.
+          На этот день порций нет: они не входят в меню {person.name}.
         </p>
       )}
       {tomorrowDate && (
@@ -7530,22 +8085,11 @@ function WeekScreen({
                 ? `Завтра, ${new Intl.DateTimeFormat("ru-RU", { weekday: "long" }).format(parseDate(tomorrowDate))}`
                 : formatDate(tomorrowDate, true)}
             </h2>
-            <b
-              className={
-                lastMove?.toDate === tomorrowDate
-                  ? `week-tomorrow-count${lastMove.epoch % 2 ? " has-pop-a" : " has-pop-b"}`
-                  : undefined
-              }
-            >
-              {withPlural(tomorrowRows.length, FORMS.portion)}
-            </b>
+            <b>{withPlural(tomorrowRows.length, FORMS.portion)}</b>
           </div>
           <p>
             {tomorrowRows.map((row) => (
-              <span
-                className={row.kind === "moved" ? "is-moved" : undefined}
-                key={row.key}
-              >
+              <span key={row.key}>
                 {row.recipe.title}
               </span>
             ))}
@@ -7680,25 +8224,6 @@ function WeekScreen({
           Показать сегодняшний день
         </button>
       )}
-      {lastMove && (
-        <div
-          className={`execution-toast glass-1${
-            toastLeaving
-              ? " is-leaving"
-              : lastMove.epoch % 2
-                ? " is-entering-a"
-                : " is-entering-b"
-          }`}
-          role="status"
-        >
-          <span>
-            {lastMove.title} → {formatDate(lastMove.toDate, true)}
-          </span>
-          <button disabled={savingExecution} onClick={() => void undoMove()}>
-            Вернуть
-          </button>
-        </div>
-      )}
       </div>
     </section>
   );
@@ -7769,7 +8294,7 @@ function missingCountFor(recipe: Recipe, plan: ActivePlan | null) {
   if (!plan) return null;
   const bought = new Set(plan.shopping.map((item) => item.id));
   return recipe.ingredients.filter(
-    (ingredient) => !bought.has(ingredient.id),
+    (ingredient) => !bought.has(canonicalIdForIngredient(ingredient)),
   ).length;
 }
 
@@ -8387,7 +8912,7 @@ function ShoppingScreen({
     const text = currentPlan.shopping
       .map(
         (item) =>
-          `${item.checked ? "✓" : "○"} ${item.name} — ${item.quantity.toLocaleString("ru-RU")} ${item.unit}`,
+          `${item.checked ? "✓" : "○"} ${item.name} — ${shoppingAmountLabel(item)}`,
       )
       .join("\n");
     try {
@@ -8526,7 +9051,7 @@ function ShoppingScreen({
                 {item.name}
               </span>
               <b>
-                {item.quantity.toLocaleString("ru-RU")} {item.unit}
+                {shoppingAmountLabel(item)}
               </b>
             </button>
           ))}
@@ -8774,7 +9299,14 @@ function ProfileScreen({
             </Note>
           )}
           <button
-            className="primary-button delete-plan-confirm"
+            className="primary-button"
+            disabled={deleteState === "deleting"}
+            onClick={() => setDeleteOpen(false)}
+          >
+            Оставить план
+          </button>
+          <button
+            className="secondary-button btn-danger delete-plan-confirm"
             disabled={deleteState === "deleting"}
             onClick={async () => {
               setDeleteState("deleting");
@@ -8786,13 +9318,6 @@ function ProfileScreen({
             }}
           >
             {deleteState === "deleting" ? "Удаляем…" : "Удалить план"}
-          </button>
-          <button
-            className="secondary-button"
-            disabled={deleteState === "deleting"}
-            onClick={() => setDeleteOpen(false)}
-          >
-            Оставить план
           </button>
         </Sheet>
       )}
@@ -8912,6 +9437,28 @@ function PlanBuilder({
       /* storage may be unavailable */
     }
   }
+  function changeStep(
+    nextStep: number,
+    historyMode: "push" | "replace" | "none" = "push",
+  ) {
+    const bounded = Math.max(initialStep, Math.min(6, nextStep));
+    stepRef.current = bounded;
+    setStep(bounded);
+    if (historyMode === "none") return;
+    const state = {
+      ...history.state,
+      mise: "builder",
+      miseTab: "builder",
+      mode,
+      builderStep: bounded,
+    };
+    if (historyMode === "replace") history.replaceState(state, "");
+    else history.pushState(state, "");
+  }
+  function backOneStep() {
+    if (stepRef.current === initialStep) closeBuilder();
+    else history.back();
+  }
   function closeBuilder() {
     clearDraft();
     if (mode === "settings") closeRef.current();
@@ -8923,7 +9470,7 @@ function PlanBuilder({
   function discardDraft() {
     clearDraft();
     setDraftRestored(false);
-    setStep(initialStep);
+    changeStep(initialStep, "replace");
     setStart(repeat ? today : (initialPlan?.start ?? today));
     setEnd(
       repeat
@@ -8968,7 +9515,8 @@ function PlanBuilder({
           setPinned(
             draft.pinnedSelectionKeys ?? initialPlan?.pinnedSelectionKeys ?? [],
           );
-          setStep(draft.step);
+          stepRef.current = Math.max(initialStep, Math.min(6, draft.step));
+          setStep(stepRef.current);
           setChoiceIndex(draft.choiceIndex);
           setDraftRestored(true);
         } else if (!fresh) localStorage.removeItem(activeBuilderDraftKey);
@@ -8978,12 +9526,27 @@ function PlanBuilder({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount
   useEffect(() => {
-    history.pushState({ mise: "builder", mode }, "");
-    const onPop = () => {
-      if (stepRef.current > initialStep) {
-        setStep((value) => value - 1);
-        history.pushState({ mise: "builder" }, "");
-      } else closeRef.current();
+    for (let historyStep = initialStep; historyStep <= stepRef.current; historyStep += 1) {
+      history.pushState(
+        {
+          ...history.state,
+          mise: "builder",
+          miseTab: "builder",
+          mode,
+          builderStep: historyStep,
+        },
+        "",
+      );
+    }
+    const onPop = (event: PopStateEvent) => {
+      if (
+        event.state?.mise === "builder" &&
+        Number.isInteger(event.state?.builderStep)
+      ) {
+        changeStep(event.state.builderStep, "none");
+        return;
+      }
+      closeRef.current();
     };
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -9015,6 +9578,30 @@ function PlanBuilder({
   const unassignedSlots = mealSlots.filter(
     (slot) => !people.some((person) => person.includedSlots.includes(slot)),
   );
+  const unavailableMenuStyles = Object.fromEntries(
+    releaseMenuStyles.flatMap((style) => {
+      const missingSlots = mealSlots.filter((slot) => {
+        const eaters = people.filter((person) =>
+          person.includedSlots.includes(slot),
+        );
+        return (
+          eaters.length > 0 &&
+          candidateRecipes(slot, style, eaters, cookEveryDays, { limit: 1 })
+            .length === 0
+        );
+      });
+      return missingSlots.length
+        ? [
+            [
+              style,
+              `Нет проверенных вариантов: ${missingSlots
+                .map((slot) => mealMeta[slot].label.toLowerCase())
+                .join(", ")}`,
+            ],
+          ]
+        : [];
+    }),
+  ) as Partial<Record<MenuStyle, string>>;
   const validSelectionAssignments = (() => {
     const valid: Record<string, RecipeAssignment[]> = {};
     const assignmentPlan = {
@@ -9037,15 +9624,14 @@ function PlanBuilder({
           return Boolean(
             recipe &&
               isProductionReadyRecipe(recipe) &&
-              recipe.slot === slot &&
+              recipeSupportsSlot(recipe, slot) &&
               recipe.tags.includes(menuStyle) &&
               (recipe.storageDays >= batch.days || recipe.freezable) &&
               eaters.length === assignment.personIds.length &&
               eaters.every(
-                (person) =>
-                  hardConflicts(recipe, person).length === 0 &&
-                  recipeFamilyViableFor(recipe, person, slot),
-              ),
+                (person) => hardConflicts(recipe, person).length === 0,
+              ) &&
+              recipeCookingSession(eaters, slot, recipe, batch.days).viable,
           );
         });
         if (groups.length) valid[key] = groups;
@@ -9092,6 +9678,10 @@ function PlanBuilder({
     const draft: BuilderDraft = {
       planId: initialPlan?.id ?? null,
       savedAt: Date.now(),
+      repeat,
+      flowId: flowIdRef.current,
+      startedAt: builderStartedAt,
+      isNextPlan,
       step,
       choiceIndex,
       start,
@@ -9129,6 +9719,9 @@ function PlanBuilder({
     initialPlan,
     mode,
     activeBuilderDraftKey,
+    repeat,
+    builderStartedAt,
+    isNextPlan,
   ]);
   const draftPlan = ((): ActivePlan => {
     const base: ActivePlan = {
@@ -9165,6 +9758,38 @@ function PlanBuilder({
     "Выбор меню",
     "Проверка",
   ];
+  const builderChatTurns = [
+    {
+      question: "На какие даты собрать план?",
+      answer: `${formatDate(start)} — ${formatDate(end)} · ${withPlural(rawDays, FORMS.day)}`,
+    },
+    {
+      question: "Какие приёмы пищи готовим заранее?",
+      answer: mealSlots.length
+        ? mealSlots.map((slot) => mealMeta[slot].label).join(", ")
+        : "Пока ничего не выбрано",
+    },
+    {
+      question: "Какое направление меню вам ближе?",
+      answer: styleMeta[menuStyle].label,
+    },
+    {
+      question: "Для кого считаем порции и цели?",
+      answer: people
+        .map((person) => `${person.name || "Человек"} · ${person.daily.kcal} ккал`)
+        .join("; "),
+    },
+    {
+      question: "Как часто удобно готовить?",
+      answer: `Раз в ${withPlural(cookEveryDays, FORMS.day)}`,
+    },
+    {
+      question: "Какие блюда войдут в план?",
+      answer: allSelected
+        ? `${withPlural(new Set(Object.values(validSelections)).size, FORMS.recipe)} выбрано`
+        : "Ещё подбираем блюда",
+    },
+  ];
   function setQuickPeriod(days: number) {
     setEnd(addDays(start, days - 1));
     setRemainderDecision(null);
@@ -9190,9 +9815,13 @@ function PlanBuilder({
             nutritionTargetMode: "manual",
           };
         }
+        const nextDaily = { ...person.daily, [key]: safeValue };
         return {
           ...person,
-          daily: { ...person.daily, [key]: safeValue },
+          daily: {
+            ...nextDaily,
+            kcal: round(macroCalories(nextDaily)),
+          },
           macroPreset: "custom",
           nutritionTargetMode: "manual",
         };
@@ -9243,13 +9872,16 @@ function PlanBuilder({
   function stepIsValid(index = step) {
     if (index === 0) return validPeriod;
     if (index === 1) return mealSlots.length > 0;
+    if (index === 2) return !unavailableMenuStyles[menuStyle];
     if (index === 3)
       return (
         people.length > 0 &&
         people.every(
           (person) =>
             person.name.trim() &&
-            person.daily.kcal > 0 &&
+            person.daily.kcal >= NUTRITION_CONFIG.minimumTargetCalories &&
+            person.daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories &&
+            Number.isFinite(person.daily.kcal) &&
             person.includedSlots.some((slot) => mealSlots.includes(slot)),
         )
       );
@@ -9299,7 +9931,7 @@ function PlanBuilder({
       }
       if (!allSelected) return;
     }
-    setStep((value) => Math.min(6, value + 1));
+    changeStep(step + 1);
   }
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
@@ -9489,7 +10121,7 @@ function PlanBuilder({
     if (complete) {
       setSaveState("idle");
       setSaveMessage("");
-      setStep(6);
+      changeStep(6);
     } else {
       setSaveState("error");
       setSaveMessage(
@@ -9510,7 +10142,7 @@ function PlanBuilder({
           ),
       );
       setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
-      setStep(5);
+      changeStep(5);
       setSaveState("error");
       setSaveMessage(
         staleCount > 0
@@ -9579,11 +10211,7 @@ function PlanBuilder({
       >
         <button
           className="icon-button glass"
-          onClick={
-            step === initialStep
-              ? closeBuilder
-              : () => setStep((value) => value - 1)
-          }
+          onClick={backOneStep}
           aria-label={
             mode === "settings"
               ? "Назад в настройки"
@@ -9609,7 +10237,11 @@ function PlanBuilder({
         {mode === "onboarding" && (
           <button
             className="builder-manual-link"
-            aria-pressed={menuMode === "manual"}
+            aria-label={
+              menuMode === "manual"
+                ? "Переключиться на автоматическую сборку Mise"
+                : "Переключиться на ручной выбор блюд"
+            }
             onClick={() => {
               const nextMode = menuMode === "manual" ? "auto" : "manual";
               setMenuMode(nextMode);
@@ -9658,6 +10290,22 @@ function PlanBuilder({
               : `${staleCount} блюда не подходят под новые настройки — выберите их заново на шаге «Выбор меню».`}
           </Note>
         )}
+        {mode === "onboarding" && step > 0 && (
+          <div className="builder-chat-history" aria-label="Предыдущие ответы">
+            <p className="builder-chat-caption">Разговор с Mise</p>
+            {builderChatTurns
+              .slice(Math.max(0, step - 2), step)
+              .map((turn, index) => (
+                <div className="builder-chat-turn" key={`${step}-${index}-${turn.question}`}>
+                  <p className="chat-bubble is-mise">
+                    <span aria-hidden>M</span>
+                    {turn.question}
+                  </p>
+                  <p className="chat-bubble is-user">{turn.answer}</p>
+                </div>
+              ))}
+          </div>
+        )}
         {step === 0 && (
           <PeriodStep
             start={start}
@@ -9686,6 +10334,7 @@ function PlanBuilder({
         {step === 2 && (
           <StyleStep
             selected={menuStyle}
+            unavailable={unavailableMenuStyles}
             onSelect={(value) => {
               setMenuStyle(value);
             }}
@@ -9744,22 +10393,38 @@ function PlanBuilder({
           />
         )}
         {step === 5 && menuMode === "auto" && (
-          <MenuReviewStep
-            batches={batches}
-            mealSlots={mealSlots}
-            people={people}
-            style={menuStyle}
-            selections={validSelections}
-            selectionAssignments={validSelectionAssignments}
-            pinned={validPinned}
-            shopping={draftPlan.shopping}
-            onReplace={replaceSelection}
-            onReassemble={() => assembleMenu("reset")}
-            onManual={() => {
-              setMenuMode("manual");
-              setChoiceIndex(0);
-            }}
-          />
+          <>
+            <MenuReviewStep
+              batches={batches}
+              mealSlots={mealSlots}
+              people={people}
+              style={menuStyle}
+              selections={validSelections}
+              selectionAssignments={validSelectionAssignments}
+              pinned={validPinned}
+              shopping={draftPlan.shopping}
+              onReplace={replaceSelection}
+              onReassemble={() => assembleMenu("reset")}
+              onManual={() => {
+                setMenuMode("manual");
+                setChoiceIndex(0);
+              }}
+            />
+            {!allSelected && (
+              <Note
+                tone="warn"
+                role="alert"
+                action={
+                  <button className="text-button" onClick={() => changeStep(3)}>
+                    Изменить ограничения
+                  </button>
+                }
+              >
+                Для части позиций нет проверенного блюда с текущими ограничениями.
+                Измените ограничения или выберите другое направление меню.
+              </Note>
+            )}
+          </>
         )}
         {step === 5 && menuMode === "manual" && (
           <ManualMenuStep
@@ -9777,7 +10442,7 @@ function PlanBuilder({
           />
         )}
         {step === 6 && (
-          <ReviewStep plan={draftPlan} onEdit={(target) => setStep(target)} />
+          <ReviewStep plan={draftPlan} onEdit={(target) => changeStep(target)} />
         )}
       </section>
       <footer className="builder-actions glass">
@@ -9786,9 +10451,7 @@ function PlanBuilder({
           onClick={
             step === 5 && menuMode === "manual" && choiceIndex > 0
               ? () => setChoiceIndex((value) => Math.max(0, value - 1))
-              : step === initialStep
-              ? closeBuilder
-              : () => setStep((value) => value - 1)
+              : backOneStep
           }
         >
           {mode === "settings"
@@ -9862,7 +10525,7 @@ function PlanBuilder({
                 })),
               );
               setUnassignedConfirmOpen(false);
-              setStep(4);
+              changeStep(4);
             }}
           >
             Назначить всем и продолжить
@@ -9874,7 +10537,7 @@ function PlanBuilder({
                 current.filter((slot) => !unassignedSlots.includes(slot)),
               );
               setUnassignedConfirmOpen(false);
-              setStep(4);
+              changeStep(4);
             }}
           >
             Убрать из плана
@@ -9890,7 +10553,7 @@ function PlanBuilder({
           onOpen={(destination) => onSaved(successPlan, destination)}
           onEdit={() => {
             setSuccessPlan(null);
-            setStep(0);
+            changeStep(0);
           }}
         />
       )}
@@ -9910,7 +10573,7 @@ function StepIntro({
   text: string;
 }) {
   return (
-    <div className="step-intro">
+    <div className="step-intro chat-bubble is-mise">
       <span>{icon}</span>
       <p className="kicker">{kicker}</p>
       <h2>{title}</h2>
@@ -10052,9 +10715,11 @@ function MealStep({
 }
 function StyleStep({
   selected,
+  unavailable,
   onSelect,
 }: {
   selected: MenuStyle;
+  unavailable: Partial<Record<MenuStyle, string>>;
   onSelect: (style: MenuStyle) => void;
 }) {
   return (
@@ -10070,17 +10735,26 @@ function StyleStep({
         role="radiogroup"
         aria-label="Направление меню"
       >
-        {(Object.keys(styleMeta) as MenuStyle[]).map((style) => (
+        {releaseMenuStyles.map((style) => (
           <button
             key={style}
             role="radio"
             className={`style-card glass-card ${selected === style ? "selected" : ""}`}
             aria-checked={selected === style}
+            aria-describedby={
+              unavailable[style] ? `style-${style}-unavailable` : undefined
+            }
+            disabled={Boolean(unavailable[style])}
             onClick={() => onSelect(style)}
           >
             <div>
               <h3>{styleMeta[style].label}</h3>
               <p>{styleMeta[style].description}</p>
+              {unavailable[style] && (
+                <small id={`style-${style}-unavailable`}>
+                  {unavailable[style]}
+                </small>
+              )}
             </div>
             <i>{selected === style ? <Icon name="check" /> : ""}</i>
           </button>
@@ -10187,6 +10861,11 @@ function PeopleStep({
   const fromMacros = macroCalories(person.daily);
   const gap = Math.abs(fromMacros - person.daily.kcal);
   const converges = gap / Math.max(person.daily.kcal, 1) <= 0.03;
+  const dailyCaloriesValid =
+    Number.isFinite(person.daily.kcal) &&
+    person.daily.kcal >= NUTRITION_CONFIG.minimumTargetCalories &&
+    person.daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories;
+  const calorieErrorId = `macro-${person.id}-calorie-range`;
 
   function patchBody(patch: Partial<NutritionWizardInput>) {
     const next = { ...draft, ...patch };
@@ -10379,6 +11058,8 @@ function PeopleStep({
             <MacroNumberInput
               id={`macro-${person.id}-kcal`}
               ariaLabel={`Калории для ${person.name || "человека"}`}
+              describedBy={calorieErrorId}
+              invalid={!dailyCaloriesValid}
               value={person.daily.kcal}
               onValueChange={(value) => {
                 onMacro(person.id, "kcal", value);
@@ -10386,6 +11067,10 @@ function PeopleStep({
             />
             <em>ккал</em>
           </span>
+          <small className="field-hint" id={calorieErrorId}>
+            Допустимый дневной диапазон — {NUTRITION_CONFIG.minimumTargetCalories}–
+            {NUTRITION_CONFIG.maximumTargetCalories} ккал.
+          </small>
         </label>
 
         <div className="norm-macros">
@@ -10402,6 +11087,8 @@ function PeopleStep({
                 <MacroNumberInput
                   id={`macro-${person.id}-${key}`}
                   ariaLabel={`${label} для ${person.name || "человека"}`}
+                  describedBy={calorieErrorId}
+                  invalid={!dailyCaloriesValid}
                   value={person.daily[key]}
                   onValueChange={(value) => {
                     onMacro(person.id, key, value);
@@ -10469,6 +11156,12 @@ function PeopleStep({
             </>
           )}
         </p>
+
+        {!dailyCaloriesValid && (
+          <Note tone="warn" role="alert">
+            Итог по БЖУ должен быть от {NUTRITION_CONFIG.minimumTargetCalories} до {NUTRITION_CONFIG.maximumTargetCalories} ккал. Измените калории или любой из макросов — остальные значения пересчитаются автоматически.
+          </Note>
+        )}
 
         {manual && coverage.percent < 50 && (
           <Note tone="warn" label="Мало вариантов">
@@ -10934,7 +11627,7 @@ function ManualMenuStep({
               onClick={() => onSelect(key, eaterIds, recipe.id)}
             >
               <span className={`manual-menu-art art-${index % 5}`} aria-hidden>
-                {recipe.emoji}
+                <RecipeMedia recipe={recipe} />
               </span>
               <span>
                 <b>{recipe.title}</b>
@@ -11055,8 +11748,8 @@ function MenuReviewStep({
   for (const recipe of new Set(chosen))
     for (const ingredient of recipe.ingredients)
       ingredientUse.set(
-        ingredient.id,
-        (ingredientUse.get(ingredient.id) ?? 0) + 1,
+        canonicalIdForIngredient(ingredient),
+        (ingredientUse.get(canonicalIdForIngredient(ingredient)) ?? 0) + 1,
       );
   const shared = [...ingredientUse.values()].filter((count) => count > 1).length;
   const freeze = freezeSummary(
@@ -11251,6 +11944,13 @@ function MenuReviewStep({
             <h2 id="menu-replace-title">
               {mealMeta[replacing.slot].label} · партия {replacing.batch.index + 1}
             </h2>
+            <button
+              className="icon-button glass-3"
+              onClick={() => setReplacing(null)}
+              aria-label="Закрыть выбор замены"
+            >
+              <Icon name="close" size={18} />
+            </button>
           </div>
           <div className="replace-list" role="radiogroup" aria-label="Чем заменить">
             {candidateRecipes(
@@ -11427,7 +12127,7 @@ function ReviewStep({
           <p key={item.key}>
             <span>{item.name}</span>
             <b>
-              {item.quantity.toLocaleString("ru-RU")} {item.unit}
+              {shoppingAmountLabel(item)}
             </b>
           </p>
         ))}
@@ -11541,7 +12241,7 @@ function SuccessSheet({
     <Sheet
       titleId={phase === "summary" ? "success-title" : "notifications-title"}
       onClose={() => onOpen("week")}
-      className={`success-sheet glass ${phase === "notifications" ? "notification-modal" : ""}`}
+      className="success-sheet glass notification-modal"
     >
       {phase === "summary" ? (
         <>
@@ -11590,6 +12290,32 @@ function roundedIngredientAmount(ingredient: Ingredient, amount: number) {
 }
 
 function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
+  const canonicalId = canonicalIdForIngredient(ingredient);
+  const canonical = Object.values(canonicalIngredients).find(
+    (candidate) =>
+      candidate.id === canonicalId || candidate.aliases.includes(canonicalId),
+  );
+  if (
+    canonical?.unit.sensibleUnit === "piece" &&
+    canonical.unit.gramsPerUnit > 1
+  ) {
+    const grams =
+      ingredient.unit === "шт."
+        ? amount * canonical.unit.gramsPerUnit
+        : amount;
+    const pieces =
+      ingredient.unit === "шт."
+        ? amount
+        : amount / canonical.unit.gramsPerUnit;
+    return `${roundedIngredientAmount(
+      { ...ingredient, unit: "г" },
+      grams,
+    ).toLocaleString("ru-RU", {
+      maximumFractionDigits: 1,
+    })} г (≈${round(pieces, 1).toLocaleString("ru-RU", {
+      maximumFractionDigits: 1,
+    })} шт.)`;
+  }
   return `${roundedIngredientAmount(ingredient, amount).toLocaleString("ru-RU", {
     maximumFractionDigits: 1,
   })} ${ingredient.unit}`;
@@ -11764,6 +12490,7 @@ function BatchCookingView({
       await onChangePlan({
         ...plan,
         cookedWeights: { ...plan.cookedWeights, ...cookedWeights },
+        cookedBatchIds: [...new Set([...(plan.cookedBatchIds ?? []), batch.id])],
       });
       localStorage.removeItem(progressKey);
       onComplete();
@@ -12095,20 +12822,40 @@ function RecipeView({
   const [section, setSection] = useState<"ingredients" | "steps" | "portion">(
     batch ? "portion" : "ingredients",
   );
+  const assignment =
+    batch && slot && plan
+      ? assignmentGroupsFor(plan, batch, slot).find(
+          (item) => item.recipeId === recipe.id,
+        )
+      : undefined;
   const eaters =
     batch && slot && plan
-      ? plan.people.filter((person) => person.includedSlots.includes(slot))
+      ? plan.people.filter((person) =>
+          assignment?.personIds.includes(person.id),
+        )
       : [];
   const [personId, setPersonId] = useState(eaters[0]?.id ?? "");
   const person = eaters.find((item) => item.id === personId) ?? eaters[0];
-  const automaticTuning =
-    person && slot
-      ? portionFor(person, slot, recipe).ratios
-      : { protein: 1, fat: 1, carbs: 1 };
   const savedTuning =
     person && batch && slot
       ? plan?.tuning?.[tuningKey(batch, slot, person)]
       : undefined;
+  const automaticSession =
+    batch && slot
+      ? recipeCookingSession(
+          eaters,
+          slot,
+          recipe,
+          batch.days,
+          (eater) => plan?.tuning?.[tuningKey(batch, slot, eater)],
+        )
+      : null;
+  const personIndex = eaters.findIndex((eater) => eater.id === person?.id);
+  const automaticTuning =
+    person && slot
+      ? automaticSession?.portions[personIndex]?.ratios ??
+        portionFor(person, slot, recipe).ratios
+      : { protein: 1, fat: 1, carbs: 1 };
   const [draft, setDraft] = useState<RecipeTuning>(
     savedTuning ?? automaticTuning,
   );
@@ -12124,11 +12871,13 @@ function RecipeView({
     "idle" | "saving" | "saved" | "error"
   >(() => (cookedKey && plan?.cookedWeights?.[cookedKey] ? "saved" : "idle"));
   const backRef = useRef(onBack);
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
   useEffect(() => {
     backRef.current = onBack;
   });
   useEffect(() => {
-    history.pushState({ mise: "recipe" }, "");
     const onPop = () => backRef.current();
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -12137,8 +12886,24 @@ function RecipeView({
     if (section === "steps" && plan && batch)
       void trackAnalytics("cooking_instructions_opened");
   }, [batch, plan, section]);
+  const previewSession =
+    batch && slot
+      ? recipeCookingSession(
+          eaters,
+          slot,
+          recipe,
+          batch.days,
+          (eater) =>
+            eater.id === person?.id
+              ? draft
+              : plan?.tuning?.[tuningKey(batch, slot, eater)],
+        )
+      : null;
   const preview =
-    person && slot ? portionFor(person, slot, recipe, draft) : null;
+    person && slot
+      ? previewSession?.portions[personIndex] ??
+        portionFor(person, slot, recipe, draft)
+      : null;
   const displayMacros: Macros = preview?.actual ?? {
     protein: round(recipe.macros.protein * draft.protein),
     fat: round(recipe.macros.fat * draft.fat),
@@ -12163,20 +12928,22 @@ function RecipeView({
   const components = portionComponents(recipe);
   const allocationPeople: PersonAllocation[] =
     batch && slot
-      ? eaters.map((eater) => {
-          const portion = portionFor(
-            eater,
-            slot,
-            recipe,
-            eater.id === person?.id
-              ? draft
-              : plan?.tuning?.[tuningKey(batch, slot, eater)],
-          );
+      ? eaters.map((eater, index) => {
+          const portion =
+            previewSession?.portions[index] ??
+            portionFor(
+              eater,
+              slot,
+              recipe,
+              eater.id === person?.id
+                ? draft
+                : plan?.tuning?.[tuningKey(batch, slot, eater)],
+            );
           return {
             personId: eater.id,
             label: eater.name,
             portionCount: batch.days,
-            nutritionShare: Math.max(1, portion.grams * batch.days),
+            nutritionShare: Math.max(1, portion.actual.kcal * batch.days),
             componentShares: Object.fromEntries(
               components.map((component) => [
                 component.id,
@@ -12218,8 +12985,10 @@ function RecipeView({
     setPersonId(nextId);
     const nextPerson = eaters.find((item) => item.id === nextId);
     if (!nextPerson || !batch || !slot) return;
+    const nextIndex = eaters.findIndex((item) => item.id === nextId);
     setDraft(
       plan?.tuning?.[tuningKey(batch, slot, nextPerson)] ??
+        automaticSession?.portions[nextIndex]?.ratios ??
         portionFor(nextPerson, slot, recipe).ratios,
     );
     setSaveStatus("idle");
@@ -12276,16 +13045,14 @@ function RecipeView({
         ]),
       );
 
-    const portions = eaters.map((eater) => {
-      const eaterTuning =
-        eater.id === person?.id
-          ? draft
-          : plan.tuning?.[tuningKey(batch, slot, eater)];
-      return portionFor(eater, slot, recipe, eaterTuning);
-    });
-    return recipeCookingAmounts(recipe, portions, batch.days);
+    return previewSession?.runPlan.totals ?? {};
   })();
   const displaySteps = recipeDisplaySteps(recipe);
+  const detailRuns =
+    previewSession?.runPlan.runs.length
+      ? previewSession.runPlan.runs
+      : [{ index: 0, portions: [], totals: cookingAmounts }];
+  const detailRunCount = previewSession?.runCount ?? 1;
   return (
     <main className="app-shell recipe-detail">
       <div className="ambient ambient-one" />
@@ -12301,7 +13068,8 @@ function RecipeView({
           <Icon name="chevron" className="back-chevron" />
         </button>
         <span className="glass">
-          {recipe.effort.activeMinutes} мин активно · {recipe.time} всего
+          {recipe.effort.activeMinutes * detailRunCount} мин активно ·{" "}
+          {recipe.time * detailRunCount} всего
         </span>
       </header>
       <section className="detail-hero">
@@ -12309,7 +13077,7 @@ function RecipeView({
           <RecipeMedia recipe={recipe} eager />
         </div>
         <p className="kicker">
-          {mealMeta[recipe.slot].label} · {originLabel}
+          {mealMeta[slot ?? recipe.slot].label} · {originLabel}
         </p>
         <h1>{recipe.title}</h1>
         <div className="detail-macros">
@@ -12351,7 +13119,8 @@ function RecipeView({
           </div>
         </section>
       )}
-      <section className="macro-tuner glass-card">
+      {recipeFamilyFor(recipe) ? (
+        <section className="macro-tuner glass-card">
         <div className="tuner-heading">
           <div>
             <p className="kicker">Гибкая порция</p>
@@ -12457,7 +13226,21 @@ function RecipeView({
             Не удалось сохранить. Изменения не попали в план.
           </Note>
         )}
-      </section>
+        </section>
+      ) : (
+        <section className="macro-tuner glass-card">
+          <div className="tuner-heading">
+            <div>
+              <p className="kicker">Порция по плану</p>
+              <h2>Точная подстройка пока недоступна</h2>
+            </div>
+          </div>
+          <p className="tuner-copy">
+            Mise уже рассчитал размер порции под ваш план, но для этого
+            рецепта ещё не проверена независимая подстройка белка, гарнира и соуса.
+          </p>
+        </section>
+      )}
       <section className="recipe-info-grid">
         <article className="glass-card">
           <Icon name="flame" />
@@ -12476,8 +13259,11 @@ function RecipeView({
         <article className="glass-card">
           <Icon name="clock" />
           <div>
-            <b>{recipe.effort.activeMinutes} мин активно</b>
-            <small>{recipe.time} мин общего времени</small>
+            <b>{recipe.effort.activeMinutes * detailRunCount} мин активно</b>
+            <small>
+              {recipe.time * detailRunCount} мин общего времени
+              {detailRunCount > 1 ? ` · ${detailRunCount} захода` : ""}
+            </small>
           </div>
         </article>
       </section>
@@ -12515,11 +13301,15 @@ function RecipeView({
               icon={<Icon name="scale" />}
               label={
                 batch
-                  ? `На ${batch.days} дн. · ${eaters.length} чел.`
+                  ? `Всего на ${batch.days} дн. · ${eaters.length} чел.${
+                      detailRunCount > 1 ? ` · ${detailRunCount} захода` : ""
+                    }`
                   : "На одну базовую порцию"
               }
             >
-              Те же количества стоят первым шагом в «Готовить»
+              {detailRunCount > 1
+                ? "Ниже — общий объём. Во вкладке «Готовить» Mise разделил продукты по вместимости посуды."
+                : "Те же количества стоят первым шагом в «Готовить»"}
             </Note>
             {recipe.ingredients.map((ingredient) => (
               <div className="ingredient-row" key={ingredient.id}>
@@ -12543,44 +13333,90 @@ function RecipeView({
                 </b>
               </div>
             ))}
+            {(recipe.procedureIngredients ?? []).map((ingredient) => (
+              <div className="ingredient-row" key={ingredient.id}>
+                <Icon name="check" />
+                <p>
+                  {ingredient.name}
+                  <small>
+                    По шагам рецепта
+                    {ingredient.allergens.length > 0
+                      ? ` · ${ingredient.allergens
+                          .map((allergen) => allergenMeta[allergen].short)
+                          .join(", ")}`
+                      : ""}
+                  </small>
+                </p>
+                <b>по шагам</b>
+              </div>
+            ))}
           </div>
         )}
         {section === "steps" && (
           <ol className="cooking-steps">
-            <li className="cooking-measure-step">
-              <span>1</span>
-              <div>
-                <p>
-                  <b>Сначала отмерьте всё на эту готовку</b>
-                  <small>
-                    {batch
-                      ? `${batch.days} дн. · ${eaters.length} чел.`
-                      : "Одна базовая порция"}
-                  </small>
-                </p>
-                <div className="cooking-measures">
-                  {recipe.ingredients.map((ingredient) => (
-                    <div key={ingredient.id}>
-                      <span>
-                        {ingredient.name}
-                      </span>
-                      <b>
-                        {ingredientAmountLabel(
-                          ingredient,
-                          cookingAmounts[ingredient.id] ?? ingredient.quantity,
+            {detailRuns.map((run) => {
+              const offset = run.index * (displaySteps.length + 1);
+              return (
+                <Fragment key={`detail-run-${run.index}`}>
+                  <li className="cooking-measure-step">
+                    <span>{offset + 1}</span>
+                    <div>
+                      <p>
+                        <b>
+                          {detailRunCount > 1
+                            ? `Заход ${run.index + 1} из ${detailRunCount}: отмерьте продукты`
+                            : "Сначала отмерьте всё на эту готовку"}
+                        </b>
+                        <small>
+                          {batch
+                            ? detailRunCount > 1
+                              ? withPlural(run.portions.length, FORMS.portion)
+                              : `${batch.days} дн. · ${eaters.length} чел.`
+                            : "Одна базовая порция"}
+                        </small>
+                      </p>
+                      <div className="cooking-measures">
+                        {recipe.ingredients.map((ingredient) => (
+                          <div key={ingredient.id}>
+                            <span>{ingredient.name}</span>
+                            <b>
+                              {ingredientAmountLabel(
+                                ingredient,
+                                run.totals[ingredient.id] ?? 0,
+                              )}
+                            </b>
+                          </div>
+                        ))}
+                        {(recipe.procedureIngredients ?? []).map(
+                          (ingredient) => (
+                            <div key={ingredient.id}>
+                              <span>{ingredient.name}</span>
+                              <b>по шагам</b>
+                            </div>
+                          ),
                         )}
-                      </b>
+                      </div>
                     </div>
+                  </li>
+                  {displaySteps.map((text, index) => (
+                    <li key={`${run.index}-${text}-${index}`}>
+                      <span>{offset + index + 2}</span>
+                      <p>{text}</p>
+                    </li>
                   ))}
-                </div>
-              </div>
-            </li>
-            {displaySteps.map((text, index) => (
-              <li key={`${text}-${index}`}>
-                <span>{index + 2}</span>
-                <p>{text}</p>
+                </Fragment>
+              );
+            })}
+            {detailRunCount > 1 && (
+              <li>
+                <span>{detailRunCount * (displaySteps.length + 1) + 1}</span>
+                <p>
+                  Сведите одинаковые готовые компоненты из всех заходов,
+                  затем взвесьте общий результат и разложите его по расчёту
+                  Mise. Так масло каждого захода распределится по всей партии.
+                </p>
               </li>
-            ))}
+            )}
           </ol>
         )}
         {section === "portion" && (

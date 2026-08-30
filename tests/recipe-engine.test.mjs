@@ -1,0 +1,212 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import vm from "node:vm";
+import ts from "typescript";
+import { loadTypeScriptModule } from "./typescript-module.mjs";
+
+const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+const cookingRuns = await loadTypeScriptModule(
+  new URL("../domain/recipe-cooking-runs.ts", import.meta.url),
+);
+const nutritionModule = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
+const nutrition = (kcal, protein = 0, fat = 0, carbs = 0) => ({ kcal, protein, fat, carbs });
+
+async function recipeCatalog() {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const runtimeRecipeCatalogJson = JSON.parse(
+    await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
+  );
+  const start = source.indexOf("const mealMeta");
+  const end = source.indexOf("export default function Home");
+  assert.ok(start >= 0 && end > start, "recipe data section is present");
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, recipeFamiliesById, recipeFamilyFor, portionFor };`, {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
+  }).outputText;
+  const sandbox = {
+    runtimeRecipeCatalogJson,
+    ACTIVITY_FACTORS: nutritionModule.ACTIVITY_FACTORS,
+    MEAL_SLOT_SHARES: nutritionModule.MEAL_SLOT_SHARES,
+    calculateMealPlanTargets: nutritionModule.calculateMealPlanTargets,
+    capMacrosAtCalories: nutritionModule.capMacrosAtCalories,
+    nutritionMacroCalories: nutritionModule.macroCalories,
+    nutritionMacrosForCalories: nutritionModule.macrosForCalories,
+    nutritionRecalculateDailyMacros: nutritionModule.recalculateDailyMacros,
+    nutritionShareForSlots: nutritionModule.shareForSlots,
+    materializeInstructions: engine.materializeInstructions,
+    canonicalIngredients: engine.canonicalIngredients,
+    PILOT_RAW_SOURCE_SLUGS: engine.PILOT_RAW_SOURCE_SLUGS,
+    recipeToFamily: engine.recipeToFamily,
+    deriveRecipeFamilyFromCatalog: engine.deriveRecipeFamilyFromCatalog,
+    solveRecipeFamily: engine.solveRecipeFamily,
+    solveRecipeBatch: engine.solveRecipeBatch,
+    normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
+    auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
+    aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    planRecipeCookingRuns: cookingRuns.planRecipeCookingRuns,
+    pooledCookingFatShare: cookingRuns.pooledCookingFatShare,
+  };
+  vm.runInNewContext(output, sandbox);
+  return sandbox.__catalog;
+}
+
+function legacyRecipe(overrides) {
+  return {
+    id: "src-bbq-burger-bowl",
+    title: "Говяжий боул с картофелем, сыром и BBQ-соусом",
+    slot: "dinner",
+    time: 45,
+    macros: nutrition(663, 49, 30, 49),
+    ingredients: [
+      { id: "beef-mince", name: "Постный говяжий фарш", quantity: 182, unit: "г" },
+      { id: "potato", name: "Картофель", quantity: 182, unit: "г" },
+      { id: "cabbage", name: "Капуста или кейл", quantity: 30, unit: "г" },
+      { id: "tomato", name: "Томат", quantity: 20, unit: "г" },
+      { id: "pickles", name: "Маринованные огурцы", quantity: 30, unit: "г" },
+      { id: "cheese", name: "Полутвёрдый сыр", quantity: 17, unit: "г" },
+      { id: "bbq-sauce", name: "BBQ-соус", quantity: 30, unit: "г" },
+      { id: "olive-oil", name: "Растительное масло", quantity: 9, unit: "г" },
+    ],
+    steps: ["Подготовьте ингредиенты."],
+    storageDays: 3,
+    freezable: true,
+    provenance: {},
+    storage: {},
+    effort: {},
+    localization: {},
+    ...overrides,
+  };
+}
+
+function ingredient(sourceIngredientId, canonicalIngredientId, amount, unit, role, scalable = true) {
+  return {
+    sourceIngredientId,
+    canonicalIngredientId,
+    baseAmount: amount,
+    unit,
+    role,
+    minAmount: amount,
+    preferredMin: amount,
+    preferredMax: amount,
+    maxAmount: amount,
+    scalable,
+    scalingPriority: 1,
+    substitutions: [],
+    optional: false,
+  };
+}
+
+test("BBQ burger bowl at 400 kcal is viable without exceeding its calorie ceiling", () => {
+  const family = engine.recipeToFamily(legacyRecipe());
+  assert.ok(family);
+
+  const solved = engine.solveRecipeFamily(family, { targetCalories: 400 });
+  assert.equal(solved.viable, true, solved.explanation.join(" "));
+  assert.ok(solved.nutrition.kcal <= 400, `received ${solved.nutrition.kcal} kcal`);
+  assert.ok(400 - solved.nutrition.kcal <= 12, `deficit is ${400 - solved.nutrition.kcal} kcal`);
+});
+
+test("carbohydrate and fat targets change the selected under-ceiling variant", () => {
+  const family = engine.recipeToFamily(legacyRecipe());
+  assert.ok(family);
+
+  const carbLed = engine.solveRecipeFamily(family, {
+    targetCalories: 500,
+    targetCarbs: 55,
+    targetFat: 12,
+  });
+  const fatLed = engine.solveRecipeFamily(family, {
+    targetCalories: 500,
+    targetCarbs: 25,
+    targetFat: 26,
+  });
+
+  assert.equal(carbLed.viable, true, carbLed.explanation.join(" "));
+  assert.equal(fatLed.viable, true, fatLed.explanation.join(" "));
+  assert.ok(carbLed.nutrition.kcal <= 500);
+  assert.ok(fatLed.nutrition.kcal <= 500);
+  assert.ok(carbLed.nutrition.carbs > fatLed.nutrition.carbs, `${carbLed.nutrition.carbs} vs ${fatLed.nutrition.carbs}`);
+  assert.ok(fatLed.nutrition.fat > carbLed.nutrition.fat, `${fatLed.nutrition.fat} vs ${carbLed.nutrition.fat}`);
+});
+
+test("structural counted ingredients advance by whole units", () => {
+  const egg = engine.canonicalIngredients.egg_raw;
+  const oats = engine.canonicalIngredients.oats_raw;
+  const family = {
+    id: "structural-eggs",
+    title: "Egg-bound bake",
+    ingredients: [
+      { ...ingredient("egg", egg.id, 2, "piece", "protein"), minAmount: 1.4, preferredMin: 2, preferredMax: 2, maxAmount: 3 },
+      { ...ingredient("oats", oats.id, 50, "g", "carb"), minAmount: 20, preferredMin: 40, preferredMax: 60, maxAmount: 100 },
+    ],
+    minViableCalories: 200,
+    maxViableCalories: 600,
+    minimumProtein: 0,
+  };
+
+  for (const targetCalories of [250, 300, 350, 400]) {
+    const solved = engine.solveRecipeFamily(family, { targetCalories });
+    assert.equal(solved.amounts.egg, Math.round(solved.amounts.egg), `target ${targetCalories}`);
+  }
+});
+
+test("a geometry-locked family rejects an over-capacity combined batch and reports the required runs", () => {
+  const beef = engine.canonicalIngredients.beef_mince_raw;
+  const family = {
+    id: "geometry-locked-bake",
+    title: "Geometry-locked bake",
+    ingredients: [ingredient("beef", beef.id, 100, "g", "protein", false)],
+    minViableCalories: 150,
+    maxViableCalories: 155,
+    minimumProtein: 0,
+    geometryLockedMax: 1,
+  };
+
+  const batch = engine.solveRecipeBatch(family, [
+    { id: "one", targetCalories: 152 },
+    { id: "two", targetCalories: 152 },
+  ]);
+  assert.equal(batch.viable, false);
+  assert.equal(batch.reason, "geometry_capacity_exceeded");
+  assert.equal(batch.geometryBatchCount, 2);
+  assert.equal(JSON.stringify(batch.totals), "{}");
+});
+
+test("production Recipe Family coverage uses only explicitly safe catalog derivations", async (t) => {
+  const { productionRecipes, recipeFamilyFor } = await recipeCatalog();
+  const covered = productionRecipes.filter((recipe) => recipeFamilyFor(recipe));
+  t.diagnostic(`${covered.length}/${productionRecipes.length}: ${covered.map((recipe) => recipe.id).join(", ")}`);
+  t.diagnostic(`uncovered: ${productionRecipes.filter((recipe) => !recipeFamilyFor(recipe)).map((recipe) => `${recipe.id} (${recipe.ingredients.map((ingredient) => ingredient.id).join("/")})`).join("; ")}`);
+  assert.equal(covered.length, productionRecipes.length);
+  assert.ok(covered.length >= 200);
+});
+
+test("portionFor forwards carb and fat tuning to Recipe Family solving", async () => {
+  const { recipes, portionFor } = await recipeCatalog();
+  const recipe = recipes.find((item) => item.id === "src-bbq-burger-bowl");
+  assert.ok(recipe);
+  const person = {
+    id: "macro-targets",
+    name: "Macro targets",
+    daily: nutrition(2000, 150, 65, 204),
+    includedSlots: ["dinner"],
+    hardExclusions: [],
+  };
+  const carbLed = portionFor(person, "dinner", recipe, {
+    protein: 1,
+    fat: 0.8,
+    carbs: 1.3,
+  });
+  const fatLed = portionFor(person, "dinner", recipe, {
+    protein: 1,
+    fat: 1.2,
+    carbs: 0.7,
+  });
+
+  assert.equal(carbLed.engine, "recipe-family-v1");
+  assert.equal(fatLed.engine, "recipe-family-v1");
+  assert.ok(carbLed.actual.kcal <= carbLed.target.kcal);
+  assert.ok(fatLed.actual.kcal <= fatLed.target.kcal);
+  assert.ok(carbLed.actual.carbs > fatLed.actual.carbs);
+  assert.ok(fatLed.actual.fat > carbLed.actual.fat);
+});

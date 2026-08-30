@@ -30,7 +30,7 @@ test("the wizard offers manual menu building without skipping required answers",
   assert.match(page, /function automaticAssignmentsFor/);
   assert.match(page, /Подобрать персональные варианты/);
   assert.match(page, /Собрать остальные \{remaining\} за меня/);
-  assert.match(product, /Обязательные вопросы нельзя пропустить/);
+  assert.match(product, /обязательные вопросы нельзя пропустить/i);
   const automaticAssembly = page.slice(
     page.indexOf("function assembleMenu"),
     page.indexOf("function replaceSelection"),
@@ -46,8 +46,9 @@ test("the hardware back button stays inside the app", async () => {
   const page = await read("app/page.tsx");
   const listeners = page.match(/addEventListener\("popstate"/g) ?? [];
   assert.ok(listeners.length >= 2, "the wizard and the recipe card both trap back");
-  assert.match(page, /history\.pushState\(\{ mise: "builder", mode \}/);
-  assert.match(page, /history\.pushState\(\{ mise: "recipe" \}/);
+  assert.match(page, /mise: "builder"[\s\S]*?builderStep:/);
+  assert.match(page, /mise: "recipe"[\s\S]*?recipeId:/);
+  assert.match(page, /event\.state\?\.mise === "builder"/);
 });
 
 test("the week screen answers what to do today", async () => {
@@ -186,14 +187,13 @@ test("the interface stays legible", async () => {
   const [page, css, layout] = await Promise.all([read("app/page.tsx"), read("app/globals.css"), read("app/layout.tsx")]);
   const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
   assert.deepEqual(tiny, [], "nothing is smaller than 12px");
-  // Liquid Glass tokens (design_handoff_liquid_glass/README.md §Контраст): the
-  // primary-button gradient is a known, documented AA departure (3.68:1 at its
-  // lightest point) — `--accent-grad-aa` exists as the fix but is intentionally
-  // not wired in yet. This only guards that the gradient stays token-driven.
+  // Liquid Glass keeps its brighter decorative ramp, while interactive surfaces
+  // use the darker ramp whose lightest endpoint still clears white-text AA.
   assert.match(css, /--accent-grad-a: #ff8143/);
   assert.match(css, /--accent-grad-b: #ee4c13/);
-  assert.match(css, /--accent-grad-aa: linear-gradient\(150deg, #d9490e, #b8350a\)/);
-  assert.match(css, /\.primary-button \{[\s\S]*?var\(--accent-grad-a\),\s*var\(--accent-grad-b\)/);
+  assert.match(css, /--accent-grad-aa: linear-gradient\(150deg, #cf430c, #b8350a\)/);
+  assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--accent-grad-aa\)/);
   assert.doesNotMatch(css, /@media \(prefers-color-scheme: dark\)(?![^\n]*min-width)/, "the dark theme is disabled");
   assert.match(css, /color-scheme: light;/, "native controls stay light");
   assert.doesNotMatch(layout, /prefers-color-scheme: dark/, "the PWA chrome stays light");

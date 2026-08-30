@@ -67,13 +67,18 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const identity = ids(request);
   if (!identity) return Response.json({ error: "client and device ids are required" }, { status: 400 });
-  const body = (await request.json()) as {
+  let body: {
     action?: "enable" | "disable" | "test";
     planId?: string;
     subscription?: PushSubscriptionInput;
     preferences?: unknown;
     jobs?: JobInput[];
   };
+  try {
+    body = (await request.json()) as typeof body;
+  } catch {
+    return Response.json({ error: "invalid JSON" }, { status: 400 });
+  }
   if (!body.planId || typeof body.planId !== "string" || body.planId.length > 100) {
     return Response.json({ error: "planId is required" }, { status: 400 });
   }
@@ -112,15 +117,15 @@ export async function POST(request: Request) {
       dueAt: now,
       createdAt: now,
     });
-    await processDueNotifications(now);
+    await processDueNotifications(now, { jobId: testId });
     const [testJob] = await db.select().from(pushJobs).where(eq(pushJobs.id, testId)).limit(1);
     return Response.json({ testDelivered: Boolean(testJob?.sentAt), error: testJob?.lastError ?? null });
   }
 
-  if (body.action !== "enable" || !validSubscription(body.subscription) || !Array.isArray(body.jobs) || body.jobs.length > 150) {
+  if (body.action !== "enable" || !validSubscription(body.subscription) || !Array.isArray(body.jobs) || body.jobs.length > 150 || !body.jobs.every((job) => validJob(job, now))) {
     return Response.json({ error: "invalid push configuration" }, { status: 400 });
   }
-  const jobs = body.jobs.filter((job) => validJob(job, now));
+  const jobs = body.jobs as Required<JobInput>[];
   const subscription = body.subscription as Required<PushSubscriptionInput> & { keys: { p256dh: string; auth: string } };
   await db.insert(pushSubscriptions).values({
     id: identity.subscriptionId,
@@ -174,6 +179,7 @@ export async function POST(request: Request) {
     dueAt: now,
     createdAt: now,
   });
-  const delivery = await processDueNotifications(now);
-  return Response.json({ enabled: true, scheduled: jobs.length, testDelivered: delivery.sent > 0 });
+  await processDueNotifications(now, { jobId: testId });
+  const [testJob] = await db.select().from(pushJobs).where(eq(pushJobs.id, testId)).limit(1);
+  return Response.json({ enabled: true, scheduled: jobs.length, testDelivered: Boolean(testJob?.sentAt), error: testJob?.lastError ?? null });
 }

@@ -36,7 +36,8 @@ export type NutritionIssue = {
     | "invalid_monthly_change"
     | "extreme_monthly_change"
     | "extreme_energy_delta"
-    | "minimum_calories_applied";
+    | "minimum_calories_applied"
+    | "maximum_calories_applied";
   severity: "error" | "warning";
   message: string;
 };
@@ -89,6 +90,7 @@ export const NUTRITION_CONFIG = {
   energyPerKgWeightChange: 7_700,
   averageDaysPerMonth: 30.4,
   minimumTargetCalories: 1_200,
+  maximumTargetCalories: 5_000,
   warningMonthlyBodyWeightShare: 0.04,
   warningTdeeDeltaShare: 0.25,
   kcalPer100gChocolate: 535,
@@ -348,15 +350,23 @@ export function calculateNutritionTarget(
     });
   }
 
-  const targetCalories = Math.max(
-    NUTRITION_CONFIG.minimumTargetCalories,
-    Math.round(rawTargetCalories / 10) * 10,
+  const roundedTargetCalories = Math.round(rawTargetCalories / 10) * 10;
+  const targetCalories = Math.min(
+    NUTRITION_CONFIG.maximumTargetCalories,
+    Math.max(NUTRITION_CONFIG.minimumTargetCalories, roundedTargetCalories),
   );
-  if (targetCalories !== Math.round(rawTargetCalories / 10) * 10) {
+  if (targetCalories > roundedTargetCalories) {
     issues.push({
       code: "minimum_calories_applied",
       severity: "warning",
       message: `Расчёт упирается в нижнюю границу ${NUTRITION_CONFIG.minimumTargetCalories} ккал; это повод пересмотреть цель, а не медицинская рекомендация.`,
+    });
+  }
+  if (targetCalories < roundedTargetCalories) {
+    issues.push({
+      code: "maximum_calories_applied",
+      severity: "warning",
+      message: `Расчёт ограничен верхней границей ${NUTRITION_CONFIG.maximumTargetCalories} ккал; проверьте параметры и цель.`,
     });
   }
 

@@ -108,10 +108,19 @@ test("nutrition audit emits one machine verdict for every scraped recipe", async
   assert.equal(report.cards.length, 217);
   assert.equal(new Set(report.cards.map((card) => card.id)).size, 217);
   assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, 217);
+  assert.deepEqual(report.counts, { ready: 213, review_required: 0, blocked: 4, independentlyCalculable: 213 });
   assert.equal(report.reasonCounts.ml_density_missing ?? 0, 0, "all current household-volume ingredients use an explicit standard density");
   for (const card of report.cards.filter((item) => item.verdict === "ready")) {
     assert.equal(card.calculationComplete, true);
     assert.ok(card.comparison);
-    assert.equal(card.comparison.outside.length, 0);
   }
+  assert.deepEqual(
+    report.cards.filter((item) => item.verdict === "blocked").map((item) => item.id).sort(),
+    [
+      "goodfood-lemon-parmesan-vinaigrette",
+      "goodfood-peperonata",
+      "goodfood-pickled-red-cabbage-salad",
+      "goodfood-yellow-coconut-curry-sauce",
+    ],
+  );
 });

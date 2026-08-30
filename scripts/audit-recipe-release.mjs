@@ -1,13 +1,15 @@
 import { auditRecipeCorpus } from "./audit-recipe-corpus.mjs";
 import { auditRecipeNutritionCorpus } from "./audit-recipe-nutrition.mjs";
+import { applyOwnerRecipeResolutions, loadOwnerRecipeResolutions } from "./recipe-owner-resolutions.mjs";
 import { mkdir, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 export async function auditRecipeRelease() {
-  const [editorial, nutrition] = await Promise.all([
+  const [editorial, nutrition, ownerResolutions] = await Promise.all([
     auditRecipeCorpus(),
     auditRecipeNutritionCorpus(),
+    loadOwnerRecipeResolutions(),
   ]);
   const nutritionById = new Map(nutrition.cards.map((card) => [card.id, card]));
   const cards = editorial.verdicts.map((card) => {
@@ -35,13 +37,13 @@ export async function auditRecipeRelease() {
     key,
     cards.filter((card) => card.reasons.some((item) => `${item.gate}:${item.code}` === key)).length,
   ]));
-  return {
+  return applyOwnerRecipeResolutions({
     schemaVersion: 1,
     total: cards.length,
     counts,
     reasonCounts,
     cards,
-  };
+  }, ownerResolutions);
 }
 
 if (

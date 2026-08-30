@@ -1,14 +1,10 @@
-import { readFile } from "node:fs/promises";
 import {
   canonicalIngredients,
   normalizeRawRecipeCandidate,
 } from "../domain/recipe-engine.ts";
 import { sourceAmount } from "./recipe-corpus-normalize.mjs";
+import { loadMealPrepReleasePolicy } from "./mealprep-release-policy.mjs";
 
-const DATASETS = [
-  new URL("../data/mealprepmanual-candidates.json", import.meta.url),
-  new URL("../data/goodfood-candidates.json", import.meta.url),
-];
 
 /**
  * Source sites round per-serving nutrition and may use a branded product that
@@ -68,7 +64,10 @@ function reason(code, severity, detail) {
 }
 
 function sourceNutritionFor(candidate) {
-  const source = candidate.macros ?? candidate.sourceNutrition ?? {};
+  // Rehabilitation preserves the publisher values in sourceNutrition and
+  // stores independently calculated runtime macros in macros. The comparison
+  // must always retain the publisher figure as the source side of the audit.
+  const source = candidate.sourceNutrition ?? candidate.macros ?? {};
   return Object.fromEntries(MACRO_KEYS.map((key) => [key, Number(source[key])]));
 }
 
@@ -134,7 +133,7 @@ function deltaReport(calculated, source) {
   return { delta, thresholds, outside };
 }
 
-function auditIngredient(sourceIngredient, mapping) {
+function auditIngredient(sourceIngredient, mapping, policy, acceptsEditorialAverage) {
   const sourceName = String(sourceIngredient?.name ?? sourceIngredient?.id ?? "").trim();
   if (mapping.status === "unresolved") {
     return { complete: false, reason: reason(NUTRITION_AUDIT_REASON.UNRESOLVED_INGREDIENT, "blocked", { sourceName }) };
@@ -174,24 +173,28 @@ function auditIngredient(sourceIngredient, mapping) {
   }
   const warnings = [];
   if (canonical.reference?.dataType === "label_required") {
-    warnings.push(reason(NUTRITION_AUDIT_REASON.LABEL_REQUIRED, "review_required", { sourceName, canonicalId: canonical.id }));
+    const averaged = acceptsEditorialAverage && (policy?.labelProfiles?.canonicalIds?.has(canonical.id) || acceptsEditorialAverage === "rehabilitated_goodfood");
+    warnings.push(reason(NUTRITION_AUDIT_REASON.LABEL_REQUIRED, averaged ? "info" : "review_required", { sourceName, canonicalId: canonical.id, policy: averaged ? "editorial_average_with_check_label" : null }));
   }
   return { complete: true, nutrition, warnings };
 }
 
-export function auditNutritionEntry(candidate, { publisher = "unknown", accessedAt = "unknown" } = {}) {
+export function auditNutritionEntry(candidate, { publisher = "unknown", accessedAt = "unknown", policy } = {}) {
   const reasons = [];
+  const isMealPrep = String(candidate.id ?? "").startsWith("tmpm-");
+  const isRehabilitatedGoodFood = candidate.miseRehabilitation?.kind === "goodfood_measured_overlay_v1";
+  const acceptsEditorialAverage = isRehabilitatedGoodFood ? "rehabilitated_goodfood" : isMealPrep;
   const sourceNutrition = sourceNutritionFor(candidate);
   const servings = Number(candidate.servings);
   if (!finitePositive(servings)) reasons.push(reason(NUTRITION_AUDIT_REASON.INVALID_YIELD, "blocked", { servings: candidate.servings ?? null }));
-  else if (!Number.isInteger(servings)) reasons.push(reason(NUTRITION_AUDIT_REASON.FRACTIONAL_YIELD, "review_required", { servings }));
+  else if (!Number.isInteger(servings)) reasons.push(reason(NUTRITION_AUDIT_REASON.FRACTIONAL_YIELD, isMealPrep ? "info" : "review_required", { servings }));
   if (!isValidNutrition(sourceNutrition)) reasons.push(reason(NUTRITION_AUDIT_REASON.INVALID_SOURCE_NUTRITION, "blocked"));
 
   const normalized = normalizeRawRecipeCandidate(candidate, { publisher, accessedAt });
   const total = { kcal: 0, protein: 0, fat: 0, carbs: 0 };
   let complete = finitePositive(servings) && isValidNutrition(sourceNutrition);
   for (const [index, ingredient] of normalized.sourceIngredients.entries()) {
-    const audited = auditIngredient(ingredient, normalized.ingredientMappings[index]);
+    const audited = auditIngredient(ingredient, normalized.ingredientMappings[index], policy, acceptsEditorialAverage);
     if (!audited.complete) {
       complete = false;
       reasons.push(audited.reason);
@@ -210,7 +213,7 @@ export function auditNutritionEntry(candidate, { publisher = "unknown", accessed
   if (calculatedNutrition) {
     comparison = deltaReport(calculatedNutrition, sourceNutrition);
     reasons.push(comparison.outside.length
-      ? reason(NUTRITION_AUDIT_REASON.DELTA_OUTSIDE_TOLERANCE, "review_required", { fields: comparison.outside })
+      ? reason(NUTRITION_AUDIT_REASON.DELTA_OUTSIDE_TOLERANCE, (isMealPrep || isRehabilitatedGoodFood) ? "info" : "review_required", { fields: comparison.outside, ...((isMealPrep || isRehabilitatedGoodFood) ? { policy: "independent_calculation_is_runtime_truth" } : {}) })
       : reason(NUTRITION_AUDIT_REASON.DELTA_WITHIN_TOLERANCE, "info"));
     if (!comparison.outside.length) reasons.push(reason(NUTRITION_AUDIT_REASON.INDEPENDENT_CALCULATION_COMPLETE, "info"));
   }
@@ -236,17 +239,13 @@ export function auditNutritionEntry(candidate, { publisher = "unknown", accessed
 }
 
 async function loadEntries() {
-  const datasets = await Promise.all(DATASETS.map(async (url) => JSON.parse(await readFile(url, "utf8"))));
-  return datasets.flatMap((dataset) => dataset.candidates.map((candidate) => ({
-    candidate,
-    publisher: dataset.source,
-    accessedAt: dataset.importedAt,
-  })));
+  const { loadRecipeCorpusEntries } = await import("./recipe-corpus-overlay.mjs");
+  return (await loadRecipeCorpusEntries()).entries;
 }
 
 export async function auditRecipeNutritionCorpus() {
-  const entries = await loadEntries();
-  const cards = entries.map(({ candidate, publisher, accessedAt }) => auditNutritionEntry(candidate, { publisher, accessedAt }));
+  const [entries, policy] = await Promise.all([loadEntries(), loadMealPrepReleasePolicy()]);
+  const cards = entries.map(({ candidate, publisher, accessedAt }) => auditNutritionEntry(candidate, { publisher, accessedAt, policy }));
   if (new Set(cards.map((card) => card.id)).size !== cards.length) throw new Error("Recipe corpus IDs must be unique.");
   const byVerdict = Object.fromEntries(["ready", "review_required", "blocked"].map((verdict) => [verdict, cards.filter((card) => card.verdict === verdict).length]));
   const byReason = Object.fromEntries(

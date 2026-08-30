@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "labelProfiles": {
+    "policy": "A current canonical average is an editorial nutrition estimate, never a product label. The UI must show a check-label warning for packaged products.",
+    "canonicalIds": [
+      "gochujang_processed",
+      "cream_processed",
+      "protein_powder_processed",
+      "buffalo_sauce_processed",
+      "mixed_vegetables_processed",
+      "seed_mix_raw",
+      "protein_pancake_mix_processed",
+      "whipped_cream_processed",
+      "beef_meatballs_processed",
+      "tikka_sauce_processed",
+      "bread_processed",
+      "chili_garlic_oil_processed",
+      "dark_chocolate_processed",
+      "dressing_processed",
+      "kimchi_processed",
+      "rice_cake_processed",
+      "casein_powder_processed",
+      "hash_browns_processed",
+      "granola_processed",
+      "ghee_processed",
+      "maseca_processed",
+      "cream_cheese_frosting_processed",
+      "splenda_processed",
+      "corn_chex_processed",
+      "miso_paste_processed",
+      "curry_paste_processed",
+      "coconut_milk_processed",
+      "popcorn_chicken_processed",
+      "chicken_sausage_processed"
+    ]
+  },
+  "servingAdaptations": {
+    "tmpm-28492": {
+      "miseServing": "2 исходные порции овощей",
+      "reason": "Овощной гарнир 59 ккал объединяется с основным блюдом, не выдаётся как самостоятельный приём пищи."
+    },
+    "tmpm-26895": {
+      "miseServing": "4 исходные крокеты",
+      "reason": "Исходная мелкая единица 53 ккал объединена в порцию перекуса."
+    },
+    "tmpm-26746": {
+      "miseServing": "2 исходные порции",
+      "reason": "Дип 109 ккал подаётся с основным продуктом или двумя порциями."
+    },
+    "tmpm-26720": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Высококалорийная исходная тарелка делится на контейнерную порцию."
+    },
+    "tmpm-26583": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Высококалорийный боул делится на контейнерную порцию."
+    },
+    "tmpm-26232": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Высококалорийная порция делится на контейнерную порцию."
+    },
+    "tmpm-25290": {
+      "miseServing": "0.5 исходной порции",
+      "reason": "Владелец подтвердил high-calorie исходную порцию; Mise использует половину."
+    },
+    "tmpm-25159": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Высококалорийная паста делится на контейнерную порцию."
+    },
+    "tmpm-24968": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Высококалорийные тефтели делятся на контейнерную порцию."
+    },
+    "tmpm-24619": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Боул на 1000 ккал делится на контейнерную порцию."
+    },
+    "tmpm-23554": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Сытный чили делится на контейнерную порцию."
+    },
+    "tmpm-23518": {
+      "miseServing": "2 исходных маффина",
+      "reason": "Один маффин 91 ккал объединяется в завтрак/перекус."
+    },
+    "tmpm-23228": {
+      "miseServing": "5 исходных наггетсов",
+      "reason": "Один наггетс 32 ккал объединяется в порцию перекуса."
+    },
+    "tmpm-22968": {
+      "miseServing": "0.6 исходной порции",
+      "reason": "Высококалорийная паста делится на контейнерную порцию."
+    },
+    "tmpm-22550": {
+      "miseServing": "5 исходных фрикаделек",
+      "reason": "Одна фрикаделька 36 ккал объединяется в порцию."
+    },
+    "tmpm-21841": {
+      "miseServing": "0.7 исходной порции",
+      "reason": "Порция для набора массы делится на контейнерную порцию."
+    },
+    "tmpm-16283": {
+      "miseServing": "4 исходные рёшти",
+      "reason": "Мелкие рёшти объединяются в порцию."
+    },
+    "tmpm-16249": {
+      "miseServing": "4 исходных панкейк-болла",
+      "reason": "Мелкие панкейк-боллы объединяются в порцию."
+    },
+    "tmpm-16861": {
+      "miseServing": "2 исходные порции",
+      "reason": "Одна исходная порция фри 120 ккал; Mise объединяет две порции в полноценный гарнир."
+    }
+  }
+}

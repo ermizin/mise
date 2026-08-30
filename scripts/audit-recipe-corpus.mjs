@@ -2,11 +2,8 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
 import ts from "typescript";
-
-const DATASETS = [
-  new URL("../data/mealprepmanual-candidates.json", import.meta.url),
-  new URL("../data/goodfood-candidates.json", import.meta.url),
-];
+import { hasDocumentedLocalization, loadMealPrepReleasePolicy } from "./mealprep-release-policy.mjs";
+import { loadRecipeCorpusEntries } from "./recipe-corpus-overlay.mjs";
 
 export const AUDIT_REASON = Object.freeze({
   MISSING_YIELD: "missing_yield",
@@ -62,35 +59,32 @@ async function loadNormalizer() {
 }
 
 export async function loadRecipeCorpus() {
-  const datasets = await Promise.all(DATASETS.map(async (url) => JSON.parse(await readFile(url, "utf8"))));
-  return datasets.flatMap((dataset) => dataset.candidates.map((candidate) => ({
-    candidate,
-    publisher: dataset.source,
-    accessedAt: dataset.importedAt,
-  })));
+  return (await loadRecipeCorpusEntries()).entries;
 }
 
 export async function auditRecipeCorpus() {
-  const [entries, engine] = await Promise.all([loadRecipeCorpus(), loadNormalizer()]);
+  const [entries, engine, policy] = await Promise.all([loadRecipeCorpus(), loadNormalizer(), loadMealPrepReleasePolicy()]);
   const seen = new Set();
   const verdicts = entries.map(({ candidate, publisher, accessedAt }) => {
     const reasons = [];
     const add = (code, severity, detail) => reasons.push(reason(code, severity, detail));
     const id = String(candidate.id ?? "");
+    const isMealPrep = id.startsWith("tmpm-");
     if (seen.has(id)) throw new Error(`Duplicate recipe id in corpus: ${id}`);
     seen.add(id);
 
     const servings = Number(candidate.servings);
     if (candidate.servings == null || candidate.servings === "") add(AUDIT_REASON.MISSING_YIELD, "blocked");
     else if (!Number.isFinite(servings) || servings <= 0) add(AUDIT_REASON.INVALID_YIELD, "blocked", { value: candidate.servings });
-    else if (!Number.isInteger(servings)) add(AUDIT_REASON.FRACTIONAL_SERVINGS, "review_required", { servings });
+    else if (!Number.isInteger(servings)) add(AUDIT_REASON.FRACTIONAL_SERVINGS, isMealPrep ? "info" : "review_required", { servings });
 
     const macros = candidate.macros ?? candidate.sourceNutrition;
     const macroKeys = ["kcal", "protein", "fat", "carbs"];
     if (!macros || !macroKeys.every((key) => isFiniteNonNegative(Number(macros[key]))) || Number(macros.kcal) <= 0) {
       add(AUDIT_REASON.INVALID_MACROS, "blocked");
     } else if (Number(macros.kcal) < 150 || Number(macros.kcal) > 800) {
-      add(AUDIT_REASON.EXTREME_KCAL, "review_required", { kcal: Number(macros.kcal), expectedRange: [150, 800] });
+      const adaptation = isMealPrep ? policy.servingAdaptations[candidate.id] : undefined;
+      add(AUDIT_REASON.EXTREME_KCAL, adaptation ? "info" : "review_required", { kcal: Number(macros.kcal), expectedRange: [150, 800], adaptation: adaptation ?? null });
     }
 
     const time = candidate.time ?? candidate.sourceTimes;
@@ -102,11 +96,11 @@ export async function auditRecipeCorpus() {
     const sourceState = validUrl(candidate.sourceUrl);
     if (sourceState === "missing") add(AUDIT_REASON.MISSING_SOURCE, "blocked");
     if (sourceState === "invalid") add(AUDIT_REASON.INVALID_SOURCE, "blocked", { value: candidate.sourceUrl });
-    const imageState = validUrl(candidate.imageUrl);
-    if (imageState === "missing") add(AUDIT_REASON.MISSING_IMAGE, "blocked");
-    if (imageState === "invalid") add(AUDIT_REASON.INVALID_IMAGE, "blocked", { value: candidate.imageUrl });
+    // Photos are optional catalog decoration. Source provenance is mandatory;
+    // a deliberate runtime fallback handles an absent preview.
 
     const normalized = engine.normalizeRawRecipeCandidate(candidate, { publisher, accessedAt });
+    const isRehabilitatedGoodFood = candidate.miseRehabilitation?.kind === "goodfood_measured_overlay_v1";
     const unresolved = normalized.ingredientMappings.filter((mapping) => mapping.status === "unresolved").map((mapping) => mapping.sourceName);
     if (unresolved.length) add(AUDIT_REASON.UNRESOLVED_INGREDIENT_MAPPING, "review_required", { ingredients: unresolved });
 
@@ -133,14 +127,21 @@ export async function auditRecipeCorpus() {
     const labelDependent = normalized.ingredientMappings
       .filter((mapping) => mapping.canonicalIngredientId && engine.canonicalIngredients[mapping.canonicalIngredientId]?.reference?.dataType === "label_required")
       .map((mapping) => mapping.sourceName);
-    if (labelDependent.length) add(AUDIT_REASON.LABEL_DEPENDENT_INGREDIENT, "review_required", { ingredients: labelDependent });
+    if (labelDependent.length) {
+      const allAveraged = (isMealPrep || isRehabilitatedGoodFood) && normalized.ingredientMappings
+        .filter((mapping) => mapping.canonicalIngredientId && engine.canonicalIngredients[mapping.canonicalIngredientId]?.reference?.dataType === "label_required")
+        .every((mapping) => isRehabilitatedGoodFood || policy.labelProfiles.canonicalIds.has(mapping.canonicalIngredientId));
+      add(AUDIT_REASON.LABEL_DEPENDENT_INGREDIENT, allAveraged ? "info" : "review_required", { ingredients: labelDependent, policy: allAveraged ? "editorial_average_with_check_label" : null });
+    }
 
     const localization = candidate.localization ?? {};
     if (localization.excludeSuggested || localization.fit === "unfamiliar" || localization.availability === "niche") {
-      add(AUDIT_REASON.NICHE_LOCALIZATION, "review_required", {
+      const documented = (isMealPrep || isRehabilitatedGoodFood) && hasDocumentedLocalization(candidate);
+      add(AUDIT_REASON.NICHE_LOCALIZATION, documented ? "info" : "review_required", {
         fit: localization.fit,
         availability: localization.availability,
         excludeSuggested: Boolean(localization.excludeSuggested),
+        documented,
       });
     }
 

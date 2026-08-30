@@ -45,11 +45,13 @@ export const pushJobs = sqliteTable("push_jobs", {
   url: text("url").notNull().default("/"),
   dueAt: integer("due_at").notNull(),
   sentAt: integer("sent_at"),
+  leaseUntil: integer("lease_until"),
   attempts: integer("attempts").notNull().default(0),
   lastError: text("last_error"),
   createdAt: integer("created_at").notNull(),
 }, (table) => [
   index("idx_push_jobs_due_at").on(table.dueAt),
+  index("idx_push_jobs_lease_until").on(table.leaseUntil),
   index("idx_push_jobs_subscription_plan").on(table.subscriptionId, table.planId),
 ]);
 

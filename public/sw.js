@@ -1,5 +1,5 @@
 const CACHE_NAME = "mise-shell-v3";
-const PLAN_CACHE_NAME = "mise-plan-v1";
+const PLAN_CACHE_NAME = "mise-plan-v2";
 const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
@@ -16,12 +16,27 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function planCacheKey(clientId) {
+  return new Request(`${self.location.origin}/api/plans?mise-client=${encodeURIComponent(clientId || "anonymous")}`);
+}
+
+async function clearPlanCache(clientId) {
+  const cache = await caches.open(PLAN_CACHE_NAME);
+  await cache.delete(planCacheKey(clientId));
+}
+
+self.addEventListener("message", (event) => {
+  const message = event.data;
+  if (message?.type !== "mise:clear-plan-cache") return;
+  event.waitUntil(clearPlanCache(typeof message.clientId === "string" ? message.clientId : "anonymous"));
+});
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
   const url = new URL(event.request.url);
   if (url.pathname === "/api/plans") {
     const clientId = event.request.headers.get("X-Mise-Client") || "anonymous";
-    const cacheKey = new Request(`${url.origin}/api/plans?mise-client=${encodeURIComponent(clientId)}`);
+    const cacheKey = planCacheKey(clientId);
     const network = fetch(event.request).then(async (response) => {
       if (response.ok) {
         const cache = await caches.open(PLAN_CACHE_NAME);

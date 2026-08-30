@@ -17,12 +17,12 @@
         "cookMinutes": 30,
         "totalMinutes": 55
       },
-      "servings": 9.5,
+      "servings": 10,
       "macros": {
-        "kcal": 282,
-        "protein": 10.3,
-        "fat": 10,
-        "carbs": 37.8
+        "kcal": 267.9,
+        "protein": 9.8,
+        "fat": 9.5,
+        "carbs": 35.9
       },
       "ingredients": [
         {
@@ -328,8 +328,12 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/9.5 готового блюда",
+        "portion": "1/10 готового блюда",
         "label": "Рис с брокколи и чеддером · дата готовки · использовать в течение 3 суток"
+      },
+      "sourceYield": {
+        "servings": 9.5,
+        "resolution": "Округлено владельцем до 10 равных порций."
       }
     },
     {
@@ -2863,10 +2867,16 @@
           "original": ".25   cups ( 60 g )   soy sauce   low sodium, gluten free if needed"
         },
         {
-          "name": "mirin",
-          "amountMetric": "60",
+          "name": "white vinegar",
+          "amountMetric": "45",
           "unitMetric": "g",
-          "original": ".25   cups ( 60 g )   mirin"
+          "original": "Mise adaptation: 45 g white vinegar replacing mirin"
+        },
+        {
+          "name": "brown sugar",
+          "amountMetric": "15",
+          "unitMetric": "g",
+          "original": "Mise adaptation: 15 g brown sugar replacing mirin"
         },
         {
           "name": "water",
@@ -3204,6 +3214,21 @@
       "packing": {
         "portion": "1/5 готового блюда",
         "label": "Курица терияки с овощами на противне · дата готовки · использовать в течение 3 суток"
+      },
+      "miseAdaptation": {
+        "kind": "distributed_ingredient_replacement",
+        "sourceIngredient": "mirin",
+        "replacement": [
+          {
+            "name": "white vinegar",
+            "grams": 45
+          },
+          {
+            "name": "brown sugar",
+            "grams": 15
+          }
+        ],
+        "reason": "Мирин заменён отмеренными уксусом и коричневым сахаром; оба компонента включены в независимый расчёт КБЖУ."
       }
     },
     {
@@ -7457,12 +7482,12 @@
         "cookMinutes": 30,
         "totalMinutes": 60
       },
-      "servings": 60,
+      "servings": 10,
       "macros": {
-        "kcal": 29.7,
-        "protein": 3.4,
-        "fat": 0.8,
-        "carbs": 2.3
+        "kcal": 178.2,
+        "protein": 20.4,
+        "fat": 4.8,
+        "carbs": 13.8
       },
       "ingredients": [
         {
@@ -7757,8 +7782,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/60 готового блюда",
+        "portion": "6 наггетсов (1/10 партии)",
         "label": "Куриные наггетсы для перекуса · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 60,
+        "originalMacrosPerPiece": {
+          "kcal": 29.7,
+          "protein": 3.4,
+          "fat": 0.8,
+          "carbs": 2.3
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -7776,12 +7811,12 @@
         "cookMinutes": 30,
         "totalMinutes": 90
       },
-      "servings": 40,
+      "servings": 20,
       "macros": {
-        "kcal": 149,
-        "protein": 8.9,
-        "fat": 5.1,
-        "carbs": 15.9
+        "kcal": 298,
+        "protein": 17.8,
+        "fat": 10.2,
+        "carbs": 31.8
       },
       "ingredients": [
         {
@@ -8317,8 +8352,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/40 готового блюда",
+        "portion": "2 такитос (1/20 партии)",
         "label": "Завтрачные такитос с картофелем, колбасой и сыром · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 40,
+        "originalMacrosPerPiece": {
+          "kcal": 149,
+          "protein": 8.9,
+          "fat": 5.1,
+          "carbs": 15.9
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -9804,12 +9849,12 @@
         "cookMinutes": 20,
         "totalMinutes": 35
       },
-      "servings": 12,
+      "servings": 6,
       "macros": {
-        "kcal": 138,
-        "protein": 10.5,
-        "fat": 2,
-        "carbs": 19.6
+        "kcal": 276,
+        "protein": 21,
+        "fat": 4,
+        "carbs": 39.2
       },
       "ingredients": [
         {
@@ -10060,7 +10105,7 @@
         },
         {
           "id": "editorial-step-2",
-          "text": "Аккуратно соедините блендерную смесь с белками, затем вмешайте сухие ингредиенты. Вылейте тесто на застеленный пергаментом и слегка смазанный противень 43 × 28 см, разровняйте. Выпекайте до упругой золотистой поверхности, остудите и разрежьте на 12 частей. Замораживайте сначала одним слоем; разогревайте 1–2 минуты в микроволновке.",
+          "text": "Аккуратно соедините блендерную смесь с белками, затем вмешайте сухие ингредиенты. Вылейте тесто на застеленный пергаментом и слегка смазанный противень 43 × 28 см, разровняйте. Выпекайте при 191 °C 20 минут, пока центр полностью не схватится и не станет упругим. Остудите и разрежьте на 12 частей. Замораживайте сначала одним слоем; разогревайте 1–2 минуты в микроволновке.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -10075,22 +10120,21 @@
             "source-ingredient-11"
           ],
           "action": "bake",
-          "temperatureC": 190,
+          "temperatureC": 191,
           "equipment": [
             "oven",
             "sheet_pan",
             "parchment"
           ],
-          "donenessCue": "пласт поднялся, поверхность золотистая и пружинит",
+          "donenessCue": "центр полностью схватился и упругий",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "20 мин"
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "source_bake_duration_not_extracted"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -10104,8 +10148,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/12 готового блюда",
+        "portion": "2 панкейка (1/6 партии)",
         "label": "Протеиновые панкейки на противне · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 12,
+        "originalMacrosPerPiece": {
+          "kcal": 138,
+          "protein": 10.5,
+          "fat": 2,
+          "carbs": 19.6
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -12010,7 +12064,8 @@
         "fit": "niche",
         "availability": "common",
         "excludeSuggested": true,
-        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула.",
+        "miseAvailabilityDecision": "Редакционная проверка: продукты доступны в крупных российских супермаркетах или имеют прямую замену, указанную в шагах; карточка не исключается из Mise."
       },
       "editorialStatus": "pending",
       "sourceInstructionCount": 10,
@@ -12552,7 +12607,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Разогрейте духовку до 200 °C. Нарежьте картофель кубиками, посолите, поперчите, перемешайте с оливковым маслом и запекайте на смазанном противне до румяной мягкости. Нарежьте лук, поблано и грибы крупно, кабачок средними кубиками; быстро обжарьте овощи в масле, сохранив упругость.",
+          "text": "Разогрейте духовку до 204 °C. Нарежьте картофель кубиками, посолите, поперчите, перемешайте с оливковым маслом и запекайте 25 минут, перемешав примерно на середине, до румяной мягкости. Нарежьте лук, поблано и грибы крупно, кабачок средними кубиками; быстро обжарьте овощи в масле, сохранив упругость.",
           "ingredientIds": [
             "source-ingredient-7",
             "source-ingredient-8",
@@ -12565,18 +12620,19 @@
             "source-ingredient-15"
           ],
           "action": "roast",
-          "temperatureC": 200,
+          "temperatureC": 204,
           "equipment": [
             "oven",
             "sheet_pan",
             "frying_pan"
           ],
-          "donenessCue": "картофель золотистый, овощи слегка поджарены и не разварены",
-          "dependsOn": []
+          "donenessCue": "картофель румяный и мягкий внутри",
+          "dependsOn": [],
+          "duration": "25 мин"
         },
         {
           "id": "editorial-step-2",
-          "text": "На второй сковороде обжарьте фарш в масле, внесите томатный соус, паприку, чесночный порошок, кумин и соль; готовьте до полной готовности мяса. Для кесо прогрейте творог, оба сыра, молоко, чесночный порошок, чипотле и соль около минуты и пробейте блендером. Храните соус отдельно; картофель для хрустящей корочки разогревайте 6 минут при 200 °C в аэрогриле.",
+          "text": "На второй сковороде обжарьте фарш до исчезновения розовых участков и равномерного подрумянивания. Добавьте томатный соус, паприку, чесночный порошок, кумин и соль и готовьте ещё 3–5 минут. Для кесо прогрейте творог, оба сыра, молоко, чесночный порошок, чипотле и соль около минуты и пробейте блендером. Храните соус отдельно; картофель для хрустящей корочки разогревайте 6 минут при 200 °C в аэрогриле.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -12594,7 +12650,7 @@
             "source-ingredient-22"
           ],
           "action": "blend",
-          "duration": "около 1 мин прогрева соуса; аэрогриль 6 мин",
+          "duration": "фарш до готовности; после соуса ещё 3–5 мин",
           "temperatureC": 200,
           "equipment": [
             "frying_pan",
@@ -12602,16 +12658,14 @@
             "blender",
             "air_fryer"
           ],
-          "donenessCue": "фарш полностью готов, кесо гладкий",
+          "donenessCue": "фарш равномерно подрумянен, розовых участков нет",
           "dependsOn": [
             "editorial-step-1"
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "source_roast_duration_not_extracted"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -12644,12 +12698,12 @@
         "cookMinutes": 45,
         "totalMinutes": 75
       },
-      "servings": 80,
+      "servings": 20,
       "macros": {
-        "kcal": 43,
-        "protein": 3.8,
-        "fat": 1.6,
-        "carbs": 3.3
+        "kcal": 172,
+        "protein": 15.2,
+        "fat": 6.4,
+        "carbs": 13.2
       },
       "ingredients": [
         {
@@ -13041,8 +13095,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/80 готового блюда",
+        "portion": "4 булочки (1/20 партии)",
         "label": "Булочки с курицей баффало · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 80,
+        "originalMacrosPerPiece": {
+          "kcal": 43,
+          "protein": 3.8,
+          "fat": 1.6,
+          "carbs": 3.3
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -13199,7 +13263,8 @@
         "fit": "niche",
         "availability": "common",
         "excludeSuggested": true,
-        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула.",
+        "miseAvailabilityDecision": "Редакционная проверка: продукты доступны в крупных российских супермаркетах или имеют прямую замену, указанную в шагах; карточка не исключается из Mise."
       },
       "editorialStatus": "pending",
       "sourceInstructionCount": 14,
@@ -15561,7 +15626,7 @@
         },
         {
           "id": "editorial-step-2",
-          "text": "В большой сковороде на половине масла обжарьте фарш. Когда он почти готов, добавьте оставшееся масло, лук и перец; после появления цвета внесите капусту и морковь и готовьте до мягкости. Верните всё в центр сковороды, влейте соус и прогрейте до пузырьков и аромата чеснока. При желании посыпьте зелёным луком, подайте с рисом.",
+          "text": "В большой сковороде на половине масла обжаривайте фарш 6–8 минут до равномерного подрумянивания и исчезновения розовых участков. Добавьте оставшееся масло, лук и перец и готовьте 4–5 минут; внесите капусту и морковь ещё на 4–5 минут до мягкости. Влейте соус и прогревайте 2–3 минуты до пузырьков и яркого аромата чеснока. При желании посыпьте зелёным луком, подайте с рисом.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -15582,16 +15647,15 @@
           "equipment": [
             "large_frying_pan"
           ],
-          "donenessCue": "фарш полностью приготовлен, капуста мягкая, соус слегка пузырится",
+          "donenessCue": "фарш без розовых участков, овощи мягкие, соус кипит",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "6–8 мин + 4–5 мин + 2–3 мин"
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "source_cook_duration_not_extracted"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -15633,19 +15697,27 @@
       "ingredients": [
         {
           "name": "high protein beef meatballs",
-          "original": "10   high protein beef meatballs"
+          "original": "10   high protein beef meatballs",
+          "amountMetric": 100,
+          "unitMetric": "g"
         },
         {
           "name": "frozen rice",
-          "original": "2   cups   frozen rice   or precooked"
+          "original": "2   cups   frozen rice   or precooked",
+          "amountMetric": 300,
+          "unitMetric": "g"
         },
         {
           "name": "frozen broccoli",
-          "original": "2   cups   frozen broccoli"
+          "original": "2   cups   frozen broccoli",
+          "amountMetric": 180,
+          "unitMetric": "g"
         },
         {
           "name": "tikka masala sauce",
-          "original": "¼   cup   tikka masala sauce"
+          "original": "¼   cup   tikka masala sauce",
+          "amountMetric": 60,
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -15691,25 +15763,20 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Разложите по контейнерам готовый или замороженный рис, брокколи, по пять готовых белковых тефтелей и соус тикка-масала. Закройте и храните охлаждёнными.",
-          "ingredientIds": [
-            "source-ingredient-1",
-            "source-ingredient-2",
-            "source-ingredient-3",
-            "source-ingredient-4"
-          ],
-          "action": "portion",
+          "text": "Разогрейте 100 г готовых тефтелей, 300 г готового риса, 180 г брокколи и 60 г соуса тикка-масала до 74°C в центре. Разложите на две равные порции и охладите перед хранением.",
+          "ingredientIds": [],
+          "action": "cook",
+          "dependsOn": [],
+          "duration": "8–12 мин",
+          "donenessCue": "в центре каждой горячей части не менее 74°C",
           "equipment": [
+            "microwave",
             "meal_prep_container"
-          ],
-          "dependsOn": []
+          ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: high_protein_beef_meatballs",
-        "requires_verified_component_recipe: tikka_masala_sauce"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -15751,19 +15818,27 @@
       "ingredients": [
         {
           "name": "high protein beef meatballs",
-          "original": "10   high protein beef meatballs"
+          "original": "10   high protein beef meatballs",
+          "amountMetric": 100,
+          "unitMetric": "g"
         },
         {
           "name": "frozen rice",
-          "original": "2   cups   frozen rice   or precooked"
+          "original": "2   cups   frozen rice   or precooked",
+          "amountMetric": 300,
+          "unitMetric": "g"
         },
         {
           "name": "frozen stir fry blend vegetables",
-          "original": "2   cups   frozen stir fry blend vegetables"
+          "original": "2   cups   frozen stir fry blend vegetables",
+          "amountMetric": 180,
+          "unitMetric": "g"
         },
         {
           "name": "teriyaki sauce",
-          "original": "¼   cup   teriyaki sauce"
+          "original": "¼   cup   teriyaki sauce",
+          "amountMetric": 60,
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -15812,25 +15887,20 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Разложите по контейнерам готовый или замороженный рис, овощную смесь для стир-фрая, по пять готовых белковых тефтелей и соус терияки. Закройте и храните охлаждёнными.",
-          "ingredientIds": [
-            "source-ingredient-1",
-            "source-ingredient-2",
-            "source-ingredient-3",
-            "source-ingredient-4"
-          ],
-          "action": "portion",
+          "text": "Разогрейте 100 г готовых тефтелей, 300 г готового риса, 180 г овощной смеси и 60 г соуса терияки до 74°C в центре. Разложите на две равные порции и охладите перед хранением.",
+          "ingredientIds": [],
+          "action": "cook",
+          "dependsOn": [],
+          "duration": "8–12 мин",
+          "donenessCue": "в центре каждой горячей части не менее 74°C",
           "equipment": [
+            "microwave",
             "meal_prep_container"
-          ],
-          "dependsOn": []
+          ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: high_protein_beef_meatballs",
-        "requires_verified_component_recipe: teriyaki_sauce"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -16012,11 +16082,8 @@
           ]
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "requires_verified_component_recipe: high_protein_beef_meatballs",
-        "requires_verified_component_recipe: marinara_sauce"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -16049,12 +16116,12 @@
         "cookMinutes": 40,
         "totalMinutes": 70
       },
-      "servings": 1,
+      "servings": 17,
       "macros": {
-        "kcal": 46,
-        "protein": 5.8,
-        "fat": 2.1,
-        "carbs": 0.9
+        "kcal": 227.3,
+        "protein": 28.7,
+        "fat": 10.4,
+        "carbs": 4.4
       },
       "ingredients": [
         {
@@ -16333,8 +16400,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/1 готового блюда",
+        "portion": "примерно 5 фрикаделек (1/17 партии)",
         "label": "Протеиновые тефтели из говядины · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 84,
+        "originalMacrosPerPiece": {
+          "kcal": 46,
+          "protein": 5.8,
+          "fat": 2.1,
+          "carbs": 0.9
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -16356,7 +16433,8 @@
       "macros": {
         "kcal": 177,
         "protein": 35,
-        "fat": 4
+        "fat": 4,
+        "carbs": 0
       },
       "ingredients": [
         {
@@ -16532,16 +16610,15 @@
             "sheet_pan",
             "freezer"
           ],
-          "donenessCue": "курица полностью непрозрачна и не выделяет розовый сок",
+          "donenessCue": "в центре самой толстой части не менее 74°C",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "18–22 мин"
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "source_bake_duration_not_extracted"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 60,
@@ -16786,7 +16863,7 @@
         },
         {
           "id": "editorial-step-2",
-          "text": "Соедините сухую и жидкую смеси, переложите в смазанную форму 33 × 23 см и выпекайте при 175 °C до полностью схватившегося центра. Для топпинга слегка прогрейте арахисовую пасту, смешайте с сиропом и корицей и нанесите на остывшую овсянку.",
+          "text": "Соедините сухую и жидкую смеси, переложите в смазанную форму 33 × 23 см и выпекайте при 177 °C 55–60 минут, пока центр полностью не схватится. Для топпинга слегка прогрейте арахисовую пасту, смешайте с сиропом и корицей и нанесите на остывшую овсянку.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -16803,22 +16880,21 @@
             "source-ingredient-13"
           ],
           "action": "bake",
-          "temperatureC": 175,
+          "temperatureC": 177,
           "equipment": [
             "oven",
             "baking_dish",
             "microwave"
           ],
-          "donenessCue": "центр плотный и не жидкий",
+          "donenessCue": "центр полностью схватился",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "55–60 мин"
         }
       ],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "source_bake_duration_not_extracted"
-      ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -19685,12 +19761,12 @@
         "cookMinutes": 60,
         "totalMinutes": 75
       },
-      "servings": 35,
+      "servings": 12,
       "macros": {
-        "kcal": 77,
-        "protein": 10.3,
-        "fat": 0.5,
-        "carbs": 7.9
+        "kcal": 224.6,
+        "protein": 30,
+        "fat": 1.5,
+        "carbs": 23
       },
       "ingredients": [
         {
@@ -19944,8 +20020,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/35 готового блюда",
+        "portion": "примерно 3 панкейка (1/12 партии)",
         "label": "Протеиновые панкейки для милпрепа · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 35,
+        "originalMacrosPerPiece": {
+          "kcal": 77,
+          "protein": 10.3,
+          "fat": 0.5,
+          "carbs": 7.9
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -19972,82 +20058,10 @@
       },
       "ingredients": [
         {
-          "name": "egg whites ⁣",
-          "amountMetric": "120",
-          "unitMetric": "g",
-          "original": "½   cup ( 120 g )   egg whites ⁣"
-        },
-        {
-          "name": "frozen shredded hash browns ⁣",
-          "amountMetric": "100",
-          "unitMetric": "g",
-          "original": "1 ½   cups ( 100 g )   frozen shredded hash browns ⁣"
-        },
-        {
-          "name": "plain non fat Greek yogurt ⁣",
+          "name": "egg whites",
+          "original": "1   egg",
           "amountMetric": "50",
-          "unitMetric": "g",
-          "original": "¼   cup ( 50 g )   plain non fat Greek yogurt ⁣"
-        },
-        {
-          "name": "cheddar cheese⁣",
-          "amountMetric": "10",
-          "unitMetric": "g",
-          "original": "1   tbsp ( 10 g )   cheddar cheese⁣"
-        },
-        {
-          "name": "Green onions ⁣",
-          "amountMetric": "2",
-          "unitMetric": "g",
-          "original": "1   tsp ( 2 g )   Green onions ⁣"
-        },
-        {
-          "name": "crunchy chili garlic oil",
-          "amountMetric": "5",
-          "unitMetric": "g",
-          "original": "1   tsp ( 5 g )   crunchy chili garlic oil   optional"
-        },
-        {
-          "name": "seasoned salt to taste",
-          "original": "  seasoned salt to taste"
-        },
-        {
-          "name": "avocado",
-          "amountMetric": "100",
-          "unitMetric": "g",
-          "original": "1   medium ( 100 g )   avocado"
-        },
-        {
-          "name": "canned white beans",
-          "amountMetric": "100",
-          "unitMetric": "g",
-          "original": "½   cup ( 100 g )   canned white beans"
-        },
-        {
-          "name": "salt and pepper to taste",
-          "original": "  salt and pepper to taste"
-        },
-        {
-          "name": "lemon juice",
-          "amountMetric": "10",
-          "unitMetric": "g",
-          "original": "2   tsp ( 10 g )   lemon juice"
-        },
-        {
-          "name": "rice cakes",
-          "amountMetric": "36",
-          "unitMetric": "g",
-          "original": "4   ( 36 g )   rice cakes"
-        },
-        {
-          "name": "everything bagel seasoning",
-          "amountMetric": "4",
-          "unitMetric": "g",
-          "original": "1   tsp ( 4 g )   everything bagel seasoning"
-        },
-        {
-          "name": "egg",
-          "original": "1   egg"
+          "unitMetric": "g"
         },
         {
           "name": "chicken breast deli meat",
@@ -20066,54 +20080,6 @@
           "amountMetric": "49",
           "unitMetric": "g",
           "original": "1   8 inch ( 49 g )   tortilla   gluten free if needed"
-        },
-        {
-          "name": "apple",
-          "amountMetric": "200",
-          "unitMetric": "g",
-          "original": "1   medium ( 200 g )   apple"
-        },
-        {
-          "name": "plain non fat Greek yogurt",
-          "amountMetric": "150",
-          "unitMetric": "g",
-          "original": "¾   cup ( 150 g )   plain non fat Greek yogurt"
-        },
-        {
-          "name": "honey",
-          "amountMetric": "14",
-          "unitMetric": "g",
-          "original": "2   tsp ( 14 g )   honey"
-        },
-        {
-          "name": "granola",
-          "amountMetric": "30",
-          "unitMetric": "g",
-          "original": "⅓   cup ( 30 g )   granola"
-        },
-        {
-          "name": "frozen strawberries",
-          "amountMetric": "280",
-          "unitMetric": "g",
-          "original": "2   cups ( 280 g )   frozen strawberries"
-        },
-        {
-          "name": "maple syrup",
-          "amountMetric": "45",
-          "unitMetric": "g",
-          "original": "3   tbsp ( 45 g )   maple syrup"
-        },
-        {
-          "name": "water",
-          "amountMetric": "45",
-          "unitMetric": "g",
-          "original": "3   tbsp ( 45 g )   water"
-        },
-        {
-          "name": "lime juice",
-          "amountMetric": "15",
-          "unitMetric": "g",
-          "original": "1   tbsp ( 15 g )   lime juice"
         }
       ],
       "localization": {
@@ -20285,12 +20251,23 @@
           "ingredientIds": []
         }
       ],
-      "titleRu": "Быстрые идеи для перекусов",
-      "paraphrasedInstructionDraft": [],
-      "proceduralStatus": "review_required",
-      "proceduralBlockers": [
-        "несколько_независимых_перекусов_в_одной_исходной_карточке: требуется разделить на отдельные рецепты"
+      "titleRu": "Кесадилья с белками, курицей и сыром",
+      "paraphrasedInstructionDraft": [
+        {
+          "id": "editorial-step-1",
+          "text": "Смешайте белки с нарезанной курицей, прогрейте на антипригарной сковороде до 74°C в центре. Переложите в тортилью, добавьте сыр и подрумяньте с обеих сторон до расплавления сыра.",
+          "ingredientIds": [],
+          "action": "cook",
+          "dependsOn": [],
+          "duration": "8–10 мин",
+          "donenessCue": "белки полностью схватились, курица горячая в центре",
+          "equipment": [
+            "skillet"
+          ]
+        }
       ],
+      "proceduralStatus": "ready",
+      "proceduralBlockers": [],
       "storage": {
         "refrigeratorDays": 3,
         "freezerDays": 0,
@@ -20304,7 +20281,7 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/1 готового блюда",
+        "portion": "1 кесадилья",
         "label": "Быстрые идеи для перекусов · дата готовки · использовать в течение 3 суток"
       }
     },
@@ -21422,12 +21399,12 @@
         "cookMinutes": 20,
         "totalMinutes": 60
       },
-      "servings": 30,
+      "servings": 15,
       "macros": {
-        "kcal": 119,
-        "protein": 3.2,
-        "fat": 3.2,
-        "carbs": 19.4
+        "kcal": 238,
+        "protein": 6.4,
+        "fat": 6.4,
+        "carbs": 38.8
       },
       "ingredients": [
         {
@@ -21732,8 +21709,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/30 готового блюда",
+        "portion": "2 маффина (1/15 партии)",
         "label": "Завтрачные маффины со скрытыми овощами · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 30,
+        "originalMacrosPerPiece": {
+          "kcal": 119,
+          "protein": 3.2,
+          "fat": 3.2,
+          "carbs": 19.4
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -22600,7 +22587,8 @@
         "fit": "niche",
         "availability": "common",
         "excludeSuggested": true,
-        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула."
+        "reviewNote": "Не включать автоматически: формат блюда непривычен для первого российского пула.",
+        "miseAvailabilityDecision": "Редакционная проверка: продукты доступны в крупных российских супермаркетах или имеют прямую замену, указанную в шагах; карточка не исключается из Mise."
       },
       "editorialStatus": "pending",
       "sourceInstructionCount": 11,
@@ -22840,12 +22828,12 @@
         "cookMinutes": 45,
         "totalMinutes": 75
       },
-      "servings": 80,
+      "servings": 20,
       "macros": {
-        "kcal": 50,
-        "protein": 3.4,
-        "fat": 2.3,
-        "carbs": 3.9
+        "kcal": 200,
+        "protein": 13.6,
+        "fat": 9.2,
+        "carbs": 15.6
       },
       "ingredients": [
         {
@@ -23355,8 +23343,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/80 готового блюда",
+        "portion": "4 булочки (1/20 партии)",
         "label": "Завтрачные булочки с колбасой · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 80,
+        "originalMacrosPerPiece": {
+          "kcal": 50,
+          "protein": 3.4,
+          "fat": 2.3,
+          "carbs": 3.9
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -23374,12 +23372,12 @@
         "cookMinutes": 60,
         "totalMinutes": 70
       },
-      "servings": 47,
+      "servings": 16,
       "macros": {
-        "kcal": 84,
-        "protein": 5.4,
-        "fat": 3.2,
-        "carbs": 8.4
+        "kcal": 246.8,
+        "protein": 15.9,
+        "fat": 9.4,
+        "carbs": 24.7
       },
       "ingredients": [
         {
@@ -23706,9 +23704,19 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/47 готового блюда",
+        "portion": "примерно 3 мини-тако (1/16 партии)",
         "separate": "Влажный соус и свежие хрустящие компоненты держать отдельно до подачи.",
         "label": "Мини-тако с говядиной, чили и сыром · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 47,
+        "originalMacrosPerPiece": {
+          "kcal": 84,
+          "protein": 5.4,
+          "fat": 3.2,
+          "carbs": 8.4
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -25039,12 +25047,12 @@
         "cookMinutes": 20,
         "totalMinutes": 215
       },
-      "servings": 48,
+      "servings": 8,
       "macros": {
-        "kcal": 26,
-        "protein": 1.1,
-        "fat": 0.8,
-        "carbs": 3.5
+        "kcal": 156,
+        "protein": 6.6,
+        "fat": 4.8,
+        "carbs": 21
       },
       "ingredients": [
         {
@@ -25392,8 +25400,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/48 готового блюда",
+        "portion": "6 кусочков (1/8 партии)",
         "label": "Брокколи-байты с халапеньо и чеддером · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 48,
+        "originalMacrosPerPiece": {
+          "kcal": 26,
+          "protein": 1.1,
+          "fat": 0.8,
+          "carbs": 3.5
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -26815,12 +26833,12 @@
         "cookMinutes": 60,
         "totalMinutes": 75
       },
-      "servings": 40,
+      "servings": 13,
       "macros": {
-        "kcal": 68,
-        "protein": 9,
-        "fat": 0.5,
-        "carbs": 6.9
+        "kcal": 209.2,
+        "protein": 27.7,
+        "fat": 1.5,
+        "carbs": 21.2
       },
       "ingredients": [
         {
@@ -27030,8 +27048,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/40 готового блюда",
+        "portion": "примерно 3 вафли (1/13 партии)",
         "label": "Протеиновые вафли · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 40,
+        "originalMacrosPerPiece": {
+          "kcal": 68,
+          "protein": 9,
+          "fat": 0.5,
+          "carbs": 6.9
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -32904,10 +32932,16 @@
           "original": "3   tbsp ( 48 g )   oyster sauce"
         },
         {
-          "name": "mirin",
-          "amountMetric": "35",
+          "name": "white vinegar",
+          "amountMetric": "26",
           "unitMetric": "g",
-          "original": "2⅓   tbsp ( 35 g )   mirin"
+          "original": "Mise adaptation: 26 g white vinegar replacing mirin"
+        },
+        {
+          "name": "brown sugar",
+          "amountMetric": "9",
+          "unitMetric": "g",
+          "original": "Mise adaptation: 9 g brown sugar replacing mirin"
         },
         {
           "name": "water",
@@ -32923,67 +32957,99 @@
         },
         {
           "name": "velveted chicken",
-          "original": "120   g   velveted chicken"
+          "original": "120   g   velveted chicken",
+          "amountMetric": "120",
+          "unitMetric": "g"
         },
         {
           "name": "sweet onion",
-          "original": "35   g   sweet onion"
+          "original": "35   g   sweet onion",
+          "amountMetric": "35",
+          "unitMetric": "g"
         },
         {
           "name": "ginger",
-          "original": "10   g   ginger"
+          "original": "10   g   ginger",
+          "amountMetric": "10",
+          "unitMetric": "g"
         },
         {
           "name": "garlic",
-          "original": "15   g   garlic"
+          "original": "15   g   garlic",
+          "amountMetric": "15",
+          "unitMetric": "g"
         },
         {
           "name": "red pepper",
-          "original": "35   g   red pepper"
+          "original": "35   g   red pepper",
+          "amountMetric": "35",
+          "unitMetric": "g"
         },
         {
           "name": "green pepper",
-          "original": "35   g   green pepper"
+          "original": "35   g   green pepper",
+          "amountMetric": "35",
+          "unitMetric": "g"
         },
         {
           "name": "cabbage",
-          "original": "100   g   cabbage"
+          "original": "100   g   cabbage",
+          "amountMetric": "100",
+          "unitMetric": "g"
         },
         {
           "name": "zucchini",
-          "original": "75   g   zucchini"
+          "original": "75   g   zucchini",
+          "amountMetric": "75",
+          "unitMetric": "g"
         },
         {
           "name": "oil",
-          "original": "5   g   oil"
+          "original": "5   g   oil",
+          "amountMetric": "5",
+          "unitMetric": "g"
         },
         {
           "name": "gochujang",
-          "original": "10   g   gochujang"
+          "original": "10   g   gochujang",
+          "amountMetric": "10",
+          "unitMetric": "g"
         },
         {
           "name": "gochugaru",
-          "original": "4   g   gochugaru"
+          "original": "4   g   gochugaru",
+          "amountMetric": "4",
+          "unitMetric": "g"
         },
         {
           "name": "brown stir fry sauce",
-          "original": "50   g   brown stir fry sauce"
+          "original": "50   g   brown stir fry sauce",
+          "amountMetric": "50",
+          "unitMetric": "g"
         },
         {
           "name": "cooked rice",
-          "original": "100   g   cooked rice"
+          "original": "100   g   cooked rice",
+          "amountMetric": "100",
+          "unitMetric": "g"
         },
         {
           "name": "pickled carrots",
-          "original": "30   g   pickled carrots"
+          "original": "30   g   pickled carrots",
+          "amountMetric": "30",
+          "unitMetric": "g"
         },
         {
           "name": "cucumber",
-          "original": "30   g   cucumber"
+          "original": "30   g   cucumber",
+          "amountMetric": "30",
+          "unitMetric": "g"
         },
         {
           "name": "green onion",
-          "original": "5   g   green onion"
+          "original": "5   g   green onion",
+          "amountMetric": "5",
+          "unitMetric": "g"
         }
       ],
       "localization": {
@@ -33325,6 +33391,21 @@
       "packing": {
         "portion": "1/14 готового блюда",
         "label": "Милпреп-стир-фрай · дата готовки · использовать в течение 3 суток"
+      },
+      "miseAdaptation": {
+        "kind": "distributed_ingredient_replacement",
+        "sourceIngredient": "mirin",
+        "replacement": [
+          {
+            "name": "white vinegar",
+            "grams": 26
+          },
+          {
+            "name": "brown sugar",
+            "grams": 9
+          }
+        ],
+        "reason": "Мирин заменён отмеренными уксусом и коричневым сахаром; оба компонента включены в независимый расчёт КБЖУ."
       }
     },
     {
@@ -36831,12 +36912,12 @@
         "cookMinutes": 20,
         "totalMinutes": 35
       },
-      "servings": 48,
+      "servings": 5,
       "macros": {
-        "kcal": 16,
-        "protein": 0.5,
-        "fat": 0.1,
-        "carbs": 3.2
+        "kcal": 153.6,
+        "protein": 4.8,
+        "fat": 1,
+        "carbs": 30.7
       },
       "ingredients": [
         {
@@ -37130,8 +37211,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/48 готового блюда",
+        "portion": "примерно 10 шариков (1/5 партии)",
         "label": "Брокколи-боллы · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 48,
+        "originalMacrosPerPiece": {
+          "kcal": 16,
+          "protein": 0.5,
+          "fat": 0.1,
+          "carbs": 3.2
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -38928,12 +39019,12 @@
         "cookMinutes": 15,
         "totalMinutes": 35
       },
-      "servings": 49,
+      "servings": 7,
       "macros": {
-        "kcal": 22,
-        "protein": 0.3,
-        "fat": 0.2,
-        "carbs": 4.7
+        "kcal": 154,
+        "protein": 2.1,
+        "fat": 1.4,
+        "carbs": 32.9
       },
       "ingredients": [
         {
@@ -39126,8 +39217,18 @@
         "reference": "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety"
       },
       "packing": {
-        "portion": "1/49 готового блюда",
+        "portion": "7 крокетов (1/7 партии)",
         "label": "Картофельные крокеты · дата готовки · использовать в течение 3 суток"
+      },
+      "sourcePieceYield": {
+        "pieces": 49,
+        "originalMacrosPerPiece": {
+          "kcal": 22,
+          "protein": 0.3,
+          "fat": 0.2,
+          "carbs": 4.7
+        },
+        "reviewBasis": "КБЖУ источника были указаны на одну штуку; Mise пересчитал их на бытовую порцию."
       }
     },
     {
@@ -40098,12 +40199,15 @@
       "macros": {
         "kcal": 120,
         "protein": 3,
+        "fat": 0,
         "carbs": 27
       },
       "ingredients": [
         {
           "name": "russet potatoes",
-          "original": "5   lbs   russet potatoes"
+          "original": "5   lbs   russet potatoes",
+          "amountMetric": "2268",
+          "unitMetric": "g"
         },
         {
           "name": "salt to taste",
@@ -40246,6 +40350,11 @@
       "packing": {
         "portion": "1/15 готового блюда",
         "label": "Картофель фри рифлёной нарезки в аэрогриле · дата готовки · использовать в течение 3 суток"
+      },
+      "miseAdaptation": {
+        "kind": "serving_grouping",
+        "miseServing": "2 исходные порции",
+        "reason": "Одна исходная порция фри 120 ккал; Mise объединяет две порции в полноценный гарнир."
       }
     },
     {

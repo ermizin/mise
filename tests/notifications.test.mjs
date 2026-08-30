@@ -70,6 +70,29 @@ test("stores device subscriptions and scheduled jobs, then sends visible Web Pus
   assert.match(sender, /Authorization: `vapid/);
   assert.match(serviceWorker, /registration\.showNotification/);
   assert.match(serviceWorker, /notificationclick/);
+  assert.match(serviceWorker, /mise:clear-plan-cache/);
+  assert.match(serviceWorker, /cache\.delete\(planCacheKey\(clientId\)\)/,
+    "a deleted plan can remove its offline GET cache entry",
+  );
+  assert.match(schema, /leaseUntil: integer\("lease_until"\)/,
+    "push jobs retain a recoverable lease for atomic claims",
+  );
+  assert.match(sender, /leaseUntil: now \+ JOB_LEASE_MS/);
+  assert.match(sender, /or\(isNull\(pushJobs\.leaseUntil\), lt\(pushJobs\.leaseUntil, now\)\)/,
+    "only one processor can claim a due job until its lease expires",
+  );
+  assert.match(route, /processDueNotifications\(now, \{ jobId: testId \}\)/,
+    "test delivery processes the exact diagnostic job",
+  );
+  assert.match(route, /error: "invalid JSON".*status: 400/s,
+    "malformed push requests fail as client errors",
+  );
+  assert.match(route, /body\.jobs\.every\(\(job\) => validJob\(job, now\)\)/,
+    "enabling reminders rejects the whole invalid schedule instead of silently dropping jobs",
+  );
+  assert.match(route, /Boolean\(testJob\?\.sentAt\)/,
+    "test delivery result comes from the newly-created job, not aggregate sends",
+  );
   assert.match(worker, /async scheduled/);
   assert.match(vite, /crons: \["\* \* \* \* \*"\]/);
 });
