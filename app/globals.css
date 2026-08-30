@@ -3009,13 +3009,18 @@ p {
   }
 }
 .builder-shell {
-  padding-bottom: calc(128px + env(safe-area-inset-bottom));
+  height: 100dvh;
+  min-height: 0;
+  padding-bottom: 0;
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  overflow: hidden;
 }
 .builder-chat-header {
   position: relative;
   z-index: 3;
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) auto;
+  grid-template-columns: 48px minmax(0, 1fr) 48px;
   align-items: center;
   gap: 13px;
 }
@@ -3031,21 +3036,6 @@ p {
 .builder-chat-header .kicker {
   margin-top: 2px;
   white-space: nowrap;
-}
-.builder-manual-link {
-  min-height: var(--hit-min);
-  max-width: 142px;
-  padding: 6px 8px;
-  border-radius: var(--r-tile);
-  background: transparent;
-  color: var(--accent-text);
-  font-size: var(--text-min);
-  font-weight: var(--weight-label);
-  line-height: 1.2;
-  text-align: right;
-}
-.builder-manual-link[aria-pressed="true"] {
-  color: var(--mint-text);
 }
 .builder-chat-progress {
   position: relative;
@@ -3066,7 +3056,14 @@ p {
 .builder-content {
   position: relative;
   z-index: 1;
+  min-height: 0;
   padding-top: 22px;
+  padding-bottom: calc(128px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-padding-top: 22px;
+  scroll-padding-bottom: calc(112px + env(safe-area-inset-bottom));
 }
 .builder-step-content.motion-enter-right {
   animation: mise-builder-step-right var(--motion-base) var(--motion-settled) 120ms both;
@@ -3176,6 +3173,70 @@ p {
   margin: 0;
   color: var(--ink-strong);
   line-height: 1.4;
+}
+.builder-menu-mode-options {
+  margin-top: var(--space-4);
+  display: grid;
+  gap: 10px;
+}
+.builder-menu-mode-options > .kicker {
+  margin: 0 2px 2px;
+}
+.builder-menu-mode-options > button {
+  width: 100%;
+  min-height: 78px;
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 24px;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.86);
+  border-radius: var(--r-row);
+  color: var(--ink-body);
+  background: rgba(255, 255, 255, 0.62);
+  text-align: left;
+}
+.builder-menu-mode-options > button.is-selected {
+  border-color: rgba(242, 87, 26, 0.42);
+  background: rgba(255, 244, 236, 0.82);
+}
+.builder-menu-mode-icon {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-nested);
+  color: var(--accent-text);
+  background: rgba(255, 255, 255, 0.82);
+}
+.builder-menu-mode-options > button > span:nth-child(2) {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.builder-menu-mode-options b {
+  color: var(--ink-strong);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.builder-menu-mode-options small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.35;
+}
+.builder-menu-mode-options i {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgba(42, 29, 20, 0.18);
+  border-radius: var(--r-pill);
+  color: transparent;
+}
+.builder-menu-mode-options > button.is-selected i {
+  border-color: transparent;
+  color: #fff;
+  background: var(--button-grad);
 }
 .builder-chat-current .is-pending {
   justify-self: end;
@@ -3322,6 +3383,7 @@ p {
   animation-delay: 320ms;
 }
 .builder-chat-response {
+  min-height: calc(100% - 92px);
   margin-top: 16px;
   animation: mise-builder-response 320ms var(--motion-settled) both;
 }
@@ -4527,6 +4589,9 @@ p {
     border-radius: var(--r-chrome);
     box-shadow: 0 26px 80px rgba(32, 60, 52, 0.18);
   }
+  .builder-shell {
+    height: calc(100dvh - 36px);
+  }
 }
 
 @media (min-width: 960px) {
@@ -5066,12 +5131,28 @@ p {
   color: var(--accent-text-strong);
 }
 .menu-row-art {
+  position: relative;
   width: 46px;
   height: 46px;
   display: grid;
   place-items: center;
+  overflow: hidden;
   border-radius: var(--r-tile);
   font-size: var(--glyph-s);
+}
+.menu-row-art img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.menu-row-art .recipe-media-fallback {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
 }
 .menu-row small {
   display: block;
@@ -5462,10 +5543,6 @@ p {
   }
   .builder-chat-header {
     gap: 8px;
-  }
-  .builder-manual-link {
-    max-width: 100px;
-    padding-inline: 4px;
   }
   .builder-chat-composer {
     grid-template-columns: minmax(0, 1fr);

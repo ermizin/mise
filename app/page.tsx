@@ -9490,6 +9490,7 @@ function PlanBuilder({
   const closeRef = useRef(onClose);
   const chatQuestionRef = useRef<HTMLDivElement | null>(null);
   const menuAssemblyRef = useRef<HTMLDivElement | null>(null);
+  const builderContentRef = useRef<HTMLElement | null>(null);
   const chatTimersRef = useRef<number[]>([]);
   useEffect(() => {
     stepRef.current = step;
@@ -9626,9 +9627,18 @@ function PlanBuilder({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- the back trap is installed once
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      chatQuestionRef.current?.focus({ preventScroll: true });
-      chatQuestionRef.current?.scrollIntoView({
-        block: "start",
+      const content = builderContentRef.current;
+      const question = chatQuestionRef.current;
+      if (!content || !question) return;
+      question.focus({ preventScroll: true });
+      const contentBox = content.getBoundingClientRect();
+      const questionBox = question.getBoundingClientRect();
+      content.scrollTo({
+        top: Math.max(
+          0,
+          content.scrollTop + questionBox.top - contentBox.top - 22,
+        ),
+        left: 0,
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
           ? "auto"
           : "smooth",
@@ -10463,43 +10473,14 @@ function PlanBuilder({
             {steps[step]} · {step + 1} из {steps.length}
           </p>
         </div>
-        {mode === "onboarding" && (
-          <button
-            className="builder-manual-link"
-            disabled={Boolean(chatTransition)}
-            aria-label={
-              menuMode === "manual"
-                ? "Переключиться на автоматическую сборку Mise"
-                : "Переключиться на ручной выбор блюд"
-            }
-            onClick={() => {
-              const nextMode = menuMode === "manual" ? "auto" : "manual";
-              setMenuMode(nextMode);
-              if (nextMode === "manual") {
-                const firstMissing = positions.findIndex(
-                  ({ batch, slot }) =>
-                    !assignmentCoverageComplete(
-                      people,
-                      slot,
-                      validSelectionAssignments[
-                        selectionKey(batch, slot)
-                      ] ?? [],
-                    ),
-                );
-                setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
-              } else if (step === 5) assembleMenu("fill");
-            }}
-          >
-            {menuMode === "manual" ? "Собрать с Mise" : "Составить самому"}
-          </button>
-        )}
+        <span className="builder-header-spacer" aria-hidden />
       </header>
       {mode === "onboarding" && (
         <div className="builder-chat-progress" aria-hidden>
           <span style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
         </div>
       )}
-      <section className="builder-content">
+      <section className="builder-content" ref={builderContentRef}>
         {draftRestored && (
           <Note
             tone="mint"
@@ -10729,22 +10710,78 @@ function PlanBuilder({
               </Note>
             )}
             {step === 4 && (
-              <CookingStep
-                periodDays={rawDays}
-                cookEveryDays={cookEveryDays}
-                remainder={remainder}
-                decision={remainderDecision}
-                start={start}
-                resolvedDays={resolvedDays}
-                canExtend={rawDays + cookEveryDays - remainder <= 14}
-                onDays={(value) => {
-                  setCookEveryDays(value);
-                  setRemainderDecision(null);
-                }}
-                onDecision={(value) => {
-                  setRemainderDecision(value);
-                }}
-              />
+              <>
+                {mode === "onboarding" && (
+                  <div
+                    className="builder-menu-mode-options"
+                    role="radiogroup"
+                    aria-label="Как собрать меню"
+                  >
+                    <p className="kicker">Как собрать меню</p>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={menuMode === "auto"}
+                      className={menuMode === "auto" ? "is-selected" : ""}
+                      onClick={() => setMenuMode("auto")}
+                    >
+                      <span className="builder-menu-mode-icon">
+                        <Icon name="pot" size={20} />
+                      </span>
+                      <span>
+                        <b>Собрать с Mise</b>
+                        <small>
+                          Получить готовое меню и заменить только то, что не
+                          подходит
+                        </small>
+                      </span>
+                      <i>
+                        {menuMode === "auto" ? (
+                          <Icon name="check" size={16} />
+                        ) : null}
+                      </i>
+                    </button>
+                    <button
+                      type="button"
+                      role="radio"
+                      aria-checked={menuMode === "manual"}
+                      className={menuMode === "manual" ? "is-selected" : ""}
+                      onClick={() => setMenuMode("manual")}
+                    >
+                      <span className="builder-menu-mode-icon">
+                        <Icon name="edit" size={20} />
+                      </span>
+                      <span>
+                        <b>Составить самому</b>
+                        <small>
+                          Выбирать блюда по одному, не пропуская параметры плана
+                        </small>
+                      </span>
+                      <i>
+                        {menuMode === "manual" ? (
+                          <Icon name="check" size={16} />
+                        ) : null}
+                      </i>
+                    </button>
+                  </div>
+                )}
+                <CookingStep
+                  periodDays={rawDays}
+                  cookEveryDays={cookEveryDays}
+                  remainder={remainder}
+                  decision={remainderDecision}
+                  start={start}
+                  resolvedDays={resolvedDays}
+                  canExtend={rawDays + cookEveryDays - remainder <= 14}
+                  onDays={(value) => {
+                    setCookEveryDays(value);
+                    setRemainderDecision(null);
+                  }}
+                  onDecision={(value) => {
+                    setRemainderDecision(value);
+                  }}
+                />
+              </>
             )}
             {step === 5 && menuMode === "auto" && (
               <>
@@ -12268,7 +12305,7 @@ function MenuReviewStep({
                     key={rowKey}
                   >
                     <span className={`menu-row-art art-${index % 5}`} aria-hidden>
-                      {recipe.emoji}
+                      <RecipeMedia recipe={recipe} />
                     </span>
                     <div>
                       <small>
@@ -12409,7 +12446,7 @@ function MenuReviewStep({
                   }}
                 >
                   <span className={`menu-row-art art-${index % 5}`} aria-hidden>
-                    {recipe.emoji}
+                    <RecipeMedia recipe={recipe} />
                   </span>
                   <div>
                     <b>{recipe.title}</b>

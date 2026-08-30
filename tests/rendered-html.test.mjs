@@ -216,7 +216,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /setPinned\(/);
   // 9c вернулся как явный ручной путь, а не как пропуск обязательных вопросов.
   assert.match(page, /function ManualMenuStep/);
-  assert.match(page, /className="builder-manual-link"/);
+  assert.match(page, /className="builder-menu-mode-options"/);
   assert.match(page, /selectionAssignments\?: Record<string, RecipeAssignment\[\]>/);
   assert.match(page, /function automaticAssignmentsFor/);
   assert.match(css, /\.manual-progress \{/);
