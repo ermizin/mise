@@ -11270,9 +11270,7 @@ function PeopleStep({
         </div>
 
         <div className="field">
-          <span className="field-label">
-            Не люблю <em>Mise не предложит сам, выбрать вручную можно</em>
-          </span>
+          <span className="field-label field-label-nowrap">Не люблю</span>
           <div className="chip-row wrap-chips">
             {dislikeOptions.map((option) => {
               const active = (person.dislikes ?? []).includes(option.id);
@@ -11300,8 +11298,8 @@ function PeopleStep({
         </div>
 
         <div className="field">
-          <span className="field-label">
-            Аллергия / мне нельзя <em>жёсткий запрет, обойти нельзя</em>
+          <span className="field-label field-label-nowrap">
+            Аллергия / мне нельзя
           </span>
           <div className="chip-row wrap-chips">
             {(Object.keys(allergenMeta) as Allergen[]).map((allergen) => {

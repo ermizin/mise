@@ -5206,6 +5206,9 @@ p {
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
+.field-label-nowrap {
+  white-space: nowrap;
+}
 .field-label em {
   margin-left: auto;
   color: var(--ink-muted);
