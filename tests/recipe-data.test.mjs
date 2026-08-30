@@ -193,6 +193,18 @@ test("runtime catalog cards use verified local source photos", async () => {
   assert.equal(runtimeRecipes.length, runtimeIds.size);
   assert.ok(runtimeRecipes.length >= 200);
   assert.ok(runtimeRecipes.every((item) => /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl)));
+  const runtimeById = new Map(runtimeCatalog.recipes.map((item) => [item.id, item]));
+  assert.ok(
+    runtimeRecipes.every((item) => {
+      const record = runtimeById.get(item.id);
+      return (
+        item.provenance.kind === "parsed" &&
+        record?.provenance.preview.kind === "source_preview" &&
+        item.provenance.imageUrl === record.provenance.preview.imageUrl
+      );
+    }),
+    "wizard adapter preserves the verified local runtime photo",
+  );
 });
 
 test("production fat-sensitive ingredients expose an honest fat note", () => {
