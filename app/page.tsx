@@ -11849,6 +11849,7 @@ function CookingStep({
 const eveningForms = ["вечер готовки", "вечера готовки", "вечеров готовки"] as const;
 const sharedForms = ["общий продукт", "общих продукта", "общих продуктов"] as const;
 const buyForms = ["продукт купить", "продукта купить", "продуктов купить"] as const;
+const initialManualRecipeCount = 5;
 
 /* Сколько порций партии не доживают до своего дня и уходят в морозилку.
    Правило то же, что у напоминаний: порция дня N морозится при N >= storageDays. */
@@ -11957,7 +11958,9 @@ function ManualMenuStep({
     current.batch.days,
     { limit: "all" },
   ).length;
-  const options = showAll ? allOptions : allOptions.slice(0, 3);
+  const options = showAll
+    ? allOptions
+    : allOptions.slice(0, initialManualRecipeCount);
   const hiddenDisliked = Math.max(
     0,
     candidateRecipes(current.slot, style, people, current.batch.days, {
@@ -12077,9 +12080,9 @@ function ManualMenuStep({
           Подберём отдельный вариант только тем, кому общее блюдо не подходит.
         </Note>
       )}
-      {!showAll && allOptions.length > 3 && (
+      {!showAll && allOptions.length > initialManualRecipeCount && (
         <button className="manual-menu-more glass-3" onClick={() => setShowAll(true)}>
-          Показать ещё {allOptions.length - 3} подходящих
+          Смотреть все подходящие — {allOptions.length}
         </button>
       )}
       {hiddenDisliked > 0 && (

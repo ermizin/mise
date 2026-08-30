@@ -27,10 +27,14 @@ test("the wizard offers manual menu building without skipping required answers",
   assert.match(page, /Составить самому/);
   assert.match(page, /Собрать с Mise/);
   assert.match(page, /function ManualMenuStep/);
+  assert.match(page, /const initialManualRecipeCount = 5/);
+  assert.match(page, /allOptions\.slice\(0, initialManualRecipeCount\)/);
+  assert.match(page, /Смотреть все подходящие — \{allOptions\.length\}/);
   assert.match(page, /function automaticAssignmentsFor/);
   assert.match(page, /Подобрать персональные варианты/);
   assert.match(page, /Собрать остальные \{remaining\} за меня/);
   assert.match(product, /обязательные вопросы нельзя пропустить/i);
+  assert.match(product, /пять лучших подходящих вариантов с фотографиями/i);
   const automaticAssembly = page.slice(
     page.indexOf("function assembleMenu"),
     page.indexOf("function replaceSelection"),
