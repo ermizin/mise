@@ -1689,6 +1689,22 @@ p {
   background: none;
   border-bottom: 1px solid var(--ink-line);
 }
+.kit-row .check-box {
+  transition:
+    background-color 260ms linear,
+    border-color 260ms linear;
+}
+.kit-row .check-box svg {
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 260ms linear,
+    transform 300ms var(--motion-spring);
+}
+.kit-row[aria-checked="true"] .check-box svg {
+  opacity: 1;
+  transform: none;
+}
 .kit-row:last-child {
   border-bottom: 0;
 }
@@ -2969,6 +2985,12 @@ p {
   z-index: 1;
   padding-top: 28px;
 }
+.builder-step-content.motion-enter-right {
+  animation: mise-builder-step-right var(--motion-base) var(--motion-settled) 120ms both;
+}
+.builder-step-content.motion-enter-left {
+  animation: mise-builder-step-left var(--motion-base) var(--motion-settled) 120ms both;
+}
 .builder-chat-history {
   margin: 0 0 22px;
   display: grid;
@@ -2984,6 +3006,12 @@ p {
 .builder-chat-turn {
   display: grid;
   gap: 7px;
+}
+.builder-chat-turn:last-child .chat-bubble.is-mise {
+  animation: mise-builder-question var(--motion-base) var(--motion-settled) both;
+}
+.builder-chat-turn:last-child .chat-bubble.is-user {
+  animation: mise-builder-answer 380ms var(--motion-spring) 90ms both;
 }
 .builder-chat-history .chat-bubble {
   width: fit-content;
@@ -4742,9 +4770,14 @@ p {
   padding: 0;
   border-radius: var(--r-chip-sq);
   background: rgba(72, 60, 51, 0.14);
+  transition:
+    transform 280ms var(--motion-segment),
+    background-color 260ms linear,
+    outline-color 260ms linear;
 }
 .manual-progress-segment.is-complete {
   background: var(--accent);
+  transform: scaleY(1.18);
 }
 .manual-progress-segment.is-current {
   background: rgba(242, 87, 26, 0.3);
@@ -4752,6 +4785,12 @@ p {
 }
 .manual-slot-heading {
   margin-bottom: var(--space-4);
+}
+.manual-slot-panel.motion-enter-right {
+  animation: mise-manual-slot-right var(--motion-base) var(--motion-settled) both;
+}
+.manual-slot-panel.motion-enter-left {
+  animation: mise-manual-slot-left var(--motion-base) var(--motion-settled) both;
 }
 .manual-slot-heading h2 {
   margin: 6px 0 7px;
@@ -4777,6 +4816,13 @@ p {
   padding: 8px;
   color: var(--ink);
   text-align: left;
+  transition:
+    transform 130ms ease,
+    border-color 260ms linear,
+    background-color 260ms linear;
+}
+.manual-menu-option.is-motion-card {
+  animation: mise-manual-card-in 320ms var(--motion-settled) var(--manual-delay, 0ms) both;
 }
 .builder-shell .builder-content .manual-menu-option.is-selected {
   border: 1.5px solid rgba(242, 87, 26, 0.55);
@@ -4835,11 +4881,32 @@ p {
   border: 1.8px solid rgba(42, 29, 20, 0.2);
   border-radius: var(--r-pill);
   color: transparent;
+  transition:
+    color 260ms linear,
+    background-color 260ms linear,
+    border-color 260ms linear;
 }
 .manual-menu-option.is-selected i {
   border-color: transparent;
   color: #fff;
   background: var(--accent-grad);
+}
+.manual-menu-option.is-selecting.manual-effect-a i svg {
+  animation: mise-manual-tick-in-a 300ms var(--motion-spring) both;
+}
+.manual-menu-option.is-selecting.manual-effect-b i svg {
+  animation: mise-manual-tick-in-b 300ms var(--motion-spring) both;
+}
+.manual-menu-option.is-deselecting i {
+  border-color: transparent;
+  color: #fff;
+  background: var(--accent-grad);
+}
+.manual-menu-option.is-deselecting.manual-effect-a i svg {
+  animation: mise-manual-tick-out-a 260ms var(--motion-settled) both;
+}
+.manual-menu-option.is-deselecting.manual-effect-b i svg {
+  animation: mise-manual-tick-out-b 260ms var(--motion-settled) both;
 }
 .manual-menu-more,
 .manual-assist {
@@ -4857,6 +4924,53 @@ p {
 .manual-split-button {
   width: 100%;
   margin-top: var(--space-3);
+}
+
+@keyframes mise-manual-slot-right {
+  from {
+    opacity: 0.3;
+    transform: translateX(34px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mise-manual-slot-left {
+  from {
+    opacity: 0.3;
+    transform: translateX(-34px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mise-manual-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mise-manual-tick-in-a {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mise-manual-tick-in-b {
+  from { opacity: 0; transform: scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes mise-manual-tick-out-a {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.5); }
+}
+@keyframes mise-manual-tick-out-b {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.5); }
 }
 
 @keyframes ms-swap-a {
@@ -4928,7 +5042,12 @@ p {
   .menu-row.is-replaced-anim > div,
   .menu-summary.is-updated .summary-tile b,
   .freeze-note.is-updated,
-  .menu-row.is-replaced-anim .menu-swap svg {
+  .menu-row.is-replaced-anim .menu-swap svg,
+  .manual-slot-panel.motion-enter-right,
+  .manual-slot-panel.motion-enter-left,
+  .manual-menu-option.is-motion-card,
+  .manual-menu-option.is-selecting i svg,
+  .manual-menu-option.is-deselecting i svg {
     animation: wizard-state-fade 160ms ease both !important;
   }
   .menu-row {
@@ -4937,6 +5056,10 @@ p {
   .menu-swap,
   .manual-menu-option {
     transition-duration: 130ms !important;
+  }
+  .manual-progress-segment {
+    transform: none !important;
+    transition-duration: 260ms !important;
   }
   .progress-track span {
     transition-duration: 520ms !important;
@@ -5244,6 +5367,7 @@ p {
   display: block;
   height: 6px;
   border-radius: var(--r-bar);
+  transition: width 420ms cubic-bezier(0.22, 0.9, 0.28, 1);
 }
 .norm-check {
   margin: 0;
@@ -6369,6 +6493,33 @@ p {
 .onboarding-shell:not(.is-guide) .onboarding-fineprint {
   animation: mise-onb-rise var(--motion-base) var(--motion-settled) 387ms both;
 }
+.onboarding-shell.is-guide .onboarding-title {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 45ms both;
+}
+.onboarding-shell.is-guide .onboarding-lead {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 90ms both;
+}
+.onboarding-shell.is-guide .rule-card {
+  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) both;
+}
+.onboarding-shell.is-guide .rule-card:nth-child(1) { animation-delay: 135ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(2) { animation-delay: 180ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(3) { animation-delay: 225ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(4) { animation-delay: 270ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(5) { animation-delay: 315ms; }
+.onboarding-shell.is-guide .onboarding-card {
+  animation: mise-onb-rise-small 462ms var(--motion-settled) 135ms both;
+}
+.onboarding-shell.is-guide .kit-list {
+  animation: mise-onb-rise-small 462ms var(--motion-settled) 225ms both;
+}
+.onboarding-shell.is-guide .note,
+.onboarding-shell.is-guide .onboarding-fineprint {
+  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 315ms both;
+}
+.onboarding-shell.is-guide > .action-bar-slot {
+  animation: mise-onb-panel 483ms var(--motion-settled) 72ms both;
+}
 .onboarding-shell .btn,
 .onboarding-shell .primary-button,
 .onboarding-shell .secondary-button,
@@ -6826,6 +6977,10 @@ p {
 @keyframes mise-onb-deck-right { from { opacity: 0; transform: translateY(14px) scale(0.92) rotate(9deg); } to { opacity: 1; transform: rotate(6deg); } }
 @keyframes mise-onb-bar { from { opacity: 0.35; transform: scaleY(0.16); } to { opacity: 1; transform: scaleY(1); } }
 @keyframes mise-onb-toggle { from { opacity: 0.6; transform: translateX(0) scale(0.9); } to { opacity: 1; transform: translateX(19px); } }
+@keyframes mise-builder-question { from { opacity: 0; transform: translate(-10px, 10px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes mise-builder-answer { from { opacity: 0; transform: translate(14px, 12px) scale(0.9); } to { opacity: 1; transform: none; } }
+@keyframes mise-builder-step-right { from { opacity: 0.3; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-builder-step-left { from { opacity: 0.3; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
 @keyframes mise-nav-icon-a { 0% { transform: translateY(0); } 40% { transform: translateY(-4px) scale(1.1); } 100% { transform: translateY(0); } }
 @keyframes mise-nav-icon-b { 0% { transform: translateY(0); } 40% { transform: translateY(-4px) scale(1.1); } 100% { transform: translateY(0); } }
 @keyframes mise-tab-forward { from { opacity: 0.25; transform: translateX(34px); } to { opacity: 1; transform: none; } }
@@ -6882,6 +7037,23 @@ p {
   .onboarding-shell:not(.is-guide) .push-card,
   .onboarding-shell:not(.is-guide) .toggle-list,
   .onboarding-shell:not(.is-guide) .onboarding-fineprint,
+  .onboarding-shell.is-guide .onboarding-title,
+  .onboarding-shell.is-guide .onboarding-lead,
+  .onboarding-shell.is-guide .rule-card,
+  .onboarding-shell.is-guide .onboarding-card,
+  .onboarding-shell.is-guide .kit-list,
+  .onboarding-shell.is-guide .note,
+  .onboarding-shell.is-guide .onboarding-fineprint,
+  .onboarding-shell.is-guide > .action-bar-slot,
+  .builder-chat-turn:last-child .chat-bubble.is-mise,
+  .builder-chat-turn:last-child .chat-bubble.is-user,
+  .builder-step-content.motion-enter-right,
+  .builder-step-content.motion-enter-left,
+  .manual-slot-panel.motion-enter-right,
+  .manual-slot-panel.motion-enter-left,
+  .manual-menu-option.is-motion-card,
+  .manual-menu-option.is-selecting i svg,
+  .manual-menu-option.is-deselecting i svg,
   .app-shell.is-tab-forward .tab-panel > :not(.has-stable-tab-header),
   .app-shell.is-tab-forward
     .tab-panel
@@ -6925,6 +7097,13 @@ p {
   .bottom-nav button.has-nav-effect-a > .icon,
   .bottom-nav button.has-nav-effect-b > .icon {
     animation: none !important;
+  }
+  .kit-row .check-box svg {
+    transform: none !important;
+    transition: opacity 160ms linear !important;
+  }
+  .manual-progress-segment {
+    transform: none !important;
   }
   .week-loading-heading i,
   .week-loading-macro i,

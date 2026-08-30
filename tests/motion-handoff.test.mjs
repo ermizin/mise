@@ -66,6 +66,26 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(css, /mise-catalog-grid-a 320ms/);
 });
 
+test("guide and manual menu finish the remaining supplied motion", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  assert.match(page, /<PrepRulesScreen[\s\S]*?motionDirection=\{motionDirection\}/);
+  assert.match(page, /<PrepKitchenScreen[\s\S]*?motionDirection=\{motionDirection\}/);
+  assert.match(page, /className=\{`builder-step-content/);
+  assert.match(page, /className=\{`manual-slot-panel/);
+  assert.match(page, /--manual-delay/);
+  assert.match(page, /manual-effect-a/);
+  assert.match(page, /matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
+  assert.match(css, /onboarding-shell\.is-guide \.rule-card:nth-child\(5\)/);
+  assert.match(css, /mise-builder-answer 380ms/);
+  assert.match(css, /mise-manual-slot-right/);
+  assert.match(css, /mise-manual-card-in 320ms/);
+  assert.match(css, /mise-manual-tick-in-a 300ms/);
+  assert.match(css, /macro-bar i[\s\S]*?transition: width 420ms/);
+});
+
 test("reduced motion keeps change visible without spatial movement", async () => {
   const css = await read("app/globals.css");
   const reduced = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
@@ -75,5 +95,8 @@ test("reduced motion keeps change visible without spatial movement", async () =>
   assert.match(reduced, /week-loading-ring[\s\S]*?animation: none !important/);
   assert.match(reduced, /background-image: none/);
   assert.doesNotMatch(reduced, /mise-skeleton-breathe/);
+  assert.match(reduced, /manual-slot-panel\.motion-enter-right/);
+  assert.match(reduced, /builder-step-content\.motion-enter-right/);
+  assert.match(reduced, /kit-row \.check-box svg[\s\S]*?transform: none !important/);
   assert.match(reduced, /transition-duration: 520ms !important/);
 });

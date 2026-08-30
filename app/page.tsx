@@ -6667,7 +6667,7 @@ function OnboardingShell({
   const swipeFrom = useRef<{ x: number; y: number } | null>(null);
   return (
     <main
-      className={`onboarding-shell${guide ? " is-guide" : motionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+      className={`onboarding-shell${guide ? " is-guide" : ""}${motionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
       onTouchStart={(event) => {
         const touch = event.touches[0];
         swipeFrom.current = touch
@@ -6733,10 +6733,17 @@ function OnboardingScreen({
     onGo(next);
   };
   if (step === "rules")
-    return <PrepRulesScreen onClose={onCloseGuide} onNext={() => go("kitchen")} />;
+    return (
+      <PrepRulesScreen
+        motionDirection={motionDirection}
+        onClose={onCloseGuide}
+        onNext={() => go("kitchen")}
+      />
+    );
   if (step === "kitchen")
     return (
       <PrepKitchenScreen
+        motionDirection={motionDirection}
         plan={plan}
         hasPlan={hasPlan}
         onBack={() => go("rules")}
@@ -7105,9 +7112,11 @@ function OnboardingReminders({
 }
 
 function PrepRulesScreen({
+  motionDirection,
   onClose,
   onNext,
 }: {
+  motionDirection: -1 | 1;
   onClose: () => void;
   onNext: () => void;
 }) {
@@ -7115,6 +7124,7 @@ function PrepRulesScreen({
     <OnboardingShell
       guide
       underBar
+      motionDirection={motionDirection}
       onNext={onNext}
       header={
         <div className="guide-bar glass-1">
@@ -7166,11 +7176,13 @@ function PrepRulesScreen({
 }
 
 function PrepKitchenScreen({
+  motionDirection,
   plan,
   hasPlan,
   onBack,
   onDone,
 }: {
+  motionDirection: -1 | 1;
   plan: ActivePlan | null;
   hasPlan: boolean;
   onBack: () => void;
@@ -7181,6 +7193,7 @@ function PrepKitchenScreen({
   return (
     <OnboardingShell
       guide
+      motionDirection={motionDirection}
       onBack={onBack}
       bar={
         <ActionBar>
@@ -7457,7 +7470,15 @@ function DailyBalance({
   );
 }
 
-function AnimatedNumber({ value, step = 1 }: { value: number; step?: number }) {
+function AnimatedNumber({
+  value,
+  step = 1,
+  duration = 520,
+}: {
+  value: number;
+  step?: number;
+  duration?: number;
+}) {
   const nodeRef = useRef<HTMLSpanElement | null>(null);
   const previousRef = useRef(value);
   useEffect(() => {
@@ -7465,18 +7486,32 @@ function AnimatedNumber({ value, step = 1 }: { value: number; step?: number }) {
     previousRef.current = value;
     const node = nodeRef.current;
     if (!node || from === value) return;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) {
+      node.textContent = String(value);
+      return;
+    }
     const startedAt = performance.now();
     let frame = 0;
     const draw = (now: number) => {
-      const progress = Math.min(1, (now - startedAt) / 520);
+      const progress = Math.min(1, (now - startedAt) / duration);
       const eased = 1 - Math.pow(1 - progress, 3);
       const current = from + (value - from) * eased;
       node.textContent = String(Math.round(current / step) * step);
       if (progress < 1) frame = window.requestAnimationFrame(draw);
     };
+    const stopForReducedMotion = (event: MediaQueryListEvent) => {
+      if (!event.matches) return;
+      window.cancelAnimationFrame(frame);
+      node.textContent = String(value);
+    };
+    reducedMotion.addEventListener("change", stopForReducedMotion);
     frame = window.requestAnimationFrame(draw);
-    return () => window.cancelAnimationFrame(frame);
-  }, [step, value]);
+    return () => {
+      reducedMotion.removeEventListener("change", stopForReducedMotion);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [duration, step, value]);
   return <span ref={nodeRef}>{value}</span>;
 }
 
@@ -9421,6 +9456,8 @@ function PlanBuilder({
   >(initialPlan?.selectionAssignments ?? {});
   const [menuMode, setMenuMode] = useState<MenuBuildMode>("auto");
   const [choiceIndex, setChoiceIndex] = useState(initialChoiceIndex);
+  const [stepMotionDirection, setStepMotionDirection] = useState<-1 | 1>(1);
+  const [manualMotionDirection, setManualMotionDirection] = useState<-1 | 1>(1);
   /* Ключи позиций, где блюдо выбрано вручную. Автосборка их не трогает —
      источник сохраняется вместе с планом и черновиком. */
   const [pinned, setPinned] = useState<string[]>(
@@ -9455,6 +9492,7 @@ function PlanBuilder({
     historyMode: "push" | "replace" | "none" = "push",
   ) {
     const bounded = Math.max(initialStep, Math.min(6, nextStep));
+    setStepMotionDirection(bounded < stepRef.current ? -1 : 1);
     stepRef.current = bounded;
     setStep(bounded);
     if (historyMode === "none") return;
@@ -9807,6 +9845,11 @@ function PlanBuilder({
     setEnd(addDays(start, days - 1));
     setRemainderDecision(null);
   }
+  function goToManualChoice(index: number) {
+    const bounded = Math.max(0, Math.min(positions.length - 1, index));
+    setManualMotionDirection(bounded < choiceIndex ? -1 : 1);
+    setChoiceIndex(bounded);
+  }
   function updatePerson(id: string, patch: Partial<Person>) {
     setPeople((current) =>
       current.map((person) =>
@@ -9939,7 +9982,7 @@ function PlanBuilder({
     }
     if (step === 5 && menuMode === "manual") {
       if (choiceIndex < positions.length - 1) {
-        setChoiceIndex((value) => value + 1);
+        goToManualChoice(choiceIndex + 1);
         return;
       }
       if (!allSelected) return;
@@ -10319,6 +10362,10 @@ function PlanBuilder({
               ))}
           </div>
         )}
+        <div
+          key={`builder-step-${step}-${step === 5 ? menuMode : "default"}`}
+          className={`builder-step-content${stepMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+        >
         {step === 0 && (
           <PeriodStep
             start={start}
@@ -10420,6 +10467,7 @@ function PlanBuilder({
               onReassemble={() => assembleMenu("reset")}
               onManual={() => {
                 setMenuMode("manual");
+                setManualMotionDirection(1);
                 setChoiceIndex(0);
               }}
             />
@@ -10444,6 +10492,7 @@ function PlanBuilder({
             key={choiceIndex}
             positions={positions}
             choiceIndex={choiceIndex}
+            motionDirection={manualMotionDirection}
             people={people}
             style={menuStyle}
             selections={validSelections}
@@ -10451,24 +10500,27 @@ function PlanBuilder({
             onSelect={replaceSelection}
             onSplit={assembleCurrentPosition}
             onAssist={assembleRemainingAndReview}
-            onGo={setChoiceIndex}
+            onGo={goToManualChoice}
           />
         )}
         {step === 6 && (
           <ReviewStep plan={draftPlan} onEdit={(target) => changeStep(target)} />
         )}
+        </div>
       </section>
       <footer className="builder-actions glass">
         <button
           className="secondary-button"
           onClick={
             step === 5 && menuMode === "manual" && choiceIndex > 0
-              ? () => setChoiceIndex((value) => Math.max(0, value - 1))
+              ? () => goToManualChoice(choiceIndex - 1)
               : backOneStep
           }
         >
           {mode === "settings"
             ? "Назад"
+            : step === 5 && menuMode === "manual" && choiceIndex > 0
+              ? "Назад"
             : step === initialStep
               ? "Отмена"
               : "Назад"}
@@ -11060,7 +11112,10 @@ function PeopleStep({
               {manual ? "ввели вы" : "посчитал Mise"}
             </p>
             <p className="norm-figure">
-              <b>{person.daily.kcal}</b> <span>ккал/день</span>
+              <b>
+                <AnimatedNumber value={person.daily.kcal} step={5} duration={420} />
+              </b>{" "}
+              <span>ккал/день</span>
             </p>
           </div>
         </div>
@@ -11159,13 +11214,15 @@ function PeopleStep({
         <p className={`norm-check ${converges ? "is-ok" : "is-off"}`} role="status">
           {converges ? (
             <>
-              <Icon name="check" size={14} /> Сумма макросов — {fromMacros} ккал,
+              <Icon name="check" size={14} /> Сумма макросов —{" "}
+              <AnimatedNumber value={fromMacros} step={5} duration={420} /> ккал,
               сходится
             </>
           ) : (
             <>
-              <Icon name="warning" size={14} /> Сумма макросов — {fromMacros}{" "}
-              ккал против {person.daily.kcal}: не сходится на {gap}
+              <Icon name="warning" size={14} /> Сумма макросов —{" "}
+              <AnimatedNumber value={fromMacros} step={5} duration={420} /> ккал
+              против {person.daily.kcal}: не сходится на {gap}
             </>
           )}
         </p>
@@ -11494,6 +11551,7 @@ function freezeSummary(
 function ManualMenuStep({
   positions,
   choiceIndex,
+  motionDirection,
   people,
   style,
   selections,
@@ -11505,6 +11563,7 @@ function ManualMenuStep({
 }: {
   positions: { batch: Batch; slot: MealSlot }[];
   choiceIndex: number;
+  motionDirection: -1 | 1;
   people: Person[];
   style: MenuStyle;
   selections: Record<string, string>;
@@ -11517,6 +11576,16 @@ function ManualMenuStep({
   const [showAll, setShowAll] = useState(false);
   const [includeDisliked, setIncludeDisliked] = useState(false);
   const [splitError, setSplitError] = useState(false);
+  const [selectionEffect, setSelectionEffect] = useState<{
+    entering: string;
+    leaving: string | null;
+    epoch: number;
+  } | null>(null);
+  useEffect(() => {
+    if (!selectionEffect) return;
+    const timer = window.setTimeout(() => setSelectionEffect(null), 360);
+    return () => window.clearTimeout(timer);
+  }, [selectionEffect]);
   const current = positions[choiceIndex];
   if (!current)
     return (
@@ -11599,6 +11668,9 @@ function ManualMenuStep({
           );
         })}
       </div>
+      <div
+        className={`manual-slot-panel${motionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+      >
       <div className="manual-slot-heading">
         <p className="kicker">
           Слот {choiceIndex + 1} · партия {current.batch.index + 1}
@@ -11631,13 +11703,31 @@ function ManualMenuStep({
             groups.length === 1 &&
             groups[0].recipeId === recipe.id &&
             assignmentCoverageComplete(people, current.slot, groups);
+          const selecting = selectionEffect?.entering === recipe.id;
+          const deselecting = selectionEffect?.leaving === recipe.id;
+          const effectClass = (selectionEffect?.epoch ?? 0) % 2
+            ? " manual-effect-a"
+            : " manual-effect-b";
           return (
             <button
               key={recipe.id}
-              className={`manual-menu-option glass-card${active ? " is-selected" : ""}`}
+              className={`manual-menu-option glass-card${active ? " is-selected" : ""}${selecting ? ` is-selecting${effectClass}` : ""}${deselecting ? ` is-deselecting${effectClass}` : ""}${index < 6 ? " is-motion-card" : ""}`}
+              style={
+                index < 6
+                  ? ({ "--manual-delay": `${index * 40}ms` } as CSSProperties)
+                  : undefined
+              }
               role="radio"
               aria-checked={active}
-              onClick={() => onSelect(key, eaterIds, recipe.id)}
+              onClick={() => {
+                if (active) return;
+                setSelectionEffect((currentEffect) => ({
+                  entering: recipe.id,
+                  leaving: groups.length === 1 ? groups[0]?.recipeId ?? null : null,
+                  epoch: (currentEffect?.epoch ?? 0) + 1,
+                }));
+                onSelect(key, eaterIds, recipe.id);
+              }}
             >
               <span className={`manual-menu-art art-${index % 5}`} aria-hidden>
                 <RecipeMedia recipe={recipe} />
@@ -11648,7 +11738,7 @@ function ManualMenuStep({
                   {recipe.macros.kcal} ккал · {recipe.time} мин · Б {recipe.macros.protein}
                 </small>
               </span>
-              <i>{active ? <Icon name="check" size={15} /> : null}</i>
+              <i>{active || deselecting ? <Icon name="check" size={15} /> : null}</i>
             </button>
           );
         })}
@@ -11695,6 +11785,7 @@ function ManualMenuStep({
           Собрать остальные {remaining} за меня
         </button>
       )}
+      </div>
     </>
   );
 }
