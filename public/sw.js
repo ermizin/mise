@@ -1,5 +1,5 @@
 const CACHE_NAME = "mise-shell-v3";
-const PLAN_CACHE_NAME = "mise-plan-v2";
+const PLAN_CACHE_NAME = "mise-plan-v3";
 const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
@@ -32,8 +32,19 @@ self.addEventListener("message", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
+  if (new URL(event.request.url).origin !== self.location.origin) return;
   const url = new URL(event.request.url);
+  if (url.pathname === "/api/plans" && ["POST", "DELETE"].includes(event.request.method)) {
+    const clientId = event.request.headers.get("X-Mise-Client") || "anonymous";
+    event.respondWith(
+      fetch(event.request).then(async (response) => {
+        if (response.ok) await clearPlanCache(clientId);
+        return response;
+      }),
+    );
+    return;
+  }
+  if (event.request.method !== "GET") return;
   if (url.pathname === "/api/plans") {
     const clientId = event.request.headers.get("X-Mise-Client") || "anonymous";
     const cacheKey = planCacheKey(clientId);
@@ -44,18 +55,15 @@ self.addEventListener("fetch", (event) => {
       }
       return response;
     });
-    event.waitUntil(network.catch(() => undefined));
     event.respondWith(
-      caches.open(PLAN_CACHE_NAME).then(async (cache) => {
+      network.catch(async () => {
+        const cache = await caches.open(PLAN_CACHE_NAME);
         const cached = await cache.match(cacheKey);
         if (cached) return cached;
-        return network.catch(
-          () =>
-            new Response(JSON.stringify({ error: "offline", plan: null }), {
-              status: 503,
-              headers: { "Content-Type": "application/json" },
-            }),
-        );
+        return new Response(JSON.stringify({ error: "offline", plan: null }), {
+          status: 503,
+          headers: { "Content-Type": "application/json" },
+        });
       }),
     );
     return;

@@ -24,7 +24,7 @@ test("plan edits survive offline and replay without mixing client caches", async
   assert.match(page, /mise-pending-plan-v1/);
   assert.match(page, /window\.addEventListener\("online", flushPendingPlan\)/);
   assert.match(page, /Нет сети — изменения сохранены на устройстве/);
-  assert.match(worker, /PLAN_CACHE_NAME = "mise-plan-v2"/);
+  assert.match(worker, /PLAN_CACHE_NAME = "mise-plan-v3"/);
   assert.match(worker, /planCacheKey\(clientId\)/);
   assert.match(worker, /mise:clear-plan-cache/);
   assert.match(worker, /mise-client=\$\{encodeURIComponent\(clientId \|\| "anonymous"\)\}/);

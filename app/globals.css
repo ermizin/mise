@@ -2106,6 +2106,16 @@ p {
   color: var(--ink-body);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
+  transition:
+    transform var(--motion-press) ease,
+    color 200ms linear,
+    border-color 200ms linear,
+    background-color 200ms linear;
+}
+.catalog-filter-button:active:not(:disabled),
+.catalog-chips .chip:active:not(:disabled),
+.catalog-filters-sheet .chip:active:not(:disabled) {
+  transform: scale(0.94);
 }
 /* Акцент — только когда есть что сбросить. */
 .catalog-filter-button.is-active {
@@ -2125,6 +2135,15 @@ p {
   font-weight: var(--weight-bold);
   line-height: 18px;
   text-align: center;
+  animation: mise-catalog-filter-count 300ms var(--motion-spring) both;
+}
+.catalog-chips .chip,
+.catalog-filters-sheet .chip {
+  transition:
+    transform var(--motion-press) ease,
+    color 200ms linear,
+    border-color 200ms linear,
+    background-color 200ms linear;
 }
 .catalog-search {
   margin: 11px 0 0;
@@ -3928,6 +3947,10 @@ p {
 .recipe-detail {
   padding-top: calc(18px + env(safe-area-inset-top));
   padding-bottom: 35px;
+  overflow-x: clip;
+}
+.recipe-detail.is-entering-from-week {
+  animation: mise-recipe-detail-week-in 420ms var(--motion-settled) both;
 }
 .detail-header {
   position: relative;
@@ -4189,6 +4212,10 @@ p {
   color: var(--muted);
   background: transparent;
   font-size: var(--text-min);
+  transition:
+    transform var(--motion-press) ease,
+    color 200ms linear,
+    background-color 200ms linear;
 }
 .detail-tabs button.selected {
   color: var(--ink);
@@ -4198,6 +4225,15 @@ p {
 }
 .portion-section {
   padding: 8px 2px 3px;
+}
+.recipe-section-motion {
+  contain: paint;
+}
+.recipe-section-motion.motion-enter-right {
+  animation: mise-recipe-section-right 320ms var(--motion-settled) both;
+}
+.recipe-section-motion.motion-enter-left {
+  animation: mise-recipe-section-left 320ms var(--motion-settled) both;
 }
 .cooking-steps {
   margin: 8px 0 0;
@@ -5473,6 +5509,9 @@ p {
 }
 
 .seg {
+  --segment-index: 0;
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 1fr;
@@ -5481,7 +5520,30 @@ p {
   border-radius: var(--r-tile);
   background: rgba(42, 29, 20, 0.06);
 }
+.seg-indicator {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  pointer-events: none;
+  border-radius: var(--r-chip-sq);
+  background: rgba(255, 255, 255, 0.95);
+  transform: translateX(calc(var(--segment-index) * (100% + 3px)));
+  transition: transform 290ms cubic-bezier(0.34, 1.28, 0.5, 1);
+}
+.seg-2 .seg-indicator {
+  width: calc((100% - 11px) / 2);
+}
+.seg-3 .seg-indicator {
+  width: calc((100% - 14px) / 3);
+}
+.seg-accent .seg-indicator {
+  background: var(--button-grad);
+}
 .seg button {
+  position: relative;
+  z-index: 1;
   min-height: var(--hit-min);
   padding: 0 8px;
   border-radius: var(--r-chip-sq);
@@ -5489,15 +5551,18 @@ p {
   color: var(--ink-muted);
   font-size: var(--text-link);
   font-weight: var(--weight-medium);
+  transition:
+    transform var(--motion-press) ease,
+    color 200ms linear 100ms;
 }
 .seg button[aria-checked="true"] {
-  background: rgba(255, 255, 255, 0.95);
+  background: transparent;
   color: var(--ink);
   font-weight: var(--weight-semibold);
 }
 /* Цель — решение, а не переключатель вида, поэтому акцент. */
 .seg-accent button[aria-checked="true"] {
-  background: var(--accent-grad-aa);
+  background: transparent;
   color: #fff;
 }
 .muscle-row {
@@ -5515,6 +5580,9 @@ p {
 }
 .nutrition-calculate-button {
   width: 100%;
+}
+.nutrition-calculate-button:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .norm-head {
@@ -5569,6 +5637,10 @@ p {
   font-size: var(--text-link);
   font-weight: var(--weight-medium);
   line-height: 1.4;
+  transition:
+    color 320ms linear,
+    border-color 320ms linear,
+    background-color 320ms linear;
 }
 .norm-check.is-ok {
   background: var(--tint-mint-bg);
@@ -5615,8 +5687,7 @@ p {
     transform: translateY(-1px);
   }
   .secondary-button:not(:disabled):hover,
-  .chip:not(:disabled):hover,
-  .seg button:not(:disabled):hover {
+  .chip:not(:disabled):hover {
     background-color: rgba(255, 255, 255, 0.78);
   }
 }
@@ -7239,10 +7310,14 @@ p {
 @keyframes mise-tab-forward { from { opacity: 0.25; transform: translateX(34px); } to { opacity: 1; transform: none; } }
 @keyframes mise-tab-backward { from { opacity: 0.25; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
 @keyframes mise-fab-in { from { opacity: 0; transform: translateY(10px) scale(0.94); } to { opacity: 1; transform: none; } }
+@keyframes mise-catalog-filter-count { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
 @keyframes mise-catalog-result-a { from { opacity: 0.35; } to { opacity: 1; } }
 @keyframes mise-catalog-result-b { from { opacity: 0.35; } to { opacity: 1; } }
 @keyframes mise-catalog-grid-a { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
 @keyframes mise-catalog-grid-b { from { opacity: 0; transform: translateY(12px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes mise-recipe-detail-week-in { from { opacity: 0.3; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-recipe-section-right { from { opacity: 0.3; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-recipe-section-left { from { opacity: 0.3; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
 @keyframes mise-skeleton-shimmer { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 @keyframes mise-skeleton-breathe { 0%, 100% { opacity: 0.55; } 50% { opacity: 0.9; } }
 @keyframes mise-state-error { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
@@ -7335,8 +7410,12 @@ p {
   .compose-fab,
   .catalog-sort-row.has-grid-effect-a,
   .catalog-sort-row.has-grid-effect-b,
+  .catalog-filter-count,
   .recipe-card.has-grid-effect-a,
   .recipe-card.has-grid-effect-b,
+  .recipe-detail.is-entering-from-week,
+  .recipe-section-motion.motion-enter-right,
+  .recipe-section-motion.motion-enter-left,
   .load-error-state,
   .week-eaten-tick,
   .week-execution-row.is-moving,
@@ -7377,6 +7456,9 @@ p {
   }
   .bottom-nav-indicator {
     transition: none !important;
+  }
+  .seg-indicator {
+    transition: background-color 160ms linear !important;
   }
   .bottom-nav button.has-nav-effect-a > .icon,
   .bottom-nav button.has-nav-effect-b > .icon {

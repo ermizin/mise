@@ -5772,6 +5772,7 @@ export default function Home() {
   >("synced");
   const [notificationSetupOpen, setNotificationSetupOpen] = useState(false);
   const persistQueue = useRef<Promise<void>>(Promise.resolve());
+  const planMutationRevision = useRef(0);
   const currentTabRef = useRef<Tab>("week");
   const tabScrollPositions = useRef<Record<PrimaryTab, TabScrollPosition>>({
     week: { windowY: 0, innerY: 0 },
@@ -5978,10 +5979,17 @@ export default function Home() {
     }
     window.addEventListener("online", flushPendingPlan);
     void flushPendingPlan();
+    const bootstrapRevision = planMutationRevision.current;
     fetch("/api/plans", { headers: { "X-Mise-Client": id } })
       .then((response) => (response.ok ? response.json() : Promise.reject()))
       .then((data: { plan?: ActivePlan | null }) => {
-        if (mounted && data.plan && !storedPendingPlan(id)) {
+        if (
+          mounted &&
+          data.plan &&
+          !cachedPlan &&
+          !storedPendingPlan(id) &&
+          planMutationRevision.current === bootstrapRevision
+        ) {
           const normalized = normalizePlan(data.plan);
           setActivePlan(normalized);
           try {
@@ -6012,6 +6020,7 @@ export default function Home() {
   async function persistPlan(plan: ActivePlan) {
     const id = clientId();
     const previousLocalPlan = storedLocalPlan(id);
+    planMutationRevision.current += 1;
     setActivePlan(plan);
     try {
       storeLocalPlan(plan, id);
@@ -6064,6 +6073,7 @@ export default function Home() {
     try {
       await persistQueue.current.catch(() => undefined);
       const id = clientId();
+      planMutationRevision.current += 1;
       const response = await fetch("/api/plans", {
         method: "DELETE",
         headers: { "X-Mise-Client": id },
@@ -8483,7 +8493,9 @@ function RecipesScreen({
             >
               Фильтры
               {active.length > 0 && (
-                <span className="catalog-filter-count">{active.length}</span>
+                <span className="catalog-filter-count" key={active.length}>
+                  {active.length}
+                </span>
               )}
             </button>
           </div>
@@ -11112,7 +11124,17 @@ function PeopleStep({
         <div className="field-row field-row-2">
           <div className="field">
             <span className="field-label">Пол</span>
-            <div className="seg" role="radiogroup" aria-label="Пол">
+            <div
+              className="seg seg-2"
+              role="radiogroup"
+              aria-label="Пол"
+              style={
+                {
+                  "--segment-index": draft.sex === "male" ? 0 : 1,
+                } as CSSProperties
+              }
+            >
+              <span className="seg-indicator" aria-hidden />
               {(["male", "female"] as Sex[]).map((value) => (
                 <button
                   key={value}
@@ -11146,7 +11168,19 @@ function PeopleStep({
 
         <div className="field">
           <span className="field-label">Цель</span>
-          <div className="seg seg-accent" role="radiogroup" aria-label="Цель">
+          <div
+            className="seg seg-accent seg-3"
+            role="radiogroup"
+            aria-label="Цель"
+            style={
+              {
+                "--segment-index": (
+                  Object.keys(goalMeta) as NutritionGoal[]
+                ).indexOf(draft.goal),
+              } as CSSProperties
+            }
+          >
+            <span className="seg-indicator" aria-hidden />
             {(Object.keys(goalMeta) as NutritionGoal[]).map((key) => (
               <button
                 key={key}
@@ -13057,6 +13091,18 @@ function RecipeView({
   const [section, setSection] = useState<"steps" | "portion">(
     batch ? "portion" : "steps",
   );
+  const [sectionMotion, setSectionMotion] = useState<{
+    direction: -1 | 1;
+    epoch: number;
+  }>({ direction: 1, epoch: 0 });
+  function selectSection(next: "steps" | "portion") {
+    if (next === section) return;
+    setSectionMotion((current) => ({
+      direction: next === "portion" ? 1 : -1,
+      epoch: current.epoch + 1,
+    }));
+    setSection(next);
+  }
   const assignment =
     batch && slot && plan
       ? assignmentGroupsFor(plan, batch, slot).find(
@@ -13283,8 +13329,14 @@ function RecipeView({
     return previewSession?.cookingAmounts ?? {};
   })();
   const displaySteps = recipeDisplaySteps(recipe);
+  const sectionMotionClass = sectionMotion.epoch
+    ? ` recipe-section-motion ${sectionMotion.direction > 0 ? "motion-enter-right" : "motion-enter-left"}`
+    : "";
+  const fromWeek = Boolean(batch && slot && plan);
   return (
-    <main className="app-shell recipe-detail">
+    <main
+      className={`app-shell recipe-detail${fromWeek ? " is-entering-from-week" : ""}`}
+    >
       <div className="ambient ambient-one" />
       <header className="detail-header">
         <button
@@ -13499,7 +13551,7 @@ function RecipeView({
             role="tab"
             aria-selected={section === "steps"}
             className={section === "steps" ? "selected" : ""}
-            onClick={() => setSection("steps")}
+            onClick={() => selectSection("steps")}
           >
             Готовить
           </button>
@@ -13507,13 +13559,16 @@ function RecipeView({
             role="tab"
             aria-selected={section === "portion"}
             className={section === "portion" ? "selected" : ""}
-            onClick={() => setSection("portion")}
+            onClick={() => selectSection("portion")}
           >
             Разложить
           </button>
         </div>
         {section === "steps" && (
-          <ol className="cooking-steps">
+          <ol
+            key={`steps-${sectionMotion.epoch}`}
+            className={`cooking-steps${sectionMotionClass}`}
+          >
             <li className="cooking-measure-step">
               <span>1</span>
               <div>
@@ -13555,7 +13610,10 @@ function RecipeView({
           </ol>
         )}
         {section === "portion" && (
-          <div className="portion-section">
+          <div
+            key={`portion-${sectionMotion.epoch}`}
+            className={`portion-section${sectionMotionClass}`}
+          >
             {batch && slot && plan ? (
               <>
                 <Note tone="mint" icon={<Icon name="scale" />} label="Сначала взвесьте готовую еду">Затем введите фактический вес — Mise сам рассчитает раскладку. После расчёта подпишите имя, приём пищи и даты.</Note>
