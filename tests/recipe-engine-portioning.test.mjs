@@ -6,9 +6,6 @@ import ts from "typescript";
 import { loadTypeScriptModule } from "./typescript-module.mjs";
 
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
-const cookingRuns = await loadTypeScriptModule(
-  new URL("../domain/recipe-cooking-runs.ts", import.meta.url),
-);
 const nutritionModule = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
 
 async function recipeCatalog() {
@@ -43,8 +40,6 @@ async function recipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
-    planRecipeCookingRuns: cookingRuns.planRecipeCookingRuns,
-    pooledCookingFatShare: cookingRuns.pooledCookingFatShare,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;

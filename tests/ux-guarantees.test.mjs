@@ -79,6 +79,8 @@ test("batch cooking follows screen 5b without inventing a parallel schedule", as
   );
   assert.match(page, /localStorage\.setItem\(progressKey/, "progress survives an accidental close");
   assert.match(page, /localStorage\.removeItem\(progressKey\)/, "completed progress is cleared");
+  assert.doesNotMatch(page, /runCount|runPlan/, "cooking is not split into automatic cookware runs");
+  assert.match(page, /session\.cookingAmounts/, "cooking uses one total amount for the selected batch");
   assert.match(css, /\.cooking-batch-header/, "screen 5b owns its glass header");
   assert.match(css, /\.cooking-action-bar/, "the action stays reachable at the bottom");
   assert.doesNotMatch(page, /Сейчас · параллельно/, "the UI does not claim dependency-aware parallel planning");
@@ -124,7 +126,9 @@ test("recipe cards keep photos and cooking measurements actionable", async () =>
   assert.match(css, /ms-heart-a 380ms/, "favorite keeps the supplied spring response");
   assert.match(css, /\.detail-food img \{[\s\S]*?object-fit: cover;/, "the detail photo fills the existing hero frame");
   assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
-  assert.match(page, /cookingAmounts\[ingredient\.id\]/, "ingredients and cooking read the same calculated amounts");
+  assert.match(page, /cookingAmounts\[ingredient\.id\]/, "cooking reads the calculated batch amount");
+  assert.doesNotMatch(page, /setSection\("ingredients"\)/, "ingredients are not duplicated in a separate recipe tab");
+  assert.match(page, /useState<"steps" \| "portion">\([\s\S]*?batch \? "portion" : "steps"/, "a standalone recipe opens directly on cooking");
   assert.doesNotMatch(page, /function totalIngredientScale/, "the obsolete divergent scale path is gone");
 });
 

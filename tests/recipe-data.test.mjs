@@ -8,7 +8,6 @@ import { loadTypeScriptModule } from "./typescript-module.mjs";
 async function loadRecipeCatalog() {
   const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
   const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
-  const cookingRuns = await loadTypeScriptModule(new URL("../domain/recipe-cooking-runs.ts", import.meta.url));
   const runtimeRecipeCatalogJson = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
@@ -39,8 +38,6 @@ async function loadRecipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
-    planRecipeCookingRuns: cookingRuns.planRecipeCookingRuns,
-    pooledCookingFatShare: cookingRuns.pooledCookingFatShare,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
@@ -208,6 +205,13 @@ test("production fat-sensitive ingredients expose an honest fat note", () => {
   assert.equal(canonicalIngredients.cream_processed.nutritionPer100g.fat, 10);
   assert.equal(canonicalIngredients.cream_processed.reference.dataType, "brand_label");
   assert.equal(canonicalIngredients.cheese_processed.canonicalName, "Полутвёрдый сыр (обычный)");
+  assert.equal(canonicalIngredients.cheese_processed.unit.sensibleUnit, "g");
+  assert.equal(canonicalIngredients.parmesan_processed.unit.sensibleUnit, "g");
+  assert.equal(canonicalIngredients.pasta_raw.unit.sensibleUnit, "g");
+  assert.equal(canonicalIngredients.broth_processed.unit.sensibleUnit, "ml");
+  assert.equal(canonicalIngredients.broth_processed.densityGPerMl, 1);
+  assert.equal(canonicalIngredients.vegetable_broth_processed.unit.sensibleUnit, "ml");
+  assert.equal(canonicalIngredients.vegetable_broth_processed.densityGPerMl, 1);
   assert.equal(canonicalIngredients.yogurt_processed.canonicalName, "Греческий йогурт 2%");
 });
 
@@ -486,13 +490,13 @@ test("a personal assignment isolates an incompatible eater and feeds shopping", 
   assert.ok(shopping.length > 0);
   assert.ok(
     safe.ingredients.some((ingredient) =>
-      shopping.some((item) => item.id === ingredient.id),
+      shopping.some((item) => item.id === (ingredient.canonicalIngredientId ?? ingredient.id)),
     ),
     "shopping includes the personal dish",
   );
   assert.ok(
     tuna.ingredients.some((ingredient) =>
-      shopping.some((item) => item.id === ingredient.id),
+      shopping.some((item) => item.id === (ingredient.canonicalIngredientId ?? ingredient.id)),
     ),
     "shopping includes the shared-slot counterpart",
   );
@@ -503,7 +507,7 @@ test("a personal assignment isolates an incompatible eater and feeds shopping", 
   );
 });
 
-test("shopping only shows an approximate piece count for ingredients supplied as pieces", () => {
+test("shopping counts only true piece products and keeps cheese, pasta, and broth metric", () => {
   const shoppingFor = (item) => {
     const person = {
       id: "shopper",
@@ -536,6 +540,16 @@ test("shopping only shows an approximate piece count for ingredients supplied as
   assert.ok(pastaLine);
   assert.equal(pastaLine.unit, "г");
   assert.equal(pastaLine.pieceEstimate, undefined, "dry pasta is not counted as pieces");
+
+  const cheeseLine = shoppingFor(pasta).find((item) => item.id === "cheese_processed");
+  assert.ok(cheeseLine);
+  assert.equal(cheeseLine.unit, "г");
+  assert.equal(cheeseLine.pieceEstimate, undefined, "cheese is not counted as pieces");
+
+  const brothLine = shoppingFor(pasta).find((item) => item.id === "broth_processed");
+  assert.ok(brothLine);
+  assert.equal(brothLine.unit, "мл");
+  assert.equal(brothLine.pieceEstimate, undefined, "liquid broth is not counted as pieces");
 
   const pieceRecipe = recipes.find((item) => item.id === "src-chile-lime-chicken");
   assert.ok(pieceRecipe);
@@ -994,10 +1008,10 @@ test("recipe view and shopping helper use solved family amounts for a multi-day 
   assert.equal(session.viable, true);
   const portions = session.portions;
   assert.ok(portions.every((portion) => portion.engine === "recipe-family-v1"));
-  const amounts = session.runPlan.totals;
+  const amounts = session.cookingAmounts;
   for (const ingredient of family.ingredients) {
     const expected = ingredient.role === "fat_cooking"
-      ? ingredient.baseAmount * session.runCount
+      ? ingredient.baseAmount
       : Math.round(portions.reduce((sum, portion) => sum + portion.solvedAmounts[ingredient.sourceIngredientId], 0) * 3 * 10) / 10;
     assert.equal(amounts[ingredient.sourceIngredientId], expected);
   }

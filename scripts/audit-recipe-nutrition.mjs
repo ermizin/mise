@@ -95,10 +95,10 @@ export function convertIngredientToGrams(measured, canonical) {
     return { ok: true, grams: amount * Number(canonical.densityGPerMl) };
   }
   if (measured.unit === "piece") {
-    // gramsPerUnit is meaningful only for ingredients whose sensible serving
-    // unit is an actual piece.  Most canonical records default it to 1 to
-    // support gram-based recipes, which must not silently become 1 g/piece.
-    if (canonical.unit?.sensibleUnit !== "piece" || !finitePositive(canonical.unit?.gramsPerUnit)) {
+    // A source may count an ingredient (for example cheese slices or lasagne
+    // sheets) even when Mise presents it by mass. Values above the 1 g default
+    // are explicit canonical piece weights and are safe for source conversion.
+    if (!finitePositive(canonical.unit?.gramsPerUnit) || Number(canonical.unit.gramsPerUnit) <= 1) {
       return { ok: false, code: NUTRITION_AUDIT_REASON.PIECE_WEIGHT_MISSING };
     }
     return { ok: true, grams: amount * Number(canonical.unit.gramsPerUnit) };

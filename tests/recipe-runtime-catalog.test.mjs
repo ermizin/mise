@@ -40,6 +40,28 @@ test("every source ingredient is accounted for or blocks projection", () => {
   assert.ok(catalog.failures.every((failure) => failure.code && failure.id));
 });
 
+test("cheese and pasta stay in grams while liquid broth uses millilitres", () => {
+  const expectedUnits = new Map([
+    ["cheese_processed", "g"],
+    ["parmesan_processed", "g"],
+    ["pasta_raw", "g"],
+    ["broth_processed", "ml"],
+    ["vegetable_broth_processed", "ml"],
+  ]);
+  for (const recipe of catalog.recipes) {
+    for (const ingredient of recipe.shoppingIngredients) {
+      const expectedUnit = expectedUnits.get(ingredient.canonicalIngredientId);
+      if (!expectedUnit) continue;
+      const familyIngredient = recipe.recipeFamily.ingredients.find(
+        (item) => item.sourceIngredientId === ingredient.sourceIngredientId,
+      );
+      assert.equal(familyIngredient?.unit, expectedUnit, `${recipe.id}: ${ingredient.nameRu}`);
+      assert.equal(ingredient.averagePieceWeightGrams, undefined, `${recipe.id}: no fake piece mass`);
+      assert.equal(ingredient.pieceEstimate, undefined, `${recipe.id}: no fake piece estimate`);
+    }
+  }
+});
+
 test("the 200-recipe release gate is enforceable without hard-coding today's count", () => {
   if (catalog.recipes.length >= 200) {
     assert.doesNotThrow(() => assertRuntimeCatalogMinimum(catalog, 200));

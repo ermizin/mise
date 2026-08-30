@@ -3968,7 +3968,7 @@ p {
 .detail-tabs {
   padding: 4px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   border-radius: var(--r-nested);
   background: rgba(77, 103, 94, 0.08);
 }
@@ -3985,41 +3985,8 @@ p {
   box-shadow: 0 7px 15px rgba(60, 79, 72, 0.09);
   font-weight: var(--weight-bold);
 }
-.detail-list,
 .portion-section {
   padding: 8px 2px 3px;
-}
-.ingredient-row {
-  min-height: 61px;
-  padding: 9px 3px;
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.75);
-}
-.ingredient-row > span {
-  flex: 0 0 26px;
-  height: 26px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  color: #fff;
-  background: var(--mint-deep);
-  font-size: var(--text-min);
-}
-.ingredient-row p {
-  flex: 1;
-  margin: 0;
-}
-.ingredient-row p small {
-  display: block;
-  margin-top: 3px;
-  color: var(--muted);
-  font-size: var(--text-min);
-}
-.ingredient-row > b {
-  color: var(--ink-soft);
-  font-size: var(--text-link);
 }
 .cooking-steps {
   margin: 8px 0 0;
@@ -6124,21 +6091,41 @@ p {
   font-weight: var(--weight-medium);
 }
 .batch-progress-ring {
+  --batch-ring-width: 10px;
   flex: 0 0 84px;
   width: 84px;
   height: 84px;
-  padding: 10px;
+  padding: var(--batch-ring-width);
+  position: relative;
   display: grid;
   place-items: center;
   border-radius: var(--r-pill);
 }
+.batch-progress-ring::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--batch-progress);
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--batch-ring-width)),
+    #000 calc(100% - var(--batch-ring-width) + 1px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - var(--batch-ring-width)),
+    #000 calc(100% - var(--batch-ring-width) + 1px)
+  );
+  pointer-events: none;
+}
 .batch-progress-ring > span {
   width: 64px;
   height: 64px;
+  position: relative;
   display: grid;
   place-content: center;
   border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.92);
   text-align: center;
 }
 .batch-progress-ring b {
@@ -6356,10 +6343,10 @@ p {
     padding: 16px;
   }
   .batch-progress-ring {
+    --batch-ring-width: 8px;
     flex-basis: 76px;
     width: 76px;
     height: 76px;
-    padding: 8px;
   }
   .batch-progress-ring > span {
     width: 60px;

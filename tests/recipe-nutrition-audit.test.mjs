@@ -22,6 +22,10 @@ test("nutrition audit converts explicit grams, ml by density, and declared piece
     convertIngredientToGrams({ amount: 2, unit: "piece" }, canonical({ unit: { sensibleUnit: "piece", gramsPerUnit: 50, roundTo: 0.1 } })),
     { ok: true, grams: 100 },
   );
+  assert.deepEqual(
+    convertIngredientToGrams({ amount: 12, unit: "piece" }, canonical({ unit: { sensibleUnit: "g", gramsPerUnit: 20, roundTo: 5 } })),
+    { ok: true, grams: 240 },
+  );
 });
 
 test("nutrition audit refuses incompatible units instead of inventing a conversion", () => {

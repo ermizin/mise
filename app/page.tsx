@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Fragment,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -29,17 +28,13 @@ import {
   type PersonAllocation,
 } from "@/domain/portion-allocation";
 import {
+  aggregateCookingAmounts,
   canonicalIngredients,
   deriveRecipeFamilyFromCatalog,
   recipeToFamily,
   solveRecipeFamily,
   type RecipeFamily,
 } from "@/domain/recipe-engine";
-import {
-  planRecipeCookingRuns,
-  pooledCookingFatShare,
-  type CookingRunPlan,
-} from "@/domain/recipe-cooking-runs";
 import {
   mealOccurrenceKey,
   normalizeMealExecution,
@@ -4563,12 +4558,7 @@ function portionComponents(recipe: Recipe): PortionComponent[] {
     });
   return components.length >= 2 ? components : [];
 }
-/**
- * A cooking session yields `people × days` containers. Pan/form fat is used
- * once per physical run; after all runs, equal components are pooled, weighed
- * and allocated across the whole session, so every promised portion carries
- * `runCount / portionCount` of that total fat.
- */
+/** A cooking session yields `people × days` containers. */
 function cookingPortionCount(personCount: number, days: number) {
   return Math.max(1, personCount) * Math.max(1, days);
 }
@@ -4656,7 +4646,7 @@ function portionFor(
   slot: MealSlot,
   recipe: Recipe,
   tuning?: RecipeTuning,
-  cooking?: { portionCount?: number; runCount?: number },
+  cooking?: { portionCount?: number },
 ) {
   const target = targetFor(person, slot);
   const family = recipeFamilyFor(recipe);
@@ -4677,10 +4667,7 @@ function portionFor(
       targetFat: target.fat * ratios.fat,
       targetCarbs: target.carbs * ratios.carbs,
       hardExclusions: person.hardExclusions,
-      cookingFatShare: pooledCookingFatShare(
-        cooking?.runCount ?? 1,
-        cooking?.portionCount ?? 1,
-      ),
+      cookingFatShare: 1 / Math.max(1, cooking?.portionCount ?? 1),
     });
     if (solved.viable) {
       const baseAmount = family.ingredients.reduce(
@@ -4763,38 +4750,43 @@ function ingredientScaleFor(
     return solvedAmount / Math.max(ingredient.quantity, 0.0001);
   return portion.factor * ingredientRatioFor(ingredient, portion.ratios);
 }
-function recipeCookingRunPlan(
+function recipeCookingAmounts(
   recipe: Recipe,
   portions: ReturnType<typeof portionFor>[],
   days: number,
-  portionIds?: string[],
-): CookingRunPlan {
+): Record<string, number> {
   const family = recipeFamilyFor(recipe);
-  const cookingFamily = family ?? {
-    ingredients: recipe.ingredients.map((ingredient) => ({
-      sourceIngredientId: ingredient.id,
-      baseAmount: ingredient.quantity,
-      role: "ingredient",
-    })),
-  };
-  const portionAmounts = portions.map((portion, index) => ({
-    id: portionIds?.[index] ?? String(index),
-    amounts: Object.fromEntries(
-      recipe.ingredients.map((ingredient) => [
-        ingredient.id,
-        portion.solvedAmounts?.[ingredient.id] ??
-          ingredient.quantity * ingredientScaleFor(ingredient, portion),
-      ]),
-    ),
-  }));
-  return planRecipeCookingRuns(cookingFamily, portionAmounts, days);
+  if (family)
+    return aggregateCookingAmounts(
+      family.ingredients,
+      portions.map((portion) =>
+        Object.fromEntries(
+          recipe.ingredients.map((ingredient) => [
+            ingredient.id,
+            portion.solvedAmounts?.[ingredient.id] ??
+              ingredient.quantity * ingredientScaleFor(ingredient, portion),
+          ]),
+        ),
+      ),
+      days,
+    );
+  return Object.fromEntries(
+    recipe.ingredients.map((ingredient) => [
+      ingredient.id,
+      ingredient.quantity *
+        portions.reduce(
+          (sum, portion) => sum + ingredientScaleFor(ingredient, portion),
+          0,
+        ) *
+        days,
+    ]),
+  );
 }
 type RecipeCookingSession = {
   viable: boolean;
   portionCount: number;
-  runCount: number;
   portions: ReturnType<typeof portionFor>[];
-  runPlan: CookingRunPlan;
+  cookingAmounts: Record<string, number>;
 };
 function recipeCookingSession(
   eaters: Person[],
@@ -4805,56 +4797,17 @@ function recipeCookingSession(
 ): RecipeCookingSession {
   const portionCount = cookingPortionCount(eaters.length, days);
   const family = recipeFamilyFor(recipe);
-  let runCount = family?.geometryLockedMax
-    ? Math.max(1, Math.ceil(portionCount / family.geometryLockedMax))
-    : 1;
-  let portions: ReturnType<typeof portionFor>[] = [];
-  let runPlan: CookingRunPlan = {
-    viable: true,
-    runs: [],
-    runCount,
-    totals: {},
+  const portions = eaters.map((person) =>
+    portionFor(person, slot, recipe, tuningFor(person), { portionCount }),
+  );
+  const viable =
+    !family || portions.every((portion) => portion.engine === "recipe-family-v1");
+  return {
+    viable,
+    portionCount,
+    portions,
+    cookingAmounts: viable ? recipeCookingAmounts(recipe, portions, days) : {},
   };
-  const seen = new Set<number>();
-  for (let attempt = 0; attempt < 8; attempt += 1) {
-    seen.add(runCount);
-    portions = eaters.map((person) =>
-      portionFor(person, slot, recipe, tuningFor(person), {
-        portionCount,
-        runCount,
-      }),
-    );
-    runPlan = recipeCookingRunPlan(
-      recipe,
-      portions,
-      days,
-      eaters.map((person) => person.id),
-    );
-    if (!runPlan.viable)
-      return { viable: false, portionCount, runCount: 0, portions, runPlan };
-    if (runPlan.runCount === runCount) {
-      const usesFamily =
-        !family ||
-        portions.every((portion) => portion.engine === "recipe-family-v1");
-      return {
-        viable: usesFamily,
-        portionCount,
-        runCount,
-        portions,
-        runPlan,
-      };
-    }
-    if (seen.has(runPlan.runCount))
-      return {
-        viable: false,
-        portionCount,
-        runCount: runPlan.runCount,
-        portions,
-        runPlan,
-      };
-    runCount = runPlan.runCount;
-  }
-  return { viable: false, portionCount, runCount, portions, runPlan };
 }
 function recipeCookingSessionForAssignment(
   plan: Pick<
@@ -4924,66 +4877,49 @@ function buildBatchCookingModel(
       1,
       Math.round(recipe.effort.activeMinutes / Math.max(1, displaySteps.length + 1)),
     );
-    if (!session.viable || session.runPlan.runs.length === 0) {
+    if (!session.viable) {
       steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:capacity`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:unavailable`,
         recipeId: recipe.id,
         title: `Пересоберите «${recipe.title}»`,
-        detail:
-          "Одна порция превышает подтверждённую вместимость посуды — безопасный план готовки не получился.",
+        detail: "Не удалось рассчитать порции по текущим целям.",
         minutes: 1,
         products: [],
       });
       continue;
     }
-    activeMinutes += recipe.effort.activeMinutes * session.runCount;
-    totalMinutes += recipe.time * session.runCount;
-    for (const run of session.runPlan.runs) {
-      const runLabel =
-        session.runCount > 1
-          ? `Заход ${run.index + 1} из ${session.runCount}`
-          : mealMeta[slot].label;
-      const products = recipe.ingredients.map(
-        (ingredient) =>
-          `${ingredient.name} — ${ingredientAmountLabel(
-            ingredient,
-            run.totals[ingredient.id] ?? 0,
-          )}`,
-      );
-      products.push(
-        ...(recipe.procedureIngredients ?? []).map(
-          (ingredient) => `${ingredient.name} — по шагам рецепта`,
-        ),
-      );
+    activeMinutes += recipe.effort.activeMinutes;
+    totalMinutes += recipe.time;
+    const products = recipe.ingredients.map(
+      (ingredient) =>
+        `${ingredient.name} — ${ingredientAmountLabel(
+          ingredient,
+          session.cookingAmounts[ingredient.id] ?? 0,
+        )}`,
+    );
+    products.push(
+      ...(recipe.procedureIngredients ?? []).map(
+        (ingredient) => `${ingredient.name} — по шагам рецепта`,
+      ),
+    );
+    steps.push({
+      id: `${slot}:${recipe.id}:${personIds.join("-")}:measure`,
+      recipeId: recipe.id,
+      title: `Отмерьте продукты для «${recipe.title}»`,
+      detail: `${mealMeta[slot].label} · ${withPlural(batch.days * eaters.length, FORMS.portion)}`,
+      minutes: fallbackMinutes,
+      products,
+    });
+    displaySteps.forEach((text, index) => {
       steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:run-${run.index}:measure`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:${index}`,
         recipeId: recipe.id,
-        title: `Отмерьте продукты для «${recipe.title}»`,
-        detail: `${runLabel} · ${withPlural(run.portions.length, FORMS.portion)}`,
-        minutes: fallbackMinutes,
+        title: text,
+        detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
+        minutes: minutesInStep(text, fallbackMinutes),
         products,
       });
-      displaySteps.forEach((text, index) => {
-        steps.push({
-          id: `${slot}:${recipe.id}:${personIds.join("-")}:run-${run.index}:${index}`,
-          recipeId: recipe.id,
-          title: text,
-          detail: `${recipe.title} · ${runLabel.toLowerCase()}`,
-          minutes: minutesInStep(text, fallbackMinutes),
-          products,
-        });
-      });
-    }
-    if (session.runCount > 1) {
-      steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:combine-runs`,
-        recipeId: recipe.id,
-        title: "Сведите результаты всех заходов перед раскладкой",
-        detail: `${recipe.title} · ${session.runCount} захода`,
-        minutes: 2,
-        products: [],
-      });
-    }
+    });
     if (recipe.freezable)
       freezePortions +=
         Math.max(0, batch.days - recipe.storageDays) * eaters.length;
@@ -5331,7 +5267,7 @@ function buildShopping(
           (person) => plan.tuning?.[tuningKey(batch, slot, person)],
         );
         if (!session.viable) continue;
-        const cookingAmounts = session.runPlan.totals;
+        const cookingAmounts = session.cookingAmounts;
         for (const ingredient of recipe.ingredients) {
           const canonicalIngredientId = canonicalIdForIngredient(ingredient);
           const canonical = Object.values(canonicalIngredients).find(
@@ -12640,9 +12576,11 @@ function BatchCookingView({
             </div>
             <div
               className="batch-progress-ring"
-              style={{
-                background: `conic-gradient(var(--accent) 0deg ${progress * 360}deg, var(--ink-track) ${progress * 360}deg 360deg)`,
-              }}
+              style={
+                {
+                  "--batch-progress": `conic-gradient(var(--accent) 0deg ${progress * 360}deg, var(--ink-track) ${progress * 360}deg 360deg)`,
+                } as CSSProperties
+              }
               aria-label={`Готово ${progressPercent}% партии`}
             >
               <span>
@@ -12930,8 +12868,8 @@ function RecipeView({
   onChangePlan?: (plan: ActivePlan) => Promise<void>;
 }) {
   const { recipe, batch, slot, plan } = context;
-  const [section, setSection] = useState<"ingredients" | "steps" | "portion">(
-    batch ? "portion" : "ingredients",
+  const [section, setSection] = useState<"steps" | "portion">(
+    batch ? "portion" : "steps",
   );
   const assignment =
     batch && slot && plan
@@ -13156,14 +13094,9 @@ function RecipeView({
         ]),
       );
 
-    return previewSession?.runPlan.totals ?? {};
+    return previewSession?.cookingAmounts ?? {};
   })();
   const displaySteps = recipeDisplaySteps(recipe);
-  const detailRuns =
-    previewSession?.runPlan.runs.length
-      ? previewSession.runPlan.runs
-      : [{ index: 0, portions: [], totals: cookingAmounts }];
-  const detailRunCount = previewSession?.runCount ?? 1;
   return (
     <main className="app-shell recipe-detail">
       <div className="ambient ambient-one" />
@@ -13179,8 +13112,7 @@ function RecipeView({
           <Icon name="chevron" className="back-chevron" />
         </button>
         <span className="glass">
-          {recipe.effort.activeMinutes * detailRunCount} мин активно ·{" "}
-          {recipe.time * detailRunCount} всего
+          {recipe.effort.activeMinutes} мин активно · {recipe.time} всего
         </span>
       </header>
       <section className="detail-hero">
@@ -13370,24 +13302,13 @@ function RecipeView({
         <article className="glass-card">
           <Icon name="clock" />
           <div>
-            <b>{recipe.effort.activeMinutes * detailRunCount} мин активно</b>
-            <small>
-              {recipe.time * detailRunCount} мин общего времени
-              {detailRunCount > 1 ? ` · ${detailRunCount} захода` : ""}
-            </small>
+            <b>{recipe.effort.activeMinutes} мин активно</b>
+            <small>{recipe.time} мин общего времени</small>
           </div>
         </article>
       </section>
       <section className="detail-panel glass-card">
         <div className="detail-tabs" role="tablist" aria-label="Раздел рецепта">
-          <button
-            role="tab"
-            aria-selected={section === "ingredients"}
-            className={section === "ingredients" ? "selected" : ""}
-            onClick={() => setSection("ingredients")}
-          >
-            Ингредиенты
-          </button>
           <button
             role="tab"
             aria-selected={section === "steps"}
@@ -13405,129 +13326,46 @@ function RecipeView({
             Разложить
           </button>
         </div>
-        {section === "ingredients" && (
-          <div className="detail-list">
-            <Note
-              tone="mint"
-              icon={<Icon name="scale" />}
-              label={
-                batch
-                  ? `Всего на ${batch.days} дн. · ${eaters.length} чел.${
-                      detailRunCount > 1 ? ` · ${detailRunCount} захода` : ""
-                    }`
-                  : "На одну базовую порцию"
-              }
-            >
-              {detailRunCount > 1
-                ? "Ниже — общий объём. Во вкладке «Готовить» Mise разделил продукты по вместимости посуды."
-                : "Те же количества стоят первым шагом в «Готовить»"}
-            </Note>
-            {recipe.ingredients.map((ingredient) => (
-              <div className="ingredient-row" key={ingredient.id}>
-                <Icon name="check" />
-                <p>
-                  {ingredient.name}
-                  <small>
-                    {ingredient.group}
-                    {ingredient.allergens.length > 0
-                      ? ` · ${ingredient.allergens
-                          .map((allergen) => allergenMeta[allergen].short)
-                          .join(", ")}`
-                      : ""}
-                  </small>
-                </p>
-                <b>
-                  {ingredientAmountLabel(
-                    ingredient,
-                    cookingAmounts[ingredient.id] ?? ingredient.quantity,
-                  )}
-                </b>
-              </div>
-            ))}
-            {(recipe.procedureIngredients ?? []).map((ingredient) => (
-              <div className="ingredient-row" key={ingredient.id}>
-                <Icon name="check" />
-                <p>
-                  {ingredient.name}
-                  <small>
-                    По шагам рецепта
-                    {ingredient.allergens.length > 0
-                      ? ` · ${ingredient.allergens
-                          .map((allergen) => allergenMeta[allergen].short)
-                          .join(", ")}`
-                      : ""}
-                  </small>
-                </p>
-                <b>по шагам</b>
-              </div>
-            ))}
-          </div>
-        )}
         {section === "steps" && (
           <ol className="cooking-steps">
-            {detailRuns.map((run) => {
-              const offset = run.index * (displaySteps.length + 1);
-              return (
-                <Fragment key={`detail-run-${run.index}`}>
-                  <li className="cooking-measure-step">
-                    <span>{offset + 1}</span>
-                    <div>
-                      <p>
-                        <b>
-                          {detailRunCount > 1
-                            ? `Заход ${run.index + 1} из ${detailRunCount}: отмерьте продукты`
-                            : "Сначала отмерьте всё на эту готовку"}
-                        </b>
-                        <small>
-                          {batch
-                            ? detailRunCount > 1
-                              ? withPlural(run.portions.length, FORMS.portion)
-                              : `${batch.days} дн. · ${eaters.length} чел.`
-                            : "Одна базовая порция"}
-                        </small>
-                      </p>
-                      <div className="cooking-measures">
-                        {recipe.ingredients.map((ingredient) => (
-                          <div key={ingredient.id}>
-                            <span>{ingredient.name}</span>
-                            <b>
-                              {ingredientAmountLabel(
-                                ingredient,
-                                run.totals[ingredient.id] ?? 0,
-                              )}
-                            </b>
-                          </div>
-                        ))}
-                        {(recipe.procedureIngredients ?? []).map(
-                          (ingredient) => (
-                            <div key={ingredient.id}>
-                              <span>{ingredient.name}</span>
-                              <b>по шагам</b>
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                  {displaySteps.map((text, index) => (
-                    <li key={`${run.index}-${text}-${index}`}>
-                      <span>{offset + index + 2}</span>
-                      <p>{text}</p>
-                    </li>
-                  ))}
-                </Fragment>
-              );
-            })}
-            {detailRunCount > 1 && (
-              <li>
-                <span>{detailRunCount * (displaySteps.length + 1) + 1}</span>
+            <li className="cooking-measure-step">
+              <span>1</span>
+              <div>
                 <p>
-                  Сведите одинаковые готовые компоненты из всех заходов,
-                  затем взвесьте общий результат и разложите его по расчёту
-                  Mise. Так масло каждого захода распределится по всей партии.
+                  <b>Сначала отмерьте всё на эту готовку</b>
+                  <small>
+                    {batch
+                      ? `${batch.days} дн. · ${eaters.length} чел.`
+                      : "Одна базовая порция"}
+                  </small>
                 </p>
+                <div className="cooking-measures">
+                  {recipe.ingredients.map((ingredient) => (
+                    <div key={ingredient.id}>
+                      <span>{ingredient.name}</span>
+                      <b>
+                        {ingredientAmountLabel(
+                          ingredient,
+                          cookingAmounts[ingredient.id] ?? ingredient.quantity,
+                        )}
+                      </b>
+                    </div>
+                  ))}
+                  {(recipe.procedureIngredients ?? []).map((ingredient) => (
+                    <div key={ingredient.id}>
+                      <span>{ingredient.name}</span>
+                      <b>по шагам</b>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </li>
+            {displaySteps.map((text, index) => (
+              <li key={`${text}-${index}`}>
+                <span>{index + 2}</span>
+                <p>{text}</p>
               </li>
-            )}
+            ))}
           </ol>
         )}
         {section === "portion" && (

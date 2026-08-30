@@ -515,6 +515,13 @@ const structuralDiscreteIngredientIds = new Set([
   "tortilla",
   "corn-tortilla",
 ]);
+const sensibleUnitOverrides: Readonly<Partial<Record<string, RecipeUnit>>> = Object.freeze({
+  broth: "ml",
+  "vegetable-broth": "ml",
+  cheese: "g",
+  parmesan: "g",
+  pasta: "g",
+});
 const ingredientSeeds: IngredientSeed[] = [
   ["bbq-sauce", "Соус BBQ", "sauce", "processed", n(172, 0.82, 0.63, 40.77)],
   ["beef", "Говядина постная", "meat", "raw", n(131, 22.09, 4.08, 0)],
@@ -785,7 +792,7 @@ const densityByLegacyId: Record<string, number> = {
   "tomato-sauce": 1.04,
   vinegar: 1,
   "vegetable-oil": 0.92,
-  "vegetable-broth": 0.92,
+  "vegetable-broth": 1,
   "sunflower-oil": 0.91,
   "wheat-flour": 0.5,
   "white-sugar": 0.83,
@@ -809,6 +816,8 @@ export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.
     const id = `${legacyId.replaceAll("-", "_")}_${state}`;
     const referenceProfile = nutritionReferences[legacyId];
     if (!referenceProfile) throw new Error(`Нет nutrition reference для canonical ingredient ${legacyId}.`);
+    const sensibleUnit = sensibleUnitOverrides[legacyId]
+      ?? (gramsPerUnit > 1 ? "piece" : densityByLegacyId[legacyId] ? "ml" : "g");
     return [id, {
       id,
       canonicalName: name,
@@ -818,9 +827,9 @@ export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.
       nutritionPer100g: nutrition,
       allergens,
       unit: {
-        sensibleUnit: gramsPerUnit > 1 ? "piece" : densityByLegacyId[legacyId] ? "ml" : "g",
+        sensibleUnit,
         gramsPerUnit,
-        roundTo: gramsPerUnit > 1 ? 0.1 : 5,
+        roundTo: sensibleUnit === "piece" ? 0.1 : 5,
         structuralDiscrete: structuralDiscreteIngredientIds.has(legacyId),
       },
       densityGPerMl: densityByLegacyId[legacyId],
@@ -2445,6 +2454,27 @@ const rawPortionFloorRatios: Readonly<Record<string, number>> = Object.freeze({
 
 type RawFamilyMeasurement = { amount: number; unit: RecipeUnit; basis: string };
 
+function normalizedFamilyMeasurement(
+  measurement: Pick<RawFamilyMeasurement, "amount" | "unit">,
+  canonical: CanonicalIngredient,
+): Pick<RawFamilyMeasurement, "amount" | "unit"> {
+  const sensibleUnit = canonical.unit.sensibleUnit;
+  if (measurement.unit === sensibleUnit) return measurement;
+  const grams = measurement.unit === "piece"
+    ? measurement.amount * canonical.unit.gramsPerUnit
+    : measurement.unit === "ml" && canonical.densityGPerMl
+      ? measurement.amount * canonical.densityGPerMl
+      : measurement.unit === "g"
+        ? measurement.amount
+        : null;
+  if (grams === null) return measurement;
+  if (sensibleUnit === "g") return { amount: grams, unit: "g" };
+  if (sensibleUnit === "ml" && canonical.densityGPerMl) {
+    return { amount: grams / canonical.densityGPerMl, unit: "ml" };
+  }
+  return measurement;
+}
+
 const rawFamilyCupWeights: Record<string, number> = {
   // These source cards state a volume only. The factor is a declared
   // household conversion, backed by metric examples elsewhere in the same
@@ -2571,12 +2601,17 @@ export function deriveRecipeFamilyFromAuditedCandidate(
     if (!sourceAmount || sourceAmount <= 0 || !sourceUnit) {
       return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Для исходного компонента нет положительного измеримого количества.");
     }
-    const unit = sourceUnit === "ml" ? "ml" : sourceUnit === "piece" || sourceUnit === "шт." ? "piece" : sourceUnit === "g" || sourceUnit === "г" ? "g" : null;
-    if (!unit) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Единица исходного компонента не поддерживается Recipe Family.");
+    const sourceRecipeUnit = sourceUnit === "ml" ? "ml" : sourceUnit === "piece" || sourceUnit === "шт." ? "piece" : sourceUnit === "g" || sourceUnit === "г" ? "g" : null;
+    if (!sourceRecipeUnit) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Единица исходного компонента не поддерживается Recipe Family.");
     if (!mapping.sourceAmount && !originalMetric && inferredMeasurement) {
-      inferredMeasurements.push({ sourceName: mapping.sourceName, amount: sourceAmount, unit, basis: inferredMeasurement.basis });
+      inferredMeasurements.push({ sourceName: mapping.sourceName, amount: sourceAmount, unit: sourceRecipeUnit, basis: inferredMeasurement.basis });
     }
-    const baseAmount = sourceAmount / servings;
+    const familyMeasurement = normalizedFamilyMeasurement(
+      { amount: sourceAmount, unit: sourceRecipeUnit },
+      canonical,
+    );
+    const baseAmount = familyMeasurement.amount / servings;
+    const unit = familyMeasurement.unit;
     const sourceIngredientId = `source-ingredient-${index + 1}`;
     const role = rawRoleForCanonical(canonical);
     const ingredientBounds = bounds(baseAmount, role);

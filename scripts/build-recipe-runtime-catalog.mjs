@@ -309,7 +309,7 @@ function projectReadyCard(releaseCard, entry) {
         failures.push(["unmeasurable_mapped_ingredient", `${mapping.sourceName} cannot be represented in grams.`]);
         return;
       }
-      const pieceEstimate = canonical.unit.gramsPerUnit > 1
+      const pieceEstimate = canonical.unit.sensibleUnit === "piece" && canonical.unit.gramsPerUnit > 1
         ? round(mass.grams / canonical.unit.gramsPerUnit, 2)
         : undefined;
       const sourceIngredientId = `source-ingredient-${index + 1}`;
@@ -337,7 +337,9 @@ function projectReadyCard(releaseCard, entry) {
         group: groupFor(canonical),
         quantityGrams: mass.grams,
         sourceMeasurement: { amount: mass.sourceAmount, unit: mass.sourceUnit },
-        averagePieceWeightGrams: canonical.unit.gramsPerUnit > 1 ? canonical.unit.gramsPerUnit : undefined,
+        averagePieceWeightGrams: canonical.unit.sensibleUnit === "piece" && canonical.unit.gramsPerUnit > 1
+          ? canonical.unit.gramsPerUnit
+          : undefined,
         pieceEstimate,
         allergens: canonical.allergens,
         checkLabel: canonical.reference.dataType === "label_required",
