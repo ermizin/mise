@@ -42,6 +42,31 @@ test("the wizard offers manual menu building without skipping required answers",
   );
 });
 
+test("the onboarding wizard is a real chat, not the old action bar", async () => {
+  const page = await read("app/page.tsx");
+  const start = page.indexOf("function PlanBuilder(");
+  const end = page.indexOf("function StepIntro(", start);
+  assert.ok(start >= 0 && end > start, "the plan builder source is present");
+  const builder = page.slice(start, end);
+
+  assert.match(
+    builder,
+    /builderChatTurns\.slice\(0, step\)\.map/,
+    "chat history renders every earlier turn",
+  );
+  assert.doesNotMatch(
+    builder,
+    /builderChatTurns\.slice\(Math\.max\(0, step - 2\), step\)/,
+    "chat history is not capped at the last two turns",
+  );
+  assert.match(builder, /className="builder-chat-question"/);
+  assert.match(builder, /role="log"\s+aria-live="polite"/);
+  assert.match(builder, /className="builder-chat-send"/);
+  assert.match(builder, /Отправить ответ/);
+  assert.doesNotMatch(builder, /className="builder-actions glass"/);
+  assert.doesNotMatch(builder, /Продолжить/);
+});
+
 test("the hardware back button stays inside the app", async () => {
   const page = await read("app/page.tsx");
   const listeners = page.match(/addEventListener\("popstate"/g) ?? [];

@@ -265,9 +265,9 @@ test("includes the complete plan-builder and private persistence model", async (
 
   // Батч 4: узкий экран не ломает поля и кнопку, а мастер не
   // создаёт backdrop-filter на каждой карточке.
-  assert.match(page, /\{step === 3 && <>Кто ест · <\/>\}Шаг/);
+  assert.match(page, /className=\{`builder-chat-header/);
   assert.match(page, /className="people-step-lead"/);
-  assert.match(css, /\.builder-actions \.primary-button \{[^}]*white-space: nowrap/s);
+  assert.match(css, /\.builder-chat-send \{[^}]*white-space: nowrap/s);
   assert.match(css, /\.primary-button:disabled \{[^}]*opacity: 1/s);
   assert.match(css, /\.field-box:focus-within \{/);
   assert.match(css, /\.builder-shell \.builder-content \.glass-card \{[^}]*backdrop-filter: none/s);

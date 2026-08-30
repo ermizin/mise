@@ -9415,16 +9415,28 @@ function PlanBuilder({
   const [unassignedConfirmOpen, setUnassignedConfirmOpen] = useState(false);
   const [successPlan, setSuccessPlan] = useState<ActivePlan | null>(null);
   const [draftRestored, setDraftRestored] = useState(false);
+  const [chatTransition, setChatTransition] = useState<{
+    answer: string;
+    thinking: boolean;
+  } | null>(null);
   const activeBuilderDraftKey =
     mode === "settings"
       ? `${builderDraftKey}:settings:${initialPlan?.id ?? "new"}:${initialStep}`
       : builderDraftKey;
   const stepRef = useRef(step);
   const closeRef = useRef(onClose);
+  const chatQuestionRef = useRef<HTMLDivElement | null>(null);
+  const chatTimersRef = useRef<number[]>([]);
   useEffect(() => {
     stepRef.current = step;
     closeRef.current = onClose;
   });
+  useEffect(
+    () => () => {
+      chatTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    },
+    [],
+  );
   function clearDraft() {
     try {
       localStorage.removeItem(activeBuilderDraftKey);
@@ -9452,6 +9464,7 @@ function PlanBuilder({
     else history.pushState(state, "");
   }
   function backOneStep() {
+    if (chatTransition) return;
     if (stepRef.current === initialStep) closeBuilder();
     else history.back();
   }
@@ -9548,7 +9561,16 @@ function PlanBuilder({
     return () => window.removeEventListener("popstate", onPop);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- the back trap is installed once
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    const frame = window.requestAnimationFrame(() => {
+      chatQuestionRef.current?.focus({ preventScroll: true });
+      chatQuestionRef.current?.scrollIntoView({
+        block: "start",
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [step]);
   const rawDays = daysInclusive(start, end);
   const validPeriod = rawDays >= 1 && rawDays <= 14;
@@ -9785,7 +9807,36 @@ function PlanBuilder({
         ? `${withPlural(new Set(Object.values(validSelections)).size, FORMS.recipe)} выбрано`
         : "Ещё подбираем блюда",
     },
+    {
+      question: "Всё верно? Сохранить план и собрать покупки?",
+      answer: "Всё проверено",
+    },
   ];
+  function editChatAnswer(index: number) {
+    if (chatTransition || index >= stepRef.current) return;
+    history.go(index - stepRef.current);
+  }
+  function beginChatAdvance(nextStep: number) {
+    if (chatTransition) return;
+    chatTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+    const answer = builderChatTurns[step]?.answer ?? "Готово";
+    setChatTransition({ answer, thinking: false });
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const thinkingDelay = reducedMotion ? 40 : 120;
+    const questionDelay = reducedMotion ? 180 : 900;
+    chatTimersRef.current = [
+      window.setTimeout(
+        () => setChatTransition({ answer, thinking: true }),
+        thinkingDelay,
+      ),
+      window.setTimeout(() => {
+        setChatTransition(null);
+        changeStep(nextStep);
+      }, questionDelay),
+    ];
+  }
   function setQuickPeriod(days: number) {
     setEnd(addDays(start, days - 1));
     setRemainderDecision(null);
@@ -9907,7 +9958,7 @@ function PlanBuilder({
     return true;
   }
   function next() {
-    if (!stepIsValid()) return;
+    if (chatTransition || !stepIsValid()) return;
     if (step === 3 && unassignedSlots.length) {
       setUnassignedConfirmOpen(true);
       return;
@@ -9932,7 +9983,7 @@ function PlanBuilder({
       }
       if (!allSelected) return;
     }
-    changeStep(step + 1);
+    beginChatAdvance(step + 1);
   }
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
@@ -10208,11 +10259,16 @@ function PlanBuilder({
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <header
-        className={`builder-header ${mode === "settings" ? "settings-header" : ""}`}
+        className={`builder-chat-header ${mode === "settings" ? "settings-header" : ""}`}
       >
         <button
           className="icon-button glass"
-          onClick={backOneStep}
+          onClick={
+            step === 5 && menuMode === "manual" && choiceIndex > 0
+              ? () => goToManualChoice(choiceIndex - 1)
+              : backOneStep
+          }
+          disabled={Boolean(chatTransition)}
           aria-label={
             mode === "settings"
               ? "Назад в настройки"
@@ -10228,16 +10284,15 @@ function PlanBuilder({
           )}
         </button>
         <div>
-          {mode === "onboarding" && (
-            <p className="kicker">
-              {step === 3 && <>Кто ест · </>}Шаг {step + 1} из {steps.length}
-            </p>
-          )}
-          <h1>{steps[step]}</h1>
+          <h1>{mode === "settings" ? "Настройки плана" : "Мастер плана"}</h1>
+          <p className="kicker">
+            {steps[step]} · {step + 1} из {steps.length}
+          </p>
         </div>
         {mode === "onboarding" && (
           <button
             className="builder-manual-link"
+            disabled={Boolean(chatTransition)}
             aria-label={
               menuMode === "manual"
                 ? "Переключиться на автоматическую сборку Mise"
@@ -10266,7 +10321,7 @@ function PlanBuilder({
         )}
       </header>
       {mode === "onboarding" && (
-        <div className="progress-track">
+        <div className="builder-chat-progress" aria-hidden>
           <span style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
         </div>
       )}
@@ -10291,212 +10346,267 @@ function PlanBuilder({
               : `${staleCount} блюда не подходят под новые настройки — выберите их заново на шаге «Выбор меню».`}
           </Note>
         )}
-        {mode === "onboarding" && step > 0 && (
-          <div className="builder-chat-history" aria-label="Предыдущие ответы">
-            <p className="builder-chat-caption">Разговор с Mise</p>
-            {builderChatTurns
-              .slice(Math.max(0, step - 2), step)
-              .map((turn, index) => (
-                <div className="builder-chat-turn" key={`${step}-${index}-${turn.question}`}>
-                  <p className="chat-bubble is-mise">
-                    <span aria-hidden>M</span>
-                    {turn.question}
-                  </p>
-                  <p className="chat-bubble is-user">{turn.answer}</p>
-                </div>
-              ))}
-          </div>
-        )}
         <div
-          key={`builder-step-${step}-${step === 5 ? menuMode : "default"}`}
-          className={`builder-step-content${stepMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+          className="builder-chat-history"
+          role="log"
+          aria-live="polite"
+          aria-label="Разговор с Mise"
         >
-        {step === 0 && (
-          <PeriodStep
-            start={start}
-            end={end}
-            rawDays={rawDays}
-            valid={validPeriod}
-            onStart={(value) => {
-              setStart(value);
-              if (daysInclusive(value, end) < 1) setEnd(value);
-              setRemainderDecision(null);
-            }}
-            onEnd={(value) => {
-              setEnd(value);
-              setRemainderDecision(null);
-            }}
-            onQuick={setQuickPeriod}
-          />
-        )}
-        {step === 1 && (
-          <MealStep
-            selected={mealSlots}
-            periodDays={rawDays}
-            onToggle={toggleMealSlot}
-          />
-        )}
-        {step === 2 && (
-          <StyleStep
-            selected={menuStyle}
-            unavailable={unavailableMenuStyles}
-            onSelect={(value) => {
-              setMenuStyle(value);
-            }}
-          />
-        )}
-        {step === 3 && (
-          <PeopleStep
-            people={people}
-            availableMealSlots={mode === "settings" ? allMealSlots : mealSlots}
-            menuStyle={menuStyle}
-            batchDays={cookEveryDays}
-            onUpdate={updatePerson}
-            onMealSlotToggle={togglePersonMealSlot}
-            onMacro={updateMacro}
-            onPreset={applyMacroPreset}
-            onAdd={() => {
-              if (people.length < 4)
-                setPeople((current) => [
-                  ...current,
-                  {
-                    ...newPerson(current.length),
-                    includedSlots: [...mealSlots],
-                  },
-                ]);
-            }}
-            onRemove={(id) => {
-              if (people.length > 1)
-                setPeople((current) =>
-                  current.filter((person) => person.id !== id),
-                );
-            }}
-          />
-        )}
-        {step === 3 && unassignedSlots.length > 0 && (
-          <Note tone="mint" role="status">
-            {unassignedSlots.map((slot) => mealMeta[slot].label).join(", ")}{" "}
-            никто не выбрал. Перед продолжением Mise попросит назначить или явно убрать {unassignedSlots.length === 1 ? "эту позицию" : "эти позиции"}.
-          </Note>
-        )}
-        {step === 4 && (
-          <CookingStep
-            periodDays={rawDays}
-            cookEveryDays={cookEveryDays}
-            remainder={remainder}
-            decision={remainderDecision}
-            start={start}
-            resolvedDays={resolvedDays}
-            canExtend={rawDays + cookEveryDays - remainder <= 14}
-            onDays={(value) => {
-              setCookEveryDays(value);
-              setRemainderDecision(null);
-            }}
-            onDecision={(value) => {
-              setRemainderDecision(value);
-            }}
-          />
-        )}
-        {step === 5 && menuMode === "auto" && (
-          <>
-            <MenuReviewStep
-              batches={batches}
-              mealSlots={mealSlots}
-              people={people}
-              style={menuStyle}
-              selections={validSelections}
-              selectionAssignments={validSelectionAssignments}
-              pinned={validPinned}
-              shopping={draftPlan.shopping}
-              onReplace={replaceSelection}
-              onReassemble={() => assembleMenu("reset")}
-              onManual={() => {
-                setMenuMode("manual");
-                setManualMotionDirection(1);
-                setChoiceIndex(0);
-              }}
-            />
-            {!allSelected && (
-              <Note
-                tone="warn"
-                role="alert"
-                action={
-                  <button className="text-button" onClick={() => changeStep(3)}>
-                    Изменить ограничения
-                  </button>
-                }
+          {mode === "onboarding" &&
+            builderChatTurns.slice(0, step).map((turn, index) => (
+              <div
+                className="builder-chat-turn"
+                key={`${index}-${turn.question}`}
               >
-                Для части позиций нет проверенного блюда с текущими ограничениями.
-                Измените ограничения или выберите другое направление меню.
+                <p className="chat-bubble is-mise">
+                  <span aria-hidden>M</span>
+                  {turn.question}
+                </p>
+                <button
+                  className="chat-bubble is-user"
+                  aria-label={`Изменить ответ: ${turn.answer}`}
+                  onClick={() => editChatAnswer(index)}
+                >
+                  <span>{turn.answer}</span>
+                  <Icon name="chevron-left" size={14} />
+                </button>
+              </div>
+            ))}
+          <div className="builder-chat-current">
+            <div
+              className="builder-chat-question"
+              ref={chatQuestionRef}
+              tabIndex={-1}
+            >
+              <span aria-hidden>M</span>
+              <div>
+                <small>{steps[step]}</small>
+                <p>{builderChatTurns[step]?.question}</p>
+              </div>
+            </div>
+            {chatTransition && (
+              <>
+                <p className="chat-bubble is-user is-pending">
+                  {chatTransition.answer}
+                </p>
+                {chatTransition.thinking && (
+                  <div
+                    className="builder-chat-typing"
+                    role="status"
+                    aria-label="Mise думает"
+                  >
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+        {!chatTransition && (
+          <div
+            key={`builder-step-${step}-${step === 5 ? menuMode : "default"}`}
+            className={`builder-step-content builder-chat-response${stepMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+          >
+            {step === 0 && (
+              <PeriodStep
+                start={start}
+                end={end}
+                rawDays={rawDays}
+                valid={validPeriod}
+                onStart={(value) => {
+                  setStart(value);
+                  if (daysInclusive(value, end) < 1) setEnd(value);
+                  setRemainderDecision(null);
+                }}
+                onEnd={(value) => {
+                  setEnd(value);
+                  setRemainderDecision(null);
+                }}
+                onQuick={setQuickPeriod}
+              />
+            )}
+            {step === 1 && (
+              <MealStep
+                selected={mealSlots}
+                periodDays={rawDays}
+                onToggle={toggleMealSlot}
+              />
+            )}
+            {step === 2 && (
+              <StyleStep
+                selected={menuStyle}
+                unavailable={unavailableMenuStyles}
+                onSelect={(value) => {
+                  setMenuStyle(value);
+                }}
+              />
+            )}
+            {step === 3 && (
+              <PeopleStep
+                people={people}
+                availableMealSlots={mode === "settings" ? allMealSlots : mealSlots}
+                menuStyle={menuStyle}
+                batchDays={cookEveryDays}
+                onUpdate={updatePerson}
+                onMealSlotToggle={togglePersonMealSlot}
+                onMacro={updateMacro}
+                onPreset={applyMacroPreset}
+                onAdd={() => {
+                  if (people.length < 4)
+                    setPeople((current) => [
+                      ...current,
+                      {
+                        ...newPerson(current.length),
+                        includedSlots: [...mealSlots],
+                      },
+                    ]);
+                }}
+                onRemove={(id) => {
+                  if (people.length > 1)
+                    setPeople((current) =>
+                      current.filter((person) => person.id !== id),
+                    );
+                }}
+              />
+            )}
+            {step === 3 && unassignedSlots.length > 0 && (
+              <Note tone="mint" role="status">
+                {unassignedSlots
+                  .map((slot) => mealMeta[slot].label)
+                  .join(", ")}{" "}
+                никто не выбрал. Перед продолжением Mise попросит назначить или
+                явно убрать{" "}
+                {unassignedSlots.length === 1
+                  ? "эту позицию."
+                  : "эти позиции."}
               </Note>
             )}
-          </>
+            {step === 4 && (
+              <CookingStep
+                periodDays={rawDays}
+                cookEveryDays={cookEveryDays}
+                remainder={remainder}
+                decision={remainderDecision}
+                start={start}
+                resolvedDays={resolvedDays}
+                canExtend={rawDays + cookEveryDays - remainder <= 14}
+                onDays={(value) => {
+                  setCookEveryDays(value);
+                  setRemainderDecision(null);
+                }}
+                onDecision={(value) => {
+                  setRemainderDecision(value);
+                }}
+              />
+            )}
+            {step === 5 && menuMode === "auto" && (
+              <>
+                <MenuReviewStep
+                  batches={batches}
+                  mealSlots={mealSlots}
+                  people={people}
+                  style={menuStyle}
+                  selections={validSelections}
+                  selectionAssignments={validSelectionAssignments}
+                  pinned={validPinned}
+                  shopping={draftPlan.shopping}
+                  onReplace={replaceSelection}
+                  onReassemble={() => assembleMenu("reset")}
+                  onManual={() => {
+                    setMenuMode("manual");
+                    setManualMotionDirection(1);
+                    setChoiceIndex(0);
+                  }}
+                />
+                {!allSelected && (
+                  <Note
+                    tone="warn"
+                    role="alert"
+                    action={
+                      <button
+                        className="text-button"
+                        onClick={() => changeStep(3)}
+                      >
+                        Изменить ограничения
+                      </button>
+                    }
+                  >
+                    Для части позиций нет проверенного блюда с текущими
+                    ограничениями. Измените ограничения или выберите другое
+                    направление меню.
+                  </Note>
+                )}
+              </>
+            )}
+            {step === 5 && menuMode === "manual" && (
+              <ManualMenuStep
+                key={choiceIndex}
+                positions={positions}
+                choiceIndex={choiceIndex}
+                motionDirection={manualMotionDirection}
+                people={people}
+                style={menuStyle}
+                selections={validSelections}
+                selectionAssignments={validSelectionAssignments}
+                onSelect={replaceSelection}
+                onSplit={assembleCurrentPosition}
+                onAssist={assembleRemainingAndReview}
+                onGo={goToManualChoice}
+              />
+            )}
+            {step === 6 && (
+              <ReviewStep
+                plan={draftPlan}
+                onEdit={(target) => changeStep(target)}
+              />
+            )}
+          </div>
         )}
-        {step === 5 && menuMode === "manual" && (
-          <ManualMenuStep
-            key={choiceIndex}
-            positions={positions}
-            choiceIndex={choiceIndex}
-            motionDirection={manualMotionDirection}
-            people={people}
-            style={menuStyle}
-            selections={validSelections}
-            selectionAssignments={validSelectionAssignments}
-            onSelect={replaceSelection}
-            onSplit={assembleCurrentPosition}
-            onAssist={assembleRemainingAndReview}
-            onGo={goToManualChoice}
-          />
-        )}
-        {step === 6 && (
-          <ReviewStep plan={draftPlan} onEdit={(target) => changeStep(target)} />
-        )}
-        </div>
       </section>
-      <footer className="builder-actions glass">
-        <button
-          className="secondary-button"
-          onClick={
-            step === 5 && menuMode === "manual" && choiceIndex > 0
-              ? () => goToManualChoice(choiceIndex - 1)
-              : backOneStep
-          }
-        >
-          {mode === "settings"
-            ? "Назад"
-            : step === 5 && menuMode === "manual" && choiceIndex > 0
-              ? "Назад"
-            : step === initialStep
-              ? "Отмена"
-              : "Назад"}
-        </button>
+      <div className="builder-chat-composer glass" aria-label="Ответ в чате">
+        <div>
+          <span>{chatTransition ? "Mise думает" : "Ваш ответ готов"}</span>
+          <small>
+            {chatTransition
+              ? "Следующий вопрос появится здесь"
+              : "Можно вернуться к любому ответу выше"}
+          </small>
+        </div>
         {mode === "settings" ? (
           <button
-            className="primary-button"
-            disabled={saveState === "saving" || !stepIsValid(initialStep)}
+            className="builder-chat-send"
+            disabled={
+              Boolean(chatTransition) ||
+              saveState === "saving" ||
+              !stepIsValid(initialStep)
+            }
             onClick={save}
           >
-            {saveState === "saving" ? "Сохраняем…" : "Сохранить"}
+            {saveState === "saving" ? "Сохраняем…" : "Сохранить ответ"}
+            <Icon name="chevron" size={16} />
           </button>
         ) : step < 6 ? (
           <button
-            className="primary-button"
-            disabled={!stepIsValid()}
+            className="builder-chat-send"
+            aria-label="Отправить ответ"
+            disabled={Boolean(chatTransition) || !stepIsValid()}
             onClick={next}
           >
             {step === 5 && menuMode === "manual"
               ? choiceIndex < positions.length - 1
                 ? `Дальше: ${mealMeta[positions[choiceIndex + 1]?.slot ?? positions[choiceIndex]?.slot ?? "lunch"].label.toLowerCase()}`
-                : "Проверить план"
+                : "Отправить меню"
               : step === 5
-                ? "Проверить план"
-                : "Продолжить"}{" "}
+                ? "Отправить меню"
+                : "Отправить ответ"}{" "}
             <Icon name="chevron" size={16} />
           </button>
         ) : (
           <button
-            className="primary-button"
-            disabled={saveState === "saving"}
+            className="builder-chat-send"
+            disabled={Boolean(chatTransition) || saveState === "saving"}
             onClick={save}
           >
             {saveState === "saving"
@@ -10504,9 +10614,10 @@ function PlanBuilder({
               : initialPlan
                 ? "Сохранить изменения"
                 : "Создать план и покупки"}
+            <Icon name="chevron" size={16} />
           </button>
         )}
-      </footer>
+      </div>
       {saveState === "error" && (
         <Note tone="warn" role="alert" className="note-toast">
           {saveMessage ||
@@ -10535,7 +10646,7 @@ function PlanBuilder({
                 })),
               );
               setUnassignedConfirmOpen(false);
-              changeStep(4);
+              beginChatAdvance(4);
             }}
           >
             Назначить всем и продолжить
@@ -10547,7 +10658,7 @@ function PlanBuilder({
                 current.filter((slot) => !unassignedSlots.includes(slot)),
               );
               setUnassignedConfirmOpen(false);
-              changeStep(4);
+              beginChatAdvance(4);
             }}
           >
             Убрать из плана
@@ -10583,7 +10694,7 @@ function StepIntro({
   text: string;
 }) {
   return (
-    <div className="step-intro chat-bubble is-mise">
+    <div className="step-intro">
       <span>{icon}</span>
       <p className="kicker">{kicker}</p>
       <h2>{title}</h2>
