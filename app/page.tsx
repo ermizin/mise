@@ -9473,6 +9473,8 @@ function PlanBuilder({
   const [chatTransition, setChatTransition] = useState<{
     answer: string;
     thinking: boolean;
+    kind: "step" | "menu";
+    assemblyStage: number;
   } | null>(null);
   const activeBuilderDraftKey =
     mode === "settings"
@@ -9831,6 +9833,38 @@ function PlanBuilder({
     "Выбор меню",
     "Проверка",
   ];
+  const menuDayCount = batches.reduce((sum, batch) => sum + batch.days, 0);
+  const menuDishCount = new Set(Object.values(validSelections)).size;
+  const menuPortionCount = batches.reduce(
+    (sum, batch) =>
+      sum +
+      batch.days *
+        mealSlots.reduce(
+          (slotSum, slot) => slotSum + relevantPeople(people, slot).length,
+          0,
+        ),
+    0,
+  );
+  const readyMenuTitle = `${withPlural(menuDishCount, FORMS.dish)} · ${withPlural(menuPortionCount, FORMS.portion)} · ${withPlural(batches.length, eveningForms)}`;
+  const readyMenuMessage = `Меню на ${withPlural(menuDayCount, FORMS.day)} готово. Докупить ${withPlural(draftPlan.shopping.length, FORMS.item)}. Посмотрите — что не нравится, заменю.`;
+  const menuAssemblyStages = [
+    {
+      label: "Считаю нормы",
+      note: `${withPlural(people.length, FORMS.person)}, учитываю разные цели`,
+    },
+    {
+      label: "Подбираю блюда",
+      note: "Ищу пересечения по продуктам",
+    },
+    {
+      label: "Делю на партии",
+      note: `Партия на ${withPlural(cookEveryDays, FORMS.day)}`,
+    },
+    {
+      label: "Собираю закупку",
+      note: "",
+    },
+  ];
   const builderChatTurns = [
     {
       question: "На какие даты собрать план?",
@@ -9857,10 +9891,8 @@ function PlanBuilder({
       answer: `Раз в ${withPlural(cookEveryDays, FORMS.day)}`,
     },
     {
-      question: "Какие блюда войдут в план?",
-      answer: allSelected
-        ? `${withPlural(new Set(Object.values(validSelections)).size, FORMS.recipe)} выбрано`
-        : "Ещё подбираем блюда",
+      question: allSelected ? readyMenuMessage : "Собираю готовое меню…",
+      answer: allSelected ? "Меню подходит" : "Ещё подбираем блюда",
     },
     {
       question: "Всё верно? Сохранить план и собрать покупки?",
@@ -9871,19 +9903,65 @@ function PlanBuilder({
     if (chatTransition || index >= stepRef.current) return;
     history.go(index - stepRef.current);
   }
-  function beginChatAdvance(nextStep: number) {
+  function beginChatAdvance(
+    nextStep: number,
+    kind: "step" | "menu" = "step",
+  ) {
     if (chatTransition) return;
     chatTimersRef.current.forEach((timer) => window.clearTimeout(timer));
     const answer = builderChatTurns[step]?.answer ?? "Готово";
-    setChatTransition({ answer, thinking: false });
+    setChatTransition({ answer, thinking: false, kind, assemblyStage: -1 });
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const thinkingDelay = reducedMotion ? 40 : 120;
-    const questionDelay = reducedMotion ? 180 : 900;
+    const thinkingDelay = reducedMotion ? 30 : 80;
+    if (kind === "menu") {
+      const stageDuration = reducedMotion ? 140 : 420;
+      chatTimersRef.current = [
+        ...menuAssemblyStages.map((_, assemblyStage) =>
+          window.setTimeout(
+            () =>
+              setChatTransition({
+                answer,
+                thinking: true,
+                kind,
+                assemblyStage,
+              }),
+            thinkingDelay + assemblyStage * stageDuration,
+          ),
+        ),
+        window.setTimeout(
+          () =>
+            setChatTransition({
+              answer,
+              thinking: true,
+              kind,
+              assemblyStage: menuAssemblyStages.length,
+            }),
+          thinkingDelay + menuAssemblyStages.length * stageDuration,
+        ),
+        window.setTimeout(
+          () => {
+            setChatTransition(null);
+            changeStep(nextStep);
+          },
+          thinkingDelay +
+            menuAssemblyStages.length * stageDuration +
+            (reducedMotion ? 120 : 160),
+        ),
+      ];
+      return;
+    }
+    const questionDelay = reducedMotion ? 140 : 560;
     chatTimersRef.current = [
       window.setTimeout(
-        () => setChatTransition({ answer, thinking: true }),
+        () =>
+          setChatTransition({
+            answer,
+            thinking: true,
+            kind,
+            assemblyStage: -1,
+          }),
         thinkingDelay,
       ),
       window.setTimeout(() => {
@@ -10030,6 +10108,7 @@ function PlanBuilder({
           ),
       );
       setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
+      if (menuMode === "auto") assembleMenu("fill");
     }
     if (step === 5 && menuMode === "manual") {
       if (choiceIndex < positions.length - 1) {
@@ -10038,7 +10117,10 @@ function PlanBuilder({
       }
       if (!allSelected) return;
     }
-    beginChatAdvance(step + 1);
+    beginChatAdvance(
+      step + 1,
+      step === 4 && menuMode === "auto" ? "menu" : "step",
+    );
   }
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
@@ -10428,23 +10510,91 @@ function PlanBuilder({
               </div>
             ))}
           <div className="builder-chat-current">
-            <div
-              className="builder-chat-question"
-              ref={chatQuestionRef}
-              tabIndex={-1}
-            >
-              <span aria-hidden>M</span>
-              <div>
-                <small>{steps[step]}</small>
-                <p>{builderChatTurns[step]?.question}</p>
+            {step === 5 && menuMode === "auto" && allSelected ? (
+              <div
+                className="builder-chat-menu-ready tint-mint"
+                ref={chatQuestionRef}
+                tabIndex={-1}
+              >
+                <strong>Меню готово</strong>
+                <b>{readyMenuTitle}</b>
+                <p>{readyMenuMessage}</p>
               </div>
-            </div>
+            ) : (
+              <div
+                className="builder-chat-question"
+                ref={chatQuestionRef}
+                tabIndex={-1}
+              >
+                <span aria-hidden>M</span>
+                <div>
+                  <small>{steps[step]}</small>
+                  <p>{builderChatTurns[step]?.question}</p>
+                </div>
+              </div>
+            )}
             {chatTransition && (
               <>
                 <p className="chat-bubble is-user is-pending">
                   {chatTransition.answer}
                 </p>
-                {chatTransition.thinking && (
+                {chatTransition.thinking &&
+                chatTransition.kind === "menu" ? (
+                  <div
+                    className="builder-menu-assembly glass-3"
+                    role="status"
+                    aria-label="Mise собирает меню по этапам"
+                  >
+                    <small>Собираю ваш план</small>
+                    <strong>Готовлю меню и закупку</strong>
+                    <div className="builder-menu-assembly-progress" aria-hidden>
+                      <span
+                        style={{
+                          width: `${(Math.max(0, chatTransition.assemblyStage) / menuAssemblyStages.length) * 100}%`,
+                        }}
+                      />
+                    </div>
+                    <div className="builder-menu-stages">
+                      {menuAssemblyStages.map((stageItem, index) => {
+                        const done = chatTransition.assemblyStage > index;
+                        const active = chatTransition.assemblyStage === index;
+                        return (
+                          <div
+                            className={`builder-menu-stage${done ? " is-done" : active ? " is-active" : " is-waiting"}`}
+                            key={stageItem.label}
+                          >
+                            <span
+                              className="builder-menu-stage-mark"
+                              aria-hidden
+                            >
+                              {done ? (
+                                <span className="builder-menu-stage-tick">✓</span>
+                              ) : active ? (
+                                <span className="builder-menu-stage-spinner" />
+                              ) : (
+                                <span className="builder-menu-stage-dot" />
+                              )}
+                            </span>
+                            <span>
+                              <b>{stageItem.label}</b>
+                              {stageItem.note && <small>{stageItem.note}</small>}
+                            </span>
+                            {active && (
+                              <span
+                                className="builder-menu-stage-dots"
+                                aria-hidden
+                              >
+                                <i />
+                                <i />
+                                <i />
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ) : chatTransition.thinking ? (
                   <div
                     className="builder-chat-typing"
                     role="status"
@@ -10454,7 +10604,7 @@ function PlanBuilder({
                     <span />
                     <span />
                   </div>
-                )}
+                ) : null}
               </>
             )}
           </div>
@@ -10622,10 +10772,18 @@ function PlanBuilder({
       </section>
       <div className="builder-chat-composer glass" aria-label="Ответ в чате">
         <div>
-          <span>{chatTransition ? "Mise думает" : "Ваш ответ готов"}</span>
+          <span>
+            {chatTransition
+              ? chatTransition.kind === "menu"
+                ? "Mise собирает меню"
+                : "Mise думает"
+              : "Ваш ответ готов"}
+          </span>
           <small>
             {chatTransition
-              ? "Следующий вопрос появится здесь"
+              ? chatTransition.kind === "menu"
+                ? "Подбираем блюда и считаем порции"
+                : "Следующий вопрос появится здесь"
               : "Можно вернуться к любому ответу выше"}
           </small>
         </div>
@@ -11994,28 +12152,9 @@ function MenuReviewStep({
     selections,
     selectionAssignments,
   );
-  const dishes = new Set(chosen.map((recipe) => recipe.id)).size;
-  const portions = batches.reduce(
-    (sum, batch) =>
-      sum +
-      batch.days *
-        mealSlots.reduce(
-          (slotSum, slot) => slotSum + relevantPeople(people, slot).length,
-          0,
-        ),
-    0,
-  );
 
   return (
     <>
-      <p className="wizard-bubble">
-        Собрал меню на {withPlural(
-          batches.reduce((sum, batch) => sum + batch.days, 0),
-          FORMS.day,
-        )}: {withPlural(dishes, FORMS.dish)}, {withPlural(portions, FORMS.portion)}.
-        Посмотрите — что не нравится, заменю.
-      </p>
-
       <div
         className={`menu-summary${lastReplaced ? ` is-updated ${replacementMotion}` : ""}`}
       >

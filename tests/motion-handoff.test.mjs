@@ -86,6 +86,48 @@ test("guide and manual menu finish the remaining supplied motion", async () => {
   assert.match(css, /macro-bar i[\s\S]*?transition: width 420ms/);
 });
 
+test("the last questionnaire answer runs the supplied staged menu assembly", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  const builder = page.slice(
+    page.indexOf("function PlanBuilder("),
+    page.indexOf("function StepIntro("),
+  );
+
+  assert.match(builder, /kind: "step" \| "menu"[\s\S]*?assemblyStage: number/);
+  assert.match(
+    builder,
+    /if \(menuMode === "auto"\) assembleMenu\("fill"\)/,
+    "the menu is assembled while the staged working state covers the form",
+  );
+  assert.match(
+    builder,
+    /step === 4 && menuMode === "auto" \? "menu" : "step"/,
+  );
+  assert.match(builder, /const stageDuration = reducedMotion \? 140 : 420/);
+  assert.match(builder, /const questionDelay = reducedMotion \? 140 : 560/);
+  assert.match(builder, /className="builder-menu-assembly glass-3"/);
+  assert.match(builder, /Считаю нормы/);
+  assert.match(builder, /Подбираю блюда/);
+  assert.match(builder, /Делю на партии/);
+  assert.match(builder, /Собираю закупку/);
+  assert.match(builder, /className="builder-chat-menu-ready tint-mint"/);
+  assert.match(builder, /Mise собирает меню/);
+  assert.match(builder, /Меню на/);
+  assert.match(
+    css,
+    /\.builder-menu-assembly-progress span \{[\s\S]*?width 400ms var\(--motion-settled\)/,
+  );
+  assert.match(css, /mise-builder-stage-spin 900ms linear infinite/);
+  assert.match(css, /mise-builder-stage-tick 300ms var\(--motion-spring\)/);
+  assert.match(
+    css,
+    /\.builder-chat-menu-ready \{[\s\S]*?mise-builder-menu-ready 460ms var\(--motion-settled\) 160ms/,
+  );
+});
+
 test("week days and batch cooking use directional keyed panels", async () => {
   const [page, css] = await Promise.all([
     read("app/page.tsx"),
