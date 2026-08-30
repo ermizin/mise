@@ -86,6 +86,34 @@ test("guide and manual menu finish the remaining supplied motion", async () => {
   assert.match(css, /macro-bar i[\s\S]*?transition: width 420ms/);
 });
 
+test("week days and batch cooking use directional keyed panels", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  assert.match(page, /function selectWeekDate\(nextDate: string\)/);
+  assert.match(page, /className=\{`week-day-panel/);
+  assert.match(page, /selectWeekDate\(nextCook\.start\)/);
+  assert.match(page, /function replayCookingMotion\(direction: -1 \| 1\)/);
+  assert.match(page, /className=\{`cooking-now-card glass-2 cooking-motion-panel/);
+  assert.match(page, /className=\{`batch-portioning cooking-motion-panel/);
+  assert.match(css, /mise-week-day-right 320ms/);
+  assert.match(css, /mise-week-day-left 320ms/);
+  assert.match(css, /mise-cooking-step-right 320ms/);
+  assert.match(css, /mise-cooking-step-left 320ms/);
+  assert.match(css, /mise-cooking-products 280ms/);
+});
+
+test("buttons keep the shared press response and latest owner color token", async () => {
+  const css = await read("app/globals.css");
+  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.match(css, /button:active:not\(:disabled\)[\s\S]*?scale\(0\.985\)/);
+  assert.match(css, /\.primary-button:not\(:disabled\):active[\s\S]*?scale\(0\.985\)/);
+  assert.match(css, /\.compose-fab[\s\S]*?background: var\(--button-grad\)/);
+  assert.match(css, /\.secondary-button[\s\S]*?var\(--motion-press\)/);
+  assert.match(css, /\.text-button[\s\S]*?var\(--motion-press\)/);
+});
+
 test("reduced motion keeps change visible without spatial movement", async () => {
   const css = await read("app/globals.css");
   const reduced = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
@@ -98,5 +126,9 @@ test("reduced motion keeps change visible without spatial movement", async () =>
   assert.match(reduced, /manual-slot-panel\.motion-enter-right/);
   assert.match(reduced, /builder-step-content\.motion-enter-right/);
   assert.match(reduced, /kit-row \.check-box svg[\s\S]*?transform: none !important/);
+  assert.match(reduced, /week-day-panel\.motion-enter-right/);
+  assert.match(reduced, /cooking-motion-panel\.motion-enter-right/);
+  assert.match(reduced, /shopping-results\.has-filter-effect-a/);
+  assert.match(reduced, /button:active:not\(:disabled\)[\s\S]*?transform: none !important/);
   assert.match(reduced, /transition-duration: 520ms !important/);
 });

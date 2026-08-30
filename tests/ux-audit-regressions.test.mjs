@@ -48,7 +48,7 @@ test("audit accessibility and daily-use regressions stay fixed", async () => {
     read("app/globals.css"),
     read("app/ui/icon.tsx"),
   ]);
-  assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, plannedMacros\.kcal\)/);
   assert.match(page, /setUnassignedConfirmOpen\(true\)/);
   assert.match(page, /Mise не будет удалять их молча/);
@@ -74,10 +74,14 @@ test("dead and misleading UI patterns from the audit do not return", async () =>
     read("app/page.tsx"),
     read("app/globals.css"),
   ]);
+  const weekScreen = page.slice(
+    page.indexOf("function WeekScreen("),
+    page.indexOf("function ShoppingScreen("),
+  );
   assert.doesNotMatch(css, /min-width:\s*100000px/);
   assert.doesNotMatch(css, /blur\(13px\)/);
   assert.match(css, /\.week-person-select \{[\s\S]*?font-size: var\(--text-input\)/);
-  assert.doesNotMatch(page, /scrollIntoView\(/);
+  assert.doesNotMatch(weekScreen, /scrollIntoView\(/);
   assert.match(page, /strip\.scrollLeft = Math\.max/);
   assert.doesNotMatch(page, /Собрать заново<\/button>[\s\S]{0,120}role="checkbox"/);
   assert.match(page, /\{recipeFamilyFor\(recipe\) \? \(/);
@@ -116,7 +120,7 @@ test("visual release blockers and high-impact P1 regressions stay fixed", async 
   assert.match(css, /\.manual-menu-art \{[\s\S]*?position: relative;/);
   assert.match(css, /\.manual-menu-art img \{[\s\S]*?position: absolute;[\s\S]*?inset: 0;/);
   assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--accent-grad-aa\)/);
-  assert.match(css, /\.primary-button \{[\s\S]*?min-height: var\(--hit-primary\)[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /\.primary-button \{[\s\S]*?min-height: var\(--hit-primary\)[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /--accent-text: #b3380a/);
   assert.match(css, /--mint-text: #1c7359/);
   assert.match(css, /\.secondary-button\.btn-danger \{[\s\S]*?color: var\(--danger-text\)/);

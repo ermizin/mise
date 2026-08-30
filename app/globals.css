@@ -58,8 +58,9 @@
   --accent-grad: linear-gradient(150deg, #ff8143, #ee4c13);
   --accent-text: #b3380a; /* AA: оранжевый текст на фоне приложения */
   --accent-text-strong: #b33a0b;
-  /* AA-вариант рампы, если решите закрыть контраст главной кнопки: */
-  --accent-grad-aa: linear-gradient(150deg, #cf430c, #b8350a);
+  /* Единая светлая рампа действий — та же, что в основном дизайн-коде. */
+  --button-grad: var(--accent-grad);
+  --accent-grad-aa: var(--button-grad);
 
   /* ---------- Смысловые цвета ----------
      Мята = хранение и заморозка. Оранжевый = действие и предупреждение.
@@ -696,6 +697,12 @@ button {
   color: inherit;
   border: 0;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform var(--motion-press) ease;
+}
+button:active:not(:disabled) {
+  transform: scale(0.985);
 }
 button:disabled {
   cursor: not-allowed;
@@ -838,6 +845,7 @@ p {
   justify-content: center;
   flex-direction: column;
   gap: 2px;
+  transition: color 200ms linear, transform var(--motion-press) ease;
 }
 .bottom-nav button > .icon {
   width: 24px;
@@ -868,7 +876,7 @@ p {
   justify-content: center;
   gap: 8px;
   color: #fff;
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   box-shadow: var(--shadow-accent), inset 0 1px rgba(255, 255, 255, 0.42);
   font: var(--weight-semibold) var(--text-h3) / 1 var(--font-ui);
   letter-spacing: var(--tracking-h3);
@@ -891,6 +899,11 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.9);
   color: var(--ink-soft);
   background: rgba(255, 255, 255, 0.53);
+  transition:
+    transform var(--motion-press) ease,
+    color 220ms linear,
+    border-color 220ms linear,
+    background-color 220ms linear;
 }
 .secondary-button.btn-danger {
   border-color: var(--danger-border);
@@ -902,6 +915,7 @@ p {
   padding: 7px 4px;
   color: var(--accent-dark);
   background: transparent;
+  transition: transform var(--motion-press) ease, color 220ms linear;
 }
 .icon-button {
   width: 48px;
@@ -912,6 +926,10 @@ p {
   color: var(--ink);
   font-size: var(--glyph-m);
   line-height: 1;
+  transition:
+    transform var(--motion-press) ease,
+    color 220ms linear,
+    background-color 220ms linear;
 }
 .icon {
   display: block;
@@ -947,11 +965,7 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-l);
   color: #fff;
-  background: linear-gradient(
-    145deg,
-    var(--accent-grad-a),
-    var(--accent-grad-b)
-  );
+  background: var(--button-grad);
   box-shadow: 0 14px 28px rgba(154, 52, 18, 0.34);
   animation: mise-fab-in 380ms var(--motion-spring) 120ms backwards;
   transition:
@@ -2422,6 +2436,10 @@ p {
   place-items: center;
   border-radius: var(--r-tile);
   color: var(--ink-muted);
+  transition:
+    transform var(--motion-press) ease,
+    color 220ms linear,
+    background-color 220ms linear;
 }
 .shopping-summary {
   display: block;
@@ -2464,6 +2482,7 @@ p {
   display: block;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent-grad-a), var(--accent-grad-b));
+  transition: width 520ms var(--motion-settled);
 }
 .shopping-filter-row {
   margin-top: 13px;
@@ -2480,6 +2499,11 @@ p {
   background: rgba(255, 255, 255, 0.5);
   font-size: var(--text-min);
   font-weight: var(--weight-medium);
+  transition:
+    transform var(--motion-press) ease,
+    color 220ms linear,
+    border-color 220ms linear,
+    background-color 220ms linear;
 }
 .shopping-filter-row button.selected {
   color: var(--ink);
@@ -2519,6 +2543,10 @@ p {
   border-top: 1px solid rgba(255, 255, 255, 0.74);
   text-align: left;
   background: transparent;
+  transition:
+    transform var(--motion-press) ease,
+    color 260ms linear,
+    background-color 260ms linear;
 }
 .checkmark {
   width: 22px;
@@ -2529,6 +2557,10 @@ p {
   border-radius: var(--r-chip-sq);
   color: #fff;
   font-size: var(--text-link);
+  transition:
+    transform var(--motion-press) ease,
+    border-color 260ms linear,
+    background-color 260ms linear;
 }
 .grocery-name {
   flex: 1;
@@ -2551,8 +2583,29 @@ p {
   text-decoration: line-through;
 }
 .grocery-row.checked .checkmark {
-  border-color: var(--accent);
-  background: var(--accent-grad);
+  border-color: var(--accent-text-strong);
+  background: var(--button-grad);
+}
+.grocery-row.is-checking.motion-a .checkmark .icon {
+  animation: mise-shopping-check-a 300ms var(--motion-spring) both;
+}
+.grocery-row.is-checking.motion-b .checkmark .icon {
+  animation: mise-shopping-check-b 300ms var(--motion-spring) both;
+}
+.grocery-row.is-unchecking.motion-a .checkmark .icon {
+  animation: mise-shopping-uncheck-a 260ms var(--motion-settled) both;
+}
+.grocery-row.is-unchecking.motion-b .checkmark .icon {
+  animation: mise-shopping-uncheck-b 260ms var(--motion-settled) both;
+}
+.shopping-results {
+  min-width: 0;
+}
+.shopping-results.has-filter-effect-a {
+  animation: mise-shopping-filter-a 320ms var(--motion-settled) both;
+}
+.shopping-results.has-filter-effect-b {
+  animation: mise-shopping-filter-b 320ms var(--motion-settled) both;
 }
 .shopping-empty {
   margin-top: var(--space-3);
@@ -2560,6 +2613,7 @@ p {
   justify-items: center;
   gap: 7px;
   text-align: center;
+  animation: mise-shopping-empty 320ms var(--motion-settled) both;
 }
 .shopping-empty > .icon {
   color: var(--mint-text);
@@ -5013,7 +5067,7 @@ p {
 .manual-menu-option.is-selected i {
   border-color: transparent;
   color: #fff;
-  background: var(--accent-grad);
+  background: var(--button-grad);
 }
 .manual-menu-option.is-selecting.manual-effect-a i svg {
   animation: mise-manual-tick-in-a 300ms var(--motion-spring) both;
@@ -5024,7 +5078,7 @@ p {
 .manual-menu-option.is-deselecting i {
   border-color: transparent;
   color: #fff;
-  background: var(--accent-grad);
+  background: var(--button-grad);
 }
 .manual-menu-option.is-deselecting.manual-effect-a i svg {
   animation: mise-manual-tick-out-a 260ms var(--motion-settled) both;
@@ -5567,6 +5621,11 @@ p {
   }
 }
 
+/* Press должен побеждать hover и на устройствах с точным указателем. */
+.primary-button:not(:disabled):active {
+  transform: scale(0.985);
+}
+
 @media (max-width: 380px) {
   .field-row,
   .norm-macros {
@@ -5595,6 +5654,12 @@ p {
 .week-screen {
   display: grid;
   gap: var(--space-3);
+}
+.week-day-panel {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3);
+  overflow-x: clip;
 }
 .week-screen-header {
   min-height: 54px;
@@ -5659,6 +5724,11 @@ p {
   min-height: 58px;
   border-radius: var(--r-nested);
   background: var(--glass-3-bg);
+  transition:
+    transform var(--motion-press) ease,
+    color 220ms linear,
+    border-color 220ms linear,
+    background-color 220ms linear;
 }
 .week-screen .date-strip button.selected {
   border-color: rgba(255, 255, 255, 0.88);
@@ -6204,7 +6274,7 @@ p {
   height: 100%;
   border-radius: inherit;
   background: var(--accent);
-  transition: width 180ms ease;
+  transition: width 280ms var(--motion-settled);
 }
 .cooking-batch-content {
   position: relative;
@@ -6431,6 +6501,11 @@ p {
   background: var(--glass-3-bg);
   font-size: var(--text-min);
   font-weight: var(--weight-label);
+  transition:
+    transform var(--motion-press) ease,
+    color 220ms linear,
+    border-color 220ms linear,
+    background-color 220ms linear;
 }
 .cooking-step-products {
   margin-top: var(--space-3);
@@ -6439,6 +6514,7 @@ p {
   gap: var(--space-2);
   border-radius: var(--r-nested);
   background: var(--glass-3-bg);
+  animation: mise-cooking-products 280ms var(--motion-settled) both;
 }
 .cooking-step-products span {
   font-size: var(--text-link);
@@ -7048,6 +7124,27 @@ p {
 .execution-toast.is-entering-b { animation: mise-toast-in-b 320ms var(--motion-settled) both; }
 .execution-toast.is-leaving { animation: mise-toast-out 260ms var(--motion-settled) both; }
 
+.week-screen-header h1.motion-enter-right,
+.week-day-panel.motion-enter-right {
+  animation: mise-week-day-right 320ms var(--motion-settled) both;
+}
+.week-screen-header h1.motion-enter-left,
+.week-day-panel.motion-enter-left {
+  animation: mise-week-day-left 320ms var(--motion-settled) both;
+}
+.cooking-motion-panel.motion-enter-right {
+  animation: mise-cooking-step-right 320ms var(--motion-settled) both;
+}
+.cooking-motion-panel.motion-enter-left {
+  animation: mise-cooking-step-left 320ms var(--motion-settled) both;
+}
+.shopping-screen .undo-bar {
+  animation: mise-shopping-toast 320ms var(--motion-settled) both;
+}
+.shopping-screen .note-toast {
+  animation: mise-shopping-toast-fixed 320ms var(--motion-settled) both;
+}
+
 @media (max-width: 430px) {
   .date-fields {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -7162,6 +7259,21 @@ p {
 @keyframes mise-toast-in-a { from { opacity: 0; transform: translate(-50%, 22px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-toast-in-b { from { opacity: 0; transform: translate(-50%, 22px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-toast-out { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, 22px); } }
+@keyframes mise-week-day-right { from { opacity: 0.3; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-week-day-left { from { opacity: 0.3; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-cooking-step-right { from { opacity: 0.3; transform: translateX(34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-cooking-step-left { from { opacity: 0.3; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
+@keyframes mise-cooking-products { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-check-a { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-check-b { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-uncheck-a { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.5); } }
+@keyframes mise-shopping-uncheck-b { from { opacity: 1; transform: none; } to { opacity: 0; transform: scale(0.5); } }
+@keyframes mise-shopping-filter-a { from { opacity: 0.35; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-filter-b { from { opacity: 0.35; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-empty { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-toast { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes mise-shopping-toast-fixed { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes mise-shopping-toast-fixed-fade { from { opacity: 0.45; transform: translate(-50%, 0); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-motion-fade { from { opacity: 0.45; } to { opacity: 1; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -7233,8 +7345,24 @@ p {
   .has-pop-b,
   .execution-toast.is-entering-a,
   .execution-toast.is-entering-b,
-  .execution-toast.is-leaving {
+  .execution-toast.is-leaving,
+  .week-screen-header h1.motion-enter-right,
+  .week-screen-header h1.motion-enter-left,
+  .week-day-panel.motion-enter-right,
+  .week-day-panel.motion-enter-left,
+  .cooking-motion-panel.motion-enter-right,
+  .cooking-motion-panel.motion-enter-left,
+  .cooking-step-products,
+  .grocery-row.is-checking .checkmark .icon,
+  .grocery-row.is-unchecking .checkmark .icon,
+  .shopping-results.has-filter-effect-a,
+  .shopping-results.has-filter-effect-b,
+  .shopping-empty,
+  .shopping-screen .undo-bar {
     animation: mise-motion-fade 160ms ease both !important;
+  }
+  .shopping-screen .note-toast {
+    animation: mise-shopping-toast-fixed-fade 160ms ease both !important;
   }
   .onboarding-shell .btn,
   .onboarding-shell .primary-button,
@@ -7278,7 +7406,12 @@ p {
     transition-duration: 300ms !important;
   }
   .week-ring-value,
-  .week-macro-row .macro-bar i {
+  .week-macro-row .macro-bar i,
+  .shopping-progress-track > span {
     transition-duration: 520ms !important;
+  }
+  .primary-button:not(:disabled):hover,
+  button:active:not(:disabled) {
+    transform: none !important;
   }
 }

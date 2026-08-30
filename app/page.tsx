@@ -7491,6 +7491,7 @@ function WeekScreen({
   const [selectedDate, setSelectedDate] = useState(
     plan ? clampDate(today, plan.start, plan.end) : today,
   );
+  const [dayMotionDirection, setDayMotionDirection] = useState<-1 | 1>(1);
   const [personId, setPersonId] = useState(plan?.people[0]?.id ?? "");
   const [confirmedBatchIds, setConfirmedBatchIds] = useState<string[]>(() =>
     plan?.cookedBatchIds ?? [],
@@ -7514,6 +7515,11 @@ function WeekScreen({
       selected.offsetLeft - (strip.clientWidth - selected.offsetWidth) / 2,
     );
   }, [selectedDate]);
+  function selectWeekDate(nextDate: string) {
+    if (nextDate === selectedDate) return;
+    setDayMotionDirection(nextDate < selectedDate ? -1 : 1);
+    setSelectedDate(nextDate);
+  }
   if (loading)
     return (
       <section
@@ -7790,7 +7796,12 @@ function WeekScreen({
             {batch.index + 1} из {plan.batches.length}
             <Icon name="chevron" size={14} />
           </button>
-          <h1>{formatDayHeading(selectedDate)}</h1>
+          <h1
+            key={selectedDate}
+            className={dayMotionDirection < 0 ? "motion-enter-left" : "motion-enter-right"}
+          >
+            {formatDayHeading(selectedDate)}
+          </h1>
         </div>
         <button
           className="week-avatar glass-3"
@@ -7859,7 +7870,7 @@ function WeekScreen({
               data-selected={date === selectedDate}
               aria-current={date === selectedDate ? "date" : undefined}
               className={`${date === selectedDate ? "selected" : ""} ${date === today ? "is-today" : ""} ${isFirstOfBatch ? "batch-start" : ""}`}
-              onClick={() => setSelectedDate(date)}
+              onClick={() => selectWeekDate(date)}
               aria-label={`${formatDate(date, true)}${date === today ? ", сегодня" : ""}${dateBatch.start === date ? `, начало готовки ${dateBatch.index + 1}` : ""}`}
             >
               <small>
@@ -7873,6 +7884,10 @@ function WeekScreen({
           );
         })}
       </div>
+      <div
+        key={selectedDate}
+        className={`week-day-panel${dayMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+      >
       <section className="week-macro-card glass-card" aria-live="polite">
         <div className="week-macro-head">
           <div>
@@ -8107,7 +8122,7 @@ function WeekScreen({
       {nextCook && (
         <button
           className="week-next-cook glass-card"
-          onClick={() => setSelectedDate(nextCook.start)}
+          onClick={() => selectWeekDate(nextCook.start)}
           aria-label={`Открыть следующую готовку ${nextCook.index + 1}`}
         >
           <div>
@@ -8211,12 +8226,13 @@ function WeekScreen({
         <button
           className="text-button week-today-button"
           onClick={() =>
-            setSelectedDate(clampDate(today, activePlan.start, activePlan.end))
+            selectWeekDate(clampDate(today, activePlan.start, activePlan.end))
           }
         >
           Показать сегодняшний день
         </button>
       )}
+      </div>
       </div>
     </section>
   );
@@ -8830,6 +8846,13 @@ function ShoppingScreen({
   const [filter, setFilter] = useState<"all" | "unchecked" | "batch-1">(
     "all",
   );
+  const [filterMotionEpoch, setFilterMotionEpoch] = useState(0);
+  const [shoppingEffect, setShoppingEffect] = useState<{
+    key: string;
+    kind: "check" | "uncheck";
+    epoch: number;
+  } | null>(null);
+  const shoppingMotionEpoch = useRef(0);
   const [shareState, setShareState] = useState<"idle" | "copied" | "error">(
     "idle",
   );
@@ -8837,6 +8860,11 @@ function ShoppingScreen({
   useEffect(() => {
     if (shoppingPlanId) void trackAnalytics("shopping_opened");
   }, [shoppingPlanId]);
+  useEffect(() => {
+    if (!shoppingEffect) return;
+    const timer = window.setTimeout(() => setShoppingEffect(null), 360);
+    return () => window.clearTimeout(timer);
+  }, [shoppingEffect]);
   if (!plan)
     return (
       <section className="screen">
@@ -8866,6 +8894,11 @@ function ShoppingScreen({
     })
     .sort((left, right) => Number(left.checked) - Number(right.checked));
   const groups = groupedShopping(visibleShopping);
+  function selectShoppingFilter(next: "all" | "unchecked" | "batch-1") {
+    if (next === filter) return;
+    setFilter(next);
+    setFilterMotionEpoch((current) => current + 1);
+  }
   async function apply(
     shopping: ShoppingItem[],
     undoTo: ShoppingItem[] | null,
@@ -8877,6 +8910,13 @@ function ShoppingScreen({
   }
   async function toggle(key: string) {
     const previous = currentPlan.shopping.find((item) => item.key === key);
+    if (!previous) return;
+    shoppingMotionEpoch.current += 1;
+    setShoppingEffect({
+      key,
+      kind: previous.checked ? "uncheck" : "check",
+      epoch: shoppingMotionEpoch.current,
+    });
     const ok = await apply(
       currentPlan.shopping.map((item) =>
         item.key === key ? { ...item, checked: !item.checked } : item,
@@ -8944,12 +8984,15 @@ function ShoppingScreen({
           <div>
             <p className="kicker">Куплено</p>
             <h2>
-              {checked}<span> / {plan.shopping.length}</span>
+              <AnimatedNumber value={checked} />
+              <span> / {plan.shopping.length}</span>
             </h2>
           </div>
           <div>
             <p className="kicker">Осталось групп</p>
-            <b>{remainingGroups} из {totalGroups}</b>
+            <b>
+              <AnimatedNumber value={remainingGroups} /> из {totalGroups}
+            </b>
           </div>
         </div>
         <div
@@ -8966,14 +9009,14 @@ function ShoppingScreen({
           <button
             className={filter === "all" ? "selected" : ""}
             aria-pressed={filter === "all"}
-            onClick={() => setFilter("all")}
+            onClick={() => selectShoppingFilter("all")}
           >
             Все
           </button>
           <button
             className={filter === "unchecked" ? "selected" : ""}
             aria-pressed={filter === "unchecked"}
-            onClick={() => setFilter("unchecked")}
+            onClick={() => selectShoppingFilter("unchecked")}
           >
             Не куплено
           </button>
@@ -8981,7 +9024,7 @@ function ShoppingScreen({
             <button
               className={filter === "batch-1" ? "selected" : ""}
               aria-pressed={filter === "batch-1"}
-              onClick={() => setFilter("batch-1")}
+              onClick={() => selectShoppingFilter("batch-1")}
             >
               Партия 1
             </button>
@@ -9019,6 +9062,16 @@ function ShoppingScreen({
           Не получилось поделиться списком. Попробуйте ещё раз.
         </Note>
       )}
+      <div
+        key={`shopping-results-${filter}-${filterMotionEpoch}`}
+        className={`shopping-results${
+          filterMotionEpoch
+            ? filterMotionEpoch % 2
+              ? " has-filter-effect-a"
+              : " has-filter-effect-b"
+            : ""
+        }`}
+      >
       {Object.entries(groups).map(([group, items]) => (
         <section className="shopping-group glass-card" key={group}>
           <div className="group-title">
@@ -9029,25 +9082,31 @@ function ShoppingScreen({
               {(allGroups[group] ?? items).length}
             </span>
           </div>
-          {items.map((item) => (
-            <button
-              className={`grocery-row ${item.checked ? "checked" : ""}`}
-              key={item.key}
-              role="checkbox"
-              aria-checked={item.checked}
-              onClick={() => void toggle(item.key)}
-            >
-              <span className="checkmark">
-                {item.checked && <Icon name="check" />}
-              </span>
-              <span className="grocery-name">
-                {item.name}
-              </span>
-              <b>
-                {shoppingAmountLabel(item)}
-              </b>
-            </button>
-          ))}
+          {items.map((item) => {
+            const effect = shoppingEffect?.key === item.key ? shoppingEffect : null;
+            const visuallyChecked = effect ? effect.kind === "check" : item.checked;
+            const showTick = visuallyChecked || effect?.kind === "uncheck";
+            const effectClass = effect
+              ? ` is-${effect.kind === "check" ? "checking" : "unchecking"}${
+                  effect.epoch % 2 ? " motion-a" : " motion-b"
+                }`
+              : "";
+            return (
+              <button
+                className={`grocery-row${visuallyChecked ? " checked" : ""}${effectClass}`}
+                key={item.key}
+                role="checkbox"
+                aria-checked={visuallyChecked}
+                onClick={() => void toggle(item.key)}
+              >
+                <span className="checkmark">
+                  {showTick && <Icon name="check" />}
+                </span>
+                <span className="grocery-name">{item.name}</span>
+                <b>{shoppingAmountLabel(item)}</b>
+              </button>
+            );
+          })}
         </section>
       ))}
       {visibleShopping.length === 0 && (
@@ -9057,6 +9116,7 @@ function ShoppingScreen({
           <p>Переключите фильтр на «Все», чтобы увидеть весь список.</p>
         </section>
       )}
+      </div>
       </div>
     </section>
   );
@@ -12519,6 +12579,10 @@ function BatchCookingView({
   const [showAll, setShowAll] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
   const [portioning, setPortioning] = useState(false);
+  const [cookingMotion, setCookingMotion] = useState<{
+    direction: -1 | 1;
+    epoch: number;
+  }>({ direction: 1, epoch: 0 });
   const [portionSaveState, setPortionSaveState] = useState<
     "idle" | "saving" | "error"
   >("idle");
@@ -12614,10 +12678,19 @@ function BatchCookingView({
   const formatTimer = (seconds: number) =>
     `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   const contactWarnings = crossContactWarnings(plan, batch);
+  function replayCookingMotion(direction: -1 | 1) {
+    setCookingMotion((current) => ({
+      direction,
+      epoch: current.epoch + 1,
+    }));
+  }
   function goToStep(nextIndex: number) {
-    setStepIndex(nextIndex);
-    localStorage.setItem(progressKey, String(nextIndex));
-    setRemainingSeconds(model.steps[nextIndex].minutes * 60);
+    const bounded = Math.max(0, Math.min(model.steps.length - 1, nextIndex));
+    if (bounded === stepIndex) return;
+    replayCookingMotion(bounded < stepIndex ? -1 : 1);
+    setStepIndex(bounded);
+    localStorage.setItem(progressKey, String(bounded));
+    setRemainingSeconds(model.steps[bounded].minutes * 60);
     setTimerRunning(false);
     setTimerEndsAt(null);
     setShowProducts(false);
@@ -12626,6 +12699,7 @@ function BatchCookingView({
     if (stepIndex >= model.steps.length - 1) {
       setTimerRunning(false);
       setTimerEndsAt(null);
+      replayCookingMotion(1);
       setPortioning(true);
       return;
     }
@@ -12665,7 +12739,13 @@ function BatchCookingView({
           <b>Готовка · партия {batch.index + 1}</b>
           <small>{formatDate(batch.start, true)}</small>
         </div>
-        <button className="cooking-all-button" onClick={() => setShowAll((value) => !value)}>
+        <button
+          className="cooking-all-button"
+          onClick={() => {
+            replayCookingMotion(1);
+            setShowAll((value) => !value);
+          }}
+        >
           {showAll ? "Текущий шаг" : "Все шаги"}
         </button>
         <span className="cooking-batch-progress" aria-hidden>
@@ -12695,7 +12775,7 @@ function BatchCookingView({
               aria-label={`Готово ${progressPercent}% партии`}
             >
               <span>
-                <b>{progressPercent}%</b>
+                <b><AnimatedNumber value={progressPercent} />%</b>
                 <small>партии</small>
               </span>
             </div>
@@ -12726,7 +12806,13 @@ function BatchCookingView({
           </Note>
         )}
         {!portioning ? (
-        <section className="cooking-now-card glass-2">
+        <section
+          key={`cooking-step-${stepIndex}-${showAll}-${cookingMotion.epoch}`}
+          className={`cooking-now-card glass-2 cooking-motion-panel${
+            cookingMotion.direction < 0 ? " motion-enter-left" : " motion-enter-right"
+          }`}
+          aria-live="polite"
+        >
           <p className="cooking-card-kicker">{showAll ? "Все шаги партии" : "Сейчас"}</p>
           <ol className="batch-step-list">
             {visibleSteps.map((step) => {
@@ -12794,7 +12880,13 @@ function BatchCookingView({
           )}
         </section>
         ) : (
-          <section className="batch-portioning" aria-labelledby="batch-portioning-title">
+          <section
+            key={`cooking-portioning-${cookingMotion.epoch}`}
+            className={`batch-portioning cooking-motion-panel${
+              cookingMotion.direction < 0 ? " motion-enter-left" : " motion-enter-right"
+            }`}
+            aria-labelledby="batch-portioning-title"
+          >
             <div className="batch-portioning-heading glass-2">
               <p className="cooking-card-kicker">Финальный шаг</p>
               <h1 id="batch-portioning-title">Разложите по контейнерам</h1>

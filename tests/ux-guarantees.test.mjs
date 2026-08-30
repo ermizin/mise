@@ -216,13 +216,13 @@ test("the interface stays legible", async () => {
   const [page, css, layout] = await Promise.all([read("app/page.tsx"), read("app/globals.css"), read("app/layout.tsx")]);
   const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
   assert.deepEqual(tiny, [], "nothing is smaller than 12px");
-  // Liquid Glass keeps its brighter decorative ramp, while interactive surfaces
-  // use the darker ramp whose lightest endpoint still clears white-text AA.
+  // Decorative accents and interactive surfaces share the approved light ramp.
   assert.match(css, /--accent-grad-a: #ff8143/);
   assert.match(css, /--accent-grad-b: #ee4c13/);
-  assert.match(css, /--accent-grad-aa: linear-gradient\(150deg, #cf430c, #b8350a\)/);
+  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.match(css, /--accent-grad-aa: var\(--button-grad\)/);
   assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--accent-grad-aa\)/);
-  assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);
   assert.doesNotMatch(css, /@media \(prefers-color-scheme: dark\)(?![^\n]*min-width)/, "the dark theme is disabled");
   assert.match(css, /color-scheme: light;/, "native controls stay light");
   assert.doesNotMatch(layout, /prefers-color-scheme: dark/, "the PWA chrome stays light");

@@ -26,6 +26,19 @@ test("shopping groups expose checked totals", () => {
   assert.match(shopping, /\(allGroups\[group\] \?\? items\)\.length/);
 });
 
+test("shopping animates confirmation, progress and filter changes", () => {
+  assert.match(shopping, /const \[filterMotionEpoch, setFilterMotionEpoch\]/);
+  assert.match(shopping, /const \[shoppingEffect, setShoppingEffect\]/);
+  assert.match(shopping, /kind: "check" \| "uncheck"/);
+  assert.match(shopping, /className=\{`shopping-results/);
+  assert.match(shopping, /<AnimatedNumber value=\{checked\}/);
+  assert.match(css, /shopping-progress-track > span[\s\S]*?width 520ms var\(--motion-settled\)/);
+  assert.match(css, /mise-shopping-check-a 300ms/);
+  assert.match(css, /mise-shopping-uncheck-a 260ms/);
+  assert.match(css, /mise-shopping-filter-a 320ms/);
+  assert.match(css, /shopping-empty 320ms/);
+});
+
 test("shopping does not expose deprecated progress ring or label reminders", () => {
   assert.doesNotMatch(shopping, /progress-ring/);
   assert.doesNotMatch(shopping, /label-reminder/);

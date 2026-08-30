@@ -17,3 +17,16 @@ test("batch progress paints only the ring and leaves its center clear", async ()
     /\.batch-progress-ring > span[\s\S]*?background:\s*rgba\(255, 255, 255, 0\.92\)/,
   );
 });
+
+test("batch cooking buttons use the lighter design gradient", async () => {
+  const css = await read("app/globals.css");
+
+  assert.match(
+    css,
+    /--button-grad: var\(--accent-grad\);/,
+  );
+  assert.match(
+    css,
+    /\.primary-button \{[\s\S]*?background: var\(--button-grad\);[\s\S]*?\}/,
+  );
+});
