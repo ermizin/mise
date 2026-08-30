@@ -11,6 +11,9 @@ async function loadRecipeCatalog() {
   const runtimeRecipeCatalogJson = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
+  const legacyRecipeImageDownloadSourcesJson = JSON.parse(
+    await readFile(new URL("../data/legacy-recipe-image-download-sources.json", import.meta.url), "utf8"),
+  );
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
@@ -20,6 +23,7 @@ async function loadRecipeCatalog() {
   }).outputText;
   const sandbox = {
     runtimeRecipeCatalogJson,
+    legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutrition.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutrition.calculateMealPlanTargets,
@@ -158,11 +162,19 @@ test("parsed recipes keep auditable source and adaptation metadata", () => {
   }
 });
 
-test("source photos and localization notes are attached to imported recipes", () => {
+test("source photos and localization notes remain attached to legacy imported recipes", () => {
   const withPhotos = recipes.filter((item) => item.provenance.kind === "parsed" && item.provenance.imageUrl);
   assert.ok(withPhotos.length > 0);
-  assert.ok(withPhotos.length < recipes.filter((item) => item.provenance.kind === "parsed").length, "photos remain optional");
+  assert.ok(withPhotos.length < recipes.filter((item) => item.provenance.kind === "parsed").length, "non-runtime legacy records may still lack assets");
   assert.ok(withPhotos.every((item) => item.provenance.imageAlt && item.provenance.sourceUrl));
+  assert.ok(
+    productionRecipes.every(
+      (item) =>
+        item.provenance.kind === "parsed" &&
+        /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl),
+    ),
+    "every production card uses a verified local source photo",
+  );
   for (const id of ["src-taco-mac", "src-teriyaki-tray", "src-halal-chicken"]) {
     const item = recipes.find((candidate) => candidate.id === id);
     assert.ok(item);
@@ -171,7 +183,7 @@ test("source photos and localization notes are attached to imported recipes", ()
   }
 });
 
-test("runtime catalog cards do not hotlink third-party recipe photos", async () => {
+test("runtime catalog cards use verified local source photos", async () => {
   const runtimeCatalog = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
@@ -179,7 +191,7 @@ test("runtime catalog cards do not hotlink third-party recipe photos", async () 
   const runtimeRecipes = recipes.filter((item) => runtimeIds.has(item.id));
   assert.equal(runtimeRecipes.length, runtimeIds.size);
   assert.ok(runtimeRecipes.length >= 200);
-  assert.ok(runtimeRecipes.every((item) => item.provenance.imageUrl === undefined));
+  assert.ok(runtimeRecipes.every((item) => /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl)));
 });
 
 test("production fat-sensitive ingredients expose an honest fat note", () => {
@@ -824,8 +836,8 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   const expectedReadyIds = recipes
     .filter(
       (item) =>
-        (item.provenance.kind === "parsed" ||
-          item.provenance.editoriallyApproved === true) &&
+        item.provenance.kind === "parsed" &&
+        /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl ?? "") &&
         item.ingredients.length >= 3 &&
         recipeFamilyFor(item)?.reviewStatus === "pilot",
     )
@@ -836,14 +848,7 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   assert.ok(productionRecipes.length >= 200);
   assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
   assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
-  assert.ok(
-    productionRecipes.every(
-      (item) =>
-        item.provenance.kind === "parsed" ||
-        item.provenance.editoriallyApproved === true,
-    ),
-    "generated placeholders require explicit editorial approval",
-  );
+  assert.ok(productionRecipes.every((item) => item.provenance.kind === "parsed"));
   assert.ok(productionRecipes.every((item) => item.ingredients.length >= 3));
   assert.ok(productionRecipes.every(isProductionReadyRecipe));
 

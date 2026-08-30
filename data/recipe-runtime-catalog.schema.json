@@ -4,16 +4,16 @@
   "type": "object",
   "required": ["schemaVersion", "constraints", "coverage", "recipes", "failures"],
   "properties": {
-    "schemaVersion": { "const": 1 },
+    "schemaVersion": { "const": 2 },
     "constraints": {
       "type": "object",
       "properties": {
         "releaseMenuTags": { "const": ["protein", "budget"] },
-        "mediaOptional": { "const": true },
+        "mediaRequired": { "const": "verified_local_source_image" },
         "servingMass": { "const": "estimated_not_verified_cooked_yield" },
         "cost": { "const": "relative_tier_not_rubles" }
       },
-      "required": ["releaseMenuTags", "mediaOptional", "servingMass", "cost"]
+      "required": ["releaseMenuTags", "mediaRequired", "servingMass", "cost"]
     },
     "recipes": {
       "type": "array",
@@ -27,7 +27,26 @@
           "servingMass": { "type": "object", "properties": { "status": { "const": "estimated_not_verified_cooked_yield" } }, "required": ["grams", "status", "method"] },
           "shoppingIngredients": { "type": "array", "items": { "type": "object", "required": ["sourceIngredientIndex", "sourceIngredientId", "canonicalIngredientId", "nameRu", "quantityGrams"] } },
           "recipeFamily": { "type": "object", "required": ["id", "ingredients", "miseCalculatedNutrition", "miseInstructions"] },
-          "provenance": { "type": "object", "required": ["sourceUrl", "preview"] },
+          "provenance": {
+            "type": "object",
+            "required": ["sourceUrl", "preview"],
+            "properties": {
+              "preview": {
+                "type": "object",
+                "required": ["kind", "imageUrl", "sourceImageUrl", "catalogImageUrl", "usage", "attribution", "contentType", "sha256"],
+                "properties": {
+                  "kind": { "const": "source_preview" },
+                  "imageUrl": { "type": "string", "pattern": "^/recipe-images/" },
+                  "sourceImageUrl": { "type": "string", "format": "uri" },
+                  "catalogImageUrl": { "type": "string", "format": "uri" },
+                  "usage": { "const": "local-source-copy-with-attribution" },
+                  "attribution": { "type": "string", "minLength": 1 },
+                  "contentType": { "enum": ["image/jpeg", "image/png", "image/webp", "image/avif"] },
+                  "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+                }
+              }
+            }
+          },
           "visualFallback": { "type": "object", "required": ["emoji", "reserveAspectRatio"] }
         }
       }

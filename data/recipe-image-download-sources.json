@@ -1,0 +1,734 @@
+{
+  "schemaVersion": 1,
+  "source": "Good Food — Meal prep ideas",
+  "entries": [
+    {
+      "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/veggie-shepherds-pie-sweet-potato-mash",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2011/02/veggie-shepherds-pie-with-sweet-potato-mash-ced560e.jpg?resize=768,699",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2011/02/veggie-shepherds-pie-with-sweet-potato-mash-ced560e.jpg?resize=768,699",
+      "localPath": "/recipe-images/goodfood-veggie-shepherds-pie-sweet-potato-mash.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-chicken-pasta-bake",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-pasta-bake",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken_pasta_bake-06fe2d6.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken_pasta_bake-06fe2d6.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-chicken-pasta-bake.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-satay-sweet-potato-curry",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/satay-sweet-potato-curry",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/satay-sweet-potato-curry-17cc62d.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/satay-sweet-potato-curry-17cc62d.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-satay-sweet-potato-curry.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-slow-cooker-chicken-tikka-masala",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-chicken-tikka-masala",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-chicken-tikka-masala-531cd12.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-chicken-tikka-masala-531cd12.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-slow-cooker-chicken-tikka-masala.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-pie-recipe",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie-recipe",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1110455_10-bf7460d.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1110455_10-bf7460d.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-family-meals-easy-fish-pie-recipe.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-kadala-curry",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/kadala-curry",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/kadala-curry-fad4df3.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/kadala-curry-fad4df3.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-kadala-curry.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-slow-cooker-lamb-curry",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-lamb-curry",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-lamb-curry-872fabb.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-lamb-curry-872fabb.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-slow-cooker-lamb-curry.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-sausage-leek-mash-pie",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/sausage-leek-mash-pie",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-leek-mash-pie-07a67d4.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-leek-mash-pie-07a67d4.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-sausage-leek-mash-pie.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-10minute-couscous-salad",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/10minute-couscous-salad",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/couscous-9ab75f0.jpg?resize=500,454",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/couscous-9ab75f0.jpg?resize=500,454",
+      "localPath": "/recipe-images/goodfood-10minute-couscous-salad.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-big-batch-bolognese",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/big-batch-bolognese",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1074456_10-1a5351d.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1074456_10-1a5351d.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-big-batch-bolognese.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-slow-cooker-beef-bourguignon",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-beef-bourguignon",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-beef-bourguignon-3aa62ab.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-beef-bourguignon-3aa62ab.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-slow-cooker-beef-bourguignon.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-power-packed-pasta-boxes",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/power-packed-pasta-boxes",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mealprep-pasta-merged_web3_copy-8687106.jpg?resize=500,454",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mealprep-pasta-merged_web3_copy-8687106.jpg?resize=500,454",
+      "localPath": "/recipe-images/goodfood-power-packed-pasta-boxes.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-tuna-pasta-bake",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/tuna-pasta-bake",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-51616_12-796faab.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-51616_12-796faab.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-tuna-pasta-bake.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-vegan-shepherds-pie",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegan-shepherds-pie",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-shepherds-pie-d0ee305.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-shepherds-pie-d0ee305.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-vegan-shepherds-pie.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-vegetarian-bolognese",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegetarian-bolognese",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2018/12/Veggie-bolognese-8ecf29a.jpg?resize=768,698",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2018/12/Veggie-bolognese-8ecf29a.jpg?resize=768,698",
+      "localPath": "/recipe-images/goodfood-vegetarian-bolognese.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-slow-cooker-sausage-casserole",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-sausage-casserole",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-sausage-casserole-522e8a2.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-sausage-casserole-522e8a2.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-slow-cooker-sausage-casserole.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-italian-vegetable-soup",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/italian-vegetable-soup",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1168468_11-4bb5726.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1168468_11-4bb5726.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-italian-vegetable-soup.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-aubergine-tomato-halloumi-pie",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/aubergine-tomato-halloumi-pie",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/aubergine-tomato-halloumi-pie-a99dba7.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/aubergine-tomato-halloumi-pie-a99dba7.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-aubergine-tomato-halloumi-pie.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/fajita-chicken-rice-bowl-with-burnt-lime",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2023/11/Fajita-chicken-rice-bowl-with-burnt-lime-5233d62.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2023/11/Fajita-chicken-rice-bowl-with-burnt-lime-5233d62.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-fajita-chicken-rice-bowl-with-burnt-lime.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-mini-lentil-shepherds-pies",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/mini-lentil-shepherds-pies",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mini-lentil-shepherds-pies-6ff8ccb.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mini-lentil-shepherds-pies-6ff8ccb.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-mini-lentil-shepherds-pies.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-freezer-ratatouille",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/freezer-ratatouille",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/ratatouille_2-369b3dd.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/ratatouille_2-369b3dd.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-freezer-ratatouille.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-family-meals-chicken-veg-casserole",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-chicken-veg-casserole",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1066475_10-daf75cf.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1066475_10-daf75cf.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-family-meals-chicken-veg-casserole.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/quinoa-salad-with-shredded-greens-raisins",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Quinoa-salad-with-shredded-greens-and-raisins-3da2933.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Quinoa-salad-with-shredded-greens-and-raisins-3da2933.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-quinoa-salad-with-shredded-greens-raisins.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-big-batch-pressure-cooker-bolognese",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/big-batch-pressure-cooker-bolognese",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/01/Big-batch-pressure-cooker-bolognese-5839437.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/01/Big-batch-pressure-cooker-bolognese-5839437.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-big-batch-pressure-cooker-bolognese.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-creamy-bean-kale-pasta",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/creamy-bean-kale-pasta",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/09/Creamy-bean-and-kale-pasta-a3939e2.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/09/Creamy-bean-and-kale-pasta-a3939e2.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-creamy-bean-kale-pasta.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-courgette-tomato-soup",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/courgette-tomato-soup",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1071455_10-9c0fd57.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1071455_10-9c0fd57.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-courgette-tomato-soup.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-banana-overnight-oats",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/banana-overnight-oats",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/01/Banana-Overnight-Oats-16f2208.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/01/Banana-Overnight-Oats-16f2208.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-banana-overnight-oats.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-creamy-chicken-sweetcorn-soup",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/creamy-chicken-sweetcorn-soup",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/creamy-chicken-sweetcorn-soup-8065fec.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/creamy-chicken-sweetcorn-soup-8065fec.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-creamy-chicken-sweetcorn-soup.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-smoky-black-bean-chilli",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/smoky-black-bean-chilli",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/smoky-black-bean-chilli-2ca6fc4.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/smoky-black-bean-chilli-2ca6fc4.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-smoky-black-bean-chilli.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-beef-stew-sweet-potato-topping",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1066464_12-fb8c781.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1066464_12-fb8c781.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-family-meals-easy-beef-stew-sweet-potato-topping.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/09/Roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy-e736a3b.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/09/Roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy-e736a3b.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-family-meals-mild-chicken-curry",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-mild-chicken-curry",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1128464_10-412937a.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1128464_10-412937a.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-family-meals-mild-chicken-curry.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-black-pepper-hasselback-potatoes",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/black-pepper-hasselback-potatoes",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/black-pepper-hasselback-potatoes-858bb79.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/black-pepper-hasselback-potatoes-858bb79.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-black-pepper-hasselback-potatoes.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-beef-red-wine-potato-pie",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/beef-red-wine-potato-pie",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2023/11/Beef-red-wine-and-potato-pie-415c1e0.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2023/11/Beef-red-wine-and-potato-pie-415c1e0.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-beef-red-wine-potato-pie.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-vegan-breakfast-muffins",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegan-breakfast-muffins",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/li-380625620170213gf025_46.p-4eddbad.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/li-380625620170213gf025_46.p-4eddbad.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-vegan-breakfast-muffins.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-tuna-nicoise-protein-pots",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/tuna-nicoise-protein-pots",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tuna-nicoise-protein-pot-e83c9e6.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tuna-nicoise-protein-pot-e83c9e6.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-tuna-nicoise-protein-pots.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-coconut-rice-with-prawn-stir-fry",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/coconut-rice-with-prawn-stir-fry",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Coconut-rice-with-prawn-stir-fry-0ecdef7.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Coconut-rice-with-prawn-stir-fry-0ecdef7.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-coconut-rice-with-prawn-stir-fry.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-spiced-broccoli",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/spiced-broccoli",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Spiced-broccoli-33b7798.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Spiced-broccoli-33b7798.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-spiced-broccoli.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/chickpea-spinach-gratin-with-salsa-verde",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/09/Chickpea-and-spinach-gratin-with-salsa-verde-804cb26.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/09/Chickpea-and-spinach-gratin-with-salsa-verde-804cb26.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-chickpea-spinach-gratin-with-salsa-verde.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/marinated-chicken-with-orzo-tomato-feta",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Marinated-chicken-with-orzo-tomato-and-feta-2ef25df.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Marinated-chicken-with-orzo-tomato-and-feta-2ef25df.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-marinated-chicken-with-orzo-tomato-feta.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-cakes",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-cakes",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1066471_12-7c96f4a.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1066471_12-7c96f4a.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-family-meals-easy-fish-cakes.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Lemon-orzo-with-trout-spiced-broccoli-and-peperonata-405ab59.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Lemon-orzo-with-trout-spiced-broccoli-and-peperonata-405ab59.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-steak-broccoli-protein-pots",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/steak-broccoli-protein-pots",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/steak-broccoli-protein-pots-9fc8214.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/steak-broccoli-protein-pots-9fc8214.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-steak-broccoli-protein-pots.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-lemon-parmesan-vinaigrette",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/lemon-parmesan-vinaigrette",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Lemon-and-parmesan-vinaigrette-e2423bb.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Lemon-and-parmesan-vinaigrette-e2423bb.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-lemon-parmesan-vinaigrette.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-spiced-meatballs",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/spiced-meatballs",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Spiced-meatballs-65e4292.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Spiced-meatballs-65e4292.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-spiced-meatballs.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-storecupboard-pasta-salad",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/storecupboard-pasta-salad",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-663451_11-43ad8a6.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-663451_11-43ad8a6.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-storecupboard-pasta-salad.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-pickled-red-cabbage-salad",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/pickled-red-cabbage-salad",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Pickled-red-cabbage-salad-0a744df.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Pickled-red-cabbage-salad-0a744df.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-pickled-red-cabbage-salad.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/roasted-tomato-pancetta-picnic-quiches",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-tomato-pancetta-picnic-quiches-8c21529.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-tomato-pancetta-picnic-quiches-8c21529.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-roasted-tomato-pancetta-picnic-quiches.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-yellow-coconut-curry-sauce",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/yellow-coconut-curry-sauce",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Yellow-coconut-curry-sauce-c62606a.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Yellow-coconut-curry-sauce-c62606a.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-yellow-coconut-curry-sauce.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-vegan-ragu",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegan-ragu",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-ragu-7650653.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-ragu-7650653.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-vegan-ragu.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-summery-beans-herby-green-aioli",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/summery-beans-herby-green-aioli",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/05/Summery-beans-and-herby-green-aioli-15b16b5.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/05/Summery-beans-and-herby-green-aioli-15b16b5.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-summery-beans-herby-green-aioli.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Meatball-and-chickpea-yellow-coconut-curry-with-rice-and-pickled-red-cabbage-4ffc55f.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Meatball-and-chickpea-yellow-coconut-curry-with-rice-and-pickled-red-cabbage-4ffc55f.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-lemon-orzo",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/lemon-orzo",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Lemon-orzo-260a9ef.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Lemon-orzo-260a9ef.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-lemon-orzo.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/speedy-turkey-wraps-with-pickled-red-cabbage",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Speedy-turkey-wraps-with-pickled-red-cabbage-600b3f7.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/08/Speedy-turkey-wraps-with-pickled-red-cabbage-600b3f7.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-speedy-turkey-wraps-with-pickled-red-cabbage.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/roasted-lemony-broccoli-mascarpone-flatbreads",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Roasted-lemony-broccoli-and-mascarpone-flatbreads-cffef1d.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Roasted-lemony-broccoli-and-mascarpone-flatbreads-cffef1d.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-roasted-lemony-broccoli-mascarpone-flatbreads.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-flatbread-dough",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/flatbread-dough",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Flatbread-dough-baa7b7f.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Flatbread-dough-baa7b7f.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-flatbread-dough.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-peperonata",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/peperonata",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Peperonata-8ac34a8.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/07/Peperonata-8ac34a8.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-peperonata.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-bulgur-quinoa-lunch-bowls",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/bulgur-quinoa-lunch-bowls",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/440-400-bulgur-quinoa-lunch-bowls-dea6596.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/440-400-bulgur-quinoa-lunch-bowls-dea6596.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-bulgur-quinoa-lunch-bowls.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-vegan-paella",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/vegan-paella",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2021/11/Vegan-paella-e57539d.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2021/11/Vegan-paella-e57539d.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-vegan-paella.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-spiced-lentil-butternut-squash-soup",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/spiced-lentil-butternut-squash-soup",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spiced-lentil-butternut-squash-soup-0b33977.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spiced-lentil-butternut-squash-soup-0b33977.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-spiced-lentil-butternut-squash-soup.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/beef-mushroom-marsala-stroganoff-with-herby-mash",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Beef-mushroom-and-marsala-stroganoff-with-herby-mash-5f36861.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Beef-mushroom-and-marsala-stroganoff-with-herby-mash-5f36861.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-pork-harissa-meatballs",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/pork-harissa-meatballs",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/03/Pork-and-harissa-meatballs-60da985.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/03/Pork-and-harissa-meatballs-60da985.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-pork-harissa-meatballs.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-crunchy-broccoli-cranberry-salad",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/crunchy-broccoli-cranberry-salad",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/02/Crunchy-broccoli-and-cranberry-salad-bebbc49.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/02/Crunchy-broccoli-and-cranberry-salad-bebbc49.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-crunchy-broccoli-cranberry-salad.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-chicken-sweet-potato-peanut-stew",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-sweet-potato-peanut-stew",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/04/Chicken-sweet-potato-and-peanut-stew-8554478.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/04/Chicken-sweet-potato-and-peanut-stew-8554478.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-chicken-sweet-potato-peanut-stew.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-mozzarella-pepper-aubergine-calzone",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/mozzarella-pepper-aubergine-calzone",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mozzarella-pepper-aubergine-calzone-ff72d14.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mozzarella-pepper-aubergine-calzone-ff72d14.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-mozzarella-pepper-aubergine-calzone.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-freeze-ahead-roasties",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/freeze-ahead-roasties",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-835452_11-7efcfc5.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-835452_11-7efcfc5.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-freeze-ahead-roasties.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-lentil-kofta-orzo-feta",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/lentil-kofta-orzo-feta",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lentil-kofta-with-orzo-feta-5581f16-scaled.jpg?resize=768,698",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lentil-kofta-with-orzo-feta-5581f16-scaled.jpg?resize=768,698",
+      "localPath": "/recipe-images/goodfood-lentil-kofta-orzo-feta.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-crispy-lamb-pea-tabbouleh",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/crispy-lamb-pea-tabbouleh",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/02/Crispy-lamb-and-pea-tabbouleh-32da086.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/02/Crispy-lamb-and-pea-tabbouleh-32da086.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-crispy-lamb-pea-tabbouleh.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-apple-penne-slaw-walnuts",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/apple-penne-slaw-walnuts",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2019/05/apple-penne-slaw44-a8e9c91.jpg?resize=768,698",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2019/05/apple-penne-slaw44-a8e9c91.jpg?resize=768,698",
+      "localPath": "/recipe-images/goodfood-apple-penne-slaw-walnuts.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-sausage-egg-muffins",
+      "sourceUrl": "https://www.bbcgoodfood.com/premium/sausage-egg-muffins",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/04/Sausage-and-egg-muffins-4e3da92.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2025/04/Sausage-and-egg-muffins-4e3da92.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-sausage-egg-muffins.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-mushroom-lentil-beef-ragu",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/mushroom-lentil-beef-ragu",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Mushroom-lentil-and-beef-ragu-ae216fb.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Mushroom-lentil-and-beef-ragu-ae216fb.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-mushroom-lentil-beef-ragu.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-black-bean-spicy-beef-pasta",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/black-bean-spicy-beef-pasta",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Black-bean-and-spicy-beef-pasta-ee787e7.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Black-bean-and-spicy-beef-pasta-ee787e7.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-black-bean-spicy-beef-pasta.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-harissa-beef-tomato-bulgur",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/harissa-beef-tomato-bulgur",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Harissa-beef-and-tomato-bulgur-f655aa1.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/08/Harissa-beef-and-tomato-bulgur-f655aa1.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-harissa-beef-tomato-bulgur.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-turmeric-granola",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/turmeric-granola",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/01/Turmeric-granola-ba11ef4.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/01/Turmeric-granola-ba11ef4.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-turmeric-granola.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/wholemeal-wraps-minty-pea-hummus-beetroot",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/wholewheat-wraps-with-minty-pea-houmous-beetroot-2-440-400-110fb8b.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/wholewheat-wraps-with-minty-pea-houmous-beetroot-2-440-400-110fb8b.jpg?resize=440,400",
+      "localPath": "/recipe-images/goodfood-wholemeal-wraps-minty-pea-hummus-beetroot.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-orange-oregano-pulled-pork",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/orange-oregano-pulled-pork",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/01/pulled-pork-7bb86de.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2024/01/pulled-pork-7bb86de.jpg?resize=768,713",
+      "localPath": "/recipe-images/goodfood-orange-oregano-pulled-pork.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-tomato-pepper-bean-one-pot",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/tomato-pepper-bean-one-pot",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tomato-pepper-bean-one-pot-398c4b2.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tomato-pepper-bean-one-pot-398c4b2.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-tomato-pepper-bean-one-pot.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-scandi-beetroot-salmon-pasta",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/scandi-beetroot-salmon-pasta",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/scandi-beetroot-salmon-pasta-c1efdcb.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/scandi-beetroot-salmon-pasta-c1efdcb.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-scandi-beetroot-salmon-pasta.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-indian-rice-salad-chicken",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/indian-rice-salad-chicken",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rice-85c72eb.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rice-85c72eb.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-indian-rice-salad-chicken.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-chicken-squash-pesto-lasagne",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-squash-pesto-lasagne",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lasagne-1f862ba.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/lasagne-1f862ba.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-chicken-squash-pesto-lasagne.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-prawn-rice-mango-jar-salad",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/prawn-rice-mango-jar-salad",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/prawn-jar-f79bc1d.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/prawn-jar-f79bc1d.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-prawn-rice-mango-jar-salad.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-deli-pasta-salad",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/deli-pasta-salad",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-338583_11-1796dd4.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-338583_11-1796dd4.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-deli-pasta-salad.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-salmon-pasta-salad-lemon-capers",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/salmon-pasta-salad-lemon-capers",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-pasta-8e85b03.jpg?resize=440,400",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-pasta-8e85b03.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-salmon-pasta-salad-lemon-capers.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/orange-dark-chocolate-yogurt-bowls",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Orange-and-dark-chocolate-yogurt-bowls-cce081e.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Orange-and-dark-chocolate-yogurt-bowls-cce081e.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-orange-dark-chocolate-yogurt-bowls.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-black-bean-soup-with-chunky-raita",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/black-bean-soup-with-chunky-raita",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Black-bean-soup-with-chunky-raita-64fd72e.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Black-bean-soup-with-chunky-raita-64fd72e.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-black-bean-soup-with-chunky-raita.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-wild-salmon-with-radish-orange-slaw",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/wild-salmon-with-radish-orange-slaw",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Wild-salmon-with-radish-and-orange-slaw-948640e.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Wild-salmon-with-radish-and-orange-slaw-948640e.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-wild-salmon-with-radish-orange-slaw.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-fragrant-biryani-with-coriander-cod",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/fragrant-biryani-with-coriander-cod",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Fragrant-biryani-with-coriander-cod-4e98060.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Fragrant-biryani-with-coriander-cod-4e98060.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-fragrant-biryani-with-coriander-cod.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/quinoa-with-roast-asparagus-eggs-capers",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Quinoa-with-roast-asparagus-eggs-and-capers-88e2de7.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Quinoa-with-roast-asparagus-eggs-and-capers-88e2de7.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-quinoa-with-roast-asparagus-eggs-capers.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-pork-with-cucumber-apricot-couscous",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/pork-with-cucumber-apricot-couscous",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pork-with-cucumber-and-apricot-couscous-56dfa09.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pork-with-cucumber-and-apricot-couscous-56dfa09.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-pork-with-cucumber-apricot-couscous.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-veggie-nuggets-with-summer-slaw",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/veggie-nuggets-with-summer-slaw",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Veggie-nuggets-with-summer-slaw-ce40d59.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Veggie-nuggets-with-summer-slaw-ce40d59.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-veggie-nuggets-with-summer-slaw.webp",
+      "contentType": "image/webp"
+    },
+    {
+      "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/sweet-potato-gnocchi-with-tomato-sauce",
+      "catalogImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Sweet-potato-gnocchi-with-tomato-sauce-e821bb0.jpg?resize=768,713",
+      "sourceImageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Sweet-potato-gnocchi-with-tomato-sauce-e821bb0.jpg?quality=90&webp=true&resize=350,318",
+      "localPath": "/recipe-images/goodfood-sweet-potato-gnocchi-with-tomato-sauce.webp",
+      "contentType": "image/webp"
+    }
+  ]
+}

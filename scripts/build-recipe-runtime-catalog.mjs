@@ -6,7 +6,8 @@ import {
   normalizeRawRecipeCandidate,
 } from "../domain/recipe-engine.ts";
 import { loadRecipeCorpusEntries } from "./recipe-corpus-overlay.mjs";
-import { mkdir, rename, writeFile } from "node:fs/promises";
+import { createHash } from "node:crypto";
+import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
@@ -246,6 +247,35 @@ async function loadCandidates() {
   }]));
 }
 
+async function loadRecipeImages() {
+  const manifest = JSON.parse(
+    await readFile(new URL("../data/recipe-image-manifest.json", import.meta.url), "utf8"),
+  );
+  if (
+    manifest.schemaVersion !== 1 ||
+    manifest.policy !== "local-source-copy-with-attribution" ||
+    !Array.isArray(manifest.images)
+  ) {
+    throw new Error("Recipe image manifest is missing or invalid.");
+  }
+  if (manifest.sourceCardCount !== manifest.images.length) {
+    throw new Error("Recipe image manifest must cover every source card.");
+  }
+  await Promise.all(manifest.images.map(async (image) => {
+    if (!/^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(image.localPath)) {
+      throw new Error(`${image.id}: invalid local recipe image path`);
+    }
+    const buffer = await readFile(new URL(`../public${image.localPath}`, import.meta.url));
+    const hash = createHash("sha256").update(buffer).digest("hex");
+    if (buffer.length !== image.bytes || hash !== image.sha256) {
+      throw new Error(`${image.id}: local recipe image does not match its manifest`);
+    }
+  }));
+  const images = new Map(manifest.images.map((image) => [image.id, image]));
+  if (images.size !== manifest.images.length) throw new Error("Recipe image manifest contains duplicate ids.");
+  return images;
+}
+
 function candidateWithFamilyMeasurements(candidate, sourceIngredients) {
   return {
     ...candidate,
@@ -257,13 +287,21 @@ function candidateWithFamilyMeasurements(candidate, sourceIngredients) {
   };
 }
 
-function projectReadyCard(releaseCard, entry) {
+function projectReadyCard(releaseCard, entry, recipeImages) {
   const { candidate, dataset } = entry;
   const normalized = normalizeRawRecipeCandidate(candidate, {
     publisher: dataset.source,
     accessedAt: dataset.importedAt,
   });
   const failures = [];
+  const sourceImage = recipeImages.get(candidate.id);
+  if (!sourceImage) {
+    failures.push(["missing_local_source_image", "A verified local source image is required for runtime."]);
+  } else {
+    if (sourceImage.sourceUrl !== candidate.sourceUrl) failures.push(["source_image_recipe_mismatch", "Image manifest sourceUrl does not match the recipe source."]);
+    if (sourceImage.catalogImageUrl !== candidate.imageUrl) failures.push(["source_image_catalog_mismatch", "Image manifest does not preserve the imported image URL."]);
+    if (!sourceImage.attribution?.trim()) failures.push(["missing_source_image_attribution", "Image attribution is required."]);
+  }
   const instructionDraft = expandedInstructionDraft(
     normalized.paraphrasedInstructionDraft,
   );
@@ -433,12 +471,31 @@ function projectReadyCard(releaseCard, entry) {
         sourceTitle: candidate.sourceTitle,
         sourceUrl: candidate.sourceUrl,
         sourceQuery: candidate.sourceQuery,
-        preview: candidate.imageUrl
-          ? { kind: "source_preview", imageUrl: candidate.imageUrl, usage: candidate.imageUse ?? "source-preview-only" }
-          : { kind: "graphic_fallback", emoji: emojiFor(candidate.id), reason: "source_preview_unavailable" },
+        preview: sourceImage
+          ? {
+              kind: "source_preview",
+              imageUrl: sourceImage.localPath,
+              sourceImageUrl: sourceImage.sourceImageUrl,
+              catalogImageUrl: sourceImage.catalogImageUrl,
+              usage: "local-source-copy-with-attribution",
+              attribution: sourceImage.attribution,
+              contentType: sourceImage.contentType,
+              sha256: sourceImage.sha256,
+            }
+          : { kind: "graphic_fallback", emoji: emojiFor(candidate.id), reason: "local_source_image_unavailable" },
       },
       visualFallback: { emoji: emojiFor(candidate.id), reserveAspectRatio: "4:3" },
-      recipeFamily,
+      recipeFamily: recipeFamily && sourceImage
+        ? {
+            ...recipeFamily,
+            image: {
+              ...recipeFamily.image,
+              imageUrl: sourceImage.localPath,
+              sourceImageUrl: sourceImage.sourceImageUrl,
+              attribution: sourceImage.attribution,
+            },
+          }
+        : recipeFamily,
       adapter: {
         status: "not_connected_to_ui_recipe_contract",
         note: "Recipe Engine integration must consume this projection through an explicit adapter; relative cost is not a rouble price.",
@@ -462,7 +519,11 @@ function jsonStableCatalog(value) {
 }
 
 export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
-  const [release, candidates] = await Promise.all([auditRecipeRelease(), loadCandidates()]);
+  const [release, candidates, recipeImages] = await Promise.all([
+    auditRecipeRelease(),
+    loadCandidates(),
+    loadRecipeImages(),
+  ]);
   const failures = [];
   const recipes = [];
   for (const releaseCard of release.cards.filter((card) => card.verdict === "ready")) {
@@ -471,7 +532,7 @@ export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
       failures.push(normalizationFailure(releaseCard, "missing_candidate", "Audit-ready card is missing candidate data."));
       continue;
     }
-    const projection = projectReadyCard(releaseCard, entry);
+    const projection = projectReadyCard(releaseCard, entry, recipeImages);
     failures.push(...projection.failures);
     if (projection.recipe) recipes.push(projection.recipe);
   }
@@ -486,11 +547,11 @@ export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
     ),
   };
   const catalog = {
-    schemaVersion: 1,
+    schemaVersion: 2,
     generatedFrom: "audit-ready editorial cards only",
     constraints: {
       releaseMenuTags: [...allowedTags],
-      mediaOptional: true,
+      mediaRequired: "verified_local_source_image",
       servingMass: "estimated_not_verified_cooked_yield",
       cost: "relative_tier_not_rubles",
     },

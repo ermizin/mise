@@ -20,8 +20,12 @@ async function automaticMenuRuntime() {
   const runtimeRecipeCatalogJson = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
+  const legacyRecipeImageDownloadSourcesJson = JSON.parse(
+    await readFile(new URL("../data/legacy-recipe-image-download-sources.json", import.meta.url), "utf8"),
+  );
   const sandbox = {
     runtimeRecipeCatalogJson,
+    legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutrition.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutrition.calculateMealPlanTargets,

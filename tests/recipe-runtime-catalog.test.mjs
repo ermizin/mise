@@ -9,6 +9,8 @@ import {
 const catalog = await buildRecipeRuntimeCatalog();
 
 test("runtime projection is complete for every recipe it admits", () => {
+  assert.equal(catalog.schemaVersion, 2);
+  assert.equal(catalog.constraints.mediaRequired, "verified_local_source_image");
   assert.ok(catalog.recipes.length > 0, "current audit should yield some runtime recipes");
   assert.equal(new Set(catalog.recipes.map((recipe) => recipe.id)).size, catalog.recipes.length);
   for (const recipe of catalog.recipes) {
@@ -21,8 +23,15 @@ test("runtime projection is complete for every recipe it admits", () => {
     assert.equal(recipe.costTier.basis, "relative_editorial_ingredient_complexity_not_rubles");
     assert.equal(recipe.servingMass.status, "estimated_not_verified_cooked_yield");
     assert.ok(recipe.provenance.sourceUrl);
+    assert.equal(recipe.provenance.preview.kind, "source_preview");
+    assert.match(recipe.provenance.preview.imageUrl, /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u);
+    assert.match(recipe.provenance.preview.sourceImageUrl, /^https:\/\//u);
+    assert.equal(recipe.provenance.preview.usage, "local-source-copy-with-attribution");
+    assert.ok(recipe.provenance.preview.attribution);
+    assert.match(recipe.provenance.preview.sha256, /^[a-f0-9]{64}$/u);
     assert.ok(recipe.visualFallback.emoji);
     assert.ok(recipe.recipeFamily, "an audited RecipeFamily is a runtime gate");
+    assert.equal(recipe.recipeFamily.image.imageUrl, recipe.provenance.preview.imageUrl);
     const familyIngredientIds = new Set(recipe.recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
     assert.ok(recipe.shoppingIngredients.every((ingredient) => familyIngredientIds.has(ingredient.sourceIngredientId)));
   }

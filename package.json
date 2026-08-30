@@ -14,6 +14,7 @@
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
     "recipes:import:tmpm": "node scripts/import-mealprepmanual.mjs --limit 500 --output data/mealprepmanual-candidates.json",
     "recipes:import:goodfood": "node scripts/import-goodfood.mjs --limit 100 --output data/goodfood-candidates.json",
+    "recipes:images:download": "node scripts/download-recipe-images.mjs",
     "recipes:enrich:instructions": "node scripts/enrich-recipe-corpus.mjs",
     "recipes:instructions:check": "node scripts/build-recipe-editorial-drafts.mjs --dry-run",
     "recipes:editorial:apply": "node scripts/apply-recipe-editorial-cards.mjs",

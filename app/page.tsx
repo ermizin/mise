@@ -21,6 +21,7 @@ import { ActionBar } from "./ui/action-bar";
 import { plural, withPlural, FORMS } from "@/lib/plural";
 import { MacroNumberInput } from "@/components/macro-number-input";
 import runtimeRecipeCatalogJson from "@/data/recipe-runtime-catalog.json";
+import legacyRecipeImageDownloadSourcesJson from "@/data/legacy-recipe-image-download-sources.json";
 import {
   allocateComponentDish,
   allocateMixedDish,
@@ -1278,18 +1279,30 @@ type RecipeSource = {
   imageUrl?: string;
   imageAlt?: string;
 };
+const localRecipePhotoBySourceUrl = new Map<string, string>([
+  ...runtimeRecipeCatalogJson.recipes.map(
+    (record) =>
+      [record.provenance.sourceUrl, record.provenance.preview.imageUrl] as const,
+  ),
+  ...legacyRecipeImageDownloadSourcesJson.entries.map(
+    (image) => [image.sourceUrl, image.localPath] as const,
+  ),
+]);
 const parsed = (
   source: RecipeSource,
   adaptation?: string,
-): RecipeProvenance => ({
-  kind: "parsed",
-  sourceTitle: source.title,
-  sourceUrl: source.url,
-  sourceQuery: source.query,
-  adaptation,
-  imageUrl: source.imageUrl,
-  imageAlt: source.imageAlt,
-});
+): RecipeProvenance => {
+  const localImageUrl = localRecipePhotoBySourceUrl.get(source.url);
+  return {
+    kind: "parsed",
+    sourceTitle: source.title,
+    sourceUrl: source.url,
+    sourceQuery: source.query,
+    adaptation,
+    imageUrl: localImageUrl,
+    imageAlt: localImageUrl ? source.imageAlt ?? source.title : undefined,
+  };
+};
 const mealPrepManualParsed = (
   title: string,
   slug: string,
@@ -4121,9 +4134,8 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
       sourceTitle: record.provenance.sourceTitle,
       sourceUrl: record.provenance.sourceUrl,
       sourceQuery: record.provenance.sourceQuery,
-      // Runtime cards deliberately use the local graphic fallback. Third-party
-      // previews are provenance, not release assets: hotlinking them makes the
-      // plan depend on a remote image host and creates broken requests offline.
+      imageUrl:
+        preview.kind === "source_preview" ? preview.imageUrl : undefined,
       imageAlt: record.title,
     },
     storage: {
@@ -4230,11 +4242,13 @@ function recipeSupportsSlot(recipe: Recipe, slot: MealSlot) {
 }
 function isProductionReadyRecipe(recipe: Recipe) {
   const family = recipeFamilyFor(recipe);
-  const editoriallyReady =
-    recipe.provenance.kind === "parsed" ||
-    recipe.provenance.editoriallyApproved === true;
+  const hasVerifiedSourcePhoto =
+    recipe.provenance.kind === "parsed" &&
+    /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(
+      recipe.provenance.imageUrl ?? "",
+    );
   return (
-    editoriallyReady &&
+    hasVerifiedSourcePhoto &&
     recipe.ingredients.length >= 3 &&
     family?.reviewStatus === "pilot"
   );
@@ -6507,8 +6521,8 @@ function RecipeMedia({
       </span>
     );
   return (
-    // Фото рецепта — удалённое превью источника; при сетевой ошибке остаётся
-    // устойчивый emoji-fallback вместо пустой карточки.
+    // Фото рецепта хранится локально; fallback защищает интерфейс при ошибке
+    // декодирования, а проверка assets не допускает такой файл в release.
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={photo}

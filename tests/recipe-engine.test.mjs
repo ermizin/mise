@@ -14,6 +14,9 @@ async function recipeCatalog() {
   const runtimeRecipeCatalogJson = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
+  const legacyRecipeImageDownloadSourcesJson = JSON.parse(
+    await readFile(new URL("../data/legacy-recipe-image-download-sources.json", import.meta.url), "utf8"),
+  );
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
@@ -22,6 +25,7 @@ async function recipeCatalog() {
   }).outputText;
   const sandbox = {
     runtimeRecipeCatalogJson,
+    legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutritionModule.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutritionModule.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutritionModule.calculateMealPlanTargets,

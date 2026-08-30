@@ -15,7 +15,7 @@ test("runtime integration report admits only fully projected audit-ready cards",
   for (const card of report.cards) {
     assert.ok(card.recipeFamilyId);
     assert.ok(card.shoppingIngredientCount > 0);
-    assert.ok(["source_preview", "graphic_fallback"].includes(card.media));
+    assert.equal(card.media, "source_preview");
   }
 });
 
