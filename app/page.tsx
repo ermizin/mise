@@ -53,6 +53,7 @@ import {
   macrosForCalories as nutritionMacrosForCalories,
   normalizeNutritionTargetMode,
   recalculateDailyMacros as nutritionRecalculateDailyMacros,
+  repairLegacyDailyMacros as nutritionRepairLegacyDailyMacros,
   togglePersonMealSlot as togglePersonMealSlotSelection,
   type ActivityKey,
   type MacroKey,
@@ -5614,6 +5615,10 @@ function macrosEqual(left: Macros, right: Macros) {
   return (Object.keys(left) as MacroKey[]).every((key) => left[key] === right[key]);
 }
 function normalizePerson(person: Person): Person {
+  const daily = nutritionRepairLegacyDailyMacros(
+    person.daily,
+    person.macroPreset ?? "balanced",
+  );
   const calculation = person.estimate
     ? calculateNutritionTarget(estimateOf(person))
     : null;
@@ -5622,10 +5627,11 @@ function normalizePerson(person: Person): Person {
     : null;
   return {
     ...person,
+    daily,
     nutritionTargetMode: normalizeNutritionTargetMode(
       person.nutritionTargetMode,
       Boolean(person.estimate),
-      Boolean(calculatedTarget && macrosEqual(person.daily, calculatedTarget)),
+      Boolean(calculatedTarget && macrosEqual(daily, calculatedTarget)),
     ),
     dislikes: Array.isArray(person.dislikes) ? person.dislikes : [],
     hardExclusions: Array.isArray(person.hardExclusions)

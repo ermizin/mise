@@ -13,6 +13,7 @@ export {
   macrosForCalories,
   normalizeNutritionTargetMode,
   recalculateDailyMacros,
+  repairLegacyDailyMacros,
   shareForSlots,
   togglePersonMealSlot,
 } from "../domain/nutrition";

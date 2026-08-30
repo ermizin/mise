@@ -131,3 +131,15 @@ test("nutrition target mode preserves legacy manual goals", () => {
   assert.equal(nutrition.normalizeNutritionTargetMode(undefined, true, false), "manual");
   assert.equal(nutrition.normalizeNutritionTargetMode(undefined, true, true), "auto");
 });
+
+test("legacy macro targets are repaired before a plan is saved", () => {
+  const legacy = { kcal: 2490, protein: 10, fat: 83, carbs: 315 };
+  const repaired = nutrition.repairLegacyDailyMacros(legacy, "custom");
+  assert.equal(repaired.kcal, legacy.kcal);
+  assert.ok(Math.abs(nutrition.macroCalories(repaired) - repaired.kcal) <= 5);
+  assert.deepEqual(
+    nutrition.repairLegacyDailyMacros(repaired, "custom"),
+    repaired,
+    "normalization is stable after the first repair",
+  );
+});

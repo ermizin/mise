@@ -255,6 +255,23 @@ export function recalculateDailyMacros(
   return fitMacrosToCalories(kcal, current);
 }
 
+export function repairLegacyDailyMacros(
+  daily: Macros,
+  preset: MacroPreset,
+): Macros {
+  const values = [daily.kcal, daily.protein, daily.fat, daily.carbs];
+  const canRepair =
+    values.every(Number.isFinite) &&
+    daily.kcal >= NUTRITION_CONFIG.minimumTargetCalories &&
+    daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories &&
+    daily.protein >= 0 &&
+    daily.fat >= 0 &&
+    daily.carbs >= 0;
+  if (!canRepair || Math.abs(macroCalories(daily) - daily.kcal) <= 5)
+    return daily;
+  return recalculateDailyMacros(daily.kcal, daily, preset);
+}
+
 export function calculateMacroTargets(
   targetCalories: number,
   weightKg: number,

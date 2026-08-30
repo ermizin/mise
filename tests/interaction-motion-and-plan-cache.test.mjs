@@ -138,6 +138,10 @@ test("plan bootstrap cannot overwrite an optimistic local shopping edit", async 
     /!cachedPlan[\s\S]{0,180}planMutationRevision\.current === bootstrapRevision/,
   );
   assert.match(page, /previousLocalPlan = storedLocalPlan\(id\);[\s\S]{0,100}planMutationRevision\.current \+= 1/);
+  assert.match(
+    page,
+    /const daily = nutritionRepairLegacyDailyMacros\([\s\S]{0,120}person\.macroPreset \?\? "balanced"/,
+  );
 });
 
 test("recipe entry, detail tabs and catalog controls use the supplied interaction motion", async () => {
