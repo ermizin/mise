@@ -25,6 +25,7 @@ import runtimeRecipeCatalogJson from "@/data/recipe-runtime-catalog.json";
 import {
   allocateComponentDish,
   allocateMixedDish,
+  groupContainerWeights,
   type PersonAllocation,
 } from "@/domain/portion-allocation";
 import {
@@ -5171,6 +5172,14 @@ function tuningKey(batch: Batch, slot: MealSlot, person: Person) {
 }
 function cookedWeightsKey(batch: Batch, slot: MealSlot, recipeId: string) {
   return `${batch.id}:${slot}:${recipeId}`;
+}
+function containerDistributionLabel(perContainerG: number[]) {
+  return groupContainerWeights(perContainerG)
+    .map(
+      ({ containerCount, weightG }) =>
+        `${containerCount} × ${weightG} г`,
+    )
+    .join(" + ");
 }
 function allocationPeopleForDish(
   plan: ActivePlan,
@@ -12837,8 +12846,8 @@ function BatchCookingView({
                           <div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div>
                           <div>
                             <h3>{allocation.label}</h3>
-                            <p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p>
-                            <small>В каждый контейнер</small>
+                            <p><b>{containerDistributionLabel(allocation.perContainerG)}</b></p>
+                            <small>По контейнерам</small>
                             <em>Подпись: {allocation.label} / {mealMeta[dish.slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em>
                           </div>
                         </article>
@@ -12854,9 +12863,9 @@ function BatchCookingView({
                             <h3>{person.label}</h3>
                             {component.components.map((item) => {
                               const allocation = item.allocations.find((entry) => entry.personId === person.personId);
-                              return <p key={item.componentId}><span>{item.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>;
+                              return <p key={item.componentId}><span>{item.label}</span><b>{containerDistributionLabel(allocation?.perContainerG ?? [])}</b></p>;
                             })}
-                            <small>В каждый из {batch.days} контейнеров</small>
+                            <small>Точная раскладка на {batch.days} контейнеров</small>
                             <em>Подпись: {person.label} / {mealMeta[dish.slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em>
                           </div>
                         </article>
@@ -13532,8 +13541,8 @@ function RecipeView({
                   <div className="component-weight-fields"><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label className="cooked-weight-field" key={component.id}><span>{component.label}</span><span className="weight-control"><input aria-label={`Фактический вес: ${component.label}`} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => { setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) })); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>)}</div>
                 )}
                 {!mixedAllocation && !componentAllocation && <p className="allocation-prompt" role="status">Введите {components.length ? "вес каждого компонента" : "вес блюда"}, чтобы увидеть точную раскладку.</p>}
-                {mixedAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите по контейнерам">Граммы рассчитаны из фактического веса всей готовой партии.</Note>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{allocation.perContainerG.length} × {allocation.perContainerG[0]} г</b></p><small>В каждый контейнер</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
-                {componentAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите компоненты">Никаких процентов — только граммы в каждый контейнер.</Note>{eaters.map((eater, index) => <article className="portion-card component-portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return <p key={component.componentId}><span>{component.label}</span><b>{allocation?.perContainerG[0] ?? 0} г</b></p>; })}<small>В каждый из {batch.days} контейнеров</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
+                {mixedAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите по контейнерам">Граммы рассчитаны из фактического веса всей готовой партии.</Note>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{containerDistributionLabel(allocation.perContainerG)}</b></p><small>По контейнерам</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
+                {componentAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите компоненты">Если грамм не делится поровну, Mise точно покажет, сколько контейнеров сделать каждого веса.</Note>{eaters.map((eater, index) => <article className="portion-card component-portion-card" key={eater.id}><div className={`person-dot tone-${index}`}>{eater.name.slice(0, 1)}</div><div><h3>{eater.name}</h3>{componentAllocation.components.map((component) => { const allocation = component.allocations.find((item) => item.personId === eater.id); return <p key={component.componentId}><span>{component.label}</span><b>{containerDistributionLabel(allocation?.perContainerG ?? [])}</b></p>; })}<small>Точная раскладка на {batch.days} контейнеров</small><em>Подпись: {eater.name} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
                 {(mixedAllocation || componentAllocation) && (
                   <div className="portion-save-row">
                     <button

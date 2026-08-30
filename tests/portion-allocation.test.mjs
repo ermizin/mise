@@ -54,3 +54,55 @@ test("actual cooked weight is authoritative even when it differs from a predicte
   assert.equal(result.allocatedWeightG, actualCookedWeight);
   assert.ok(result.allocations.reduce((sum, allocation) => sum + allocation.totalG, 0) <= actualCookedWeight);
 });
+
+test("container weight groups report rounding remainders without overstating every container", () => {
+  const groups = portions.groupContainerWeights([40, 40, 40, 39]);
+  assert.deepEqual(Array.from(groups, (group) => ({ ...group })), [
+    { weightG: 40, containerCount: 3 },
+    { weightG: 39, containerCount: 1 },
+  ]);
+  assert.equal(
+    groups.reduce(
+      (sum, group) => sum + group.weightG * group.containerCount,
+      0,
+    ),
+    159,
+  );
+});
+
+test("screenshot-sized component allocation preserves all 800 grams", () => {
+  const result = portions.allocateComponentDish(
+    [
+      { componentId: "protein", label: "Фарш", cookedWeightG: 400 },
+      { componentId: "carbs", label: "Картофель", cookedWeightG: 200 },
+      { componentId: "vegetables", label: "Овощи", cookedWeightG: 200 },
+    ],
+    [
+      person("A", 4, 159, {
+        protein: 159,
+        carbs: 67,
+        vegetables: 99,
+      }),
+      person("B", 4, 241, {
+        protein: 241,
+        carbs: 133,
+        vegetables: 101,
+      }),
+    ],
+  );
+  assert.equal(
+    result.components.reduce(
+      (sum, component) => sum + component.allocatedWeightG,
+      0,
+    ),
+    800,
+  );
+  assert.deepEqual(
+    Array.from(result.components[0].allocations[0].perContainerG),
+    [40, 40, 40, 39],
+  );
+  assert.deepEqual(
+    Array.from(result.components[0].allocations[1].perContainerG),
+    [61, 60, 60, 60],
+  );
+});

@@ -21,6 +21,11 @@ export type ContainerAllocation = {
   perContainerG: number[];
 };
 
+export type ContainerWeightGroup = {
+  weightG: number;
+  containerCount: number;
+};
+
 export type ComponentAllocation = CookedComponent & {
   allocations: ContainerAllocation[];
   allocatedWeightG: number;
@@ -59,6 +64,18 @@ function splitContainers(totalG: number, count: number) {
     { length: count },
     (_, index) => base + (index < remainder ? 1 : 0),
   );
+}
+
+export function groupContainerWeights(
+  perContainerG: number[],
+): ContainerWeightGroup[] {
+  const groups: ContainerWeightGroup[] = [];
+  for (const weightG of perContainerG) {
+    const existing = groups.find((group) => group.weightG === weightG);
+    if (existing) existing.containerCount += 1;
+    else groups.push({ weightG, containerCount: 1 });
+  }
+  return groups;
 }
 
 function allocateWeight(
