@@ -44,5 +44,7 @@
     "foodru-blogger-stuffed-pepper",
     "foodru-oats-chicken"
   ],
-  "publicPhotoRights": "unresolved"
+  "publicPhotoRights": "owner_authorized_publication",
+  "publicPhotoRightsDecisionAt": "2026-08-31",
+  "publicPhotoRightsDecisionContext": "Owner explicitly removed the public-photo release gate and instructed Codex to publish."
 }
