@@ -7,10 +7,12 @@
 - Before recipe catalog, Recipe Engine, or recipe photo work, read `RECIPE_HANDOFF.md`: it records the frozen decisions, the confirmed engine defects with file references, and which items require owner approval before implementation.
 ## Validation and publishing
 
-- Treat each completed Mise change as an independently shippable increment: validate it immediately with the relevant tests and publish it to the current Sites release before starting or accumulating another finished change.
+- The only production publication target for Mise is the VPS serving `https://mise.ermizinm.ru`. Do not publish or deploy a Mise release through Sites unless the user explicitly asks for a separate Sites deployment; a saved or deployed Sites version is not the public Mise release.
+- Install the exact validated production artifact into a new `/opt/mise/releases/<full-sha>` directory on the VPS, retain the previous release for rollback, atomically switch `/opt/mise/current`, restart `mise.service`, and verify the real public domain before declaring release success.
+- Treat each completed Mise change as an independently shippable increment: validate it immediately with the relevant tests and publish it to the current VPS release before starting or accumulating another finished change.
 - Do not leave a completed product change only in the local checkout unless the user explicitly asks for local-only work.
 - Before validating, committing, or publishing, inspect the shared working tree for parallel changes. Preserve and include compatible work, do not overwrite or revert another contributor's files, and stop for coordination if the exact release contents cannot be determined safely.
-- Publish only the exact source state that was just validated. After deployment, verify that the current Sites release succeeded before reporting the change complete.
+- Publish only the exact source state that was just validated. After deployment, verify the active VPS release, service health, origin, and real public domain before reporting the change complete.
 
 ## Git hygiene for all contributors
 
