@@ -9,6 +9,7 @@ import { loadRecipeCorpusWithOverlays } from "../scripts/recipe-corpus-overlay.m
 async function loadRecipeCatalog() {
   const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
   const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+  const mealExecution = await loadTypeScriptModule(new URL("../domain/meal-execution.ts", import.meta.url));
   const runtimeRecipeCatalogJson = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
@@ -19,7 +20,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, normalizeShoppingIngredient, normalizedShoppingKey, migratedShoppingChecked, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, normalizeShoppingIngredient, normalizedShoppingKey, normalizePlan, migratedShoppingChecked, buildShopping, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -28,10 +29,13 @@ async function loadRecipeCatalog() {
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutrition.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutrition.calculateMealPlanTargets,
+    calculateNutritionTarget: nutrition.calculateNutritionTarget,
+    normalizeNutritionTargetMode: nutrition.normalizeNutritionTargetMode,
     capMacrosAtCalories: nutrition.capMacrosAtCalories,
     nutritionMacroCalories: nutrition.macroCalories,
     nutritionMacrosForCalories: nutrition.macrosForCalories,
     nutritionRecalculateDailyMacros: nutrition.recalculateDailyMacros,
+    nutritionRepairLegacyDailyMacros: nutrition.repairLegacyDailyMacros,
     nutritionShareForSlots: nutrition.shareForSlots,
     materializeInstructions: engine.materializeInstructions,
     canonicalIngredients: engine.canonicalIngredients,
@@ -43,12 +47,13 @@ async function loadRecipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    normalizeMealExecution: mealExecution.normalizeMealExecution,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
 }
 
-const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, normalizeShoppingIngredient, normalizedShoppingKey, migratedShoppingChecked, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, normalizeShoppingIngredient, normalizedShoppingKey, normalizePlan, migratedShoppingChecked, buildShopping, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const { validatePlanForPersistence } = await loadTypeScriptModule(
   new URL("../lib/plan-validation.ts", import.meta.url),
 );
@@ -194,17 +199,12 @@ test("runtime catalog cards use verified local source photos", async () => {
   assert.ok(runtimeRecipes.length >= 200);
   assert.ok(runtimeRecipes.every((item) => /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl)));
   const runtimeById = new Map(runtimeCatalog.recipes.map((item) => [item.id, item]));
-  assert.ok(
-    runtimeRecipes.every((item) => {
-      const record = runtimeById.get(item.id);
-      return (
-        item.provenance.kind === "parsed" &&
-        record?.provenance.preview.kind === "source_preview" &&
-        item.provenance.imageUrl === record.provenance.preview.imageUrl
-      );
-    }),
-    "wizard adapter preserves the verified local runtime photo",
-  );
+  assert.ok(runtimeRecipes.every((item) => {
+    const record = runtimeById.get(item.id);
+    return item.provenance.kind === "parsed" &&
+      record?.provenance.preview.kind === "source_preview" &&
+      item.provenance.imageUrl === record.provenance.preview.imageUrl;
+  }), "wizard adapter preserves the verified local runtime photo");
 });
 
 test("production fat-sensitive ingredients expose an honest fat note", () => {
@@ -464,7 +464,12 @@ test("hard exclusions cannot be bypassed while dislikes stay reversible", () => 
   assert.ok(hardSafe.length > 0);
   assert.ok(hardSafe.every((item) => !item.allergens.includes("fish")));
 
-  const softPerson = { ...basePerson, dislikes: ["broccoli"] };
+  const availableDislike = ["fish", "cottage", "egg", "tofu", "broccoli", "buckwheat", "legumes", "avocado", "coconut", "turkey"].find(
+    (id) => candidateRecipes("lunch", "protein", [], 1, { limit: "all", includeDisliked: true })
+      .some((item) => dislikeMatches(item, { ...basePerson, dislikes: [id] }).length > 0),
+  );
+  assert.ok(availableDislike, "the production fixture contains a soft-dislike option");
+  const softPerson = { ...basePerson, dislikes: [availableDislike] };
   const preferred = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all" });
   const allAllowed = candidateRecipes("lunch", "protein", [softPerson], 1, { limit: "all", includeDisliked: true });
   assert.ok(preferred.every((item) => dislikeMatches(item, softPerson).length === 0));
@@ -665,6 +670,55 @@ test("shopping migration keeps a collapsed row checked only when all old rows we
   const checkedRuntime = { id: "milk_processed", key: "milk_processed:мл", name: "Молоко", unit: "мл", checked: true };
   assert.equal(migratedShoppingChecked(rebuilt, [checkedLegacy, checkedRuntime]), true);
   assert.equal(migratedShoppingChecked(rebuilt, [checkedLegacy, { ...checkedRuntime, checked: false }]), false);
+});
+
+test("plan normalization preserves a checked legacy row after shopping-key migration", () => {
+  const person = {
+    id: "saved-shopper",
+    name: "Покупатель",
+    daily: { kcal: 3200, protein: 200, fat: 100, carbs: 375 },
+    includedSlots: ["dinner"],
+  };
+  const batch = {
+    id: "saved-batch",
+    index: 0,
+    start: "2026-08-31",
+    end: "2026-08-31",
+    days: 1,
+  };
+  const key = `${batch.id}:dinner`;
+  const normalized = normalizePlan({
+    id: "saved-plan",
+    start: batch.start,
+    end: batch.end,
+    periodDays: 1,
+    cookEveryDays: 1,
+    menuStyle: "budget",
+    mealSlots: ["dinner"],
+    people: [person],
+    batches: [batch],
+    selections: { [key]: "tmpm-28083" },
+    selectionAssignments: {
+      [key]: [{ recipeId: "tmpm-28083", personIds: [person.id] }],
+    },
+    shopping: [
+      {
+        id: "milk",
+        key: "milk:мл",
+        name: "Молоко 2%",
+        quantity: 10,
+        unit: "мл",
+        group: "Молочное",
+        allergens: ["milk"],
+        checkLabel: false,
+        checked: true,
+      },
+    ],
+  });
+  const milk = normalized.shopping.find((item) => item.id === "milk_processed");
+  assert.ok(milk);
+  assert.equal(milk.checked, true);
+  assert.equal(JSON.stringify(milk.allergens), JSON.stringify(["milk"]));
 });
 
 test("all beef mince recipes calculate from the 85/15 product", () => {
@@ -975,13 +1029,14 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
       );
 });
 
-test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {
+test("pilot solver stays within the asymmetric -10%/+5% calorie corridor", () => {
   for (const family of Object.values(recipeFamiliesById).filter((item) => item.reviewStatus === "pilot")) {
     for (const targetCalories of [450, 600, 750]) {
       if (targetCalories < family.minViableCalories || targetCalories > family.maxViableCalories) continue;
       const solved = solveRecipeFamily(family, { targetCalories });
       assert.equal(solved.viable, true, `${family.title} solves ${targetCalories}: ${solved.explanation.join(" ")}`);
-      assert.ok(Math.abs(solved.nutrition.kcal - targetCalories) <= Math.max(12, targetCalories * 0.025), `${family.title} stays near ${targetCalories}`);
+      assert.ok(solved.nutrition.kcal >= targetCalories * 0.9, `${family.title} stays above -10% for ${targetCalories}`);
+      assert.ok(solved.nutrition.kcal <= targetCalories * 1.05, `${family.title} stays below +5% for ${targetCalories}`);
       assert.ok(solved.nutrition.protein >= family.minimumProtein - 0.2, `${family.title} keeps minimum protein`);
       for (const ingredient of family.ingredients) {
         const amount = solved.amounts[ingredient.sourceIngredientId];
@@ -1057,8 +1112,8 @@ test("a shared batch uses pan and form fat once, then allocates it across portio
     ) / 10,
     cookingFat.baseAmount,
   );
-  assert.ok(Math.abs(batch.packing[0].calories - 600) <= 15);
-  assert.ok(Math.abs(batch.packing[1].calories - 450) <= 12);
+  assert.ok(batch.packing[0].calories >= 540 && batch.packing[0].calories <= 630);
+  assert.ok(batch.packing[1].calories >= 405 && batch.packing[1].calories <= 472.5);
 
   const empty = solveRecipeBatch(family, []);
   assert.equal(empty.viable, true);

@@ -31,12 +31,15 @@ test("derived families solve a representative reachable target or report a visib
   for (const { candidate, family } of families) {
     if (!family) continue;
     // The lower bound itself is a representative feasible target. A family is
-    // allowed to have coarse ingredient steps, so a mathematical midpoint can
-    // be inside the advertised range yet farther than the solver tolerance.
+    // allowed to have coarse ingredient steps, so the result may land above
+    // the target while remaining inside the explicit +5% corridor.
     const target = family.minViableCalories;
     const solved = engine.solveRecipeFamily(family, { targetCalories: target });
     if (!solved.viable) failures.push(`${candidate.id}: ${solved.reason} (${solved.explanation.join("; ")})`);
-    else assert.ok(solved.nutrition.kcal <= target, `${candidate.id}: ${solved.nutrition.kcal} > ${target}`);
+    else {
+      assert.ok(solved.nutrition.kcal >= target * 0.9, `${candidate.id}: ${solved.nutrition.kcal} is below -10% of ${target}`);
+      assert.ok(solved.nutrition.kcal <= target * 1.05, `${candidate.id}: ${solved.nutrition.kcal} is above +5% of ${target}`);
+    }
   }
   assert.deepEqual(failures, []);
 });

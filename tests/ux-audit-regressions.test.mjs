@@ -74,14 +74,10 @@ test("dead and misleading UI patterns from the audit do not return", async () =>
     read("app/page.tsx"),
     read("app/globals.css"),
   ]);
-  const weekScreen = page.slice(
-    page.indexOf("function WeekScreen("),
-    page.indexOf("function ShoppingScreen("),
-  );
   assert.doesNotMatch(css, /min-width:\s*100000px/);
   assert.doesNotMatch(css, /blur\(13px\)/);
   assert.match(css, /\.week-person-select \{[\s\S]*?font-size: var\(--text-input\)/);
-  assert.doesNotMatch(weekScreen, /scrollIntoView\(/);
+  assert.doesNotMatch(page, /scrollIntoView\(/);
   assert.match(page, /strip\.scrollLeft = Math\.max/);
   assert.doesNotMatch(page, /Собрать заново<\/button>[\s\S]{0,120}role="checkbox"/);
   assert.match(page, /\{recipeFamilyFor\(recipe\) \? \(/);

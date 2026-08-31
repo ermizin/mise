@@ -4539,9 +4539,6 @@ p {
     border-radius: var(--r-chrome);
     box-shadow: 0 26px 80px rgba(32, 60, 52, 0.18);
   }
-  .builder-shell {
-    height: calc(100dvh - 36px);
-  }
 }
 
 @media (min-width: 960px) {
@@ -5892,7 +5889,8 @@ p {
     transform: translateY(-1px);
   }
   .secondary-button:not(:disabled):hover,
-  .chip:not(:disabled):hover {
+  .chip:not(:disabled):hover,
+  .seg button:not(:disabled):hover {
     background-color: rgba(255, 255, 255, 0.78);
   }
 }

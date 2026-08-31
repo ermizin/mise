@@ -29,6 +29,8 @@ async function recipeCatalog() {
     ACTIVITY_FACTORS: nutritionModule.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutritionModule.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutritionModule.calculateMealPlanTargets,
+    calculateNutritionTarget: nutritionModule.calculateNutritionTarget,
+    normalizeNutritionTargetMode: nutritionModule.normalizeNutritionTargetMode,
     capMacrosAtCalories: nutritionModule.capMacrosAtCalories,
     nutritionMacroCalories: nutritionModule.macroCalories,
     nutritionMacrosForCalories: nutritionModule.macrosForCalories,
@@ -112,19 +114,51 @@ test("carbohydrate and fat targets change the selected under-ceiling variant", a
 
   const carbLed = engine.solveRecipeFamily(family, {
     targetCalories: 500,
-    targetCarbs: 55,
-    targetFat: 12,
+    targetCarbs: 70,
+    targetFat: 8,
   });
   const fatLed = engine.solveRecipeFamily(family, {
     targetCalories: 500,
-    targetCarbs: 25,
-    targetFat: 26,
+    targetCarbs: 20,
+    targetFat: 35,
   });
 
   assert.equal(carbLed.viable, true, carbLed.explanation.join(" "));
   assert.equal(fatLed.viable, true, fatLed.explanation.join(" "));
-  assert.ok(carbLed.nutrition.kcal <= 500);
-  assert.ok(fatLed.nutrition.kcal <= 500);
+  assert.ok(carbLed.nutrition.kcal >= 450 && carbLed.nutrition.kcal <= 525);
+  assert.ok(fatLed.nutrition.kcal >= 450 && fatLed.nutrition.kcal <= 525);
+  assert.ok(carbLed.nutrition.carbs > fatLed.nutrition.carbs, `${carbLed.nutrition.carbs} vs ${fatLed.nutrition.carbs}`);
+  assert.ok(fatLed.nutrition.fat >= carbLed.nutrition.fat, `${fatLed.nutrition.fat} vs ${carbLed.nutrition.fat}`);
+});
+
+test("synthetic macro tuning stays inside the asymmetric calorie corridor", () => {
+  const family = {
+    id: "macro-tuning",
+    title: "Macro tuning",
+    ingredients: [
+      { ...ingredient("chicken", "chicken_raw", 120, "g", "protein", false) },
+      { ...ingredient("oats", "oats_raw", 60, "g", "carb"), minAmount: 20, preferredMin: 40, preferredMax: 80, maxAmount: 120 },
+      { ...ingredient("olive-oil", "olive_oil_processed", 12, "g", "fat"), minAmount: 2, preferredMin: 6, preferredMax: 18, maxAmount: 30 },
+    ],
+    minViableCalories: 250,
+    maxViableCalories: 700,
+    minimumProtein: 20,
+  };
+  const carbLed = engine.solveRecipeFamily(family, {
+    targetCalories: 500,
+    targetCarbs: 70,
+    targetFat: 8,
+  });
+  const fatLed = engine.solveRecipeFamily(family, {
+    targetCalories: 500,
+    targetCarbs: 20,
+    targetFat: 35,
+  });
+
+  assert.equal(carbLed.viable, true, carbLed.explanation.join(" "));
+  assert.equal(fatLed.viable, true, fatLed.explanation.join(" "));
+  assert.ok(carbLed.nutrition.kcal >= 450 && carbLed.nutrition.kcal <= 525);
+  assert.ok(fatLed.nutrition.kcal >= 450 && fatLed.nutrition.kcal <= 525);
   assert.ok(carbLed.nutrition.carbs > fatLed.nutrition.carbs, `${carbLed.nutrition.carbs} vs ${fatLed.nutrition.carbs}`);
   assert.ok(fatLed.nutrition.fat >= carbLed.nutrition.fat, `${fatLed.nutrition.fat} vs ${carbLed.nutrition.fat}`);
 });
@@ -205,8 +239,8 @@ test("portionFor forwards carb and fat tuning to Recipe Family solving", async (
 
   assert.equal(carbLed.engine, "recipe-family-v1");
   assert.equal(fatLed.engine, "recipe-family-v1");
-  assert.ok(carbLed.actual.kcal <= carbLed.target.kcal);
-  assert.ok(fatLed.actual.kcal <= fatLed.target.kcal);
+  assert.ok(carbLed.actual.kcal >= carbLed.target.kcal * 0.9 && carbLed.actual.kcal <= carbLed.target.kcal * 1.05);
+  assert.ok(fatLed.actual.kcal >= fatLed.target.kcal * 0.9 && fatLed.actual.kcal <= fatLed.target.kcal * 1.05);
   assert.ok(carbLed.actual.carbs > fatLed.actual.carbs);
   assert.ok(fatLed.actual.fat > carbLed.actual.fat);
 });

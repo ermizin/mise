@@ -1911,7 +1911,7 @@ const curatedPilotIngredientAudits: Record<string, SourceIngredientDisposition[]
 
 const rawPilotIngredientAudits: Record<string, { sourceSlug: string; sourceIngredientCount: number }> = {
   "src-crispy-beef-noodles": { sourceSlug: "crispy-chili-beef-noodles", sourceIngredientCount: 16 },
-  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 15 },
+  "src-teriyaki-tray": { sourceSlug: "sheet-pan-teriyaki-chicken-and-vegetables", sourceIngredientCount: 16 },
   "src-taco-mac": { sourceSlug: "taco-mac", sourceIngredientCount: 16 },
   "src-mediterranean-wrap": { sourceSlug: "mediterranean-chicken-wraps", sourceIngredientCount: 24 },
   "src-creamy-chicken-pasta": { sourceSlug: "easy-dump-and-bake-creamy-chicken-pasta", sourceIngredientCount: 17 },
@@ -2342,8 +2342,12 @@ export function recipeToFamily(
   // hit (so they failed as `constraints_unsatisfied` instead of an honest
   // `outside_calorie_range`) and cut off every target outside the band even
   // when the dish scaled there perfectly well.
+  // Keep the lower advertised target conservative: a mathematical +5%
+  // extension can expose targets that meet calories but cannot preserve the
+  // family's protein floor. The solver still accepts +5% results inside the
+  // declared range.
   const minViableCalories = Math.ceil(reach.minKcal);
-  const maxViableCalories = Math.floor(Math.max(reach.maxKcal + 12, reach.maxKcal / 0.975));
+  const maxViableCalories = Math.floor(reach.maxKcal / 0.9);
   const desiredProteinFloor = mealLike
     ? Math.min(35, Math.max(24, Math.floor(recipe.macros.protein * 0.68)))
     : Math.max(16, Math.floor(recipe.macros.protein * 0.65));
@@ -2637,7 +2641,7 @@ export function deriveRecipeFamilyFromAuditedCandidate(
     image: { imageUrl, source: sourceTitle, sourceUrl: candidate.sourceUrl, usageStatus: imageUrl ? "reference_only" : "unknown", license: undefined, fetchedAt: context.accessedAt, confidenceMatch: imageUrl ? 1 : 0, manuallyApproved: false, photoType: imageUrl ? "source" : "fallback" },
     ingredients,
     minViableCalories: Math.ceil(reach.minKcal),
-    maxViableCalories: Math.floor(Math.max(reach.maxKcal + 12, reach.maxKcal / 0.975)),
+    maxViableCalories: Math.floor(reach.maxKcal / 0.9),
     // The publisher's demonstrated batch is the largest vessel load we can
     // defend without inventing cookware dimensions. Larger Mise sessions are
     // split into repeated physical runs by the cooking-run planner.
@@ -2784,12 +2788,10 @@ function scoreFor(totals: Nutrition, deviation: number, targets: SolveTargets) {
   const proteinError = targets.targetProtein === undefined ? 0 : Math.abs(targets.targetProtein - protein);
   const carbError = targets.targetCarbs === undefined ? 0 : Math.abs(targets.targetCarbs - carbs);
   const fatError = targets.targetFat === undefined ? 0 : Math.abs(targets.targetFat - fat);
-  // Calories are a ceiling. A candidate above the target is never selected as
-  // a viable portion, so crossing it must be substantially worse than a
-  // similarly sized deficit while the search is moving through local states.
-  const calorieError = kcal > targets.targetCalories
-    ? (kcal - targets.targetCalories) * 1000
-    : targets.targetCalories - kcal;
+  // The final gate accepts a small asymmetric corridor around the target.
+  // Search by distance so a close result above the target can beat a much
+  // larger shortfall; the viability check still enforces the exact band.
+  const calorieError = Math.abs(kcal - targets.targetCalories);
   return calorieError * 10 + shortfall * 150 + proteinError * 2 + carbError * 8 + fatError * 10 + deviation * 50;
 }
 
@@ -2971,15 +2973,16 @@ function solveRecipeFamilyUncached(
   const candidates = (["min", "base", "preferred"] as const)
     .map((seed) => hillClimb(solvedFamily, seed, targets))
     .sort((a, b) => a.score - b.score);
-  // Prefer an under-ceiling candidate even if the unconstrained score would
-  // have selected an overage. This remains deterministic for a non-viable
-  // result too, so the explanation can show the closest constrained attempt.
-  const best = candidates.find((candidate) => candidate.nutrition.kcal <= targetCalories) ?? candidates[0];
-  const calorieTolerance = Math.max(12, targetCalories * 0.025);
+  const minimumCalories = targetCalories * 0.9;
+  const maximumCalories = targetCalories * 1.05;
+  const best = candidates.find((candidate) =>
+    candidate.nutrition.kcal >= minimumCalories &&
+    candidate.nutrition.kcal <= maximumCalories
+  ) ?? candidates[0];
   const proteinFloor = Math.max(family.minimumProtein, input.targetProtein ?? 0);
   const viable =
-    best.nutrition.kcal <= targetCalories &&
-    targetCalories - best.nutrition.kcal <= calorieTolerance &&
+    best.nutrition.kcal >= minimumCalories &&
+    best.nutrition.kcal <= maximumCalories &&
     best.nutrition.protein + 0.2 >= proteinFloor;
   const changed = solvedFamily.ingredients.filter((ingredient) => Math.abs(best.amounts[ingredient.sourceIngredientId] - ingredient.baseAmount) > (amountStep(ingredient) < 1 ? 0.05 : 0.5)).sort((a, b) => a.scalingPriority - b.scalingPriority);
   return {

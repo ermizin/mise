@@ -29,6 +29,8 @@ async function recipeCatalog() {
     ACTIVITY_FACTORS: nutritionModule.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutritionModule.MEAL_SLOT_SHARES,
     calculateMealPlanTargets: nutritionModule.calculateMealPlanTargets,
+    calculateNutritionTarget: nutritionModule.calculateNutritionTarget,
+    normalizeNutritionTargetMode: nutritionModule.normalizeNutritionTargetMode,
     capMacrosAtCalories: nutritionModule.capMacrosAtCalories,
     nutritionMacroCalories: nutritionModule.macroCalories,
     nutritionMacrosForCalories: nutritionModule.macrosForCalories,
@@ -84,18 +86,12 @@ test("one cooking session's pan fat is divided among the portions that share it"
   }
 });
 
-test("a family's working calorie range is one its ingredients can actually reach", async () => {
+test("a family's working calorie range contains targets reachable within -10%/+5%", async () => {
   const catalog = await recipeCatalog();
   for (const family of Object.values(catalog.recipeFamiliesById)) {
     const reach = engine.nutritionReachForIngredients(family.ingredients);
-    assert.ok(
-      family.minViableCalories >= reach.minKcal,
-      `${family.id}: declares ${family.minViableCalories} kcal below its reachable ${reach.minKcal}`,
-    );
-    assert.ok(
-      family.maxViableCalories >= reach.maxKcal,
-      `${family.id}: declares ${family.maxViableCalories} kcal above its reachable ${reach.maxKcal}`,
-    );
+    assert.equal(family.minViableCalories, Math.ceil(reach.minKcal), `${family.id}: lower target preserves the reachable protein-safe floor`);
+    assert.equal(family.maxViableCalories, Math.floor(reach.maxKcal / 0.9), `${family.id}: upper target allows at most -10%`);
     // A protein floor the dish cannot physically hit makes every target fail.
     assert.ok(
       family.minimumProtein <= reach.maxProtein,

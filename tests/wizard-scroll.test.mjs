@@ -32,7 +32,7 @@ test("wizard keeps its chat history in a touch-scrollable viewport", async () =>
     page,
     /content\.scrollTo\(\{[\s\S]*?questionBox\.top - contentBox\.top - 22/,
   );
-  assert.match(page, /menuAssemblyRef\.current\?\.scrollIntoView\(/);
+  assert.doesNotMatch(page, /scrollIntoView\(/);
   assert.doesNotMatch(page, /className="builder-menu-mode-options"/);
   assert.match(page, /const showManualMenuChoice =/);
   assert.match(page, /className="builder-chat-alternative"/);

@@ -371,7 +371,9 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
         sourceIngredientIndex: index + 1,
         sourceIngredientId,
         canonicalIngredientId: canonical.id,
-        nameRu: sourceIngredient.displayNameRu?.trim() || canonical.canonicalName,
+        nameRu: ["beef_mince_raw", "beef_mince_90_raw", "beef_mince_85_raw"].includes(canonical.id)
+          ? canonical.canonicalName
+          : sourceIngredient.displayNameRu?.trim() || canonical.canonicalName,
         group: groupFor(canonical),
         quantityGrams: mass.grams,
         sourceMeasurement: { amount: mass.sourceAmount, unit: mass.sourceUnit },

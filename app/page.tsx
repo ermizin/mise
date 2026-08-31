@@ -695,6 +695,8 @@ function normalizedIngredientName(id: string, name: string) {
   // Весь расчётный профиль молока в текущем каталоге — 2%; карточка и КБЖУ
   // должны ссылаться на один и тот же продукт, а не на 2,5/3,2% одновременно.
   if (id === "milk") return "Молоко 2%";
+  if (["beef-mince", "beef-mince-90", "beef-mince-85"].includes(id))
+    return "Говяжий фарш 85/15";
   if (id === "berries" && /^замороженные ягоды$/iu.test(name.trim()))
     return "Замороженная черника";
   return name;
@@ -3019,7 +3021,7 @@ recipes.push(
     280,
     ["protein"],
     [
-      i("beef-mince", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"),
+      i("beef-mince-85", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"),
       i("rice", "Рис, сухой вес", 45, "г", "Крупы"),
       i("potato", "Картофель", 50, "г", "Овощи и фрукты"),
       i("carrot", "Морковь", 30, "г", "Овощи и фрукты"),
@@ -4141,6 +4143,8 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
       sourceTitle: record.provenance.sourceTitle,
       sourceUrl: record.provenance.sourceUrl,
       sourceQuery: record.provenance.sourceQuery,
+      // Runtime catalog v2 admits only checksum-verified local source copies.
+      // Keep the UI on that local asset; never fall back to the remote source URL.
       imageUrl:
         preview.kind === "source_preview" ? preview.imageUrl : undefined,
       imageAlt: record.title,
@@ -4622,6 +4626,8 @@ function migratedShoppingChecked(
     (item) =>
       item.key === rebuilt.key || normalizedShoppingKey(item) === rebuilt.key,
   );
+  // If several old duplicate rows collapse into one, the merged product is
+  // bought only when every former row had already been checked.
   return previous.length > 0 && previous.every((item) => item.checked);
 }
 function portionComponents(recipe: Recipe): PortionComponent[] {
@@ -6664,8 +6670,8 @@ function RecipeMedia({
       </span>
     );
   return (
-    // Фото рецепта хранится локально; fallback защищает интерфейс при ошибке
-    // декодирования, а проверка assets не допускает такой файл в release.
+    // Фото runtime-рецепта — проверенная локальная копия источника; при
+    // повреждении asset остаётся устойчивый emoji-fallback вместо пустой карточки.
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={photo}
@@ -8622,9 +8628,7 @@ function RecipesScreen({
             >
               Фильтры
               {active.length > 0 && (
-                <span className="catalog-filter-count" key={active.length}>
-                  {active.length}
-                </span>
+                <span className="catalog-filter-count">{active.length}</span>
               )}
             </button>
           </div>
@@ -9769,23 +9773,6 @@ function PlanBuilder({
     });
     return () => window.cancelAnimationFrame(frame);
   }, [step]);
-  useEffect(() => {
-    if (
-      chatTransition?.kind !== "menu" ||
-      !chatTransition.thinking ||
-      chatTransition.assemblyStage !== -1
-    )
-      return;
-    const frame = window.requestAnimationFrame(() => {
-      menuAssemblyRef.current?.scrollIntoView({
-        block: "center",
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-      });
-    });
-    return () => window.cancelAnimationFrame(frame);
-  }, [chatTransition]);
   const rawDays = daysInclusive(start, end);
   const validPeriod = rawDays >= 1 && rawDays <= 14;
   const remainder = validPeriod ? rawDays % cookEveryDays : 0;
@@ -10288,10 +10275,7 @@ function PlanBuilder({
       }
       if (!allSelected) return;
     }
-    beginChatAdvance(
-      step + 1,
-      step === 4 ? "menu" : "step",
-    );
+    beginChatAdvance(step + 1, step === 4 ? "menu" : "step");
   }
   function chooseManualMenu() {
     setMenuMode("manual");
@@ -12318,7 +12302,6 @@ function MenuReviewStep({
     selections,
     selectionAssignments,
   );
-
   return (
     <>
       <div

@@ -422,7 +422,7 @@
           }
         ],
         "minViableCalories": 136,
-        "maxViableCalories": 484,
+        "maxViableCalories": 525,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -1078,7 +1078,7 @@
           }
         ],
         "minViableCalories": 174,
-        "maxViableCalories": 508,
+        "maxViableCalories": 550,
         "geometryLockedMax": 7,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -1994,7 +1994,7 @@
           }
         ],
         "minViableCalories": 365,
-        "maxViableCalories": 798,
+        "maxViableCalories": 864,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -2716,7 +2716,7 @@
           }
         ],
         "minViableCalories": 241,
-        "maxViableCalories": 459,
+        "maxViableCalories": 497,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -3217,7 +3217,7 @@
           }
         ],
         "minViableCalories": 114,
-        "maxViableCalories": 509,
+        "maxViableCalories": 552,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -3662,7 +3662,7 @@
           }
         ],
         "minViableCalories": 139,
-        "maxViableCalories": 255,
+        "maxViableCalories": 270,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -4133,7 +4133,7 @@
           }
         ],
         "minViableCalories": 51,
-        "maxViableCalories": 81,
+        "maxViableCalories": 76,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -4856,7 +4856,7 @@
           }
         ],
         "minViableCalories": 528,
-        "maxViableCalories": 1139,
+        "maxViableCalories": 1234,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -5690,7 +5690,7 @@
           }
         ],
         "minViableCalories": 388,
-        "maxViableCalories": 886,
+        "maxViableCalories": 960,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -6592,7 +6592,7 @@
           }
         ],
         "minViableCalories": 477,
-        "maxViableCalories": 1287,
+        "maxViableCalories": 1394,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -7546,7 +7546,7 @@
           }
         ],
         "minViableCalories": 335,
-        "maxViableCalories": 935,
+        "maxViableCalories": 1013,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -8538,7 +8538,7 @@
           }
         ],
         "minViableCalories": 313,
-        "maxViableCalories": 759,
+        "maxViableCalories": 822,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -9408,7 +9408,7 @@
           }
         ],
         "minViableCalories": 359,
-        "maxViableCalories": 943,
+        "maxViableCalories": 1022,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -10283,7 +10283,7 @@
           }
         ],
         "minViableCalories": 468,
-        "maxViableCalories": 1128,
+        "maxViableCalories": 1222,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -11009,7 +11009,7 @@
           }
         ],
         "minViableCalories": 547,
-        "maxViableCalories": 1090,
+        "maxViableCalories": 1181,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -11924,7 +11924,7 @@
           }
         ],
         "minViableCalories": 406,
-        "maxViableCalories": 973,
+        "maxViableCalories": 1054,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -12982,7 +12982,7 @@
           }
         ],
         "minViableCalories": 473,
-        "maxViableCalories": 1255,
+        "maxViableCalories": 1360,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -13973,7 +13973,7 @@
           }
         ],
         "minViableCalories": 348,
-        "maxViableCalories": 875,
+        "maxViableCalories": 948,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -14651,7 +14651,7 @@
           }
         ],
         "minViableCalories": 102,
-        "maxViableCalories": 318,
+        "maxViableCalories": 340,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -15397,7 +15397,7 @@
           }
         ],
         "minViableCalories": 212,
-        "maxViableCalories": 520,
+        "maxViableCalories": 563,
         "geometryLockedMax": 20,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -16933,7 +16933,7 @@
           }
         ],
         "minViableCalories": 528,
-        "maxViableCalories": 841,
+        "maxViableCalories": 911,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -17634,7 +17634,7 @@
           }
         ],
         "minViableCalories": 99,
-        "maxViableCalories": 179,
+        "maxViableCalories": 186,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -18390,7 +18390,7 @@
           }
         ],
         "minViableCalories": 535,
-        "maxViableCalories": 1881,
+        "maxViableCalories": 2038,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -19124,7 +19124,7 @@
           }
         ],
         "minViableCalories": 156,
-        "maxViableCalories": 503,
+        "maxViableCalories": 545,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -20014,7 +20014,7 @@
           }
         ],
         "minViableCalories": 320,
-        "maxViableCalories": 715,
+        "maxViableCalories": 775,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -20824,7 +20824,7 @@
           }
         ],
         "minViableCalories": 391,
-        "maxViableCalories": 1074,
+        "maxViableCalories": 1163,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -21526,7 +21526,7 @@
           }
         ],
         "minViableCalories": 323,
-        "maxViableCalories": 728,
+        "maxViableCalories": 789,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -22175,7 +22175,7 @@
           }
         ],
         "minViableCalories": 366,
-        "maxViableCalories": 749,
+        "maxViableCalories": 812,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -23048,7 +23048,7 @@
           }
         ],
         "minViableCalories": 743,
-        "maxViableCalories": 1681,
+        "maxViableCalories": 1821,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -23982,7 +23982,7 @@
           }
         ],
         "minViableCalories": 595,
-        "maxViableCalories": 1074,
+        "maxViableCalories": 1164,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -24681,7 +24681,7 @@
           }
         ],
         "minViableCalories": 172,
-        "maxViableCalories": 391,
+        "maxViableCalories": 421,
         "geometryLockedMax": 20,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -25416,7 +25416,7 @@
           }
         ],
         "minViableCalories": 491,
-        "maxViableCalories": 1033,
+        "maxViableCalories": 1119,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -26314,7 +26314,7 @@
           }
         ],
         "minViableCalories": 526,
-        "maxViableCalories": 1022,
+        "maxViableCalories": 1107,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -27058,7 +27058,7 @@
           }
         ],
         "minViableCalories": 260,
-        "maxViableCalories": 747,
+        "maxViableCalories": 809,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -27879,7 +27879,7 @@
           }
         ],
         "minViableCalories": 474,
-        "maxViableCalories": 1134,
+        "maxViableCalories": 1228,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -28729,7 +28729,7 @@
           }
         ],
         "minViableCalories": 574,
-        "maxViableCalories": 1729,
+        "maxViableCalories": 1873,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -29532,7 +29532,7 @@
           }
         ],
         "minViableCalories": 466,
-        "maxViableCalories": 1059,
+        "maxViableCalories": 1147,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -30111,7 +30111,7 @@
           }
         ],
         "minViableCalories": 415,
-        "maxViableCalories": 1142,
+        "maxViableCalories": 1238,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -30583,7 +30583,7 @@
           }
         ],
         "minViableCalories": 230,
-        "maxViableCalories": 471,
+        "maxViableCalories": 510,
         "geometryLockedMax": 17,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -31037,7 +31037,7 @@
           }
         ],
         "minViableCalories": 121,
-        "maxViableCalories": 230,
+        "maxViableCalories": 243,
         "geometryLockedMax": 12,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -31758,7 +31758,7 @@
           }
         ],
         "minViableCalories": 604,
-        "maxViableCalories": 1605,
+        "maxViableCalories": 1738,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -32573,7 +32573,7 @@
           }
         ],
         "minViableCalories": 321,
-        "maxViableCalories": 719,
+        "maxViableCalories": 779,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -33339,7 +33339,7 @@
           }
         ],
         "minViableCalories": 434,
-        "maxViableCalories": 971,
+        "maxViableCalories": 1052,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -34116,7 +34116,7 @@
           }
         ],
         "minViableCalories": 726,
-        "maxViableCalories": 1662,
+        "maxViableCalories": 1801,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -34652,7 +34652,7 @@
           }
         ],
         "minViableCalories": 201,
-        "maxViableCalories": 416,
+        "maxViableCalories": 449,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -35123,7 +35123,7 @@
           }
         ],
         "minViableCalories": 263,
-        "maxViableCalories": 469,
+        "maxViableCalories": 508,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -35558,7 +35558,7 @@
           }
         ],
         "minViableCalories": 192,
-        "maxViableCalories": 397,
+        "maxViableCalories": 428,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -36023,7 +36023,7 @@
           }
         ],
         "minViableCalories": 224,
-        "maxViableCalories": 382,
+        "maxViableCalories": 412,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -36518,7 +36518,7 @@
           }
         ],
         "minViableCalories": 342,
-        "maxViableCalories": 661,
+        "maxViableCalories": 716,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -37135,7 +37135,7 @@
           }
         ],
         "minViableCalories": 389,
-        "maxViableCalories": 954,
+        "maxViableCalories": 1033,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -37783,7 +37783,7 @@
           }
         ],
         "minViableCalories": 397,
-        "maxViableCalories": 1403,
+        "maxViableCalories": 1520,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -38360,7 +38360,7 @@
           }
         ],
         "minViableCalories": 180,
-        "maxViableCalories": 424,
+        "maxViableCalories": 458,
         "geometryLockedMax": 12,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -38909,7 +38909,7 @@
           }
         ],
         "minViableCalories": 250,
-        "maxViableCalories": 464,
+        "maxViableCalories": 503,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -39337,7 +39337,7 @@
           }
         ],
         "minViableCalories": 293,
-        "maxViableCalories": 745,
+        "maxViableCalories": 807,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -39707,7 +39707,7 @@
           }
         ],
         "minViableCalories": 169,
-        "maxViableCalories": 672,
+        "maxViableCalories": 728,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -40075,7 +40075,7 @@
           }
         ],
         "minViableCalories": 276,
-        "maxViableCalories": 650,
+        "maxViableCalories": 704,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -40424,7 +40424,7 @@
           }
         ],
         "minViableCalories": 234,
-        "maxViableCalories": 384,
+        "maxViableCalories": 413,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -40961,7 +40961,7 @@
           }
         ],
         "minViableCalories": 554,
-        "maxViableCalories": 1052,
+        "maxViableCalories": 1139,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -41771,7 +41771,7 @@
           }
         ],
         "minViableCalories": 765,
-        "maxViableCalories": 1700,
+        "maxViableCalories": 1841,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -42741,7 +42741,7 @@
           }
         ],
         "minViableCalories": 410,
-        "maxViableCalories": 844,
+        "maxViableCalories": 914,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -43422,7 +43422,7 @@
           }
         ],
         "minViableCalories": 164,
-        "maxViableCalories": 392,
+        "maxViableCalories": 422,
         "geometryLockedMax": 15,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -44184,7 +44184,7 @@
           }
         ],
         "minViableCalories": 433,
-        "maxViableCalories": 1050,
+        "maxViableCalories": 1137,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -44908,7 +44908,7 @@
           }
         ],
         "minViableCalories": 421,
-        "maxViableCalories": 865,
+        "maxViableCalories": 937,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -45729,7 +45729,7 @@
           }
         ],
         "minViableCalories": 184,
-        "maxViableCalories": 392,
+        "maxViableCalories": 422,
         "geometryLockedMax": 20,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -46369,7 +46369,7 @@
           }
         ],
         "minViableCalories": 170,
-        "maxViableCalories": 447,
+        "maxViableCalories": 484,
         "geometryLockedMax": 16,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -47009,7 +47009,7 @@
           }
         ],
         "minViableCalories": 488,
-        "maxViableCalories": 935,
+        "maxViableCalories": 1013,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -47970,7 +47970,7 @@
           }
         ],
         "minViableCalories": 705,
-        "maxViableCalories": 1713,
+        "maxViableCalories": 1855,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -48718,7 +48718,7 @@
           }
         ],
         "minViableCalories": 235,
-        "maxViableCalories": 381,
+        "maxViableCalories": 410,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -49256,7 +49256,7 @@
           }
         ],
         "minViableCalories": 92,
-        "maxViableCalories": 284,
+        "maxViableCalories": 303,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -50110,7 +50110,7 @@
           }
         ],
         "minViableCalories": 331,
-        "maxViableCalories": 765,
+        "maxViableCalories": 829,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -51013,7 +51013,7 @@
           }
         ],
         "minViableCalories": 356,
-        "maxViableCalories": 866,
+        "maxViableCalories": 938,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -51862,7 +51862,7 @@
           }
         ],
         "minViableCalories": 383,
-        "maxViableCalories": 863,
+        "maxViableCalories": 935,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -52458,7 +52458,7 @@
           }
         ],
         "minViableCalories": 171,
-        "maxViableCalories": 371,
+        "maxViableCalories": 399,
         "geometryLockedMax": 13,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -53439,7 +53439,7 @@
           }
         ],
         "minViableCalories": 794,
-        "maxViableCalories": 1811,
+        "maxViableCalories": 1962,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -54162,7 +54162,7 @@
           }
         ],
         "minViableCalories": 234,
-        "maxViableCalories": 571,
+        "maxViableCalories": 618,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -54778,7 +54778,7 @@
           }
         ],
         "minViableCalories": 470,
-        "maxViableCalories": 1145,
+        "maxViableCalories": 1241,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -55413,7 +55413,7 @@
           }
         ],
         "minViableCalories": 185,
-        "maxViableCalories": 588,
+        "maxViableCalories": 637,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -56168,7 +56168,7 @@
           }
         ],
         "minViableCalories": 390,
-        "maxViableCalories": 661,
+        "maxViableCalories": 716,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -56807,7 +56807,7 @@
           }
         ],
         "minViableCalories": 230,
-        "maxViableCalories": 639,
+        "maxViableCalories": 693,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -57542,7 +57542,7 @@
           }
         ],
         "minViableCalories": 278,
-        "maxViableCalories": 702,
+        "maxViableCalories": 760,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -58245,7 +58245,7 @@
           }
         ],
         "minViableCalories": 141,
-        "maxViableCalories": 379,
+        "maxViableCalories": 408,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -58910,7 +58910,7 @@
           }
         ],
         "minViableCalories": 273,
-        "maxViableCalories": 604,
+        "maxViableCalories": 655,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -59777,7 +59777,7 @@
           }
         ],
         "minViableCalories": 419,
-        "maxViableCalories": 996,
+        "maxViableCalories": 1079,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -60400,7 +60400,7 @@
           }
         ],
         "minViableCalories": 324,
-        "maxViableCalories": 1097,
+        "maxViableCalories": 1189,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -61075,7 +61075,7 @@
           }
         ],
         "minViableCalories": 152,
-        "maxViableCalories": 278,
+        "maxViableCalories": 296,
         "geometryLockedMax": 18,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -62057,7 +62057,7 @@
           }
         ],
         "minViableCalories": 415,
-        "maxViableCalories": 662,
+        "maxViableCalories": 717,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -62846,7 +62846,7 @@
           }
         ],
         "minViableCalories": 436,
-        "maxViableCalories": 969,
+        "maxViableCalories": 1050,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -63670,7 +63670,7 @@
           }
         ],
         "minViableCalories": 334,
-        "maxViableCalories": 625,
+        "maxViableCalories": 678,
         "geometryLockedMax": 17,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -64504,7 +64504,7 @@
           }
         ],
         "minViableCalories": 488,
-        "maxViableCalories": 1178,
+        "maxViableCalories": 1276,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -65316,7 +65316,7 @@
           }
         ],
         "minViableCalories": 644,
-        "maxViableCalories": 1666,
+        "maxViableCalories": 1805,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -66009,7 +66009,7 @@
           }
         ],
         "minViableCalories": 217,
-        "maxViableCalories": 625,
+        "maxViableCalories": 677,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -67265,7 +67265,7 @@
           }
         ],
         "minViableCalories": 209,
-        "maxViableCalories": 393,
+        "maxViableCalories": 424,
         "geometryLockedMax": 14,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -67879,7 +67879,7 @@
           }
         ],
         "minViableCalories": 170,
-        "maxViableCalories": 316,
+        "maxViableCalories": 337,
         "geometryLockedMax": 17,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -68748,7 +68748,7 @@
           }
         ],
         "minViableCalories": 358,
-        "maxViableCalories": 855,
+        "maxViableCalories": 926,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -69419,7 +69419,7 @@
           }
         ],
         "minViableCalories": 280,
-        "maxViableCalories": 605,
+        "maxViableCalories": 656,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -70172,7 +70172,7 @@
           }
         ],
         "minViableCalories": 502,
-        "maxViableCalories": 1109,
+        "maxViableCalories": 1202,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -71106,7 +71106,7 @@
           }
         ],
         "minViableCalories": 386,
-        "maxViableCalories": 756,
+        "maxViableCalories": 819,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -71925,7 +71925,7 @@
           }
         ],
         "minViableCalories": 522,
-        "maxViableCalories": 938,
+        "maxViableCalories": 1016,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -72528,7 +72528,7 @@
           }
         ],
         "minViableCalories": 165,
-        "maxViableCalories": 353,
+        "maxViableCalories": 379,
         "geometryLockedMax": 20,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -73309,7 +73309,7 @@
           }
         ],
         "minViableCalories": 363,
-        "maxViableCalories": 945,
+        "maxViableCalories": 1024,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -73896,7 +73896,7 @@
           }
         ],
         "minViableCalories": 54,
-        "maxViableCalories": 81,
+        "maxViableCalories": 76,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -74764,7 +74764,7 @@
           }
         ],
         "minViableCalories": 461,
-        "maxViableCalories": 1189,
+        "maxViableCalories": 1288,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -75230,7 +75230,7 @@
           }
         ],
         "minViableCalories": 93,
-        "maxViableCalories": 295,
+        "maxViableCalories": 314,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -75903,7 +75903,7 @@
           }
         ],
         "minViableCalories": 265,
-        "maxViableCalories": 596,
+        "maxViableCalories": 645,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -76636,7 +76636,7 @@
           }
         ],
         "minViableCalories": 663,
-        "maxViableCalories": 1676,
+        "maxViableCalories": 1816,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -77370,7 +77370,7 @@
           }
         ],
         "minViableCalories": 477,
-        "maxViableCalories": 1195,
+        "maxViableCalories": 1295,
         "geometryLockedMax": 7,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -78102,7 +78102,7 @@
           }
         ],
         "minViableCalories": 502,
-        "maxViableCalories": 951,
+        "maxViableCalories": 1031,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -78857,7 +78857,7 @@
           }
         ],
         "minViableCalories": 476,
-        "maxViableCalories": 1136,
+        "maxViableCalories": 1231,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -79621,7 +79621,7 @@
           }
         ],
         "minViableCalories": 344,
-        "maxViableCalories": 815,
+        "maxViableCalories": 883,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -80040,7 +80040,7 @@
           }
         ],
         "minViableCalories": 227,
-        "maxViableCalories": 398,
+        "maxViableCalories": 429,
         "geometryLockedMax": 7,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -80706,7 +80706,7 @@
           }
         ],
         "minViableCalories": 390,
-        "maxViableCalories": 1012,
+        "maxViableCalories": 1096,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -81180,7 +81180,7 @@
           }
         ],
         "minViableCalories": 224,
-        "maxViableCalories": 414,
+        "maxViableCalories": 447,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -81484,7 +81484,7 @@
           }
         ],
         "minViableCalories": 519,
-        "maxViableCalories": 1066,
+        "maxViableCalories": 1154,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -81818,7 +81818,7 @@
           }
         ],
         "minViableCalories": 568,
-        "maxViableCalories": 1101,
+        "maxViableCalories": 1193,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -82264,7 +82264,7 @@
           }
         ],
         "minViableCalories": 369,
-        "maxViableCalories": 657,
+        "maxViableCalories": 712,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -82639,7 +82639,7 @@
           }
         ],
         "minViableCalories": 94,
-        "maxViableCalories": 180,
+        "maxViableCalories": 187,
         "geometryLockedMax": 15,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -83227,7 +83227,7 @@
           }
         ],
         "minViableCalories": 342,
-        "maxViableCalories": 840,
+        "maxViableCalories": 910,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -84019,7 +84019,7 @@
           }
         ],
         "minViableCalories": 325,
-        "maxViableCalories": 757,
+        "maxViableCalories": 820,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -84533,7 +84533,7 @@
           }
         ],
         "minViableCalories": 207,
-        "maxViableCalories": 388,
+        "maxViableCalories": 418,
         "geometryLockedMax": 20,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -85207,7 +85207,7 @@
           }
         ],
         "minViableCalories": 483,
-        "maxViableCalories": 1106,
+        "maxViableCalories": 1198,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -85947,7 +85947,7 @@
           }
         ],
         "minViableCalories": 244,
-        "maxViableCalories": 661,
+        "maxViableCalories": 716,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -86548,7 +86548,7 @@
           }
         ],
         "minViableCalories": 215,
-        "maxViableCalories": 375,
+        "maxViableCalories": 404,
         "geometryLockedMax": 12,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -87076,7 +87076,7 @@
           }
         ],
         "minViableCalories": 116,
-        "maxViableCalories": 294,
+        "maxViableCalories": 314,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -87776,7 +87776,7 @@
           }
         ],
         "minViableCalories": 266,
-        "maxViableCalories": 686,
+        "maxViableCalories": 743,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -88480,7 +88480,7 @@
           }
         ],
         "minViableCalories": 474,
-        "maxViableCalories": 926,
+        "maxViableCalories": 1004,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -89147,7 +89147,7 @@
           }
         ],
         "minViableCalories": 366,
-        "maxViableCalories": 950,
+        "maxViableCalories": 1029,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -89857,7 +89857,7 @@
           }
         ],
         "minViableCalories": 289,
-        "maxViableCalories": 1104,
+        "maxViableCalories": 1196,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -90578,7 +90578,7 @@
           }
         ],
         "minViableCalories": 368,
-        "maxViableCalories": 711,
+        "maxViableCalories": 770,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -91297,7 +91297,7 @@
           }
         ],
         "minViableCalories": 411,
-        "maxViableCalories": 767,
+        "maxViableCalories": 831,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -92000,7 +92000,7 @@
           }
         ],
         "minViableCalories": 406,
-        "maxViableCalories": 1185,
+        "maxViableCalories": 1284,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -92701,7 +92701,7 @@
           }
         ],
         "minViableCalories": 514,
-        "maxViableCalories": 1274,
+        "maxViableCalories": 1380,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -93337,7 +93337,7 @@
           }
         ],
         "minViableCalories": 494,
-        "maxViableCalories": 912,
+        "maxViableCalories": 988,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -93913,7 +93913,7 @@
           }
         ],
         "minViableCalories": 222,
-        "maxViableCalories": 818,
+        "maxViableCalories": 887,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -94614,7 +94614,7 @@
           }
         ],
         "minViableCalories": 369,
-        "maxViableCalories": 630,
+        "maxViableCalories": 683,
         "geometryLockedMax": 12,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -95386,7 +95386,7 @@
           }
         ],
         "minViableCalories": 441,
-        "maxViableCalories": 855,
+        "maxViableCalories": 927,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -96286,7 +96286,7 @@
           }
         ],
         "minViableCalories": 502,
-        "maxViableCalories": 1245,
+        "maxViableCalories": 1349,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -96941,7 +96941,7 @@
           }
         ],
         "minViableCalories": 287,
-        "maxViableCalories": 803,
+        "maxViableCalories": 870,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -97856,7 +97856,7 @@
           }
         ],
         "minViableCalories": 345,
-        "maxViableCalories": 527,
+        "maxViableCalories": 571,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -98647,7 +98647,7 @@
           }
         ],
         "minViableCalories": 329,
-        "maxViableCalories": 673,
+        "maxViableCalories": 729,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -99279,7 +99279,7 @@
           }
         ],
         "minViableCalories": 532,
-        "maxViableCalories": 956,
+        "maxViableCalories": 1036,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -100000,7 +100000,7 @@
           }
         ],
         "minViableCalories": 212,
-        "maxViableCalories": 408,
+        "maxViableCalories": 440,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -100703,7 +100703,7 @@
           }
         ],
         "minViableCalories": 412,
-        "maxViableCalories": 1260,
+        "maxViableCalories": 1365,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -101333,7 +101333,7 @@
           }
         ],
         "minViableCalories": 347,
-        "maxViableCalories": 924,
+        "maxViableCalories": 1001,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -102141,7 +102141,7 @@
           }
         ],
         "minViableCalories": 395,
-        "maxViableCalories": 638,
+        "maxViableCalories": 691,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -103413,7 +103413,7 @@
           }
         ],
         "minViableCalories": 140,
-        "maxViableCalories": 229,
+        "maxViableCalories": 241,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -104120,7 +104120,7 @@
           }
         ],
         "minViableCalories": 286,
-        "maxViableCalories": 514,
+        "maxViableCalories": 557,
         "geometryLockedMax": 3,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -104742,7 +104742,7 @@
           }
         ],
         "minViableCalories": 309,
-        "maxViableCalories": 698,
+        "maxViableCalories": 756,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -105483,7 +105483,7 @@
           }
         ],
         "minViableCalories": 368,
-        "maxViableCalories": 936,
+        "maxViableCalories": 1014,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -106209,7 +106209,7 @@
           }
         ],
         "minViableCalories": 288,
-        "maxViableCalories": 888,
+        "maxViableCalories": 962,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -106831,7 +106831,7 @@
           }
         ],
         "minViableCalories": 229,
-        "maxViableCalories": 834,
+        "maxViableCalories": 904,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -107319,7 +107319,7 @@
           }
         ],
         "minViableCalories": 257,
-        "maxViableCalories": 776,
+        "maxViableCalories": 841,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -108008,7 +108008,7 @@
           }
         ],
         "minViableCalories": 283,
-        "maxViableCalories": 470,
+        "maxViableCalories": 509,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -108946,7 +108946,7 @@
           }
         ],
         "minViableCalories": 597,
-        "maxViableCalories": 1172,
+        "maxViableCalories": 1270,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -109729,7 +109729,7 @@
           }
         ],
         "minViableCalories": 408,
-        "maxViableCalories": 732,
+        "maxViableCalories": 793,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -110653,7 +110653,7 @@
           }
         ],
         "minViableCalories": 455,
-        "maxViableCalories": 999,
+        "maxViableCalories": 1083,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -111367,7 +111367,7 @@
           }
         ],
         "minViableCalories": 385,
-        "maxViableCalories": 725,
+        "maxViableCalories": 785,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -111873,7 +111873,7 @@
           }
         ],
         "minViableCalories": 359,
-        "maxViableCalories": 495,
+        "maxViableCalories": 536,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -112693,7 +112693,7 @@
           }
         ],
         "minViableCalories": 574,
-        "maxViableCalories": 1220,
+        "maxViableCalories": 1322,
         "geometryLockedMax": 9,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -113526,7 +113526,7 @@
           }
         ],
         "minViableCalories": 170,
-        "maxViableCalories": 364,
+        "maxViableCalories": 391,
         "geometryLockedMax": 12,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -114036,7 +114036,7 @@
           }
         ],
         "minViableCalories": 260,
-        "maxViableCalories": 453,
+        "maxViableCalories": 490,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -114966,7 +114966,7 @@
           }
         ],
         "minViableCalories": 242,
-        "maxViableCalories": 723,
+        "maxViableCalories": 783,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -115689,7 +115689,7 @@
           }
         ],
         "minViableCalories": 151,
-        "maxViableCalories": 198,
+        "maxViableCalories": 207,
         "geometryLockedMax": 3,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -116268,7 +116268,7 @@
           }
         ],
         "minViableCalories": 462,
-        "maxViableCalories": 900,
+        "maxViableCalories": 975,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -117214,7 +117214,7 @@
           }
         ],
         "minViableCalories": 420,
-        "maxViableCalories": 886,
+        "maxViableCalories": 960,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -118054,7 +118054,7 @@
           }
         ],
         "minViableCalories": 369,
-        "maxViableCalories": 597,
+        "maxViableCalories": 646,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -119252,7 +119252,7 @@
           }
         ],
         "minViableCalories": 294,
-        "maxViableCalories": 704,
+        "maxViableCalories": 762,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -119985,7 +119985,7 @@
           }
         ],
         "minViableCalories": 301,
-        "maxViableCalories": 859,
+        "maxViableCalories": 931,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -120440,7 +120440,7 @@
           }
         ],
         "minViableCalories": 114,
-        "maxViableCalories": 230,
+        "maxViableCalories": 243,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -120999,7 +120999,7 @@
           }
         ],
         "minViableCalories": 329,
-        "maxViableCalories": 599,
+        "maxViableCalories": 649,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -121796,7 +121796,7 @@
           }
         ],
         "minViableCalories": 245,
-        "maxViableCalories": 392,
+        "maxViableCalories": 423,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -122634,7 +122634,7 @@
           }
         ],
         "minViableCalories": 730,
-        "maxViableCalories": 902,
+        "maxViableCalories": 977,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -123667,7 +123667,7 @@
           }
         ],
         "minViableCalories": 470,
-        "maxViableCalories": 1157,
+        "maxViableCalories": 1254,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -124537,7 +124537,7 @@
           }
         ],
         "minViableCalories": 267,
-        "maxViableCalories": 1104,
+        "maxViableCalories": 1196,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -125182,7 +125182,7 @@
           }
         ],
         "minViableCalories": 392,
-        "maxViableCalories": 707,
+        "maxViableCalories": 766,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -126169,7 +126169,7 @@
           }
         ],
         "minViableCalories": 382,
-        "maxViableCalories": 1199,
+        "maxViableCalories": 1299,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -126925,7 +126925,7 @@
           }
         ],
         "minViableCalories": 241,
-        "maxViableCalories": 1058,
+        "maxViableCalories": 1147,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -127739,7 +127739,7 @@
           }
         ],
         "minViableCalories": 308,
-        "maxViableCalories": 690,
+        "maxViableCalories": 747,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -128411,7 +128411,7 @@
           }
         ],
         "minViableCalories": 283,
-        "maxViableCalories": 775,
+        "maxViableCalories": 840,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -129093,7 +129093,7 @@
           }
         ],
         "minViableCalories": 281,
-        "maxViableCalories": 410,
+        "maxViableCalories": 442,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -130192,7 +130192,7 @@
           }
         ],
         "minViableCalories": 620,
-        "maxViableCalories": 1082,
+        "maxViableCalories": 1172,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -131229,7 +131229,7 @@
           }
         ],
         "minViableCalories": 500,
-        "maxViableCalories": 1035,
+        "maxViableCalories": 1121,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -131933,7 +131933,7 @@
           }
         ],
         "minViableCalories": 348,
-        "maxViableCalories": 751,
+        "maxViableCalories": 814,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -132601,7 +132601,7 @@
           }
         ],
         "minViableCalories": 397,
-        "maxViableCalories": 597,
+        "maxViableCalories": 647,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -133340,7 +133340,7 @@
           }
         ],
         "minViableCalories": 292,
-        "maxViableCalories": 1037,
+        "maxViableCalories": 1124,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -133832,7 +133832,7 @@
           }
         ],
         "minViableCalories": 206,
-        "maxViableCalories": 231,
+        "maxViableCalories": 244,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -134456,7 +134456,7 @@
           }
         ],
         "minViableCalories": 435,
-        "maxViableCalories": 1286,
+        "maxViableCalories": 1393,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -135138,7 +135138,7 @@
           }
         ],
         "minViableCalories": 581,
-        "maxViableCalories": 1153,
+        "maxViableCalories": 1250,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -135870,7 +135870,7 @@
           }
         ],
         "minViableCalories": 303,
-        "maxViableCalories": 852,
+        "maxViableCalories": 923,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -136410,7 +136410,7 @@
           }
         ],
         "minViableCalories": 285,
-        "maxViableCalories": 836,
+        "maxViableCalories": 906,
         "geometryLockedMax": 12,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -137131,7 +137131,7 @@
           }
         ],
         "minViableCalories": 537,
-        "maxViableCalories": 895,
+        "maxViableCalories": 969,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -138158,7 +138158,7 @@
           }
         ],
         "minViableCalories": 447,
-        "maxViableCalories": 1180,
+        "maxViableCalories": 1279,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -139446,7 +139446,7 @@
           }
         ],
         "minViableCalories": 460,
-        "maxViableCalories": 1098,
+        "maxViableCalories": 1190,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -140279,7 +140279,7 @@
           }
         ],
         "minViableCalories": 362,
-        "maxViableCalories": 725,
+        "maxViableCalories": 786,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -140965,7 +140965,7 @@
           }
         ],
         "minViableCalories": 248,
-        "maxViableCalories": 750,
+        "maxViableCalories": 813,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -141665,7 +141665,7 @@
           }
         ],
         "minViableCalories": 426,
-        "maxViableCalories": 1084,
+        "maxViableCalories": 1174,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -142529,7 +142529,7 @@
           }
         ],
         "minViableCalories": 307,
-        "maxViableCalories": 548,
+        "maxViableCalories": 594,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -143131,7 +143131,7 @@
           }
         ],
         "minViableCalories": 382,
-        "maxViableCalories": 944,
+        "maxViableCalories": 1023,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -143870,7 +143870,7 @@
           }
         ],
         "minViableCalories": 351,
-        "maxViableCalories": 1295,
+        "maxViableCalories": 1403,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -144648,7 +144648,7 @@
           }
         ],
         "minViableCalories": 402,
-        "maxViableCalories": 1225,
+        "maxViableCalories": 1327,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -145305,7 +145305,7 @@
           }
         ],
         "minViableCalories": 308,
-        "maxViableCalories": 1116,
+        "maxViableCalories": 1210,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -145858,7 +145858,7 @@
           }
         ],
         "minViableCalories": 308,
-        "maxViableCalories": 773,
+        "maxViableCalories": 838,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -146482,7 +146482,7 @@
           }
         ],
         "minViableCalories": 315,
-        "maxViableCalories": 579,
+        "maxViableCalories": 627,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -147203,7 +147203,7 @@
           }
         ],
         "minViableCalories": 290,
-        "maxViableCalories": 501,
+        "maxViableCalories": 542,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -147944,7 +147944,7 @@
           }
         ],
         "minViableCalories": 331,
-        "maxViableCalories": 861,
+        "maxViableCalories": 933,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -148712,7 +148712,7 @@
           }
         ],
         "minViableCalories": 405,
-        "maxViableCalories": 799,
+        "maxViableCalories": 865,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -149497,7 +149497,7 @@
           }
         ],
         "minViableCalories": 374,
-        "maxViableCalories": 920,
+        "maxViableCalories": 997,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -150365,7 +150365,7 @@
           }
         ],
         "minViableCalories": 441,
-        "maxViableCalories": 759,
+        "maxViableCalories": 822,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -150995,7 +150995,7 @@
           }
         ],
         "minViableCalories": 367,
-        "maxViableCalories": 916,
+        "maxViableCalories": 992,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {

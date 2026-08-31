@@ -86,7 +86,7 @@ test("guide and manual menu finish the remaining supplied motion", async () => {
   assert.match(css, /macro-bar i[\s\S]*?transition: width 420ms/);
 });
 
-test("the last questionnaire answer runs the supplied staged menu assembly", async () => {
+test("manual menu choice stays available as a separate bottom action", async () => {
   const [page, css] = await Promise.all([
     read("app/page.tsx"),
     read("app/globals.css"),
@@ -106,16 +106,12 @@ test("the last questionnaire answer runs the supplied staged menu assembly", asy
     builder,
     /step === 4 \? "menu" : "step"/,
   );
-  assert.match(builder, /const menuAssemblyRef = useRef<HTMLDivElement/);
   assert.match(builder, /const menuRevealDelay = reducedMotion \? 60 : 220/);
   assert.match(
     builder,
     /const menuStageStartDelay =\s*menuRevealDelay \+ \(reducedMotion \? 80 : 320\)/,
   );
-  assert.match(
-    builder,
-    /menuAssemblyRef\.current\?\.scrollIntoView\(\{[\s\S]*?block: "center"[\s\S]*?"smooth"/,
-  );
+  assert.doesNotMatch(builder, /scrollIntoView\(/);
   assert.match(
     builder,
     /menuStageStartDelay \+ assemblyStage \* stageDuration/,
@@ -145,6 +141,8 @@ test("the last questionnaire answer runs the supplied staged menu assembly", asy
     css,
     /\.builder-chat-menu-ready \{[\s\S]*?mise-builder-menu-ready 460ms var\(--motion-settled\) 160ms/,
   );
+  assert.match(builder, /const showManualMenuChoice =/);
+  assert.match(builder, /className="builder-chat-alternative"/);
 });
 
 test("week days and batch cooking use directional keyed panels", async () => {
