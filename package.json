@@ -25,6 +25,7 @@
     "recipes:audit:nutrition": "node scripts/audit-recipe-nutrition.mjs",
     "recipes:audit:release": "node scripts/audit-recipe-release.mjs",
     "recipes:audit:release:write": "node scripts/audit-recipe-release.mjs --output data/recipe-release-audit.json",
+    "release:vps:package": "bash scripts/package-vps-release.sh",
     "db:generate": "drizzle-kit generate",
     "db:local:bootstrap": "node scripts/local-d1.mjs bootstrap",
     "db:local:check": "node scripts/local-d1.mjs check"
