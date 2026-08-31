@@ -14,6 +14,10 @@
 
 ## Git hygiene for all contributors
 
+- The primary agent in the designated Git-coordination thread is the sole Git integration owner for the project. Every contributor and subagent must contact that coordinator when their task ends, including when the task is blocked, cancelled, or completed without code changes; do not treat a user-facing final reply as a substitute for this handoff.
+- The mandatory completion handoff must state: task outcome; branch and worktree path; exact `HEAD`; `git status --short --branch`; files changed; commits created; checks run and their results; remaining uncommitted or untracked files; known dependencies/conflicts; and the recommended integration or release action. Explicitly say when any item is `none` or was not run.
+- Contributors may create scoped commits on their own task branches, but must not merge, rebase, cherry-pick into an integration/release branch, push an integration/release branch, publish, deploy, remove worktrees, or delete branches unless the Git coordinator explicitly delegates that exact action. At completion, stop after the handoff and wait for the coordinator's integration decision.
+- The Git coordinator inventories all active work and handoffs, decides integration order, verifies the exact combined source state, performs or explicitly delegates Git integration and cleanup, and is the only agent that may declare work integrated or released.
 - Treat the main checkout as shared. Before writing, committing, integrating, or publishing, inspect `git status --short --branch` and `git worktree list`; assume every pre-existing change belongs to another contributor until proven otherwise.
 - Use one branch and preferably one dedicated worktree per task. Do not start new work in a dirty checkout containing unrelated changes. If the intended base or ownership is unclear, stop and coordinate instead of mixing batches.
 - Never discard or hide another contributor's work with `git reset`, `git restore`, `git checkout --`, `git clean`, or `git stash`. Never force-push. Do not pull, merge, or rebase a dirty shared checkout.
