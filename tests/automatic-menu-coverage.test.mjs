@@ -126,10 +126,14 @@ const HIGH_PROTEIN_SHARE = 0.4;
 const MINIMUM_OFFERED = { breakfast: 6, lunch: 15, dinner: 15 };
 
 function highProteinPerson(kcal, includedSlots) {
+  return proteinSharePerson(kcal, includedSlots, HIGH_PROTEIN_SHARE);
+}
+
+function proteinSharePerson(kcal, includedSlots, proteinShare) {
   const daily = nutrition.fitMacrosToCalories(kcal, {
-    protein: (kcal * HIGH_PROTEIN_SHARE) / 4,
+    protein: (kcal * proteinShare) / 4,
     fat: (kcal * 0.3) / 9,
-    carbs: (kcal * (0.7 - HIGH_PROTEIN_SHARE)) / 4,
+    carbs: (kcal * (0.7 - proteinShare)) / 4,
   });
   return { id: "variety", name: "Variety", daily, includedSlots, hardExclusions: [], dislikes: [] };
 }
@@ -156,5 +160,42 @@ test("high-protein daily targets keep real menu variety at 1600 and 3100 kcal", 
               failures.push(`${kcal}kcal ${style} d${days} ${slot} ${recipe.id}: ${(deviation * 100).toFixed(1)}% off target`);
           }
         }
+  assert.deepEqual(failures, [], failures.join("\n"));
+});
+
+test("snack slots stay viable across the pilot calorie, protein, and batch grid", async (t) => {
+  const { candidateRecipes, allMealSlots, recipeCookingSession, targetFor } = await automaticMenuRuntime();
+  const failures = [];
+  let checks = 0;
+
+  for (const kcal of [1200, 1400, 1600])
+    for (const proteinShare of [0.3, 0.4])
+      for (const slot of ["snack1", "snack2"])
+        for (const days of [3, 4, 5, 7]) {
+          const person = proteinSharePerson(kcal, allMealSlots, proteinShare);
+          const options = candidateRecipes(slot, "protein", [person], days, {
+            limit: "all",
+          });
+          const optionIds = options.map((recipe) => recipe.id);
+          checks += 1;
+          if (optionIds.length === 0)
+            failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: no candidates`);
+          if (optionIds.includes("tmpm-26746"))
+            failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: tmpm-26746 must stay lunch-only`);
+          if (optionIds.some((id) => id !== "tmpm-26965"))
+            failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: unexpected ${optionIds.join(",")}`);
+          const target = targetFor(person, slot);
+          for (const recipe of options) {
+            const portion = recipeCookingSession([person], slot, recipe, days).portions[0];
+            const deviation = (portion.actual.kcal - target.kcal) / target.kcal;
+            if (deviation < -0.1 || deviation > 0.05)
+              failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days} ${recipe.id}: ${(deviation * 100).toFixed(1)}% off target`);
+            const proteinFloor = nutrition.mealProteinFloor(target.kcal, target.protein);
+            if (portion.actual.protein + 0.2 < proteinFloor)
+              failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days} ${recipe.id}: ${portion.actual.protein}g protein < ${proteinFloor}g floor`);
+          }
+        }
+
+  t.diagnostic(`checks=${checks}; failures=${failures.length}`);
   assert.deepEqual(failures, [], failures.join("\n"));
 });

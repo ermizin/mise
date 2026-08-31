@@ -4726,6 +4726,21 @@ function solveRecipeFamilyMeal(
 ) {
   const direct = solveRecipeFamily(family, input);
   if (direct.viable || direct.reason === "hard_exclusion") return direct;
+  // A capped meal protein floor must also be reachable by the search. The
+  // primary solve still aims for the slot's full proportional protein share,
+  // but that objective can steer the best candidate just outside the calorie
+  // window even when a floor-clearing variant exists inside it.
+  if (
+    input.proteinFloor !== undefined &&
+    input.targetProtein !== undefined &&
+    input.targetProtein > input.proteinFloor
+  ) {
+    const floorAligned = solveRecipeFamily(family, {
+      ...input,
+      targetProtein: input.proteinFloor,
+    });
+    if (floorAligned.viable) return floorAligned;
+  }
   const maxRepeats = Math.max(
     1,
     Math.min(8, Math.floor(family.geometryLockedMax ?? 8)),
