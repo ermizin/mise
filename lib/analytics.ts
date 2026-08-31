@@ -6,6 +6,8 @@ export const analyticsEventNames = [
   "blocking_error",
   "shopping_opened",
   "shopping_item_checked",
+  "recipe_opened",
+  "recipe_tab_switched",
   "cooking_instructions_opened",
   "cooking_confirmed",
   "reminders_enabled",
@@ -21,6 +23,8 @@ export const analyticsErrorCodes = [
   "reminder_enable",
 ] as const;
 export type AnalyticsErrorCode = (typeof analyticsErrorCodes)[number];
+export const analyticsRecipeSections = ["cooking", "products", "dish"] as const;
+export type AnalyticsRecipeSection = (typeof analyticsRecipeSections)[number];
 
 export type AnalyticsEventInput = {
   eventId: string;
@@ -29,6 +33,8 @@ export type AnalyticsEventInput = {
   durationMs?: number;
   errorCode?: AnalyticsErrorCode;
   pilotEligible?: boolean;
+  from?: AnalyticsRecipeSection;
+  to?: AnalyticsRecipeSection;
   occurredAt?: number;
 };
 
@@ -47,6 +53,8 @@ const inputKeys = new Set([
   "durationMs",
   "errorCode",
   "pilotEligible",
+  "from",
+  "to",
   "occurredAt",
 ]);
 
@@ -89,6 +97,15 @@ export function parseAnalyticsEvent(
     typeof raw.pilotEligible !== "boolean"
   )
     return { error: "pilotEligible must be boolean" };
+  for (const key of ["from", "to"] as const) {
+    const section = raw[key];
+    if (
+      section !== undefined &&
+      (typeof section !== "string" ||
+        !analyticsRecipeSections.includes(section as AnalyticsRecipeSection))
+    )
+      return { error: `${key} is not an allowed recipe section` };
+  }
   if (
     raw.occurredAt !== undefined &&
     (!Number.isInteger(raw.occurredAt) ||
@@ -121,6 +138,16 @@ export function parseAnalyticsEvent(
     return { error: "errorCode is required for blocking_error" };
   if (eventName !== "blocking_error" && raw.errorCode !== undefined)
     return { error: "errorCode is only allowed for blocking_error" };
+  if (
+    eventName === "recipe_tab_switched" &&
+    (raw.from === undefined || raw.to === undefined || raw.from === raw.to)
+  )
+    return { error: "different from and to sections are required for recipe_tab_switched" };
+  if (
+    eventName !== "recipe_tab_switched" &&
+    (raw.from !== undefined || raw.to !== undefined)
+  )
+    return { error: "recipe sections are only allowed for recipe_tab_switched" };
 
   return {
     event: {
@@ -136,6 +163,8 @@ export function parseAnalyticsEvent(
       ...(raw.pilotEligible !== undefined
         ? { pilotEligible: raw.pilotEligible as boolean }
         : {}),
+      ...(raw.from ? { from: raw.from as AnalyticsRecipeSection } : {}),
+      ...(raw.to ? { to: raw.to as AnalyticsRecipeSection } : {}),
       ...(raw.occurredAt !== undefined
         ? { occurredAt: raw.occurredAt as number }
         : {}),

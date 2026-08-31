@@ -64,6 +64,8 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   durationMs: integer("duration_ms"),
   errorCode: text("error_code"),
   pilotEligible: integer("pilot_eligible", { mode: "boolean" }),
+  from: text("from_section"),
+  to: text("to_section"),
   occurredAt: integer("occurred_at").notNull(),
   recordedAt: integer("recorded_at").notNull(),
 }, (table) => [

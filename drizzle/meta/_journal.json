@@ -36,6 +36,13 @@
       "when": 1788000000000,
       "tag": "0004_atomic_push_leases",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1788210000000,
+      "tag": "0005_recipe_tab_analytics",
+      "breakpoints": true
     }
   ]
 }

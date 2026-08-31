@@ -32,18 +32,29 @@ test("runtime projection is complete for every recipe it admits", () => {
     assert.ok(recipe.visualFallback.emoji);
     assert.ok(recipe.recipeFamily, "an audited RecipeFamily is a runtime gate");
     assert.equal(recipe.recipeFamily.image.imageUrl, recipe.provenance.preview.imageUrl);
-    assert.equal(recipe.effort.parallelProcesses, 1, "the current card is an honest one-cook sequence");
+    assert.ok(recipe.effort.parallelProcesses >= 1);
     assert.ok([1, 2, 3].includes(recipe.effort.difficulty));
     const expectedDifficulty =
       recipe.effort.activeMinutes <= 15 && recipe.effort.cookware <= 1
         ? 1
-        : recipe.effort.activeMinutes <= 30 && recipe.effort.cookware <= 3
+        : recipe.effort.activeMinutes <= 30 || recipe.effort.cookware >= 2
           ? 2
           : 3;
     assert.equal(recipe.effort.difficulty, expectedDifficulty);
+    assert.ok(recipe.instructions.length > 0);
+    assert.ok(recipe.instructions.every((step) => Number.isFinite(step.minutes) && step.minutes >= 0));
+    assert.ok(recipe.instructions.every((step) => typeof step.hands === "boolean"));
+    assert.ok(recipe.instructions.every((step, index) => index === 0 || step.at >= recipe.instructions[index - 1].at));
     const familyIngredientIds = new Set(recipe.recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
     assert.ok(recipe.shoppingIngredients.every((ingredient) => familyIngredientIds.has(ingredient.sourceIngredientId)));
   }
+});
+
+test("timeline inference distinguishes active work from passive waiting", () => {
+  const steps = catalog.recipes.flatMap((recipe) => recipe.instructions);
+  assert.ok(steps.some((step) => step.hands), "some instructions require hands-on work");
+  assert.ok(steps.some((step) => !step.hands), "passive cooking or waiting is explicit");
+  assert.ok(steps.some((step) => step.minutes > 0), "source durations reach the runtime timeline");
 });
 
 test("every source ingredient is accounted for or blocks projection", () => {

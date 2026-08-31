@@ -92,6 +92,32 @@ test("analytics accepts only the bounded event contract", () => {
     "errorCode is not allowed",
   );
   assert.ok(analyticsEventNames.includes("reminders_enabled"));
+  assert.ok(analyticsEventNames.includes("recipe_opened"));
+  assert.ok(analyticsEventNames.includes("recipe_tab_switched"));
+  const tabSwitch = parseAnalyticsEvent(
+    {
+      eventId: ids.first,
+      eventName: "recipe_tab_switched",
+      from: "cooking",
+      to: "products",
+      occurredAt: now,
+    },
+    now,
+  );
+  assert.equal("error" in tabSwitch, false);
+  assert.equal(
+    parseAnalyticsEvent(
+      {
+        eventId: ids.first,
+        eventName: "recipe_tab_switched",
+        from: "cooking",
+        to: "cooking",
+        occurredAt: now,
+      },
+      now,
+    ).error,
+    "different from and to sections are required for recipe_tab_switched",
+  );
 });
 
 test("pilot report separates screen opens from confirmed purchase and cooking", () => {

@@ -35,6 +35,7 @@ import {
   recipeToFamily,
   solveRecipeFamily,
   type RecipeFamily,
+  type RecipeStep,
 } from "@/domain/recipe-engine";
 import {
   mealOccurrenceKey,
@@ -173,7 +174,7 @@ type RecipeFlex = {
   carbs: [number, number];
 };
 type RecipeEffort = {
-  level: "low" | "high";
+  level: "low" | "medium" | "high";
   knifeActions: number;
   cookware: number;
   activeActions: number;
@@ -187,6 +188,7 @@ type RecipeLocalization = {
   note?: string;
 };
 type RecipePacking = { portion: string; separate?: string; label: string };
+type RecipeSection = "cooking" | "products" | "dish";
 type Recipe = {
   id: string;
   slot: MealSlot;
@@ -200,6 +202,7 @@ type Recipe = {
   ingredients: Ingredient[];
   allergens: Allergen[];
   steps: string[];
+  instructions?: RecipeStep[];
   storageDays: number;
   freezable: boolean;
   provenance: RecipeProvenance;
@@ -239,6 +242,7 @@ type RuntimeRecipeRecord = {
     allergens?: string[];
   }[];
   steps: string[];
+  instructions?: RecipeStep[];
   storage: {
     refrigerator: string;
     freezer: string;
@@ -414,6 +418,8 @@ type ClientAnalyticsEvent =
   | "blocking_error"
   | "shopping_opened"
   | "shopping_item_checked"
+  | "recipe_opened"
+  | "recipe_tab_switched"
   | "cooking_instructions_opened"
   | "cooking_confirmed"
   | "reminders_enabled"
@@ -428,6 +434,8 @@ type ClientAnalyticsFields = {
     | "shopping_save"
     | "reminder_enable";
   pilotEligible?: boolean;
+  from?: RecipeSection;
+  to?: RecipeSection;
 };
 
 const onboardingStorageKey = "mise-onboarding-v3";
@@ -868,11 +876,22 @@ function estimateEffort(
     Math.max(3, steps.length * 3 + knifeActions * 2),
   );
   return {
-    level: knifeActions + cookware + activeActions <= 9 ? "low" : "high",
+    level:
+      activeMinutes <= 15 && cookware <= 1
+        ? "low"
+        : activeMinutes <= 30 || cookware >= 2
+          ? "medium"
+          : "high",
     knifeActions,
     cookware,
     activeActions,
     activeMinutes,
+    difficulty:
+      activeMinutes <= 15 && cookware <= 1
+        ? 1
+        : activeMinutes <= 30 || cookware >= 2
+          ? 2
+          : 3,
   };
 }
 type RecipeMeta = {
@@ -4180,6 +4199,7 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
         .join("; ")}.`,
       ...record.steps,
     ],
+    instructions: record.instructions,
     storageDays: Math.max(1, record.storage.refrigeratorDays ?? 3),
     freezable: record.storage.freezable,
     provenance: {
@@ -13554,6 +13574,18 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
   })} ${ingredient.unit}`;
 }
 
+function ingredientSortableAmount(ingredient: Ingredient, amount: number) {
+  if (ingredient.unit !== "шт.") return amount;
+  const canonicalId = canonicalIdForIngredient(ingredient);
+  const canonical = Object.values(canonicalIngredients).find(
+    (candidate) =>
+      candidate.id === canonicalId || candidate.aliases.includes(canonicalId),
+  );
+  return canonical?.unit.gramsPerUnit && canonical.unit.gramsPerUnit > 1
+    ? amount * canonical.unit.gramsPerUnit
+    : amount;
+}
+
 function batchCookingProgressKey(plan: ActivePlan, batch: Batch) {
   const selectionSignature = plan.mealSlots
     .map((slot) =>
@@ -14090,9 +14122,12 @@ function RecipeView({
   onReplace?: () => void;
 }) {
   const { recipe, batch, slot, plan } = context;
-  type RecipeSection = "cooking" | "products" | "dish";
   const sectionOrder: RecipeSection[] = ["cooking", "products", "dish"];
   const [section, setSection] = useState<RecipeSection>("cooking");
+  const [photoExpanded, setPhotoExpanded] = useState(false);
+  const photoTouchStart = useRef<number | null>(null);
+  const stepsRef = useRef<HTMLElement | null>(null);
+  const cookingInstructionsTracked = useRef(false);
   const [productScale, setProductScale] = useState<"cooking" | "portion">(
     "cooking",
   );
@@ -14108,6 +14143,7 @@ function RecipeView({
   function selectSection(next: RecipeSection) {
     if (next === section) return;
     sectionScroll.current[section] = window.scrollY;
+    void trackAnalytics("recipe_tab_switched", { from: section, to: next });
     setSectionMotion((current) => ({
       direction:
         sectionOrder.indexOf(next) > sectionOrder.indexOf(section) ? 1 : -1,
@@ -14183,9 +14219,27 @@ function RecipeView({
     return () => window.removeEventListener("popstate", onPop);
   }, []);
   useEffect(() => {
-    if (section === "cooking" && plan && batch)
-      void trackAnalytics("cooking_instructions_opened");
-  }, [batch, plan, section]);
+    void trackAnalytics("recipe_opened");
+  }, []);
+  useEffect(() => {
+    if (
+      section !== "cooking" ||
+      cookingInstructionsTracked.current ||
+      !stepsRef.current
+    )
+      return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        cookingInstructionsTracked.current = true;
+        void trackAnalytics("cooking_instructions_opened");
+        observer.disconnect();
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(stepsRef.current);
+    return () => observer.disconnect();
+  }, [section]);
   const previewSession =
     batch && slot
       ? recipeCookingSession(
@@ -14348,11 +14402,34 @@ function RecipeView({
     return previewSession?.cookingAmounts ?? {};
   })();
   const displaySteps = recipeDisplaySteps(recipe);
+  const timelineSteps = recipe.instructions?.length ? recipe.instructions : null;
+  const timelineHandsMinutes =
+    timelineSteps?.reduce(
+      (sum, step) => sum + (step.hands ? step.minutes : 0),
+      0,
+    ) ?? 0;
+  const timelinePassiveMinutes =
+    timelineSteps?.reduce(
+      (sum, step) => sum + (step.hands ? 0 : step.minutes),
+      0,
+    ) ?? 0;
+  const sortedIngredients = [...recipe.ingredients].sort(
+    (left, right) =>
+      ingredientSortableAmount(
+        right,
+        cookingAmounts[right.id] ?? right.quantity,
+      ) -
+      ingredientSortableAmount(
+        left,
+        cookingAmounts[left.id] ?? left.quantity,
+      ),
+  );
   const sectionMotionClass = sectionMotion.epoch
     ? ` recipe-section-motion ${sectionMotion.direction > 0 ? "motion-enter-right" : "motion-enter-left"}`
     : "";
   const difficulty =
-    recipe.effort.difficulty ?? (recipe.effort.level === "low" ? 1 : 3);
+    recipe.effort.difficulty ??
+    (recipe.effort.level === "low" ? 1 : recipe.effort.level === "medium" ? 2 : 3);
   const difficultyLabel = ["Просто", "Средне", "Сложно"][difficulty - 1];
   const cookingPortions = Math.max(1, (batch?.days ?? 1) * Math.max(1, eaters.length));
   const cookwareLabel =
@@ -14362,10 +14439,25 @@ function RecipeView({
         ? `${recipe.effort.cookware} предмета посуды`
         : `${recipe.effort.cookware} предметов посуды`;
   return (
-    <main className="app-shell recipe-detail">
-      <div className="recipe-hero-photo" aria-hidden>
+    <main
+      className={`app-shell recipe-detail${photoExpanded ? " photo-expanded" : ""}`}
+      onTouchStart={(event) => {
+        const touch = event.touches[0];
+        photoTouchStart.current =
+          window.scrollY <= 8 && touch ? touch.clientY : null;
+      }}
+      onTouchEnd={(event) => {
+        const start = photoTouchStart.current;
+        const end = event.changedTouches[0]?.clientY;
+        photoTouchStart.current = null;
+        if (start === null || end === undefined) return;
+        if (end - start >= 48) setPhotoExpanded(true);
+        if (start - end >= 48) setPhotoExpanded(false);
+      }}
+    >
+      <div className="recipe-hero-photo">
         <RecipeMedia recipe={recipe} eager />
-        <span />
+        <span className="recipe-cover-shade" aria-hidden />
       </div>
       <header className="detail-header">
         <button
@@ -14378,6 +14470,18 @@ function RecipeView({
         >
           <Icon name="chevron" className="back-chevron" />
         </button>
+        <button
+          className="icon-button glass recipe-photo-expand"
+          type="button"
+          aria-label={photoExpanded ? "Уменьшить фото" : "Увеличить фото"}
+          aria-expanded={photoExpanded}
+          onClick={() => setPhotoExpanded((current) => !current)}
+        >
+          <Icon
+            name="chevron"
+            className={photoExpanded ? "photo-chevron-up" : "photo-chevron-down"}
+          />
+        </button>
         <span className="glass recipe-source-pill">
           {originLabel}
         </span>
@@ -14389,6 +14493,22 @@ function RecipeView({
         </p>
         <h1>{recipe.title}</h1>
       </section>
+      {contactWarnings.length > 0 && (
+        <section className="allergy-warning glass-card" role="alert">
+          <span>!</span>
+          <div>
+            <h3>Общая готовка: перекрёстный контакт</h3>
+            <p>
+              {contactWarnings
+                .map(
+                  ({ person: eater, allergen }) =>
+                    `${allergenMeta[allergen].short} — нельзя ${eater.name}`,
+                )
+                .join("; ")}. Разделите инвентарь и поверхности.
+            </p>
+          </div>
+        </section>
+      )}
       <div className="detail-tabs glass-1" role="tablist" aria-label="Раздел рецепта">
         {(
           [
@@ -14431,22 +14551,6 @@ function RecipeView({
             {recipe.allergens.map((allergen) => (
               <span key={allergen}>{allergenMeta[allergen].label}</span>
             ))}
-          </div>
-        </section>
-      )}
-      {section === "dish" && contactWarnings.length > 0 && (
-        <section className="allergy-warning glass-card" role="alert">
-          <span>!</span>
-          <div>
-            <h3>Общая готовка: перекрёстный контакт</h3>
-            <p>
-              {contactWarnings
-                .map(
-                  ({ person: eater, allergen }) =>
-                    `${allergenMeta[allergen].short} — нельзя ${eater.name}`,
-                )
-                .join("; ")}. Разделите инвентарь и поверхности.
-            </p>
           </div>
         </section>
       )}
@@ -14611,7 +14715,7 @@ function RecipeView({
                 </button>
               </header>
               <div className="recipe-product-list">
-                {recipe.ingredients.slice(0, 6).map((ingredient) => (
+                {sortedIngredients.slice(0, 6).map((ingredient) => (
                   <div key={ingredient.id}>
                     <span>{ingredient.name}</span>
                     <b>{ingredientAmountLabel(ingredient, cookingAmounts[ingredient.id] ?? ingredient.quantity)}</b>
@@ -14622,22 +14726,52 @@ function RecipeView({
                 )}
               </div>
             </section>
-            <section className="recipe-steps-card glass-card">
-              <p className="kicker">Один повар · по порядку</p>
-              <h2>Шаги</h2>
-              <p className="recipe-timeline-note">
-                Точное время каждого шага ещё не размечено — показываем честную последовательность без выдуманных минут.
+            <section className="recipe-steps-card glass-card" ref={stepsRef}>
+              <p className="kicker">
+                {timelineSteps && (recipe.effort.parallelProcesses ?? 1) > 1
+                  ? `${recipe.effort.parallelProcesses} процесса параллельно`
+                  : "Один повар · по порядку"}
               </p>
-          <ol
-                className="cooking-steps"
-          >
-            {displaySteps.map((text, index) => (
-              <li key={`${text}-${index}`}>
+              <h2>Шаги</h2>
+              {timelineSteps ? (
+                <>
+                  <p className="recipe-timeline-summary">
+                    {timelineHandsMinutes > 0
+                      ? `${timelineHandsMinutes} мин руками`
+                      : "Активное время без точной отметки"}
+                    {timelinePassiveMinutes > 0
+                      ? ` · ${timelinePassiveMinutes} мин без вас`
+                      : ""}
+                  </p>
+                  <ol className="recipe-timeline">
+                    {timelineSteps.map((step, index) => (
+                      <li
+                        className={step.hands ? "is-hands" : "is-passive"}
+                        key={`${step.at}-${step.text}-${index}`}
+                      >
+                        <time>{step.at === 0 ? "Старт" : `${step.at} мин`}</time>
+                        <span className="recipe-timeline-node" aria-hidden />
+                        <div>
+                          <small>
+                            {step.hands ? "Руками" : "Без вашего участия"}
+                            {step.minutes > 0 ? ` · ${step.minutes} мин` : " · время не указано"}
+                          </small>
+                          <p>{step.text}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              ) : (
+                <ol className="cooking-steps">
+                  {displaySteps.map((text, index) => (
+                    <li key={`${text}-${index}`}>
                       <span>{index + 1}</span>
-                <p>{text}</p>
-              </li>
-            ))}
-          </ol>
+                      <p>{text}</p>
+                    </li>
+                  ))}
+                </ol>
+              )}
             </section>
           </div>
         )}
@@ -14648,7 +14782,7 @@ function RecipeView({
           >
             <header>
               <div>
-                <p className="kicker">Без отметок кладовой</p>
+                <p className="kicker">Состав рецепта</p>
                 <h2>Все продукты</h2>
               </div>
               {batch && (
@@ -14670,9 +14804,9 @@ function RecipeView({
                 </div>
               )}
             </header>
-            <p className="recipe-products-neutral">Нейтральный список рецепта: без «есть» и «докупить».</p>
+            <p className="recipe-products-neutral">Количество на готовку или одну базовую порцию.</p>
             <div className="recipe-product-list is-full">
-              {recipe.ingredients.map((ingredient) => (
+              {sortedIngredients.map((ingredient) => (
                 <div key={ingredient.id}>
                   <span>{ingredient.name}</span>
                   <b>
@@ -14764,6 +14898,15 @@ function RecipeView({
       </section>
       {section === "dish" && (
         <>
+      <section className="recipe-packing glass-card">
+        <p className="kicker">Упаковка</p>
+        <h2>Как разложить блюдо</h2>
+        <p>{recipe.packing.portion}</p>
+        {recipe.packing.separate && (
+          <p><b>Хранить отдельно:</b> {recipe.packing.separate}</p>
+        )}
+        <small><b>Подпись:</b> {recipe.packing.label}</small>
+      </section>
       <section className="recipe-storage glass-card">
         <p className="kicker">Ориентиры хранения</p>
         <h2>

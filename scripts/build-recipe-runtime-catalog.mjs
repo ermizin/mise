@@ -4,6 +4,10 @@ import {
   canonicalIngredients,
   deriveRecipeFamilyFromAuditedCandidate,
   normalizeRawRecipeCandidate,
+  parallelRecipeProcesses,
+  recipeEffortDifficulty,
+  recipeEffortLevel,
+  recipeStepsFromInstructions,
 } from "../domain/recipe-engine.ts";
 import { loadRecipeCorpusEntries } from "./recipe-corpus-overlay.mjs";
 import { createHash } from "node:crypto";
@@ -196,24 +200,17 @@ function effortFor(candidate, steps) {
   );
   const knifeActions = steps.filter((step) => /нареж|измельч|натр|поруб/i.test(step.text ?? "")).length;
   const activeActions = steps.length + knifeActions;
-  // Runtime cards are deliberately sequential until the complete timing
-  // overlay exists. Do not infer parallel work from prose.
-  const parallelProcesses = 1;
   const activeMinutes = Math.min(total, Math.max(3, activeActions * 3 + knifeActions * 2));
-  const difficulty =
-    activeMinutes <= 15 && cookware <= 1 && parallelProcesses <= 1
-      ? 1
-      : activeMinutes <= 30 && cookware <= 3 && parallelProcesses <= 2
-        ? 2
-        : 3;
+  const instructions = recipeStepsFromInstructions(steps);
+  const parallelProcesses = parallelRecipeProcesses(instructions);
   return {
-    level: cookware + activeActions + knifeActions <= 9 ? "low" : "high",
+    level: recipeEffortLevel(activeMinutes, cookware),
     knifeActions,
     cookware,
     activeActions,
     activeMinutes,
     parallelProcesses,
-    difficulty,
+    difficulty: recipeEffortDifficulty(activeMinutes, cookware),
   };
 }
 
@@ -222,7 +219,9 @@ function normalizationFailure(card, code, detail) {
 }
 
 function expandedInstructionDraft(steps) {
-  const expanded = steps.flatMap((step, stepIndex) => {
+  const terminalIdBySourceId = new Map();
+  const expanded = [];
+  steps.forEach((step, stepIndex) => {
     const parts = String(step.text ?? "")
       .split(/(?<=[.!?])\s+(?=[А-ЯЁ])/u)
       .map((part) => part.trim())
@@ -234,19 +233,33 @@ function expandedInstructionDraft(steps) {
     }
     if (merged.length > 1 && merged[0].length < 20)
       merged.splice(0, 2, `${merged[0]} ${merged[1]}`);
-    return merged.map((text, partIndex) => ({
-      ...step,
-      id: `${step.id || `editorial-step-${stepIndex + 1}`}-part-${partIndex + 1}`,
-      text,
-      dependsOn: [],
-    }));
+    const sourceId = step.id || `editorial-step-${stepIndex + 1}`;
+    const sourceDependencies = (step.dependsOn ?? []).flatMap((dependencyId) => {
+      const terminalId = terminalIdBySourceId.get(dependencyId);
+      return terminalId ? [terminalId] : [];
+    });
+    merged.forEach((text, partIndex) => {
+      const id = `${sourceId}-part-${partIndex + 1}`;
+      const previousPartId = partIndex > 0 ? `${sourceId}-part-${partIndex}` : null;
+      expanded.push({
+        ...step,
+        id,
+        text,
+        ...(partIndex === merged.length - 1 && step.duration
+          ? { duration: step.duration }
+          : { duration: undefined }),
+        dependsOn: previousPartId ? [previousPartId] : sourceDependencies,
+      });
+      terminalIdBySourceId.set(sourceId, id);
+    });
   });
   if (expanded.length === 1)
     expanded.push({
       ...expanded[0],
       id: `${expanded[0].id}-pack`,
       text: "Разделите готовый выход по числу рассчитанных контейнеров, подпишите имя, приём пищи и дату, затем уберите на хранение.",
-      dependsOn: [],
+      duration: undefined,
+      dependsOn: [expanded[0].id],
     });
   return expanded;
 }
@@ -341,6 +354,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
     failures.push(["missing_packing", "Packing guidance is incomplete."]);
   }
   const steps = instructionDraft.map((step) => step.text).filter(Boolean);
+  const instructions = recipeStepsFromInstructions(instructionDraft);
   if (!steps.length) failures.push(["missing_paraphrased_steps", "No editorial paraphrased steps."]);
 
   const shoppingIngredients = [];
@@ -466,6 +480,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
       shoppingIngredients,
       procedureIngredients,
       steps,
+      instructions,
       storage: {
         refrigerator: candidate.storage.refrigerator,
         freezer: candidate.storage.freezer,

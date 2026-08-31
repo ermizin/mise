@@ -321,7 +321,7 @@ test("every recipe has bounded flexibility, effort and storage guidance", () => 
       assert.ok(range[0] > 0 && range[0] <= 1);
       assert.ok(range[1] >= 1 && range[1] <= 1.5);
     }
-    assert.ok(["low", "high"].includes(item.effort.level));
+    assert.ok(["low", "medium", "high"].includes(item.effort.level));
     assert.ok(item.effort.knifeActions >= 0);
     assert.ok(item.effort.cookware >= 1);
     assert.ok(item.effort.activeActions >= 1);

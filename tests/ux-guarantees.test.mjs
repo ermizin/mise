@@ -159,12 +159,14 @@ test("recipe card 14A keeps cooking, products and dish data actionable", async (
   for (const label of ["Готовка", "Продукты", "Блюдо"]) assert.match(page, new RegExp(label));
   assert.match(page, /useState<RecipeSection>\("cooking"\)/, "every opening starts on cooking");
   assert.match(page, /role="tablist"[\s\S]*?role="tab"[\s\S]*?role="tabpanel"/, "the three sections expose tab semantics");
-  assert.match(page, /recipe\.ingredients\.slice\(0, 6\)/, "cooking keeps a brief product list");
+  assert.match(page, /sortedIngredients\.slice\(0, 6\)/, "cooking keeps a quantity-sorted brief product list");
   assert.match(page, /На \{cookingPortions\} порц\./, "the full list exposes the selected cooking scale");
   assert.match(page, /На 1 порцию/, "the full list can return to the base portion");
   assert.match(page, /cookingAmounts\[ingredient\.id\]/, "cooking reads the calculated batch amount");
-  assert.match(page, /Нейтральный список рецепта/, "the product tab does not pretend to know pantry state");
-  assert.match(page, /Точное время каждого шага ещё не размечено/, "the card does not invent a hands/at timeline");
+  assert.match(page, /Количество на готовку или одну базовую порцию/, "the product tab remains a neutral quantity view");
+  assert.match(page, /recipe\.instructions\?\.length/, "the card uses structured instructions when available");
+  assert.match(page, /className="recipe-timeline"/, "the card renders the projected timeline");
+  assert.match(page, /className="cooking-steps"/, "legacy recipes retain the numbered fallback");
   assert.match(page, /recipe\.effort\.difficulty/, "the card renders the projected difficulty");
   assert.match(page, /Начать готовку/, "a planned recipe connects to cooking mode");
   assert.match(page, /leaveRecipeFor\(\(\) => editDayMenu/, "replace remains connected to menu editing");

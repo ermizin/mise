@@ -165,6 +165,121 @@ export type RecipeInstruction = {
   dependsOn?: string[];
 };
 
+export type RecipeEffortLevel = "low" | "medium" | "high";
+
+export type RecipeStep = {
+  text: string;
+  minutes: number;
+  hands: boolean;
+  at: number;
+  ingredientIds: string[];
+};
+
+export type RecipeEffortProjection = {
+  level: RecipeEffortLevel;
+  knifeActions: number;
+  cookware: number;
+  activeActions: number;
+  activeMinutes: number;
+  parallelProcesses: number;
+  difficulty: 1 | 2 | 3;
+};
+
+export function recipeEffortLevel(
+  activeMinutes: number,
+  cookware: number,
+): RecipeEffortLevel {
+  if (activeMinutes <= 15 && cookware <= 1) return "low";
+  if (activeMinutes <= 30 || cookware >= 2) return "medium";
+  return "high";
+}
+
+export function recipeEffortDifficulty(
+  activeMinutes: number,
+  cookware: number,
+): 1 | 2 | 3 {
+  const level = recipeEffortLevel(activeMinutes, cookware);
+  return level === "low" ? 1 : level === "medium" ? 2 : 3;
+}
+
+export function recipeInstructionMinutes(duration?: string): number {
+  if (!duration?.trim()) return 0;
+  const normalized = duration.replaceAll(",", ".").replaceAll("−", "–");
+  const expressions = normalized.matchAll(
+    /(\d+(?:\.\d+)?)(?:\s*(?:–|-|до)\s*(\d+(?:\.\d+)?))?\s*(сек(?:унд[аы]?)?|мин(?:ут[аы]?)?|ч(?:ас(?:а|ов)?)?)/giu,
+  );
+  let minutes = 0;
+  for (const match of expressions) {
+    const upper = Number(match[2] ?? match[1]);
+    if (!Number.isFinite(upper)) continue;
+    const unit = match[3].toLowerCase();
+    minutes += unit.startsWith("ч")
+      ? upper * 60
+      : unit.startsWith("сек")
+        ? upper / 60
+        : upper;
+  }
+  return Math.max(0, Math.round(minutes));
+}
+
+export function recipeInstructionHands(
+  instruction: Pick<RecipeInstruction, "action" | "duration" | "text">,
+): boolean {
+  const action = instruction.action?.toLowerCase() ?? "";
+  const passiveAction = /(?:^|_)(?:boil|simmer|bake|roast|slow_cook|cool|rest|chill|refrigerate|marinate|infuse|thaw|defrost|freeze)(?:$|_)/u;
+  const passiveText = /(?:осты|охлад|наста|марин|размороз|замороз|запека|варите|томите)/iu;
+  return !passiveAction.test(action) &&
+    !passiveText.test(`${instruction.duration ?? ""} ${instruction.text}`);
+}
+
+export function recipeStepsFromInstructions(
+  instructions: RecipeInstruction[],
+): RecipeStep[] {
+  const scheduled = new Map<string, RecipeStep>();
+  const indexed = instructions.map((instruction, index) => {
+    const minutes = recipeInstructionMinutes(instruction.duration);
+    const dependencyEnds = (instruction.dependsOn ?? []).flatMap((dependencyId) => {
+      const dependency = scheduled.get(dependencyId);
+      return dependency ? [dependency.at + dependency.minutes] : [];
+    });
+    const step: RecipeStep = {
+      text: instruction.text,
+      minutes,
+      hands: recipeInstructionHands(instruction),
+      at: dependencyEnds.length ? Math.max(...dependencyEnds) : 0,
+      ingredientIds: [...instruction.ingredientIds],
+    };
+    scheduled.set(instruction.id, step);
+    return { ...step, index };
+  });
+  return indexed
+    .sort((left, right) => left.at - right.at || left.index - right.index)
+    .map((step) => ({
+      text: step.text,
+      minutes: step.minutes,
+      hands: step.hands,
+      at: step.at,
+      ingredientIds: step.ingredientIds,
+    }));
+}
+
+export function parallelRecipeProcesses(steps: RecipeStep[]): number {
+  const events = steps
+    .filter((step) => step.minutes > 0)
+    .flatMap((step) => [
+      { at: step.at, delta: 1 },
+      { at: step.at + step.minutes, delta: -1 },
+    ])
+    .sort((left, right) => left.at - right.at || left.delta - right.delta);
+  let active = 0;
+  let maximum = 1;
+  for (const event of events) {
+    active += event.delta;
+    maximum = Math.max(maximum, active);
+  }
+  return maximum;
+}
+
 export type RecipeFamily = {
   id: string;
   title: string;
