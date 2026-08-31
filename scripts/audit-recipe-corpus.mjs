@@ -101,6 +101,7 @@ export async function auditRecipeCorpus() {
 
     const normalized = engine.normalizeRawRecipeCandidate(candidate, { publisher, accessedAt });
     const isRehabilitatedGoodFood = candidate.miseRehabilitation?.kind === "goodfood_measured_overlay_v1";
+    const isMeasuredEditorial = candidate.miseEditorialAdaptation?.kind === "simple_home_measured_adaptation_v1";
     const unresolved = normalized.ingredientMappings.filter((mapping) => mapping.status === "unresolved").map((mapping) => mapping.sourceName);
     if (unresolved.length) add(AUDIT_REASON.UNRESOLVED_INGREDIENT_MAPPING, "review_required", { ingredients: unresolved });
 
@@ -128,15 +129,15 @@ export async function auditRecipeCorpus() {
       .filter((mapping) => mapping.canonicalIngredientId && engine.canonicalIngredients[mapping.canonicalIngredientId]?.reference?.dataType === "label_required")
       .map((mapping) => mapping.sourceName);
     if (labelDependent.length) {
-      const allAveraged = (isMealPrep || isRehabilitatedGoodFood) && normalized.ingredientMappings
+      const allAveraged = (isMealPrep || isRehabilitatedGoodFood || isMeasuredEditorial) && normalized.ingredientMappings
         .filter((mapping) => mapping.canonicalIngredientId && engine.canonicalIngredients[mapping.canonicalIngredientId]?.reference?.dataType === "label_required")
-        .every((mapping) => isRehabilitatedGoodFood || policy.labelProfiles.canonicalIds.has(mapping.canonicalIngredientId));
+        .every((mapping) => isRehabilitatedGoodFood || isMeasuredEditorial || policy.labelProfiles.canonicalIds.has(mapping.canonicalIngredientId));
       add(AUDIT_REASON.LABEL_DEPENDENT_INGREDIENT, allAveraged ? "info" : "review_required", { ingredients: labelDependent, policy: allAveraged ? "editorial_average_with_check_label" : null });
     }
 
     const localization = candidate.localization ?? {};
     if (localization.excludeSuggested || localization.fit === "unfamiliar" || localization.availability === "niche") {
-      const documented = (isMealPrep || isRehabilitatedGoodFood) && hasDocumentedLocalization(candidate);
+      const documented = (isMealPrep || isRehabilitatedGoodFood || isMeasuredEditorial) && hasDocumentedLocalization(candidate);
       add(AUDIT_REASON.NICHE_LOCALIZATION, documented ? "info" : "review_required", {
         fit: localization.fit,
         availability: localization.availability,

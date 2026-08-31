@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-08-31T10:36:27.992Z",
+  "source": {
+    "report": "simple-home-recipes-review",
+    "datasetVersion": "2026-08-31-v1",
+    "itemCount": 28
+  },
+  "decisions": [
+    {
+      "recipeId": "new-home-buckwheat-legs",
+      "title": "Гречка с куриными ножками в духовке",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/115681-grechka-s-kurinymi-nozhkami-v-dukhovke-1645019420",
+      "decision": "edit",
+      "note": "включи соус",
+      "updatedAt": "2026-08-31T10:30:23.263Z"
+    },
+    {
+      "recipeId": "new-home-chicken-cutlets-potato",
+      "title": "Куриные котлеты с картофелем",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/118461-kotlety-kurinye-s-kartofelem-1645478681",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:30:35.459Z"
+    },
+    {
+      "recipeId": "new-home-cutlets-mash",
+      "title": "Котлеты с картофельным пюре и соусом",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/250423-kotlety-s-piure-i-sousom",
+      "decision": "edit",
+      "note": "нужно сделать покороче",
+      "updatedAt": "2026-08-31T10:30:58.815Z"
+    },
+    {
+      "recipeId": "new-home-merchant-buckwheat",
+      "title": "Гречка по-купечески с курицей",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/182512-grechka-po-kupecheski-s-kurinoi-grudkoi-i-lukom",
+      "decision": "edit",
+      "note": "не все ингредиенты перечислил",
+      "updatedAt": "2026-08-31T10:31:35.706Z"
+    },
+    {
+      "recipeId": "new-home-buckwheat-mushroom",
+      "title": "Гречка с курицей и грибами в духовке",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/167142-grechka-s-kuritsei-i-gribami-v-dukhovke-1681322055",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:33:07.332Z"
+    },
+    {
+      "recipeId": "new-home-simple-buckwheat",
+      "title": "Простая гречка с курицей",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/11952-grechka-s-kuricei",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:33:11.696Z"
+    },
+    {
+      "recipeId": "new-home-stewed-cabbage",
+      "title": "Тушёная капуста с мясом",
+      "kind": "new",
+      "group": "home",
+      "sourceUrl": "https://food.ru/recipes/194336-kapusta-tushenaia-s-miasom",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:33:19.715Z"
+    },
+    {
+      "recipeId": "new-oats-banana-blueberry",
+      "title": "Ночная овсянка с бананом, черникой и пеканом",
+      "kind": "new",
+      "group": "oats",
+      "sourceUrl": "https://www.skinnytaste.com/skinny-overnight-oats-in-jar/",
+      "decision": "edit",
+      "note": "в белковую версию можно просто протика нахерачить",
+      "updatedAt": "2026-08-31T10:33:36.089Z"
+    },
+    {
+      "recipeId": "new-oats-chocolate",
+      "title": "Шоколадная ночная овсянка",
+      "kind": "new",
+      "group": "oats",
+      "sourceUrl": "https://www.budgetbytes.com/double-chocolate-overnight-oats/",
+      "decision": "edit",
+      "note": "оставь шоколад просто покрошенную плитку",
+      "updatedAt": "2026-08-31T10:33:52.056Z"
+    },
+    {
+      "recipeId": "new-oats-apple",
+      "title": "Ночная овсянка «Яблочный пирог»",
+      "kind": "new",
+      "group": "oats",
+      "sourceUrl": "https://www.skinnytaste.com/apple-pie-overnight-oats/",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:33:57.850Z"
+    },
+    {
+      "recipeId": "new-oats-carrot",
+      "title": "Ночная овсянка «Морковный торт»",
+      "kind": "new",
+      "group": "oats",
+      "sourceUrl": "https://thegirlonbloor.com/carrot-cake-overnight-oats/",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:34:04.848Z"
+    },
+    {
+      "recipeId": "new-oats-blueberry-almond",
+      "title": "Ночная овсянка с черникой и миндалём",
+      "kind": "new",
+      "group": "oats",
+      "sourceUrl": "https://www.budgetbytes.com/no-sugar-added-blueberry-almond-overnight-oats/",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:34:07.900Z"
+    },
+    {
+      "recipeId": "new-oats-cinnamon-raisin",
+      "title": "Ночная овсянка с корицей и изюмом",
+      "kind": "new",
+      "group": "oats",
+      "sourceUrl": "https://www.skinnytaste.com/cinnamon-raisin-overnight-oats/",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:34:15.900Z"
+    },
+    {
+      "recipeId": "new-sandwich-boiled-chicken",
+      "title": "Сэндвич с варёной курицей и сырным соусом",
+      "kind": "new",
+      "group": "sandwich",
+      "sourceUrl": "https://food.ru/recipes/222344-sendvich-s-kuritsei-i-syrnym-sousom-1720730429",
+      "decision": "edit",
+      "note": "соусы есть низкокалорийные типа \"zero\", ПИШИ ИХ",
+      "updatedAt": "2026-08-31T10:34:41.540Z"
+    },
+    {
+      "recipeId": "new-sandwich-smoked-chicken",
+      "title": "Сэндвич с копчёной курицей и яйцом",
+      "kind": "new",
+      "group": "sandwich",
+      "sourceUrl": "https://food.ru/recipes/253548-sendvichi-s-kopchenoi-kuricei",
+      "decision": "edit",
+      "note": "соусы есть низкокалорийные типа \"zero\", ПИШИ ИХ",
+      "updatedAt": "2026-08-31T10:34:52.287Z"
+    },
+    {
+      "recipeId": "new-sandwich-turkey-ham",
+      "title": "Сэндвич с хорошей ветчиной из индейки",
+      "kind": "new",
+      "group": "sandwich",
+      "sourceUrl": "https://ovkuse.ru/recipes/16398834",
+      "decision": "edit",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:00.303Z"
+    },
+    {
+      "recipeId": "new-sandwich-balyk",
+      "title": "Простой сэндвич с балыком",
+      "kind": "new",
+      "group": "sandwich",
+      "sourceUrl": "https://www.gastronom.ru/recipe/34297/sendvich-s-balykom",
+      "decision": "edit",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:04.935Z"
+    },
+    {
+      "recipeId": "new-sandwich-caesar",
+      "title": "Открытый сэндвич «Цезарь» с курицей",
+      "kind": "new",
+      "group": "sandwich",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/open-chicken-caesar-sandwich",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:12.104Z"
+    },
+    {
+      "recipeId": "new-sandwich-paprika",
+      "title": "Чиабатта с курицей и копчёной паприкой",
+      "kind": "new",
+      "group": "sandwich",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/paprika-chicken-ciabattas",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:17.037Z"
+    },
+    {
+      "recipeId": "tmpm-22550",
+      "title": "Куриные фрикадельки",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://mealprepmanual.com/chicken-meatballs/",
+      "decision": "reject",
+      "note": "это в бэклог к заготовкам",
+      "updatedAt": "2026-08-31T10:35:32.018Z"
+    },
+    {
+      "recipeId": "goodfood-family-meals-easy-fish-cakes",
+      "title": "Простые рыбные котлеты",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-cakes",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:42.561Z"
+    },
+    {
+      "recipeId": "goodfood-family-meals-chicken-veg-casserole",
+      "title": "Куриное рагу с овощами",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-chicken-veg-casserole",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:50.752Z"
+    },
+    {
+      "recipeId": "goodfood-banana-overnight-oats",
+      "title": "Ночная овсянка с бананом",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/banana-overnight-oats",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:53.170Z"
+    },
+    {
+      "recipeId": "tmpm-23545",
+      "title": "Запечённая овсянка с бананом и корицей",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://mealprepmanual.com/banana-cinnamon-baked-oatmeal/",
+      "decision": "edit",
+      "note": "",
+      "updatedAt": "2026-08-31T10:35:58.154Z"
+    },
+    {
+      "recipeId": "goodfood-chicken-pasta-bake",
+      "title": "Запеканка из пасты с курицей",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/chicken-pasta-bake",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:36:04.088Z"
+    },
+    {
+      "recipeId": "goodfood-tuna-pasta-bake",
+      "title": "Запеканка из пасты с тунцом",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/tuna-pasta-bake",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:36:07.904Z"
+    },
+    {
+      "recipeId": "tmpm-25453",
+      "title": "Протеиновые тефтели из говядины",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://mealprepmanual.com/high-protein-beef-meatballs/",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:36:15.437Z"
+    },
+    {
+      "recipeId": "tmpm-26528",
+      "title": "Картофель с говядиной и сырным соусом",
+      "kind": "existing",
+      "group": "existing",
+      "sourceUrl": "https://mealprepmanual.com/beefy-queso-loaded-potatoes/",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:36:22.255Z"
+    }
+  ]
+}

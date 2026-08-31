@@ -173,7 +173,11 @@ function auditIngredient(sourceIngredient, mapping, policy, acceptsEditorialAver
   }
   const warnings = [];
   if (canonical.reference?.dataType === "label_required") {
-    const averaged = acceptsEditorialAverage && (policy?.labelProfiles?.canonicalIds?.has(canonical.id) || acceptsEditorialAverage === "rehabilitated_goodfood");
+    const averaged = acceptsEditorialAverage && (
+      policy?.labelProfiles?.canonicalIds?.has(canonical.id) ||
+      acceptsEditorialAverage === "rehabilitated_goodfood" ||
+      acceptsEditorialAverage === "simple_home_editorial"
+    );
     warnings.push(reason(NUTRITION_AUDIT_REASON.LABEL_REQUIRED, averaged ? "info" : "review_required", { sourceName, canonicalId: canonical.id, policy: averaged ? "editorial_average_with_check_label" : null }));
   }
   return { complete: true, nutrition, warnings };
@@ -183,7 +187,10 @@ export function auditNutritionEntry(candidate, { publisher = "unknown", accessed
   const reasons = [];
   const isMealPrep = String(candidate.id ?? "").startsWith("tmpm-");
   const isRehabilitatedGoodFood = candidate.miseRehabilitation?.kind === "goodfood_measured_overlay_v1";
-  const acceptsEditorialAverage = isRehabilitatedGoodFood ? "rehabilitated_goodfood" : isMealPrep;
+  const isMeasuredEditorial = candidate.miseEditorialAdaptation?.kind === "simple_home_measured_adaptation_v1";
+  const acceptsEditorialAverage = isRehabilitatedGoodFood
+    ? "rehabilitated_goodfood"
+    : isMeasuredEditorial ? "simple_home_editorial" : isMealPrep;
   const sourceNutrition = sourceNutritionFor(candidate);
   const servings = Number(candidate.servings);
   if (!finitePositive(servings)) reasons.push(reason(NUTRITION_AUDIT_REASON.INVALID_YIELD, "blocked", { servings: candidate.servings ?? null }));
@@ -213,7 +220,7 @@ export function auditNutritionEntry(candidate, { publisher = "unknown", accessed
   if (calculatedNutrition) {
     comparison = deltaReport(calculatedNutrition, sourceNutrition);
     reasons.push(comparison.outside.length
-      ? reason(NUTRITION_AUDIT_REASON.DELTA_OUTSIDE_TOLERANCE, (isMealPrep || isRehabilitatedGoodFood) ? "info" : "review_required", { fields: comparison.outside, ...((isMealPrep || isRehabilitatedGoodFood) ? { policy: "independent_calculation_is_runtime_truth" } : {}) })
+      ? reason(NUTRITION_AUDIT_REASON.DELTA_OUTSIDE_TOLERANCE, (isMealPrep || isRehabilitatedGoodFood || isMeasuredEditorial) ? "info" : "review_required", { fields: comparison.outside, ...((isMealPrep || isRehabilitatedGoodFood || isMeasuredEditorial) ? { policy: "independent_calculation_is_runtime_truth" } : {}) })
       : reason(NUTRITION_AUDIT_REASON.DELTA_WITHIN_TOLERANCE, "info"));
     if (!comparison.outside.length) reasons.push(reason(NUTRITION_AUDIT_REASON.INDEPENDENT_CALCULATION_COMPLETE, "info"));
   }
@@ -265,5 +272,10 @@ export async function auditRecipeNutritionCorpus() {
 }
 
 if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
-  process.stdout.write(`${JSON.stringify(await auditRecipeNutritionCorpus())}\n`);
+  auditRecipeNutritionCorpus()
+    .then((report) => process.stdout.write(`${JSON.stringify(report)}\n`))
+    .catch((error) => {
+      process.stderr.write(`${error.stack ?? error}\n`);
+      process.exitCode = 1;
+    });
 }

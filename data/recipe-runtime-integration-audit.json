@@ -1,25 +1,25 @@
 {
   "schemaVersion": 2,
   "releaseAuditCounts": {
-    "ready": 209,
+    "ready": 243,
     "review_required": 6,
     "blocked": 6
   },
-  "auditedReadyCards": 209,
-  "runtimeReleaseableCards": 209,
+  "auditedReadyCards": 243,
+  "runtimeReleaseableCards": 243,
   "recommendedReleaseBehavior": "runtime_projection_ready",
   "failureCounts": {},
   "coverage": {
     "bySlot": {
-      "breakfast": 25,
-      "dinner": 90,
-      "lunch": 83,
+      "breakfast": 41,
+      "dinner": 105,
+      "lunch": 86,
       "snack1": 11,
       "snack2": 0
     },
     "byReleaseMenuTag": {
-      "budget": 209,
-      "protein": 141
+      "budget": 243,
+      "protein": 176
     }
   },
   "cards": [
@@ -1387,7 +1387,7 @@
       "slot": "breakfast",
       "title": "Ночная овсянка с бананом",
       "recipeFamilyId": "raw-goodfood-banana-overnight-oats",
-      "shoppingIngredientCount": 5,
+      "shoppingIngredientCount": 6,
       "procedureIngredientCount": 0,
       "media": "source_preview"
     },
@@ -1901,6 +1901,312 @@
       "title": "Ньокки из батата с томатным соусом",
       "recipeFamilyId": "raw-goodfood-sweet-potato-gnocchi-with-tomato-sauce",
       "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-home-buckwheat-legs",
+      "slot": "dinner",
+      "title": "Гречка с куриными бёдрами и йогуртовым соусом",
+      "recipeFamilyId": "raw-new-home-buckwheat-legs",
+      "shoppingIngredientCount": 11,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-home-cutlets-mash",
+      "slot": "dinner",
+      "title": "Куриные котлеты с пюре и быстрым соусом",
+      "recipeFamilyId": "raw-new-home-cutlets-mash",
+      "shoppingIngredientCount": 10,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-home-merchant-buckwheat",
+      "slot": "lunch",
+      "title": "Гречка по-купечески с курицей",
+      "recipeFamilyId": "raw-new-home-merchant-buckwheat",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-home-simple-buckwheat",
+      "slot": "lunch",
+      "title": "Простая гречка с курицей",
+      "recipeFamilyId": "raw-new-home-simple-buckwheat",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-home-stewed-cabbage",
+      "slot": "dinner",
+      "title": "Тушёная капуста со свиной вырезкой",
+      "recipeFamilyId": "raw-new-home-stewed-cabbage",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 3,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-oats-banana-blueberry",
+      "slot": "breakfast",
+      "title": "Ночная овсянка с бананом и черникой",
+      "recipeFamilyId": "raw-new-oats-banana-blueberry",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-oats-chocolate",
+      "slot": "breakfast",
+      "title": "Шоколадная ночная овсянка",
+      "recipeFamilyId": "raw-new-oats-chocolate",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-oats-apple",
+      "slot": "breakfast",
+      "title": "Ночная овсянка «Яблочный пирог»",
+      "recipeFamilyId": "raw-new-oats-apple",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-oats-carrot",
+      "slot": "breakfast",
+      "title": "Ночная овсянка «Морковный торт»",
+      "recipeFamilyId": "raw-new-oats-carrot",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-oats-blueberry-almond",
+      "slot": "breakfast",
+      "title": "Ночная овсянка с черникой и миндалём",
+      "recipeFamilyId": "raw-new-oats-blueberry-almond",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-oats-cinnamon-raisin",
+      "slot": "breakfast",
+      "title": "Ночная овсянка с корицей и изюмом",
+      "recipeFamilyId": "raw-new-oats-cinnamon-raisin",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-sandwich-boiled-chicken",
+      "slot": "breakfast",
+      "title": "Сэндвич с варёной курицей и zero-соусом",
+      "recipeFamilyId": "raw-new-sandwich-boiled-chicken",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-sandwich-smoked-chicken",
+      "slot": "breakfast",
+      "title": "Сэндвич с копчёной курицей и яйцом",
+      "recipeFamilyId": "raw-new-sandwich-smoked-chicken",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-sandwich-turkey-ham",
+      "slot": "breakfast",
+      "title": "Сэндвич с ветчиной из индейки",
+      "recipeFamilyId": "raw-new-sandwich-turkey-ham",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-sandwich-balyk",
+      "slot": "breakfast",
+      "title": "Простой сэндвич с балыком",
+      "recipeFamilyId": "raw-new-sandwich-balyk",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-sandwich-caesar",
+      "slot": "breakfast",
+      "title": "Открытый сэндвич «Цезарь» с курицей",
+      "recipeFamilyId": "raw-new-sandwich-caesar",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "new-sandwich-paprika",
+      "slot": "breakfast",
+      "title": "Чиабатта с курицей и копчёной паприкой",
+      "recipeFamilyId": "raw-new-sandwich-paprika",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-potato-mushroom",
+      "slot": "dinner",
+      "title": "Картофель с грибным соусом и курицей",
+      "recipeFamilyId": "raw-foodru-oblomov-potato-mushroom",
+      "shoppingIngredientCount": 9,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-meatballs",
+      "slot": "dinner",
+      "title": "Фрикадельки с пастой",
+      "recipeFamilyId": "raw-foodru-oblomov-meatballs",
+      "shoppingIngredientCount": 9,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-chicken-legs",
+      "slot": "dinner",
+      "title": "Куриные бёдра с йогуртовым соусом",
+      "recipeFamilyId": "raw-foodru-oblomov-chicken-legs",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-beef-veg",
+      "slot": "dinner",
+      "title": "Мясо с овощами",
+      "recipeFamilyId": "raw-foodru-oblomov-beef-veg",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-chashushuli",
+      "slot": "dinner",
+      "title": "Чашушули",
+      "recipeFamilyId": "raw-foodru-oblomov-chashushuli",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-borscht",
+      "slot": "dinner",
+      "title": "Борщ с увеличенной порцией мяса",
+      "recipeFamilyId": "raw-foodru-oblomov-borscht",
+      "shoppingIngredientCount": 10,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-pepper-beef",
+      "slot": "dinner",
+      "title": "Перечная говядина с подливой",
+      "recipeFamilyId": "raw-foodru-oblomov-pepper-beef",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 3,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-pepper-chicken",
+      "slot": "dinner",
+      "title": "Перечная курица с подливой",
+      "recipeFamilyId": "raw-foodru-oblomov-pepper-chicken",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 3,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-ginger-pork",
+      "slot": "dinner",
+      "title": "Имбирная свинина",
+      "recipeFamilyId": "raw-foodru-oblomov-ginger-pork",
+      "shoppingIngredientCount": 9,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-ginger-chicken",
+      "slot": "dinner",
+      "title": "Имбирная курица",
+      "recipeFamilyId": "raw-foodru-oblomov-ginger-chicken",
+      "shoppingIngredientCount": 9,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-seabass",
+      "slot": "dinner",
+      "title": "Сибас с картофелем",
+      "recipeFamilyId": "raw-foodru-oblomov-seabass",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 3,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oblomov-sandwich",
+      "slot": "lunch",
+      "title": "Бутерброд с курицей и авокадо",
+      "recipeFamilyId": "raw-foodru-oblomov-sandwich",
+      "shoppingIngredientCount": 10,
+      "procedureIngredientCount": 1,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-blogger-chicken-bombs",
+      "slot": "dinner",
+      "title": "Куриные «бомбочки» с рисом и жюльеном",
+      "recipeFamilyId": "raw-foodru-blogger-chicken-bombs",
+      "shoppingIngredientCount": 8,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-blogger-cottage-waffles",
+      "slot": "breakfast",
+      "title": "Творожные вафли с яблоком",
+      "recipeFamilyId": "raw-foodru-blogger-cottage-waffles",
+      "shoppingIngredientCount": 5,
+      "procedureIngredientCount": 2,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oats-chocolate-shell",
+      "slot": "breakfast",
+      "title": "Ленивая овсянка с шоколадной корочкой",
+      "recipeFamilyId": "raw-foodru-oats-chocolate-shell",
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 0,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oats-no-cook",
+      "slot": "breakfast",
+      "title": "Нежная овсянка без варки",
+      "recipeFamilyId": "raw-foodru-oats-no-cook",
+      "shoppingIngredientCount": 6,
+      "procedureIngredientCount": 0,
+      "media": "source_preview"
+    },
+    {
+      "id": "foodru-oats-tomato",
+      "slot": "breakfast",
+      "title": "Томатная овсянка с яйцом и пармезаном",
+      "recipeFamilyId": "raw-foodru-oats-tomato",
+      "shoppingIngredientCount": 8,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     }

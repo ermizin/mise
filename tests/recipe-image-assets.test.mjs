@@ -2,15 +2,10 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { loadRecipeCorpusEntries } from "../scripts/recipe-corpus-overlay.mjs";
 
 const manifest = JSON.parse(
   await readFile(new URL("../data/recipe-image-manifest.json", import.meta.url), "utf8"),
-);
-const mealPrepManual = JSON.parse(
-  await readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8"),
-);
-const goodFood = JSON.parse(
-  await readFile(new URL("../data/goodfood-candidates.json", import.meta.url), "utf8"),
 );
 const runtimeCatalog = JSON.parse(
   await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
@@ -18,7 +13,7 @@ const runtimeCatalog = JSON.parse(
 const legacyManifest = JSON.parse(
   await readFile(new URL("../data/legacy-recipe-image-download-sources.json", import.meta.url), "utf8"),
 );
-const candidates = [...mealPrepManual.candidates, ...goodFood.candidates];
+const candidates = (await loadRecipeCorpusEntries()).entries.map((entry) => entry.candidate);
 
 function detectedContentType(buffer) {
   if (buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) return "image/jpeg";

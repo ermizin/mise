@@ -871,11 +871,11 @@ test("missing caloric and allergenic source components are explicit in the pilot
   assert.ok(bouillon.allergens.includes("gluten"));
 });
 
-test("raw candidate adapter preserves 217 source pages as 221 derived cards and legacy editorial statuses", async () => {
+test("raw candidate adapter preserves the fixed 255-card corpus and legacy editorial statuses", async () => {
   const { documents: datasets } = await loadRecipeCorpusWithOverlays();
   const drafts = datasets.flatMap((dataset) => dataset.candidates.map((candidate) => normalizeRawRecipeCandidate(candidate, { publisher: dataset.source, accessedAt: dataset.importedAt })));
-  assert.equal(drafts.length, 221);
-  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "promoted").length, 28);
+  assert.equal(drafts.length, 255);
+  assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "promoted").length, 62);
   assert.equal(drafts.filter((draft) => draft.editorial.reviewStatus === "pending").length, 193);
   assert.ok(drafts.every((draft) => draft.sourceUrl && draft.imageUrl && draft.sourceIngredients.length > 0));
   assert.ok(drafts.every((draft) => Object.values(draft.sourceNutrition).every(Number.isFinite)));

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "total": 221,
+  "total": 255,
   "counts": {
-    "ready": 209,
+    "ready": 243,
     "review_required": 6,
     "blocked": 6
   },
@@ -12,11 +12,11 @@
     "editorial:missing_yield": 2,
     "editorial:niche_localization": 9,
     "editorial:procedure_review_required": 2,
-    "nutrition:ignored_component_not_calculable": 189,
-    "nutrition:independent_calculation_complete": 97,
+    "nutrition:ignored_component_not_calculable": 221,
+    "nutrition:independent_calculation_complete": 131,
     "nutrition:invalid_yield": 4,
     "nutrition:nutrition_delta_outside_tolerance": 120,
-    "nutrition:nutrition_delta_within_tolerance": 97
+    "nutrition:nutrition_delta_within_tolerance": 131
   },
   "cards": [
     {
@@ -9305,10 +9305,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 441.4,
-        "protein": 16.3,
-        "fat": 10.3,
-        "carbs": 75.5
+        "kcal": 521.4,
+        "protein": 32.3,
+        "fat": 11.5,
+        "carbs": 77.1
       },
       "reasons": [
         {
@@ -9317,7 +9317,7 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "kcal",
+              "protein",
               "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -12262,6 +12262,1364 @@
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-home-buckwheat-legs",
+      "title": "Гречка с куриными бёдрами и йогуртовым соусом",
+      "sourceUrl": "https://food.ru/recipes/115681-grechka-s-kurinymi-nozhkami-v-dukhovke-1645019420",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 542.2,
+        "protein": 49.4,
+        "fat": 13.9,
+        "carbs": 58
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-home-cutlets-mash",
+      "title": "Куриные котлеты с пюре и быстрым соусом",
+      "sourceUrl": "https://food.ru/recipes/250423-kotlety-s-piure-i-sousom",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 580.4,
+        "protein": 45.9,
+        "fat": 22.7,
+        "carbs": 49.1
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-home-merchant-buckwheat",
+      "title": "Гречка по-купечески с курицей",
+      "sourceUrl": "https://food.ru/recipes/182512-grechka-po-kupecheski-s-kurinoi-grudkoi-i-lukom",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 538.8,
+        "protein": 49,
+        "fat": 11.7,
+        "carbs": 62.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-home-simple-buckwheat",
+      "title": "Простая гречка с курицей",
+      "sourceUrl": "https://food.ru/recipes/11952-grechka-s-kuricei",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 486.3,
+        "protein": 49,
+        "fat": 6.7,
+        "carbs": 60.2
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dill"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-home-stewed-cabbage",
+      "title": "Тушёная капуста со свиной вырезкой",
+      "sourceUrl": "https://food.ru/recipes/194336-kapusta-tushenaia-s-miasom",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 413.7,
+        "protein": 42.2,
+        "fat": 11.5,
+        "carbs": 37.4
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dill"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-oats-banana-blueberry",
+      "title": "Ночная овсянка с бананом и черникой",
+      "sourceUrl": "https://www.skinnytaste.com/skinny-overnight-oats-in-jar/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 653.9,
+        "protein": 46.7,
+        "fat": 17,
+        "carbs": 84.9
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-oats-chocolate",
+      "title": "Шоколадная ночная овсянка",
+      "sourceUrl": "https://www.budgetbytes.com/double-chocolate-overnight-oats/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 550.4,
+        "protein": 46.1,
+        "fat": 17.3,
+        "carbs": 57.8
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-oats-apple",
+      "title": "Ночная овсянка «Яблочный пирог»",
+      "sourceUrl": "https://www.skinnytaste.com/apple-pie-overnight-oats/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 585.9,
+        "protein": 45.3,
+        "fat": 16.6,
+        "carbs": 68.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-oats-carrot",
+      "title": "Ночная овсянка «Морковный торт»",
+      "sourceUrl": "https://thegirlonbloor.com/carrot-cake-overnight-oats/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 540.7,
+        "protein": 45.6,
+        "fat": 16.6,
+        "carbs": 55.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-oats-blueberry-almond",
+      "title": "Ночная овсянка с черникой и миндалём",
+      "sourceUrl": "https://www.budgetbytes.com/no-sugar-added-blueberry-almond-overnight-oats/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 628.4,
+        "protein": 47.4,
+        "fat": 17.8,
+        "carbs": 75.3
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-oats-cinnamon-raisin",
+      "title": "Ночная овсянка с корицей и изюмом",
+      "sourceUrl": "https://www.skinnytaste.com/cinnamon-raisin-overnight-oats/",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 638.9,
+        "protein": 46.4,
+        "fat": 16.7,
+        "carbs": 81.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-sandwich-boiled-chicken",
+      "title": "Сэндвич с варёной курицей и zero-соусом",
+      "sourceUrl": "https://food.ru/recipes/222344-sendvich-s-kuritsei-i-syrnym-sousom-1720730429",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 558.5,
+        "protein": 47.3,
+        "fat": 17.8,
+        "carbs": 49.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-sandwich-smoked-chicken",
+      "title": "Сэндвич с копчёной курицей и яйцом",
+      "sourceUrl": "https://food.ru/recipes/253548-sendvichi-s-kopchenoi-kuricei",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 561.6,
+        "protein": 45.8,
+        "fat": 19.1,
+        "carbs": 48.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-sandwich-turkey-ham",
+      "title": "Сэндвич с ветчиной из индейки",
+      "sourceUrl": "https://ovkuse.ru/recipes/16398834",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 542.5,
+        "protein": 39.2,
+        "fat": 19.5,
+        "carbs": 51.1
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-sandwich-balyk",
+      "title": "Простой сэндвич с балыком",
+      "sourceUrl": "https://www.gastronom.ru/recipe/34297/sendvich-s-balykom",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 505.5,
+        "protein": 40,
+        "fat": 14.9,
+        "carbs": 50.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-sandwich-caesar",
+      "title": "Открытый сэндвич «Цезарь» с курицей",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/open-chicken-caesar-sandwich",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 579.3,
+        "protein": 55.2,
+        "fat": 16.1,
+        "carbs": 50
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "new-sandwich-paprika",
+      "title": "Чиабатта с курицей и копчёной паприкой",
+      "sourceUrl": "https://www.bbcgoodfood.com/recipes/paprika-chicken-ciabattas",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 520.5,
+        "protein": 49.8,
+        "fat": 12.4,
+        "carbs": 49.5
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-potato-mushroom",
+      "title": "Картофель с грибным соусом и курицей",
+      "sourceUrl": "https://food.ru/recipes/169798-slavnaja-kartoshka-s-gribnym-sousom",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 643.4,
+        "protein": 51.6,
+        "fat": 24,
+        "carbs": 57.4
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "thyme"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-meatballs",
+      "title": "Фрикадельки с пастой",
+      "sourceUrl": "https://food.ru/recipes/140818-slavniye-frikadelki",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 744.4,
+        "protein": 59.4,
+        "fat": 16.3,
+        "carbs": 88.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-chicken-legs",
+      "title": "Куриные бёдра с йогуртовым соусом",
+      "sourceUrl": "https://food.ru/recipes/223398-slavnye-kurinye-nozhki-na-grile-1721575870",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 418.8,
+        "protein": 52.4,
+        "fat": 20.5,
+        "carbs": 3.4
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-beef-veg",
+      "title": "Мясо с овощами",
+      "sourceUrl": "https://food.ru/recipes/163158-slavnoe-mjaso-s-ovoshchami",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 353.8,
+        "protein": 44.3,
+        "fat": 13.4,
+        "carbs": 16.6
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-chashushuli",
+      "title": "Чашушули",
+      "sourceUrl": "https://food.ru/recipes/139757-slavnye-chashushuli",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 350.3,
+        "protein": 42.7,
+        "fat": 16.3,
+        "carbs": 10.6
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-borscht",
+      "title": "Борщ с увеличенной порцией мяса",
+      "sourceUrl": "https://food.ru/recipes/146194-slavniy-borsch",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 311.5,
+        "protein": 37.4,
+        "fat": 11,
+        "carbs": 18.9
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-pepper-beef",
+      "title": "Перечная говядина с подливой",
+      "sourceUrl": "https://food.ru/recipes/197557-slavnaia-perechnaia-goviadina-1698934971",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 405.7,
+        "protein": 43.3,
+        "fat": 18.2,
+        "carbs": 18.6
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "water"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black peppercorns"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-pepper-chicken",
+      "title": "Перечная курица с подливой",
+      "sourceUrl": "https://food.ru/recipes/197557-slavnaia-perechnaia-goviadina-1698934971",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 371.7,
+        "protein": 47.5,
+        "fat": 10.9,
+        "carbs": 18.6
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "water"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black peppercorns"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-ginger-pork",
+      "title": "Имбирная свинина",
+      "sourceUrl": "https://food.ru/recipes/209701-slavnaia-imbirnaia-svinina",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 341.3,
+        "protein": 44.6,
+        "fat": 7.2,
+        "carbs": 23.5
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-ginger-chicken",
+      "title": "Имбирная курица",
+      "sourceUrl": "https://food.ru/recipes/209701-slavnaia-imbirnaia-svinina",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 341.3,
+        "protein": 47.2,
+        "fat": 5.4,
+        "carbs": 23.5
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-seabass",
+      "title": "Сибас с картофелем",
+      "sourceUrl": "https://food.ru/recipes/140785-slavniy-sibas",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 533.7,
+        "protein": 50.1,
+        "fat": 16,
+        "carbs": 46.2
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "sage"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "white pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oblomov-sandwich",
+      "title": "Бутерброд с курицей и авокадо",
+      "sourceUrl": "https://food.ru/recipes/59659-slavnyi-buterbrod",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 610.1,
+        "protein": 49.4,
+        "fat": 23.4,
+        "carbs": 50.1
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-blogger-chicken-bombs",
+      "title": "Куриные «бомбочки» с рисом и жюльеном",
+      "sourceUrl": "https://food.ru/recipes/163507-kurinye-bombochki-s-risom-i-zhiulenom",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 477,
+        "protein": 40.9,
+        "fat": 13.8,
+        "carbs": 44.8
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-blogger-cottage-waffles",
+      "title": "Творожные вафли с яблоком",
+      "sourceUrl": "https://food.ru/recipes/96969-tvorozhnye-vafli-pp",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 300.4,
+        "protein": 30.8,
+        "fat": 9.5,
+        "carbs": 22.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oats-chocolate-shell",
+      "title": "Ленивая овсянка с шоколадной корочкой",
+      "sourceUrl": "https://food.ru/recipes/263940-shokoladnaja-lenivaja-ovsjanka",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 716.5,
+        "protein": 47.5,
+        "fat": 25.2,
+        "carbs": 79.6
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oats-no-cook",
+      "title": "Нежная овсянка без варки",
+      "sourceUrl": "https://food.ru/recipes/212434-nezhnaia-ovsianka-kotoruiu-ne-nuzhno-varit-1711542065",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 549.7,
+        "protein": 46,
+        "fat": 11.3,
+        "carbs": 73.7
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
+        }
+      ],
+      "resolvedReasons": []
+    },
+    {
+      "id": "foodru-oats-tomato",
+      "title": "Томатная овсянка с яйцом и пармезаном",
+      "sourceUrl": "https://food.ru/recipes/264110-tomatnaia-ovsianka-1759827857",
+      "verdict": "ready",
+      "editorialVerdict": "ready",
+      "nutritionVerdict": "ready",
+      "calculatedNutrition": {
+        "kcal": 523.8,
+        "protein": 41.8,
+        "fat": 17.1,
+        "carbs": 50.8
+      },
+      "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "rosemary"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
