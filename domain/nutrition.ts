@@ -402,6 +402,97 @@ export function calculateNutritionTarget(
   };
 }
 
+type NutritionRecord = Record<string, unknown>;
+const automaticTargetTolerance = 0.02;
+const sexes = new Set<Sex>(["male", "female"]);
+const activities = new Set<ActivityKey>([
+  "low",
+  "light",
+  "medium",
+  "high",
+  "athlete",
+]);
+const nutritionGoals = new Set<NutritionGoal>([
+  "maintenance",
+  "loss",
+  "gain",
+]);
+
+function nutritionRecord(value: unknown): value is NutritionRecord {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function automaticEstimate(value: unknown): NutritionWizardInput | null {
+  if (!nutritionRecord(value)) return null;
+  const {
+    sex,
+    age,
+    height,
+    weight,
+    activity,
+    musclePriority,
+    goal,
+    monthlyWeightChangeKg,
+  } = value;
+  if (
+    typeof sex !== "string" ||
+    !sexes.has(sex as Sex) ||
+    !Number.isFinite(age) ||
+    !Number.isFinite(height) ||
+    !Number.isFinite(weight) ||
+    typeof activity !== "string" ||
+    !activities.has(activity as ActivityKey) ||
+    typeof musclePriority !== "boolean" ||
+    typeof goal !== "string" ||
+    !nutritionGoals.has(goal as NutritionGoal) ||
+    !Number.isFinite(monthlyWeightChangeKg)
+  )
+    return null;
+  return {
+    sex: sex as Sex,
+    age: age as number,
+    height: height as number,
+    weight: weight as number,
+    activity: activity as ActivityKey,
+    musclePriority,
+    goal: goal as NutritionGoal,
+    monthlyWeightChangeKg: monthlyWeightChangeKg as number,
+  };
+}
+
+function automaticTargetDiffers(daily: unknown, target: Macros) {
+  if (!nutritionRecord(daily)) return true;
+  return (Object.keys(target) as MacroKey[]).some((key) => {
+    const current = daily[key];
+    return (
+      !Number.isFinite(current) ||
+      Math.abs((current as number) - target[key]) /
+        Math.max(1, target[key]) >
+        automaticTargetTolerance
+    );
+  });
+}
+
+export function normalizeAutomaticNutritionTargets(value: unknown): unknown {
+  if (!nutritionRecord(value) || !Array.isArray(value.people)) return value;
+  let changed = false;
+  const people = value.people.map((person) => {
+    if (
+      !nutritionRecord(person) ||
+      person.nutritionTargetMode !== "auto"
+    )
+      return person;
+    const estimate = automaticEstimate(person.estimate);
+    if (!estimate) return person;
+    const calculation = calculateNutritionTarget(estimate);
+    if (!("target" in calculation)) return person;
+    if (!automaticTargetDiffers(person.daily, calculation.target)) return person;
+    changed = true;
+    return { ...person, daily: calculation.target };
+  });
+  return changed ? { ...value, people } : value;
+}
+
 function allocateCalories(targetCalories: number): Record<MealSlot, number> {
   const total = Math.max(0, Math.floor(finiteOrZero(targetCalories)));
   const exact = NUTRITION_CONFIG.mealSlots.map(({ id, share }, index) => ({

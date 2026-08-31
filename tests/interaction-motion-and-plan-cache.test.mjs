@@ -142,6 +142,11 @@ test("plan bootstrap cannot overwrite an optimistic local shopping edit", async 
     page,
     /const daily = nutritionRepairLegacyDailyMacros\([\s\S]{0,120}person\.macroPreset \?\? "balanced"/,
   );
+  assert.match(
+    page,
+    /const data = \(await response\.json\(\)\)[\s\S]{0,320}serverPlan = normalizePlan\(data\.plan\)[\s\S]{0,160}setActivePlan\(serverPlan\)/,
+    "the client silently adopts a server-verified automatic target",
+  );
 });
 
 test("recipe entry, detail tabs and catalog controls use the supplied interaction motion", async () => {
@@ -180,9 +185,12 @@ test("goal calculator follows motion_wizard_1 card 9d", async () => {
   assert.match(css, /\.seg button \{[\s\S]*?color 200ms linear 100ms/);
   assert.match(css, /\.macro-bar i \{[\s\S]*?width 420ms/);
   assert.match(css, /\.norm-check \{[\s\S]*?color 320ms linear[\s\S]*?background-color 320ms linear/);
-  assert.match(css, /\.nutrition-calculate-button:active:not\(:disabled\)[\s\S]*?scale\(0\.97\)/);
+  assert.match(css, /\.norm-updated-chip\.is-visible \{[\s\S]*?mise-norm-updated 300ms cubic-bezier\(0\.34, 1\.3, 0\.5, 1\) 120ms/);
+  assert.match(css, /\.norm-reason \{[\s\S]*?mise-norm-reason 260ms linear 120ms/);
   const reduced = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
   assert.match(reduced, /recipe-detail\.is-entering-from-week/);
   assert.match(reduced, /recipe-section-motion\.motion-enter-right/);
   assert.match(reduced, /seg-indicator[\s\S]*?transition: background-color 160ms linear !important/);
+  assert.match(reduced, /norm-updated-chip[\s\S]*?transition-duration: 0ms !important/);
+  assert.match(reduced, /norm-macro-tile \.macro-bar i[\s\S]*?transition-duration: 0ms !important/);
 });

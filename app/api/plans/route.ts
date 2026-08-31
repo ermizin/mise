@@ -1,7 +1,10 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "../../../db";
 import { mealPlans, pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
-import { validatePlanForPersistence } from "../../../lib/plan-validation";
+import {
+  validatePlanForPersistence,
+} from "../../../lib/plan-validation";
+import { normalizeAutomaticNutritionTargets } from "../../../domain/nutrition";
 
 function messageFor(error: unknown) {
   const message = error instanceof Error ? error.message : "Неизвестная ошибка";
@@ -37,9 +40,10 @@ export async function POST(request: Request) {
     } catch {
       return Response.json({ error: "invalid JSON" }, { status: 400 });
     }
-    const validation = validatePlanForPersistence(body.plan);
+    const normalizedPlan = normalizeAutomaticNutritionTargets(body.plan);
+    const validation = validatePlanForPersistence(normalizedPlan);
     if (!validation.valid) return Response.json({ error: validation.error }, { status: validation.status });
-    const plan = body.plan as { id: string };
+    const plan = normalizedPlan as { id: string };
 
     const payload = JSON.stringify(plan);
     if (payload.length > 1_500_000) {

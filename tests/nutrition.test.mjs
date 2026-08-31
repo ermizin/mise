@@ -51,6 +51,29 @@ test("wizard calculates maintenance, loss and gain from Mifflin-St Jeor and kg p
   assert.ok(Math.abs(loss.dailyEnergyDelta - 7700 / 30.4) < 1);
 });
 
+test("server normalization corrects stale automatic targets but preserves manual targets", () => {
+  const automatic = {
+    id: "plan",
+    people: [
+      {
+        id: "person",
+        nutritionTargetMode: "auto",
+        estimate: baseWizard,
+        daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 },
+      },
+    ],
+  };
+  const normalized = nutrition.normalizeAutomaticNutritionTargets(automatic);
+  const expected = nutrition.calculateNutritionTarget(baseWizard);
+  assert.ok("target" in expected);
+  assert.deepEqual(normalized.people[0].daily, expected.target);
+
+  const manual = structuredClone(automatic);
+  manual.people[0].nutritionTargetMode = "manual";
+  const preserved = nutrition.normalizeAutomaticNutritionTargets(manual);
+  assert.equal(preserved.people[0].daily.kcal, 2200);
+});
+
 test("activity factor changes TDEE", () => {
   const inactive = nutrition.calculateNutritionTarget({ ...baseWizard, activity: "low" });
   const active = nutrition.calculateNutritionTarget({ ...baseWizard, activity: "high" });

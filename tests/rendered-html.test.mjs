@@ -227,12 +227,13 @@ test("includes the complete plan-builder and private persistence model", async (
   // Ручная норма хранит режим вместе с человеком и не перезаписывается после
   // повторного открытия настроек.
   assert.match(page, /nutritionTargetMode\?: NutritionTargetMode/);
-  assert.match(page, /nutritionTargetMode: normalizeNutritionTargetMode/);
+  assert.match(page, /const nutritionTargetMode = normalizeNutritionTargetMode/);
   assert.match(page, /nutritionTargetMode: "manual"/);
   assert.match(page, /nutritionTargetMode: "auto"/);
-  assert.match(page, /function onCalculate\(\)/);
-  assert.match(page, />\s*Рассчитать\s*</);
-  assert.doesNotMatch(page, /Ввести своё|Вернуть расчёт Mise/);
+  assert.match(page, /function resumeAutoCalculation\(\)/);
+  assert.doesNotMatch(page, />\s*(?:Рассчитать|Пересчитать)\s*</);
+  assert.match(page, /Ввести своё/);
+  assert.match(page, /Считать Mise/);
   assert.doesNotMatch(page, /manualIds/);
   // Пошаговый выбор по слотам ушёл вместе со своей разметкой.
   for (const dead of [
@@ -252,9 +253,16 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /const manual = person\.nutritionTargetMode !== "auto"/);
   assert.doesNotMatch(page, /manualIds/);
   assert.match(page, /onUpdate\(person\.id, \{ estimate: next \}\)/);
-  assert.match(page, /function onCalculate\(\)[\s\S]*?nutritionTargetMode: "auto"/);
-  assert.doesNotMatch(page, /manual \|\| !target/);
-  assert.match(page, /className=\{`norm-check \$\{converges \? "is-ok" : "is-off"\}`\} role="status"/);
+  assert.match(page, /calculateNutritionTarget\(next\)/);
+  assert.match(page, /daily: nextTarget/);
+  assert.match(
+    page,
+    /nutritionTargetMode === "auto" && calculatedTarget[\s\S]{0,100}\? calculatedTarget[\s\S]{0,60}: daily/,
+    "a restored automatic draft cannot show targets calculated from older body parameters",
+  );
+  assert.match(page, /function resumeAutoCalculation\(\)[\s\S]*?nutritionTargetMode: "auto"/);
+  assert.match(page, /manual \|\| !nextTarget/);
+  assert.match(page, /className=\{`norm-check \$\{converges \? "is-ok" : "is-off"\}`\}/);
   assert.match(page, /Сумма макросов/);
   assert.match(page, /Скопировать цели у/);
   for (const dead of [
