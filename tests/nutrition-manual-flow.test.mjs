@@ -15,38 +15,39 @@ function sourceBetween(start, end) {
   return page.slice(startAt, endAt);
 }
 
-test("изменение параметров тела сохраняет только estimate и не пересчитывает daily", () => {
+test("автоматическая норма пересчитывается вместе с параметрами тела", () => {
   const patchBody = sourceBetween(
     "  function patchBody(patch: Partial<NutritionWizardInput>) {",
-    "\n  return (",
+    "\n  function resumeAutoCalculation()",
   );
 
-  assert.match(patchBody, /onUpdate\(\s*person\.id/);
+  assert.match(patchBody, /calculateNutritionTarget\(next\)/);
   assert.match(patchBody, /estimate:\s*next/);
-  assert.doesNotMatch(
-    patchBody,
-    /daily:\s*target/,
-    "patchBody не должен менять daily до явного нажатия «Рассчитать»",
-  );
-});
-
-test("калькулятор имеет явную кнопку Рассчитать и отдельный обработчик", () => {
-  assert.match(page, /calculateNutritionTarget/);
-  assert.match(page, /Рассчитать/);
+  assert.match(patchBody, /daily:\s*nextTarget/);
+  assert.match(patchBody, /nutritionTargetMode:\s*["']auto["']/);
   assert.match(
-    page,
-    /onClick=\{\(\)\s*=>[\s\S]{0,500}(?:calculate|onCalculate)[\s\S]{0,500}\}/,
-    "у кнопки должен быть явный обработчик расчёта",
+    patchBody,
+    /if \(manual \|\| !nextTarget\)[\s\S]{0,180}onUpdate\(person\.id, \{ estimate: next \}\)/,
+    "ручная норма и последнее валидное автоматическое значение не должны перезаписываться",
   );
 });
 
-test("старые переключатели ручного режима удалены", () => {
-  assert.doesNotMatch(page, /Внести своё/);
-  assert.doesNotMatch(page, /Ввести своё/);
-  assert.doesNotMatch(page, /Вернуть расчёт Mise/);
+test("автосчёт не требует отдельной кнопки", () => {
+  assert.match(page, /calculateNutritionTarget/);
+  assert.doesNotMatch(page, />\s*(?:Рассчитать|Пересчитать)\s*</);
+  assert.match(page, /считаю на лету/);
+  assert.match(page, /showAutoCalculationFeedback/);
 });
 
-test("ручное редактирование макросов включает manual, а расчёт — auto", () => {
+test("ручной режим включается отдельно и возвращается к формуле явно", () => {
+  assert.match(page, /Ввести своё/);
+  assert.match(page, /Считать Mise/);
+  assert.match(page, /function enterManualMode\(\)[\s\S]{0,180}nutritionTargetMode:\s*["']manual["']/);
+  assert.match(page, /function resumeAutoCalculation\(\)[\s\S]{0,400}nutritionTargetMode:\s*["']auto["']/);
+  assert.match(page, /Считаю по вашему числу, формулу не применяю/);
+});
+
+test("ручное редактирование макросов сохраняет приоритет пользователя", () => {
   const macroHandlers = sourceBetween(
     "  function updateMacro(id: string, key: MacroKey, value: number) {",
     "\n  function applyMacroPreset",
@@ -59,10 +60,19 @@ test("ручное редактирование макросов включае�
   const peopleStep = page.slice(page.indexOf("function PeopleStep({"));
   assert.match(
     peopleStep,
-    /function onCalculate\(\)[\s\S]{0,500}nutritionTargetMode:\s*["']auto["']/,
-    "явный расчёт должен возвращать автоматический режим",
+    /function resumeAutoCalculation\(\)[\s\S]{0,500}nutritionTargetMode:\s*["']auto["']/,
+    "«Считать Mise» должно возвращать автоматический режим",
   );
-  assert.match(peopleStep, />\s*Рассчитать\s*</);
+  assert.match(peopleStep, /Считать Mise/);
+});
+
+test("объяснение пересчёта, чип и live-region не сохраняются в плане", () => {
+  const peopleStep = page.slice(page.indexOf("function PeopleStep({"));
+  assert.match(peopleStep, /updatedTimerRef[\s\S]{0,1200}4_000/);
+  assert.match(peopleStep, /changeWindowTimerRef\.current = window\.setTimeout\([\s\S]{0,120}2_000/);
+  assert.match(peopleStep, /role="status"[\s\S]{0,100}aria-live="polite"/);
+  assert.match(peopleStep, /className=\{`norm-updated-chip[\s\S]{0,180}aria-hidden="true"/);
+  assert.match(peopleStep, /Пересчитал:/);
 });
 
 test("при доступности менее половины рецептов показывается понятное предупреждение", () => {

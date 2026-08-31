@@ -169,10 +169,12 @@ test("automatic and manual goals are both durable", async () => {
   assert.match(nutrition, /10\s*\*\s*input\.weight\s*\+\s*6\.25\s*\*\s*input\.height\s*-\s*5\s*\*\s*input\.age/, "Mifflin-St Jeor");
   assert.match(nutrition, /energyPerKgWeightChange: 7_700/, "monthly weight change uses an explicit energy conversion");
   assert.match(page, /nutritionTargetMode/, "the chosen target source is persisted with the person");
-  assert.match(page, />\s*Рассчитать\s*</, "manual targets can be replaced only by an explicit calculation");
-  assert.match(page, /function onCalculate\(\)[\s\S]*?nutritionTargetMode: "auto"/);
+  assert.doesNotMatch(page, />\s*(?:Рассчитать|Пересчитать)\s*</, "automatic targets update without a separate button");
+  assert.match(page, /function patchBody\([\s\S]*?calculateNutritionTarget\(next\)[\s\S]*?daily: nextTarget/);
+  assert.match(page, /function resumeAutoCalculation\(\)[\s\S]*?nutritionTargetMode: "auto"/);
+  assert.match(page, /Считать Mise/, "manual targets return to the formula only by an explicit action");
   assert.doesNotMatch(page, /manualIds/, "manual mode is not ephemeral component state");
-  assert.match(page, /Ориентир|Ориентировочный/, "the estimate is framed as an orientation");
+  assert.match(page, /Это ориентир, а не медицинская рекомендация/, "the estimate is framed as an orientation");
 });
 
 test("profile settings can add any standard meal slot", async () => {

@@ -5770,14 +5770,18 @@ function normalizePerson(person: Person): Person {
   const calculatedTarget = calculation && "target" in calculation
     ? (calculation as NutritionCalculation).target
     : null;
+  const nutritionTargetMode = normalizeNutritionTargetMode(
+    person.nutritionTargetMode,
+    Boolean(person.estimate),
+    Boolean(calculatedTarget && macrosEqual(daily, calculatedTarget)),
+  );
   return {
     ...person,
-    daily,
-    nutritionTargetMode: normalizeNutritionTargetMode(
-      person.nutritionTargetMode,
-      Boolean(person.estimate),
-      Boolean(calculatedTarget && macrosEqual(daily, calculatedTarget)),
-    ),
+    daily:
+      nutritionTargetMode === "auto" && calculatedTarget
+        ? calculatedTarget
+        : daily,
+    nutritionTargetMode,
     dislikes: Array.isArray(person.dislikes) ? person.dislikes : [],
     hardExclusions: Array.isArray(person.hardExclusions)
       ? person.hardExclusions
@@ -6156,6 +6160,7 @@ export default function Home() {
     const id = clientId();
     const previousLocalPlan = storedLocalPlan(id);
     planMutationRevision.current += 1;
+    const mutationRevision = planMutationRevision.current;
     setActivePlan(plan);
     try {
       storeLocalPlan(plan, id);
@@ -6186,6 +6191,19 @@ export default function Home() {
           setActivePlan(previousLocalPlan);
           setPlanSyncState("error");
           throw new Error("Не удалось сохранить план");
+        }
+        const data = (await response.json()) as { plan?: ActivePlan };
+        if (
+          data.plan &&
+          planMutationRevision.current === mutationRevision
+        ) {
+          const serverPlan = normalizePlan(data.plan);
+          setActivePlan(serverPlan);
+          try {
+            storeLocalPlan(serverPlan, id);
+          } catch {
+            // The verified server value remains active for this session.
+          }
         }
         const pending = storedPendingPlan(id);
         if (pending && JSON.stringify(pending) === JSON.stringify(plan))
@@ -11254,7 +11272,8 @@ function StyleStep({
 
    Один человек на экране, переключение вкладками. Норма считается по Миффлину —
    Сан-Жеору из тех же параметров, что и раньше (lib/nutrition-engine-v2), но
-   пересчёт выполняется только по явной кнопке «Рассчитать».
+   в автоматическом режиме пересчитывается сразу; ручные значения сохраняют
+   приоритет до явного возврата через «Считать Mise».
    Ручной ввод имеет приоритет, пока человек сам не запросит новый расчёт. */
 
 /* Цвета те же, что на «Неделе»: один код КБЖУ на всё приложение. */
@@ -11280,6 +11299,54 @@ const bodyFields: {
   { key: "height", label: "Рост", unit: "см", min: 120, max: 230 },
   { key: "weight", label: "Вес", unit: "кг", min: 35, max: 300 },
 ];
+
+type NutritionEstimateChangeKey = keyof NutritionWizardInput;
+type NutritionEstimateChange = {
+  from: NutritionWizardInput[NutritionEstimateChangeKey];
+  to: NutritionWizardInput[NutritionEstimateChangeKey];
+};
+type NutritionChangeWindow = {
+  personId: string;
+  firstKcal: number;
+  changes: Partial<Record<NutritionEstimateChangeKey, NutritionEstimateChange>>;
+};
+
+const nutritionChangeLabels: Record<NutritionEstimateChangeKey, string> = {
+  sex: "пол",
+  age: "возраст",
+  height: "рост",
+  weight: "вес",
+  activity: "активность",
+  musclePriority: "приоритет мышц",
+  goal: "цель",
+  monthlyWeightChangeKg: "темп",
+};
+
+function nutritionChangeValue(
+  key: NutritionEstimateChangeKey,
+  value: NutritionWizardInput[NutritionEstimateChangeKey],
+) {
+  if (key === "sex") return value === "male" ? "мужчина" : "женщина";
+  if (key === "activity")
+    return activityMeta[value as ActivityKey]?.label.toLocaleLowerCase("ru-RU") ?? String(value);
+  if (key === "goal")
+    return goalMeta[value as NutritionGoal]?.label.toLocaleLowerCase("ru-RU") ?? String(value);
+  if (key === "musclePriority") return value ? "включён" : "выключен";
+  if (key === "age") return `${value} лет`;
+  if (key === "height") return `${value} см`;
+  if (key === "weight") return `${value} кг`;
+  if (key === "monthlyWeightChangeKg") return `${value} кг/мес`;
+  return String(value);
+}
+
+function changedParametersWord(count: number) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return "параметр";
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14))
+    return "параметра";
+  return "параметров";
+}
 
 function estimateOf(person: Person): NutritionWizardInput {
   const saved = person.estimate as
@@ -11333,7 +11400,27 @@ function PeopleStep({
   onRemove: (id: string) => void;
 }) {
   const [activeId, setActiveId] = useState(people[0]?.id ?? "");
+  const [normExplanation, setNormExplanation] = useState<string | null>(null);
+  const [updatedVisible, setUpdatedVisible] = useState(false);
+  const [liveAnnouncement, setLiveAnnouncement] = useState("");
+  const changeWindowRef = useRef<NutritionChangeWindow | null>(null);
+  const changeWindowTimerRef = useRef<number | null>(null);
+  const updatedTimerRef = useRef<number | null>(null);
+  const announcementTimerRef = useRef<number | null>(null);
   const person = people.find((item) => item.id === activeId) ?? people[0];
+
+  useEffect(
+    () => () => {
+      if (updatedTimerRef.current !== null)
+        window.clearTimeout(updatedTimerRef.current);
+      if (announcementTimerRef.current !== null)
+        window.clearTimeout(announcementTimerRef.current);
+      if (changeWindowTimerRef.current !== null)
+        window.clearTimeout(changeWindowTimerRef.current);
+    },
+    [],
+  );
+
   if (!person) return null;
 
   const manual = person.nutritionTargetMode !== "auto";
@@ -11350,11 +11437,95 @@ function PeopleStep({
     person.daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories;
   const calorieErrorId = `macro-${person.id}-calorie-range`;
 
+  function selectPerson(id: string) {
+    setActiveId(id);
+    setNormExplanation(null);
+    setUpdatedVisible(false);
+    setLiveAnnouncement("");
+    changeWindowRef.current = null;
+    if (changeWindowTimerRef.current !== null)
+      window.clearTimeout(changeWindowTimerRef.current);
+    if (updatedTimerRef.current !== null)
+      window.clearTimeout(updatedTimerRef.current);
+    if (announcementTimerRef.current !== null)
+      window.clearTimeout(announcementTimerRef.current);
+  }
+
+  function announceAutoCalculation(nextDaily: Macros, explanation: string) {
+    if (announcementTimerRef.current !== null)
+      window.clearTimeout(announcementTimerRef.current);
+    const announce = () =>
+      setLiveAnnouncement(
+        `Новая норма — ${nextDaily.kcal.toLocaleString("ru-RU")} килокалорий в день. ${explanation}`,
+      );
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) announce();
+    else announcementTimerRef.current = window.setTimeout(announce, 420);
+  }
+
+  function showAutoCalculationFeedback(
+    patch: Partial<NutritionWizardInput>,
+    previousEstimate: NutritionWizardInput,
+    previousKcal: number,
+    nextDaily: Macros,
+  ) {
+    const prior = changeWindowRef.current;
+    const sameWindow = prior && prior.personId === person.id;
+    const changes = sameWindow ? { ...prior.changes } : {};
+    for (const key of Object.keys(patch) as NutritionEstimateChangeKey[]) {
+      const existing = changes[key];
+      changes[key] = {
+        from: existing?.from ?? previousEstimate[key],
+        to: patch[key] as NutritionWizardInput[NutritionEstimateChangeKey],
+      };
+    }
+    const firstKcal = sameWindow ? prior.firstKcal : previousKcal;
+    changeWindowRef.current = {
+      personId: person.id,
+      firstKcal,
+      changes,
+    };
+    if (changeWindowTimerRef.current !== null)
+      window.clearTimeout(changeWindowTimerRef.current);
+    changeWindowTimerRef.current = window.setTimeout(() => {
+      changeWindowRef.current = null;
+    }, 2_000);
+    const entries = Object.entries(changes) as [
+      NutritionEstimateChangeKey,
+      NutritionEstimateChange,
+    ][];
+    const explanation =
+      entries.length === 1
+        ? `Пересчитал: ${nutritionChangeLabels[entries[0][0]]} ${nutritionChangeValue(entries[0][0], entries[0][1].from)} → ${nutritionChangeValue(entries[0][0], entries[0][1].to)}. Было ${firstKcal.toLocaleString("ru-RU")}.`
+        : `Пересчитал: изменили ${entries.length} ${changedParametersWord(entries.length)}. Было ${firstKcal.toLocaleString("ru-RU")}.`;
+    setNormExplanation(explanation);
+    setUpdatedVisible(true);
+    if (updatedTimerRef.current !== null)
+      window.clearTimeout(updatedTimerRef.current);
+    updatedTimerRef.current = window.setTimeout(
+      () => setUpdatedVisible(false),
+      4_000,
+    );
+    announceAutoCalculation(nextDaily, explanation);
+  }
+
   function patchBody(patch: Partial<NutritionWizardInput>) {
     const next = { ...draft, ...patch };
-    onUpdate(person.id, { estimate: next });
+    const nextCalculation = calculateNutritionTarget(next);
+    const nextTarget =
+      "target" in nextCalculation ? nextCalculation.target : null;
+    if (manual || !nextTarget) {
+      onUpdate(person.id, { estimate: next });
+      return;
+    }
+    onUpdate(person.id, {
+      estimate: next,
+      daily: nextTarget,
+      macroPreset: "custom",
+      nutritionTargetMode: "auto",
+    });
+    showAutoCalculationFeedback(patch, draft, person.daily.kcal, nextTarget);
   }
-  function onCalculate() {
+  function resumeAutoCalculation() {
     if (!computed) return;
     onUpdate(person.id, {
       estimate: draft,
@@ -11362,6 +11533,30 @@ function PeopleStep({
       macroPreset: "custom",
       nutritionTargetMode: "auto",
     });
+    const explanation = `Пересчитал по параметрам тела. Было ${person.daily.kcal.toLocaleString("ru-RU")}.`;
+    setNormExplanation(explanation);
+    setUpdatedVisible(true);
+    if (updatedTimerRef.current !== null)
+      window.clearTimeout(updatedTimerRef.current);
+    updatedTimerRef.current = window.setTimeout(
+      () => setUpdatedVisible(false),
+      4_000,
+    );
+    announceAutoCalculation(computed, explanation);
+    changeWindowRef.current = null;
+    if (changeWindowTimerRef.current !== null)
+      window.clearTimeout(changeWindowTimerRef.current);
+  }
+  function enterManualMode() {
+    onUpdate(person.id, { nutritionTargetMode: "manual" });
+    setNormExplanation(null);
+    setUpdatedVisible(false);
+    setLiveAnnouncement("");
+    changeWindowRef.current = null;
+    if (changeWindowTimerRef.current !== null)
+      window.clearTimeout(changeWindowTimerRef.current);
+    if (updatedTimerRef.current !== null)
+      window.clearTimeout(updatedTimerRef.current);
   }
 
   return (
@@ -11378,7 +11573,7 @@ function PeopleStep({
             className="chip"
             role="tab"
             aria-selected={item.id === person.id}
-            onClick={() => setActiveId(item.id)}
+            onClick={() => selectPerson(item.id)}
           >
             {item.name || "Человек"}
           </button>
@@ -11535,13 +11730,6 @@ function PeopleStep({
           </span>
           <span>Тренируюсь, важно сохранить мышцы</span>
         </button>
-        <button
-          className="primary-button nutrition-calculate-button"
-          disabled={!computed}
-          onClick={() => onCalculate()}
-        >
-          Рассчитать
-        </button>
       </section>
 
       <section className="glass-card norm-card">
@@ -11549,47 +11737,80 @@ function PeopleStep({
           <div>
             <p className="kicker">
               Норма {person.name || "человека"} ·{" "}
-              {manual ? "ввели вы" : "посчитал Mise"}
+              {manual ? "ввели вы" : "считаю на лету"}
             </p>
-            <p className="norm-figure">
-              <b>
+            <p
+              className="norm-figure"
+              aria-label={`${person.daily.kcal.toLocaleString("ru-RU")} килокалорий в день`}
+            >
+              <b aria-hidden="true">
                 <AnimatedNumber value={person.daily.kcal} step={5} duration={420} />
               </b>{" "}
-              <span>ккал/день</span>
+              <span aria-hidden="true">ккал/день</span>
             </p>
           </div>
+          <span
+            className={`norm-updated-chip${updatedVisible && !manual ? " is-visible" : ""}`}
+            aria-hidden="true"
+          >
+            обновлено
+          </span>
         </div>
 
-        <label className="field" htmlFor={`macro-${person.id}-kcal`}>
-          <span className="field-label">Калории в день</span>
-          <span className="field-box">
-            <MacroNumberInput
-              id={`macro-${person.id}-kcal`}
-              ariaLabel={`Калории для ${person.name || "человека"}`}
-              describedBy={calorieErrorId}
-              invalid={!dailyCaloriesValid}
-              value={person.daily.kcal}
-              onValueChange={(value) => {
-                onMacro(person.id, "kcal", value);
-              }}
-            />
-            <em>ккал</em>
-          </span>
-          <small className="field-hint" id={calorieErrorId}>
-            Допустимый дневной диапазон — {NUTRITION_CONFIG.minimumTargetCalories}–
-            {NUTRITION_CONFIG.maximumTargetCalories} ккал.
-          </small>
-        </label>
+        <span
+          className="norm-live-region"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {liveAnnouncement}
+        </span>
+
+        {(manual || normExplanation) && (
+          <p className={`norm-reason${manual ? " is-manual" : ""}`}>
+            <span aria-hidden="true">↻</span>
+            {manual
+              ? "Считаю по вашему числу, формулу не применяю."
+              : normExplanation}
+          </p>
+        )}
+
+        {manual && (
+          <label className="field" htmlFor={`macro-${person.id}-kcal`}>
+            <span className="field-label">Калории в день</span>
+            <span className="field-box">
+              <MacroNumberInput
+                id={`macro-${person.id}-kcal`}
+                ariaLabel={`Калории для ${person.name || "человека"}`}
+                describedBy={calorieErrorId}
+                invalid={!dailyCaloriesValid}
+                value={person.daily.kcal}
+                onValueChange={(value) => {
+                  onMacro(person.id, "kcal", value);
+                }}
+              />
+              <em>ккал</em>
+            </span>
+            <small className="field-hint" id={calorieErrorId}>
+              Допустимый дневной диапазон — {NUTRITION_CONFIG.minimumTargetCalories}–
+              {NUTRITION_CONFIG.maximumTargetCalories} ккал.
+            </small>
+          </label>
+        )}
 
         <div className="norm-macros">
-          {macroFieldMeta.map(({ key, label, color, perGram }) => (
-            <label
-              className="field macro-field"
-              key={key}
-              htmlFor={`macro-${person.id}-${key}`}
-            >
-              <span className="field-label">
-                <i style={{ background: color }} aria-hidden /> {label}
+          {macroFieldMeta.map(({ key, label, color, perGram }) => {
+            const share = Math.min(
+              100,
+              Math.round(
+                (person.daily[key] * perGram * 100) /
+                  Math.max(person.daily.kcal, 1),
+              ),
+            );
+            return manual ? (
+              <label className="field macro-field" key={key} htmlFor={`macro-${person.id}-${key}`}>
+                <span className="field-label">
+                  <i style={{ background: color }} aria-hidden /> {label}
               </span>
               <span className="field-box">
                 <MacroNumberInput
@@ -11604,19 +11825,30 @@ function PeopleStep({
                 />
                 <em>г</em>
               </span>
-              <span className="macro-bar" aria-hidden>
-                <i
-                  style={{
-                    background: color,
-                    width: `${Math.min(100, Math.round((person.daily[key] * perGram * 100) / Math.max(person.daily.kcal, 1)))}%`,
-                  }}
-                />
-              </span>
-            </label>
-          ))}
+                <span className="macro-bar" aria-hidden>
+                  <i style={{ background: color, width: `${share}%` }} />
+                </span>
+              </label>
+            ) : (
+              <div className="norm-macro-tile" key={key}>
+                <span className="field-label">
+                  <i style={{ background: color }} aria-hidden /> {label}
+                </span>
+                <p aria-label={`${label}: ${person.daily[key]} граммов`}>
+                  <b aria-hidden="true">
+                    <AnimatedNumber value={person.daily[key]} step={1} duration={420} />
+                  </b>{" "}
+                  <span aria-hidden="true">г</span>
+                </p>
+                <span className="macro-bar" aria-hidden>
+                  <i style={{ background: color, width: `${share}%` }} />
+                </span>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="field">
+        {manual && <div className="field">
           <span className="field-label">Как распределить БЖУ</span>
           <div
             className="chip-row wrap-chips"
@@ -11649,20 +11881,44 @@ function PeopleStep({
             ].description}{" "}
             — доли от калорий. Значения можно поправить вручную.
           </small>
+        </div>}
+
+        <div className="norm-manual-row">
+          <span>{manual ? "Вернуться к ориентиру Mise" : "Хочу ввести норму самостоятельно"}</span>
+          <button
+            type="button"
+            disabled={manual && !computed}
+            onClick={manual ? resumeAutoCalculation : enterManualMode}
+          >
+            {manual ? "Считать Mise" : "Ввести своё"}
+          </button>
         </div>
 
-        <p className={`norm-check ${converges ? "is-ok" : "is-off"}`} role="status">
+        <p
+          className={`norm-check ${converges ? "is-ok" : "is-off"}`}
+          aria-label={
+            converges
+              ? `Сумма макросов — ${fromMacros} килокалорий, сходится`
+              : `Сумма макросов — ${fromMacros} килокалорий против ${person.daily.kcal}, не сходится на ${gap}`
+          }
+        >
           {converges ? (
             <>
-              <Icon name="check" size={14} /> Сумма макросов —{" "}
-              <AnimatedNumber value={fromMacros} step={5} duration={420} /> ккал,
-              сходится
+              <Icon name="check" size={14} />
+              <span className="norm-check-copy" aria-hidden="true">
+                Сумма макросов —{" "}
+                <AnimatedNumber value={fromMacros} step={5} duration={420} /> ккал,
+                сходится
+              </span>
             </>
           ) : (
             <>
-              <Icon name="warning" size={14} /> Сумма макросов —{" "}
-              <AnimatedNumber value={fromMacros} step={5} duration={420} /> ккал
-              против {person.daily.kcal}: не сходится на {gap}
+              <Icon name="warning" size={14} />
+              <span className="norm-check-copy" aria-hidden="true">
+                Сумма макросов —{" "}
+                <AnimatedNumber value={fromMacros} step={5} duration={420} /> ккал
+                против {person.daily.kcal}: не сходится на {gap}
+              </span>
             </>
           )}
         </p>
@@ -11778,7 +12034,7 @@ function PeopleStep({
       />
 
       <p className="onboarding-fineprint">
-        Расчёт — ориентир, а не медицинская рекомендация.
+        Расчёт по формуле Миффлина — Сан-Жеора. Это ориентир, а не медицинская рекомендация.
       </p>
 
       <div className="chip-row menu-actions">

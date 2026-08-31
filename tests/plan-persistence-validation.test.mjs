@@ -3,7 +3,9 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { loadTypeScriptModule } from "./typescript-module.mjs";
 
-const { validatePlanForPersistence } = await loadTypeScriptModule(new URL("../lib/plan-validation.ts", import.meta.url));
+const { validatePlanForPersistence } = await loadTypeScriptModule(
+  new URL("../lib/plan-validation.ts", import.meta.url),
+);
 const runtimeCatalog = JSON.parse(
   await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
 );
@@ -81,7 +83,8 @@ test("plan persistence rejects obsolete recipes in selections and assignments", 
 
 test("the plans API validates before serializing or writing", async () => {
   const route = await readFile(new URL("../app/api/plans/route.ts", import.meta.url), "utf8");
-  assert.match(route, /validatePlanForPersistence\(body\.plan\)/);
+  assert.match(route, /normalizeAutomaticNutritionTargets\(body\.plan\)/);
+  assert.match(route, /validatePlanForPersistence\(normalizedPlan\)/);
   assert.match(route, /error: "invalid JSON".*status: 400/s);
   assert.match(route, /if \(!validation\.valid\) return Response\.json\(\{ error: validation\.error \}, \{ status: validation\.status \}\)/);
 });
