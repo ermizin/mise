@@ -1443,6 +1443,7 @@ const microIngredientReasons: Record<string, string> = Object.fromEntries([
   "cayenne pepper", "celery salt (optional)", "chili powder", "cinnamon", "cooking spray", "cumin", "cumin seed", "cumin seeds", "everything bagel seasoning",
   "fennel seeds", "fenugreek powder", "fresh or dried chilli to taste", "garlic granules", "garlic powder", "generous pinches of saffron",
   "gochugaru", "good grating of nutmeg", "ground allspice", "ground cumin", "hot chilli powder", "italian seasoning", "oil spray",
+  "allspice", "caucasian herbs", "cloves", "dried garlic", "dried onion", "herbes de provence", "khmeli suneli",
   "onion powder", "oregano", "paprika", "pepper", "ras el hanout", "red pepper flakes", "salt and pepper to taste", "smoked paprika",
   "any other seasoning you like is optional", "dried mixed herbs", "few sprigs thyme", "few thyme sprigs", "medium curry powder plus 1 tsp for the rice",
   "mild chilli powder", "mild curry powder", "mixed dried herbs", "mixed herbs", "msg", "several pinches of ground cinnamon",

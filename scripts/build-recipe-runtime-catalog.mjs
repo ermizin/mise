@@ -413,7 +413,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
     procedureIngredients.push({
       sourceIngredientIndex: index + 1,
       sourceIngredientId: `source-ingredient-${index + 1}`,
-      nameRu: russianPantryName(mapping.sourceName),
+      nameRu: sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName),
       sourceName: mapping.sourceName,
       classification: mapping.status === "ignored_noncaloric" ? "pantry" : "to_taste",
       allergens: procedureAllergens(mapping.sourceName),

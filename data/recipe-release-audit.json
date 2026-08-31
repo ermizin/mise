@@ -12,7 +12,7 @@
     "editorial:missing_yield": 2,
     "editorial:niche_localization": 9,
     "editorial:procedure_review_required": 2,
-    "nutrition:ignored_component_not_calculable": 221,
+    "nutrition:ignored_component_not_calculable": 223,
     "nutrition:independent_calculation_complete": 131,
     "nutrition:invalid_yield": 4,
     "nutrition:nutrition_delta_outside_tolerance": 120,
@@ -3056,6 +3056,38 @@
         "carbs": 74.7
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "garlic powder"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "onion powder"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9699,6 +9731,38 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "turmeric"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "mild curry powder"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "ground coriander"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "ground cumin"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
@@ -9900,6 +9964,30 @@
           "severity": "info",
           "detail": {
             "sourceName": "pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "smoked paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cayenne pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "lemon zest"
           }
         },
         {
@@ -10456,6 +10544,54 @@
           "severity": "info",
           "detail": {
             "sourceName": "small handful of coriander leaves picked"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "ground cumin"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "sumac"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "ground allspice"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "turmeric"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "mild curry powder"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "ground coriander"
           }
         },
         {
@@ -12298,6 +12434,22 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "bay leaf"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "Caucasian herbs"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -12337,6 +12489,22 @@
           "severity": "info",
           "detail": {
             "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "nutmeg"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "basil"
           }
         },
         {
@@ -12427,6 +12595,14 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -12446,10 +12622,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 413.7,
-        "protein": 42.2,
+        "kcal": 415.1,
+        "protein": 42.3,
         "fat": 11.5,
-        "carbs": 37.4
+        "carbs": 37.7
       },
       "reasons": [
         {
@@ -12466,14 +12642,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "black pepper"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dill"
           }
         },
         {
@@ -12828,6 +12996,14 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dill"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -12960,10 +13136,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 744.4,
-        "protein": 59.4,
-        "fat": 16.3,
-        "carbs": 88.7
+        "kcal": 791.5,
+        "protein": 59.7,
+        "fat": 21.2,
+        "carbs": 89.5
       },
       "reasons": [
         {
@@ -12980,6 +13156,14 @@
           "severity": "info",
           "detail": {
             "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "basil"
           }
         },
         {
@@ -13003,10 +13187,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 418.8,
-        "protein": 52.4,
+        "kcal": 430.3,
+        "protein": 52.5,
         "fat": 20.5,
-        "carbs": 3.4
+        "carbs": 6.2
       },
       "reasons": [
         {
@@ -13023,6 +13207,54 @@
           "severity": "info",
           "detail": {
             "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dried onion"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dried garlic"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "chilli powder"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "herbes de Provence"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "curry powder"
           }
         },
         {
@@ -13070,6 +13302,22 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "bay leaf"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black peppercorns"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -13089,10 +13337,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 350.3,
-        "protein": 42.7,
-        "fat": 16.3,
-        "carbs": 10.6
+        "kcal": 364.7,
+        "protein": 43.1,
+        "fat": 16.5,
+        "carbs": 13.7
       },
       "reasons": [
         {
@@ -13109,6 +13357,30 @@
           "severity": "info",
           "detail": {
             "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "khmeli suneli"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "bay leaf"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "allspice"
           }
         },
         {
@@ -13132,10 +13404,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 311.5,
-        "protein": 37.4,
+        "kcal": 332.1,
+        "protein": 37.5,
         "fat": 11,
-        "carbs": 18.9
+        "carbs": 24.1
       },
       "reasons": [
         {
@@ -13152,6 +13424,30 @@
           "severity": "info",
           "detail": {
             "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "allspice"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cloves"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "bay leaf"
           }
         },
         {
@@ -13187,6 +13483,30 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "bay leaf"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "rosemary"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "thyme"
           }
         },
         {
@@ -13238,6 +13558,30 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "bay leaf"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "rosemary"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "thyme"
           }
         },
         {
@@ -13430,6 +13774,22 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "chilli powder"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -13469,6 +13829,30 @@
           "severity": "info",
           "detail": {
             "sourceName": "paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "black pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "thyme"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dried garlic"
           }
         },
         {
@@ -13516,6 +13900,14 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "vanilla"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -13541,6 +13933,14 @@
         "carbs": 79.6
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cinnamon"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",

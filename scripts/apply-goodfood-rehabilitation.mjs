@@ -270,6 +270,16 @@ export async function applyGoodFoodRehabilitation({ cwd = process.cwd(), documen
       if (component) sourceIngredients.push(...component);
       else sourceIngredients.push(measuredIngredient(ingredient, candidate));
     }
+    for (const ingredient of correction.flavourIngredients ?? []) {
+      sourceIngredients.push(measuredIngredient(ingredient, candidate));
+    }
+    for (const override of correction.ingredientDisplayNames ?? []) {
+      const ingredient = sourceIngredients.find((item) =>
+        String(item.name ?? item.original ?? "").toLowerCase().includes(override.sourceIncludes.toLowerCase()),
+      );
+      if (!ingredient) throw new Error(`${candidate.id}: display-name ingredient ${override.sourceIncludes} is missing.`);
+      ingredient.displayNameRu = override.displayNameRu;
+    }
     const originalMacros = clone(candidate.macros ?? candidate.sourceNutrition);
     const base = {
       ...clone(candidate),

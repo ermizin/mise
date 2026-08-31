@@ -371,7 +371,7 @@
       "title": "Тефтели терияки из говядины",
       "recipeFamilyId": "raw-tmpm-25463",
       "shoppingIngredientCount": 6,
-      "procedureIngredientCount": 0,
+      "procedureIngredientCount": 4,
       "media": "source_preview"
     },
     {
@@ -1478,7 +1478,7 @@
       "title": "Кокосовый рис со стир-фраем из креветок",
       "recipeFamilyId": "raw-goodfood-coconut-rice-with-prawn-stir-fry",
       "shoppingIngredientCount": 19,
-      "procedureIngredientCount": 3,
+      "procedureIngredientCount": 7,
       "media": "source_preview"
     },
     {
@@ -1523,7 +1523,7 @@
       "title": "Лимонное орзо с форелью, пряной брокколи и пеперонатой",
       "recipeFamilyId": "raw-goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
       "shoppingIngredientCount": 24,
-      "procedureIngredientCount": 1,
+      "procedureIngredientCount": 4,
       "media": "source_preview"
     },
     {
@@ -1577,7 +1577,7 @@
       "title": "Карри с фрикадельками, нутом, рисом и маринованной капустой",
       "recipeFamilyId": "raw-goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
       "shoppingIngredientCount": 20,
-      "procedureIngredientCount": 7,
+      "procedureIngredientCount": 13,
       "media": "source_preview"
     },
     {
@@ -1910,7 +1910,7 @@
       "title": "Гречка с куриными бёдрами и йогуртовым соусом",
       "recipeFamilyId": "raw-new-home-buckwheat-legs",
       "shoppingIngredientCount": 11,
-      "procedureIngredientCount": 2,
+      "procedureIngredientCount": 4,
       "media": "source_preview"
     },
     {
@@ -1919,7 +1919,7 @@
       "title": "Куриные котлеты с пюре и быстрым соусом",
       "recipeFamilyId": "raw-new-home-cutlets-mash",
       "shoppingIngredientCount": 10,
-      "procedureIngredientCount": 2,
+      "procedureIngredientCount": 4,
       "media": "source_preview"
     },
     {
@@ -1937,7 +1937,7 @@
       "title": "Простая гречка с курицей",
       "recipeFamilyId": "raw-new-home-simple-buckwheat",
       "shoppingIngredientCount": 6,
-      "procedureIngredientCount": 2,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -1945,8 +1945,8 @@
       "slot": "dinner",
       "title": "Тушёная капуста со свиной вырезкой",
       "recipeFamilyId": "raw-new-home-stewed-cabbage",
-      "shoppingIngredientCount": 6,
-      "procedureIngredientCount": 3,
+      "shoppingIngredientCount": 7,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {
@@ -2036,7 +2036,7 @@
       "title": "Простой сэндвич с балыком",
       "recipeFamilyId": "raw-new-sandwich-balyk",
       "shoppingIngredientCount": 5,
-      "procedureIngredientCount": 1,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {
@@ -2071,8 +2071,8 @@
       "slot": "dinner",
       "title": "Фрикадельки с пастой",
       "recipeFamilyId": "raw-foodru-oblomov-meatballs",
-      "shoppingIngredientCount": 9,
-      "procedureIngredientCount": 2,
+      "shoppingIngredientCount": 12,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -2080,8 +2080,8 @@
       "slot": "dinner",
       "title": "Куриные бёдра с йогуртовым соусом",
       "recipeFamilyId": "raw-foodru-oblomov-chicken-legs",
-      "shoppingIngredientCount": 7,
-      "procedureIngredientCount": 2,
+      "shoppingIngredientCount": 9,
+      "procedureIngredientCount": 8,
       "media": "source_preview"
     },
     {
@@ -2090,7 +2090,7 @@
       "title": "Мясо с овощами",
       "recipeFamilyId": "raw-foodru-oblomov-beef-veg",
       "shoppingIngredientCount": 7,
-      "procedureIngredientCount": 2,
+      "procedureIngredientCount": 4,
       "media": "source_preview"
     },
     {
@@ -2098,8 +2098,8 @@
       "slot": "dinner",
       "title": "Чашушули",
       "recipeFamilyId": "raw-foodru-oblomov-chashushuli",
-      "shoppingIngredientCount": 7,
-      "procedureIngredientCount": 2,
+      "shoppingIngredientCount": 11,
+      "procedureIngredientCount": 5,
       "media": "source_preview"
     },
     {
@@ -2107,8 +2107,8 @@
       "slot": "dinner",
       "title": "Борщ с увеличенной порцией мяса",
       "recipeFamilyId": "raw-foodru-oblomov-borscht",
-      "shoppingIngredientCount": 10,
-      "procedureIngredientCount": 2,
+      "shoppingIngredientCount": 13,
+      "procedureIngredientCount": 5,
       "media": "source_preview"
     },
     {
@@ -2117,7 +2117,7 @@
       "title": "Перечная говядина с подливой",
       "recipeFamilyId": "raw-foodru-oblomov-pepper-beef",
       "shoppingIngredientCount": 5,
-      "procedureIngredientCount": 3,
+      "procedureIngredientCount": 6,
       "media": "source_preview"
     },
     {
@@ -2126,7 +2126,7 @@
       "title": "Перечная курица с подливой",
       "recipeFamilyId": "raw-foodru-oblomov-pepper-chicken",
       "shoppingIngredientCount": 5,
-      "procedureIngredientCount": 3,
+      "procedureIngredientCount": 6,
       "media": "source_preview"
     },
     {
@@ -2162,7 +2162,7 @@
       "title": "Бутерброд с курицей и авокадо",
       "recipeFamilyId": "raw-foodru-oblomov-sandwich",
       "shoppingIngredientCount": 10,
-      "procedureIngredientCount": 1,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -2171,7 +2171,7 @@
       "title": "Куриные «бомбочки» с рисом и жюльеном",
       "recipeFamilyId": "raw-foodru-blogger-chicken-bombs",
       "shoppingIngredientCount": 8,
-      "procedureIngredientCount": 2,
+      "procedureIngredientCount": 5,
       "media": "source_preview"
     },
     {
@@ -2180,7 +2180,7 @@
       "title": "Творожные вафли с яблоком",
       "recipeFamilyId": "raw-foodru-blogger-cottage-waffles",
       "shoppingIngredientCount": 5,
-      "procedureIngredientCount": 2,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -2189,7 +2189,7 @@
       "title": "Ленивая овсянка с шоколадной корочкой",
       "recipeFamilyId": "raw-foodru-oats-chocolate-shell",
       "shoppingIngredientCount": 7,
-      "procedureIngredientCount": 0,
+      "procedureIngredientCount": 1,
       "media": "source_preview"
     },
     {

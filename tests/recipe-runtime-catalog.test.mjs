@@ -119,7 +119,7 @@ test("every release build refreshes the audited wizard catalog", async () => {
     await readFile(new URL("../package.json", import.meta.url), "utf8"),
   );
   const refreshCommand =
-    "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200";
+    "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs";
   assert.equal(packageJson.scripts.prebuild, refreshCommand);
   assert.equal(packageJson.scripts["recipes:runtime:refresh"], refreshCommand);
 });

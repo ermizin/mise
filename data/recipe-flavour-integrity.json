@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "purpose": "User-visible flavour components that must survive source overlays, normalization and runtime projection.",
+  "recipes": [
+    { "id": "new-home-buckwheat-legs", "ingredientTerms": ["Лавровый лист", "Кавказские травы"], "instructionTerms": ["лавров", "кавказск"] },
+    { "id": "new-home-cutlets-mash", "ingredientTerms": ["Мускатный орех", "Базилик"], "instructionTerms": ["мускатн", "базилик"] },
+    { "id": "new-home-simple-buckwheat", "ingredientTerms": ["Чёрный перец", "Укроп"], "instructionTerms": ["перец", "укроп"] },
+    { "id": "new-home-stewed-cabbage", "ingredientTerms": ["Кинза"], "instructionTerms": ["кинз"] },
+    { "id": "new-sandwich-balyk", "ingredientTerms": ["Укроп"], "instructionTerms": ["укроп"] },
+    { "id": "foodru-oblomov-meatballs", "ingredientTerms": ["Чеснок", "Петрушка", "Базилик"], "instructionTerms": ["чеснок", "петруш", "базилик"] },
+    { "id": "foodru-oblomov-chicken-legs", "ingredientTerms": ["Сушёный лук", "Сушёный чеснок", "Сладкая паприка", "Перец чили", "Прованские травы", "Карри", "Кинза", "Сахар"], "instructionTerms": ["сушёные лук и чеснок", "сладкую паприку", "чили", "прованские травы", "карри", "кинз", "сахар"] },
+    { "id": "foodru-oblomov-beef-veg", "ingredientTerms": ["Лавровый лист", "Чёрный перец горошком"], "instructionTerms": ["лавров", "перец горошком"] },
+    { "id": "foodru-oblomov-chashushuli", "ingredientTerms": ["Петрушка", "Кинза", "Аджика", "Хмели-сунели", "Лавровый лист", "Душистый перец", "Сахар"], "instructionTerms": ["аджик", "хмели-сунели", "лавров", "душистый перец", "сахар", "петруш", "кинз"] },
+    { "id": "foodru-oblomov-borscht", "ingredientTerms": ["Укроп", "Петрушка", "Душистый перец", "Гвоздика", "Лавровый лист", "Сахар"], "instructionTerms": ["укроп", "петруш", "душист", "гвоздик", "лавров", "сахар"] },
+    { "id": "foodru-oblomov-pepper-beef", "ingredientTerms": ["Лавровый лист", "Розмарин", "Тимьян"], "instructionTerms": ["лавров", "розмарин", "тимьян"] },
+    { "id": "foodru-oblomov-pepper-chicken", "ingredientTerms": ["Лавровый лист", "Розмарин", "Тимьян"], "instructionTerms": ["лавров", "розмарин", "тимьян"] },
+    { "id": "foodru-oblomov-sandwich", "ingredientTerms": ["Перец чили", "Соль"], "instructionTerms": ["чили", "соль"] },
+    { "id": "foodru-blogger-chicken-bombs", "ingredientTerms": ["Чёрный перец", "Тимьян", "Сушёный чеснок"], "instructionTerms": ["чёрн", "тимьян", "сушёным чесноком"] },
+    { "id": "foodru-blogger-cottage-waffles", "ingredientTerms": ["Ваниль"], "instructionTerms": ["ваниль"] },
+    { "id": "foodru-oats-chocolate-shell", "ingredientTerms": ["Корица"], "instructionTerms": ["кориц"] },
+    { "id": "tmpm-25463", "ingredientTerms": ["Сушёный чеснок", "Сушёный лук", "Соль", "Чёрный перец"], "instructionTerms": ["чесночный", "луковый", "соль", "перец"] },
+    { "id": "goodfood-coconut-rice-with-prawn-stir-fry", "ingredientTerms": ["Куркума", "Мягкий порошок карри", "Молотый кориандр", "Молотый кумин"], "instructionTerms": ["куркум", "карри", "кориандр", "кумин"] },
+    { "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage", "ingredientTerms": ["Молотый кумин", "Сумах", "Молотый душистый перец", "Куркума", "Мягкий порошок карри", "Молотый кориандр"], "instructionTerms": ["кумин", "сумах", "душист", "куркум", "карри", "кориандр"] },
+    { "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata", "ingredientTerms": ["Копчёная паприка", "Кайенский перец", "Лимонная цедра"], "instructionTerms": ["копчёной паприк", "кайенск", "лимонной цедр"] },
+    { "id": "goodfood-pork-harissa-meatballs", "ingredientTerms": ["Харисса"], "instructionTerms": ["харисс"] },
+    { "id": "goodfood-harissa-beef-tomato-bulgur", "ingredientTerms": ["Харисса"], "instructionTerms": ["харисс"] }
+  ]
+}

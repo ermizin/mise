@@ -129,6 +129,20 @@
           "name": "paprika",
           "displayNameRu": "Паприка",
           "original": "по вкусу"
+        },
+        {
+          "name": "bay leaf",
+          "displayNameRu": "Лавровый лист",
+          "amountMetric": 2,
+          "unitMetric": "g",
+          "original": "2 g · редакционное решение Mise"
+        },
+        {
+          "name": "Caucasian herbs",
+          "displayNameRu": "Кавказские травы",
+          "amountMetric": 6,
+          "unitMetric": "g",
+          "original": "6 g · редакционное решение Mise"
         }
       ],
       "instructionFacts": [
@@ -176,7 +190,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Смешайте бёдра с горчицей, паприкой, половиной чеснока и солью.",
+          "text": "Смешайте куриные бёдра с горчицей, паприкой, кавказскими травами, половиной чеснока и солью.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -190,14 +204,16 @@
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Овощи слегка обжарьте, переложите в форму, добавьте промытую гречку и 720 мл кипятка.",
+          "text": "Овощи слегка обжарьте, переложите в форму, добавьте промытую гречку, лавровый лист и 720 мл кипятка.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -211,7 +227,9 @@
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "cook",
           "dependsOn": [
@@ -234,7 +252,9 @@
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "cook",
           "dependsOn": [
@@ -257,7 +277,9 @@
             "source-ingredient-10",
             "source-ingredient-11",
             "source-ingredient-12",
-            "source-ingredient-13"
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "portion",
           "dependsOn": [
@@ -425,6 +447,20 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "name": "nutmeg",
+          "displayNameRu": "Мускатный орех",
+          "amountMetric": 1,
+          "unitMetric": "g",
+          "original": "1 g · редакционное решение Mise"
+        },
+        {
+          "name": "basil",
+          "displayNameRu": "Базилик",
+          "amountMetric": 2,
+          "unitMetric": "g",
+          "original": "2 g · редакционное решение Mise"
         }
       ],
       "instructionFacts": [
@@ -472,7 +508,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Смешайте фарш, яйцо, сухари, мелко нарезанный лук и специи; сформуйте 8 котлет.",
+          "text": "Смешайте фарш, яйцо, сухари, мелко нарезанный лук, базилик, соль и перец; сформуйте 8 котлет.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -485,7 +521,9 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
           ],
           "action": "cook",
           "dependsOn": []
@@ -505,7 +543,9 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
           ],
           "action": "cook",
           "dependsOn": [
@@ -514,7 +554,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Отварите картофель, разомните с молоком и маслом.",
+          "text": "Отварите картофель, разомните с молоком, маслом и мускатным орехом.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -527,7 +567,9 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
           ],
           "action": "cook",
           "dependsOn": [
@@ -549,7 +591,9 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14"
           ],
           "action": "portion",
           "dependsOn": [
@@ -912,6 +956,11 @@
           "name": "dill",
           "displayNameRu": "Укроп",
           "original": "по вкусу"
+        },
+        {
+          "name": "black pepper",
+          "displayNameRu": "Чёрный перец",
+          "original": "по вкусу"
         }
       ],
       "instructionFacts": [
@@ -949,7 +998,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Обжарьте лук и чеснок 3 минуты, затем добавьте помидор и томатную пасту.",
+          "text": "Обжарьте лук и чеснок 3 минуты, затем добавьте помидор, томатную пасту и чёрный перец.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -958,7 +1007,8 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9"
           ],
           "action": "cook",
           "dependsOn": []
@@ -974,7 +1024,8 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9"
           ],
           "action": "cook",
           "dependsOn": [
@@ -983,7 +1034,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Всыпьте промытую гречку, влейте 560 мл воды и тушите под крышкой до готовности крупы и курицы.",
+          "text": "Всыпьте промытую гречку, влейте 560 мл воды и тушите под крышкой до готовности крупы и курицы; добавьте укроп.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -992,7 +1043,8 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9"
           ],
           "action": "portion",
           "dependsOn": [
@@ -1058,10 +1110,10 @@
       },
       "servings": 4,
       "macros": {
-        "kcal": 413.7,
-        "protein": 42.2,
+        "kcal": 415.1,
+        "protein": 42.3,
         "fat": 11.5,
-        "carbs": 37.4
+        "carbs": 37.7
       },
       "sourceDeclaredNutrition": {
         "kcal": 91.2,
@@ -1130,9 +1182,12 @@
           "original": "по вкусу"
         },
         {
-          "name": "dill",
-          "displayNameRu": "Зелень",
-          "original": "по вкусу"
+          "id": "greens_raw",
+          "name": "Кинза",
+          "displayNameRu": "Кинза",
+          "amountMetric": 15,
+          "unitMetric": "g",
+          "original": "15 г · адаптация Mise"
         }
       ],
       "instructionFacts": [
@@ -1206,7 +1261,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Добавьте картофель, капусту, кетчуп и ещё 150 мл воды; тушите 20–25 минут до мягкости овощей.",
+          "text": "Добавьте картофель, капусту, кетчуп и ещё 150 мл воды; тушите 20–25 минут до мягкости овощей, затем добавьте кинзу.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -1262,7 +1317,7 @@
         ],
         "sourceFacts": "data/simple-home-source-extract.json",
         "proteinRule": "at_least_25g_per_serving",
-        "proteinPerServing": 42.2,
+        "proteinPerServing": 42.3,
         "note": "Вместо неопределённой свинины взята постная вырезка; 175 г на порцию."
       }
     },
@@ -3222,6 +3277,11 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "name": "dill",
+          "displayNameRu": "Укроп",
+          "original": "по вкусу"
         }
       ],
       "instructionFacts": [
@@ -3259,28 +3319,30 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Подсушите хлеб; мясо нарежьте тонкими ломтиками.",
+          "text": "Подсушите хлеб; балык нарежьте тонкими ломтиками.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Выложите на хлеб овощи и всю белковую порцию.",
+          "text": "Смешайте творожную намазку с укропом, нанесите на хлеб и добавьте помидоры.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7"
           ],
           "action": "cook",
           "dependsOn": [
@@ -3289,14 +3351,15 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Добавьте 15 г zero-соуса и соберите сэндвич непосредственно перед едой.",
+          "text": "Добавьте балык и 15 г zero-соуса; соберите сэндвич непосредственно перед едой.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
             "source-ingredient-3",
             "source-ingredient-4",
             "source-ingredient-5",
-            "source-ingredient-6"
+            "source-ingredient-6",
+            "source-ingredient-7"
           ],
           "action": "portion",
           "dependsOn": [
@@ -4047,10 +4110,10 @@
       },
       "servings": 5,
       "macros": {
-        "kcal": 744.4,
-        "protein": 59.4,
-        "fat": 16.3,
-        "carbs": 88.7
+        "kcal": 791.5,
+        "protein": 59.7,
+        "fat": 21.2,
+        "carbs": 89.5
       },
       "sourceDeclaredNutrition": {
         "kcal": 162.9,
@@ -4141,6 +4204,37 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "id": "garlic_raw",
+          "name": "Чеснок",
+          "displayNameRu": "Чеснок",
+          "amountMetric": 10,
+          "unitMetric": "g",
+          "original": "10 г · адаптация Mise"
+        },
+        {
+          "id": "greens_raw",
+          "name": "Петрушка",
+          "displayNameRu": "Петрушка",
+          "amountMetric": 15,
+          "unitMetric": "g",
+          "original": "15 г · адаптация Mise"
+        },
+        {
+          "name": "basil",
+          "displayNameRu": "Базилик",
+          "amountMetric": 5,
+          "unitMetric": "g",
+          "original": "5 g · редакционное решение Mise"
+        },
+        {
+          "id": "butter_processed",
+          "name": "Сливочное масло",
+          "displayNameRu": "Сливочное масло",
+          "amountMetric": 30,
+          "unitMetric": "g",
+          "original": "30 г · адаптация Mise"
         }
       ],
       "instructionFacts": [
@@ -4188,7 +4282,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте мясо и овощи, отмерьте компоненты соуса.",
+          "text": "Смешайте фарш из куриного бедра с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4200,14 +4294,18 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте мясо партиями до румяной корочки, затем добавьте овощи.",
+          "text": "Обжарьте фрикадельки до румяной корочки и доведите до 74°C внутри.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4219,7 +4317,11 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "cook",
           "dependsOn": [
@@ -4228,7 +4330,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Введите остальные ингредиенты и тушите до мягкости мяса; курица должна достичь 74°C в центре.",
+          "text": "Пассеруйте лук, морковь и сельдерей на сливочном масле, добавьте протёртые томаты и базилик; тушите до густоты.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4240,7 +4342,11 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "cook",
           "dependsOn": [
@@ -4249,7 +4355,7 @@
         },
         {
           "id": "editorial-step-4",
-          "text": "Разделите блюдо на равные порции вместе с соусом.",
+          "text": "Отварите спагетти, соедините с соусом и разделите вместе с фрикадельками на равные порции.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4261,7 +4367,11 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
           ],
           "action": "portion",
           "dependsOn": [
@@ -4307,7 +4417,7 @@
         ],
         "sourceFacts": "data/simple-home-source-extract.json",
         "proteinRule": "at_least_25g_per_serving",
-        "proteinPerServing": 59.4,
+        "proteinPerServing": 59.7,
         "note": "Исходная белковая основа сохранена; паста нормирована до 70 г сухой на порцию."
       }
     },
@@ -4327,10 +4437,10 @@
       },
       "servings": 6,
       "macros": {
-        "kcal": 418.8,
-        "protein": 52.4,
+        "kcal": 430.3,
+        "protein": 52.5,
         "fat": 20.5,
-        "carbs": 3.4
+        "carbs": 6.2
       },
       "sourceDeclaredNutrition": {
         "kcal": 237.27,
@@ -4405,6 +4515,64 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "name": "dried onion",
+          "displayNameRu": "Сушёный лук",
+          "amountMetric": 9,
+          "unitMetric": "g",
+          "original": "9 g · редакционное решение Mise"
+        },
+        {
+          "name": "dried garlic",
+          "displayNameRu": "Сушёный чеснок",
+          "amountMetric": 10,
+          "unitMetric": "g",
+          "original": "10 g · редакционное решение Mise"
+        },
+        {
+          "name": "paprika",
+          "displayNameRu": "Сладкая паприка",
+          "amountMetric": 14,
+          "unitMetric": "g",
+          "original": "14 g · редакционное решение Mise"
+        },
+        {
+          "name": "chilli powder",
+          "displayNameRu": "Перец чили",
+          "amountMetric": 7,
+          "unitMetric": "g",
+          "original": "7 g · редакционное решение Mise"
+        },
+        {
+          "name": "herbes de Provence",
+          "displayNameRu": "Прованские травы",
+          "amountMetric": 5,
+          "unitMetric": "g",
+          "original": "5 g · редакционное решение Mise"
+        },
+        {
+          "name": "curry powder",
+          "displayNameRu": "Карри",
+          "amountMetric": 2,
+          "unitMetric": "g",
+          "original": "2 g · редакционное решение Mise"
+        },
+        {
+          "id": "greens_raw",
+          "name": "Кинза",
+          "displayNameRu": "Кинза",
+          "amountMetric": 30,
+          "unitMetric": "g",
+          "original": "30 г · адаптация Mise"
+        },
+        {
+          "id": "white_sugar_processed",
+          "name": "Сахар",
+          "displayNameRu": "Сахар",
+          "amountMetric": 15,
+          "unitMetric": "g",
+          "original": "15 г · адаптация Mise"
         }
       ],
       "instructionFacts": [
@@ -4452,7 +4620,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте мясо и овощи, отмерьте компоненты соуса.",
+          "text": "Смешайте сушёные лук и чеснок, сладкую паприку, чили, прованские травы, карри, соль и масло; натрите куриные бёдра и маринуйте 3 часа.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4462,14 +4630,22 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте мясо партиями до румяной корочки, затем добавьте овощи.",
+          "text": "Запекайте или жарьте бёдра до румяности и 74°C в центре мяса.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4479,7 +4655,15 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17"
           ],
           "action": "cook",
           "dependsOn": [
@@ -4488,7 +4672,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Введите остальные ингредиенты и тушите до мягкости мяса; курица должна достичь 74°C в центре.",
+          "text": "Для соуса смешайте йогурт, майонез, солёные огурцы, сок лайма, шрирачу, сахар и рубленую кинзу.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4498,7 +4682,15 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17"
           ],
           "action": "cook",
           "dependsOn": [
@@ -4507,7 +4699,7 @@
         },
         {
           "id": "editorial-step-4",
-          "text": "Разделите блюдо на равные порции вместе с соусом.",
+          "text": "Разделите курицу на порции, соус упакуйте отдельно.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4517,7 +4709,15 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17"
           ],
           "action": "portion",
           "dependsOn": [
@@ -4563,7 +4763,7 @@
         ],
         "sourceFacts": "data/simple-home-source-extract.json",
         "proteinRule": "at_least_25g_per_serving",
-        "proteinPerServing": 52.4,
+        "proteinPerServing": 52.5,
         "note": "Майонез и сахар в соусе сильно сокращены; основа соуса — йогурт."
       }
     },
@@ -4661,6 +4861,20 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "name": "bay leaf",
+          "displayNameRu": "Лавровый лист",
+          "amountMetric": 3,
+          "unitMetric": "g",
+          "original": "3 g · редакционное решение Mise"
+        },
+        {
+          "name": "black peppercorns",
+          "displayNameRu": "Чёрный перец горошком",
+          "amountMetric": 3,
+          "unitMetric": "g",
+          "original": "3 g · редакционное решение Mise"
         }
       ],
       "instructionFacts": [
@@ -4708,7 +4922,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте мясо и овощи, отмерьте компоненты соуса.",
+          "text": "Нарежьте говядину и овощи; отмерьте бульон, лавровый лист и чёрный перец горошком.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4718,14 +4932,16 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте мясо партиями до румяной корочки, затем добавьте овощи.",
+          "text": "Обжарьте говядину партиями до румяной корочки, затем добавьте лук, морковь, сладкий перец, чеснок и томатную пасту.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4735,7 +4951,9 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": [
@@ -4744,7 +4962,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Введите остальные ингредиенты и тушите до мягкости мяса; говядина должна стать мягкой.",
+          "text": "Влейте бульон, добавьте лавровый лист и перец горошком; тушите до мягкости говядины.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4754,7 +4972,9 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": [
@@ -4763,7 +4983,7 @@
         },
         {
           "id": "editorial-step-4",
-          "text": "Разделите блюдо на равные порции вместе с соусом.",
+          "text": "Удалите лавровый лист и разделите блюдо на равные порции вместе с соусом.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4773,7 +4993,9 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "portion",
           "dependsOn": [
@@ -4839,10 +5061,10 @@
       },
       "servings": 12,
       "macros": {
-        "kcal": 350.3,
-        "protein": 42.7,
-        "fat": 16.3,
-        "carbs": 10.6
+        "kcal": 364.7,
+        "protein": 43.1,
+        "fat": 16.5,
+        "carbs": 13.7
       },
       "sourceDeclaredNutrition": {
         "kcal": 143.89,
@@ -4917,6 +5139,59 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "id": "greens_raw",
+          "name": "Петрушка",
+          "displayNameRu": "Петрушка",
+          "amountMetric": 80,
+          "unitMetric": "g",
+          "original": "80 г · адаптация Mise"
+        },
+        {
+          "id": "greens_raw",
+          "name": "Кинза",
+          "displayNameRu": "Кинза",
+          "amountMetric": 80,
+          "unitMetric": "g",
+          "original": "80 г · адаптация Mise"
+        },
+        {
+          "id": "hot_sauce_processed",
+          "name": "Аджика",
+          "displayNameRu": "Аджика",
+          "amountMetric": 40,
+          "unitMetric": "g",
+          "original": "40 г · адаптация Mise"
+        },
+        {
+          "name": "khmeli suneli",
+          "displayNameRu": "Хмели-сунели",
+          "amountMetric": 16,
+          "unitMetric": "g",
+          "original": "16 g · редакционное решение Mise"
+        },
+        {
+          "name": "bay leaf",
+          "displayNameRu": "Лавровый лист",
+          "amountMetric": 1.6,
+          "unitMetric": "g",
+          "original": "1.6 g · редакционное решение Mise"
+        },
+        {
+          "name": "allspice",
+          "displayNameRu": "Душистый перец",
+          "amountMetric": 3.2,
+          "unitMetric": "g",
+          "original": "3.2 g · редакционное решение Mise"
+        },
+        {
+          "id": "white_sugar_processed",
+          "name": "Сахар",
+          "displayNameRu": "Сахар",
+          "amountMetric": 20,
+          "unitMetric": "g",
+          "original": "20 г · адаптация Mise"
         }
       ],
       "instructionFacts": [
@@ -4964,7 +5239,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте мясо и овощи, отмерьте компоненты соуса.",
+          "text": "Обжарьте говядину партиями до румяной корочки, добавьте лук и сладкий перец.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4974,14 +5249,21 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте мясо партиями до румяной корочки, затем добавьте овощи.",
+          "text": "Смешайте томатную пасту с аджикой и хмели-сунели; добавьте к мясу вместе с помидорами.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4991,7 +5273,14 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5000,7 +5289,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Введите остальные ингредиенты и тушите до мягкости мяса; говядина должна стать мягкой.",
+          "text": "Добавьте сахар, лавровый лист и душистый перец, влейте немного воды и тушите до мягкости говядины.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5010,7 +5299,14 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5019,7 +5315,7 @@
         },
         {
           "id": "editorial-step-4",
-          "text": "Разделите блюдо на равные порции вместе с соусом.",
+          "text": "Снимите с огня, вмешайте чеснок, петрушку и кинзу; удалите лавровый лист и разделите на порции.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5029,7 +5325,14 @@
             "source-ingredient-6",
             "source-ingredient-7",
             "source-ingredient-8",
-            "source-ingredient-9"
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16"
           ],
           "action": "portion",
           "dependsOn": [
@@ -5075,7 +5378,7 @@
         ],
         "sourceFacts": "data/simple-home-source-extract.json",
         "proteinRule": "at_least_25g_per_serving",
-        "proteinPerServing": 42.7,
+        "proteinPerServing": 43.1,
         "note": "Белковая порция 200 г сырой говядины; масло и сахар сокращены."
       }
     },
@@ -5095,10 +5398,10 @@
       },
       "servings": 10,
       "macros": {
-        "kcal": 311.5,
-        "protein": 37.4,
+        "kcal": 332.1,
+        "protein": 37.5,
         "fat": 11,
-        "carbs": 18.9
+        "carbs": 24.1
       },
       "sourceDeclaredNutrition": {
         "kcal": 71.88,
@@ -5197,6 +5500,51 @@
           "name": "black pepper",
           "displayNameRu": "Чёрный перец",
           "original": "по вкусу"
+        },
+        {
+          "id": "greens_raw",
+          "name": "Укроп",
+          "displayNameRu": "Укроп",
+          "amountMetric": 15,
+          "unitMetric": "g",
+          "original": "15 г · адаптация Mise"
+        },
+        {
+          "id": "greens_raw",
+          "name": "Петрушка",
+          "displayNameRu": "Петрушка",
+          "amountMetric": 20,
+          "unitMetric": "g",
+          "original": "20 г · адаптация Mise"
+        },
+        {
+          "name": "allspice",
+          "displayNameRu": "Душистый перец",
+          "amountMetric": 10,
+          "unitMetric": "g",
+          "original": "10 g · редакционное решение Mise"
+        },
+        {
+          "name": "cloves",
+          "displayNameRu": "Гвоздика",
+          "amountMetric": 7,
+          "unitMetric": "g",
+          "original": "7 g · редакционное решение Mise"
+        },
+        {
+          "name": "bay leaf",
+          "displayNameRu": "Лавровый лист",
+          "amountMetric": 3,
+          "unitMetric": "g",
+          "original": "3 g · редакционное решение Mise"
+        },
+        {
+          "id": "white_sugar_processed",
+          "name": "Сахар",
+          "displayNameRu": "Сахар",
+          "amountMetric": 50,
+          "unitMetric": "g",
+          "original": "50 г · адаптация Mise"
         }
       ],
       "instructionFacts": [
@@ -5244,7 +5592,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте мясо и овощи, отмерьте компоненты соуса.",
+          "text": "Сварите говядину в бульоне с лавровым листом, душистым перцем и гвоздикой до мягкости.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5257,14 +5605,20 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте мясо партиями до румяной корочки, затем добавьте овощи.",
+          "text": "Пассеруйте лук, морковь, сельдерей, свёклу и томатную пасту; добавьте сахар и лимонный сок.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5277,7 +5631,13 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5286,7 +5646,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Введите остальные ингредиенты и тушите до мягкости мяса; говядина должна стать мягкой.",
+          "text": "Добавьте овощную заправку и капусту в бульон, варите до мягкости капусты.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5299,7 +5659,13 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5308,7 +5674,7 @@
         },
         {
           "id": "editorial-step-4",
-          "text": "Разделите блюдо на равные порции вместе с соусом.",
+          "text": "Верните нарезанную говядину, добавьте чеснок, укроп и петрушку; удалите целые специи и разделите на порции.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5321,7 +5687,13 @@
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
-            "source-ingredient-12"
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15",
+            "source-ingredient-16",
+            "source-ingredient-17",
+            "source-ingredient-18"
           ],
           "action": "portion",
           "dependsOn": [
@@ -5367,7 +5739,7 @@
         ],
         "sourceFacts": "data/simple-home-source-extract.json",
         "proteinRule": "at_least_25g_per_serving",
-        "proteinPerServing": 37.4,
+        "proteinPerServing": 37.5,
         "note": "Выход сокращён до 10 порций, чтобы в каждой было 160 г сырой говядины."
       }
     },
@@ -5446,6 +5818,27 @@
           "original": "по вкусу"
         },
         {
+          "name": "bay leaf",
+          "displayNameRu": "Лавровый лист",
+          "amountMetric": 2,
+          "unitMetric": "g",
+          "original": "2 g · редакционное решение Mise"
+        },
+        {
+          "name": "rosemary",
+          "displayNameRu": "Розмарин",
+          "amountMetric": 4,
+          "unitMetric": "g",
+          "original": "4 g · редакционное решение Mise"
+        },
+        {
+          "name": "thyme",
+          "displayNameRu": "Тимьян",
+          "amountMetric": 30,
+          "unitMetric": "g",
+          "original": "30 g · редакционное решение Mise"
+        },
+        {
           "name": "water",
           "displayNameRu": "Вода",
           "amountMetric": 1500,
@@ -5505,7 +5898,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте говядину, лук и чеснок; отмерьте муку, масло, перец и 250 мл воды на порцию.",
+          "text": "Нарежьте говядину, лук и чеснок; отмерьте муку, масло, перец, лавровый лист, розмарин, тимьян и 250 мл воды на порцию.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5514,14 +5907,17 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте говядину партиями до румяной корочки, добавьте лук и чеснок. Влейте воду, добавьте перец и тушите под крышкой 45–50 минут до мягкости мяса.",
+          "text": "Обжарьте говядину партиями до румяной корочки, добавьте лук и чеснок. Влейте воду, добавьте перец, лавровый лист, розмарин и тимьян; тушите под крышкой 45–50 минут до мягкости мяса.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5530,7 +5926,10 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5548,7 +5947,10 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5566,7 +5968,10 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "portion",
           "dependsOn": [
@@ -5691,6 +6096,27 @@
           "original": "по вкусу"
         },
         {
+          "name": "bay leaf",
+          "displayNameRu": "Лавровый лист",
+          "amountMetric": 2,
+          "unitMetric": "g",
+          "original": "2 g · редакционное решение Mise"
+        },
+        {
+          "name": "rosemary",
+          "displayNameRu": "Розмарин",
+          "amountMetric": 4,
+          "unitMetric": "g",
+          "original": "4 g · редакционное решение Mise"
+        },
+        {
+          "name": "thyme",
+          "displayNameRu": "Тимьян",
+          "amountMetric": 30,
+          "unitMetric": "g",
+          "original": "30 g · редакционное решение Mise"
+        },
+        {
           "name": "water",
           "displayNameRu": "Вода",
           "amountMetric": 1500,
@@ -5750,7 +6176,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Нарежьте курицу, лук и чеснок; отмерьте муку, масло, перец и 250 мл воды на порцию.",
+          "text": "Нарежьте курицу, лук и чеснок; отмерьте муку, масло, перец, лавровый лист, розмарин, тимьян и 250 мл воды на порцию.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5759,14 +6185,17 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Обжарьте курицу партиями до румяной корочки, добавьте лук и чеснок. Влейте воду, добавьте перец и готовьте под крышкой до 74°C в центре курицы.",
+          "text": "Обжарьте курицу партиями до румяной корочки, добавьте лук и чеснок. Влейте воду, добавьте перец, лавровый лист, розмарин и тимьян; готовьте под крышкой до 74°C в центре курицы.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -5775,7 +6204,10 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5793,7 +6225,10 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "cook",
           "dependsOn": [
@@ -5811,7 +6246,10 @@
             "source-ingredient-5",
             "source-ingredient-6",
             "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11"
           ],
           "action": "portion",
           "dependsOn": [
@@ -6747,6 +7185,16 @@
           "name": "paprika",
           "displayNameRu": "Паприка",
           "original": "по вкусу"
+        },
+        {
+          "name": "chilli powder",
+          "displayNameRu": "Перец чили",
+          "original": "по вкусу"
+        },
+        {
+          "name": "salt",
+          "displayNameRu": "Соль",
+          "original": "по вкусу"
         }
       ],
       "instructionFacts": [
@@ -6794,7 +7242,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Замаринуйте курицу в соевом соусе с паприкой на 10 минут.",
+          "text": "Замаринуйте курицу в соевом соусе с паприкой, чили и солью на 10 минут.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -6806,7 +7254,9 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "cook",
           "dependsOn": []
@@ -6825,7 +7275,9 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "cook",
           "dependsOn": [
@@ -6846,7 +7298,9 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "cook",
           "dependsOn": [
@@ -6867,7 +7321,9 @@
             "source-ingredient-8",
             "source-ingredient-9",
             "source-ingredient-10",
-            "source-ingredient-11"
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "portion",
           "dependsOn": [
@@ -7019,6 +7475,27 @@
           "name": "paprika",
           "displayNameRu": "Специи",
           "original": "по вкусу"
+        },
+        {
+          "name": "black pepper",
+          "displayNameRu": "Чёрный перец",
+          "amountMetric": 1,
+          "unitMetric": "g",
+          "original": "1 g · редакционное решение Mise"
+        },
+        {
+          "name": "thyme",
+          "displayNameRu": "Тимьян",
+          "amountMetric": 1,
+          "unitMetric": "g",
+          "original": "1 g · редакционное решение Mise"
+        },
+        {
+          "name": "dried garlic",
+          "displayNameRu": "Сушёный чеснок",
+          "amountMetric": 0.9,
+          "unitMetric": "g",
+          "original": "0.9 g · редакционное решение Mise"
         }
       ],
       "instructionFacts": [
@@ -7066,7 +7543,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Подготовьте овощи, крупу и мясную начинку по указанным массам.",
+          "text": "Приправьте мясо куриного бедра солью, чёрным перцем, тимьяном и сушёным чесноком.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -7077,14 +7554,17 @@
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
-            "source-ingredient-10"
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Соберите порционные заготовки, равномерно распределяя мясо и гарнир.",
+          "text": "Обжарьте лук и шампиньоны, добавьте сметану и приготовьте густую начинку.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -7095,7 +7575,10 @@
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
-            "source-ingredient-10"
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "cook",
           "dependsOn": [
@@ -7104,7 +7587,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Доведите блюдо под крышкой или в духовке до 74°C в центре курицы и мягкости крупы.",
+          "text": "Сформуйте куриные «бомбочки» с грибной начинкой и запекайте до 74°C внутри; отдельно приготовьте рис.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -7115,7 +7598,10 @@
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
-            "source-ingredient-10"
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "cook",
           "dependsOn": [
@@ -7124,7 +7610,7 @@
         },
         {
           "id": "editorial-step-4",
-          "text": "Остудите и разделите на равные контейнеры.",
+          "text": "Смешайте томатную пасту с небольшим количеством воды, прогрейте как соус и разделите всё на пять порций.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -7135,7 +7621,10 @@
             "source-ingredient-7",
             "source-ingredient-8",
             "source-ingredient-9",
-            "source-ingredient-10"
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13"
           ],
           "action": "portion",
           "dependsOn": [
@@ -7263,6 +7752,11 @@
           "name": "paprika",
           "displayNameRu": "Специи",
           "original": "по вкусу"
+        },
+        {
+          "name": "vanilla",
+          "displayNameRu": "Ваниль",
+          "original": "по вкусу"
         }
       ],
       "instructionFacts": [
@@ -7300,7 +7794,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Пробейте творог, яйца и протеин до однородности.",
+          "text": "Пробейте творог, яйца, протеин и ваниль до однородности.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -7308,7 +7802,8 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "cook",
           "dependsOn": []
@@ -7323,7 +7818,8 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "cook",
           "dependsOn": [
@@ -7340,7 +7836,8 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "portion",
           "dependsOn": [
@@ -7474,6 +7971,13 @@
           "amountMetric": 20,
           "unitMetric": "g",
           "original": "20 г · адаптация Mise"
+        },
+        {
+          "name": "cinnamon",
+          "displayNameRu": "Корица",
+          "amountMetric": 1.5,
+          "unitMetric": "g",
+          "original": "1.5 g · редакционное решение Mise"
         }
       ],
       "instructionFacts": [
@@ -7519,14 +8023,15 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "cook",
           "dependsOn": []
         },
         {
           "id": "editorial-step-2",
-          "text": "Добавьте овсянку, банан и грецкие орехи; растопите тёмный шоколад и распределите его сверху тонким слоем.",
+          "text": "Добавьте овсянку, банан, корицу и грецкие орехи; растопите тёмный шоколад и распределите его сверху тонким слоем.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -7534,7 +8039,8 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "cook",
           "dependsOn": [
@@ -7551,7 +8057,8 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7"
+            "source-ingredient-7",
+            "source-ingredient-8"
           ],
           "action": "portion",
           "dependsOn": [

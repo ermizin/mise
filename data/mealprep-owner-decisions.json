@@ -32,6 +32,16 @@
       "sourceIngredient": "protein pancake mix",
       "displayNameRu": "Смесь для вафли: 12,5 г сывороточного протеина + 12,5 г казеина + 20 г овсяной муки + 10 г кукурузного крахмала + 1 г разрыхлителя",
       "instructionNoteRu": "На одну порцию заранее смешайте 12,5 г сывороточного протеина, 12,5 г казеина, 20 г овсяной муки, 10 г кукурузного крахмала и 1 г разрыхлителя."
+    },
+    {
+      "recipeId": "tmpm-25463",
+      "kind": "recipe_flavour_restore",
+      "ingredients": [
+        { "name": "garlic powder", "displayNameRu": "Сушёный чеснок", "original": "по вкусу" },
+        { "name": "onion powder", "displayNameRu": "Сушёный лук", "original": "по вкусу" },
+        { "name": "salt", "displayNameRu": "Соль", "original": "по вкусу" },
+        { "name": "black pepper", "displayNameRu": "Чёрный перец", "original": "по вкусу" }
+      ]
     }
   ]
 }

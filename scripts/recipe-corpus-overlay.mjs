@@ -134,6 +134,10 @@ async function applyMealPrepOwnerDecisions({ document }) {
       if (!ingredient) throw new Error(`${candidate.id}: compound ingredient is missing.`);
       ingredient.displayNameRu = decision.displayNameRu;
       steps[0] = { ...steps[0], text: `${decision.instructionNoteRu} ${steps[0].text}` };
+    } else if (decision.kind === "recipe_flavour_restore") {
+      ingredients.push(...decision.ingredients.map((ingredient) => ({ ...ingredient })));
+      const ingredientIds = ingredients.map((_, index) => `source-ingredient-${index + 1}`);
+      for (const step of steps) step.ingredientIds = ingredientIds;
     } else {
       throw new Error(`${candidate.id}: unsupported owner decision kind ${decision.kind}.`);
     }

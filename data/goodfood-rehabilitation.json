@@ -29,14 +29,50 @@
     { "id": "goodfood-smoky-black-bean-chilli", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The measured beef, bean and topping batch is divided into five labelled meal-prep bowls instead of four oversized portions." },
     { "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping", "action": "rehabilitate" },
     { "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy", "action": "rehabilitate", "components": ["roasted_spiced_cauliflower", "creamy_beans", "red_onion_gravy"] },
-    { "id": "goodfood-coconut-rice-with-prawn-stir-fry", "action": "rehabilitate", "components": ["yellow_coconut_curry_sauce"] },
+    {
+      "id": "goodfood-coconut-rice-with-prawn-stir-fry",
+      "action": "rehabilitate",
+      "components": ["yellow_coconut_curry_sauce"],
+      "flavourIngredients": [
+        { "name": "turmeric", "displayNameRu": "Куркума", "original": "щепотка куркумы" },
+        { "name": "mild curry powder", "displayNameRu": "Мягкий порошок карри", "original": "щепотка мягкого карри" },
+        { "name": "ground coriander", "displayNameRu": "Молотый кориандр", "original": "щепотка молотого кориандра" },
+        { "name": "ground cumin", "displayNameRu": "Молотый кумин", "original": "щепотка молотого кумина" }
+      ]
+    },
     { "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde", "action": "rehabilitate", "components": ["creamy_beans", "salsa_verde"] },
     { "id": "goodfood-marinated-chicken-with-orzo-tomato-feta", "action": "rehabilitate", "components": ["lemon_parmesan_vinaigrette", "lemon_orzo"], "servings": 6, "yieldEvidence": "The measured chicken-and-orzo tray is divided into six labelled meal-prep containers instead of four oversized plates." },
     { "id": "goodfood-family-meals-easy-fish-cakes", "action": "rehabilitate" },
-    { "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata", "action": "rehabilitate", "components": ["spiced_broccoli", "lemon_parmesan_vinaigrette", "peperonata", "lemon_orzo"], "servings": 6, "yieldEvidence": "Four 110 g fish fillets are portioned as six smaller fish-and-orzo meal-prep servings; the component weights are retained in the container label." },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "action": "rehabilitate",
+      "components": ["spiced_broccoli", "lemon_parmesan_vinaigrette", "peperonata", "lemon_orzo"],
+      "servings": 6,
+      "yieldEvidence": "Four 110 g fish fillets are portioned as six smaller fish-and-orzo meal-prep servings; the component weights are retained in the container label.",
+      "flavourIngredients": [
+        { "name": "smoked paprika", "displayNameRu": "Копчёная паприка", "original": "копчёная паприка по рецепту" },
+        { "name": "cayenne pepper", "displayNameRu": "Кайенский перец", "original": "щепотка кайенского перца" },
+        { "name": "lemon zest", "displayNameRu": "Лимонная цедра", "amountMetric": 5, "unitMetric": "g", "original": "5 g lemon zest" }
+      ]
+    },
     { "id": "goodfood-spiced-meatballs", "action": "rehabilitate", "fullDish": true },
     { "id": "goodfood-roasted-tomato-pancetta-picnic-quiches", "action": "rehabilitate" },
-    { "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage", "action": "rehabilitate", "components": ["spiced_meatballs", "yellow_coconut_curry_sauce", "pickled_red_cabbage"], "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The 420 g meatball component plus chickpeas and rice is packed into five labelled portions." },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "action": "rehabilitate",
+      "components": ["spiced_meatballs", "yellow_coconut_curry_sauce", "pickled_red_cabbage"],
+      "excludeOptionalServing": true,
+      "servings": 5,
+      "yieldEvidence": "The 420 g meatball component plus chickpeas and rice is packed into five labelled portions.",
+      "flavourIngredients": [
+        { "name": "ground cumin", "displayNameRu": "Молотый кумин", "original": "молотый кумин по рецепту" },
+        { "name": "sumac", "displayNameRu": "Сумах", "original": "сумах по рецепту" },
+        { "name": "ground allspice", "displayNameRu": "Молотый душистый перец", "original": "молотый душистый перец по рецепту" },
+        { "name": "turmeric", "displayNameRu": "Куркума", "original": "щепотка куркумы" },
+        { "name": "mild curry powder", "displayNameRu": "Мягкий порошок карри", "original": "щепотка мягкого карри" },
+        { "name": "ground coriander", "displayNameRu": "Молотый кориандр", "original": "щепотка молотого кориандра" }
+      ]
+    },
     { "id": "goodfood-lemon-orzo", "action": "rehabilitate", "servings": 4, "yieldEvidence": "500 g dry orzo is normalized to four meal-prep side portions; the source card did not publish a yield." },
     { "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage", "action": "rehabilitate", "components": ["spiced_meatballs", "pickled_red_cabbage"] },
     { "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads", "action": "rehabilitate", "components": ["flatbread_dough", "peperonata", "spiced_broccoli", "lemon_parmesan_vinaigrette"], "servings": 5, "yieldEvidence": "The measured flatbread and topping batch is divided into five practical meal-prep portions instead of four oversized servings." },
@@ -48,7 +84,7 @@
     { "id": "goodfood-sausage-egg-muffins", "action": "rehabilitate", "excludeOptionalServing": true },
     { "id": "goodfood-mushroom-lentil-beef-ragu", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 4, "yieldEvidence": "The ragu is packed as four main-meal portions rather than the source's three large servings." },
     { "id": "goodfood-black-bean-spicy-beef-pasta", "action": "rehabilitate", "components": ["mushroom_lentil_beef_ragu"], "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The completed pasta bake is divided into five containers after the measured ragu substitution." },
-    { "id": "goodfood-harissa-beef-tomato-bulgur", "action": "rehabilitate", "components": ["mushroom_lentil_beef_ragu"], "excludeOptionalServing": true },
+    { "id": "goodfood-harissa-beef-tomato-bulgur", "action": "rehabilitate", "components": ["mushroom_lentil_beef_ragu"], "excludeOptionalServing": true, "ingredientDisplayNames": [{ "sourceIncludes": "harissa", "displayNameRu": "Харисса" }] },
     { "id": "goodfood-orange-oregano-pulled-pork", "action": "rehabilitate", "excludeOptionalServing": true },
     { "id": "goodfood-indian-rice-salad-chicken", "action": "rehabilitate", "excludeOptionalServing": true },
     { "id": "goodfood-chicken-squash-pesto-lasagne", "action": "rehabilitate", "servings": 8, "yieldEvidence": "The source tray has twelve pasta sheets and is normalized to eight practical meal-prep squares." },
@@ -76,7 +112,7 @@
     ,{ "id": "goodfood-summery-beans-herby-green-aioli", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 8, "yieldEvidence": "The bean tray is split into eight labelled side-to-main portions instead of three oversized servings." }
     ,{ "id": "goodfood-bulgur-quinoa-lunch-bowls", "action": "rehabilitate", "excludeOptionalServing": true }
     ,{ "id": "goodfood-vegan-paella", "action": "rehabilitate", "excludeOptionalServing": true }
-    ,{ "id": "goodfood-pork-harissa-meatballs", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The batch is packed into five portions after cooking rather than three oversized servings." }
+    ,{ "id": "goodfood-pork-harissa-meatballs", "action": "rehabilitate", "excludeOptionalServing": true, "servings": 5, "yieldEvidence": "The batch is packed into five portions after cooking rather than three oversized servings.", "ingredientDisplayNames": [{ "sourceIncludes": "harissa", "displayNameRu": "Харисса" }] }
     ,{ "id": "goodfood-crunchy-broccoli-cranberry-salad", "action": "rehabilitate", "excludeOptionalServing": true }
     ,{ "id": "goodfood-mozzarella-pepper-aubergine-calzone", "action": "rehabilitate", "excludeOptionalServing": true }
     ,{ "id": "goodfood-freeze-ahead-roasties", "action": "rehabilitate", "excludeOptionalServing": true }
