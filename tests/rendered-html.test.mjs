@@ -116,14 +116,18 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(route, /id: `\$\{clientId\}:\$\{plan\.id\}`/);
   assert.match(schema, /clientId: text\("client_id"\)\.notNull\(\)/);
   assert.match(schema, /analyticsEvents = sqliteTable\("analytics_events"/);
-  assert.match(layout, /images: \[\{ url: "\/og\.png"/);
+  assert.match(layout, /images: \[\{ url: "\/og-image\.png", width: 1200, height: 630/);
   assert.match(layout, /applicationName: "Mise"/);
   assert.match(layout, /apple-touch-icon\.png/);
   assert.match(layout, /https:\/\/mise\.ermizinm\.ru/);
   const manifest = JSON.parse(manifestText);
   assert.equal(manifest.name, "Mise");
   assert.equal(manifest.short_name, "Mise");
-  assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
+  assert.deepEqual(manifest.icons.map((icon) => [icon.sizes, icon.purpose]), [
+    ["192x192", "any"],
+    ["512x512", "any"],
+    ["512x512", "maskable"],
+  ]);
   assert.match(css, /env\(safe-area-inset-bottom\)/);
   assert.match(css, /\.onboarding-shell/);
   assert.match(css, /\.action-bar \{/);

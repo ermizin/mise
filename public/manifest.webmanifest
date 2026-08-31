@@ -5,8 +5,8 @@
   "description": "Меню, покупки и готовые порции на несколько дней.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#e5ece7",
-  "theme_color": "#e5ece7",
+  "background_color": "#FDF6EE",
+  "theme_color": "#FBF3EA",
   "lang": "ru",
   "icons": [
     {
@@ -20,6 +20,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }

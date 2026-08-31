@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FDF6EE"/><stop offset="1" stop-color="#F4E4D4"/></linearGradient>
+    <radialGradient id="shine" cx="82%" cy="6%" r="60%"><stop stop-color="#FFC79A" stop-opacity=".55"/><stop offset=".6" stop-color="#FFC79A" stop-opacity="0"/></radialGradient>
+    <linearGradient id="left" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FF8143"/><stop offset="1" stop-color="#E2500F"/></linearGradient>
+    <linearGradient id="right" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A8CDBB"/><stop offset="1" stop-color="#5E9E86"/></linearGradient>
+    <filter id="shadow" x="-25%" y="-25%" width="150%" height="180%"><feDropShadow dx="0" dy="10" stdDeviation="11" flood-color="#965A28" flood-opacity=".18"/></filter>
+  </defs>
+  <rect width="240" height="240" fill="url(#bg)"/>
+  <rect width="240" height="240" fill="url(#shine)"/>
+  <rect x="38" y="62" width="164" height="116" rx="26" fill="#fff" fill-opacity=".85" filter="url(#shadow)"/>
+  <rect x="48" y="72" width="75" height="96" rx="17" fill="url(#left)"/>
+  <rect x="132" y="72" width="60" height="96" rx="17" fill="url(#right)"/>
+  <rect x="62" y="46" width="116" height="9" rx="5" fill="#2A1D14" fill-opacity=".2"/>
+</svg>

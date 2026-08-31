@@ -1,6 +1,17 @@
-const CACHE_NAME = "mise-shell-v3";
+const CACHE_NAME = "mise-shell-v4";
 const PLAN_CACHE_NAME = "mise-plan-v3";
-const SHELL = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
+const SHELL = [
+  "/",
+  "/manifest.webmanifest",
+  "/favicon.svg",
+  "/favicon-32.png",
+  "/favicon-16.png",
+  "/icon-192.png",
+  "/icon-512.png",
+  "/icon-maskable-512.png",
+  "/apple-touch-icon.png",
+  "/badge-96.png",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(SHELL)).catch(() => undefined));
@@ -82,7 +93,7 @@ self.addEventListener("push", (event) => {
     self.registration.showNotification(payload.title || "Mise", {
       body: payload.body || "Пора вернуться к плану.",
       icon: "/icon-192.png",
-      badge: "/icon-192.png",
+      badge: "/badge-96.png",
       tag: payload.kind ? `mise-${payload.kind}` : "mise-reminder",
       renotify: false,
       data: { url: payload.url || "/" },

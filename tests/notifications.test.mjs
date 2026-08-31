@@ -28,16 +28,23 @@ test("places conditional Home Screen installation before onboarding reminders", 
   assert.equal(manifest.start_url, "/");
   assert.equal(manifest.name, "Mise");
   assert.equal(manifest.short_name, "Mise");
-  assert.deepEqual(manifest.icons.map(({ sizes, type }) => [sizes, type]), [["192x192", "image/png"], ["512x512", "image/png"]]);
+  assert.deepEqual(manifest.icons.map(({ sizes, type, purpose }) => [sizes, type, purpose]), [
+    ["192x192", "image/png", "any"],
+    ["512x512", "image/png", "any"],
+    ["512x512", "image/png", "maskable"],
+  ]);
   assert.match(layout, /apple-touch-icon\.png/);
   assert.match(serviceWorker, /icon: "\/icon-192\.png"/);
+  assert.match(serviceWorker, /badge: "\/badge-96\.png"/);
 });
 
 test("ships real PNG icons at the declared sizes", async () => {
   const files = await Promise.all([
     ["public/icon-192.png", 192],
     ["public/icon-512.png", 512],
+    ["public/icon-maskable-512.png", 512],
     ["public/apple-touch-icon.png", 180],
+    ["public/badge-96.png", 96],
   ].map(async ([path, expected]) => [await readFile(new URL(`../${path}`, import.meta.url)), expected, path]));
   for (const [buffer, expected, path] of files) {
     assert.equal(buffer.subarray(0, 8).toString("hex"), "89504e470d0a1a0a", `${path} is PNG`);
