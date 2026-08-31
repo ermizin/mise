@@ -39,3 +39,24 @@ yarn-error.log*
 /.wrangler/
 /outputs/
 /work/
+
+# local agent/browser state and QA evidence
+/.mcp.json
+/.claude/settings.local.json
+/.claude/launch.json
+/.playwright-mcp/
+/.visual-qa/
+
+# local recovery snapshots: keep them on disk or archive them outside Git
+/.wip-snapshots/
+
+# machine-specific build/runtime state
+/tsconfig.tsbuildinfo
+/wrangler.local.json
+
+# one-off local icon/debug artifacts
+/.debug-mise-icon.py
+/.install-mise-icon.sh
+/.mise-icon-source.jpg.b64
+/.mise-icon-source.txt
+/mise-final-week-1440.png
