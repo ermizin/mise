@@ -252,7 +252,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -908,7 +910,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -1749,7 +1753,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -2576,7 +2582,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -3107,7 +3115,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -3552,7 +3562,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -4023,7 +4035,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -4611,7 +4625,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -5460,7 +5476,9 @@
         "knifeActions": 2,
         "cookware": 4,
         "activeActions": 5,
-        "activeMinutes": 19
+        "activeMinutes": 19,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -6392,7 +6410,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -7271,7 +7291,9 @@
         "knifeActions": 3,
         "cookware": 3,
         "activeActions": 6,
-        "activeMinutes": 24
+        "activeMinutes": 24,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -8278,7 +8300,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -9193,7 +9217,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -10068,7 +10094,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -10824,7 +10852,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -11649,7 +11679,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -12722,7 +12754,9 @@
         "knifeActions": 2,
         "cookware": 6,
         "activeActions": 5,
-        "activeMinutes": 19
+        "activeMinutes": 19,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -13788,7 +13822,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -14526,7 +14562,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -15197,7 +15235,9 @@
         "knifeActions": 1,
         "cookware": 7,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -15969,7 +16009,9 @@
         "knifeActions": 0,
         "cookware": 6,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -16703,7 +16745,9 @@
         "knifeActions": 3,
         "cookware": 5,
         "activeActions": 6,
-        "activeMinutes": 24
+        "activeMinutes": 24,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -17479,7 +17523,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -18160,7 +18206,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -18969,7 +19017,9 @@
         "knifeActions": 0,
         "cookware": 6,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -19784,7 +19834,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -20609,7 +20661,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -21326,7 +21380,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -21990,7 +22046,9 @@
         "knifeActions": 2,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 16
+        "activeMinutes": 16,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -22773,7 +22831,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -23707,7 +23767,9 @@
         "knifeActions": 1,
         "cookware": 6,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -24526,7 +24588,9 @@
         "knifeActions": 2,
         "cookware": 6,
         "activeActions": 4,
-        "activeMinutes": 16
+        "activeMinutes": 16,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -25231,7 +25295,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -26024,7 +26090,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -26888,7 +26956,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -27634,7 +27704,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -28484,7 +28556,9 @@
         "knifeActions": 2,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 16
+        "activeMinutes": 16,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -29302,7 +29376,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -29971,7 +30047,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 2
+        "activeMinutes": 2,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -30488,7 +30566,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -30957,7 +31037,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -31558,7 +31640,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -32343,7 +32427,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -33139,7 +33225,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -33901,7 +33989,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -34542,7 +34632,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -34998,7 +35090,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -35448,7 +35542,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -35898,7 +35994,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -36378,7 +36476,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -36965,7 +37065,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -37583,7 +37685,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -38220,7 +38324,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -38769,7 +38875,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -39227,7 +39335,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -39597,7 +39707,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -39965,7 +40077,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -40329,7 +40443,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -40791,7 +40907,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -41526,7 +41644,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -42421,7 +42541,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -43252,7 +43374,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -43969,7 +44093,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -44708,7 +44834,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -45514,7 +45642,9 @@
         "knifeActions": 1,
         "cookware": 6,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -46244,7 +46374,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -46839,7 +46971,9 @@
         "knifeActions": 2,
         "cookware": 3,
         "activeActions": 5,
-        "activeMinutes": 19
+        "activeMinutes": 19,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -47665,7 +47799,9 @@
         "knifeActions": 2,
         "cookware": 4,
         "activeActions": 5,
-        "activeMinutes": 19
+        "activeMinutes": 19,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -48533,7 +48669,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -49146,7 +49284,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -49850,7 +49990,9 @@
         "knifeActions": 2,
         "cookware": 3,
         "activeActions": 5,
-        "activeMinutes": 19
+        "activeMinutes": 19,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -50753,7 +50895,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -51617,7 +51761,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -52318,7 +52464,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -53089,7 +53237,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -53977,7 +54127,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -54593,7 +54745,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -55228,7 +55382,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -55908,7 +56064,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -56622,7 +56780,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -57297,7 +57457,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -58030,7 +58192,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -58710,7 +58874,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -59502,7 +59668,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -60245,7 +60413,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -60890,7 +61060,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -61752,7 +61924,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -62616,7 +62790,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -63425,7 +63601,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -64244,7 +64422,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -65056,7 +65236,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -65809,7 +65991,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -66810,7 +66994,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -67784,7 +67970,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -68488,7 +68676,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -69219,7 +69409,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -69927,7 +70119,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -70801,7 +70995,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -71695,7 +71891,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -72403,7 +72601,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -73049,7 +73249,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -73741,7 +73943,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -74444,7 +74648,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -75135,7 +75341,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -75688,7 +75896,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -76406,7 +76616,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -77140,7 +77352,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -77872,7 +78086,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -78612,7 +78828,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -79376,7 +79594,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -79960,7 +80180,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -80506,7 +80728,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -81070,7 +81294,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -81404,7 +81630,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -81723,7 +81951,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -82124,7 +82354,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -82574,7 +82806,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -83027,7 +83261,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -83744,7 +83980,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -84423,7 +84661,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -85007,7 +85247,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -85732,7 +85974,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -86393,7 +86637,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -86936,7 +87182,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -87561,7 +87809,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -88280,7 +88530,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -88947,7 +89199,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -89627,7 +89881,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -90363,7 +90619,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -91082,7 +91340,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -91800,7 +92060,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -92501,7 +92763,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -93137,7 +93401,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -93743,7 +94009,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -94369,7 +94637,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -95126,7 +95396,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -95996,7 +96268,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -96771,7 +97045,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -97551,7 +97827,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -98432,7 +98710,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -99094,7 +99374,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -99770,7 +100052,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -100488,7 +100772,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -101148,7 +101434,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -101896,7 +102184,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -102988,7 +103278,9 @@
         "knifeActions": 1,
         "cookware": 6,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -103935,7 +104227,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -104557,7 +104851,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -105253,7 +105549,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -106069,7 +106367,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -106676,7 +106976,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -107212,7 +107514,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 5
+        "activeMinutes": 5,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -107797,7 +108101,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -108690,7 +108996,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -109533,7 +109841,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -110382,7 +110692,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -111216,7 +111528,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -111797,7 +112111,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -112467,7 +112783,9 @@
         "knifeActions": 0,
         "cookware": 6,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -113375,7 +113693,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -113945,7 +114265,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -114665,7 +114987,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -115643,7 +115967,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -116132,7 +116458,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -116943,7 +117271,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 6,
-        "activeMinutes": 20
+        "activeMinutes": 20,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -117903,7 +118233,9 @@
         "knifeActions": 0,
         "cookware": 8,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -118876,7 +119208,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 7,
-        "activeMinutes": 21
+        "activeMinutes": 21,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -119894,7 +120228,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -120379,7 +120715,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -120848,7 +121186,9 @@
         "knifeActions": 0,
         "cookware": 6,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -121585,7 +121925,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -122393,7 +122735,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -123351,7 +123695,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 7,
-        "activeMinutes": 21
+        "activeMinutes": 21,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -124431,7 +124777,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -124986,7 +125334,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -125838,7 +126188,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 6,
-        "activeMinutes": 18
+        "activeMinutes": 18,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -126849,7 +127201,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -127483,7 +127837,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -128230,7 +128586,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -128957,7 +129315,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -129831,7 +130191,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -131003,7 +131365,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -131752,7 +132116,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 3,
-        "activeMinutes": 11
+        "activeMinutes": 11,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -132420,7 +132786,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -133159,7 +133527,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -133756,7 +134126,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -134305,7 +134677,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -134972,7 +135346,9 @@
         "knifeActions": 1,
         "cookware": 5,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -135689,7 +136065,9 @@
         "knifeActions": 1,
         "cookware": 2,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -136289,7 +136667,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -136935,7 +137315,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -137812,7 +138194,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -139085,7 +139469,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -140143,7 +140529,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -140784,7 +141172,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -141499,7 +141889,9 @@
         "knifeActions": 0,
         "cookware": 5,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -142303,7 +142695,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -142995,7 +143389,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -143644,7 +144040,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -144437,7 +144835,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -145169,7 +145569,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -145752,7 +146154,9 @@
         "knifeActions": 0,
         "cookware": 2,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -146316,7 +146720,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -147052,7 +147458,9 @@
         "knifeActions": 1,
         "cookware": 3,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -147778,7 +148186,9 @@
         "knifeActions": 0,
         "cookware": 6,
         "activeActions": 2,
-        "activeMinutes": 6
+        "activeMinutes": 6,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -148531,7 +148941,9 @@
         "knifeActions": 0,
         "cookware": 4,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -149286,7 +149698,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -150139,7 +150553,9 @@
         "knifeActions": 0,
         "cookware": 3,
         "activeActions": 1,
-        "activeMinutes": 3
+        "activeMinutes": 3,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -150874,7 +151290,9 @@
         "knifeActions": 1,
         "cookware": 4,
         "activeActions": 2,
-        "activeMinutes": 8
+        "activeMinutes": 8,
+        "parallelProcesses": 1,
+        "difficulty": 3
       },
       "provenance": {
         "kind": "parsed",
@@ -151560,7 +151978,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -152222,7 +152642,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -152805,7 +153227,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -153294,7 +153718,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -153769,7 +154195,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -154252,7 +154680,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -154731,7 +155161,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -155193,7 +155625,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -155655,7 +156089,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -156130,7 +156566,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -156626,7 +157064,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -157093,7 +157533,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -157524,7 +157966,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -157968,7 +158412,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -158414,7 +158860,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -158860,7 +159308,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -159308,7 +159758,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -159806,7 +160258,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -160410,7 +160864,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -160974,7 +161430,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -161498,7 +161956,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -162024,7 +162484,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -162597,7 +163059,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -163161,7 +163625,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -163649,7 +164115,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -164188,7 +164656,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -164787,7 +165257,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 17
+        "activeMinutes": 17,
+        "parallelProcesses": 1,
+        "difficulty": 2
       },
       "provenance": {
         "kind": "parsed",
@@ -165331,7 +165803,9 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 14
+        "activeMinutes": 14,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -165850,7 +166324,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -166445,7 +166921,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 4,
-        "activeMinutes": 12
+        "activeMinutes": 12,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -166960,7 +167438,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -167413,7 +167893,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -167879,7 +168361,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",
@@ -168381,7 +168865,9 @@
         "knifeActions": 0,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 9
+        "activeMinutes": 9,
+        "parallelProcesses": 1,
+        "difficulty": 1
       },
       "provenance": {
         "kind": "parsed",

@@ -80,7 +80,7 @@ test("dead and misleading UI patterns from the audit do not return", async () =>
   assert.doesNotMatch(page, /scrollIntoView\(/);
   assert.match(page, /strip\.scrollLeft = Math\.max/);
   assert.doesNotMatch(page, /Собрать заново<\/button>[\s\S]{0,120}role="checkbox"/);
-  assert.match(page, /\{recipeFamilyFor\(recipe\) \? \(/);
+  assert.match(page, /recipeFamilyFor\(recipe\) \? \(/);
   assert.match(page, /Точная подстройка пока недоступна/);
   assert.match(page, /Math\.ceil\(quantity \/ item\.averagePieceWeightGrams\)/);
 });

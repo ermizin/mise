@@ -149,19 +149,18 @@ test("plan bootstrap cannot overwrite an optimistic local shopping edit", async 
   );
 });
 
-test("recipe entry, detail tabs and catalog controls use the supplied interaction motion", async () => {
+test("recipe card 14A keeps local tab state and uses only its short fade", async () => {
   const [page, css] = await Promise.all([
     read("app/page.tsx"),
     read("app/globals.css"),
   ]);
   const recipeView = page.slice(page.indexOf("function RecipeView("));
-  assert.match(recipeView, /const fromWeek = Boolean\(batch && slot && plan\)/);
-  assert.match(recipeView, /recipe-detail\$\{fromWeek \? " is-entering-from-week"/);
-  assert.match(recipeView, /function selectSection\(next: "steps" \| "portion"\)/);
+  assert.match(recipeView, /function selectSection\(next: RecipeSection\)/);
+  assert.match(recipeView, /sectionScroll\.current\[section\] = window\.scrollY/);
+  assert.match(recipeView, /top: sectionScroll\.current\[next\]/);
   assert.match(recipeView, /recipe-section-motion/);
-  assert.match(css, /mise-recipe-detail-week-in 420ms var\(--motion-settled\)/);
-  assert.match(css, /mise-recipe-section-right 320ms var\(--motion-settled\)/);
-  assert.match(css, /mise-recipe-section-left 320ms var\(--motion-settled\)/);
+  assert.match(css, /mise-recipe-panel-fade 160ms ease both/);
+  assert.doesNotMatch(css, /mise-recipe-detail-week-in|mise-recipe-section-right|mise-recipe-section-left/);
   assert.match(css, /catalog-filter-button:active:not\(:disabled\)[\s\S]{0,180}scale\(0\.94\)/);
   assert.match(css, /catalog-filters-sheet \.chip:active:not\(:disabled\)/);
   assert.match(css, /mise-catalog-filter-count 300ms var\(--motion-spring\)/);
@@ -188,7 +187,6 @@ test("goal calculator follows motion_wizard_1 card 9d", async () => {
   assert.match(css, /\.norm-updated-chip\.is-visible \{[\s\S]*?mise-norm-updated 300ms cubic-bezier\(0\.34, 1\.3, 0\.5, 1\) 120ms/);
   assert.match(css, /\.norm-reason \{[\s\S]*?mise-norm-reason 260ms linear 120ms/);
   const reduced = css.slice(css.lastIndexOf("@media (prefers-reduced-motion: reduce)"));
-  assert.match(reduced, /recipe-detail\.is-entering-from-week/);
   assert.match(reduced, /recipe-section-motion\.motion-enter-right/);
   assert.match(reduced, /seg-indicator[\s\S]*?transition: background-color 160ms linear !important/);
   assert.match(reduced, /norm-updated-chip[\s\S]*?transition-duration: 0ms !important/);

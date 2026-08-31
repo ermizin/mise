@@ -177,6 +177,8 @@ type RecipeEffort = {
   cookware: number;
   activeActions: number;
   activeMinutes: number;
+  parallelProcesses?: number;
+  difficulty?: 1 | 2 | 3;
 };
 type RecipeLocalization = {
   fit: "familiar" | "adapted" | "niche";
@@ -6086,6 +6088,17 @@ export default function Home() {
     );
     setRecipeContext(context);
   }
+  function leaveRecipeFor(action: () => void) {
+    const url = new URL(location.href);
+    url.searchParams.delete("recipe");
+    const href = `${url.pathname}${url.search}${url.hash}`;
+    const nextState = { ...(history.state ?? {}) };
+    delete nextState.mise;
+    delete nextState.recipeId;
+    history.replaceState(nextState, "", href);
+    setRecipeContext(null);
+    action();
+  }
   /* eslint-disable react-hooks/set-state-in-effect -- bootstraps onboarding state and the stored plan on mount */
   useEffect(() => {
     let mounted = true;
@@ -6495,6 +6508,20 @@ export default function Home() {
       <RecipeView
         context={recipeContext}
         onBack={() => setRecipeContext(null)}
+        onStartCooking={
+          recipeContext.batch && recipeContext.plan
+            ? () =>
+                leaveRecipeFor(() =>
+                  setBatchCookingContext({ batchId: recipeContext.batch!.id }),
+                )
+            : undefined
+        }
+        onReplace={
+          recipeContext.batch && recipeContext.plan
+            ? () =>
+                leaveRecipeFor(() => editDayMenu(recipeContext.batch!.id))
+            : undefined
+        }
         onChangePlan={
           recipeContext.plan
             ? async (plan) => {
@@ -14028,24 +14055,47 @@ function RecipeView({
   context,
   onBack,
   onChangePlan,
+  onStartCooking,
+  onReplace,
 }: {
   context: RecipeContext;
   onBack: () => void;
   onChangePlan?: (plan: ActivePlan) => Promise<void>;
+  onStartCooking?: () => void;
+  onReplace?: () => void;
 }) {
   const { recipe, batch, slot, plan } = context;
-  const [section, setSection] = useState<"steps" | "portion">("steps");
+  type RecipeSection = "cooking" | "products" | "dish";
+  const sectionOrder: RecipeSection[] = ["cooking", "products", "dish"];
+  const [section, setSection] = useState<RecipeSection>("cooking");
+  const [productScale, setProductScale] = useState<"cooking" | "portion">(
+    "cooking",
+  );
+  const sectionScroll = useRef<Record<RecipeSection, number>>({
+    cooking: 0,
+    products: 0,
+    dish: 0,
+  });
   const [sectionMotion, setSectionMotion] = useState<{
     direction: -1 | 1;
     epoch: number;
   }>({ direction: 1, epoch: 0 });
-  function selectSection(next: "steps" | "portion") {
+  function selectSection(next: RecipeSection) {
     if (next === section) return;
+    sectionScroll.current[section] = window.scrollY;
     setSectionMotion((current) => ({
-      direction: next === "portion" ? 1 : -1,
+      direction:
+        sectionOrder.indexOf(next) > sectionOrder.indexOf(section) ? 1 : -1,
       epoch: current.epoch + 1,
     }));
     setSection(next);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: sectionScroll.current[next],
+        left: 0,
+        behavior: "auto",
+      });
+    });
   }
   const assignment =
     batch && slot && plan
@@ -14108,7 +14158,7 @@ function RecipeView({
     return () => window.removeEventListener("popstate", onPop);
   }, []);
   useEffect(() => {
-    if (section === "steps" && plan && batch)
+    if (section === "cooking" && plan && batch)
       void trackAnalytics("cooking_instructions_opened");
   }, [batch, plan, section]);
   const previewSession =
@@ -14276,12 +14326,22 @@ function RecipeView({
   const sectionMotionClass = sectionMotion.epoch
     ? ` recipe-section-motion ${sectionMotion.direction > 0 ? "motion-enter-right" : "motion-enter-left"}`
     : "";
-  const fromWeek = Boolean(batch && slot && plan);
+  const difficulty =
+    recipe.effort.difficulty ?? (recipe.effort.level === "low" ? 1 : 3);
+  const difficultyLabel = ["Просто", "Средне", "Сложно"][difficulty - 1];
+  const cookingPortions = Math.max(1, (batch?.days ?? 1) * Math.max(1, eaters.length));
+  const cookwareLabel =
+    recipe.effort.cookware === 1
+      ? "1 предмет посуды"
+      : recipe.effort.cookware < 5
+        ? `${recipe.effort.cookware} предмета посуды`
+        : `${recipe.effort.cookware} предметов посуды`;
   return (
-    <main
-      className={`app-shell recipe-detail${fromWeek ? " is-entering-from-week" : ""}`}
-    >
-      <div className="ambient ambient-one" />
+    <main className="app-shell recipe-detail">
+      <div className="recipe-hero-photo" aria-hidden>
+        <RecipeMedia recipe={recipe} eager />
+        <span />
+      </div>
       <header className="detail-header">
         <button
           className="icon-button glass"
@@ -14293,19 +14353,40 @@ function RecipeView({
         >
           <Icon name="chevron" className="back-chevron" />
         </button>
-        <span className="glass">
-          {recipe.effort.activeMinutes} мин активно · {recipe.time} всего
+        <span className="glass recipe-source-pill">
+          {originLabel}
         </span>
       </header>
       <section className="detail-hero">
-        <div className="detail-food glass">
-          <RecipeMedia recipe={recipe} eager />
-        </div>
         <p className="kicker">
-          {mealMeta[slot ?? recipe.slot].label} · {originLabel}
+          {mealMeta[slot ?? recipe.slot].label}
+          {batch ? ` · ${cookingPortions} порц.` : " · базовая порция"}
         </p>
         <h1>{recipe.title}</h1>
-        <div className="detail-macros">
+      </section>
+      <div className="detail-tabs glass-1" role="tablist" aria-label="Раздел рецепта">
+        {(
+          [
+            ["cooking", "Готовка"],
+            ["products", "Продукты"],
+            ["dish", "Блюдо"],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            id={`recipe-tab-${id}`}
+            key={id}
+            role="tab"
+            aria-controls={`recipe-panel-${id}`}
+            aria-selected={section === id}
+            className={section === id ? "selected" : ""}
+            onClick={() => selectSection(id)}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+      {section === "dish" && (
+        <div className="detail-macros glass-card">
           {(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => (
             <span key={key}>
               <b>{displayMacros[key]}</b>
@@ -14316,8 +14397,8 @@ function RecipeView({
             </span>
           ))}
         </div>
-      </section>
-      {recipe.allergens.length > 0 && (
+      )}
+      {section === "dish" && recipe.allergens.length > 0 && (
         <section className="recipe-allergens glass-card">
           <p className="kicker">Метки каталога</p>
           <h2>Аллергены в рецепте</h2>
@@ -14328,7 +14409,7 @@ function RecipeView({
           </div>
         </section>
       )}
-      {contactWarnings.length > 0 && (
+      {section === "dish" && contactWarnings.length > 0 && (
         <section className="allergy-warning glass-card" role="alert">
           <span>!</span>
           <div>
@@ -14344,7 +14425,7 @@ function RecipeView({
           </div>
         </section>
       )}
-      {recipeFamilyFor(recipe) ? (
+      {section === "dish" && (recipeFamilyFor(recipe) ? (
         <section className="macro-tuner glass-card">
         <div className="tuner-heading">
           <div>
@@ -14465,98 +14546,133 @@ function RecipeView({
             рецепта ещё не проверена независимая подстройка белка, гарнира и соуса.
           </p>
         </section>
-      )}
-      <section className="recipe-info-grid">
-        <article className="glass-card">
-          <Icon name="flame" />
-          <div>
-            <b>
-              {recipe.effort.level === "low"
-                ? "Низкая сложность"
-                : "Высокая сложность"}
-            </b>
-            <small>
-              {recipe.effort.knifeActions} нарезки · {recipe.effort.cookware}{" "}
-              ед. посуды · {recipe.effort.activeActions} действий
-            </small>
-          </div>
-        </article>
-        <article className="glass-card">
-          <Icon name="clock" />
-          <div>
-            <b>{recipe.effort.activeMinutes} мин активно</b>
-            <small>{recipe.time} мин общего времени</small>
-          </div>
-        </article>
-      </section>
-      <section className="detail-panel glass-card">
-        <div className="detail-tabs" role="tablist" aria-label="Раздел рецепта">
-          <button
-            role="tab"
-            aria-selected={section === "steps"}
-            className={section === "steps" ? "selected" : ""}
-            onClick={() => selectSection("steps")}
+      ))}
+      <section
+        id={`recipe-panel-${section}`}
+        className={`detail-panel recipe-panel-${section}`}
+        role="tabpanel"
+        aria-labelledby={`recipe-tab-${section}`}
+        tabIndex={0}
+      >
+        {section === "cooking" && (
+          <div
+            key={`cooking-${sectionMotion.epoch}`}
+            className={`recipe-cooking-content${sectionMotionClass}`}
           >
-            Готовить
-          </button>
-          <button
-            role="tab"
-            aria-selected={section === "portion"}
-            className={section === "portion" ? "selected" : ""}
-            onClick={() => selectSection("portion")}
-          >
-            Разложить
-          </button>
-        </div>
-        {section === "steps" && (
-          <ol
-            key={`steps-${sectionMotion.epoch}`}
-            className={`cooking-steps${sectionMotionClass}`}
-          >
-            <li className="cooking-measure-step">
-              <span>1</span>
+            <section className="recipe-difficulty glass-card">
               <div>
-                <p>
-                  <b>Сначала отмерьте всё на эту готовку</b>
-                  <small>
-                    {batch
-                      ? `${batch.days} дн. · ${eaters.length} чел.`
-                      : "Одна базовая порция"}
-                  </small>
-                </p>
-                <div className="cooking-measures">
-                  {recipe.ingredients.map((ingredient) => (
-                    <div key={ingredient.id}>
-                      <span>{ingredient.name}</span>
-                      <b>
-                        {ingredientAmountLabel(
-                          ingredient,
-                          cookingAmounts[ingredient.id] ?? ingredient.quantity,
-                        )}
-                      </b>
-                    </div>
+                <p className="kicker">Сложность</p>
+                <h2>{difficultyLabel}</h2>
+                <span aria-label={`Сложность: ${difficultyLabel}, ${difficulty} из 3`}>
+                  {[1, 2, 3].map((dot) => (
+                    <i className={dot <= difficulty ? "is-filled" : ""} key={dot} />
                   ))}
-                  {(recipe.procedureIngredients ?? []).map((ingredient) => (
-                    <div key={ingredient.id}>
-                      <span>{ingredient.name}</span>
-                      <b>по шагам</b>
-                    </div>
-                  ))}
-                </div>
+                </span>
               </div>
-            </li>
+              <p>{cookwareLabel}</p>
+              <dl>
+                <div><dt>Активно</dt><dd>{recipe.effort.activeMinutes} мин</dd></div>
+                <div><dt>Всего</dt><dd>{recipe.time} мин</dd></div>
+              </dl>
+            </section>
+            <section className="recipe-products-preview glass-card">
+              <header>
+                <div>
+                  <p className="kicker">Подготовить</p>
+                  <h2>Продукты на готовку</h2>
+                </div>
+                <button className="text-button" onClick={() => selectSection("products")}>
+                  Все продукты
+                </button>
+              </header>
+              <div className="recipe-product-list">
+                {recipe.ingredients.slice(0, 6).map((ingredient) => (
+                  <div key={ingredient.id}>
+                    <span>{ingredient.name}</span>
+                    <b>{ingredientAmountLabel(ingredient, cookingAmounts[ingredient.id] ?? ingredient.quantity)}</b>
+                  </div>
+                ))}
+                {recipe.ingredients.length > 6 && (
+                  <small>Ещё {recipe.ingredients.length - 6} — во вкладке «Продукты»</small>
+                )}
+              </div>
+            </section>
+            <section className="recipe-steps-card glass-card">
+              <p className="kicker">Один повар · по порядку</p>
+              <h2>Шаги</h2>
+              <p className="recipe-timeline-note">
+                Точное время каждого шага ещё не размечено — показываем честную последовательность без выдуманных минут.
+              </p>
+          <ol
+                className="cooking-steps"
+          >
             {displaySteps.map((text, index) => (
               <li key={`${text}-${index}`}>
-                <span>{index + 2}</span>
+                      <span>{index + 1}</span>
                 <p>{text}</p>
               </li>
             ))}
           </ol>
+            </section>
+          </div>
         )}
-        {section === "portion" && (
+        {section === "products" && (
           <div
-            key={`portion-${sectionMotion.epoch}`}
-            className={`portion-section${sectionMotionClass}`}
+            key={`products-${sectionMotion.epoch}`}
+            className={`recipe-products-content glass-card${sectionMotionClass}`}
+          >
+            <header>
+              <div>
+                <p className="kicker">Без отметок кладовой</p>
+                <h2>Все продукты</h2>
+              </div>
+              {batch && (
+                <div className="recipe-product-scale" role="group" aria-label="Количество продуктов">
+                  <button
+                    className={productScale === "cooking" ? "selected" : ""}
+                    aria-pressed={productScale === "cooking"}
+                    onClick={() => setProductScale("cooking")}
+                  >
+                    На {cookingPortions} порц.
+                  </button>
+                  <button
+                    className={productScale === "portion" ? "selected" : ""}
+                    aria-pressed={productScale === "portion"}
+                    onClick={() => setProductScale("portion")}
+                  >
+                    На 1 порцию
+                  </button>
+                </div>
+              )}
+            </header>
+            <p className="recipe-products-neutral">Нейтральный список рецепта: без «есть» и «докупить».</p>
+            <div className="recipe-product-list is-full">
+              {recipe.ingredients.map((ingredient) => (
+                <div key={ingredient.id}>
+                  <span>{ingredient.name}</span>
+                  <b>
+                    {ingredientAmountLabel(
+                      ingredient,
+                      productScale === "cooking"
+                        ? cookingAmounts[ingredient.id] ?? ingredient.quantity
+                        : ingredient.quantity,
+                    )}
+                  </b>
+                </div>
+              ))}
+              {(recipe.procedureIngredients ?? []).map((ingredient) => (
+                <div key={ingredient.id}>
+                  <span>{ingredient.name}</span>
+                  <b>по шагам</b>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+        {section === "dish" && (
+          <div
+            key={`dish-${sectionMotion.epoch}`}
+            className={`portion-section recipe-dish-content${sectionMotionClass}`}
           >
             {batch && slot && plan ? (
               <>
@@ -14621,6 +14737,8 @@ function RecipeView({
           </div>
         )}
       </section>
+      {section === "dish" && (
+        <>
       <section className="recipe-storage glass-card">
         <p className="kicker">Ориентиры хранения</p>
         <h2>
@@ -14678,6 +14796,22 @@ function RecipeView({
           </>
         )}
       </section>
+        </>
+      )}
+      {(onStartCooking || onReplace) && (
+        <footer className="recipe-detail-actions glass">
+          {onReplace && (
+            <button className="secondary-button" onClick={onReplace}>
+              Заменить
+            </button>
+          )}
+          {onStartCooking && (
+            <button className="primary-button" onClick={onStartCooking}>
+              Начать готовку <span>· {recipe.time} мин</span>
+            </button>
+          )}
+        </footer>
+      )}
     </main>
   );
 }

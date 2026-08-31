@@ -32,6 +32,15 @@ test("runtime projection is complete for every recipe it admits", () => {
     assert.ok(recipe.visualFallback.emoji);
     assert.ok(recipe.recipeFamily, "an audited RecipeFamily is a runtime gate");
     assert.equal(recipe.recipeFamily.image.imageUrl, recipe.provenance.preview.imageUrl);
+    assert.equal(recipe.effort.parallelProcesses, 1, "the current card is an honest one-cook sequence");
+    assert.ok([1, 2, 3].includes(recipe.effort.difficulty));
+    const expectedDifficulty =
+      recipe.effort.activeMinutes <= 15 && recipe.effort.cookware <= 1
+        ? 1
+        : recipe.effort.activeMinutes <= 30 && recipe.effort.cookware <= 3
+          ? 2
+          : 3;
+    assert.equal(recipe.effort.difficulty, expectedDifficulty);
     const familyIngredientIds = new Set(recipe.recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
     assert.ok(recipe.shoppingIngredients.every((ingredient) => familyIngredientIds.has(ingredient.sourceIngredientId)));
   }

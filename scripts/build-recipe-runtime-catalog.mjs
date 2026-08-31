@@ -196,12 +196,24 @@ function effortFor(candidate, steps) {
   );
   const knifeActions = steps.filter((step) => /нареж|измельч|натр|поруб/i.test(step.text ?? "")).length;
   const activeActions = steps.length + knifeActions;
+  // Runtime cards are deliberately sequential until the complete timing
+  // overlay exists. Do not infer parallel work from prose.
+  const parallelProcesses = 1;
+  const activeMinutes = Math.min(total, Math.max(3, activeActions * 3 + knifeActions * 2));
+  const difficulty =
+    activeMinutes <= 15 && cookware <= 1 && parallelProcesses <= 1
+      ? 1
+      : activeMinutes <= 30 && cookware <= 3 && parallelProcesses <= 2
+        ? 2
+        : 3;
   return {
     level: cookware + activeActions + knifeActions <= 9 ? "low" : "high",
     knifeActions,
     cookware,
     activeActions,
-    activeMinutes: Math.min(total, Math.max(3, activeActions * 3 + knifeActions * 2)),
+    activeMinutes,
+    parallelProcesses,
+    difficulty,
   };
 }
 

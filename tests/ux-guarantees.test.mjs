@@ -124,7 +124,7 @@ test("a failed shopping tick is visible", async () => {
   assert.match(page, /undo-bar/, "clearing can be undone");
 });
 
-test("recipe cards keep photos and cooking measurements actionable", async () => {
+test("recipe card 14A keeps cooking, products and dish data actionable", async () => {
   const [page, css] = await Promise.all([
     read("app/page.tsx"),
     read("app/globals.css"),
@@ -155,11 +155,19 @@ test("recipe cards keep photos and cooking measurements actionable", async () =>
     "favorite keeps a 44px touch target",
   );
   assert.match(css, /ms-heart-a 380ms/, "favorite keeps the supplied spring response");
-  assert.match(css, /\.detail-food img \{[\s\S]*?object-fit: cover;/, "the detail photo fills the existing hero frame");
-  assert.match(page, /className="cooking-measures"/, "cooking starts with a structured measurement list");
+  assert.match(css, /\.recipe-hero-photo img \{[\s\S]*?object-fit: cover;/, "the source photo fills the 14A hero");
+  for (const label of ["Готовка", "Продукты", "Блюдо"]) assert.match(page, new RegExp(label));
+  assert.match(page, /useState<RecipeSection>\("cooking"\)/, "every opening starts on cooking");
+  assert.match(page, /role="tablist"[\s\S]*?role="tab"[\s\S]*?role="tabpanel"/, "the three sections expose tab semantics");
+  assert.match(page, /recipe\.ingredients\.slice\(0, 6\)/, "cooking keeps a brief product list");
+  assert.match(page, /На \{cookingPortions\} порц\./, "the full list exposes the selected cooking scale");
+  assert.match(page, /На 1 порцию/, "the full list can return to the base portion");
   assert.match(page, /cookingAmounts\[ingredient\.id\]/, "cooking reads the calculated batch amount");
-  assert.doesNotMatch(page, /setSection\("ingredients"\)/, "ingredients are not duplicated in a separate recipe tab");
-  assert.match(page, /useState<"steps" \| "portion">\("steps"\)/, "every recipe opens directly on cooking, including recipes from a batch");
+  assert.match(page, /Нейтральный список рецепта/, "the product tab does not pretend to know pantry state");
+  assert.match(page, /Точное время каждого шага ещё не размечено/, "the card does not invent a hands/at timeline");
+  assert.match(page, /recipe\.effort\.difficulty/, "the card renders the projected difficulty");
+  assert.match(page, /Начать готовку/, "a planned recipe connects to cooking mode");
+  assert.match(page, /leaveRecipeFor\(\(\) => editDayMenu/, "replace remains connected to menu editing");
   assert.doesNotMatch(page, /function totalIngredientScale/, "the obsolete divergent scale path is gone");
 });
 
