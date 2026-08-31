@@ -139,7 +139,7 @@ test("nutrition deltas distinguish a reasonable source match from a bad mismatch
 
 test("nutrition audit emits one machine verdict for every scraped recipe", async () => {
   const report = await auditRecipeNutritionCorpus();
-  assert.equal(report.total, 221);
+  assert.equal(report.total, 255);
   assert.equal(report.cards.length, report.total);
   assert.equal(new Set(report.cards.map((card) => card.id)).size, report.total);
   assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, report.total);

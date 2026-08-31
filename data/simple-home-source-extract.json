@@ -1,0 +1,1641 @@
+{
+  "schemaVersion": 1,
+  "extractedAt": "2026-08-31T11:14:15.543Z",
+  "decisionFiles": [
+    "data/simple-home-review-decisions.json",
+    "data/foodru-curated-review-decisions.json"
+  ],
+  "count": 34,
+  "records": [
+    {
+      "id": "new-home-buckwheat-legs",
+      "decision": "edit",
+      "ownerNote": "включи соус",
+      "group": "home",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Елена Т.",
+        "title": "Гречка с куриными ножками в духовке",
+        "url": "https://food.ru/recipes/115681-grechka-s-kurinymi-nozhkami-v-dukhovke-1645019420",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIyMDIxNi9pc29qdmkuanBlZw.jpg",
+        "recipeYield": "6 порций",
+        "servings": 6,
+        "prepMinutes": 20,
+        "cookMinutes": null,
+        "totalMinutes": 80,
+        "declaredNutrition": {
+          "kcal": 115.09,
+          "protein": 6.11,
+          "fat": 4.77,
+          "carbs": 11.48,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Куриная голень 6 шт. = 720 г",
+        "Гречка 3 стакан = 495 г",
+        "Морковь 2 шт. = 200 г",
+        "Репчатый лук 3 шт. = 240 г",
+        "Помидор 2 шт. = 180 г",
+        "Болгарский перец 1 шт. = 150 г",
+        "Кабачки 1 шт. = 300 г",
+        "Чеснок 4 зубчик = 20 г",
+        "Соль по вкусу",
+        "Лавровый лист 2 лист = 2 г",
+        "Оливковое масло 40 г",
+        "Горчица 2 ч. л. = 16 г",
+        "Смесь кавказских трав по вкусу",
+        "Вода (кипяток) 5 стакан = 1000 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты.",
+        "Куриные ножки помойте и хорошо просушите при помощи бумажного полотенца. Овощи промойте. Лук и морковь очистите от кожуры. Кабачки, помидоры, перец я брала замороженные. Специи можно брать любые на ваш вкус.",
+        "Замаринуйте голени. Переложите голени в миску или, как я, в пакет, добавьте чеснок, пропущенный через пресс, или натрите на мелкой терке, затем горчицу, соль (по желанию), так как во многие специи уже входит соль, любые специи, оливковое масло (можно растительное), хорошо все перемешивайте и оставьте мясо мариноваться.",
+        "Натрите морковь на терке для корейской моркови или на обычной терке. Лук, кабачки, помидоры порежьте на небольшие ломтики.",
+        "Прогрейте хорошо сковороду с маслом, всыпьте в нее все овощи сразу, посолите, поперчите и потушите до мягкости.",
+        "Затем пересыпьте потушенные овощи в форму для запекания, сверху выложите промытую гречку, затем равномерно распределите промаринованные голени.",
+        "Далее залейте содержимое формы кипятком до середины голеней. Накройте форму крышкой или фольгой. Поставьте в предварительно разогретую духовку до 180 градусов на 50-60 минут.",
+        "После того, как блюдо приготовится, достаньте его из духовке и дайте ему чуть остыть.",
+        "Подавайте блюдо с зеленью и овощами."
+      ]
+    },
+    {
+      "id": "new-home-cutlets-mash",
+      "decision": "edit",
+      "ownerNote": "нужно сделать покороче",
+      "group": "home",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Анна Синицына",
+        "title": "Котлеты с пюре и соусом",
+        "url": "https://food.ru/recipes/250423-kotlety-s-piure-i-sousom",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI1MDQyNS9aamFnM2MuanBlZw.jpg",
+        "recipeYield": "4 штуки",
+        "servings": 4,
+        "prepMinutes": 20,
+        "cookMinutes": null,
+        "totalMinutes": 230,
+        "declaredNutrition": {
+          "kcal": 188.18,
+          "protein": 10.96,
+          "fat": 11.79,
+          "carbs": 9.78,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Куриные котлеты 500 г",
+        "Растительное масло 1 ст. л. = 17 г",
+        "Говяжий бульон 1 стакан = 200 г",
+        "Сливки 33% жирности 0,5 стакан = 105 г",
+        "Дижонская горчица 1 ст. л. = 25 г",
+        "Соевый соус 2 ч. л. = 10 г",
+        "Пшеничная мука хлебопекарная 1,5 ст. л. = 22,5 г",
+        "Вода 2 ст. л. = 36 г",
+        "Мускатный орех 1 щепотка = 1 г",
+        "Соль по вкусу",
+        "Черный перец молотый по вкусу",
+        "Картофельное пюре по желанию",
+        "Базилик по желанию"
+      ],
+      "sourceInstructions": [
+        "Подготовьте сковороду и мультиварку.",
+        "Разогрейте в сковороде растительное масло. Обжарьте котлеты по 3–4 минуты с каждой стороны на среднем огне.",
+        "Смешайте в миске сливки, дижонскую горчицу, соевый соус, соль, черный молотый перец и мускатный орех. Залейте говяжий бульон. Добавьте воду и муку до получения однородной консистенции.",
+        "Переложите котлеты в мультиварку. Залейте их соусом. Закройте крышку и включите режим «Тушение» на 3 часа.",
+        "Подайте котлеты с картофельным пюре, щедро полив соусом, приправив молотым перцем."
+      ]
+    },
+    {
+      "id": "new-home-merchant-buckwheat",
+      "decision": "edit",
+      "ownerNote": "не все ингредиенты перечислил",
+      "group": "home",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Анна Синицына",
+        "title": "Гречка по-купечески с курицей",
+        "url": "https://food.ru/recipes/182512-grechka-po-kupecheski-s-kurinoi-grudkoi-i-lukom",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIzMDgxMC8zcTVGRVAuanBlZw.jpg",
+        "recipeYield": "3 порции",
+        "servings": 3,
+        "prepMinutes": 30,
+        "cookMinutes": null,
+        "totalMinutes": 40,
+        "declaredNutrition": {
+          "kcal": 113.01,
+          "protein": 8.66,
+          "fat": 2.72,
+          "carbs": 13.93,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Гречка 200 г",
+        "Куриное филе 250 г",
+        "Репчатый лук 0,5 шт. = 40 г",
+        "Морковь 0,5 шт. = 50 г",
+        "Томатная паста 1 ст. л. = 30 г",
+        "Вода 2 стакан = 400 г",
+        "Растительное масло 1 ст. л. = 17 г",
+        "Специи по вкусу",
+        "Соль по вкусу"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все необходимые специи. Промойте гречку, слейте воду. Курицу вымойте. Морковь почистите. С лука снимите шелуху.",
+        "Курицу нарежьте небольшими кусочками, обжарьте на растительном масле до золотистой корочки — примерно по 5 минут с каждой стороны. Измельчите лук, морковь натрите на терке. Добавьте к курице и жарьте до мягкости.",
+        "Добавьте томатную пасту и гречку, тщательно перемешайте. Влейте воду, доведите до кипения. Уменьшите огонь, всыпьте приправы и соль по вкусу. Оставьте блюдо тушиться на слабом огне под крышкой около 15 минут.",
+        "Подайте на стол с хлебом."
+      ]
+    },
+    {
+      "id": "new-home-simple-buckwheat",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "home",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Сергей Фиксин",
+        "title": "Гречка с курицей",
+        "url": "https://food.ru/recipes/11952-grechka-s-kuricei",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzExOTUyL2NvdmVycy8zaVg5VEIuanBn.jpg",
+        "recipeYield": "3 порции",
+        "servings": 3,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 40,
+        "declaredNutrition": {
+          "kcal": 148.64,
+          "protein": 11.97,
+          "fat": 1.5,
+          "carbs": 22.41,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Куриное филе 300 г",
+        "Гречка 300 г",
+        "Помидор 1 шт. = 90 г",
+        "Соль по вкусу",
+        "Черный перец молотый по вкусу",
+        "Репчатый лук 1 шт. = 80 г",
+        "Чеснок 1 зубчик = 5 г",
+        "Томатная паста 50 г",
+        "Вода 100 мл = 100 г",
+        "Укроп 10 г"
+      ],
+      "sourceInstructions": [
+        "Курицу предварительно помойте.",
+        "Нарежьте мелко помидоры и лук. Чеснок почистите и мелко нарежьте либо пропустите его через чеснокодавку. В разогретую сковороду добавьте лук и чеснок, обжаривайте овощи в течение 3 минут.",
+        "Добавьте помидоры и потушите в течение 2 минут.",
+        "Далее к овощам добавьте куриное филе, томатную пасту и хорошо все перемешайте. Обжаривайте курицу до золотистой корочки.",
+        "Крупу промойте и добавьте к овощам и курице, залейте водой и посолите. Тушите до полной готовности под крышкой.",
+        "Перед подачем можно украсить гречку зеленью на ваш вкус."
+      ]
+    },
+    {
+      "id": "new-home-stewed-cabbage",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "home",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Софья Глухова",
+        "title": "Тушеная капуста с мясом",
+        "url": "https://food.ru/recipes/194336-kapusta-tushenaia-s-miasom",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIzMTAxNS82dmhIdGcuanBlZw.jpg",
+        "recipeYield": "4 порции",
+        "servings": 4,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 70,
+        "declaredNutrition": {
+          "kcal": 91.2,
+          "protein": 3.54,
+          "fat": 5.56,
+          "carbs": 6.66,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Капуста 600 г",
+        "Свинина 300 г",
+        "Вода 300 мл = 300 г",
+        "Кетчуп 6 ст. л. = 132 г",
+        "Картошка 3 шт. = 360 г",
+        "Морковь 1 шт. = 100 г",
+        "Растительное масло 2 ст. л. = 34 г",
+        "Кинза 5 веточка = 15 г",
+        "Соль по вкусу",
+        "Черный перец молотый по вкусу"
+      ],
+      "sourceInstructions": [
+        "Помойте и почистите овощи. Вымойте и просушите мясо. Ополосните зелень. Подготовьте глубокую сковороду.",
+        "Нарежьте морковь небольшими по размеру кубиками.",
+        "Нашинкуйте капусту мелкой соломкой.",
+        "Нарежьте свинину произвольными кусочками.",
+        "Разогрейте сковороду с маслом на среднем огне. Добавьте морковь. Обжаривайте ее около 2 минут, периодически помешивая.",
+        "Добавьте в сковороду свинину. Обжаривайте ингредиенты еще 10 минут, периодически помешивая.",
+        "Посолите и поперчите блюдо по вкусу. Влейте в сковороду 100 мл воды и накройте ее крышкой. Тушите ингредиенты в течение 20 минут.",
+        "Нарежьте картофель средними кубиками.",
+        "Добавьте картофель в сковороду вместе с капустой. Перемешайте, приправьте овощи специями и потушите их еще 5 минут.",
+        "Влейте в сковороду оставшуюся воду. Накройте блюдо крышкой и тушите в течение 15 минут до готовности овощей.",
+        "Добавьте в блюдо кетчуп. Хорошо перемешайте и готовьте блюдо еще 5-7 минут.",
+        "Уберите готовое блюдо с огня. Накрошите кинзу, а затем добавьте зелень в сковороду и еще раз перемешайте блюдо.",
+        "Разложите тушеную капусту по небольшим тарелкам. Подайте блюдо на стол в качестве основного блюда."
+      ]
+    },
+    {
+      "id": "new-oats-banana-blueberry",
+      "decision": "edit",
+      "ownerNote": "в белковую версию можно просто протика нахерачить",
+      "group": "oats",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "skinnytaste.com",
+        "author": null,
+        "title": "Basic Overnight Oats Recipe",
+        "url": "https://www.skinnytaste.com/skinny-overnight-oats-in-jar/",
+        "imageUrl": "https://www.skinnytaste.com/wp-content/uploads/2022/06/Overnight-Oats-13.jpg",
+        "recipeYield": [
+          "1",
+          "1 serving"
+        ],
+        "servings": 1.1,
+        "prepMinutes": 5,
+        "cookMinutes": null,
+        "totalMinutes": 485,
+        "declaredNutrition": {
+          "kcal": 236,
+          "protein": 6,
+          "fat": 10,
+          "carbs": 34.5,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "1/4 cup quick oats (I prefer organic, you can use gluten-free, or protein oats)",
+        "1/2 cup milk (use milk of choice)",
+        "1/2 medium  banana (sliced (use the other half as a topping))",
+        "1/2 tbsp chia seeds",
+        "1/2 cup blueberries (divided)",
+        "monk fruit sweetener (stevia, or your favorite sweetener, to taste)",
+        "pinch cinnamon",
+        "1 tbsp chopped pecans (or any nuts or seeds)"
+      ],
+      "sourceInstructions": [
+        "Place all the ingredient in a jar, shake, cover and refrigerate overnight.",
+        "The next morning, add your favorite crunchy toppings such as nuts, granola, etc and enjoy!"
+      ]
+    },
+    {
+      "id": "new-oats-chocolate",
+      "decision": "edit",
+      "ownerNote": "оставь шоколад просто покрошенную плитку",
+      "group": "oats",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "budgetbytes.com",
+        "author": null,
+        "title": "Chocolate Overnight Oats",
+        "url": "https://www.budgetbytes.com/double-chocolate-overnight-oats/",
+        "imageUrl": "https://www.budgetbytes.com/wp-content/uploads/2022/03/Double-Chocolate-Overnight-Oats-toppings.jpg",
+        "recipeYield": [
+          "4",
+          "4 ¾ cup each"
+        ],
+        "servings": 4.4,
+        "prepMinutes": 1450,
+        "cookMinutes": null,
+        "totalMinutes": 1450,
+        "declaredNutrition": {
+          "kcal": 268,
+          "protein": 8,
+          "fat": 9,
+          "carbs": 40,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "1⅓ cups old-fashioned rolled oats ($0.45)",
+        "2 Tbsp chia seeds (optional, $0.30)",
+        "2 Tbsp unsweetened cocoa powder ($0.22)",
+        "2 Tbsp brown sugar ($0.06)",
+        "¼ cup mini chocolate chips ($0.64)",
+        "¼ tsp salt ($0.02)",
+        "1⅓ cups milk ($0.28*)",
+        "½ tsp  vanilla extract ($0.25)",
+        "nut or seed butter",
+        "sliced bananas",
+        "coconut",
+        "walnuts, pecans or almonds",
+        "fresh raspberry or strawberry jam"
+      ],
+      "sourceInstructions": [
+        "Combine the oats, chia seeds, cocoa powder, brown sugar, chocolate chips, and salt in a bowl.",
+        "Add the milk and vanilla extract, then stir to combine. Allow the mixture to sit for about five minutes.",
+        "Divide the oat mixture between four resealable containers. Close the containers and refrigerate overnight or up to five days.",
+        "Stir the oats just before enjoying. Eat cold or warm them up in the microwave."
+      ]
+    },
+    {
+      "id": "new-oats-apple",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "skinnytaste.com",
+        "author": null,
+        "title": "Apple Pie Overnight Oats",
+        "url": "https://www.skinnytaste.com/apple-pie-overnight-oats/",
+        "imageUrl": "https://www.skinnytaste.com/wp-content/uploads/2022/10/Apple-Pie-Overnight-Oats-3.jpg",
+        "recipeYield": [
+          "2",
+          "2 servings"
+        ],
+        "servings": 2.2,
+        "prepMinutes": 10,
+        "cookMinutes": 15,
+        "totalMinutes": 505,
+        "declaredNutrition": {
+          "kcal": 361,
+          "protein": 8,
+          "fat": 11,
+          "carbs": 59,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "1 medium apple (chopped)",
+        "1 teaspoon ground cinnamon",
+        "1 tablespoon pure maple syrup (or sugar-free maple syrup)",
+        "Sea salt",
+        "1 ½ cups unsweetened almond milk (or milk of your choice)",
+        "2 teaspoons chia seeds",
+        "1 teaspoon vanilla extract",
+        "1 teaspoon ground cinnamon",
+        "1/8 teaspoon ground nutmeg",
+        "½ tablespoon pure maple syrup (or sugar-free maple syrup)",
+        "1 cup old fashioned oats (or gluten-free oats)",
+        "2 tablespoons chopped walnuts (for topping)"
+      ],
+      "sourceInstructions": [
+        "Add the apples, cinnamon, maple syrup and a pinch of sea salt to small sauce pan over low heat.",
+        "Mix to combine then cover and cook for about 10 minutes, stirring occasionally, until the apples are tender.",
+        "Remove the lid, increase the heat to medium and cook an additional 2-3 minutes or until the sauce thickens slightly and coats the apples and excess liquid evaporates.",
+        "Remove from the heat and set aside while you make the oats.",
+        "In a small bowl, add the milk, chia seeds, vanilla, cinnamon, nutmeg, and maple syrup.",
+        "Add the oats and mix to combine.",
+        "Add 1/4 of the oat mixture to 2 mason jars (8oz) or airtight containers (with lids).",
+        "Layer each evenly with ¼ of the apples then top each with an equal amount of the remaining oats and 1 tablespoon walnuts.",
+        "Cover and refrigerate overnight.",
+        "Oats may be eaten cold, at room temperature or warm."
+      ]
+    },
+    {
+      "id": "new-oats-carrot",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "thegirlonbloor.com",
+        "author": null,
+        "title": "Carrot Cake Overnight Oats",
+        "url": "https://thegirlonbloor.com/carrot-cake-overnight-oats/",
+        "imageUrl": "https://thegirlonbloor.com/wp-content/uploads/2021/03/Carrot-Cake-Overnight-Oats-8.jpg",
+        "recipeYield": [
+          "4",
+          "4 servings"
+        ],
+        "servings": 4.4,
+        "prepMinutes": 20,
+        "cookMinutes": null,
+        "totalMinutes": 140,
+        "declaredNutrition": {
+          "kcal": 344,
+          "protein": 12,
+          "fat": 14,
+          "carbs": 43,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "2 cups rolled oats",
+        "3 cups coconut milk",
+        "1 cup plain Greek yogurt",
+        "2 tsp vanilla extract",
+        "1  carrot, grated",
+        "1/4 cup pineapple, diced",
+        "1/4 cup sweetened shredded coconut",
+        "1/4 cup finely chopped walnuts (optional)",
+        "1 tsp cinnamon",
+        "1/2 tsp nutmeg"
+      ],
+      "sourceInstructions": [
+        "Add all ingredients to a large bowl, mixing well to combine.",
+        "Divide mixture between four 16-oz mason jars. Let chill in the fridge for a minimum of 2 hours before enjoying, preferably overnight.",
+        "Serve and enjoy!"
+      ]
+    },
+    {
+      "id": "new-oats-blueberry-almond",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "budgetbytes.com",
+        "author": null,
+        "title": "Low Sugar Overnight Oats",
+        "url": "https://www.budgetbytes.com/no-sugar-added-blueberry-almond-overnight-oats/",
+        "imageUrl": "https://www.budgetbytes.com/wp-content/uploads/2017/07/Applesauce-and-Blueberries-for-Blueberry-Almond-Overnight-Oats.jpg",
+        "recipeYield": [
+          "4"
+        ],
+        "servings": 4,
+        "prepMinutes": 490,
+        "cookMinutes": null,
+        "totalMinutes": 490,
+        "declaredNutrition": {
+          "kcal": 350.43,
+          "protein": 11.83,
+          "fat": 17.13,
+          "carbs": 41.03,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "1 cup old-fashioned rolled oats ($0.34)",
+        "¼ cup chia seeds (optional, flax seeds also work, $0.59*)",
+        "½ cup sliced almonds ($0.97)",
+        "¼ tsp nutmeg ($0.02)",
+        "1⅓ cup unsweetened applesauce ($1.08)",
+        "1 cup blueberries (fresh or frozen, $0.82)",
+        "2 cups milk ($0.42)",
+        "½ tsp almond extract (vanilla extract also works, $0.33)"
+      ],
+      "sourceInstructions": [
+        "To each of four containers, add ¼ cup oats, 1 Tbsp chia seeds, 2 Tbsp sliced almonds, and a pinch of nutmeg.",
+        "On top of the dry ingredients, add ⅓ cup applesauce and ¼ cup blueberries to each container.",
+        "Stir the almond extract into the milk, then add ½ cup milk to each container. Stir the containers well to prevent the chia seeds from clumping. Place a lid on the containers and refrigerate for at least 8 hours or up to 4 days.",
+        "When ready to eat, simply stir with a spoon and then enjoy!"
+      ]
+    },
+    {
+      "id": "new-oats-cinnamon-raisin",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "skinnytaste.com",
+        "author": null,
+        "title": "Cinnamon-Raisin Overnight Oats",
+        "url": "https://www.skinnytaste.com/cinnamon-raisin-overnight-oats/",
+        "imageUrl": "https://www.skinnytaste.com/wp-content/uploads/2023/08/Cinnamon_Raisin_Overnight_Oats-03.jpg",
+        "recipeYield": [
+          "1",
+          "1 servings"
+        ],
+        "servings": 1.1,
+        "prepMinutes": 5,
+        "cookMinutes": null,
+        "totalMinutes": 245,
+        "declaredNutrition": {
+          "kcal": 378,
+          "protein": 10,
+          "fat": 14,
+          "carbs": 58,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "1/3 cup quick oats (I prefer organic, you can use gluten-free)",
+        "1 tablespoon ground flax seeds",
+        "1 tablespoon chia seeds",
+        "1 cup unsweetened almond milk (or milk of choice)",
+        "1/8 teaspoon cinnamon",
+        "monk fruit sweetener or stevia (to taste, or your favorite sweetener)",
+        "1 tablespoons dried raisins (plus optional more for topping)",
+        "1 small banana (sliced)",
+        "1 tablespoon chopped walnuts (hemp seeds, or any nuts or seeds)"
+      ],
+      "sourceInstructions": [
+        "Add oats, flax, chia seeds, milk of choice, cinnamon, sweetener of choice and dried raisins into a mason jar or storage container with a lid. Stir ingredients together.",
+        "Place in the fridge overnight. If you’re in a rush you can shorten the soak time 3 to 4 hours.",
+        "The next morning, when ready to eat, remove the lid and stir. If the oats are too thick, add a little more milk to loosen the mixture.",
+        "Top with sliced banana, walnuts and optional extra raisins or berries and enjoy.",
+        "You can eat the oats straight from the jar or pour into a bowl for serving."
+      ]
+    },
+    {
+      "id": "new-sandwich-boiled-chicken",
+      "decision": "edit",
+      "ownerNote": "соусы есть низкокалорийные типа \"zero\", ПИШИ ИХ",
+      "group": "sandwich",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Екатерина Ш.",
+        "title": "Сэндвич с курицей и сырным соусом",
+        "url": "https://food.ru/recipes/222344-sendvich-s-kuritsei-i-syrnym-sousom-1720730429",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI0MDcyNS9lRUp2V1UuanBlZw.jpg",
+        "recipeYield": "2 порции",
+        "servings": 2,
+        "prepMinutes": 30,
+        "cookMinutes": null,
+        "totalMinutes": 60,
+        "declaredNutrition": {
+          "kcal": 208.64,
+          "protein": 10.69,
+          "fat": 11,
+          "carbs": 15.52,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Тостовый хлеб 4 шт. = 160 г",
+        "Помидор 1 шт. = 90 г",
+        "Плавленый сыр 2 шт. = 36 г",
+        "Курица 300 г",
+        "Сырный соус 2 ст. л. = 50 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все необходимые ингредиенты. Курицу заранее отварите.",
+        "Помидор нарежьте ломтиками.",
+        "Хлеб обжарьте в тостере, выложите сыр.",
+        "На сыр выложите ломтики помидора.",
+        "Сверху положите вареную курицу.",
+        "Приправьте курицу сырным соусом.",
+        "Подавайте сэндвич теплым. По желанию, можете дополнить листьями салата."
+      ]
+    },
+    {
+      "id": "new-sandwich-smoked-chicken",
+      "decision": "edit",
+      "ownerNote": "соусы есть низкокалорийные типа \"zero\", ПИШИ ИХ",
+      "group": "sandwich",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Алина Бирюкова",
+        "title": "Сэндвичи с копченой курицей",
+        "url": "https://food.ru/recipes/253548-sendvichi-s-kopchenoi-kuricei",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI1MDUzMS91RWZmdDguanBlZw.jpg",
+        "recipeYield": "3 порции",
+        "servings": 3,
+        "prepMinutes": 15,
+        "cookMinutes": null,
+        "totalMinutes": 20,
+        "declaredNutrition": {
+          "kcal": 225.28,
+          "protein": 13.14,
+          "fat": 12.76,
+          "carbs": 14.67,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Плавленый сыр 8 ломтик = 144 г",
+        "Куриный окорочок (копченый) 1 шт. = 250 г",
+        "Куриное яйцо 2 шт. = 120 г",
+        "Майонез 2 ст. л. = 50 г",
+        "Хлеб с отрубями 6 ломтик = 150 г",
+        "Микс салатов по вкусу",
+        "Помидоры черри по вкусу"
+      ],
+      "sourceInstructions": [
+        "Подготовьте ингредиенты, терку, небольшой сотейник и сковороду.",
+        "Отварите яйца вкрутую. Положите их в сотейник, залейте водой и варите 10 минут с момента закипания. Остудите в ледяной воде, очистите от скорлупы и натрите на крупной терке.",
+        "Отделите куриное мясо от костей и нарежьте на небольшие кусочки. Сыр разделите на небольшие квадратики.",
+        "Обжарьте хлеб с двух сторон на сковороде без масла до золотистой корочки.",
+        "Соедините курицу, сыр и яйца. Заправьте майонезом и перемешайте. Выложите начинку на половину обжаренных хлебных ломтиков.",
+        "Накройте бутерброды сверху оставшимися хлебными кусочками и слегка прижмите.",
+        "Украсьте сэндвичи листьями салата или салатным миксом и помидорами черри."
+      ]
+    },
+    {
+      "id": "new-sandwich-turkey-ham",
+      "decision": "edit",
+      "ownerNote": "",
+      "group": "sandwich",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "ovkuse.ru",
+        "author": "Вкусные рецепты",
+        "title": "Сэндвич с индейкой",
+        "url": "https://ovkuse.ru/recipes/16398834",
+        "imageUrl": "https://media.ovkuse.ru/images/recipes/95f4efb7-8b65-4e6e-b59e-94e0fdfcd73e/95f4efb7-8b65-4e6e-b59e-94e0fdfcd73e_1200_630.webp",
+        "recipeYield": "2",
+        "servings": 2,
+        "prepMinutes": null,
+        "cookMinutes": null,
+        "totalMinutes": null,
+        "declaredNutrition": {
+          "kcal": 250.75,
+          "protein": 15.5,
+          "fat": 10.25,
+          "carbs": 25,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "Тостовый хлеб",
+        "Ветчина из индейки",
+        "Салат",
+        "Помидор",
+        "Огурец",
+        "Сыр для сендвичей"
+      ],
+      "sourceInstructions": [
+        "Хлеб поджарить, я это делаю в тостере.",
+        "Далее выкладываем в следующей последовательности: хлеб, салат, ветчина из индейки, сыр, огурец, помидоры, хлеб.",
+        "Приятного аппетита!!"
+      ]
+    },
+    {
+      "id": "new-sandwich-balyk",
+      "decision": "edit",
+      "ownerNote": "",
+      "group": "sandwich",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "gastronom.ru",
+        "author": "Kirilenkoluba",
+        "title": "Сендвич с балыком",
+        "url": "https://www.gastronom.ru/recipe/34297/sendvich-s-balykom",
+        "imageUrl": "https://images.gastronom.ru/BgVOilgw5MYjiqkat79XtVWAoq-g7GLGfQdfUOCsu9Y/pr:recipe-cover-image/g:ce/rs:auto:0:0:0/L2Ntcy9hbGwtaW1hZ2VzL2FlZmQ2ZGNiLTY2OGEtNGJjNi1iMWYzLTFlOWI2YjU3MTY2ZS5qcGc.webp",
+        "recipeYield": 1,
+        "servings": 1,
+        "prepMinutes": 0,
+        "cookMinutes": 0,
+        "totalMinutes": 0,
+        "declaredNutrition": {
+          "kcal": null,
+          "protein": null,
+          "fat": null,
+          "carbs": null,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "хлеб Геркулес 2 ломтика",
+        "балык 20 г",
+        "помидоры черри 2-3 шт.",
+        "укроп 1 веточка"
+      ],
+      "sourceInstructions": [
+        "Нарезать балык тонкими ломтиками.",
+        "Помыть и нарезать помидорки, укроп помыть и порезать.",
+        "Положить на хлеб балык, помидорки и укроп."
+      ]
+    },
+    {
+      "id": "new-sandwich-caesar",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "sandwich",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "bbcgoodfood.com",
+        "author": "Good Food team",
+        "title": "Open chicken Caesar sandwich",
+        "url": "https://www.bbcgoodfood.com/recipes/open-chicken-caesar-sandwich",
+        "imageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-7837_10-bb42bb9.jpg?resize=440,400",
+        "recipeYield": 2,
+        "servings": 2,
+        "prepMinutes": null,
+        "cookMinutes": 15,
+        "totalMinutes": 20,
+        "declaredNutrition": {
+          "kcal": 319,
+          "protein": 40,
+          "fat": 8,
+          "carbs": 24,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "2 skinless chicken breasts",
+        "1 tsp sunflower oil",
+        "2 Little Gem lettuces",
+        "2 tbsp low-fat crème fraîche or Greek yogurt",
+        "1 tbsp grated   parmesan plus a few shavings, to serve",
+        "squeeze lemon juice",
+        "1 tsp caper roughly chopped",
+        "2 thick slices   bread",
+        "1 small garlic clove cut in half"
+      ],
+      "sourceInstructions": [
+        "Heat a griddle pan. Rub the chicken with the oil, season with salt and pepper, then griddle for 7 mins each side or until cooked through. Set aside to rest.",
+        "Meanwhile, separate the lettuce leaves. Mix the crème fraîche, parmesan, lemon juice and capers with 1 tbsp cold water, then season to taste.",
+        "3 Toast the bread and rub with the cut side of the garlic, then crush the garlic and add to the dressing. Slice the warm chicken breasts on the diagonal, then top the toast with lettuce leaves, sliced chicken breast and a drizzle of the Caesar dressing. Finish with a few shavings of parmesan."
+      ]
+    },
+    {
+      "id": "new-sandwich-paprika",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "sandwich",
+      "sourceDecisionFile": "data/simple-home-review-decisions.json",
+      "source": {
+        "publisher": "bbcgoodfood.com",
+        "author": "Good Food team",
+        "title": "Paprika chicken ciabattas",
+        "url": "https://www.bbcgoodfood.com/recipes/paprika-chicken-ciabattas",
+        "imageUrl": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-320459_11-dec7f06.jpg?resize=440,400",
+        "recipeYield": 4,
+        "servings": 4,
+        "prepMinutes": 5,
+        "cookMinutes": 10,
+        "totalMinutes": 15,
+        "declaredNutrition": {
+          "kcal": 520,
+          "protein": 42,
+          "fat": 22,
+          "carbs": 41,
+          "scope": "publisher_declared"
+        }
+      },
+      "sourceIngredients": [
+        "4 skinless chicken breasts",
+        "juice 1 lemon",
+        "1 tbsp smoked paprika",
+        "olive oil for drizzling",
+        "1 ciabatta loaf",
+        "1 garlic clove crushed",
+        "4 tbsp mayonnaise",
+        "8 romaine lettuces leaves, torn"
+      ],
+      "sourceInstructions": [
+        "Cut the chicken breasts in half horizontally and lay each between two sheets of cling film. Bash with a rolling pin until about 1cm thick.",
+        "Squeeze lemon juice over the chicken and dust with the paprika. Season with salt and pepper, and drizzle with a little olive oil. Lay on a hot griddle pan or barbecue and cook for 3-4 mins on each side until charred and cooked through.",
+        "Halve the ciabatta horizontally and lay, cut side down, on the pan for 1 min. Mix the crushed garlic and mayonnaise, then spread over the cut side of each ciabatta half. Top with the lettuce and chicken, then season with a little salt and pepper. Cut in half to serve."
+      ]
+    },
+    {
+      "id": "foodru-oblomov-potato-mushroom",
+      "decision": "edit",
+      "ownerNote": "просто можно больше мяса из белк модуля пихать",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славная картошка с грибным соусом",
+        "url": "https://food.ru/recipes/169798-slavnaja-kartoshka-s-gribnym-sousom",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIzMDYwMS8zTVdLUHYuanBlZw.jpg",
+        "recipeYield": "5 порций",
+        "servings": 5,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 60,
+        "declaredNutrition": {
+          "kcal": 127.12,
+          "protein": 2.24,
+          "fat": 8.21,
+          "carbs": 11,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Картошка 2 кг = 2000 г",
+        "Шампиньоны 600 г",
+        "Грибной порошок 2 ст. л. = 20 г",
+        "Репчатый лук 500 г",
+        "Сливочное масло 180 г",
+        "Чеснок 10 зубчик = 50 г",
+        "Тимьян / чабрец 1 пучок = 30 г",
+        "Сметана 600 г",
+        "Подсолнечное масло рафинированное 3 ст. л. = 51 г"
+      ],
+      "sourceInstructions": [
+        "Заранее почистите картофель, лук и чеснок. Если у вас нет готовых молотых грибов, перебейте сушеные в блендере до состояния пыли. Лучше всего, если у вас будут белые грибы.",
+        "Очищенный картофель поставьте вариться, но не доготавливайте его.",
+        "Нашинкуйте лук, грибы и чеснок.",
+        "Нарежьте картофель на кубики.",
+        "Начните обжаривать шампиньоны, к ним добавьте пучок тимьяна. После того, как грибы обжарятся, достаньте тимьян.",
+        "Добавьте к шампиньонам пудру белых грибов и прогрейте ее 1-2 минуты. Затем добавьте сметану, соль и перец по вкусу. Готовьте 2-3 минуты и снимите с огня. Оставьте настаиваться.",
+        "Начните обжаривать картофель на сливочном масле. Готовьте 30-35 минут на среднем огне, переворачивая каждые пять минут. Посолите и поперчите, добавьте лук за 10 минут до конца готовки. Добавьте чеснок в самом конце.",
+        "Подавайте жареный картофель вместе с грибным соусом!"
+      ]
+    },
+    {
+      "id": "foodru-oblomov-meatballs",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славные фрикадельки",
+        "url": "https://food.ru/recipes/140818-slavniye-frikadelki",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIyMDUxNi8zNjdLRzYuanBlZw.jpg",
+        "recipeYield": "5 порций",
+        "servings": 5,
+        "prepMinutes": 25,
+        "cookMinutes": null,
+        "totalMinutes": 40,
+        "declaredNutrition": {
+          "kcal": 162.9,
+          "protein": 10.99,
+          "fat": 6.17,
+          "carbs": 15.74,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Мясо куриного бедра 1000 г",
+        "Чеснок 10 г",
+        "Пармезан 150 г",
+        "Яйца 2 шт. = 120 г",
+        "Панировочные сухари 150 г",
+        "Петрушка 15 г",
+        "Соль 5 г",
+        "Черный перец молотый 3 г",
+        "Стебель сельдерея 150 г",
+        "Морковь 150 г",
+        "Репчатый лук 200 г",
+        "Помидор 800 г",
+        "Базилик 5 г",
+        "Спагетти 450 г",
+        "Сливочное масло 30 г"
+      ],
+      "sourceInstructions": [
+        "Заранее почистите чеснок и лук. Помойте и высушите овощи.",
+        "Проверьте, чтобы в мясе не было костей. Пропустите его через мясорубку.",
+        "К фаршу добавьте мелко натертый чеснок, тертый пармезан, яйца, петрушку и панировочные сухари. Хорошо перемешайте. Добавьте соль и перец. Оставьте на 5 минут.",
+        "Кубиками нарежьте морковь и сельдерей. Мелко нарежьте лук. У помидоров снимите кожуру и также нарежьте. Мелко покрошите базилик.",
+        "Сформируйте фрикадельки.",
+        "Обжарьте их до золотистой корочки с каждой стороны.",
+        "Для соуса обжарьте лук, морковь и сельдерей до мягкости. Затем добавьте томаты и немного воды. Посолите и поперчите. После добавьте базилик.",
+        "Фрикадельки добавьте в соус, при необходимости добавьте еще немного воды и оставьте тушиться на 10 минут.",
+        "Макароны отварите до состояния аль денте.",
+        "В сковороде растопите сливочное масло. Добавьте пасту, соус и фрикадельки. Готовьте еще 1-2 минуты.",
+        "Готово! Сразу же подавайте в теплом виде. Можно украсить нашинкованным базиликом."
+      ]
+    },
+    {
+      "id": "foodru-oblomov-chicken-legs",
+      "decision": "edit",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славные куриные ножки на гриле",
+        "url": "https://food.ru/recipes/223398-slavnye-kurinye-nozhki-na-grile-1721575870",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI0MDcyMS9Oc2hqcjgucG5n.jpg",
+        "recipeYield": "4 порции",
+        "servings": 4,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 240,
+        "declaredNutrition": {
+          "kcal": 237.27,
+          "protein": 13.73,
+          "fat": 18.5,
+          "carbs": 4.23,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Куриная голень 12 шт. = 1440 г",
+        "Соль 1 ст. л. = 25 г",
+        "Сушеный репчатый лук 1 ст. л. = 9 г",
+        "Сушеный чеснок 1 ст. л. = 10 г",
+        "Сладкая паприка 1 ст. л. = 14 г",
+        "Перец чили сушеный 1 ч. л. = 7 г",
+        "Прованские травы 1 ст. л. = 5 г",
+        "Карри 0,5 ч. л. = 2 г",
+        "Растительное масло 3 ст. л. = 51 г",
+        "Кинза 1 пучок = 30 г",
+        "Соленые огурцы 2 шт. = 60 г",
+        "Майонез 6 ст. л. = 150 г",
+        "Сметана 20% жирности 2 ст. л. = 50 г",
+        "Лайм 1 шт. = 60 г",
+        "Шрирача 1 ст. л. = 15 г",
+        "Сахар 2 ст. л. = 50 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты.",
+        "По толстому краю куриной ножки сделайте надрез вдоль кости.",
+        "Расправьте мясо, что бы получилась заготовка, как на фото. Проделайте так со всеми куриными ножками.",
+        "Для сухого маринада смешайте в миске соль, сахар, сухой лук, сухой чеснок, паприку, острый сушеный чили перец, прованские травы, карри. Перемешайте все специи.",
+        "Влейте к специям подсолнечное масло и тщательно перемешайте.",
+        "Полейте маринадом куриные голени, вмешивайте около 10 минут для равномерного распределения маринада. Оставьте мариноваться не менее чем на 3 часа.",
+        "Для приготовления соуса на чистой разделочной доске мелко нарубите кинзу.",
+        "Соленые огурцы натрите на крупной терке, добавьте к нарезанной кинзе.",
+        "К огурцам и кинзе добавьте майонез и сметану.",
+        "Для придания освежающей кислинки добавьте в соус сок одного лайма. При желании, также добавьте немного цедры лайма.",
+        "Для легкой остринки добавьте соус Шрирача и 1 ст.л. сахара. Все ингредиенты тщательно перемешайте.",
+        "Обжарьте голени с двух сторон на слабом огне газового гриля по 5-7 минут с каждой стороны.",
+        "Доведите голени до полной готовности, оставив их на верхнем ярусе газового гриля при минимальном огне — на 10 минут.",
+        "Подавайте ножки с соусом. Чтобы блюдо было сочнее — готовые куриные ножки нужно полностью окунать в соус! Приятного аппетита!"
+      ]
+    },
+    {
+      "id": "foodru-oblomov-beef-veg",
+      "decision": "edit",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славное мясо с овощами",
+        "url": "https://food.ru/recipes/163158-slavnoe-mjaso-s-ovoshchami",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIzMDMxMC80UHROV3YuanBlZw.jpg",
+        "recipeYield": "9 порций",
+        "servings": 9,
+        "prepMinutes": 60,
+        "cookMinutes": null,
+        "totalMinutes": 160,
+        "declaredNutrition": {
+          "kcal": 38.43,
+          "protein": 3.94,
+          "fat": 2.06,
+          "carbs": 1.08,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Говяжьи кости 3 кг = 3000 г",
+        "Вода 4 л = 4000 г",
+        "Говядина 1,2 кг = 1200 г",
+        "Репчатый лук 300 г",
+        "Морковь 300 г",
+        "Болгарский перец 300 г",
+        "Томатная паста 50 г",
+        "Чеснок 40 г",
+        "Соль 25 г",
+        "Черный перец горошком 3 г",
+        "Лавровый лист 3 шт. = 3 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты. Заранее почистите чеснок.",
+        "Кости проварите 5 минут в кипятке и слейте воду. Чистые кости поставьте вариться на 1 час в скороварку. Должен получится 1 литр бульона. Если получится больше выпарите его, если меньше — добавьте воды.",
+        "Болгарский перец нарежьте на полоски.",
+        "Морковь и лук нашинкуйте.",
+        "Мясо нарежьте на порционные кубики.",
+        "Начните жарить лук и морковь до золотистости. Затем уберите в миску.",
+        "Обжарьте мясо до корочки и уберите к овощам. Туда же добавьте нарезанный перец, томатную пасту, соль, черный перец, чеснок. Хорошо перемешайте.",
+        "Разложите получившуюся массу по 3 банкам, добавьте 1 лавровый лист в каждую и залейте бульоном. Оставьте сверху пару сантиметров и закройте крышками. Уберите в автоклав, залейте водой, чтобы банки были покрыты минимум на 3-4 см. Дождитесь пока температура достигнет 120 градусов и готовьте 40 минут. Не пытайтесь открыть, если крышка находится под давлением!",
+        "Готовые банки уберите в холодильник на ночь. Готово!",
+        "Готовое мясо подавайте с любым гарниром по вкусу!"
+      ]
+    },
+    {
+      "id": "foodru-oblomov-chashushuli",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славные чашушули",
+        "url": "https://food.ru/recipes/139757-slavnye-chashushuli",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIyMDQyNy8zRDROZ2kuanBlZw.jpg",
+        "recipeYield": "15 порций",
+        "servings": 15,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 200,
+        "declaredNutrition": {
+          "kcal": 143.89,
+          "protein": 11.79,
+          "fat": 9.16,
+          "carbs": 3.42,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Говядина 3000 г",
+        "Сладкий перец 6 шт. = 600 г",
+        "Репчатый лук 5 шт. = 400 г",
+        "Помидор 6 шт. = 540 г",
+        "Петрушка 100 г",
+        "Кинза 100 г",
+        "Чеснок 10 зубчик = 50 г",
+        "Аджика 1 ст. л. = 50 г",
+        "Томатная паста 3 ст. л. = 90 г",
+        "Хмели-сунели 2 ст. л. = 20 г",
+        "Сливочное масло 100 г",
+        "Лавровый лист 2 шт. = 2 г",
+        "Душистый перец горошком 4 шт. = 4 г",
+        "Соль 1 ст. л. = 25 г",
+        "Сахар 1 ст. л. = 25 г"
+      ],
+      "sourceInstructions": [
+        "Заранее почистите чеснок. Промойте и высушите зелень. Промойте мясо от костной пыли.",
+        "Мясо отделите от кости, если она есть. Срежьте лишние пленки и прожилки. Нарежьте на крупные кубики.",
+        "Кости уберите вариться для бульона. Добавьте лавровый лист и душистый перец.",
+        "Произвольно нарежьте лук, сладкий перец и зелень. Мелко нарежьте чеснок.",
+        "С помидоров снимите шкуру и нарежьте.",
+        "В миске смешайте томатную пасту, аджику и хмели сунели. Добавьте немного воды и хорошо перемешайте.",
+        "Мясо обжарьте до золотистой корочки.",
+        "В большой кастрюле смешайте лук и мясо. Обжарьте лук до прозрачности. Добавьте сливочное масло, соль, сахар, смесь из томатной пасты, перец и томаты. Хорошо перемешайте и залейте бульоном, все должно быть покрыто жидкостью. Доведите до кипения, уменьшите огонь и оставьте томиться 2–2,5 часа.",
+        "Выключите огонь и добавьте чеснок и зелень. Оставьте на 3–5 минут.",
+        "Готово! Подавайте сразу же с любым гарниром по желанию. Остатки заморозьте и используйте при необходимости."
+      ]
+    },
+    {
+      "id": "foodru-oblomov-borscht",
+      "decision": "edit",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славный борщ",
+        "url": "https://food.ru/recipes/146194-slavniy-borsch",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIyMDgwOS8zOThyZWkuanBlZw.jpg",
+        "recipeYield": "16 порций",
+        "servings": 16,
+        "prepMinutes": 60,
+        "cookMinutes": null,
+        "totalMinutes": 120,
+        "declaredNutrition": {
+          "kcal": 71.88,
+          "protein": 6.51,
+          "fat": 3.46,
+          "carbs": 3.36,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Говядина 1600 г",
+        "Говяжьи кости 3000 г",
+        "Репчатый лук 2 шт. = 160 г",
+        "Морковь 3 шт. = 300 г",
+        "Свекла 2 шт. = 260 г",
+        "Капуста 1 шт. = 890 г",
+        "Корень сельдерея 1 шт. = 500 г",
+        "Томатная паста 3 ст. л. = 90 г",
+        "Укроп 1 пучок = 15 г",
+        "Петрушка 1 пучок = 20 г",
+        "Чеснок 40 г",
+        "Душистый перец горошком 10 шт. = 10 г",
+        "Гвоздика 7 шт. = 7 г",
+        "Лавровый лист 3 шт. = 3 г",
+        "Сахар 2 ст. л. = 50 г",
+        "Соль 2 ст. л. = 50 г",
+        "Лимонный сок 40 г"
+      ],
+      "sourceInstructions": [
+        "Заранее очистите овощи от кожуры и промойте. Зелень промойте и нарежьте. Выжмите сок из половинки лимона.",
+        "Кости выложите на противень, смажьте маслом и уберите в духовку. Запекайте при 200 градусах до золотистости.",
+        "Мясо нарежьте на крупные кубики. Обжарьте их со всех сторон до золотистой корочки.",
+        "Капусту мелко покрошите. Немного обжарьте капусту перед добавлением в суп, чтобы выпарить ненужную влагу.",
+        "Если вы брали кости с костным мозгом, вытащите его в отдельную миску.",
+        "Оставшиеся кости уберите в скороварку, добавьте мясо и специи для бульона (душистый перец, гвоздику, лавровый лист).",
+        "Залейте холодной водой, чтобы она покрывала мясо на 3–4 см сверху. Поставьте вариться на 1,5 часа после закипания. Или на 3 часа в обычной кастрюле.",
+        "Лук, морковь, сельдерей и свеклу пропустите через комбайн или нарежьте.",
+        "Начните обжаривать лук, морковь и сельдерей. Чуть позже добавьте томатную пасту, но сначала обязательно прогрейте ее на пустом участке сковороды и потом начинайте смешивать вместе с овощами. Готовьте еще 3–5 минут и затем добавьте сок лимона и свеклу. Через пару минут добавьте немного воды.",
+        "Бульон процедите. Готовое мясо нарежьте на куски поменьше.",
+        "В бульон добавьте зажарку, капусту, мясо, зелень, соль и сахар, тертый чеснок и готовьте еще 10–15 минут.",
+        "Украсьте зеленью и подавайте со сметаной и гренками!"
+      ]
+    },
+    {
+      "id": "foodru-oblomov-pepper-beef",
+      "decision": "edit",
+      "ownerNote": "можно сделать куриную версию еще",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славная перечная говядина",
+        "url": "https://food.ru/recipes/197557-slavnaia-perechnaia-goviadina-1698934971",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIzMTEwMi80QjN3SkIuanBlZw.jpg",
+        "recipeYield": "6 порций",
+        "servings": 6,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 70,
+        "declaredNutrition": {
+          "kcal": 91.88,
+          "protein": 7.09,
+          "fat": 5.51,
+          "carbs": 3.43,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Говядина 1200 г",
+        "Репчатый лук 600 г",
+        "Чеснок 6 зубчик = 30 г",
+        "Вода (кипяток) 1500 мл = 1500 г",
+        "Сливочное масло 50 г",
+        "Пшеничная мука цельнозерновая 3 ст. л. = 72 г",
+        "Лавровый лист 2 шт. = 2 г",
+        "Соль 1 ч. л. = 7 г",
+        "Черный перец горошком 1 ст. л. = 8 г",
+        "Розмарин 1 веточка = 4 г",
+        "Тимьян / чабрец 1 пучок = 30 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты.",
+        "Говядину нарежьте на крупные кубики.",
+        "Обжарьте мясо до корочки со всех сторон.",
+        "Лук нашинкуйте и добавьте к мясу обжариваться до золотистости.",
+        "Перец горошком обжарьте на сухой сковороде, чтобы раскрыть его аромат. Как только перец начнет двигаться на сковороде, сразу снимайте с огня.",
+        "К мясу добавьте тимьян, розмарин, чеснок, обжаренный перец и лавровый лист. Залейте водой, добавьте соль и готовьте на медленном огне полчаса.",
+        "Процедите бульон и отделите кусочки мяса от специй.",
+        "Муку обжарьте на сливочном масле до золотистого цвета и добавьте к ней бульон. Дождитесь, пока соус загустится.",
+        "Добавьте к получившейся подливе мясо.",
+        "Используйте ваш любимый гарнир и подавайте!"
+      ]
+    },
+    {
+      "id": "foodru-oblomov-ginger-pork",
+      "decision": "approve",
+      "ownerNote": "нужна. И куриная версия тоже",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славная имбирная свинина",
+        "url": "https://food.ru/recipes/209701-slavnaia-imbirnaia-svinina",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI0MDIyOC9ZSERGUzkuanBlZw.jpg",
+        "recipeYield": "6 порций",
+        "servings": 6,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 40,
+        "declaredNutrition": {
+          "kcal": 210.42,
+          "protein": 8.85,
+          "fat": 10.83,
+          "carbs": 18.82,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Свинина 1 кг = 1000 г",
+        "Репчатый лук 3 шт. = 240 г",
+        "Картофельный крахмал 200 г",
+        "Соевый соус 9 ст. л. = 135 г",
+        "Саке 6 ст. л. = 108 г",
+        "Имбирь 2 ст. л. = 30 г",
+        "Чеснок 4 зубчик = 20 г",
+        "Сахар 4 ст. л. = 100 г",
+        "Вода 50 мл = 50 г",
+        "Лимонный сок 2 ст. л. = 36 г",
+        "Мед 3 ст. л. = 84 г",
+        "Соль 1 щепотка = 1 г",
+        "Черный перец молотый 1 щепотка = 1 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты.",
+        "Свиной карбонад нарежьте тонкими пластинками. Затем тонко отбейте каждый кусочек.",
+        "Чеснок и имбирь мелко натрите. Лук нарежьте дольками.",
+        "На маленьком огне растопите сахар с небольшим количеством воды до золотистого цвета. Пристально следите, чтобы сахар не начал гореть!",
+        "Снимите с огня и добавьте к сахару немного воды, чтобы остановить процесс приготовления. Туда же добавьте соевый соус, саке (можно заменить белым вином), мед, чеснок и имбирь. Хорошо перемешайте и добавьте лимонный сок.",
+        "Мясо посолите и поперчите. Затем обмакните куски в крахмал с обеих сторон и положите в разогретую сковородку. Жарьте на максимальном огне с обеих сторон до золотистости.",
+        "Готовые кусочки мяса нарежьте на порционные части.",
+        "В разогретое масло закиньте лук и готовьте на максимальном огне ~2 минуты. Затем к луку добавьте мясо и соус. Готовьте еще пару минут, пока весь соус не распределится.",
+        "Подавайте сразу, украсив кунжутом и зеленым луком!"
+      ]
+    },
+    {
+      "id": "foodru-oblomov-seabass",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славный сибас",
+        "url": "https://food.ru/recipes/140785-slavniy-sibas",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIyMDUxMS93a3V0djIuanBlZw.jpg",
+        "recipeYield": "8 порций",
+        "servings": 8,
+        "prepMinutes": 25,
+        "cookMinutes": null,
+        "totalMinutes": 70,
+        "declaredNutrition": {
+          "kcal": 150.28,
+          "protein": 10.4,
+          "fat": 8.11,
+          "carbs": 8.61,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Картошка 1100 г",
+        "Сибас 800 г",
+        "Пармезан 200 г",
+        "Шалфей 10 г",
+        "Чеснок 9 зубчик = 45 г",
+        "Сливочное масло 120 г",
+        "Белый перец молотый 7 г",
+        "Соль по вкусу"
+      ],
+      "sourceInstructions": [
+        "Заранее почистите чеснок и картофель.",
+        "Сибас разделайте, отделите филе и срежьте кости. Снимите кожу с филе.",
+        "Картофель и чеснок нарежьте на тонкие слайсы.",
+        "Белый перец измельчите в ступке.",
+        "Противень смажьте оливковым маслом, затем выложите слоями: сначала картофель, шалфей и чеснок, филе сибаса, пармезан. Повторите пока ингредиенты не закончатся (~3 слоя). Во втором слое добавьте пластины сливочного масла. Между слоев посолите и поперчите.",
+        "Заверните противень в фольгу и уберите в духовку на 30–40 минут при 200 градусах.",
+        "Затем достаньте, добавьте еще сливочного масла и пармезан. Уберите еще на 5–10 минут до золотистости. Готово!",
+        "Подавайте сразу, в теплом виде. Украсьте нарезанным луком-резанцем."
+      ]
+    },
+    {
+      "id": "foodru-oblomov-sandwich",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oblomov",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Друже Обломов",
+        "title": "Славный бутерброд",
+        "url": "https://food.ru/recipes/59659-slavnyi-buterbrod",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzU5NjU5L2NvdmVycy82RzJXVVEuanBlZw.jpg",
+        "recipeYield": "1 порция",
+        "servings": 1,
+        "prepMinutes": 15,
+        "cookMinutes": null,
+        "totalMinutes": 20,
+        "declaredNutrition": {
+          "kcal": 237.93,
+          "protein": 10.91,
+          "fat": 19.37,
+          "carbs": 5.06,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Куриное бедро 2 шт. = 340 г",
+        "Чиабатта 2 ломтик = 30 г",
+        "Растительное масло 3 ст. л. = 51 г",
+        "Оливковое масло 2 ст. л. = 34 г",
+        "Молотая паприка 0,5 ст. л. = 3 г",
+        "Сушеный чеснок 0,5 ст. л. = 5 г",
+        "Соевый соус 2 ст. л. = 30 г",
+        "Салатные листья 2 шт. = 16 г",
+        "Помидор 0,5 шт. = 45 г",
+        "Красный лук 0,5 шт. = 37,5 г",
+        "Авокадо 0,5 шт. = 110 г",
+        "Чеснок 1 зубчик = 5 г",
+        "Перец чили 1 шт. = 15 г",
+        "Сок лайма 3 ст. л. = 30 г",
+        "Соль 0,5 ч. л. = 3,5 г"
+      ],
+      "sourceInstructions": [
+        "Заранее очистите лук и чеснок. Овощи и салатные листья помойте и высушите.",
+        "Выложите бедра в миску и добавьте к ним паприку, сушеный чеснок и соевый соус. Хорошо перемешайте и оставьте на 10 минут мариноваться.",
+        "Для соуса произвольно нарежьте томат и лук на крупные куски. Переложите их в блендер и добавьте зубчик чеснока и целый перец чили. Начните перебивать. Если блендера нет, очень мелко нарежьте все ингредиенты и смешайте их в миске.",
+        "Измельчите до состояния маленьких кусочков и добавьте туда мякоть авокадо, сок лайма и соль. Измельчите ещё раз до однородной консистенции.",
+        "Маринованную курицу обжарьте на растительном масле на сильном огне по3 минуты с каждой стороны.",
+        "Готовое мясо заверните в фольгу и дайте отдохнуть 5 минут. Затем нарежьте на небольшие кусочки.",
+        "Чиабатту смажьте оливковым маслом с двух сторон и обжарьте до золотистой корочки.",
+        "Соберите бутерброд: на хлеб выложите лист салата, кусочки курицы и сверху соус. Подавайте сразу в теплом виде."
+      ]
+    },
+    {
+      "id": "foodru-blogger-chicken-bombs",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "bloggers",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Ольга «Здоровое питание»",
+        "title": "Куриные «бомбочки» с рисом и жюльеном. Здоровое питание с Ольгой",
+        "url": "https://food.ru/recipes/163507-kurinye-bombochki-s-risom-i-zhiulenom",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIzMDMzMC9YcnFoWlAuanBlZw.jpg",
+        "recipeYield": "5 порций",
+        "servings": 5,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 65,
+        "declaredNutrition": {
+          "kcal": 190.1,
+          "protein": 14.37,
+          "fat": 8.25,
+          "carbs": 14.61,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Мясо куриного бедра 900 г",
+        "Рис 250 г",
+        "Соль по вкусу",
+        "Черный перец молотый 1 щепотка = 1 г",
+        "Шампиньоны 150 г",
+        "Репчатый лук 80 г",
+        "Чеснок 1 зубчик = 5 г",
+        "Сметана 15% жирности 20 г",
+        "Растительное масло 10 г",
+        "Сушеный тимьян / чабрец 1 щепотка = 1 г",
+        "Сметана 15% жирности 80 г",
+        "Томатная паста 30 г",
+        "Соль по вкусу",
+        "Сушеный чеснок 0,3 ч. л. = 0,9 г"
+      ],
+      "sourceInstructions": [
+        "Сварите рис в подсоленной воде до готовности и остудите. Ополосните курицу, снимите лишние пленки и уберите жилки.",
+        "Мелко нарежьте репчатый лук и чеснок, снимите с шампиньонов тонкую кожицу ножом, так они не впитают в себя лишнюю влагу. Нарежьте грибы мелкими кубиками.",
+        "Разогрейте сковороду с растительным маслом и обжарьте репчатый лук до прозрачности и золотистого цвета. Добавьте в сковороду шампиньоны и чеснок, жарьте все вместе, периодически помешивая. Посолите, добавьте немного черного молотого перца и щепотку сушеного тимьяна.",
+        "Когда грибы будут полностью готовы, добавьте в сковороду сметану и снимите с плиты.",
+        "Выложите филе куриного бедра на доску гладкой стороной вниз, сверху прикройте пищевой пленкой или пакетом и отбейте. Должен получиться тонкий пласт мяса без разрывов, особенно в центре. Такие образом сделайте отбивные из всех кусочков курицы.",
+        "Смешайте в отдельной миске соль, черный молотый перец и сушеный чеснок.",
+        "Застелите небольшую пиалу пищевой пленкой и уложите внутрь куриное филе так, чтобы вся внутренняя поверхность пиалы была закрыта мясом без просветов. Посыпьте мясо смесью соли и специй.",
+        "Положить в центр пиалы несколько ложек отварного риса. Сделайте в центре риса небольшое углубление, наполните его грибным жюльеном, прикройте грибы рисом.",
+        "Приподнимая края пленки, закройте начинку куриным мясом и, закрутив пленку, сформируйте «бомбочку». Таким же образом подготовьте все остальные порции. Уберите заготовки в холодильник минимум на 1-1,5 часа. Это позволит им сохранить форму во время приготовления. Такие же заготовки можно сделать заранее.",
+        "Для соуса смешайте сметану с щепоткой соли и томатной пастой, можно добавить любые специи по желанию, например, сушеный чеснок.",
+        "Перед запеканием снимите с «бомбочек» пленку, для подстраховки можно закрепить филе зубочистками. Выложите заготовки на противень, смажьте соусом со всех сторон.",
+        "Запекайте «бомбочки» в разогретой до 180°C духовке примерно 40 минут."
+      ]
+    },
+    {
+      "id": "foodru-blogger-stuffed-pepper",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "bloggers",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Ольга «Здоровое питание»",
+        "title": "Фаршированный перец «Чистые ручки». Здоровое питание с Ольгой",
+        "url": "https://food.ru/recipes/148266-farshirovannyj-perec-chistye-ruchki",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDIyMDkxMy9KNE1XdEYucG5n.jpg",
+        "recipeYield": "8 штук",
+        "servings": 8,
+        "prepMinutes": 40,
+        "cookMinutes": null,
+        "totalMinutes": 55,
+        "declaredNutrition": {
+          "kcal": 57.78,
+          "protein": 4.68,
+          "fat": 2.24,
+          "carbs": 5.04,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Болгарский перец 650 г",
+        "Говяжий фарш 150 г",
+        "Куриная грудка 150 г",
+        "Куриное бедро 150 г",
+        "Репчатый лук 120 г",
+        "Рис 70 г",
+        "Петрушка 20 г",
+        "Вода 170 г",
+        "Соль по вкусу",
+        "Черный перец молотый по вкусу",
+        "Кумин (Зира) по вкусу",
+        "Томатная паста 40 г",
+        "Вода 800 г",
+        "Соль по вкусу"
+      ],
+      "sourceInstructions": [
+        "Сделайте фарш из курицы и смешайте его с говяжьим фаршем. Очистите и нарежьте репчатый лук. Промойте рис. Нарежьте зелень.",
+        "Перцы почистите: аккуратно выдавите плодоножку внутрь и выньте вместе с семенами.",
+        "Поставьте перцы вертикально в кастрюлю подходящего размера.",
+        "К фаршу добавьте соль и черный молотый перец по вкусу, а также семена кумина, которые предварительно разотрите руками. Еще добавьте в начинку нарезанный репчатый лук, промытый сырой рис, нарубленную петрушку. Все хорошо перемешайте.",
+        "В несколько заходов в начинку добавьте воду, чтобы фарш получился мягким и жидковатым.",
+        "Переложите фарш в кулинарный мешок или обычный пакет, отрежьте угол и наполните перцы фаршем. Жидкий фарш и использование кулинарного мешка позволят наполнить перец от самого кончика до самого верха. При этом руки и перцы снаружи остаются чистыми.",
+        "Для соуса размешайте в воде томатную пасту и соль. Залейте соусом фаршированные перцы и поставьте тушиться на огонь. После закипания готовьте под крышкой на самом слабом огне 35–40 минут.",
+        "Подавать со сметаной или йогуртом и зеленью."
+      ]
+    },
+    {
+      "id": "foodru-blogger-cottage-waffles",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "bloggers",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Виктория Молоканова",
+        "title": "Творожные вафли ПП",
+        "url": "https://food.ru/recipes/96969-tvorozhnye-vafli-pp",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy9yZWNpcGVzLzk2OTY5L2NvdmVycy8zNWRhUG8uanBlZw.jpg",
+        "recipeYield": "8 штук",
+        "servings": 8,
+        "prepMinutes": 15,
+        "cookMinutes": null,
+        "totalMinutes": 30,
+        "declaredNutrition": {
+          "kcal": 124.2,
+          "protein": 12.13,
+          "fat": 4.23,
+          "carbs": 10.43,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Творог 400 г",
+        "Кукурузная мука 3 ст. л. = 90 г",
+        "Куриное яйцо 1 шт. = 60 г",
+        "Яблоки 1 шт. = 150 г",
+        "Ванилин по вкусу",
+        "Соль по вкусу",
+        "Сахар по вкусу"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты. Помойте яблоко.",
+        "Положите творог в глубокую емкость. Добавьте ванилин, соль и сахар (идеально без него) по вкусу. Аккуратно взбивайте миксером в течении 2 минут до однородной массы.",
+        "Разбейте яйцо и взбейте миксером до однородной массы.",
+        "Добавьте кукурузную муку. Аккуратно перемешайте.",
+        "Яблоко нарежьте мелкими кубиками и отправьте в миску с основной массой. Перемешайте.",
+        "В заранее разогретые формы для выпекания вафель выкладываем смесь. Готовьте 2 минуты.",
+        "Подавайте вафли в красивой посуде с ягодами, любимым джемом или фруктовым пюре, арахисовой пастой, йогуртом. А можно даже со слабосоленой рыбкой."
+      ]
+    },
+    {
+      "id": "foodru-oats-chocolate-shell",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Софья Глухова",
+        "title": "Ленивая овсянка с шоколадной корочкой",
+        "url": "https://food.ru/recipes/263940-shokoladnaja-lenivaja-ovsjanka",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI1MTAwNC80TVBSRVMuanBlZw.jpg",
+        "recipeYield": "1 порция",
+        "servings": 1,
+        "prepMinutes": 10,
+        "cookMinutes": null,
+        "totalMinutes": 610,
+        "declaredNutrition": {
+          "kcal": 174.61,
+          "protein": 4.22,
+          "fat": 7.72,
+          "carbs": 21.95,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Овсянка 40 г",
+        "Молоко 2,5% жирности 0,5 стакан = 100 г",
+        "Греческий йогурт 1 ст. л. = 25 г",
+        "Банан 1 шт. = 150 г",
+        "Грецкие орехи 2 шт. = 12 г",
+        "Молотая корица 0,5 ч. л. = 1,5 г",
+        "Темный шоколад 45 г",
+        "Молоко 2,5% жирности 1 ст. л. = 18 г"
+      ],
+      "sourceInstructions": [
+        "Помойте и почистите банан. Подготовьте миски и банку с плотной крышкой объемом 200 мл.",
+        "Нарежьте половину банана кружочками толщиной 2–3 мм, а вторую — разомните вилкой в пюре. Мелко порубите грецкие орехи.",
+        "Всыпьте сухую овсяную кашу в банку, влейте к ней 0,5 стакана молока. Всыпьте корицу и рубленые орехи, добавьте банановое пюре. Все хорошо перемешайте.",
+        "Поставьте поверх каши кружочки банана вертикально, прислоняя их к стенкам банки. Положите в свободный центр между бананами греческий йогурт.",
+        "Поломайте шоколад на небольшие кусочки, выложите их в миску, подходящую для нагревания в микроволновой печи. Влейте к нему 1 ст.л. молока. Растопите шоколад за 2–3 приема по 20–30 секунд, хорошо перемешивая после каждого нагрева.",
+        "Равномерно полейте растопленным шоколадом верхушку заготовки. Поставьте банку в холодильник на 6–8 часов.",
+        "Достаньте готовую овсянку из холодильника и сразу пробуйте. Корочку удобнее всего разбить ложкой."
+      ]
+    },
+    {
+      "id": "foodru-oats-no-cook",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Александр Ч.",
+        "title": "Нежная овсянка, которую не нужно варить",
+        "url": "https://food.ru/recipes/212434-nezhnaia-ovsianka-kotoruiu-ne-nuzhno-varit-1711542065",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI0MDMyNy8zbVZTbTIuanBlZw.jpg",
+        "recipeYield": "1 порция",
+        "servings": 1,
+        "prepMinutes": 5,
+        "cookMinutes": null,
+        "totalMinutes": 605,
+        "declaredNutrition": {
+          "kcal": 148.75,
+          "protein": 5.03,
+          "fat": 2.86,
+          "carbs": 25.57,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Овсянка 80 г",
+        "Молоко 100 г",
+        "Банан 1 шт. = 150 г",
+        "Какао 1 ч. л. = 9 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все необходимые ингредиенты.",
+        "Насыпьте овсянку и какао в удобную посуду.",
+        "Далее добавьте нарезанные произвольно бананы.",
+        "Залейте овсянку и бананы молоком. Перемешайте и отправьте в холодильник на всю ночь.",
+        "Утром достаньте овсянку из холодильника, она готова. Хлопья стали мягкими. Приятного аппетита!",
+        "Добавьте любимые ягоды, фрукты . Я украшаю блюдо тертым шоколадом."
+      ]
+    },
+    {
+      "id": "foodru-oats-tomato",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Элина А.",
+        "title": "Томатная овсянка",
+        "url": "https://food.ru/recipes/264110-tomatnaia-ovsianka-1759827857",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI1MTAxNC8zQ1JRa0IuanBlZw.jpg",
+        "recipeYield": "2 порции",
+        "servings": 2,
+        "prepMinutes": 15,
+        "cookMinutes": null,
+        "totalMinutes": 30,
+        "declaredNutrition": {
+          "kcal": 117.69,
+          "protein": 6.28,
+          "fat": 5.28,
+          "carbs": 11.16,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Овсянка 1 стакан = 90 г",
+        "Молоко 250 мл = 250 г",
+        "Протертые томаты 200 г",
+        "Яйца 2 шт. = 120 г",
+        "Пармезан 20 г",
+        "Оливковое масло 1 ч. л. = 5 г",
+        "Чеснок 1 зубчик = 5 г",
+        "Соль по вкусу",
+        "Розмарин 1 веточка = 4 г"
+      ],
+      "sourceInstructions": [
+        "Подготовьте все ингредиенты.",
+        "Кастрюльку поставьте на огонь. Далее влейте оливковое масло, можно и подсолнечное. Заранее очистите 1 зубчик чеснока и разделите на большие кусочки. Я кидаю чеснок с веточкой розмарина прямо в кастрюлю, но без нее тоже можно обойтись.",
+        "Как только чесноки розмарин дадут аромат и поджарятся, можете розмарин убрать. И сразу же влейте протертые томаты, перемешивая. Выбирайте банку, где помидоры кусочками. Если они как пюре, то можно дополнительно мелко нарезать 1 помидорчик.",
+        "Томаты немного потушите и влейте сливки. Посолите, я делаю это на вкус. Вообще я все делаю на глаз, не обязательно следовать всем пропорциям. После сливок можете сразу засыпать овсянку. Честно, не знаю, какая у меня, но она готовится примерно 15 минут. Так что где-то на 10 минуте я начинаю делать яйца пашот. Вы можете делать разными способами, а я обычно делаю способом воронки.",
+        "Итак, овсянка готова. Конечно, я всегда томлю до готовности, просто постоянно пробую на вкус. Главное чтобы овсянка была мягкой. Переложите кашу в тарелочку, сверху положите яичко и все посыпьте тертым пармезаном. Готово!"
+      ]
+    },
+    {
+      "id": "foodru-oats-chicken",
+      "decision": "approve",
+      "ownerNote": "",
+      "group": "oats",
+      "sourceDecisionFile": "data/foodru-curated-review-decisions.json",
+      "source": {
+        "publisher": "food.ru",
+        "author": "Инна Б.",
+        "title": "Овсянка с куриным филе",
+        "url": "https://food.ru/recipes/223632-ovsianka-s-kurinym-file-1721738897",
+        "imageUrl": "https://cdn.food.ru/unsigned/fit/640/480/ce/0/czM6Ly9tZWRpYS9waWN0dXJlcy8yMDI0MDcyMy8zM0ZtWWMuanBlZw.jpg",
+        "recipeYield": "2 порции",
+        "servings": 2,
+        "prepMinutes": 20,
+        "cookMinutes": null,
+        "totalMinutes": 40,
+        "declaredNutrition": {
+          "kcal": 140.55,
+          "protein": 8.04,
+          "fat": 7.1,
+          "carbs": 10.66,
+          "scope": "per_100g_raw"
+        }
+      },
+      "sourceIngredients": [
+        "Овсяные хлопья 6 ст. л. = 84 г",
+        "Вода 1 стакан = 200 г",
+        "Куриное филе 150 г",
+        "Репчатый лук 60 г",
+        "Морковь 50 г",
+        "Подсолнечное масло рафинированное 2 ст. л. = 34 г",
+        "Соль по вкусу"
+      ],
+      "sourceInstructions": [
+        "Подготовить все ингредиенты.",
+        "Подготовить ингредиенты.",
+        "Овсянку залить водой, посолить. Готовить 5 минут.",
+        "Лук и морковку почистить, нашинковать кусочками.",
+        "Нарезать кусочками куриное филе.",
+        "Обжарить на сковородке куриное филе и овощи.",
+        "Залить водой филе и протушить 20 минут. Посолить.",
+        "Овсянку выложить в тарелку. Сверху выложить кусочки куриного филе. Блюдо готово.",
+        "Подавать со свежим огурцом."
+      ]
+    }
+  ]
+}

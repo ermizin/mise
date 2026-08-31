@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-08-31T10:57:42.665Z",
+  "source": {
+    "report": "foodru-curated-recipes-review",
+    "datasetVersion": "2026-08-31-v1",
+    "itemCount": 20
+  },
+  "decisions": [
+    {
+      "recipeId": "foodru-oblomov-potato-mushroom",
+      "title": "Славная картошка с грибным соусом",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/169798-slavnaja-kartoshka-s-gribnym-sousom",
+      "decision": "edit",
+      "note": "просто можно больше мяса из белк модуля пихать",
+      "updatedAt": "2026-08-31T10:54:06.193Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-meatballs",
+      "title": "Славные фрикадельки с пастой и томатным соусом",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/140818-slavniye-frikadelki",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:54:10.120Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-chicken-legs",
+      "title": "Славные куриные ножки с соусом",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/223398-slavnye-kurinye-nozhki-na-grile-1721575870",
+      "decision": "edit",
+      "note": "",
+      "updatedAt": "2026-08-31T10:54:30.601Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-beef-veg",
+      "title": "Славное мясо с овощами",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/163158-slavnoe-mjaso-s-ovoshchami",
+      "decision": "edit",
+      "note": "",
+      "updatedAt": "2026-08-31T10:54:27.393Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-beef-jars",
+      "title": "Славная говядина с баклажаном и перцем",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/213334-slavnaia-goviadina-v-bankakh",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:55:52.317Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-chashushuli",
+      "title": "Славные чашушули",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/139757-slavnye-chashushuli",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:55:56.490Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-borscht",
+      "title": "Славный борщ",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/146194-slavniy-borsch",
+      "decision": "edit",
+      "note": "",
+      "updatedAt": "2026-08-31T10:56:18.749Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-pepper-beef",
+      "title": "Славная перечная говядина с подливой",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/197557-slavnaia-perechnaia-goviadina-1698934971",
+      "decision": "edit",
+      "note": "можно сделать куриную версию еще",
+      "updatedAt": "2026-08-31T10:56:34.182Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-ginger-pork",
+      "title": "Славная имбирная свинина",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/209701-slavnaia-imbirnaia-svinina",
+      "decision": "approve",
+      "note": "нужна. И куриная версия тоже",
+      "updatedAt": "2026-08-31T10:56:53.350Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-kebab",
+      "title": "Славный куриный кебаб",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/148401-slavnyj-kebab",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:56:57.656Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-seabass",
+      "title": "Славный сибас с картофелем",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/140785-slavniy-sibas",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:03.656Z"
+    },
+    {
+      "recipeId": "foodru-oblomov-sandwich",
+      "title": "Славный бутерброд с курицей и авокадо",
+      "author": "Друже Обломов",
+      "group": "oblomov",
+      "sourceUrl": "https://food.ru/recipes/59659-slavnyi-buterbrod",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:06.800Z"
+    },
+    {
+      "recipeId": "foodru-blogger-chicken-bombs",
+      "title": "Куриные «бомбочки» с рисом и жюльеном",
+      "author": "Ольга «Здоровое питание»",
+      "group": "bloggers",
+      "sourceUrl": "https://food.ru/recipes/163507-kurinye-bombochki-s-risom-i-zhiulenom",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:11.250Z"
+    },
+    {
+      "recipeId": "foodru-blogger-stuffed-pepper",
+      "title": "Фаршированный перец «Чистые ручки»",
+      "author": "Ольга «Здоровое питание»",
+      "group": "bloggers",
+      "sourceUrl": "https://food.ru/recipes/148266-farshirovannyj-perec-chistye-ruchki",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:18.607Z"
+    },
+    {
+      "recipeId": "foodru-blogger-cottage-waffles",
+      "title": "Творожные вафли с яблоком",
+      "author": "Виктория Молоканова",
+      "group": "bloggers",
+      "sourceUrl": "https://food.ru/recipes/96969-tvorozhnye-vafli-pp",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:22.272Z"
+    },
+    {
+      "recipeId": "foodru-oats-chocolate-shell",
+      "title": "Ленивая овсянка с шоколадной корочкой",
+      "author": "Софья Глухова · редакция Food.ru",
+      "group": "oats",
+      "sourceUrl": "https://food.ru/recipes/263940-shokoladnaja-lenivaja-ovsjanka",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:27.673Z"
+    },
+    {
+      "recipeId": "foodru-oats-no-cook",
+      "title": "Нежная овсянка, которую не нужно варить",
+      "author": "Александр Ч. · автор Food.ru",
+      "group": "oats",
+      "sourceUrl": "https://food.ru/recipes/212434-nezhnaia-ovsianka-kotoruiu-ne-nuzhno-varit-1711542065",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:29.773Z"
+    },
+    {
+      "recipeId": "foodru-oats-tomato",
+      "title": "Томатная овсянка с яйцом и пармезаном",
+      "author": "Элина А. · автор Food.ru",
+      "group": "oats",
+      "sourceUrl": "https://food.ru/recipes/264110-tomatnaia-ovsianka-1759827857",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:33.650Z"
+    },
+    {
+      "recipeId": "foodru-oats-chicken",
+      "title": "Овсянка с куриным филе",
+      "author": "Инна Б. · автор Food.ru",
+      "group": "oats",
+      "sourceUrl": "https://food.ru/recipes/223632-ovsianka-s-kurinym-file-1721738897",
+      "decision": "approve",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:37.931Z"
+    },
+    {
+      "recipeId": "foodru-oats-vegetables",
+      "title": "Овсянка с овощами",
+      "author": "Константин Ермаков · автор Food.ru",
+      "group": "oats",
+      "sourceUrl": "https://food.ru/recipes/98699-postnaja-ovsjanka-s-ovoshchami",
+      "decision": "reject",
+      "note": "",
+      "updatedAt": "2026-08-31T10:57:40.048Z"
+    }
+  ]
+}

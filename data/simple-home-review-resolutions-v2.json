@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "reviewVersion": 2,
+  "source": {
+    "decisionExportedAt": "2026-08-31T12:46:30.571Z",
+    "expectedInputRecipes": 42
+  },
+  "expectedOutputRecipes": 40,
+  "rejectedRecipeIds": [
+    "foodru-blogger-stuffed-pepper",
+    "foodru-oats-chicken"
+  ],
+  "overnightOats": [
+    { "recipeId": "goodfood-banana-overnight-oats", "proteinGrams": 20 },
+    { "recipeId": "new-oats-banana-blueberry", "proteinGrams": 25 },
+    { "recipeId": "new-oats-chocolate", "proteinGrams": 25 },
+    { "recipeId": "new-oats-apple", "proteinGrams": 25 },
+    { "recipeId": "new-oats-carrot", "proteinGrams": 25 },
+    { "recipeId": "new-oats-blueberry-almond", "proteinGrams": 25 },
+    { "recipeId": "new-oats-cinnamon-raisin", "proteinGrams": 25 },
+    { "recipeId": "foodru-oats-chocolate-shell", "proteinGrams": 25 },
+    { "recipeId": "foodru-oats-no-cook", "proteinGrams": 25 }
+  ],
+  "zeroSauceSandwichRecipeIds": [
+    "new-sandwich-boiled-chicken",
+    "new-sandwich-smoked-chicken",
+    "new-sandwich-turkey-ham",
+    "new-sandwich-balyk",
+    "new-sandwich-caesar",
+    "new-sandwich-paprika"
+  ],
+  "titleOverrides": {
+    "new-home-buckwheat-legs": "Гречка с куриными бёдрами и йогуртовым соусом",
+    "foodru-oblomov-meatballs": "Фрикадельки с пастой",
+    "foodru-oblomov-chicken-legs": "Куриные бёдра с йогуртовым соусом",
+    "foodru-oblomov-beef-veg": "Мясо с овощами",
+    "foodru-oblomov-chashushuli": "Чашушули",
+    "foodru-oblomov-borscht": "Борщ с увеличенной порцией мяса",
+    "foodru-oblomov-pepper-beef": "Перечная говядина с подливой",
+    "foodru-oblomov-pepper-chicken": "Перечная курица с подливой",
+    "foodru-oblomov-ginger-pork": "Имбирная свинина",
+    "foodru-oblomov-ginger-chicken": "Имбирная курица",
+    "foodru-oblomov-seabass": "Сибас с картофелем",
+    "foodru-oblomov-sandwich": "Бутерброд с курицей и авокадо"
+  }
+}

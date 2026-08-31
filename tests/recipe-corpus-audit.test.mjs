@@ -5,7 +5,7 @@ import { AUDIT_REASON, auditRecipeCorpus } from "../scripts/audit-recipe-corpus.
 const report = await auditRecipeCorpus();
 
 test("corpus audit emits one unique verdict for every imported candidate", () => {
-  assert.equal(report.total, 221);
+  assert.equal(report.total, 255);
   assert.equal(report.verdicts.length, report.total);
   assert.equal(new Set(report.verdicts.map((item) => item.id)).size, report.total);
   assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, report.total);
