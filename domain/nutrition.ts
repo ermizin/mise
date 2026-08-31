@@ -108,6 +108,11 @@ export const NUTRITION_CONFIG = {
     },
     fatCalorieShare: { standard: 0.3, muscle: 0.25 },
     maximumProteinCalorieShare: 0.4,
+    // A daily protein share is a property of the day, not of every dish in it.
+    // Above this share a single meal's protein target stops being a hard
+    // viability floor for the Recipe Engine and stays a preference the solver
+    // optimises towards; the rest of the day carries the remainder.
+    mealProteinFloorCalorieShare: 0.32,
   },
   macroPresetShares,
 } as const;
@@ -560,6 +565,25 @@ export function calculateMealPlanTargets(
       bars: round(chocolateGrams / NUTRITION_CONFIG.chocolateBarWeightG, 1),
     },
   };
+}
+
+/**
+ * The hard protein floor a single meal must clear to stay selectable.
+ *
+ * A person's daily protein goal is split across slots in proportion to
+ * calories, so a 40%-of-energy day asks a 400 kcal breakfast for 40 g of
+ * protein. Ordinary breakfasts cannot carry that density inside their calorie
+ * band, so using the proportional share as a viability gate removed almost the
+ * whole breakfast catalog at high-protein targets. Above
+ * `mealProteinFloorCalorieShare` the share stays the value the solver
+ * optimises towards, but the floor it must clear is capped.
+ */
+export function mealProteinFloor(targetCalories: number, targetProtein: number) {
+  const kcal = Math.max(0, finiteOrZero(targetCalories));
+  const protein = Math.max(0, finiteOrZero(targetProtein));
+  const cap =
+    (kcal * NUTRITION_CONFIG.macroPolicy.mealProteinFloorCalorieShare) / 4;
+  return Math.min(protein, cap);
 }
 
 export function shareForSlots(selectedSlots: MealSlot[], slot: MealSlot) {

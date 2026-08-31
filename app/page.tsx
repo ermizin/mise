@@ -50,6 +50,7 @@ import {
   calculateNutritionTarget,
   capMacrosAtCalories,
   macroCalories as nutritionMacroCalories,
+  mealProteinFloor as nutritionMealProteinFloor,
   macrosForCalories as nutritionMacrosForCalories,
   normalizeNutritionTargetMode,
   recalculateDailyMacros as nutritionRecalculateDailyMacros,
@@ -4747,6 +4748,10 @@ function solveRecipeFamilyMeal(
         input.targetProtein === undefined
           ? undefined
           : input.targetProtein / repeat,
+      proteinFloor:
+        input.proteinFloor === undefined
+          ? undefined
+          : input.proteinFloor / repeat,
       targetFat:
         input.targetFat === undefined ? undefined : input.targetFat / repeat,
       targetCarbs:
@@ -4809,12 +4814,17 @@ function portionFor(
           carbs: clamp(tuning.carbs, ...recipe.flex.carbs),
         }
       : { protein: 1, fat: 1, carbs: 1 };
+    const mealProteinTarget = Math.min(
+      target.kcal / 8,
+      target.protein * ratios.protein,
+    );
     const solved = solveRecipeFamilyMeal(family, {
       targetCalories: target.kcal,
-      targetProtein: Math.min(
-        target.kcal / 8,
-        target.protein * ratios.protein,
-      ),
+      targetProtein: mealProteinTarget,
+      // The slot's proportional protein share stays the search target, but a
+      // share an ordinary dish of this size cannot carry must not delete the
+      // dish: the day, not one meal, owns the protein goal.
+      proteinFloor: nutritionMealProteinFloor(target.kcal, mealProteinTarget),
       targetFat: target.fat * ratios.fat,
       targetCarbs: target.carbs * ratios.carbs,
       hardExclusions: person.hardExclusions,

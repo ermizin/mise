@@ -2782,8 +2782,11 @@ function scoreFor(totals: Nutrition, deviation: number, targets: SolveTargets) {
   const protein = round(totals.protein);
   const fat = round(totals.fat);
   const carbs = round(totals.carbs);
-  const proteinFloor = Math.max(targets.minimumProtein, targets.targetProtein ?? 0);
-  const shortfall = Math.max(0, proteinFloor - protein);
+  // Scoring still steers to the full proportional protein target even when the
+  // caller declared a lower viability floor: the search should give the most
+  // protein the dish can carry, the floor only decides whether it is offered.
+  const proteinTarget = Math.max(targets.minimumProtein, targets.targetProtein ?? 0);
+  const shortfall = Math.max(0, proteinTarget - protein);
   // A target of exactly 0 g of protein is a target, not an absent one.
   const proteinError = targets.targetProtein === undefined ? 0 : Math.abs(targets.targetProtein - protein);
   const carbError = targets.targetCarbs === undefined ? 0 : Math.abs(targets.targetCarbs - carbs);
@@ -2899,6 +2902,17 @@ export type SolveRecipeFamilyInput = {
    * claim the whole pan's oil, which is the default only for a lone portion.
    */
   cookingFatShare?: number;
+  /**
+   * Hard protein floor for viability, defaulting to `targetProtein`.
+   *
+   * A meal's share of a daily protein goal is a preference, not a physical
+   * property of the dish: a 40%-of-energy day asks every single slot for 40%
+   * protein, which no ordinary breakfast can carry inside its calorie band.
+   * Enforcing that share as a gate silently deleted whole slots from the
+   * catalog, so the caller can declare a lower floor and leave `targetProtein`
+   * as the value the search still optimises towards.
+   */
+  proteinFloor?: number;
 };
 
 const solveCache = new Map<string, SolvedRecipeVariant>();
@@ -2941,7 +2955,7 @@ export function solveRecipeFamily(
   const exclusions = [...new Set(input.hardExclusions ?? [])].sort().join(",");
   // The solve is deterministic in these inputs, so memoizing it is safe and
   // removes the repeated full search the catalog filter used to run per render.
-  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${cookingFatShare}|${exclusions}`;
+  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.proteinFloor ?? ""}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${cookingFatShare}|${exclusions}`;
   const cached = solveCache.get(cacheKey);
   if (cached) return cloneVariant(cached);
   const solved = solveRecipeFamilyUncached(family, input, targetCalories, cookingFatShare);
@@ -2979,7 +2993,7 @@ function solveRecipeFamilyUncached(
     candidate.nutrition.kcal >= minimumCalories &&
     candidate.nutrition.kcal <= maximumCalories
   ) ?? candidates[0];
-  const proteinFloor = Math.max(family.minimumProtein, input.targetProtein ?? 0);
+  const proteinFloor = Math.max(family.minimumProtein, input.proteinFloor ?? input.targetProtein ?? 0);
   const viable =
     best.nutrition.kcal >= minimumCalories &&
     best.nutrition.kcal <= maximumCalories &&

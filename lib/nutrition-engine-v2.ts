@@ -11,6 +11,7 @@ export {
   fitMacrosToCalories,
   macroCalories,
   macrosForCalories,
+  mealProteinFloor,
   normalizeNutritionTargetMode,
   recalculateDailyMacros,
   repairLegacyDailyMacros,

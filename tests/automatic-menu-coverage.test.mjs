@@ -14,7 +14,7 @@ async function automaticMenuRuntime() {
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "menu runtime section is present");
   const output = ts.transpileModule(
-    `${source.slice(start, end)}\nglobalThis.__runtime = { candidateRecipes, allMealSlots };`,
+    `${source.slice(start, end)}\nglobalThis.__runtime = { candidateRecipes, allMealSlots, recipeCookingSession, targetFor };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const runtimeRecipeCatalogJson = JSON.parse(
@@ -28,6 +28,7 @@ async function automaticMenuRuntime() {
     legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutrition.MEAL_SLOT_SHARES,
+    nutritionMealProteinFloor: nutrition.mealProteinFloor,
     calculateMealPlanTargets: nutrition.calculateMealPlanTargets,
     capMacrosAtCalories: nutrition.capMacrosAtCalories,
     nutritionMacroCalories: nutrition.macroCalories,
@@ -112,4 +113,48 @@ test("automatic menu has a released, engine-viable candidate throughout the supp
     0,
     `automatic-menu coverage gaps: ${JSON.stringify(gaps.slice(0, 20))}`,
   );
+});
+
+// A person's daily protein share is split across slots in proportion to
+// calories, so the wizard's own 40%-of-energy ceiling used to ask a 400 kcal
+// breakfast for 40 g of protein and a 775 kcal one for 77 g. That share was
+// enforced as a viability gate, which cut the offered breakfasts down to three
+// at 2,500-3,500 kcal. The floor is now capped at 32% of the meal's energy, so
+// these are the two targets the owner reported, pinned against a return of the
+// collapse.
+const HIGH_PROTEIN_SHARE = 0.4;
+const MINIMUM_OFFERED = { breakfast: 6, lunch: 15, dinner: 15 };
+
+function highProteinPerson(kcal, includedSlots) {
+  const daily = nutrition.fitMacrosToCalories(kcal, {
+    protein: (kcal * HIGH_PROTEIN_SHARE) / 4,
+    fat: (kcal * 0.3) / 9,
+    carbs: (kcal * (0.7 - HIGH_PROTEIN_SHARE)) / 4,
+  });
+  return { id: "variety", name: "Variety", daily, includedSlots, hardExclusions: [], dislikes: [] };
+}
+
+test("high-protein daily targets keep real menu variety at 1600 and 3100 kcal", async (t) => {
+  const { candidateRecipes, recipeCookingSession, targetFor } = await automaticMenuRuntime();
+  const includedSlots = ["breakfast", "lunch", "dinner"];
+  const failures = [];
+  for (const kcal of [1600, 3100])
+    for (const style of styles)
+      for (const days of [1, 3])
+        for (const slot of includedSlots) {
+          const person = highProteinPerson(kcal, includedSlots);
+          const options = candidateRecipes(slot, style, [person], days, { limit: "all" });
+          t.diagnostic(`${kcal}kcal ${style} d${days} ${slot}: ${options.length}`);
+          if (options.length < MINIMUM_OFFERED[slot])
+            failures.push(`${kcal}kcal ${style} d${days} ${slot}: ${options.length} < ${MINIMUM_OFFERED[slot]}`);
+          // Relaxing the protein floor must not buy variety with calories.
+          const target = targetFor(person, slot);
+          for (const recipe of options) {
+            const portion = recipeCookingSession([person], slot, recipe, days).portions[0];
+            const deviation = (portion.actual.kcal - target.kcal) / target.kcal;
+            if (deviation < -0.1 || deviation > 0.05)
+              failures.push(`${kcal}kcal ${style} d${days} ${slot} ${recipe.id}: ${(deviation * 100).toFixed(1)}% off target`);
+          }
+        }
+  assert.deepEqual(failures, [], failures.join("\n"));
 });

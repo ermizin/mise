@@ -33,6 +33,7 @@ async function loadRecipeCatalog() {
     normalizeNutritionTargetMode: nutrition.normalizeNutritionTargetMode,
     capMacrosAtCalories: nutrition.capMacrosAtCalories,
     nutritionMacroCalories: nutrition.macroCalories,
+    nutritionMealProteinFloor: nutrition.mealProteinFloor,
     nutritionMacrosForCalories: nutrition.macrosForCalories,
     nutritionRecalculateDailyMacros: nutrition.recalculateDailyMacros,
     nutritionRepairLegacyDailyMacros: nutrition.repairLegacyDailyMacros,

@@ -33,6 +33,7 @@ async function recipeCatalog() {
     normalizeNutritionTargetMode: nutritionModule.normalizeNutritionTargetMode,
     capMacrosAtCalories: nutritionModule.capMacrosAtCalories,
     nutritionMacroCalories: nutritionModule.macroCalories,
+    nutritionMealProteinFloor: nutritionModule.mealProteinFloor,
     nutritionMacrosForCalories: nutritionModule.macrosForCalories,
     nutritionRecalculateDailyMacros: nutritionModule.recalculateDailyMacros,
     nutritionShareForSlots: nutritionModule.shareForSlots,

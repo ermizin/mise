@@ -166,3 +166,17 @@ test("legacy macro targets are repaired before a plan is saved", () => {
     "normalization is stable after the first repair",
   );
 });
+
+test("a meal's protein floor is the proportional share until that share stops being a dish property", () => {
+  // A balanced 30%-of-energy day: every slot's share is already reachable, so
+  // the floor is exactly the share and nothing about selection changes.
+  assert.equal(nutrition.mealProteinFloor(400, 30), 30);
+  // The wizard's own ceiling is 40% of energy. A 400 kcal breakfast would then
+  // be asked for 40 g of protein; the floor stops at 32% of the meal's energy
+  // so the slot keeps a real catalog, while the 40 g stays the search target.
+  assert.equal(nutrition.mealProteinFloor(400, 40), 32);
+  assert.equal(nutrition.mealProteinFloor(775, 77), 62);
+  // A slot the person does not eat has no floor at all.
+  assert.equal(nutrition.mealProteinFloor(0, 0), 0);
+  assert.equal(nutrition.mealProteinFloor(Number.NaN, 40), 0);
+});
