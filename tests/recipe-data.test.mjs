@@ -610,7 +610,7 @@ test("shopping counts only true piece products and keeps cheese, pasta, and brot
   const limeLine = shoppingFor(pieceRecipe).find((item) => /лайм|лимон/iu.test(item.name));
   assert.ok(limeLine);
   assert.equal(limeLine.unit, "г");
-  assert.ok(limeLine.pieceEstimate >= 1, "a source piece is shown as grams plus an approximate count");
+  assert.equal(limeLine.pieceEstimate, undefined, "non-structural produce does not invent a piece count");
 });
 
 test("shopping canonicalizes legacy ids and converts only evidenced units", () => {
@@ -627,12 +627,20 @@ test("shopping canonicalizes legacy ids and converts only evidenced units", () =
   assert.equal(normalizedShoppingKey(runtimeMilk), "milk_processed:мл");
 
   const butter = normalizeShoppingIngredient({ id: "butter", name: "Сливочное масло", unit: "г" }, 10);
-  assert.equal(butter.unit, "мл");
-  assert.ok(Math.abs(butter.quantity - 10 / 0.91) < 0.001);
+  assert.equal(butter.unit, "г");
+  assert.equal(butter.quantity, 10);
 
   const oats = normalizeShoppingIngredient({ id: "oats", name: "Овсяные хлопья", unit: "мл" }, 100);
   assert.equal(oats.unit, "мл", "an unsupported conversion preserves the source unit");
   assert.equal(oats.quantity, 100);
+
+  const sugar = normalizeShoppingIngredient({ id: "white-sugar", name: "Сахар", unit: "г" }, 100);
+  assert.equal(sugar.unit, "г", "a solid is not converted to a density-based volume");
+  assert.equal(sugar.quantity, 100);
+
+  const egg = normalizeShoppingIngredient({ id: "egg", name: "Яйцо", unit: "шт." }, 2);
+  assert.equal(egg.unit, "шт.");
+  assert.equal(egg.quantity, 2);
 });
 
 test("mixed legacy and runtime recipes produce one milk shopping row", () => {

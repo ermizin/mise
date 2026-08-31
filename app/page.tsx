@@ -293,8 +293,6 @@ type ShoppingItem = Ingredient & {
   key: string;
   checked: boolean;
   batchIds?: string[];
-  averagePieceWeightGrams?: number;
-  pieceEstimate?: number;
 };
 type RecipeAssignment = {
   recipeId: string;
@@ -4582,6 +4580,27 @@ const canonicalShoppingIngredients = new Map(
     ...ingredient.aliases.map((alias) => [alias, ingredient] as const),
   ]),
 );
+const shoppingLiquidIngredientIds = new Set([
+  "broth_processed",
+  "vegetable_broth_processed",
+  "milk_processed",
+  "whole_milk_processed",
+  "soy_milk_processed",
+  "cream_processed",
+  "heavy_cream_processed",
+  "orange_juice_processed",
+  "red_wine_processed",
+  "olive_oil_processed",
+  "canola_oil_processed",
+  "sesame_oil_processed",
+  "vegetable_oil_processed",
+  "sunflower_oil_processed",
+  "vinegar_processed",
+  "mirin_processed",
+  "soy_processed",
+  "fish_sauce_processed",
+  "hot_sauce_processed",
+]);
 const beefMinceShoppingCanonicalId = "beef_mince_85_raw";
 function canonicalShoppingIngredient(
   ingredient: Pick<Ingredient, "id" | "canonicalIngredientId" | "name">,
@@ -4620,7 +4639,6 @@ function normalizeShoppingIngredient(
       canonical,
       quantity: sourceQuantity,
       unit: ingredient.unit,
-      averagePieceWeightGrams: undefined,
     };
 
   const grams =
@@ -4631,46 +4649,40 @@ function normalizeShoppingIngredient(
         : ingredient.unit === "шт." && canonical.unit.gramsPerUnit > 0
           ? sourceQuantity * canonical.unit.gramsPerUnit
           : null;
-  const averagePieceWeightGrams =
-    canonical.unit.sensibleUnit === "piece" &&
-    canonical.unit.gramsPerUnit > 1
-      ? canonical.unit.gramsPerUnit
-      : undefined;
-
-  if (grams !== null && canonical.unit.sensibleUnit === "piece")
+  if (canonical.unit.structuralDiscrete && canonical.unit.gramsPerUnit > 1)
     return {
       canonicalIngredientId,
       canonical,
-      quantity: grams,
-      unit: "г" as const,
-      averagePieceWeightGrams,
+      quantity:
+        ingredient.unit === "шт."
+          ? sourceQuantity
+          : grams !== null
+            ? grams / canonical.unit.gramsPerUnit
+            : sourceQuantity,
+      unit: "шт." as const,
     };
-  if (grams !== null && canonical.unit.sensibleUnit === "g")
+  if (shoppingLiquidIngredientIds.has(canonicalIngredientId))
     return {
       canonicalIngredientId,
       canonical,
-      quantity: grams,
-      unit: "г" as const,
-      averagePieceWeightGrams,
-    };
-  if (
-    grams !== null &&
-    canonical.unit.sensibleUnit === "ml" &&
-    canonical.densityGPerMl
-  )
-    return {
-      canonicalIngredientId,
-      canonical,
-      quantity: grams / canonical.densityGPerMl,
+      quantity:
+        grams !== null && canonical.densityGPerMl
+          ? grams / canonical.densityGPerMl
+          : sourceQuantity,
       unit: "мл" as const,
-      averagePieceWeightGrams,
+    };
+  if (grams !== null)
+    return {
+      canonicalIngredientId,
+      canonical,
+      quantity: grams,
+      unit: "г" as const,
     };
   return {
     canonicalIngredientId,
     canonical,
     quantity: sourceQuantity,
     unit: ingredient.unit,
-    averagePieceWeightGrams,
   };
 }
 function normalizedShoppingKey(
@@ -5487,7 +5499,6 @@ function buildShopping(
             canonical,
             quantity,
             unit,
-            averagePieceWeightGrams,
           } = normalizedMeasurement;
           const displayName = canonical?.canonicalName ?? ingredient.name;
           const metadataId = canonical?.aliases[0] ?? canonicalIngredientId;
@@ -5504,11 +5515,6 @@ function buildShopping(
               ...new Set([...existing.allergens, ...ingredient.allergens]),
             ];
             existing.checkLabel ||= ingredient.checkLabel;
-            if (
-              !existing.averagePieceWeightGrams &&
-              averagePieceWeightGrams
-            )
-              existing.averagePieceWeightGrams = averagePieceWeightGrams;
             if (!existing.batchIds?.includes(batch.id))
               existing.batchIds = [...(existing.batchIds ?? []), batch.id];
           } else
@@ -5521,7 +5527,6 @@ function buildShopping(
               quantity,
               checked: false,
               batchIds: [batch.id],
-              averagePieceWeightGrams,
               cheeseVariant,
               fatNote:
                 ingredient.fatNote ??
@@ -5541,13 +5546,7 @@ function buildShopping(
         item.unit === "шт."
           ? Math.ceil(item.quantity)
           : Math.ceil(item.quantity / 10) * 10;
-      return {
-        ...item,
-        quantity,
-        pieceEstimate: item.averagePieceWeightGrams
-          ? Math.ceil(quantity / item.averagePieceWeightGrams)
-          : undefined,
-      };
+      return { ...item, quantity };
     })
     .sort(
       (a, b) =>
@@ -5556,12 +5555,7 @@ function buildShopping(
     );
 }
 function shoppingAmountLabel(item: ShoppingItem) {
-  const amount = `${item.quantity.toLocaleString("ru-RU")} ${item.unit}`;
-  return item.pieceEstimate
-    ? `${amount} (≈${item.pieceEstimate.toLocaleString("ru-RU", {
-        maximumFractionDigits: 1,
-      })} шт.)`
-    : amount;
+  return `${item.quantity.toLocaleString("ru-RU")} ${item.unit}`;
 }
 function styleScore(recipe: Recipe, style: MenuStyle) {
   if (style === "protein")
@@ -13549,7 +13543,7 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
       candidate.id === canonicalId || candidate.aliases.includes(canonicalId),
   );
   if (
-    canonical?.unit.sensibleUnit === "piece" &&
+    canonical?.unit.structuralDiscrete &&
     canonical.unit.gramsPerUnit > 1
   ) {
     const grams =
