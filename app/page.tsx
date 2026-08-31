@@ -715,7 +715,9 @@ function ingredientFatNote(
     case "beef":
       return "≈4% по расчётному профилю";
     case "beef-mince":
-      return /85\s*\/\s*15/u.test(name) ? "15% (85/15)" : "7% (93/7)";
+    case "beef-mince-90":
+    case "beef-mince-85":
+      return "15% (85/15)";
     case "pork-mince":
       return "10% (90/10)";
     case "tuna":
@@ -2144,7 +2146,7 @@ recipes.push(
     245,
     ["protein", "budget"],
     [
-      i("beef-mince", "Постный говяжий фарш", 182, "г", "Мясо и рыба"),
+      i("beef-mince", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"),
       i("pasta", "Макароны из твёрдых сортов", 57, "г", "Крупы"),
       i("pepper", "Болгарский перец", 0.4, "шт.", "Овощи и фрукты"),
       i("tomato-passata", "Протёртые томаты", 84, "мл", "Бакалея"),
@@ -2201,7 +2203,7 @@ recipes.push(
       i("sweet-potato", "Батат", 60, "г", "Овощи и фрукты"),
       i("broccoli", "Брокколи", 90, "г", "Овощи и фрукты"),
       i("soy", "Соевый соус", 15, "мл", "Бакалея"),
-      i("olive-oil", "Растительное масло", 6, "г", "Бакалея"),
+      i("olive-oil", "Оливковое масло", 6, "г", "Бакалея"),
       i("brown-sugar", "Коричневый сахар", 5, "г", "Бакалея"),
       i("vinegar", "Рисовый или белый уксус", 3, "мл", "Бакалея"),
       i("mirin", "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)", 12, "г", "Бакалея"),
@@ -2687,7 +2689,7 @@ recipes.push(
     260,
     ["protein"],
     [
-      i("beef-mince", "Постный говяжий фарш", 182, "г", "Мясо и рыба"),
+      i("beef-mince", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"),
       i("pasta", "Яичная или рисовая лапша", 45, "г", "Крупы"),
       i("broccoli", "Брокколи", 45, "г", "Овощи и фрукты"),
       i("cabbage", "Капуста", 36, "г", "Овощи и фрукты"),
@@ -2819,7 +2821,7 @@ recipes.push(
       i("cottage", "Творог 5%", 45, "г", "Молочное"),
       i("milk", "Молоко 2,5%", 72, "мл", "Молочное"),
       i("parmesan", "Пармезан", 11, "г", "Молочное"),
-      i("olive-oil", "Растительное масло", 4.5, "г", "Бакалея"),
+      i("olive-oil", "Оливковое масло", 4.5, "г", "Бакалея"),
       i("lemon", "Лимонный сок", 2, "мл", "Овощи и фрукты"),
       i("bouillon", "Сухой куриный бульон", 2, "г", "Бакалея"),
     ],
@@ -3069,7 +3071,7 @@ recipes.push(
     265,
     ["protein", "budget"],
     [
-      i("beef-mince", "Постный говяжий фарш", 182, "г", "Мясо и рыба"),
+      i("beef-mince", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"),
       i("rice", "Рис, сухой вес", 40, "г", "Крупы"),
       i("cabbage", "Белокочанная капуста", 45, "г", "Овощи и фрукты"),
       i("carrot", "Морковь", 30, "г", "Овощи и фрукты"),
@@ -3216,7 +3218,7 @@ recipes.push(
 
 recipes.push(
   r("src-sausage-pepper-pasta", "lunch", "Паста со свиным фаршем, перцем и шпинатом", "🍝", 50, { kcal: 681, protein: 51, fat: 29, carbs: 55 }, 520, 230, ["protein", "budget"], [
-    i("pork-mince", "Постный свиной фарш", 182, "г", "Мясо и рыба"), i("pasta", "Короткая паста, сухой вес", 56, "г", "Крупы"), i("onion", "Репчатый лук", 40, "г", "Овощи и фрукты"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("spinach", "Шпинат", 20, "г", "Овощи и фрукты"), i("tomato-passata", "Протёртые томаты", 84, "мл", "Бакалея"), i("tomato-paste", "Томатная паста", 9, "г", "Бакалея"), i("cream", "Сливки 10%", 12, "мл", "Молочное"), i("parmesan", "Твёрдый сыр", 8, "г", "Молочное"), i("olive-oil", "Растительное масло", 6, "г", "Бакалея"), i("garlic", "Чеснок", 3, "г", "Овощи и фрукты"),
+    i("pork-mince", "Постный свиной фарш", 182, "г", "Мясо и рыба"), i("pasta", "Короткая паста, сухой вес", 56, "г", "Крупы"), i("onion", "Репчатый лук", 40, "г", "Овощи и фрукты"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("spinach", "Шпинат", 20, "г", "Овощи и фрукты"), i("tomato-passata", "Протёртые томаты", 84, "мл", "Бакалея"), i("tomato-paste", "Томатная паста", 9, "г", "Бакалея"), i("cream", "Сливки 10%", 12, "мл", "Молочное"), i("parmesan", "Твёрдый сыр", 8, "г", "Молочное"), i("olive-oil", "Оливковое масло", 6, "г", "Бакалея"), i("garlic", "Чеснок", 3, "г", "Овощи и фрукты"),
   ], [
     "Подрумяньте фарш в широкой кастрюле, разминая его на небольшие кусочки; добавьте паприку, орегано и растёртые семена фенхеля.",
     "Освободите середину кастрюли, добавьте мелко нарезанные лук и перец и готовьте до лёгкой румяности.",
@@ -3226,7 +3228,7 @@ recipes.push(
   ], 4, true, { provenance: mealPrepManualParsed("One Pot Sausage and Pepper Pasta", "one-pot-sausage-and-pepper-pasta", "https://mealprepmanual.com/wp-content/uploads/2025/09/One-Pot-Sausage-and-Pepper-Pasta.jpg", "Горячая паста со свиным фаршем, перцем и шпинатом", "Italian sausage заменена постным свиным фаршем с фенхелем и паприкой; half-and-half — обычными сливками 10%."), localization: { fit: "familiar", availability: "common", note: "Это горячая паста из одной кастрюли, а не непривычный для России макаронный салат." }, storage: { refrigerator: "В закрытом контейнере при ≤4 °C — ориентировочно до 4 суток.", freezerDays: 45, freezeParts: "Замораживать готовую пасту порционно; сыр для подачи можно добавить уже после разогрева." }, effort: { knifeActions: 4, cookware: 1, activeActions: 10, activeMinutes: 20, level: "high" } }),
 
   r("src-honey-lime-steak", "lunch", "Говядина с лаймом, рисом, фасолью и кукурузой", "🥩", 60, { kcal: 605, protein: 41, fat: 17, carbs: 73 }, 500, 320, ["protein"], [
-    i("beef", "Постная говядина", 136, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 54, "г", "Крупы"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("corn", "Замороженная кукуруза", 20, "г", "Овощи и фрукты"), i("black-beans", "Консервированная фасоль", 84, "г", "Бакалея"), i("salsa", "Томатная сальса", 24, "г", "Бакалея"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("honey", "Мёд", 4, "г", "Бакалея"), i("soy", "Соевый соус", 3, "мл", "Бакалея"), i("olive-oil", "Растительное масло", 7.5, "г", "Бакалея"), i("lime-juice", "Сок лайма", 6, "мл", "Овощи и фрукты"),
+    i("beef", "Постная говядина", 136, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 54, "г", "Крупы"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("corn", "Замороженная кукуруза", 20, "г", "Овощи и фрукты"), i("black-beans", "Консервированная фасоль", 84, "г", "Бакалея"), i("salsa", "Томатная сальса", 24, "г", "Бакалея"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("honey", "Мёд", 4, "г", "Бакалея"), i("soy", "Соевый соус", 3, "мл", "Бакалея"), i("olive-oil", "Оливковое масло", 7.5, "г", "Бакалея"), i("lime-juice", "Сок лайма", 6, "мл", "Овощи и фрукты"),
   ], [
     "Сварите рис; мелко нарезанную зелень и острый перец добавляйте только по желанию, чтобы вкус можно было оставить нейтральным.",
     "Нарежьте говядину тонкими полосками поперёк волокон и ненадолго смешайте с цитрусовым соком, соевым соусом, паприкой и чесноком.",
@@ -3236,7 +3238,7 @@ recipes.push(
   ], 3, true, { provenance: mealPrepManualParsed("Honey Lime Steak Burrito Bowls", "honey-lime-steak-burrito-bowls", "https://mealprepmanual.com/wp-content/uploads/2025/08/Honey-Lime-Steak-Burrito-Bowls.jpg", "Говядина с цитрусовым рисом, фасолью и кукурузой", "Jalapeño и кинза сделаны необязательными; чёрная фасоль заменяется любой консервированной фасолью."), localization: { fit: "adapted", availability: "common", note: "Формат боула оставлен, но все компоненты знакомы и хранятся раздельно." }, storage: { refrigerator: "Мясо, рис, фасоль и приготовленные овощи при ≤4 °C — ориентировочно до 3 суток; сальсу хранить отдельно.", freezerDays: 30, freezeParts: "Замораживать мясо, рис, фасоль и приготовленные овощи. Сальсу и свежую зелень не замораживать." }, packing: { separate: "Сальса и свежая зелень — в маленькую ёмкость; добавлять после разогрева." }, effort: { knifeActions: 4, cookware: 3, activeActions: 13, activeMinutes: 30, level: "high" } }),
 
   r("src-chile-lime-chicken", "lunch", "Курица с лаймом, золотым рисом и брокколи", "🍋", 65, { kcal: 537, protein: 46, fat: 17, carbs: 50 }, 470, 215, ["protein", "budget"], [
-    i("chicken-thigh", "Филе куриного бедра", 182, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 36, "г", "Крупы"), i("pasta", "Вермишель, сухой вес", 20, "г", "Крупы"), i("broccoli", "Брокколи", 45, "г", "Овощи и фрукты"), i("butter", "Сливочное масло", 6, "г", "Молочное"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("broth", "Куриный бульон", 96, "мл", "Бакалея"), i("turmeric", "Куркума", 1, "г", "Бакалея"), i("garlic", "Чеснок", 3, "г", "Овощи и фрукты"), i("paprika", "Паприка", 1, "г", "Бакалея"), i("oregano", "Сушёный орегано", 0.5, "г", "Бакалея"), i("olive-oil", "Растительное масло", 5, "г", "Бакалея"),
+    i("chicken-thigh", "Филе куриного бедра", 182, "г", "Мясо и рыба"), i("rice", "Рис, сухой вес", 36, "г", "Крупы"), i("pasta", "Вермишель, сухой вес", 20, "г", "Крупы"), i("broccoli", "Брокколи", 45, "г", "Овощи и фрукты"), i("butter", "Сливочное масло", 6, "г", "Молочное"), i("lime", "Лайм или лимон", 0.2, "шт.", "Овощи и фрукты"), i("broth", "Куриный бульон", 96, "мл", "Бакалея"), i("turmeric", "Куркума", 1, "г", "Бакалея"), i("garlic", "Чеснок", 3, "г", "Овощи и фрукты"), i("paprika", "Паприка", 1, "г", "Бакалея"), i("oregano", "Сушёный орегано", 0.5, "г", "Бакалея"), i("olive-oil", "Оливковое масло", 5, "г", "Бакалея"),
   ], [
     "Поломайте вермишель на короткие кусочки и слегка подрумяньте её в масле, не допуская потемнения.",
     "Добавьте промытый рис, куркуму, чеснок и бульон; доведите до активного кипения, затем готовьте под плотной крышкой и дайте настояться.",
@@ -3266,7 +3268,7 @@ recipes.push(
   ], 4, true, { provenance: mealPrepManualParsed("Sriracha Lime Chicken Bowls", "sriracha-lime-chicken-bowls", "https://mealprepmanual.com/wp-content/uploads/2024/09/Sriracha-Lime-Chicken-Bowls.jpg", "Курица в сладко-остром соусе с бататом, рисом и брокколи", "Japanese sweet potato заменён обычным бататом; количество шрирачи регулируется вплоть до полной замены томатным соусом."), localization: { fit: "adapted", availability: "specialty", note: "Шрирача продаётся не везде, но блюдо не зависит от неё: остроту можно убрать без смены формата." }, storage: { refrigerator: "В закрытом контейнере при ≤4 °C — ориентировочно до 4 суток.", freezerDays: 45, freezeParts: "Замораживать курицу, рис и батат; брокколи лучше держать отдельно, чтобы не размокла." }, effort: { knifeActions: 3, cookware: 3, activeActions: 11, activeMinutes: 20, level: "high" } }),
 
   r("src-bbq-burger-bowl", "dinner", "Говяжий боул с картофелем, сыром и BBQ-соусом", "🍔", 45, { kcal: 663, protein: 49, fat: 30, carbs: 49 }, 500, 280, ["protein"], [
-    i("beef-mince", "Постный говяжий фарш", 182, "г", "Мясо и рыба"), i("potato", "Картофель", 182, "г", "Овощи и фрукты"), i("cabbage", "Капуста или кейл", 30, "г", "Овощи и фрукты"), i("tomato", "Томат", 20, "г", "Овощи и фрукты"), i("pickles", "Маринованные огурцы", 30, "г", "Овощи и фрукты"), i("cheese", "Полутвёрдый сыр", 17, "г", "Молочное"), i("bbq-sauce", "BBQ-соус", 30, "г", "Бакалея"), i("olive-oil", "Растительное масло", 9, "г", "Бакалея"),
+    i("beef-mince", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"), i("potato", "Картофель", 182, "г", "Овощи и фрукты"), i("cabbage", "Капуста или кейл", 30, "г", "Овощи и фрукты"), i("tomato", "Томат", 20, "г", "Овощи и фрукты"), i("pickles", "Маринованные огурцы", 30, "г", "Овощи и фрукты"), i("cheese", "Полутвёрдый сыр", 17, "г", "Молочное"), i("bbq-sauce", "BBQ-соус", 30, "г", "Бакалея"), i("olive-oil", "Оливковое масло", 9, "г", "Бакалея"),
   ], [
     "Нарежьте картофель крупными кубиками, перемешайте с небольшим количеством масла и запекайте до румяной корочки.",
     "Капусту или кейл очень мелко нашинкуйте и коротко помните руками, чтобы она стала мягче.",
@@ -3286,7 +3288,7 @@ recipes.push(
   ], 3, false, { provenance: mealPrepManualParsed("Roasted Red Pepper Chicken Dip", "roasted-red-pepper-chicken-dip", "https://mealprepmanual.com/wp-content/uploads/2024/12/Roasted-Red-Pepper-Chicken-Dip.jpg", "Белковый куриный дип с запечённым болгарским перцем", "Одна порция Mise — две маленькие порции источника; готовый запечённый перец можно заменить домашним."), localization: { fit: "familiar", availability: "common", note: "Формат дипа менее привычен, но по сути это мягкий куриный паштет для овощей или хлебцев." }, storage: { refrigerator: "В плотно закрытой банке при ≤4 °C — ориентировочно до 3 суток." }, packing: { portion: "Одна порция — банка не меньше 250 мл, заполненная примерно 180 г дипа.", separate: "Овощные палочки или хлебцы хранить в отдельном сухом контейнере.", label: "Куриный дип с запечённым перцем · около 180 г · дата и перекус" }, flex: { protein: [0.8, 1.3], fat: [0.7, 1.2], carbs: [1, 1] }, effort: { knifeActions: 0, cookware: 2, activeActions: 6, activeMinutes: 10, level: "low" } }),
 
   r("src-beefy-cheese-potatoes", "dinner", "Картофель с говядиной, овощами и сырным соусом", "🥔", 60, { kcal: 667, protein: 48, fat: 33, carbs: 45 }, 520, 285, ["protein"], [
-    i("beef-mince", "Постный говяжий фарш", 182, "г", "Мясо и рыба"), i("potato", "Картофель", 200, "г", "Овощи и фрукты"), i("zucchini", "Кабачок", 25, "г", "Овощи и фрукты"), i("onion", "Репчатый лук", 30, "г", "Овощи и фрукты"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("mushrooms", "Шампиньоны", 23, "г", "Овощи и фрукты"), i("tomato-passata", "Томатный соус", 45, "мл", "Бакалея"), i("cottage", "Творог 5%", 23, "г", "Молочное"), i("cheese", "Полутвёрдый сыр", 11, "г", "Молочное"), i("milk", "Молоко 2,5%", 9, "мл", "Молочное"),
+    i("beef-mince", "Говяжий фарш 85/15", 182, "г", "Мясо и рыба"), i("potato", "Картофель", 200, "г", "Овощи и фрукты"), i("zucchini", "Кабачок", 25, "г", "Овощи и фрукты"), i("onion", "Репчатый лук", 30, "г", "Овощи и фрукты"), i("pepper", "Болгарский перец", 30, "г", "Овощи и фрукты"), i("mushrooms", "Шампиньоны", 23, "г", "Овощи и фрукты"), i("tomato-sauce", "Томатный соус", 45, "мл", "Бакалея"), i("cottage", "Творог 5%", 23, "г", "Молочное"), i("cheese", "Полутвёрдый сыр", 11, "г", "Молочное"), i("milk", "Молоко 2,5%", 9, "мл", "Молочное"),
   ], [
     "Нарежьте картофель крупными кубиками, смешайте с небольшим количеством масла и запекайте до румяной поверхности.",
     "Лук и перец подрумяньте первыми, затем добавьте грибы и кабачок и быстро доведите овощи до мягкости без лишней влаги.",
@@ -4506,6 +4508,122 @@ type PortionComponent = {
 function canonicalIdForIngredient(ingredient: Ingredient) {
   return ingredient.canonicalIngredientId ?? ingredient.id;
 }
+const canonicalShoppingIngredients = new Map(
+  Object.values(canonicalIngredients).flatMap((ingredient) => [
+    [ingredient.id, ingredient] as const,
+    ...ingredient.aliases.map((alias) => [alias, ingredient] as const),
+  ]),
+);
+const beefMinceShoppingCanonicalId = "beef_mince_85_raw";
+function canonicalShoppingIngredient(
+  ingredient: Pick<Ingredient, "id" | "canonicalIngredientId" | "name">,
+) {
+  const sourceId = ingredient.canonicalIngredientId ?? ingredient.id;
+  if (
+    sourceId === "beef-mince" ||
+    sourceId === "beef-mince-90" ||
+    sourceId === "beef-mince-85" ||
+    sourceId === "beef_mince_raw" ||
+    sourceId === "beef_mince_90_raw" ||
+    sourceId === "beef_mince_85_raw"
+  )
+    return canonicalIngredients[beefMinceShoppingCanonicalId];
+  // Old saved plans used passata as the internal id for this exact product.
+  if (
+    sourceId === "tomato-passata" &&
+    /^\s*томатный соус\s*$/iu.test(ingredient.name)
+  )
+    return canonicalIngredients.tomato_sauce_processed;
+  return canonicalShoppingIngredients.get(sourceId);
+}
+function normalizeShoppingIngredient(
+  ingredient: Pick<
+    Ingredient,
+    "id" | "canonicalIngredientId" | "name" | "unit"
+  >,
+  sourceQuantity: number,
+) {
+  const sourceId = ingredient.canonicalIngredientId ?? ingredient.id;
+  const canonical = canonicalShoppingIngredient(ingredient);
+  const canonicalIngredientId = canonical?.id ?? sourceId;
+  if (!canonical)
+    return {
+      canonicalIngredientId,
+      canonical,
+      quantity: sourceQuantity,
+      unit: ingredient.unit,
+      averagePieceWeightGrams: undefined,
+    };
+
+  const grams =
+    ingredient.unit === "г"
+      ? sourceQuantity
+      : ingredient.unit === "мл" && canonical.densityGPerMl
+        ? sourceQuantity * canonical.densityGPerMl
+        : ingredient.unit === "шт." && canonical.unit.gramsPerUnit > 0
+          ? sourceQuantity * canonical.unit.gramsPerUnit
+          : null;
+  const averagePieceWeightGrams =
+    canonical.unit.sensibleUnit === "piece" &&
+    canonical.unit.gramsPerUnit > 1
+      ? canonical.unit.gramsPerUnit
+      : undefined;
+
+  if (grams !== null && canonical.unit.sensibleUnit === "piece")
+    return {
+      canonicalIngredientId,
+      canonical,
+      quantity: grams,
+      unit: "г" as const,
+      averagePieceWeightGrams,
+    };
+  if (grams !== null && canonical.unit.sensibleUnit === "g")
+    return {
+      canonicalIngredientId,
+      canonical,
+      quantity: grams,
+      unit: "г" as const,
+      averagePieceWeightGrams,
+    };
+  if (
+    grams !== null &&
+    canonical.unit.sensibleUnit === "ml" &&
+    canonical.densityGPerMl
+  )
+    return {
+      canonicalIngredientId,
+      canonical,
+      quantity: grams / canonical.densityGPerMl,
+      unit: "мл" as const,
+      averagePieceWeightGrams,
+    };
+  return {
+    canonicalIngredientId,
+    canonical,
+    quantity: sourceQuantity,
+    unit: ingredient.unit,
+    averagePieceWeightGrams,
+  };
+}
+function normalizedShoppingKey(
+  ingredient: Pick<
+    Ingredient,
+    "id" | "canonicalIngredientId" | "name" | "unit"
+  >,
+) {
+  const normalized = normalizeShoppingIngredient(ingredient, 0);
+  return `${normalized.canonicalIngredientId}:${normalized.unit}`;
+}
+function migratedShoppingChecked(
+  rebuilt: ShoppingItem,
+  previousItems: ShoppingItem[],
+) {
+  const previous = previousItems.filter(
+    (item) =>
+      item.key === rebuilt.key || normalizedShoppingKey(item) === rebuilt.key,
+  );
+  return previous.length > 0 && previous.every((item) => item.checked);
+}
 function portionComponents(recipe: Recipe): PortionComponent[] {
   const text = recipe.title.toLowerCase();
   const mixed =
@@ -5150,15 +5268,22 @@ function hardConflicts(recipe: Recipe, person: Person) {
 }
 function dislikeMatches(recipe: Recipe, person: Person) {
   const selected = new Set(person.dislikes ?? []);
+  const recipeIngredientIds = new Set(
+    recipe.ingredients.map(
+      (ingredient) =>
+        canonicalShoppingIngredient(ingredient)?.id ??
+        canonicalIdForIngredient(ingredient),
+    ),
+  );
   return dislikeOptions
     .filter(
       (option) =>
         selected.has(option.id) &&
-        option.ingredientIds.some((id) =>
-          recipe.ingredients.some(
-            (ingredient) => canonicalIdForIngredient(ingredient) === id,
-          ),
-        ),
+        option.ingredientIds.some((id) => {
+          const canonicalId =
+            canonicalShoppingIngredient({ id, name: id })?.id ?? id;
+          return recipeIngredientIds.has(canonicalId);
+        }),
     )
     .map((option) => option.label);
 }
@@ -5253,28 +5378,33 @@ function buildShopping(
         if (!session.viable) continue;
         const cookingAmounts = session.cookingAmounts;
         for (const ingredient of recipe.ingredients) {
-          const canonicalIngredientId = canonicalIdForIngredient(ingredient);
-          const canonical = Object.values(canonicalIngredients).find(
-            (candidate) =>
-              candidate.id === canonicalIngredientId ||
-              candidate.aliases.includes(canonicalIngredientId),
+          const sourceQuantity = cookingAmounts[ingredient.id] ?? 0;
+          const normalizedMeasurement = normalizeShoppingIngredient(
+            ingredient,
+            sourceQuantity,
           );
-          const averagePieceWeightGrams =
-            ingredient.unit === "шт." &&
-            canonical?.unit.sensibleUnit === "piece" &&
-            canonical.unit.gramsPerUnit > 1
-              ? canonical.unit.gramsPerUnit
-              : undefined;
-          const unit = averagePieceWeightGrams ? "г" : ingredient.unit;
+          const {
+            canonicalIngredientId,
+            canonical,
+            quantity,
+            unit,
+            averagePieceWeightGrams,
+          } = normalizedMeasurement;
+          const displayName = canonical?.canonicalName ?? ingredient.name;
+          const metadataId = canonical?.aliases[0] ?? canonicalIngredientId;
+          const cheeseVariant = cheeseVariantFor(
+            metadataId,
+            displayName,
+            ingredient.cheeseVariant,
+          );
           const key = `${canonicalIngredientId}:${unit}`;
           const existing = aggregate.get(key);
-          const sourceQuantity = cookingAmounts[ingredient.id] ?? 0;
-          const quantity =
-            averagePieceWeightGrams && ingredient.unit === "шт."
-            ? sourceQuantity * averagePieceWeightGrams
-            : sourceQuantity;
           if (existing) {
             existing.quantity += quantity;
+            existing.allergens = [
+              ...new Set([...existing.allergens, ...ingredient.allergens]),
+            ];
+            existing.checkLabel ||= ingredient.checkLabel;
             if (
               !existing.averagePieceWeightGrams &&
               averagePieceWeightGrams
@@ -5287,11 +5417,20 @@ function buildShopping(
               ...ingredient,
               id: canonicalIngredientId,
               key,
+              name: displayName,
               unit,
               quantity,
               checked: false,
               batchIds: [batch.id],
               averagePieceWeightGrams,
+              cheeseVariant,
+              fatNote:
+                ingredient.fatNote ??
+                ingredientFatNote(
+                  metadataId,
+                  displayName,
+                  cheeseVariant,
+                ),
             });
         }
       }
@@ -5709,26 +5848,10 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
           normalizedPlan.batches.some((batch) => batch.id === id),
         )
       : [],
-    shopping: [...rebuiltShopping.values()].map((rebuilt) => {
-      const previous = (plan.shopping ?? []).find(
-        (item) => item.key === rebuilt.key || item.id === rebuilt.id,
-      );
-      const name = normalizedIngredientName(rebuilt.id, rebuilt.name);
-      const cheeseVariant = cheeseVariantFor(
-        rebuilt.id,
-        name,
-        rebuilt.cheeseVariant,
-      );
-      return {
-        ...rebuilt,
-        checked: previous?.checked ?? false,
-        name,
-        fatNote: ingredientFatNote(rebuilt.id, name, cheeseVariant),
-        cheeseVariant,
-        allergens: [...(ingredientAllergens[rebuilt.id] ?? [])],
-        checkLabel: packagedIngredientIds.has(rebuilt.id),
-      };
-    }),
+    shopping: [...rebuiltShopping.values()].map((rebuilt) => ({
+      ...rebuilt,
+      checked: migratedShoppingChecked(rebuilt, plan.shopping ?? []),
+    })),
   };
   return {
     ...normalized,

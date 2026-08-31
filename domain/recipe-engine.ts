@@ -287,7 +287,7 @@ const averageReference = (recordId: string, description: string, note = "Уср�
 const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "bbq-sauce": fdcReference("174523", "Sauce, barbecue", "Упаковка может заметно отличаться; перед готовкой сверить этикетку."),
   beef: fdcReference("174055", "Beef, top sirloin, steak, separable lean only, raw"),
-  "beef-mince": fdcReference("173110", "Beef, ground, 93% lean meat / 7% fat, raw"),
+  "beef-mince": fdcReference("171796", "Beef, ground, 85% lean meat / 15% fat, raw"),
   berries: fdcReference("171711", "Blueberries, raw", "Расчётный профиль черники; другие ягоды требуют отдельного редакционного профиля."),
   "black-beans": fdcReference("173735", "Beans, black, mature seeds, cooked, boiled, without salt"),
   broccoli: fdcReference("170379", "Broccoli, raw"),
@@ -377,7 +377,7 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "pinto-beans": fdcReference("175200", "Beans, pinto, mature seeds, cooked, boiled, without salt"),
   "oat-flour": fdcReference("169741", "Oat flour, partially debranned"),
   ketchup: fdcReference("168556", "Catsup", "Содержание сахара зависит от марки; сверить этикетку."),
-  "beef-mince-90": fdcReference("174030", "Beef, ground, 90% lean meat / 10% fat, raw"),
+  "beef-mince-90": fdcReference("171796", "Beef, ground, 85% lean meat / 15% fat, raw"),
   "beef-mince-85": fdcReference("171796", "Beef, ground, 85% lean meat / 15% fat, raw"),
   "turkey-mince-93": fdcReference("172850", "Turkey, ground, 93% lean, 7% fat, raw"),
   "chicken-mince": fdcReference("171116", "Chicken, ground, raw"),
@@ -525,7 +525,7 @@ const sensibleUnitOverrides: Readonly<Partial<Record<string, RecipeUnit>>> = Obj
 const ingredientSeeds: IngredientSeed[] = [
   ["bbq-sauce", "Соус BBQ", "sauce", "processed", n(172, 0.82, 0.63, 40.77)],
   ["beef", "Говядина постная", "meat", "raw", n(131, 22.09, 4.08, 0)],
-  ["beef-mince", "Говяжий фарш 93/7", "meat", "raw", n(152, 20.85, 7, 0)],
+  ["beef-mince", "Говяжий фарш 85/15", "meat", "raw", n(215, 18.6, 15, 0)],
   ["berries", "Черника", "fruit", "raw", n(57, 0.74, 0.33, 14.49)],
   ["black-beans", "Фасоль чёрная", "legume", "cooked", n(132, 8.86, 0.54, 23.71)],
   ["broccoli", "Брокколи", "vegetable", "raw", n(34, 2.82, 0.37, 6.64), 350],
@@ -607,7 +607,7 @@ const ingredientSeeds: IngredientSeed[] = [
   ["pinto-beans", "Фасоль пинто", "legume", "cooked", n(143, 9.01, 0.65, 26.2)],
   ["oat-flour", "Овсяная мука", "grain", "raw", n(404, 14.7, 9.12, 65.7), 1, ["gluten"]],
   ["ketchup", "Кетчуп", "sauce", "processed", n(101, 1.04, 0.1, 27.4)],
-  ["beef-mince-90", "Говяжий фарш 90/10", "meat", "raw", n(176, 20, 10, 0)],
+  ["beef-mince-90", "Говяжий фарш 85/15", "meat", "raw", n(215, 18.6, 15, 0)],
   ["beef-mince-85", "Говяжий фарш 85/15", "meat", "raw", n(215, 18.6, 15, 0)],
   ["turkey-mince-93", "Фарш индейки 93/7", "meat", "raw", n(150, 18.7, 8.34, 0)],
   ["chicken-mince", "Куриный фарш", "meat", "raw", n(143, 17.4, 8.1, 0.04)],
@@ -2111,7 +2111,7 @@ const catalogRoleOverrides: Record<string, Record<string, RecipeIngredientRole>>
   "src-fajita-rice": familyRoles({ protein: ["chicken-thigh"], carb: ["rice"], vegetable: ["onion", "pepper"], flavour_fixed: ["lime"] }),
   "src-japanese-beef-curry": familyRoles({ protein: ["beef-mince"], carb: ["rice", "potato"], vegetable: ["carrot", "onion", "peas"], sauce: ["soy"] }),
   "src-gochujang-beef": familyRoles({ protein: ["beef-mince"], carb: ["rice"], vegetable: ["cabbage", "carrot", "pepper"], sauce: ["gochujang", "soy"] }),
-  "src-beefy-cheese-potatoes": familyRoles({ protein: ["beef-mince", "cottage"], carb: ["potato"], vegetable: ["zucchini", "onion", "pepper", "mushrooms"], fat: ["cheese"], sauce: ["tomato-passata", "milk"] }),
+  "src-beefy-cheese-potatoes": familyRoles({ protein: ["beef-mince", "cottage"], carb: ["potato"], vegetable: ["zucchini", "onion", "pepper", "mushrooms"], fat: ["cheese"], sauce: ["tomato-sauce", "milk"] }),
 };
 
 function unitFor(unit: LegacyIngredient["unit"]): RecipeUnit {

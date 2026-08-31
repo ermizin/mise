@@ -19,7 +19,7 @@ async function loadRecipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor: (person, slot) => nutritionShareForSlots(person.includedSlots, slot), plannedTargetsFor, macroDifference, candidateRecipes, automaticAssignmentsFor, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, normalizeShoppingIngredient, normalizedShoppingKey, migratedShoppingChecked, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -48,7 +48,7 @@ async function loadRecipeCatalog() {
   return sandbox.__catalog;
 }
 
-const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
+const { recipes, productionRecipes, isProductionReadyRecipe, recipeFamiliesById, recipeFamilyFor, canonicalIngredients, PILOT_RAW_SOURCE_SLUGS, portionFor, ingredientScaleFor, recipeCookingSession, solveRecipeFamily, solveRecipeBatch, materializeInstructions, aggregateCookingAmounts, normalizeRawRecipeCandidate, auditRawCandidateAgainstFamily, shareFor, plannedTargetsFor, macroDifference, candidateRecipes, hardConflicts, dislikeMatches, validateHardExclusions, buildShopping, normalizeShoppingIngredient, normalizedShoppingKey, migratedShoppingChecked, addMacros, macrosForCalories, recalculateDailyMacros, macroCalories } = await loadRecipeCatalog();
 const { validatePlanForPersistence } = await loadTypeScriptModule(
   new URL("../lib/plan-validation.ts", import.meta.url),
 );
@@ -607,10 +607,111 @@ test("shopping counts only true piece products and keeps cheese, pasta, and brot
   assert.ok(limeLine.pieceEstimate >= 1, "a source piece is shown as grams plus an approximate count");
 });
 
+test("shopping canonicalizes legacy ids and converts only evidenced units", () => {
+  const legacyMilk = { id: "milk", name: "Молоко 2%", unit: "мл" };
+  const runtimeMilk = {
+    id: "source-milk",
+    canonicalIngredientId: "milk_processed",
+    name: "Молоко",
+    unit: "мл",
+  };
+  assert.equal(normalizeShoppingIngredient(legacyMilk, 100).canonicalIngredientId, "milk_processed");
+  assert.equal(normalizeShoppingIngredient(runtimeMilk, 100).canonicalIngredientId, "milk_processed");
+  assert.equal(normalizedShoppingKey(legacyMilk), "milk_processed:мл");
+  assert.equal(normalizedShoppingKey(runtimeMilk), "milk_processed:мл");
+
+  const butter = normalizeShoppingIngredient({ id: "butter", name: "Сливочное масло", unit: "г" }, 10);
+  assert.equal(butter.unit, "мл");
+  assert.ok(Math.abs(butter.quantity - 10 / 0.91) < 0.001);
+
+  const oats = normalizeShoppingIngredient({ id: "oats", name: "Овсяные хлопья", unit: "мл" }, 100);
+  assert.equal(oats.unit, "мл", "an unsupported conversion preserves the source unit");
+  assert.equal(oats.quantity, 100);
+});
+
+test("mixed legacy and runtime recipes produce one milk shopping row", () => {
+  const person = {
+    id: "shopper",
+    name: "Покупатель",
+    daily: { kcal: 2200, protein: 150, fat: 75, carbs: 231 },
+    includedSlots: ["breakfast", "dinner"],
+  };
+  const batch = { id: "batch-shopping", index: 0, start: "2026-08-30", end: "2026-08-30", days: 1 };
+  const selections = {
+    [`${batch.id}:breakfast`]: "src-cottage-bake",
+    [`${batch.id}:dinner`]: "tmpm-28083",
+  };
+  const selectionAssignments = {
+    [`${batch.id}:breakfast`]: [{ recipeId: "src-cottage-bake", personIds: [person.id] }],
+    [`${batch.id}:dinner`]: [{ recipeId: "tmpm-28083", personIds: [person.id] }],
+  };
+  const shopping = buildShopping({
+    batches: [batch],
+    mealSlots: ["breakfast", "dinner"],
+    people: [person],
+    selections,
+    selectionAssignments,
+  });
+  const milkRows = shopping.filter((item) => item.id === "milk_processed");
+  assert.equal(milkRows.length, 1);
+  assert.equal(milkRows[0].key, "milk_processed:мл");
+  assert.equal(milkRows[0].name, "Молоко 2%");
+  assert.ok(milkRows[0].quantity > 0);
+});
+
+test("shopping migration keeps a collapsed row checked only when all old rows were checked", () => {
+  const rebuilt = { id: "milk_processed", key: "milk_processed:мл" };
+  const checkedLegacy = { id: "milk", key: "milk:мл", name: "Молоко 2%", unit: "мл", checked: true };
+  const checkedRuntime = { id: "milk_processed", key: "milk_processed:мл", name: "Молоко", unit: "мл", checked: true };
+  assert.equal(migratedShoppingChecked(rebuilt, [checkedLegacy, checkedRuntime]), true);
+  assert.equal(migratedShoppingChecked(rebuilt, [checkedLegacy, { ...checkedRuntime, checked: false }]), false);
+});
+
+test("all beef mince recipes calculate from the 85/15 product", () => {
+  for (const id of ["beef_mince_raw", "beef_mince_90_raw", "beef_mince_85_raw"]) {
+    const item = canonicalIngredients[id];
+    assert.equal(item.canonicalName, "Говяжий фарш 85/15");
+    assert.equal(JSON.stringify(item.nutritionPer100g), JSON.stringify({ kcal: 215, protein: 18.6, fat: 15, carbs: 0 }));
+  }
+  for (const id of ["beef-mince", "beef-mince-90", "beef-mince-85"])
+    assert.equal(
+      normalizeShoppingIngredient({ id, name: "Говяжий фарш", unit: "г" }, 100).canonicalIngredientId,
+      "beef_mince_85_raw",
+    );
+
+  const beefIngredients = recipes.flatMap((item) => item.ingredients).filter((item) =>
+    ["beef-mince", "beef-mince-90", "beef-mince-85", "beef_mince_raw", "beef_mince_90_raw", "beef_mince_85_raw"].includes(item.canonicalIngredientId ?? item.id),
+  );
+  assert.ok(beefIngredients.length > 0);
+  assert.ok(beefIngredients.every((item) => {
+    const normalized = normalizeShoppingIngredient(item, 100);
+    return normalized.canonicalIngredientId === "beef_mince_85_raw"
+      && normalized.canonical?.canonicalName === "Говяжий фарш 85/15";
+  }));
+  assert.equal(recipes.some((item) => item.ingredients.some((ingredient) => ingredient.id === "olive-oil" && ingredient.name === "Растительное масло")), false);
+  const beefyPotatoes = recipes.find((item) => item.id === "src-beefy-cheese-potatoes");
+  assert.ok(beefyPotatoes);
+  assert.ok(beefyPotatoes.ingredients.some((ingredient) => ingredient.id === "tomato-sauce"));
+});
+
+test("active catalog has no shopping-name splits after canonicalization", () => {
+  const keysByName = new Map();
+  for (const item of productionRecipes)
+    for (const ingredient of item.ingredients) {
+      const key = normalizedShoppingKey(ingredient);
+      const name = normalizeShoppingIngredient(ingredient, 0).canonical?.name ?? ingredient.name;
+      const normalizedName = name.toLocaleLowerCase("ru-RU").replace(/[^а-яёa-z0-9]+/giu, " ").trim();
+      if (!keysByName.has(normalizedName)) keysByName.set(normalizedName, new Set());
+      keysByName.get(normalizedName).add(key);
+    }
+  const splits = [...keysByName].filter(([, keys]) => keys.size > 1);
+  assert.deepEqual(splits, []);
+});
+
 test("Recipe Engine v1 migrates 17 existing reviewed recipes without replacing the legacy catalog", () => {
   assert.equal(Object.keys(recipeFamiliesById).length, 17);
-  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "pilot").length, 10);
-  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "review_required").length, 7);
+  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "pilot").length, 7);
+  assert.equal(Object.values(recipeFamiliesById).filter((family) => family.reviewStatus === "review_required").length, 10);
   assert.ok(recipes.length > Object.keys(recipeFamiliesById).length);
   for (const family of Object.values(recipeFamiliesById)) {
     assert.equal(family.id.startsWith("src-"), true, `${family.title} reuses an existing recipe`);
@@ -815,7 +916,7 @@ test("review-required families stay out of automatic menu candidates", () => {
   const breakfastIds = candidateRecipes("breakfast", "protein", [], 1, { limit: "all" }).map((item) => item.id);
   const lunchIds = candidateRecipes("lunch", "protein", [], 1, { limit: "all" }).map((item) => item.id);
   assert.equal(breakfastIds.includes("src-cottage-bake"), false);
-  assert.equal(lunchIds.includes("src-taco-mac"), true);
+  assert.equal(lunchIds.includes("src-taco-mac"), false);
 });
 
 test("release menu candidates exclude hidden keto, paleo and vegan diet cards", () => {
@@ -844,7 +945,7 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
     .sort();
   const visibleIds = new Set(productionRecipes.map((item) => item.id));
 
-  assert.equal(blockedIds.length, 7);
+  assert.equal(blockedIds.length, 10);
   const expectedReadyIds = recipes
     .filter(
       (item) =>
@@ -875,7 +976,7 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
 });
 
 test("pilot solver reaches viable 450, 600 and 750 kcal targets without absurd ingredient amounts", () => {
-  for (const family of Object.values(recipeFamiliesById)) {
+  for (const family of Object.values(recipeFamiliesById).filter((item) => item.reviewStatus === "pilot")) {
     for (const targetCalories of [450, 600, 750]) {
       if (targetCalories < family.minViableCalories || targetCalories > family.maxViableCalories) continue;
       const solved = solveRecipeFamily(family, { targetCalories });
@@ -1032,7 +1133,7 @@ test("cooking amounts count pan fat once and all other ingredients for every day
 });
 
 test("recipe view and shopping helper use solved family amounts for a multi-day batch", () => {
-  const item = recipes.find((candidate) => candidate.id === "src-taco-mac");
+  const item = recipes.find((candidate) => candidate.id === "src-creamy-chicken-pasta");
   const family = recipeFamiliesById[item.id];
   const people = [
     { id: "a", name: "А", daily: { kcal: 2000, protein: 150, fat: 65, carbs: 210 }, includedSlots: ["lunch"] },
