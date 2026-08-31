@@ -55,13 +55,17 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(page, /buildShopping/);
   assert.match(page, /X-Mise-Client/);
   assert.match(page, /mise-onboarding-v3/);
+  assert.match(page, /mise-onboarding-progress-v4/);
   assert.match(page, /mise-builder-draft-v\d/);
   assert.match(page, /mise-reminder-defaults-v1/);
-  // Онбординг — три экрана: обещание, партии, напоминания (SCREENS.md 7a/8a/8b).
+  // В мобильном браузере онбординг включает установку между партиями и напоминаниями.
   assert.match(page, /Готовим раз —/);
   assert.match(page, /Готовка партиями/);
   assert.match(page, /— это два вечера/);
-  assert.match(page, /Три напоминания/);
+  assert.match(page, /Поставьте Mise на домашний экран/);
+  assert.match(page, /Что напоминать/);
+  assert.match(page, /Приложение не установлено/);
+  assert.match(page, /Срок хранения истекает/);
   for (const promise of ["список покупок на всех", "расчётов в голове"]) assert.match(page, new RegExp(promise));
   // Инструктаж — два экрана, не блокирует и открывается из профиля и из недели.
   for (const rule of ["Остудить за 2 часа", "3–4 дня в холодильнике", "Разморозка — в холодильнике", "Подписывать каждую крышку", "Разогревать до горячего"]) assert.match(page, new RegExp(rule));

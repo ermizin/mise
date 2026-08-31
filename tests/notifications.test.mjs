@@ -4,17 +4,25 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("offers Home Screen installation after the first plan without requesting notification permission", async () => {
+test("places conditional Home Screen installation before onboarding reminders", async () => {
   const [page, manifestText, layout, serviceWorker] = await Promise.all([read("app/page.tsx"), read("public/manifest.webmanifest"), read("app/layout.tsx"), read("public/sw.js")]);
   const manifest = JSON.parse(manifestText);
-  // the offer follows the finished plan and stays reachable from the profile, so onboarding no longer holds an install step
-  assert.doesNotMatch(page, /setOnboardingStep\("install"\)/);
+  assert.match(page, /\| "install"/);
+  assert.match(page, /onboardingFlowWithInstall = \[[\s\S]*?"welcome"[\s\S]*?"batches"[\s\S]*?"install"[\s\S]*?"reminders"/);
+  assert.match(page, /onboardingFlowWithoutInstall = \[[\s\S]*?"welcome"[\s\S]*?"batches"[\s\S]*?"reminders"/);
+  assert.match(page, /showInstallStep =\s*installEnvironment\.ready[\s\S]*?installEnvironment\.mobile[\s\S]*?!installEnvironment\.installed/);
+  assert.match(page, /matchMedia\("\(display-mode: standalone\)"\)/);
+  assert.match(page, /navigator as Navigator & \{ standalone\?: boolean \}/);
+  assert.match(page, /beforeinstallprompt/);
+  assert.match(page, /prompt\.prompt\(\)/);
+  assert.match(page, /onboardingProgressKey/);
+  for (const copy of ["Поставьте Mise на домашний экран", "Нажмите «Поделиться»", "На экран „Домой“", "Похоже, приложение всё ещё в браузере", "Собрать первый план"]) assert.match(page, new RegExp(copy));
   assert.match(page, /function InstallInline\(/);
   assert.match(page, /Добавить Mise на экран Домой/);
   const successSheet = page.indexOf("function SuccessSheet(");
-  assert.ok(successSheet > 0 && page.indexOf("<InstallInline />", successSheet) > successSheet, "the finished plan offers installation");
+  assert.ok(successSheet > 0 && page.indexOf("<InstallInline", successSheet) === -1, "the finished plan no longer interrupts with a second install offer");
   const profile = page.indexOf("function ProfileScreen(");
-  assert.ok(profile > 0 && page.indexOf("<InstallInline />", profile) > profile, "the profile keeps the offer available");
+  assert.ok(profile > 0 && page.indexOf("<InstallInline", profile) > profile, "the profile keeps the offer available");
   assert.doesNotMatch(page, /Notification\.requestPermission/);
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.start_url, "/");
@@ -38,13 +46,18 @@ test("ships real PNG icons at the declared sizes", async () => {
   }
 });
 
-test("requests permission only from the explicit reminder action", async () => {
+test("requests permission only from the explicit reminder action in standalone mode", async () => {
   const setup = await read("app/notification-setup.tsx");
   const enableStart = setup.indexOf("async function enable()");
+  const standaloneGate = setup.indexOf("if (!isStandalone())", enableStart);
   const permission = setup.indexOf("Notification.requestPermission()", enableStart);
   const enableButton = setup.indexOf("Включить напоминания");
-  assert.ok(enableStart >= 0 && permission > enableStart && enableButton > permission);
-  for (const kind of ["shopping", "cooking", "thaw", "next-plan"]) assert.match(setup, new RegExp(`kind: "${kind}"`));
+  assert.ok(enableStart >= 0 && standaloneGate > enableStart && permission > standaloneGate && enableButton > permission);
+  for (const kind of ["cooking", "thaw", "expire"]) assert.match(setup, new RegExp(`kind: "${kind}"`));
+  assert.doesNotMatch(setup, /kind: "shopping"/);
+  assert.doesNotMatch(setup, /kind: "next-plan"/);
+  assert.match(setup, /role="switch" aria-checked=\{active\}/);
+  assert.match(setup, /installed: true/);
   assert.match(setup, /userVisibleOnly: true/);
   assert.match(setup, /applicationServerKey/);
 });
@@ -62,6 +75,7 @@ test("stores device subscriptions and scheduled jobs, then sends visible Web Pus
   for (const table of ["push_subscriptions", "push_preferences", "push_jobs"]) assert.match(schema, new RegExp(table));
   assert.match(route, /processDueNotifications/);
   assert.match(route, /testDelivered/);
+  assert.match(route, /installed: body\.installed === true/);
   assert.match(route, /body\.action === "test"/);
   assert.match(route, /kind: "diagnostic"/);
   assert.match(setup, /Отправить тестовое уведомление/);
@@ -78,6 +92,10 @@ test("stores device subscriptions and scheduled jobs, then sends visible Web Pus
     "push jobs retain a recoverable lease for atomic claims",
   );
   assert.match(sender, /leaseUntil: now \+ JOB_LEASE_MS/);
+  assert.match(sender, /RETIRED_REMINDER_KINDS = new Set\(\["shopping", "next-plan"\]\)/,
+    "jobs from the replaced reminder model are retired after deployment",
+  );
+  assert.match(sender, /lastError: "retired reminder kind"/);
   assert.match(sender, /or\(isNull\(pushJobs\.leaseUntil\), lt\(pushJobs\.leaseUntil, now\)\)/,
     "only one processor can claim a due job until its lease expires",
   );

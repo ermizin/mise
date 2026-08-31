@@ -128,6 +128,7 @@ export function publicVapidKey() {
 }
 
 const JOB_LEASE_MS = 60_000;
+const RETIRED_REMINDER_KINDS = new Set(["shopping", "next-plan"]);
 
 export async function processDueNotifications(now = Date.now(), options: { jobId?: string } = {}) {
   const db = getDb();
@@ -150,6 +151,18 @@ export async function processDueNotifications(now = Date.now(), options: { jobId
       or(isNull(pushJobs.leaseUntil), lt(pushJobs.leaseUntil, now)),
     )).returning();
     if (!claimed) continue;
+
+    // Batch 5 replaced the shopping and next-plan reminders. Existing D1 jobs
+    // may outlive the client release that created them, so retire only those
+    // obsolete kinds while preserving still-valid cooking and thaw jobs.
+    if (RETIRED_REMINDER_KINDS.has(claimed.kind)) {
+      await db.update(pushJobs).set({
+        sentAt: now,
+        leaseUntil: null,
+        lastError: "retired reminder kind",
+      }).where(eq(pushJobs.id, claimed.id));
+      continue;
+    }
 
     const [subscription] = await db.select().from(pushSubscriptions).where(eq(pushSubscriptions.id, claimed.subscriptionId)).limit(1);
     const [preference] = await db.select().from(pushPreferences).where(and(

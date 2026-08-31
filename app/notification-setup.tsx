@@ -7,11 +7,11 @@ import { Note } from "./ui/note";
 export type NotificationPlan = {
   id: string;
   end: string;
-  batches: { id: string; index: number; start: string }[];
+  batches: { id: string; index: number; start: string; end: string }[];
   frozenUseDates: string[];
 };
 
-type ReminderKind = "shopping" | "cooking" | "thaw" | "next-plan";
+type ReminderKind = "cooking" | "thaw" | "expire";
 type ReminderToggles = Record<ReminderKind, boolean>;
 type StoredPreferences = {
   toggles: ReminderToggles;
@@ -27,9 +27,9 @@ type ScheduledJob = {
   dueAt: number;
 };
 
-const defaultToggles: ReminderToggles = { shopping: true, cooking: true, thaw: true, "next-plan": true };
+const defaultToggles: ReminderToggles = { cooking: true, thaw: true, expire: false };
 
-/* Что человек выбрал на третьем экране онбординга. Разрешения там не просят —
+/* Что человек выбрал на последнем экране онбординга. Разрешения там не просят —
    это только стартовое положение переключателей для готового плана. */
 const reminderDefaultsKey = "mise-reminder-defaults-v1";
 
@@ -43,7 +43,7 @@ function seededToggles(): ReminderToggles {
       ...defaultToggles,
       cooking: parsed.cooking ?? defaultToggles.cooking,
       thaw: parsed.thaw ?? defaultToggles.thaw,
-      "next-plan": parsed["next-plan"] ?? defaultToggles["next-plan"],
+      expire: parsed.expire ?? defaultToggles.expire,
     };
   } catch {
     return defaultToggles;
@@ -81,24 +81,39 @@ function applicationServerKey(value: string) {
   return Uint8Array.from(binary, (character) => character.charCodeAt(0));
 }
 
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches ||
+    Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+}
+
+function isMobileDevice() {
+  return /iphone|ipad|ipod|android/i.test(navigator.userAgent) ||
+    (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+}
+
+function isIosDevice() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+    (/macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
+}
+
 function buildJobs(plan: NotificationPlan, preferences: StoredPreferences) {
   const jobs: ScheduledJob[] = [];
   const firstCookTime = preferences.cookTimes[plan.batches[0]?.id] ?? "18:00";
   for (const batch of plan.batches) {
     const cookTime = preferences.cookTimes[batch.id] ?? firstCookTime;
-    if (preferences.toggles.shopping) jobs.push({
-      kind: "shopping",
-      title: "Проверьте покупки",
-      body: `Завтра готовка ${batch.index + 1}. Всё нужное уже куплено?`,
-      url: "/?tab=shopping",
-      dueAt: atLocalTime(addDays(batch.start, -1), cookTime),
-    });
     if (preferences.toggles.cooking) jobs.push({
       kind: "cooking",
       title: `Пора готовить партию ${batch.index + 1}`,
       body: `Откройте рецепты и раскладку порций на ${formatDate(batch.start)}.`,
       url: "/",
       dueAt: atLocalTime(batch.start, cookTime),
+    });
+    if (preferences.toggles.expire) jobs.push({
+      kind: "expire",
+      title: `Срок хранения партии ${batch.index + 1} истекает`,
+      body: "Проверьте оставшиеся порции: съешьте их завтра или заморозьте сегодня.",
+      url: "/",
+      dueAt: atLocalTime(addDays(batch.end, -1), cookTime),
     });
   }
   if (preferences.toggles.thaw) for (const date of [...new Set(plan.frozenUseDates)]) jobs.push({
@@ -108,17 +123,10 @@ function buildJobs(plan: NotificationPlan, preferences: StoredPreferences) {
     url: "/",
     dueAt: atLocalTime(addDays(date, -1), preferences.thawTime),
   });
-  if (preferences.toggles["next-plan"]) jobs.push({
-    kind: "next-plan",
-    title: "Пора составить следующий план",
-    body: "До конца текущего плана осталось два дня.",
-    url: "/?new-plan=1",
-    dueAt: atLocalTime(addDays(plan.end, -2), firstCookTime),
-  });
   return jobs.filter((job) => job.dueAt > Date.now() + 30_000);
 }
 
-export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCancel }: { plan: NotificationPlan; clientId: string; deviceId: string; onDone: () => void; onCancel: () => void }) {
+export function NotificationSetupPanel({ plan, clientId, deviceId, showInstallWarning = false, onInstall, onDone, onCancel }: { plan: NotificationPlan; clientId: string; deviceId: string; showInstallWarning?: boolean; onInstall?: () => void; onDone: () => void; onCancel: () => void }) {
   const defaultCookTimes = useMemo(() => Object.fromEntries(plan.batches.map((batch) => [batch.id, "18:00"])), [plan.batches]);
   const [toggles, setToggles] = useState<ReminderToggles>(seededToggles);
   const [cookTimes, setCookTimes] = useState<Record<string, string>>(defaultCookTimes);
@@ -127,6 +135,12 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
   const [testDelivered, setTestDelivered] = useState(false);
   const [testState, setTestState] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [status, setStatus] = useState<"idle" | "saving" | "success" | "error" | "unavailable" | "denied">("idle");
+  const [installed, setInstalled] = useState(true);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- display mode is client-only state
+    setInstalled(isStandalone() || !isMobileDevice() || !isIosDevice());
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -158,6 +172,11 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
         setStatus("unavailable");
         return;
       }
+      if (!isStandalone()) {
+        setInstalled(false);
+        setStatus("unavailable");
+        return;
+      }
       const keyResponse = await fetch("/api/push", { headers: { "X-Mise-Client": clientId, "X-Mise-Device": deviceId } });
       const keyData = await keyResponse.json() as { available?: boolean; publicKey?: string | null };
       if (!keyResponse.ok || !keyData.available || !keyData.publicKey) {
@@ -175,7 +194,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
       const response = await fetch("/api/push", {
         method: "POST",
         headers: { "Content-Type": "application/json", "X-Mise-Client": clientId, "X-Mise-Device": deviceId },
-        body: JSON.stringify({ action: "enable", planId: plan.id, subscription: subscription.toJSON(), preferences, jobs }),
+        body: JSON.stringify({ action: "enable", planId: plan.id, installed: true, subscription: subscription.toJSON(), preferences, jobs }),
       });
       if (!response.ok) throw new Error("save failed");
       const result = await response.json() as { testDelivered?: boolean };
@@ -233,17 +252,17 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
 
   return <section className="notification-setup" aria-labelledby="notifications-title">
     <div className="notification-heading"><Icon name="bell" /><div><p className="kicker">По расписанию плана</p><h2 id="notifications-title">Напоминания</h2><p>Сначала проверьте расписание. Системное разрешение появится только после нажатия «Включить».</p></div></div>
+    {showInstallWarning && !installed && <Note tone="warn" role="status" className="notification-install-warning" icon={<Icon name="warning" size={16} />} label="Приложение не установлено" action={onInstall ? <button onClick={onInstall}>Поставить</button> : undefined}>Пуши на iOS приходят только с домашнего экрана. Настройки сохранятся, но уведомления не придут.</Note>}
     <div className="reminder-list glass-card">
-      <ReminderToggle active={toggles.shopping} title="Проверить покупки" note="Накануне каждой готовки, в то же время" onClick={() => toggle("shopping")} />
-      <ReminderToggle active={toggles.cooking} title="Приготовить партию" note={`${plan.batches.length} ${plan.batches.length === 1 ? "готовка" : "готовки"}`} onClick={() => toggle("cooking")} />
+      <ReminderToggle active={toggles.cooking} title="Сегодня готовим" note={`${plan.batches.length} ${plan.batches.length === 1 ? "готовка" : "готовки"}`} onClick={() => toggle("cooking")} />
       {toggles.cooking && <div className="cook-time-list">{plan.batches.map((batch) => <label key={batch.id}><span>Готовка {batch.index + 1} · {formatDate(batch.start)}</span><input type="time" value={cookTimes[batch.id] ?? "18:00"} onChange={(event) => setCookTimes((current) => ({ ...current, [batch.id]: event.target.value }))} /></label>)}</div>}
       <ReminderToggle active={toggles.thaw} title="Разморозить порции" note={plan.frozenUseDates.length ? `${[...new Set(plan.frozenUseDates)].length} вечера` : "В этом плане не понадобится"} disabled={!plan.frozenUseDates.length} onClick={() => toggle("thaw")} />
       {toggles.thaw && plan.frozenUseDates.length > 0 && <label className="single-time"><span>Накануне использования</span><input type="time" value={thawTime} onChange={(event) => setThawTime(event.target.value)} /></label>}
-      <ReminderToggle active={toggles["next-plan"]} title="Составить следующий план" note={`За 2 дня до окончания · ${cookTimes[plan.batches[0]?.id] ?? "18:00"}`} onClick={() => toggle("next-plan")} />
+      <ReminderToggle active={toggles.expire} title="Срок хранения истекает" note="За день до конца каждой партии" onClick={() => toggle("expire")} />
     </div>
     <p className="t-min schedule-note">Будет запланировано: <b>{jobs.length}</b>. Напоминания относятся только к этому плану и этому устройству.</p>
     {status === "success" ? <><Note tone="mint" role="status" icon={<Icon name="check" size={16} />}>{testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</Note>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <Icon name="chevron" size={16} /></button></> : <>
-      {status === "unavailable" && <Note tone="warn" role="alert">На этом устройстве Web Push недоступен. На iPhone откройте Mise с экрана Домой.</Note>}
+      {status === "unavailable" && <Note tone="warn" role="alert">На этом устройстве Web Push недоступен. Установите Mise и откройте его с домашнего экрана.</Note>}
       {status === "denied" && <Note tone="warn" role="alert">Разрешение не выдано. План продолжит работать без уведомлений.</Note>}
       {status === "error" && <Note tone="warn" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</Note>}
       <button className="primary-button" disabled={status === "saving" || jobs.length === 0} onClick={enable}>{status === "saving" ? "Включаем…" : enabled ? "Обновить расписание" : "Включить напоминания"}</button>
@@ -255,5 +274,5 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, onDone, onCan
 }
 
 function ReminderToggle({ active, title, note, disabled = false, onClick }: { active: boolean; title: string; note: string; disabled?: boolean; onClick: () => void }) {
-  return <button className="reminder-toggle" aria-pressed={active} disabled={disabled} onClick={onClick}><span className={`toggle-control ${active && !disabled ? "active" : ""}`}><i /></span><span><b>{title}</b><small>{note}</small></span></button>;
+  return <button className="reminder-toggle" role="switch" aria-checked={active} disabled={disabled} onClick={onClick}><span className={`toggle-control ${active && !disabled ? "active" : ""}`}><i /></span><span><b>{title}</b><small>{note}</small></span></button>;
 }

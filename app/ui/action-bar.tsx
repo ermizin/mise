@@ -27,10 +27,14 @@ export function ActionBar({
           <div
             className="action-dots"
             role="img"
-            aria-label={`Экран ${step + 1} из ${steps}`}
+            aria-label={`Шаг ${step + 1} из ${steps}`}
           >
             {Array.from({ length: steps }, (_, index) => (
-              <span key={index} className={index === step ? "is-current" : ""} />
+              <span
+                key={index}
+                aria-hidden="true"
+                className={index === step ? "is-current" : ""}
+              />
             ))}
           </div>
         )}

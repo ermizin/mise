@@ -383,6 +383,7 @@ type BuilderDraft = {
 type OnboardingStep =
   | "welcome"
   | "batches"
+  | "install"
   | "reminders"
   /* Инструктаж: не блокирует, открывается из профиля и из карточки готовки. */
   | "rules"
@@ -393,7 +394,14 @@ type OnboardingStep =
 type ReminderDefaults = {
   cooking: boolean;
   thaw: boolean;
-  "next-plan": boolean;
+  expire: boolean;
+};
+type InstallEnvironment = {
+  ready: boolean;
+  installed: boolean;
+  mobile: boolean;
+  ios: boolean;
+  safari: boolean;
 };
 type ClientAnalyticsEvent =
   | "first_open"
@@ -420,12 +428,45 @@ type ClientAnalyticsFields = {
 };
 
 const onboardingStorageKey = "mise-onboarding-v3";
+const onboardingProgressKey = "mise-onboarding-progress-v4";
+const onboardingInstallSkippedKey = "mise-onboarding-install-skipped-v1";
 const reminderDefaultsKey = "mise-reminder-defaults-v1";
 const builderDraftKey = "mise-builder-draft-v3";
 const analyticsStoragePrefix = "mise-analytics-v1";
 const favoriteRecipesStorageKey = "mise-favorite-recipes-v1";
 const localPlanStoragePrefix = "mise-local-plan-v1";
 const pendingPlanStoragePrefix = "mise-pending-plan-v1";
+
+const initialInstallEnvironment: InstallEnvironment = {
+  ready: false,
+  installed: false,
+  mobile: false,
+  ios: false,
+  safari: false,
+};
+
+function readInstallEnvironment(): InstallEnvironment {
+  if (typeof window === "undefined" || typeof navigator === "undefined")
+    return initialInstallEnvironment;
+  const userAgent = navigator.userAgent;
+  const ios =
+    /iphone|ipad|ipod/i.test(userAgent) ||
+    (/macintosh/i.test(userAgent) && navigator.maxTouchPoints > 1);
+  const android = /android/i.test(userAgent);
+  const safari =
+    ios &&
+    /safari/i.test(userAgent) &&
+    !/crios|fxios|edgios|opios/i.test(userAgent);
+  return {
+    ready: true,
+    installed:
+      window.matchMedia("(display-mode: standalone)").matches ||
+      Boolean((navigator as Navigator & { standalone?: boolean }).standalone),
+    mobile: ios || android,
+    ios,
+    safari,
+  };
+}
 
 function storedFavoriteRecipeIds() {
   try {
@@ -5092,7 +5133,12 @@ function notificationPlanFor(plan: ActivePlan): NotificationPlan {
   return {
     id: plan.id,
     end: plan.end,
-    batches: plan.batches.map(({ id, index, start }) => ({ id, index, start })),
+    batches: plan.batches.map(({ id, index, start, end }) => ({
+      id,
+      index,
+      start,
+      end,
+    })),
     frozenUseDates,
   };
 }
@@ -5898,6 +5944,11 @@ export default function Home() {
   const [onboardingReturnTab, setOnboardingReturnTab] = useState<Tab | null>(
     null,
   );
+  const [installEnvironment, setInstallEnvironment] =
+    useState<InstallEnvironment>(initialInstallEnvironment);
+  const [installPrompt, setInstallPrompt] =
+    useState<InstallPromptEvent | null>(null);
+  const [installSkipped, setInstallSkipped] = useState(false);
   /* Инструктаж, открытый из онбординга, возвращает на его первый экран,
      а не завершает онбординг. */
   const [guideOrigin, setGuideOrigin] = useState<"welcome" | null>(null);
@@ -5923,6 +5974,35 @@ export default function Home() {
     currentTabRef.current = tab;
     if (isPrimaryTab(tab)) restoreTabScroll(tab, tabScrollPositions.current);
   }, [tab]);
+  useEffect(() => {
+    const refresh = () => {
+      const next = readInstallEnvironment();
+      setInstallEnvironment(next);
+      setInstallSkipped(
+        !next.installed &&
+          localStorage.getItem(onboardingInstallSkippedKey) === "true",
+      );
+      if (next.installed) {
+        localStorage.removeItem(onboardingInstallSkippedKey);
+        setInstallSkipped(false);
+        setInstallPrompt(null);
+      }
+    };
+    const capture = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as InstallPromptEvent);
+      refresh();
+    };
+    refresh();
+    window.addEventListener("beforeinstallprompt", capture);
+    window.addEventListener("appinstalled", refresh);
+    window.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.removeEventListener("beforeinstallprompt", capture);
+      window.removeEventListener("appinstalled", refresh);
+      window.removeEventListener("visibilitychange", refresh);
+    };
+  }, []);
   useEffect(() => {
     const onPopState = (event: PopStateEvent) => {
       const next = event.state?.miseTab;
@@ -6017,8 +6097,23 @@ export default function Home() {
       setActivePlan(normalizePlan(pendingPlan));
       setPlanSyncState("pending");
     }
-    if (!localStorage.getItem(onboardingStorageKey))
-      setOnboardingStep("welcome");
+    if (!localStorage.getItem(onboardingStorageKey)) {
+      const progress = localStorage.getItem(onboardingProgressKey);
+      const environment = readInstallEnvironment();
+      const resumable =
+        progress === "welcome" ||
+        progress === "batches" ||
+        progress === "install" ||
+        progress === "reminders"
+          ? progress
+          : "welcome";
+      setOnboardingStep(
+        resumable === "install" &&
+          (environment.installed || !environment.mobile)
+          ? "reminders"
+          : resumable,
+      );
+    }
     if ("serviceWorker" in navigator)
       navigator.serviceWorker.register("/sw.js").catch(() => undefined);
     const params = new URLSearchParams(location.search);
@@ -6342,6 +6437,7 @@ export default function Home() {
   }
   function finishOnboarding(reminders?: ReminderDefaults) {
     localStorage.setItem(onboardingStorageKey, "complete");
+    localStorage.removeItem(onboardingProgressKey);
     if (reminders)
       localStorage.setItem(reminderDefaultsKey, JSON.stringify(reminders));
     void trackAnalytics("onboarding_completed", {}, "onboarding-completed");
@@ -6358,11 +6454,31 @@ export default function Home() {
         step={onboardingStep}
         plan={activePlan}
         hasPlan={Boolean(activePlan)}
+        installEnvironment={installEnvironment}
+        installPrompt={installPrompt}
+        installSkipped={installSkipped}
         onGo={(next) => {
           if (next === "rules" && onboardingStep === "welcome")
             setGuideOrigin("welcome");
+          if (
+            next === "welcome" ||
+            next === "batches" ||
+            next === "install" ||
+            next === "reminders"
+          )
+            localStorage.setItem(onboardingProgressKey, next);
           setOnboardingStep(next);
         }}
+        onInstallPromptUsed={() => setInstallPrompt(null)}
+        onInstallSkipped={(skipped) => {
+          if (skipped)
+            localStorage.setItem(onboardingInstallSkippedKey, "true");
+          else localStorage.removeItem(onboardingInstallSkippedKey);
+          setInstallSkipped(skipped);
+        }}
+        onInstallEnvironmentRefresh={() =>
+          setInstallEnvironment(readInstallEnvironment())
+        }
         onFinish={finishOnboarding}
         onCloseGuide={() => {
           if (guideOrigin) {
@@ -6563,6 +6679,9 @@ export default function Home() {
             setOnboardingStep("rules");
           }}
           onNotifications={() => setNotificationSetupOpen(true)}
+          installEnvironment={installEnvironment}
+          installPrompt={installPrompt}
+          onInstallPromptUsed={() => setInstallPrompt(null)}
         />
       )}
       </div>
@@ -6576,6 +6695,13 @@ export default function Home() {
             plan={notificationPlanFor(activePlan)}
             clientId={clientId()}
             deviceId={deviceId()}
+            showInstallWarning
+            onInstall={() => {
+              setNotificationSetupOpen(false);
+              setOnboardingReturnTab("profile");
+              localStorage.setItem(onboardingProgressKey, "install");
+              setOnboardingStep("install");
+            }}
             onDone={() => setNotificationSetupOpen(false)}
             onCancel={() => setNotificationSetupOpen(false)}
           />
@@ -6591,15 +6717,27 @@ export default function Home() {
   );
 }
 
-/* Онбординг и инструктаж · SCREENS.md, макеты 7a / 8a / 8b / 8c / 8d.
+/* Онбординг и инструктаж · макеты 7a / 8a / 17a / 17b / 8c / 8d.
 
-   Онбординг — три экрана (обещание, партии, напоминания), свайп и точки.
+   В мобильном браузере онбординг состоит из четырёх экранов: обещание,
+   партии, установка, напоминания. В установленном приложении и на десктопе
+   шаг установки скрыт, поэтому индикатор снова состоит из трёх сегментов.
    Инструктаж — два экрана (пять правил, чек-лист), не блокирует и открывается
    из «Профиля» и из карточки готовки.
 
    Числа на плитках 7a настоящие: если план уже есть, берём его дни и порции. */
 
-const onboardingFlow = ["welcome", "batches", "reminders"] as const;
+const onboardingFlowWithInstall = [
+  "welcome",
+  "batches",
+  "install",
+  "reminders",
+] as const;
+const onboardingFlowWithoutInstall = [
+  "welcome",
+  "batches",
+  "reminders",
+] as const;
 
 const promiseForms = {
   days: [
@@ -6798,21 +6936,41 @@ function OnboardingScreen({
   step,
   plan,
   hasPlan,
+  installEnvironment,
+  installPrompt,
+  installSkipped,
   onGo,
+  onInstallPromptUsed,
+  onInstallSkipped,
+  onInstallEnvironmentRefresh,
   onFinish,
   onCloseGuide,
 }: {
   step: Exclude<OnboardingStep, "done">;
   plan: ActivePlan | null;
   hasPlan: boolean;
+  installEnvironment: InstallEnvironment;
+  installPrompt: InstallPromptEvent | null;
+  installSkipped: boolean;
   onGo: (step: Exclude<OnboardingStep, "done">) => void;
+  onInstallPromptUsed: () => void;
+  onInstallSkipped: (skipped: boolean) => void;
+  onInstallEnvironmentRefresh: () => void;
   onFinish: (reminders?: ReminderDefaults) => void;
   onCloseGuide: () => void;
 }) {
   const [motionDirection, setMotionDirection] = useState<-1 | 1>(1);
+  const showInstallStep =
+    installEnvironment.ready &&
+    installEnvironment.mobile &&
+    !installEnvironment.installed;
+  const onboardingFlow = showInstallStep
+    ? onboardingFlowWithInstall
+    : onboardingFlowWithoutInstall;
   const motionOrder: Exclude<OnboardingStep, "done">[] = [
     "welcome",
     "batches",
+    "install",
     "reminders",
     "rules",
     "kitchen",
@@ -6846,16 +7004,37 @@ function OnboardingScreen({
       <OnboardingBatches
         motionDirection={motionDirection}
         onBack={() => go("welcome")}
-        onNext={() => go("reminders")}
+        onNext={() => go(showInstallStep ? "install" : "reminders")}
         onSkip={() => onFinish()}
+        steps={onboardingFlow.length}
+      />
+    );
+  if (step === "install")
+    return (
+      <OnboardingInstall
+        motionDirection={motionDirection}
+        environment={installEnvironment}
+        prompt={installPrompt}
+        onBack={() => go("batches")}
+        onNext={() => go("reminders")}
+        onPromptUsed={onInstallPromptUsed}
+        onSkipped={onInstallSkipped}
+        onEnvironmentRefresh={onInstallEnvironmentRefresh}
+        steps={onboardingFlowWithInstall.length}
       />
     );
   if (step === "reminders")
     return (
       <OnboardingReminders
         motionDirection={motionDirection}
-        onBack={() => go("batches")}
+        onBack={() => go(showInstallStep ? "install" : "batches")}
+        onInstall={() => go("install")}
+        showInstallWarning={
+          showInstallStep && installSkipped && installEnvironment.ios
+        }
         onFinish={onFinish}
+        step={onboardingFlow.length - 1}
+        steps={onboardingFlow.length}
       />
     );
   return (
@@ -6866,6 +7045,7 @@ function OnboardingScreen({
       onNext={() => go("batches")}
       onSkip={() => onFinish()}
       onOpenGuide={() => go("rules")}
+      steps={onboardingFlow.length}
     />
   );
 }
@@ -6877,6 +7057,7 @@ function OnboardingWelcome({
   onNext,
   onSkip,
   onOpenGuide,
+  steps,
 }: {
   motionDirection: -1 | 1;
   plan: ActivePlan | null;
@@ -6884,6 +7065,7 @@ function OnboardingWelcome({
   onNext: () => void;
   onSkip: () => void;
   onOpenGuide: () => void;
+  steps: number;
 }) {
   const days = plan?.periodDays ?? 7;
   const portions = plan ? totalPlanPortions(plan) : 21;
@@ -6893,7 +7075,7 @@ function OnboardingWelcome({
       motionDirection={motionDirection}
       onNext={onNext}
       bar={
-        <ActionBar step={0} steps={onboardingFlow.length}>
+        <ActionBar step={0} steps={steps}>
           <button className="btn btn-primary action-primary" onClick={onNext}>
             <span>Начать — это 5 минут</span>
             <Icon name="chevron" size={16} />
@@ -6964,11 +7146,13 @@ function OnboardingBatches({
   onBack,
   onNext,
   onSkip,
+  steps,
 }: {
   motionDirection: -1 | 1;
   onBack: () => void;
   onNext: () => void;
   onSkip: () => void;
+  steps: number;
 }) {
   return (
     <OnboardingShell
@@ -6976,7 +7160,7 @@ function OnboardingBatches({
       onNext={onNext}
       onBack={onBack}
       bar={
-        <ActionBar step={1} steps={onboardingFlow.length}>
+        <ActionBar step={1} steps={steps}>
           <button className="btn btn-primary action-primary" onClick={onNext}>
             <span>Дальше</span>
             <Icon name="chevron" size={16} />
@@ -7070,35 +7254,225 @@ function OnboardingBatches({
   );
 }
 
+function OnboardingInstall({
+  motionDirection,
+  environment,
+  prompt,
+  onBack,
+  onNext,
+  onPromptUsed,
+  onSkipped,
+  onEnvironmentRefresh,
+  steps,
+}: {
+  motionDirection: -1 | 1;
+  environment: InstallEnvironment;
+  prompt: InstallPromptEvent | null;
+  onBack: () => void;
+  onNext: () => void;
+  onPromptUsed: () => void;
+  onSkipped: (skipped: boolean) => void;
+  onEnvironmentRefresh: () => void;
+  steps: number;
+}) {
+  const [showShareHint, setShowShareHint] = useState(false);
+  const [warning, setWarning] = useState(false);
+  const androidPrompt = !environment.ios && Boolean(prompt);
+  const androidFallback = !environment.ios && !prompt;
+
+  function skip() {
+    onSkipped(true);
+    onNext();
+  }
+
+  async function installAndroid() {
+    if (!prompt) return;
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    onPromptUsed();
+    if (choice.outcome === "accepted") {
+      onSkipped(false);
+      onEnvironmentRefresh();
+      onNext();
+    }
+  }
+
+  function confirmInstalled() {
+    const current = readInstallEnvironment();
+    onEnvironmentRefresh();
+    if (!current.installed) {
+      setWarning(true);
+      return;
+    }
+    onSkipped(false);
+    onNext();
+  }
+
+  return (
+    <OnboardingShell
+      motionDirection={motionDirection}
+      onBack={onBack}
+      bar={
+        <ActionBar step={2} steps={steps}>
+          <button
+            className="btn btn-primary action-primary"
+            onClick={
+              androidPrompt
+                ? () => void installAndroid()
+                : () => setShowShareHint(true)
+            }
+          >
+            <span>
+              {androidPrompt
+                ? "Установить"
+                : androidFallback
+                  ? "Как установить"
+                  : "Показать, как это сделать"}
+            </span>
+            <Icon name={androidPrompt ? "plus" : "share"} size={17} />
+          </button>
+          {!androidPrompt && (
+            <div className="install-action-row">
+              <button className="btn install-secondary" onClick={confirmInstalled}>
+                Уже установил
+              </button>
+              <button className="btn install-later" onClick={skip}>
+                Позже
+              </button>
+            </div>
+          )}
+        </ActionBar>
+      }
+    >
+      <div className="onboarding-top">
+        <button className="text-link" onClick={onBack}>
+          Назад
+        </button>
+        <button className="text-link" onClick={skip}>
+          Позже
+        </button>
+      </div>
+      <p className="install-kicker">Шаг 3 из 4</p>
+      <h1 className="onboarding-title">Поставьте Mise на домашний экран</h1>
+      <p className="onboarding-lead install-lead">
+        Иначе не будет главного: напоминаний «достать из морозилки» и «сегодня
+        готовим» — их присылает только установленное приложение.
+      </p>
+
+      {!androidPrompt && (
+        <section className="onboarding-card glass-card install-steps-card">
+          {environment.ios ? (
+            <ol className="install-steps">
+              <li>
+                <span aria-hidden><Icon name="share" size={18} /></span>
+                <div><b>Нажмите «Поделиться» в нижней панели Safari</b></div>
+              </li>
+              <li>
+                <span aria-hidden><Icon name="plus" size={18} /></span>
+                <div>
+                  <b>Выберите «На экран „Домой“»</b>
+                  <small>Пункт со значком плюса в списке</small>
+                </div>
+              </li>
+              <li>
+                <span className="is-mint" aria-hidden><Icon name="check" size={18} /></span>
+                <div>
+                  <b>Откройте Mise с домашнего экрана</b>
+                  <small>Мы продолжим ровно с этого места</small>
+                </div>
+              </li>
+            </ol>
+          ) : (
+            <div className="install-android-fallback">
+              <span aria-hidden><Icon name="plus" size={18} /></span>
+              <div>
+                <b>Откройте меню Chrome и выберите «Установить приложение»</b>
+                <small>
+                  Если пункта нет, обновите страницу или продолжите без
+                  установки — вернуться сюда можно из профиля.
+                </small>
+              </div>
+            </div>
+          )}
+          {environment.ios && !environment.safari && (
+            <p className="install-browser-warning" role="status">
+              Откройте mise.ermizinm.ru в Safari — из этого браузера установка
+              недоступна.
+            </p>
+          )}
+        </section>
+      )}
+
+      <section className="install-preview glass-2" aria-label="Превью установленного приложения">
+        {/* eslint-disable-next-line @next/next/no-img-element -- local PWA icon preview */}
+        <img src="/apple-touch-icon.png" alt="Иконка Mise" />
+        <div>
+          <b>Так это будет выглядеть</b>
+          <small>Иконка Mise рядом с остальными приложениями, без адресной строки.</small>
+        </div>
+      </section>
+
+      {warning && (
+        <Note tone="warn" role="status">
+          Похоже, приложение всё ещё в браузере.
+        </Note>
+      )}
+      <Note tone="mint" icon={<Icon name="basket" size={17} />}>
+        План и закупка останутся <b>доступны офлайн</b> — в магазине список
+        открывается без интернета.
+      </Note>
+      {showShareHint && (
+        <div className="install-share-hint" role="status">
+          <Icon name={environment.ios ? "share" : "plus"} size={20} />
+          {environment.ios
+            ? "Нажмите «Поделиться» в нижней панели Safari"
+            : "Откройте меню Chrome и выберите «Установить приложение»"}
+          <button aria-label="Закрыть подсказку" onClick={() => setShowShareHint(false)}>
+            <Icon name="close" size={18} />
+          </button>
+        </div>
+      )}
+    </OnboardingShell>
+  );
+}
+
 function OnboardingReminders({
   motionDirection,
   onBack,
+  onInstall,
+  showInstallWarning,
   onFinish,
+  step,
+  steps,
 }: {
   motionDirection: -1 | 1;
   onBack: () => void;
+  onInstall: () => void;
+  showInstallWarning: boolean;
   onFinish: (reminders?: ReminderDefaults) => void;
+  step: number;
+  steps: number;
 }) {
   const [wanted, setWanted] = useState<ReminderDefaults>({
     cooking: true,
     thaw: true,
-    "next-plan": true,
+    expire: false,
   });
   const rows: { kind: keyof ReminderDefaults; title: string; note: string }[] = [
     {
       kind: "cooking",
-      title: "День готовки",
-      note: "В день партии, во сколько скажете",
+      title: "Сегодня готовим",
+      note: "18:00 в дни партий",
     },
     {
       kind: "thaw",
-      title: "Разморозка накануне",
-      note: "Вечером накануне, в 21:00",
+      title: "Достать из морозилки",
+      note: "Накануне в 21:00, когда есть что доставать",
     },
     {
-      kind: "next-plan",
-      title: "Пора собрать новый план",
-      note: "За два дня до конца плана",
+      kind: "expire",
+      title: "Срок хранения истекает",
+      note: "За день, по каждой партии",
     },
   ];
   return (
@@ -7106,18 +7480,18 @@ function OnboardingReminders({
       motionDirection={motionDirection}
       onBack={onBack}
       bar={
-        <ActionBar step={2} steps={onboardingFlow.length}>
+        <ActionBar step={step} steps={steps}>
           <button
             className="btn btn-primary action-primary"
             onClick={() => onFinish(wanted)}
           >
-            <span>Начать</span>
+            <span>Собрать первый план</span>
             <Icon name="chevron" size={16} />
           </button>
           <button
             className="btn action-link"
             onClick={() =>
-              onFinish({ cooking: false, thaw: false, "next-plan": false })
+              onFinish({ cooking: false, thaw: false, expire: false })
             }
           >
             Без напоминаний
@@ -7133,13 +7507,27 @@ function OnboardingReminders({
           Пропустить
         </button>
       </div>
+      <p className="install-kicker">Шаг {step + 1} из {steps}</p>
       <h1 className="onboarding-title">
-        Три напоминания,<br />и план не развалится
+        Что напоминать
       </h1>
       <p className="onboarding-lead">
-        Mise напомнит начать готовку, переложить порцию из морозилки и вовремя
-        собрать следующий план.
+        Выберите, что напоминать. Время готовки и разморозки можно уточнить в
+        готовом плане.
       </p>
+      {showInstallWarning && (
+        <Note
+          tone="warn"
+          role="status"
+          className="onboarding-install-warning"
+          icon={<Icon name="warning" size={17} />}
+          label="Приложение не установлено"
+          action={<button onClick={onInstall}>Поставить</button>}
+        >
+          Пуши на iOS приходят только с домашнего экрана — сейчас напоминания
+          сохранятся, но не придут.
+        </Note>
+      )}
       <section className="onboarding-card glass-card">
         <div className="push-preview">
           <div className="push-card glass-3">
@@ -7195,8 +7583,8 @@ function OnboardingReminders({
         ))}
       </section>
       <p className="onboarding-fineprint">
-        Разрешение на уведомления Mise запросит вместе с готовым планом — здесь
-        только выбираем, какие из них нужны. Всё можно поменять в профиле.
+        Разрешение на уведомления спросит система — после установки, когда вы
+        проверите расписание и нажмёте «Включить напоминания».
       </p>
     </OnboardingShell>
   );
@@ -7368,13 +7756,20 @@ type InstallPromptEvent = Event & {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 };
 
-function InstallInline() {
-  const [prompt, setPrompt] = useState<InstallPromptEvent | null>(null);
+function InstallInline({
+  environment,
+  deferredPrompt,
+  onPromptUsed,
+}: {
+  environment: InstallEnvironment;
+  deferredPrompt: InstallPromptEvent | null;
+  onPromptUsed: () => void;
+}) {
+  const [localPrompt, setLocalPrompt] = useState<InstallPromptEvent | null>(null);
   const [installed, setInstalled] = useState(true);
   const [showSteps, setShowSteps] = useState(false);
-  const isIos =
-    typeof navigator !== "undefined" &&
-    /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const prompt = deferredPrompt ?? localPrompt;
+  const isIos = environment.ios;
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- display-mode can only be read on the client
     setInstalled(
@@ -7383,7 +7778,7 @@ function InstallInline() {
     );
     const capture = (event: Event) => {
       event.preventDefault();
-      setPrompt(event as InstallPromptEvent);
+      setLocalPrompt(event as InstallPromptEvent);
     };
     window.addEventListener("beforeinstallprompt", capture);
     return () => window.removeEventListener("beforeinstallprompt", capture);
@@ -7395,7 +7790,8 @@ function InstallInline() {
     }
     await prompt.prompt();
     await prompt.userChoice;
-    setPrompt(null);
+    setLocalPrompt(null);
+    onPromptUsed();
   }
   if (installed) return null;
   return (
@@ -9278,6 +9674,9 @@ function ProfileScreen({
   onOpenTutorial,
   onOpenPrepGuide,
   onNotifications,
+  installEnvironment,
+  installPrompt,
+  onInstallPromptUsed,
 }: {
   people: Person[];
   hasPlan: boolean;
@@ -9288,6 +9687,9 @@ function ProfileScreen({
   onOpenTutorial: () => void;
   onOpenPrepGuide: () => void;
   onNotifications: () => void;
+  installEnvironment: InstallEnvironment;
+  installPrompt: InstallPromptEvent | null;
+  onInstallPromptUsed: () => void;
 }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleteState, setDeleteState] = useState<"idle" | "deleting" | "error">(
@@ -9423,7 +9825,11 @@ function ProfileScreen({
       <button className="primary-button profile-plan-action" onClick={onBuild}>
         <Icon name="plus" /> Составить план
       </button>
-      <InstallInline />
+      <InstallInline
+        environment={installEnvironment}
+        deferredPrompt={installPrompt}
+        onPromptUsed={onInstallPromptUsed}
+      />
       <section
         className="profile-settings-list glass-card"
         aria-label="Настройки и помощь"
@@ -13031,7 +13437,6 @@ function SuccessSheet({
             рецептов: {new Set(selectionRecipeIds(plan)).size} ·
             продуктов: {plan.shopping.length}
           </p>
-          <InstallInline />
           <button
             className="primary-button"
             onClick={() => setPhase("notifications")}

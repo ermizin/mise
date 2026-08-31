@@ -70,6 +70,7 @@ export async function POST(request: Request) {
   let body: {
     action?: "enable" | "disable" | "test";
     planId?: string;
+    installed?: boolean;
     subscription?: PushSubscriptionInput;
     preferences?: unknown;
     jobs?: JobInput[];
@@ -127,6 +128,9 @@ export async function POST(request: Request) {
   }
   const jobs = body.jobs as Required<JobInput>[];
   const subscription = body.subscription as Required<PushSubscriptionInput> & { keys: { p256dh: string; auth: string } };
+  const storedPreferences = body.preferences && typeof body.preferences === "object" && !Array.isArray(body.preferences)
+    ? { ...(body.preferences as Record<string, unknown>), installed: body.installed === true }
+    : { installed: body.installed === true };
   await db.insert(pushSubscriptions).values({
     id: identity.subscriptionId,
     clientId: identity.clientId,
@@ -146,12 +150,12 @@ export async function POST(request: Request) {
     id: `${identity.subscriptionId}:${body.planId}`,
     subscriptionId: identity.subscriptionId,
     planId: body.planId,
-    payload: JSON.stringify(body.preferences ?? {}),
+    payload: JSON.stringify(storedPreferences),
     enabled: true,
     updatedAt: now,
   }).onConflictDoUpdate({
     target: pushPreferences.id,
-    set: { payload: JSON.stringify(body.preferences ?? {}), enabled: true, updatedAt: now },
+    set: { payload: JSON.stringify(storedPreferences), enabled: true, updatedAt: now },
   });
   if (jobs.length) {
     await db.insert(pushJobs).values(jobs.map((job) => ({
