@@ -55,16 +55,9 @@ test("the onboarding wizard is a real chat, not the old action bar", async () =>
   assert.ok(start >= 0 && end > start, "the plan builder source is present");
   const builder = page.slice(start, end);
 
-  assert.match(
-    builder,
-    /builderChatTurns\.slice\(0, step\)\.map/,
-    "chat history renders every earlier turn",
-  );
-  assert.doesNotMatch(
-    builder,
-    /builderChatTurns\.slice\(Math\.max\(0, step - 2\), step\)/,
-    "chat history is not capped at the last two turns",
-  );
+  assert.match(builder, /completedChatTurns\.slice\(-1\)/, "the current context stays compact");
+  assert.match(builder, /Показать предыдущие ответы/, "earlier answers remain available on demand");
+  assert.match(builder, /setHistoryExpanded/, "the user controls expanded history");
   assert.match(builder, /className="builder-chat-question"/);
   assert.match(builder, /role="log"\s+aria-live="polite"/);
   assert.match(builder, /className="builder-chat-send"/);
@@ -234,10 +227,10 @@ test("the interface stays legible", async () => {
   const [page, css, layout] = await Promise.all([read("app/page.tsx"), read("app/globals.css"), read("app/layout.tsx")]);
   const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
   assert.deepEqual(tiny, [], "nothing is smaller than 12px");
-  // Decorative accents and interactive surfaces share the approved light ramp.
+  // Decorative accents stay light while text-bearing actions use an AA ramp.
   assert.match(css, /--accent-grad-a: #ff8143/);
   assert.match(css, /--accent-grad-b: #ee4c13/);
-  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.match(css, /--button-grad: linear-gradient\(150deg, #d2440f, #b3380a\)/);
   assert.match(css, /--accent-grad-aa: var\(--button-grad\)/);
   assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--accent-grad-aa\)/);
   assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);

@@ -4,6 +4,46 @@ import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
+function contrastAgainstWhite(hex) {
+  const channels = [1, 3, 5]
+    .map((index) => Number.parseInt(hex.slice(index, index + 2), 16) / 255)
+    .map((channel) =>
+      channel <= 0.04045
+        ? channel / 12.92
+        : ((channel + 0.055) / 1.055) ** 2.4,
+    );
+  const luminance =
+    0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+  return 1.05 / (luminance + 0.05);
+}
+
+test("the 2026-08-31 audit fixes keep the core flow compact and legible", async () => {
+  const [page, css, pluralSource] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+    read("lib/plural.ts"),
+  ]);
+
+  assert.ok(contrastAgainstWhite("#d2440f") >= 4.5);
+  assert.ok(contrastAgainstWhite("#b3380a") >= 4.5);
+  assert.match(css, /\.builder-chat-history \.chat-bubble\.is-user \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
+  assert.match(page, /completedChatTurns\.slice\(-1\)/);
+  assert.match(page, /Показать предыдущие ответы/);
+  assert.match(page, /Нужно ваше решение[\s\S]*?Выберите, что делать с остатком дней/);
+  assert.match(page, /id="builder-composer-status" role="status" aria-live="polite"/);
+  assert.match(css, /\.remainder-sheet\.needs-decision/);
+  assert.match(page, /function formatMacro\(value: number\)/);
+  assert.match(pluralSource, /function genitiveAfterNumber/);
+  assert.match(page, /genitiveAfterNumber\([\s\S]{0,100}\["порции", "порций"\]/);
+  assert.match(page, /className="screen app-boot-loading"/);
+  assert.match(page, /className=\{loadedPhoto === photo \? "is-loaded" : "is-loading"\}/);
+  assert.match(css, /\.cooking-batch-shell \{[\s\S]*?padding: 0 18px calc\(148px \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(page, /система в установленном приложении/);
+  assert.doesNotMatch(page, /className="install-kicker"/);
+  assert.ok(page.indexOf("Открыть план") < page.indexOf("Настроить напоминания"));
+});
+
 test("cooked weights persist and finish the batch through portioning", async () => {
   const page = await read("app/page.tsx");
   assert.match(page, /cookedWeights\?: Record<string, CookedWeights>/);
@@ -49,7 +89,7 @@ test("audit accessibility and daily-use regressions stay fixed", async () => {
     read("app/ui/icon.tsx"),
   ]);
   assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);
-  assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, plannedMacros\.kcal\)/);
+  assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, person\.daily\.kcal\)/);
   assert.match(page, /setUnassignedConfirmOpen\(true\)/);
   assert.match(page, /Mise не будет удалять их молча/);
   assert.match(page, /timerEndsAt - Date\.now\(\)/);
@@ -82,7 +122,7 @@ test("dead and misleading UI patterns from the audit do not return", async () =>
   assert.doesNotMatch(page, /Собрать заново<\/button>[\s\S]{0,120}role="checkbox"/);
   assert.match(page, /recipeFamilyFor\(recipe\) \? \(/);
   assert.match(page, /Точная подстройка пока недоступна/);
-  assert.match(page, /Math\.ceil\(quantity \/ item\.averagePieceWeightGrams\)/);
+  assert.doesNotMatch(page, /averagePieceWeightGrams|pieceEstimate/);
 });
 
 test("visual release blockers and high-impact P1 regressions stay fixed", async () => {
@@ -131,7 +171,7 @@ test("visual release blockers and high-impact P1 regressions stay fixed", async 
     profile.indexOf("Оставить план") < profile.indexOf("secondary-button btn-danger delete-plan-confirm"),
     "the safe action precedes the destructive action",
   );
-  assert.match(page, /className="week-loading-dates"/);
-  assert.match(page, /className="week-loading-balance week-loading-placeholder"/);
+  assert.match(page, /className="screen app-boot-loading"/);
+  assert.match(page, /Готовим приложение…/);
   assert.match(icons, /snowflake: \[[\s\S]*?M22 12h-6\.5L14 15/);
 });

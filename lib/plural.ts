@@ -27,6 +27,18 @@ export function withPlural(n: number, forms: PluralForms): string {
   return `${n} ${plural(n, forms)}`;
 }
 
+/**
+ * Форма после предлога перед числом: «из 1 порции», «из 3 порций»,
+ * «из 21 порции». Обычная счётная форма здесь грамматически неверна.
+ */
+export function genitiveAfterNumber(
+  n: number,
+  forms: readonly [singular: string, plural: string],
+): string {
+  const abs = Math.abs(Math.trunc(n));
+  return abs % 10 === 1 && abs % 100 !== 11 ? forms[0] : forms[1];
+}
+
 export const FORMS = {
   day: ["день", "дня", "дней"],
   dish: ["блюдо", "блюда", "блюд"],

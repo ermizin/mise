@@ -18,12 +18,12 @@ test("batch progress paints only the ring and leaves its center clear", async ()
   );
 });
 
-test("batch cooking buttons use the lighter design gradient", async () => {
+test("batch cooking buttons use the accessible action gradient", async () => {
   const css = await read("app/globals.css");
 
   assert.match(
     css,
-    /--button-grad: var\(--accent-grad\);/,
+    /--button-grad: linear-gradient\(150deg, #d2440f, #b3380a\);/,
   );
   assert.match(
     css,

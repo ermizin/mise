@@ -18,7 +18,12 @@ import {
 import { Icon, type IconName } from "./ui/icon";
 import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
-import { plural, withPlural, FORMS } from "@/lib/plural";
+import {
+  genitiveAfterNumber,
+  plural,
+  withPlural,
+  FORMS,
+} from "@/lib/plural";
 import { MacroNumberInput } from "@/components/macro-number-input";
 import runtimeRecipeCatalogJson from "@/data/recipe-runtime-catalog.json";
 import legacyRecipeImageDownloadSourcesJson from "@/data/legacy-recipe-image-download-sources.json";
@@ -4448,6 +4453,9 @@ function round(value: number, digits = 0) {
   const factor = 10 ** digits;
   return Math.round(value * factor) / factor;
 }
+function formatMacro(value: number) {
+  return Math.round(value).toLocaleString("ru-RU");
+}
 function clampDate(value: string, min: string, max: string) {
   return value < min ? min : value > max ? max : value;
 }
@@ -6885,15 +6893,16 @@ function RecipeMedia({
   const photo =
     recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
   const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
+  const [loadedPhoto, setLoadedPhoto] = useState<string | null>(null);
   if (!photo || failedPhoto === photo)
     return (
       <span className="recipe-media-fallback" aria-hidden>
         {recipe.emoji}
       </span>
     );
+  // Фото runtime-рецепта — проверенная локальная копия источника; при
+  // повреждении asset остаётся устойчивый emoji-fallback вместо пустой карточки.
   return (
-    // Фото runtime-рецепта — проверенная локальная копия источника; при
-    // повреждении asset остаётся устойчивый emoji-fallback вместо пустой карточки.
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={photo}
@@ -6902,8 +6911,10 @@ function RecipeMedia({
           ? recipe.provenance.imageAlt || recipe.title
           : recipe.title
       }
+      className={loadedPhoto === photo ? "is-loaded" : "is-loading"}
       loading={eager ? "eager" : "lazy"}
       referrerPolicy="no-referrer"
+      onLoad={() => setLoadedPhoto(photo)}
       onError={() => setFailedPhoto(photo)}
     />
   );
@@ -6928,7 +6939,7 @@ function DeckCard({
       <div className={`deck-thumb art-${index % 5}`}>
         <RecipeMedia recipe={recipe} />
         {main && (
-          <span className="deck-kcal">{recipe.macros.kcal} ккал</span>
+          <span className="deck-kcal">{formatMacro(recipe.macros.kcal)} ккал</span>
         )}
       </div>
       <div className="deck-slot">
@@ -7418,7 +7429,6 @@ function OnboardingInstall({
           Позже
         </button>
       </div>
-      <p className="install-kicker">Шаг 3 из 4</p>
       <h1 className="onboarding-title">Поставьте Mise на домашний экран</h1>
       <p className="onboarding-lead install-lead">
         Иначе не будет главного: напоминаний «достать из морозилки» и «сегодня
@@ -7573,7 +7583,6 @@ function OnboardingReminders({
           Пропустить
         </button>
       </div>
-      <p className="install-kicker">Шаг {step + 1} из {steps}</p>
       <h1 className="onboarding-title">
         Что напоминать
       </h1>
@@ -7649,8 +7658,8 @@ function OnboardingReminders({
         ))}
       </section>
       <p className="onboarding-fineprint">
-        Разрешение на уведомления спросит система — после установки, когда вы
-        проверите расписание и нажмёте «Включить напоминания».
+        Разрешение на уведомления спросит система в установленном приложении —
+        после того как вы проверите расписание и нажмёте «Включить напоминания».
       </p>
     </OnboardingShell>
   );
@@ -8131,64 +8140,16 @@ function WeekScreen({
   if (loading)
     return (
       <section
-        className="screen week-loading-state"
+        className="screen app-boot-loading"
         aria-busy="true"
-        aria-label="Загружаем сохранённый план"
+        aria-label="Загружаем Mise"
       >
-        <p className="week-loading-copy">Ищем сохранённый план…</p>
-        <div className="week-loading-header" aria-hidden>
-          <div className="week-loading-heading">
-            <i className="week-loading-placeholder" />
-            <i className="week-loading-placeholder" />
-          </div>
-          <i className="week-loading-avatar week-loading-placeholder" />
-        </div>
-        <div className="week-loading-dates" aria-hidden>
-          {Array.from({ length: 7 }, (_, index) => (
-            <i className="week-loading-placeholder" key={index} />
-          ))}
-        </div>
-        <div className="week-loading-macro glass-card">
-          <div className="week-loading-macro-head" aria-hidden>
-            <div>
-              <i className="week-loading-placeholder" />
-              <i className="week-loading-placeholder" />
-            </div>
-            <i className="week-loading-person week-loading-placeholder" />
-          </div>
-          <div className="week-loading-macro-body" aria-hidden>
-            <span className="week-loading-ring week-loading-placeholder" />
-            <div className="week-loading-bars">
-              {[0, 1, 2].map((item) => (
-                <span key={item}>
-                  <i className="week-loading-placeholder" />
-                  <i className="week-loading-placeholder" />
-                </span>
-              ))}
-            </div>
-          </div>
-          <i className="week-loading-balance week-loading-placeholder" aria-hidden />
-        </div>
-        <div className="week-loading-section-heading" aria-hidden>
-          <div>
-            <i className="week-loading-placeholder" />
-            <i className="week-loading-placeholder" />
-          </div>
-          <i className="week-loading-placeholder" />
-        </div>
-        <div className="week-loading-list">
-          {[0, 1, 2].map((item) => (
-            <div className="week-loading-row glass-card" key={item}>
-              <i className="week-loading-check week-loading-placeholder" />
-              <span className="week-loading-thumb week-loading-placeholder" />
-              <div>
-                <i className="week-loading-placeholder" />
-                <i className="week-loading-placeholder" />
-              </div>
-              <i className="week-loading-chevron week-loading-placeholder" />
-            </div>
-          ))}
-        </div>
+        <span className="app-boot-mark" aria-hidden>M</span>
+        <h1>Mise</h1>
+        <p>Готовим приложение…</p>
+        <span className="app-boot-progress" aria-hidden>
+          <i />
+        </span>
       </section>
     );
   if (loadError)
@@ -8287,7 +8248,7 @@ function WeekScreen({
   const ringCircumference = 2 * Math.PI * 44;
   const ringProgress = Math.min(
     1,
-    eatenMacros.kcal / Math.max(1, plannedMacros.kcal),
+    eatenMacros.kcal / Math.max(1, person.daily.kcal),
   );
   const contactWarnings = crossContactWarnings(plan, batch);
   const planEnded = today > plan.end;
@@ -8510,7 +8471,10 @@ function WeekScreen({
               }`}
             >
               Съедено <AnimatedNumber value={eatenCount} /> из{" "}
-              {withPlural(mealRows.length, FORMS.portion)}
+              {mealRows.length.toLocaleString("ru-RU")} {genitiveAfterNumber(
+                mealRows.length,
+                ["порции", "порций"],
+              )}
             </b>
           </div>
           <select
@@ -8671,12 +8635,12 @@ function WeekScreen({
               >
                 <span className="week-meal-topline">
                   <span>{mealMeta[row.slot].label}</span>
-                  <b>{portion.actual.kcal} ккал</b>
+                  <b>{formatMacro(portion.actual.kcal)} ккал</b>
                 </span>
                 <strong>{row.recipe.title}</strong>
                 <small>
-                  {portion.grams} г · Б{portion.actual.protein} Ж{portion.actual.fat}{" "}
-                  У{portion.actual.carbs}
+                  {portion.grams} г · Б{formatMacro(portion.actual.protein)} Ж
+                  {formatMacro(portion.actual.fat)} У{formatMacro(portion.actual.carbs)}
                 </small>
                 {frozen && (
                   <span className="week-freeze-badge">
@@ -9370,7 +9334,7 @@ function RecipeCard({
   return (
     <article
       className={`recipe-card${
-        gridMotionEpoch
+        gridMotionEpoch && index < 6
           ? gridMotionEpoch % 2
             ? " has-grid-effect-a"
             : " has-grid-effect-b"
@@ -9393,12 +9357,12 @@ function RecipeCard({
           {batchNumber && (
             <span className="recipe-batch-badge">в партии {batchNumber}</span>
           )}
-          <span className="recipe-kcal">{recipe.macros.kcal} ккал</span>
+          <span className="recipe-kcal">{formatMacro(recipe.macros.kcal)} ккал</span>
         </div>
         <div className="recipe-body">
           <h2>{recipe.title}</h2>
           <p className="recipe-meta">
-            {recipe.time} мин · {recipe.servingWeight} г · Б {recipe.macros.protein}
+            {recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
           </p>
           <div className="recipe-chips">
             {missing !== null && (
@@ -10093,6 +10057,7 @@ function PlanBuilder({
   const [unassignedConfirmOpen, setUnassignedConfirmOpen] = useState(false);
   const [successPlan, setSuccessPlan] = useState<ActivePlan | null>(null);
   const [draftRestored, setDraftRestored] = useState(false);
+  const [historyExpanded, setHistoryExpanded] = useState(false);
   const [chatTransition, setChatTransition] = useState<{
     answer: string;
     thinking: boolean;
@@ -10132,6 +10097,7 @@ function PlanBuilder({
   ) {
     const bounded = Math.max(initialStep, Math.min(6, nextStep));
     setStepMotionDirection(bounded < stepRef.current ? -1 : 1);
+    setHistoryExpanded(false);
     stepRef.current = bounded;
     setStep(bounded);
     if (historyMode === "none") return;
@@ -10533,9 +10499,16 @@ function PlanBuilder({
       answer: "Всё проверено",
     },
   ];
+  const completedChatTurns = builderChatTurns
+    .slice(0, step)
+    .map((turn, index) => ({ ...turn, index }));
+  const visibleChatTurns = historyExpanded
+    ? completedChatTurns
+    : completedChatTurns.slice(-1);
+  const hiddenChatTurnCount = completedChatTurns.length - visibleChatTurns.length;
   function editChatAnswer(index: number) {
-    if (chatTransition || index >= stepRef.current) return;
-    history.go(index - stepRef.current);
+    if (chatTransition || index >= step) return;
+    history.go(index - step);
   }
   function beginChatAdvance(
     nextStep: number,
@@ -11046,6 +11019,26 @@ function PlanBuilder({
     step === 5 &&
     menuMode === "auto" &&
     !chatTransition;
+  const needsRemainderDecision =
+    step === 4 && remainder > 0 && remainderDecision === null;
+  const composerStatus = chatTransition
+    ? {
+        title:
+          chatTransition.kind === "menu" ? "Mise собирает меню" : "Mise думает",
+        detail:
+          chatTransition.kind === "menu"
+            ? "Подбираем блюда и считаем порции"
+            : "Следующий вопрос появится здесь",
+      }
+    : needsRemainderDecision
+      ? {
+          title: "Нужно ваше решение",
+          detail: "Выберите, что делать с остатком дней",
+        }
+      : {
+          title: "Ваш ответ готов",
+          detail: "Можно вернуться к любому ответу выше",
+        };
   return (
     <main
       className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}`}
@@ -11117,11 +11110,23 @@ function PlanBuilder({
           aria-live="polite"
           aria-label="Разговор с Mise"
         >
+          {mode === "onboarding" && completedChatTurns.length > 1 && (
+            <button
+              type="button"
+              className="builder-chat-history-toggle"
+              aria-expanded={historyExpanded}
+              onClick={() => setHistoryExpanded((current) => !current)}
+            >
+              {historyExpanded
+                ? "Скрыть предыдущие ответы"
+                : `Показать предыдущие ответы · ${hiddenChatTurnCount}`}
+            </button>
+          )}
           {mode === "onboarding" &&
-            builderChatTurns.slice(0, step).map((turn, index) => (
+            visibleChatTurns.map((turn) => (
               <div
                 className="builder-chat-turn"
-                key={`${index}-${turn.question}`}
+                key={`${turn.index}-${turn.question}`}
               >
                 <p className="chat-bubble is-mise">
                   <span aria-hidden>M</span>
@@ -11130,7 +11135,7 @@ function PlanBuilder({
                 <button
                   className="chat-bubble is-user"
                   aria-label={`Изменить ответ: ${turn.answer}`}
-                  onClick={() => editChatAnswer(index)}
+                  onClick={() => editChatAnswer(turn.index)}
                 >
                   <span>{turn.answer}</span>
                   <Icon name="chevron-left" size={14} />
@@ -11409,21 +11414,9 @@ function PlanBuilder({
             Выбрать вручную
           </button>
         ) : (
-          <div>
-            <span>
-              {chatTransition
-                ? chatTransition.kind === "menu"
-                  ? "Mise собирает меню"
-                  : "Mise думает"
-                : "Ваш ответ готов"}
-            </span>
-            <small>
-              {chatTransition
-                ? chatTransition.kind === "menu"
-                  ? "Подбираем блюда и считаем порции"
-                  : "Следующий вопрос появится здесь"
-                : "Можно вернуться к любому ответу выше"}
-            </small>
+          <div id="builder-composer-status" role="status" aria-live="polite">
+            <span>{composerStatus.title}</span>
+            <small>{composerStatus.detail}</small>
           </div>
         )}
         {mode === "settings" ? (
@@ -11443,6 +11436,9 @@ function PlanBuilder({
           <button
             className="builder-chat-send"
             aria-label="Отправить ответ"
+            aria-describedby={
+              showManualMenuChoice ? undefined : "builder-composer-status"
+            }
             disabled={Boolean(chatTransition) || !stepIsValid()}
             onClick={next}
           >
@@ -12606,7 +12602,7 @@ function CookingStep({
       </section>
       {remainder > 0 && (
         <div
-          className="remainder-sheet glass-card"
+          className={`remainder-sheet glass-card${decision === null ? " needs-decision" : ""}`}
           role="radiogroup"
           aria-label="Как поступить с остатком"
         >
@@ -12904,7 +12900,7 @@ function ManualMenuStep({
               <span>
                 <b>{recipe.title}</b>
                 <small>
-                  {recipe.macros.kcal} ккал · {recipe.time} мин · Б {recipe.macros.protein}
+                  {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
                 </small>
               </span>
               <i>{active || deselecting ? <Icon name="check" size={15} /> : null}</i>
@@ -13116,7 +13112,7 @@ function MenuReviewStep({
                       <b>{recipe.title}</b>
                     </div>
                     <button
-                      className={`menu-swap${lastReplaced === rowKey ? " is-rotating" : ""}`}
+                      className="menu-swap"
                       aria-label={`Заменить блюдо: ${personal ? `для ${personNames}` : mealMeta[slot].label}, ${recipe.title}`}
                       onClick={() => {
                         setIncludeDisliked(false);
@@ -13245,7 +13241,7 @@ function MenuReviewStep({
                   <div>
                     <b>{recipe.title}</b>
                     <small>
-                      {recipe.macros.kcal} ккал · {recipe.time} мин
+                      {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин
                     </small>
                   </div>
                   {active && <Icon name="check" size={16} />}
@@ -13505,12 +13501,15 @@ function SuccessSheet({
           </p>
           <button
             className="primary-button"
+            onClick={() => onOpen("week")}
+          >
+            Открыть план <Icon name="chevron" size={16} />
+          </button>
+          <button
+            className="secondary-button"
             onClick={() => setPhase("notifications")}
           >
-            Настроить напоминания <Icon name="chevron" size={16} />
-          </button>
-          <button className="secondary-button" onClick={() => onOpen("week")}>
-            Открыть план без них
+            Настроить напоминания
           </button>
           <button className="text-button" onClick={onEdit}>
             Изменить план
@@ -14528,7 +14527,7 @@ function RecipeView({
         <div className="detail-macros glass-card">
           {(["kcal", "protein", "fat", "carbs"] as MacroKey[]).map((key) => (
             <span key={key}>
-              <b>{displayMacros[key]}</b>
+              <b>{formatMacro(displayMacros[key])}</b>
               <small>
                 {macroLabels[key]}
                 {key === "kcal" ? "кал" : ""}

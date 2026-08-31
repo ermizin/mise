@@ -23,7 +23,7 @@ test("server-renders the Russian Mise shell and navigation", async () => {
   assert.match(html, /<html lang="ru">/i);
   assert.match(html, /<title>Mise — милпреп без суеты<\/title>/i);
   assert.match(html, /План на неделю/);
-  assert.match(html, /Ищем сохранённый план/);
+  assert.match(html, /Готовим приложение/);
 
   const labels = ["План на неделю", "Рецепты", "Покупки", "Профиль"];
   const positions = labels.map((label) => html.indexOf(`aria-label="${label}"`));
