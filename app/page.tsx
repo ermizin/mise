@@ -9144,7 +9144,7 @@ function CuisineMenu({
       </button>
       {open && (
         <div
-          className={`cuisine-menu-panel glass-1${closing ? " is-closing" : ""}`}
+          className={`cuisine-menu-panel glass-3${closing ? " is-closing" : ""}`}
           role="menu"
           aria-label={label}
         >
@@ -9273,11 +9273,6 @@ function RecipesScreen({
             <h1>Рецепты</h1>
           </div>
           <div className="catalog-head-actions">
-            <CuisineMenu
-              value={state.cuisine}
-              options={catalogCuisines}
-              onChange={(next) => updateCatalog({ ...state, cuisine: next })}
-            />
             <button
               className="btn btn-icon catalog-sort-button"
               aria-label={`Сортировка: ${catalogSortLabels[state.sort]}`}
@@ -9323,6 +9318,16 @@ function RecipesScreen({
             }
           />
         </label>
+        {/* Отдельная строка, а не соседство с сортировкой и «Фильтрами»:
+            в ряду действий кнопка кухни отбирала ширину у заголовка, и
+            «Рецепты» ломались на три строки уже на 390 px. */}
+        <div className="catalog-cuisine-row">
+          <CuisineMenu
+            value={state.cuisine}
+            options={catalogCuisines}
+            onChange={(next) => updateCatalog({ ...state, cuisine: next })}
+          />
+        </div>
         {(active.length > 0 || !state.slot) && (
           <div className="chip-row catalog-chips">
             {active.map((filter) => (

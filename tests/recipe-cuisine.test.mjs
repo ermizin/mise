@@ -321,7 +321,8 @@ test("the catalog screen and the manual step are wired to the shared filter", as
   assert.match(page, /id: "cuisine",\n\s*label: cuisineLabels\[state\.cuisine\],/);
   assert.match(page, /clear: \(\) => \(\{ \.\.\.state, cuisine: null \}\),/);
   assert.match(page, /const catalogCuisines = useMemo\(\n\s*\(\) => availableCuisines\(productionRecipes\),/);
-  assert.match(page, /<CuisineMenu\n\s*value=\{state\.cuisine\}/);
+  assert.match(page, /<div className="catalog-cuisine-row">\n\s*<CuisineMenu\n\s*value=\{state\.cuisine\}/,
+    "кухня стоит отдельной строкой, а не в ряду действий шапки");
 
   // Ручной выбор.
   assert.match(page, /function CuisineMenu\(/);
@@ -343,6 +344,9 @@ test("the catalog screen and the manual step are wired to the shared filter", as
 
 test("the cuisine menu is animated and respects reduced motion", async () => {
   const css = await read("app/globals.css");
+  // Панель обязана оставаться внутри экрана на 320 px.
+  assert.match(css, /\.cuisine-menu-panel \{[\s\S]*?max-width: min\(268px, calc\(100vw - 32px\)\);/);
+  assert.match(css, /\.catalog-cuisine-row \.cuisine-menu-panel \{[\s\S]*?left: 0;/);
   assert.match(css, /@keyframes mise-cuisine-panel-in \{/);
   assert.match(css, /@keyframes mise-cuisine-panel-out \{/);
   assert.match(css, /@keyframes mise-cuisine-option-in \{/);

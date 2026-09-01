@@ -8513,7 +8513,7 @@ p {
 }
 .cuisine-menu-trigger {
   min-height: var(--hit-min);
-  max-width: 168px;
+  max-width: 100%;
   padding: 0 12px;
   display: inline-flex;
   align-items: center;
@@ -8550,6 +8550,9 @@ p {
   top: calc(100% + 6px);
   right: 0;
   min-width: 208px;
+  /* На 320 px панель шире доступного места: она обязана оставаться в экране,
+     а не уезжать под левый край. */
+  max-width: min(268px, calc(100vw - 32px));
   max-height: 320px;
   overflow-y: auto;
   padding: 6px;
@@ -8587,9 +8590,32 @@ p {
 .cuisine-menu-option:active:not(:disabled) {
   transform: scale(0.97);
 }
+/* Кухня стоит отдельной строкой под поиском: в ряду действий она отбирала
+   ширину у заголовка, а её панель, выровненная по правому краю кнопки,
+   уезжала под левый край экрана на 320–390 px. */
+.catalog-cuisine-row {
+  margin-top: 8px;
+  display: flex;
+  min-width: 0;
+}
+.catalog-cuisine-row .cuisine-menu {
+  min-width: 0;
+  max-width: 100%;
+}
+.catalog-cuisine-row .cuisine-menu-panel {
+  right: auto;
+  left: 0;
+  transform-origin: top left;
+}
+
 .manual-slot-cuisine {
   margin-top: 10px;
   display: flex;
+  min-width: 0;
+}
+.manual-slot-cuisine .cuisine-menu {
+  min-width: 0;
+  max-width: 100%;
 }
 .manual-slot-cuisine .cuisine-menu-panel {
   right: auto;
