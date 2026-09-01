@@ -2766,32 +2766,43 @@ export function deriveRecipeFamilyFromAuditedCandidate(
     if (!canonical) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Canonical ingredient отсутствует в Recipe Family.");
     const stateConversion = sourceIngredient.miseSourceStateConversion;
     if (stateConversion) {
-      const valid =
-        stateConversion.sourceState === "cooked" &&
-        Number.isFinite(Number(stateConversion.sourceAmount)) &&
-        Number(stateConversion.sourceAmount) > 0 &&
-        stateConversion.sourceUnit === "g" &&
-        stateConversion.targetState === "raw" &&
-        Number.isFinite(Number(stateConversion.targetAmount)) &&
-        Number(stateConversion.targetAmount) > 0 &&
-        stateConversion.targetUnit === "g" &&
-        stateConversion.targetCanonicalIngredientId === canonical.id &&
-        typeof stateConversion.basis === "string" &&
-        Boolean(stateConversion.basis) &&
-        typeof stateConversion.evidenceRecipeId === "string" &&
-        Boolean(stateConversion.evidenceRecipeId);
-      if (!valid) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Source-state conversion не имеет полного доказательства.");
+      const {
+        sourceState,
+        sourceAmount,
+        sourceUnit,
+        targetState,
+        targetAmount,
+        targetUnit,
+        targetCanonicalIngredientId,
+        basis,
+        evidenceRecipeId,
+      } = stateConversion;
+      if (
+        sourceState !== "cooked" ||
+        !Number.isFinite(Number(sourceAmount)) ||
+        Number(sourceAmount) <= 0 ||
+        sourceUnit !== "g" ||
+        targetState !== "raw" ||
+        !Number.isFinite(Number(targetAmount)) ||
+        Number(targetAmount) <= 0 ||
+        targetUnit !== "g" ||
+        targetCanonicalIngredientId !== canonical.id ||
+        typeof basis !== "string" ||
+        !basis ||
+        typeof evidenceRecipeId !== "string" ||
+        !evidenceRecipeId
+      ) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Source-state conversion не имеет полного доказательства.");
       stateConversions.push({
         sourceName: mapping.sourceName,
-        sourceState: stateConversion.sourceState,
-        sourceAmount: Number(stateConversion.sourceAmount),
-        sourceUnit: stateConversion.sourceUnit,
-        targetState: stateConversion.targetState,
-        targetAmount: Number(stateConversion.targetAmount),
-        targetUnit: stateConversion.targetUnit,
-        targetCanonicalIngredientId: stateConversion.targetCanonicalIngredientId,
-        basis: stateConversion.basis,
-        evidenceRecipeId: stateConversion.evidenceRecipeId,
+        sourceState,
+        sourceAmount: Number(sourceAmount),
+        sourceUnit,
+        targetState,
+        targetAmount: Number(targetAmount),
+        targetUnit,
+        targetCanonicalIngredientId,
+        basis,
+        evidenceRecipeId,
       });
     }
     const original = String(sourceIngredient?.original ?? "");
