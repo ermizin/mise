@@ -4110,10 +4110,10 @@
       },
       "servings": 5,
       "macros": {
-        "kcal": 791.5,
-        "protein": 59.7,
-        "fat": 21.2,
-        "carbs": 89.5
+        "kcal": 788.2,
+        "protein": 50.4,
+        "fat": 25.9,
+        "carbs": 89.6
       },
       "sourceDeclaredNutrition": {
         "kcal": 162.9,
@@ -4124,12 +4124,12 @@
       },
       "ingredients": [
         {
-          "id": "chicken_thigh_raw",
-          "name": "Мясо куриного бедра",
-          "displayNameRu": "Мясо куриного бедра",
-          "amountMetric": 900,
+          "id": "chicken_mince_raw",
+          "name": "Куриный фарш",
+          "displayNameRu": "Куриный фарш",
+          "amountMetric": 750,
           "unitMetric": "g",
-          "original": "900 г · адаптация Mise"
+          "original": "750 г · адаптация Mise"
         },
         {
           "id": "pasta_raw",
@@ -4282,7 +4282,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Смешайте фарш из куриного бедра с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
+          "text": "Смешайте куриный фарш с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -4385,7 +4385,7 @@
         "fit": "familiar",
         "availability": "common",
         "excludeSuggested": false,
-        "reviewNote": "Утверждённая владельцем домашняя адаптация. Исходная белковая основа сохранена; паста нормирована до 70 г сухой на порцию."
+        "reviewNote": "Утверждённая владельцем домашняя адаптация. Мясо куриного бедра заменено 150 г готового куриного фарша на порцию, чтобы рецепт не требовал мясорубки; паста нормирована до 70 г сухой на порцию."
       },
       "editorialStatus": "promoted",
       "storage": {
@@ -4417,8 +4417,8 @@
         ],
         "sourceFacts": "data/simple-home-source-extract.json",
         "proteinRule": "at_least_25g_per_serving",
-        "proteinPerServing": 59.7,
-        "note": "Исходная белковая основа сохранена; паста нормирована до 70 г сухой на порцию."
+        "proteinPerServing": 50.4,
+        "note": "Мясо куриного бедра заменено 150 г готового куриного фарша на порцию, чтобы рецепт не требовал мясорубки; паста нормирована до 70 г сухой на порцию."
       }
     },
     {

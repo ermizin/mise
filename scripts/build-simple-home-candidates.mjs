@@ -94,7 +94,7 @@ const configs = [
   },
 
   ...[
-    ["foodru-oblomov-meatballs", "Славные фрикадельки с пастой", 5, 55, [gram("chicken_thigh_raw", "Мясо куриного бедра", 900), gram("pasta_raw", "Спагетти", 350), gram("tomato_passata_processed", "Протёртые томаты", 800), gram("breadcrumbs_processed", "Панировочные сухари", 100), gram("parmesan_processed", "Пармезан", 80), gram("egg_raw", "Яйца", 120), gram("onion_raw", "Лук", 180), gram("carrot_raw", "Морковь", 150), gram("celery_raw", "Стебель сельдерея", 120)], "Исходная белковая основа сохранена; паста нормирована до 70 г сухой на порцию."],
+    ["foodru-oblomov-meatballs", "Славные фрикадельки с пастой", 5, 55, [gram("chicken_mince_raw", "Куриный фарш", 750), gram("pasta_raw", "Спагетти", 350), gram("tomato_passata_processed", "Протёртые томаты", 800), gram("breadcrumbs_processed", "Панировочные сухари", 100), gram("parmesan_processed", "Пармезан", 80), gram("egg_raw", "Яйца", 120), gram("onion_raw", "Лук", 180), gram("carrot_raw", "Морковь", 150), gram("celery_raw", "Стебель сельдерея", 120)], "Мясо куриного бедра заменено 150 г готового куриного фарша на порцию, чтобы рецепт не требовал мясорубки; паста нормирована до 70 г сухой на порцию."],
     ["foodru-oblomov-chicken-legs", "Славные куриные ножки с йогуртовым соусом", 6, 60, [gram("chicken_thigh_raw", "Куриные голени, мясная часть", 1440), gram("yogurt_processed", "Греческий йогурт", 300), gram("mayonnaise_processed", "Майонез", 50), gram("pickles_processed", "Солёные огурцы", 90), gram("lime_juice_raw", "Сок лайма", 40), gram("hot_sauce_processed", "Шрирача", 15), gram("vegetable_oil_processed", "Растительное масло", 20)], "Майонез и сахар в соусе сильно сокращены; основа соуса — йогурт."],
     ["foodru-oblomov-beef-veg", "Славное мясо с овощами", 6, 160, [gram("beef_stewing_raw", "Говядина для тушения", 1200), gram("broth_processed", "Говяжий бульон", 1200), gram("onion_raw", "Лук", 300), gram("carrot_raw", "Морковь", 300), gram("pepper_raw", "Сладкий перец", 300), gram("tomato_paste_processed", "Томатная паста", 50), gram("garlic_raw", "Чеснок", 30)], "Кости не входят в массу порции: в адаптации указан готовый бульон и 200 г сырой говядины на порцию."],
     ["foodru-oblomov-chashushuli", "Славные чашушули", 12, 200, [gram("beef_stewing_raw", "Говядина для тушения", 2400), gram("pepper_raw", "Сладкий перец", 600), gram("onion_raw", "Лук", 400), gram("tomato_raw", "Помидор", 600), gram("tomato_paste_processed", "Томатная паста", 90), gram("butter_processed", "Сливочное масло", 50), gram("garlic_raw", "Чеснок", 40)], "Белковая порция 200 г сырой говядины; масло и сахар сокращены."],
@@ -215,7 +215,7 @@ const flavourRestorations = new Map(Object.entries({
   "foodru-oblomov-meatballs": {
     ingredients: [gram("garlic_raw", "Чеснок", 10), gram("greens_raw", "Петрушка", 15), measuredEditorial("basil", "Базилик", 5), gram("butter_processed", "Сливочное масло", 30)],
     steps: [
-      "Смешайте фарш из куриного бедра с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
+      "Смешайте куриный фарш с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
       "Обжарьте фрикадельки до румяной корочки и доведите до 74°C внутри.",
       "Пассеруйте лук, морковь и сельдерей на сливочном масле, добавьте протёртые томаты и базилик; тушите до густоты.",
       "Отварите спагетти, соедините с соусом и разделите вместе с фрикадельками на равные порции.",

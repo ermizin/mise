@@ -185242,10 +185242,10 @@
       "slot": "dinner",
       "title": "Фрикадельки с пастой",
       "macros": {
-        "kcal": 791.5,
-        "protein": 59.7,
-        "fat": 21.2,
-        "carbs": 89.5
+        "kcal": 788.2,
+        "protein": 50.4,
+        "fat": 25.9,
+        "carbs": 89.6
       },
       "timeMinutes": 55,
       "menuTags": [
@@ -185258,7 +185258,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 619.3,
+        "grams": 596.5,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -185266,16 +185266,14 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "chicken_thigh_raw",
-          "nameRu": "Мясо куриного бедра",
+          "canonicalIngredientId": "chicken_mince_raw",
+          "nameRu": "Куриный фарш",
           "group": "Мясо и птица",
-          "quantityGrams": 900,
+          "quantityGrams": 750,
           "sourceMeasurement": {
-            "amount": 900,
+            "amount": 750,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 100,
-          "pieceEstimate": 9,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric"
@@ -185498,14 +185496,14 @@
         }
       ],
       "steps": [
-        "Смешайте фарш из куриного бедра с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
+        "Смешайте куриный фарш с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
         "Обжарьте фрикадельки до румяной корочки и доведите до 74°C внутри.",
         "Пассеруйте лук, морковь и сельдерей на сливочном масле, добавьте протёртые томаты и базилик; тушите до густоты.",
         "Отварите спагетти, соедините с соусом и разделите вместе с фрикадельками на равные порции."
       ],
       "instructions": [
         {
-          "text": "Смешайте фарш из куриного бедра с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
+          "text": "Смешайте куриный фарш с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
           "minutes": 4,
           "hands": true,
           "at": 0,
@@ -185619,7 +185617,7 @@
         "fit": "familiar",
         "availability": "common",
         "excludeSuggested": false,
-        "reviewNote": "Утверждённая владельцем домашняя адаптация. Исходная белковая основа сохранена; паста нормирована до 70 г сухой на порцию."
+        "reviewNote": "Утверждённая владельцем домашняя адаптация. Мясо куриного бедра заменено 150 г готового куриного фарша на порцию, чтобы рецепт не требовал мясорубки; паста нормирована до 70 г сухой на порцию."
       },
       "effort": {
         "level": "low",
@@ -185678,14 +185676,14 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "chicken_thigh_raw",
-            "baseAmount": 180,
+            "canonicalIngredientId": "chicken_mince_raw",
+            "baseAmount": 150,
             "unit": "g",
             "role": "protein",
-            "minAmount": 129.6,
-            "preferredMin": 162,
-            "preferredMax": 206.99999999999997,
-            "maxAmount": 261,
+            "minAmount": 108,
+            "preferredMin": 135,
+            "preferredMax": 172.5,
+            "maxAmount": 217.5,
             "scalable": true,
             "scalingPriority": 2,
             "substitutions": [],
@@ -185858,32 +185856,32 @@
           }
         ],
         "minViableCalories": 491,
-        "maxViableCalories": 1466,
+        "maxViableCalories": 1457,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 791.5,
-          "protein": 59.7,
-          "fat": 21.2,
-          "carbs": 89.5
+          "kcal": 788.2,
+          "protein": 50.4,
+          "fat": 25.9,
+          "carbs": 89.6
         },
         "comparisonNutrition": {
-          "kcal": 791.5,
-          "protein": 59.7,
-          "fat": 21.2,
-          "carbs": 89.5
+          "kcal": 788.2,
+          "protein": 50.4,
+          "fat": 25.9,
+          "carbs": 89.6
         },
         "legacyEditorialNutrition": {
-          "kcal": 791.5,
-          "protein": 59.7,
-          "fat": 21.2,
-          "carbs": 89.5
+          "kcal": 788.2,
+          "protein": 50.4,
+          "fat": 25.9,
+          "carbs": 89.6
         },
         "miseCalculatedNutrition": {
-          "kcal": 791.5,
-          "protein": 59.7,
-          "fat": 21.2,
-          "carbs": 89.5
+          "kcal": 788.2,
+          "protein": 50.4,
+          "fat": 25.9,
+          "carbs": 89.6
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -185932,7 +185930,7 @@
           },
           {
             "id": "editorial-step-1-part-1",
-            "text": "Смешайте фарш из куриного бедра с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
+            "text": "Смешайте куриный фарш с яйцами, сухарями, пармезаном, чесноком, петрушкой, солью и перцем; сформуйте фрикадельки.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -186055,7 +186053,7 @@
           "fit": "familiar",
           "availability": "common",
           "excludeSuggested": false,
-          "reviewNote": "Утверждённая владельцем домашняя адаптация. Исходная белковая основа сохранена; паста нормирована до 70 г сухой на порцию."
+          "reviewNote": "Утверждённая владельцем домашняя адаптация. Мясо куриного бедра заменено 150 г готового куриного фарша на порцию, чтобы рецепт не требовал мясорубки; паста нормирована до 70 г сухой на порцию."
         },
         "substitutions": {},
         "reviewStatus": "pilot"
