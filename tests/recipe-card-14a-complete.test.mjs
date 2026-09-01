@@ -76,21 +76,18 @@ test("14A analytics distinguish opening, tab switching, and reaching cooking ste
   assert.match(recipeView, /IntersectionObserver[\s\S]{0,1000}trackAnalytics\("cooking_instructions_opened"/);
 });
 
-test("14A keeps safety and dish information visible in the right places without pantry UI", async () => {
+test("14A keeps products in Cooking and removes duplicate Dish controls", async () => {
   const { page } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
-  const productsStart = recipeView.indexOf('section === "products"');
-  const products = recipeView.slice(
-    productsStart,
-    recipeView.indexOf('section === "dish"', productsStart),
-  );
   const warning = recipeView.slice(recipeView.indexOf("contactWarnings.length > 0"), recipeView.indexOf("contactWarnings.length > 0") + 650);
 
   assert.match(warning, /<section className="allergy-warning glass-card" role="alert">/);
   assert.doesNotMatch(recipeView, /section\s*===\s*"dish"\s*&&\s*contactWarnings\.length\s*>\s*0/, "cross-contact warning stays outside tabs");
-  assert.match(recipeView, /section\s*===\s*"dish"[\s\S]{0,12000}recipe\.packing/, "packing guidance belongs to Dish");
-  assert.match(products, /Количество на готовку или одну базовую порцию/, "Products remains neutral when pantry is out of scope");
-  assert.doesNotMatch(products, /(?:\bесть\b|докупить|кладов)/iu, "Products has no pantry statuses or actions");
+  assert.doesNotMatch(recipeView, /section\s*===\s*"products"|\["products",\s*"Продукты"\]/, "the separate Products tab is gone");
+  assert.match(recipeView, /aria-expanded=\{ingredientsExpanded\}/);
+  assert.match(recipeView, /ingredientsExpanded \? "Свернуть" : "Развернуть"/);
+  assert.doesNotMatch(recipeView, /Как разложить блюдо|className="macro-tuner glass-card"/, "Dish has neither duplicate packing copy nor macro tuning");
+  assert.doesNotMatch(recipeView, /(?:\bесть\b|докупить|кладов)/iu, "the inline product list has no pantry statuses or actions");
   assert.match(page, /function ingredientSortableAmount\([\s\S]{0,700}gramsPerUnit/, "piece quantities are normalized before sorting");
   assert.match(recipeView, /sortedIngredients[\s\S]{0,500}ingredientSortableAmount\(/, "product quantities are shown in descending normalized order");
 });
@@ -101,7 +98,7 @@ test("14A renders a real timeline with a permanent legacy fallback and reduced-m
 
   assert.match(recipeView, /className="recipe-timeline/);
   assert.match(recipeView, /timelineHasEstimates/);
-  assert.match(recipeView, /step\.estimated\s*\?\s*"≈ "/);
+  assert.match(recipeView, /timelineHasEstimates\s*\?\s*"≈ "/);
   assert.match(recipeView, /recipe\.instructions\s*(?:\?\.|&&|\?)/, "missing instructions fall back instead of breaking old recipes");
   assert.match(recipeView, /className="cooking-steps/, "numbered legacy steps remain available");
   assert.match(css, /\.recipe-timeline\s*\{/);
@@ -134,7 +131,8 @@ test("14A explains difficulty with equipment and parallel-process evidence", asy
 });
 
 test("14A follows the supplied visual reference without adding pantry states", async () => {
-  const { css } = await recipeSources();
+  const { page, css } = await recipeSources();
+  const recipeView = page.slice(page.indexOf("function RecipeView("));
 
   assert.match(
     css,
@@ -145,9 +143,5 @@ test("14A follows the supplied visual reference without adding pantry states", a
     /\.recipe-timeline-node\s*\{[^}]*background:\s*var\(--accent\)/s,
     "hands-on steps use the action colour",
   );
-  assert.match(
-    css,
-    /\.recipe-timeline \.is-passive small\s*\{[^}]*color:\s*var\(--mint-text\)/s,
-    "passive steps use the waiting colour",
-  );
+  assert.doesNotMatch(recipeView, /Без вашего участия/, "the timeline does not repeat the passive label in every card");
 });

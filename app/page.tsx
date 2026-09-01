@@ -195,7 +195,7 @@ type RecipeLocalization = {
   note?: string;
 };
 type RecipePacking = { portion: string; separate?: string; label: string };
-type RecipeSection = "cooking" | "products" | "dish";
+type RecipeSection = "cooking" | "dish";
 type Recipe = {
   id: string;
   slot: MealSlot;
@@ -224,6 +224,9 @@ type Recipe = {
     name: string;
     note: string;
     allergens: Allergen[];
+    classification: "pantry" | "to_taste" | "optional_serving";
+    quantityPerServing?: number;
+    unit?: "g" | "ml" | "piece";
   }[];
 };
 type RuntimeRecipeRecord = {
@@ -249,6 +252,9 @@ type RuntimeRecipeRecord = {
     nameRu: string;
     reason: string;
     allergens?: string[];
+    classification: "pantry" | "to_taste" | "optional_serving";
+    quantityPerServing?: number;
+    unit?: "g" | "ml" | "piece";
   }[];
   steps: string[];
   instructions?: RecipeStep[];
@@ -504,13 +510,13 @@ function storedFavoriteRecipeIds() {
 
 const mealMeta: Record<
   MealSlot,
-  { label: string; short: string; icon: string }
+  { label: string; short: string; icon: string; uiIcon: IconName }
 > = {
-  breakfast: { label: "Завтрак", short: "Завтрак", icon: "☀️" },
-  lunch: { label: "Обед", short: "Обед", icon: "🥗" },
-  dinner: { label: "Ужин", short: "Ужин", icon: "🌙" },
-  snack1: { label: "Перекус 1", short: "Перекус 1", icon: "🍏" },
-  snack2: { label: "Перекус 2", short: "Перекус 2", icon: "🥛" },
+  breakfast: { label: "Завтрак", short: "Завтрак", icon: "☀️", uiIcon: "meal-breakfast" },
+  lunch: { label: "Обед", short: "Обед", icon: "🥗", uiIcon: "meal-lunch" },
+  dinner: { label: "Ужин", short: "Ужин", icon: "🌙", uiIcon: "meal-dinner" },
+  snack1: { label: "Перекус 1", short: "Перекус 1", icon: "🍏", uiIcon: "meal-snack-one" },
+  snack2: { label: "Перекус 2", short: "Перекус 2", icon: "🥛", uiIcon: "meal-snack-two" },
 };
 const allMealSlots: MealSlot[] = [
   "breakfast",
@@ -4355,6 +4361,9 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
       name: ingredient.nameRu,
       note: ingredient.reason,
       allergens: runtimeAllergens(ingredient.allergens ?? []),
+      classification: ingredient.classification,
+      quantityPerServing: ingredient.quantityPerServing,
+      unit: ingredient.unit,
     })),
   };
 }
@@ -4825,27 +4834,15 @@ function portionComponents(recipe: Recipe): PortionComponent[] {
   const carbs = recipe.ingredients.filter((ingredient) =>
     carbIngredientIds.has(canonicalIdForIngredient(ingredient)),
   );
-  const vegetables = recipe.ingredients.filter(
-    (ingredient) =>
-      ingredient.group === "Овощи и фрукты" &&
-      !proteinIngredientIds.has(canonicalIdForIngredient(ingredient)) &&
-      !carbIngredientIds.has(canonicalIdForIngredient(ingredient)),
-  );
   const components: PortionComponent[] = [];
   if (protein.length)
     components.push({
       id: "protein",
-      label: protein[0].name,
+      label: "Мясо",
       ingredients: protein,
     });
   if (carbs.length)
-    components.push({ id: "carbs", label: carbs[0].name, ingredients: carbs });
-  if (vegetables.length)
-    components.push({
-      id: "vegetables",
-      label: "Овощи",
-      ingredients: vegetables,
-    });
+    components.push({ id: "carbs", label: "Гарнир", ingredients: carbs });
   return components.length >= 2 ? components : [];
 }
 /** A cooking session yields `people × days` containers. */
@@ -5213,7 +5210,11 @@ function buildBatchCookingModel(
     );
     products.push(
       ...(recipe.procedureIngredients ?? []).map(
-        (ingredient) => `${ingredient.name} — по шагам рецепта`,
+        (ingredient) =>
+          `${ingredient.name} — ${procedureIngredientAmountLabel(
+            ingredient,
+            session.portionCount,
+          )}`,
       ),
     );
     steps.push({
@@ -11760,6 +11761,9 @@ function MealStep({
               aria-checked={active}
               onClick={() => onToggle(slot)}
             >
+              <span className="meal-choice-icon" aria-hidden>
+                <Icon name={mealMeta[slot].uiIcon} size={30} />
+              </span>
               <b>{mealMeta[slot].label}</b>
               <small>
                 {active ? (
@@ -13416,6 +13420,10 @@ function ReviewStep({
 }) {
   const recipeIds = new Set(selectionRecipeIds(plan));
   const totalPortions = totalPlanPortions(plan);
+  const [showAllShopping, setShowAllShopping] = useState(false);
+  const visibleShopping = showAllShopping
+    ? plan.shopping
+    : plan.shopping.slice(0, 5);
   return (
     <>
       <StepIntro
@@ -13495,7 +13503,7 @@ function ReviewStep({
           <h3>Покупки</h3>
           <span>{plan.shopping.length}</span>
         </div>
-        {plan.shopping.slice(0, 5).map((item) => (
+        {visibleShopping.map((item) => (
           <p key={item.key}>
             <span>{item.name}</span>
             <b>
@@ -13504,7 +13512,14 @@ function ReviewStep({
           </p>
         ))}
         {plan.shopping.length > 5 && (
-          <small>и ещё {plan.shopping.length - 5} продуктов</small>
+          <button
+            type="button"
+            className="text-button shopping-preview-toggle"
+            aria-expanded={showAllShopping}
+            onClick={() => setShowAllShopping((value) => !value)}
+          >
+            {showAllShopping ? "Свернуть" : `Показать все — ${plan.shopping.length}`}
+          </button>
         )}
       </section>
     </>
@@ -13695,6 +13710,22 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
   })} ${ingredient.unit}`;
 }
 
+function procedureIngredientAmountLabel(
+  ingredient: NonNullable<Recipe["procedureIngredients"]>[number],
+  portions: number,
+) {
+  if (ingredient.quantityPerServing && ingredient.unit) {
+    const amount = ingredient.quantityPerServing * Math.max(1, portions);
+    const rounded =
+      amount < 1 ? round(amount, 2) : amount < 10 ? round(amount, 1) : round(amount);
+    const unit = ingredient.unit === "piece" ? "шт." : ingredient.unit === "g" ? "г" : "мл";
+    return `${rounded.toLocaleString("ru-RU", { maximumFractionDigits: 2 })} ${unit}`;
+  }
+  if (ingredient.classification === "optional_serving") return "по желанию";
+  if (ingredient.classification === "pantry") return "по необходимости";
+  return "по вкусу";
+}
+
 function ingredientSortableAmount(ingredient: Ingredient, amount: number) {
   if (ingredient.unit !== "шт.") return amount;
   const canonicalId = canonicalIdForIngredient(ingredient);
@@ -13840,9 +13871,7 @@ function BatchCookingView({
   const completed = stepIndex;
   const progress = completed / Math.max(1, model.steps.length);
   const progressPercent = Math.round(progress * 100);
-  const visibleSteps = showAll
-    ? model.steps
-    : model.steps.slice(stepIndex, stepIndex + 3);
+  const visibleSteps = showAll ? model.steps : [currentStep];
   const formatTimer = (seconds: number) =>
     `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   const contactWarnings = crossContactWarnings(plan, batch);
@@ -13929,38 +13958,7 @@ function BatchCookingView({
                 {model.activeMinutes}
                 <small> мин</small>
               </strong>
-              <span>
-                из ~{model.totalMinutes} мин · шаг {stepIndex + 1} из {model.steps.length}
-              </span>
             </div>
-            <div
-              className="batch-progress-ring"
-              style={
-                {
-                  "--batch-progress": `conic-gradient(var(--accent) 0deg ${progress * 360}deg, var(--ink-track) ${progress * 360}deg 360deg)`,
-                } as CSSProperties
-              }
-              aria-label={`Готово ${progressPercent}% партии`}
-            >
-              <span>
-                <b><AnimatedNumber value={progressPercent} />%</b>
-                <small>партии</small>
-              </span>
-            </div>
-          </div>
-          <div className="batch-summary-tiles">
-            <span>
-              <b>{model.totalPortions}</b>
-              <small>{plural(model.totalPortions, FORMS.portion)}</small>
-            </span>
-            <span>
-              <b>{model.dishes.length}</b>
-              <small>{plural(model.dishes.length, FORMS.dish)}</small>
-            </span>
-            <span className="is-mint">
-              <b>{model.freezePortions}</b>
-              <small>заморозить</small>
-            </span>
           </div>
         </section>
         {contactWarnings.length > 0 && (
@@ -14243,8 +14241,9 @@ function RecipeView({
   onReplace?: () => void;
 }) {
   const { recipe, batch, slot, plan } = context;
-  const sectionOrder: RecipeSection[] = ["cooking", "products", "dish"];
+  const sectionOrder: RecipeSection[] = ["cooking", "dish"];
   const [section, setSection] = useState<RecipeSection>("cooking");
+  const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
   const [photoExpanded, setPhotoExpanded] = useState(false);
   const photoTouchStart = useRef<number | null>(null);
   const stepsRef = useRef<HTMLElement | null>(null);
@@ -14254,7 +14253,6 @@ function RecipeView({
   );
   const sectionScroll = useRef<Record<RecipeSection, number>>({
     cooking: 0,
-    products: 0,
     dish: 0,
   });
   const [sectionMotion, setSectionMotion] = useState<{
@@ -14291,8 +14289,7 @@ function RecipeView({
           assignment?.personIds.includes(person.id),
         )
       : [];
-  const [personId, setPersonId] = useState(eaters[0]?.id ?? "");
-  const person = eaters.find((item) => item.id === personId) ?? eaters[0];
+  const person = eaters[0];
   const savedTuning =
     person && batch && slot
       ? plan?.tuning?.[tuningKey(batch, slot, person)]
@@ -14313,12 +14310,7 @@ function RecipeView({
       ? automaticSession?.portions[personIndex]?.ratios ??
         portionFor(person, slot, recipe).ratios
       : { protein: 1, fat: 1, carbs: 1 };
-  const [draft, setDraft] = useState<RecipeTuning>(
-    savedTuning ?? automaticTuning,
-  );
-  const [saveStatus, setSaveStatus] = useState<
-    "idle" | "saving" | "saved" | "error"
-  >("idle");
+  const draft = savedTuning ?? automaticTuning;
   const cookedKey =
     batch && slot ? cookedWeightsKey(batch, slot, recipe.id) : null;
   const [cookedWeights, setCookedWeights] = useState<Record<string, number>>(
@@ -14456,37 +14448,6 @@ function RecipeView({
           allocationPeople,
         )
       : null;
-  function selectPerson(nextId: string) {
-    setPersonId(nextId);
-    const nextPerson = eaters.find((item) => item.id === nextId);
-    if (!nextPerson || !batch || !slot) return;
-    const nextIndex = eaters.findIndex((item) => item.id === nextId);
-    setDraft(
-      plan?.tuning?.[tuningKey(batch, slot, nextPerson)] ??
-        automaticSession?.portions[nextIndex]?.ratios ??
-        portionFor(nextPerson, slot, recipe).ratios,
-    );
-    setSaveStatus("idle");
-  }
-  function updateDraft(key: keyof RecipeTuning, value: number) {
-    setDraft((current) => ({ ...current, [key]: value }));
-    setSaveStatus("idle");
-  }
-  async function saveTuning() {
-    if (!plan || !batch || !slot || !person || !onChangePlan) return;
-    setSaveStatus("saving");
-    const next: ActivePlan = {
-      ...plan,
-      tuning: { ...plan.tuning, [tuningKey(batch, slot, person)]: draft },
-    };
-    next.shopping = buildShopping(next);
-    try {
-      await onChangePlan(next);
-      setSaveStatus("saved");
-    } catch {
-      setSaveStatus("error");
-    }
-  }
   async function saveCookedWeights() {
     if (
       !plan ||
@@ -14553,6 +14514,11 @@ function RecipeView({
   const difficulty = recipe.effort.difficulty;
   const difficultyLabel = ["Просто", "Средне", "Сложно"][difficulty - 1];
   const cookingPortions = Math.max(1, (batch?.days ?? 1) * Math.max(1, eaters.length));
+  const totalProductCount =
+    sortedIngredients.length + (recipe.procedureIngredients?.length ?? 0);
+  const visibleIngredients = ingredientsExpanded
+    ? sortedIngredients
+    : sortedIngredients.slice(0, 6);
   return (
     <main
       className={`app-shell recipe-detail${photoExpanded ? " photo-expanded" : ""}`}
@@ -14616,7 +14582,6 @@ function RecipeView({
         {(
           [
             ["cooking", "Готовка"],
-            ["products", "Продукты"],
             ["dish", "Блюдо"],
           ] as const
         ).map(([id, label]) => (
@@ -14657,128 +14622,6 @@ function RecipeView({
           </div>
         </section>
       )}
-      {section === "dish" && (recipeFamilyFor(recipe) ? (
-        <section className="macro-tuner glass-card">
-        <div className="tuner-heading">
-          <div>
-            <p className="kicker">Гибкая порция</p>
-            <h2>Подстройка КБЖУ</h2>
-          </div>
-          {person && (
-            <select
-              aria-label="Для кого настроить порцию"
-              value={person.id}
-              onChange={(event) => selectPerson(event.target.value)}
-            >
-              {eaters.map((item) => (
-                <option value={item.id} key={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-        <p className="tuner-copy">
-          {person
-            ? "База уже подогнана под цель. Здесь можно докрутить состав порции в разумных пределах."
-            : "Попробуйте базовую порцию. В плане Mise начнёт с цели каждого человека."}
-        </p>
-        <div className="tuner-controls">
-          {(
-            [
-              {
-                key: "protein",
-                label: "Белковая часть",
-                value: displayMacros.protein,
-                range: recipe.flex.protein,
-              },
-              {
-                key: "carbs",
-                label: "Гарнир",
-                value: displayMacros.carbs,
-                range: recipe.flex.carbs,
-              },
-              {
-                key: "fat",
-                label: "Жиры и соус",
-                value: displayMacros.fat,
-                range: recipe.flex.fat,
-              },
-            ] as const
-          ).map((control) => (
-            <label key={control.key} aria-label={control.label}>
-              <span>
-                <b>{control.label}</b>
-                <em>
-                  {Math.round(draft[control.key] * 100)}% · {control.value} г
-                </em>
-              </span>
-              <input
-                type="range"
-                min={control.range[0]}
-                max={control.range[1]}
-                step="0.05"
-                value={draft[control.key]}
-                onChange={(event) =>
-                  updateDraft(control.key, Number(event.target.value))
-                }
-              />
-            </label>
-          ))}
-        </div>
-        <div className="tuner-actions">
-          <button
-            className="secondary-button"
-            onClick={() => {
-              setDraft(automaticTuning);
-              setSaveStatus("idle");
-            }}
-          >
-            {person ? "Вернуть к цели" : "Сбросить"}
-          </button>
-          {person && (
-            <button
-              className="primary-button"
-              disabled={saveStatus === "saving"}
-              onClick={saveTuning}
-            >
-              {saveStatus === "saving" ? (
-                "Сохраняем…"
-              ) : saveStatus === "saved" ? (
-                <>
-                  Сохранено <Icon name="check" size={12} />
-                </>
-              ) : (
-                "Сохранить и пересчитать"
-              )}
-            </button>
-          )}
-        </div>
-        {saveStatus === "saved" && (
-          <p className="tuner-saved" role="status">
-            Порция сохранена — список покупок пересчитан.
-          </p>
-        )}
-        {saveStatus === "error" && (
-          <Note tone="warn" role="alert">
-            Не удалось сохранить. Изменения не попали в план.
-          </Note>
-        )}
-        </section>
-      ) : (
-        <section className="macro-tuner glass-card">
-          <div className="tuner-heading">
-            <div>
-              <p className="kicker">Порция по плану</p>
-              <h2>Точная подстройка пока недоступна</h2>
-            </div>
-          </div>
-          <p className="tuner-copy">
-            Mise уже рассчитал размер порции под ваш план, но для этого
-            рецепта ещё не проверена независимая подстройка белка, гарнира и соуса.
-          </p>
-        </section>
-      ))}
       <section
         id={`recipe-panel-${section}`}
         className={`detail-panel recipe-panel-${section}`}
@@ -14815,19 +14658,59 @@ function RecipeView({
                   <p className="kicker">Подготовить</p>
                   <h2>Продукты на готовку</h2>
                 </div>
-                <button className="text-button" onClick={() => selectSection("products")}>
-                  Все продукты
+                <button
+                  className="text-button"
+                  aria-expanded={ingredientsExpanded}
+                  onClick={() => setIngredientsExpanded((value) => !value)}
+                >
+                  {ingredientsExpanded ? "Свернуть" : "Развернуть"}
                 </button>
               </header>
+              {ingredientsExpanded && batch && (
+                <div className="recipe-product-scale" role="group" aria-label="Количество продуктов">
+                  <button
+                    className={productScale === "cooking" ? "selected" : ""}
+                    aria-pressed={productScale === "cooking"}
+                    onClick={() => setProductScale("cooking")}
+                  >
+                    На {cookingPortions} порц.
+                  </button>
+                  <button
+                    className={productScale === "portion" ? "selected" : ""}
+                    aria-pressed={productScale === "portion"}
+                    onClick={() => setProductScale("portion")}
+                  >
+                    На 1 порцию
+                  </button>
+                </div>
+              )}
               <div className="recipe-product-list">
-                {sortedIngredients.slice(0, 6).map((ingredient) => (
+                {visibleIngredients.map((ingredient) => (
                   <div key={ingredient.id}>
                     <span>{ingredient.name}</span>
-                    <b>{ingredientAmountLabel(ingredient, cookingAmounts[ingredient.id] ?? ingredient.quantity)}</b>
+                    <b>
+                      {ingredientAmountLabel(
+                        ingredient,
+                        productScale === "cooking"
+                          ? cookingAmounts[ingredient.id] ?? ingredient.quantity
+                          : ingredient.quantity,
+                      )}
+                    </b>
                   </div>
                 ))}
-                {recipe.ingredients.length > 6 && (
-                  <small>Ещё {recipe.ingredients.length - 6} — во вкладке «Продукты»</small>
+                {ingredientsExpanded && (recipe.procedureIngredients ?? []).map((ingredient) => (
+                  <div key={ingredient.id}>
+                    <span>{ingredient.name}</span>
+                    <b>
+                      {procedureIngredientAmountLabel(
+                        ingredient,
+                        productScale === "cooking" ? cookingPortions : 1,
+                      )}
+                    </b>
+                  </div>
+                ))}
+                {!ingredientsExpanded && totalProductCount > 6 && (
+                  <small>Ещё {totalProductCount - 6} — нажмите «Развернуть»</small>
                 )}
               </div>
             </section>
@@ -14862,12 +14745,6 @@ function RecipeView({
                         </time>
                         <span className="recipe-timeline-node" aria-hidden />
                         <div>
-                          <small>
-                            {step.hands ? "Руками" : "Без вашего участия"}
-                            {step.minutes > 0
-                              ? ` · ${step.estimated ? "≈ " : ""}${step.minutes} мин`
-                              : " · время не указано"}
-                          </small>
                           <p>{step.text}</p>
                         </div>
                       </li>
@@ -14885,59 +14762,6 @@ function RecipeView({
                 </ol>
               )}
             </section>
-          </div>
-        )}
-        {section === "products" && (
-          <div
-            key={`products-${sectionMotion.epoch}`}
-            className={`recipe-products-content glass-card${sectionMotionClass}`}
-          >
-            <header>
-              <div>
-                <p className="kicker">Состав рецепта</p>
-                <h2>Все продукты</h2>
-              </div>
-              {batch && (
-                <div className="recipe-product-scale" role="group" aria-label="Количество продуктов">
-                  <button
-                    className={productScale === "cooking" ? "selected" : ""}
-                    aria-pressed={productScale === "cooking"}
-                    onClick={() => setProductScale("cooking")}
-                  >
-                    На {cookingPortions} порц.
-                  </button>
-                  <button
-                    className={productScale === "portion" ? "selected" : ""}
-                    aria-pressed={productScale === "portion"}
-                    onClick={() => setProductScale("portion")}
-                  >
-                    На 1 порцию
-                  </button>
-                </div>
-              )}
-            </header>
-            <p className="recipe-products-neutral">Количество на готовку или одну базовую порцию.</p>
-            <div className="recipe-product-list is-full">
-              {sortedIngredients.map((ingredient) => (
-                <div key={ingredient.id}>
-                  <span>{ingredient.name}</span>
-                  <b>
-                    {ingredientAmountLabel(
-                      ingredient,
-                      productScale === "cooking"
-                        ? cookingAmounts[ingredient.id] ?? ingredient.quantity
-                        : ingredient.quantity,
-                    )}
-                  </b>
-                </div>
-              ))}
-              {(recipe.procedureIngredients ?? []).map((ingredient) => (
-                <div key={ingredient.id}>
-                  <span>{ingredient.name}</span>
-                  <b>по шагам</b>
-                </div>
-              ))}
-            </div>
           </div>
         )}
         {section === "dish" && (
@@ -15010,15 +14834,6 @@ function RecipeView({
       </section>
       {section === "dish" && (
         <>
-      <section className="recipe-packing glass-card">
-        <p className="kicker">Упаковка</p>
-        <h2>Как разложить блюдо</h2>
-        <p>{recipe.packing.portion}</p>
-        {recipe.packing.separate && (
-          <p><b>Хранить отдельно:</b> {recipe.packing.separate}</p>
-        )}
-        <small><b>Подпись:</b> {recipe.packing.label}</small>
-      </section>
       <section className="recipe-storage glass-card">
         <p className="kicker">Ориентиры хранения</p>
         <h2>

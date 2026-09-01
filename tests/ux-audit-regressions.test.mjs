@@ -24,7 +24,7 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
   assert.match(page, /genitiveAfterNumber\([\s\S]{0,100}\["порции", "порций"\]/);
   assert.match(page, /className="screen app-boot-loading"/);
   assert.match(page, /className=\{loadedPhoto === photo \? "is-loaded" : "is-loading"\}/);
-  assert.match(css, /\.cooking-batch-shell \{[\s\S]*?padding: 0 18px calc\(148px \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(css, /\.cooking-batch-shell \{[\s\S]*?padding: 0 18px calc\(176px \+ env\(safe-area-inset-bottom\)\)/);
   assert.match(page, /система в установленном приложении/);
   assert.doesNotMatch(page, /className="install-kicker"/);
   assert.ok(page.indexOf("Открыть план") < page.indexOf("Настроить напоминания"));
@@ -106,8 +106,9 @@ test("dead and misleading UI patterns from the audit do not return", async () =>
   assert.doesNotMatch(page, /scrollIntoView\(/);
   assert.match(page, /strip\.scrollLeft = Math\.max/);
   assert.doesNotMatch(page, /Собрать заново<\/button>[\s\S]{0,120}role="checkbox"/);
-  assert.match(page, /recipeFamilyFor\(recipe\) \? \(/);
-  assert.match(page, /Точная подстройка пока недоступна/);
+  const recipeView = page.slice(page.indexOf("function RecipeView("));
+  assert.doesNotMatch(recipeView, /recipeFamilyFor\(recipe\) \? \(/);
+  assert.doesNotMatch(recipeView, /Точная подстройка пока недоступна|macro-tuner/);
   assert.doesNotMatch(page, /averagePieceWeightGrams|pieceEstimate/);
 });
 

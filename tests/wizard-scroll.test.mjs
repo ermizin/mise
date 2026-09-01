@@ -54,4 +54,13 @@ test("wizard keeps its chat history in a touch-scrollable viewport", async () =>
     css,
     /\.menu-row-art img \{[\s\S]*?width: 100%;[\s\S]*?height: 100%;[\s\S]*?object-fit: cover;/,
   );
+  const review = page.slice(page.indexOf("function ReviewStep("), page.indexOf("const focusableSelector"));
+  assert.match(review, /showAllShopping/);
+  assert.match(review, /Показать все — \$\{plan\.shopping\.length\}/);
+  assert.match(review, /aria-expanded=\{showAllShopping\}/);
+  const mealStep = page.slice(page.indexOf("function MealStep("), page.indexOf("function StyleStep("));
+  assert.match(mealStep, /meal-choice-icon/);
+  assert.match(mealStep, /mealMeta\[slot\]\.uiIcon/);
+  for (const icon of ["meal-breakfast", "meal-snack-one", "meal-lunch", "meal-snack-two", "meal-dinner"])
+    assert.match(page, new RegExp(icon));
 });

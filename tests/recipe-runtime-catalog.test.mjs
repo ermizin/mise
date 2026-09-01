@@ -131,6 +131,20 @@ test("every source ingredient is accounted for or blocks projection", () => {
   assert.ok(catalog.failures.every((failure) => failure.code && failure.id));
 });
 
+test("measured spices keep a scalable source-derived amount", () => {
+  const recipe = catalog.recipes.find((item) => item.id === "tmpm-28572");
+  assert.ok(recipe);
+  const paprika = recipe.procedureIngredients.find((item) => item.nameRu === "Паприка");
+  assert.ok(paprika);
+  assert.equal(paprika.unit, "g");
+  assert.ok(Math.abs(paprika.quantityPerServing - 3 / 7) < 0.0001);
+  for (const item of catalog.recipes.flatMap((entry) => entry.procedureIngredients)) {
+    if (item.quantityPerServing === undefined) continue;
+    assert.ok(Number.isFinite(item.quantityPerServing) && item.quantityPerServing > 0);
+    assert.ok(["g", "ml", "piece"].includes(item.unit));
+  }
+});
+
 test("cheese and pasta stay in grams while liquid broth uses millilitres", () => {
   const expectedUnits = new Map([
     ["cheese_processed", "g"],

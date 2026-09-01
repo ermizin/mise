@@ -99,7 +99,7 @@ test("analytics accepts only the bounded event contract", () => {
       eventId: ids.first,
       eventName: "recipe_tab_switched",
       from: "cooking",
-      to: "products",
+      to: "dish",
       occurredAt: now,
     },
     now,

@@ -26,6 +26,17 @@
           "costTier": { "type": "object", "properties": { "value": { "minimum": 1, "maximum": 3 }, "basis": { "const": "relative_editorial_ingredient_complexity_not_rubles" } }, "required": ["value", "basis"] },
           "servingMass": { "type": "object", "properties": { "status": { "const": "estimated_not_verified_cooked_yield" } }, "required": ["grams", "status", "method"] },
           "shoppingIngredients": { "type": "array", "items": { "type": "object", "required": ["sourceIngredientIndex", "sourceIngredientId", "canonicalIngredientId", "nameRu", "quantityGrams"] } },
+          "procedureIngredients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "quantityPerServing": { "type": "number", "exclusiveMinimum": 0 },
+                "unit": { "enum": ["g", "ml", "piece"] },
+                "amountStatus": { "type": "string" }
+              }
+            }
+          },
           "recipeFamily": { "type": "object", "required": ["id", "ingredients", "miseCalculatedNutrition", "miseInstructions"] },
           "provenance": {
             "type": "object",

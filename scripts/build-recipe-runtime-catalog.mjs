@@ -122,6 +122,17 @@ function optionalServingSourceIngredient(sourceIngredient) {
   );
 }
 
+function procedureMeasurement(sourceIngredient, servings) {
+  const measured = sourceAmount(sourceIngredient);
+  if (!measured || !hasPositive(measured.amount) || !hasPositive(servings))
+    return {};
+  return {
+    quantityPerServing: round(measured.amount / servings, 4),
+    unit: measured.unit,
+    amountStatus: measured.status,
+  };
+}
+
 function nonRawRiceCanonicalId(value) {
   return /^rice(?:_|-)cooked(?:_|-|$)/iu.test(String(value ?? ""));
 }
@@ -433,6 +444,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
 
   const shoppingSourceRows = [];
   const procedureIngredients = [];
+  const servings = Number(candidate.servings);
   let estimatedCookedBatchMass = 0;
   normalized.ingredientMappings.forEach((mapping, index) => {
     const sourceIngredient = normalized.sourceIngredients[index];
@@ -461,6 +473,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
             classification: "optional_serving",
             allergens: canonical.allergens,
             reason: "Опциональный компонент для подачи сохранён вне вариативной RecipeFamily.",
+            ...procedureMeasurement(sourceIngredient, servings),
           });
           return;
         }
@@ -524,6 +537,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
       classification: mapping.status === "ignored_noncaloric" ? "pantry" : "to_taste",
       allergens: procedureAllergens(mapping.sourceName),
       reason: mapping.reason ?? "Редакционное примечание к приготовлению.",
+      ...procedureMeasurement(sourceIngredient, servings),
     });
   });
 
@@ -546,7 +560,6 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
       failures.push(["recipe_family_macro_mismatch", `Derived RecipeFamily ${familyMacroDelta} differs from audited runtime macros.`]);
     }
   }
-  const servings = Number(candidate.servings);
   if (!Number.isFinite(servings) || servings <= 0) failures.push(["invalid_servings", "No positive batch yield."]);
   const servingWeight = servings > 0 ? Math.max(60, round(estimatedCookedBatchMass / servings)) : 0;
   if (!hasPositive(servingWeight)) failures.push(["missing_estimated_serving_mass", "Raw mass model cannot estimate a serving mass."]);

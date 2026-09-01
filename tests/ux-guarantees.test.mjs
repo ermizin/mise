@@ -119,6 +119,8 @@ test("batch cooking follows screen 5b without inventing a parallel schedule", as
   assert.match(page, /Шаг готов — дальше/, "the primary action advances one step");
   assert.match(page, /Продукты шага/, "calculated products stay available in context");
   assert.match(page, /Активное время · ориентир/, "time is not presented as an exact schedule");
+  assert.match(page, /const visibleSteps = showAll \? model\.steps : \[currentStep\]/, "Now contains only the current step");
+  assert.doesNotMatch(page, /className="batch-progress-ring"|className="batch-summary-tiles"/, "duplicate summary data is removed below active time");
   assert.match(page, /history\.pushState\(\{ mise: "batch-cooking" \}/, "hardware back closes cooking mode");
   assert.match(
     page,
@@ -141,7 +143,7 @@ test("a failed shopping tick is visible", async () => {
   assert.match(page, /undo-bar/, "clearing can be undone");
 });
 
-test("recipe card 14A keeps cooking, products and dish data actionable", async () => {
+test("recipe card 14A keeps inline products and dish data actionable", async () => {
   const [page, css] = await Promise.all([
     read("app/page.tsx"),
     read("app/globals.css"),
@@ -173,14 +175,19 @@ test("recipe card 14A keeps cooking, products and dish data actionable", async (
   );
   assert.match(css, /ms-heart-a 380ms/, "favorite keeps the supplied spring response");
   assert.match(css, /\.recipe-hero-photo img \{[\s\S]*?object-fit: cover;/, "the source photo fills the 14A hero");
-  for (const label of ["Готовка", "Продукты", "Блюдо"]) assert.match(page, new RegExp(label));
+  for (const label of ["Готовка", "Блюдо"]) assert.match(page, new RegExp(label));
   assert.match(page, /useState<RecipeSection>\("cooking"\)/, "every opening starts on cooking");
-  assert.match(page, /role="tablist"[\s\S]*?role="tab"[\s\S]*?role="tabpanel"/, "the three sections expose tab semantics");
+  assert.match(page, /role="tablist"[\s\S]*?role="tab"[\s\S]*?role="tabpanel"/, "the two sections expose tab semantics");
   assert.match(page, /sortedIngredients\.slice\(0, 6\)/, "cooking keeps a quantity-sorted brief product list");
-  assert.match(page, /На \{cookingPortions\} порц\./, "the full list exposes the selected cooking scale");
-  assert.match(page, /На 1 порцию/, "the full list can return to the base portion");
+  assert.match(page, /На \{cookingPortions\} порц\./, "the expanded list exposes the selected cooking scale");
+  assert.match(page, /На 1 порцию/, "the expanded list can return to the base portion");
   assert.match(page, /cookingAmounts\[ingredient\.id\]/, "cooking reads the calculated batch amount");
-  assert.match(page, /Количество на готовку или одну базовую порцию/, "the product tab remains a neutral quantity view");
+  assert.match(page, /procedureIngredientAmountLabel/, "procedure ingredients use real amounts or an honest fallback");
+  assert.doesNotMatch(page, /по шагам рецепта|<b>по шагам<\/b>/, "the old amount placeholder is gone");
+  assert.doesNotMatch(page, /\["products",\s*"Продукты"\]/, "there is no Products tab");
+  assert.doesNotMatch(page, /Как разложить блюдо|Подстройка КБЖУ/, "Dish omits duplicate packing and tuning sections");
+  assert.match(page, /label: "Мясо"/);
+  assert.match(page, /label: "Гарнир"/);
   assert.match(page, /recipe\.instructions\?\.length/, "the card uses structured instructions when available");
   assert.match(page, /className="recipe-timeline"/, "the card renders the projected timeline");
   assert.match(page, /className="cooking-steps"/, "legacy recipes retain the numbered fallback");
