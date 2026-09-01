@@ -13,10 +13,11 @@
     "editorial:niche_localization": 9,
     "editorial:procedure_review_required": 2,
     "nutrition:ignored_component_not_calculable": 223,
-    "nutrition:independent_calculation_complete": 131,
+    "nutrition:independent_calculation_complete": 128,
     "nutrition:invalid_yield": 4,
-    "nutrition:nutrition_delta_outside_tolerance": 120,
-    "nutrition:nutrition_delta_within_tolerance": 131
+    "nutrition:nutrition_delta_outside_tolerance": 123,
+    "nutrition:nutrition_delta_within_tolerance": 128,
+    "nutrition:rice_dry_weight_conversion_applied": 29
   },
   "cards": [
     {
@@ -137,10 +138,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 514.2,
-        "protein": 43.1,
-        "fat": 17.5,
-        "carbs": 44.6
+        "kcal": 528.6,
+        "protein": 43.2,
+        "fat": 17.4,
+        "carbs": 48.1
       },
       "reasons": [
         {
@@ -197,6 +198,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "water"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -501,10 +516,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 560.3,
-        "protein": 43.6,
-        "fat": 14.3,
-        "carbs": 61.1
+        "kcal": 578.1,
+        "protein": 43.8,
+        "fat": 14.2,
+        "carbs": 65.3
       },
       "reasons": [
         {
@@ -521,6 +536,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "white pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -728,10 +757,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 473.8,
-        "protein": 36.1,
-        "fat": 14.5,
-        "carbs": 49.1
+        "kcal": 493,
+        "protein": 36.3,
+        "fat": 14.4,
+        "carbs": 53.6
       },
       "reasons": [
         {
@@ -780,6 +809,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 600,
+            "sourceUnit": "g",
+            "dryAmount": 240,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -1912,10 +1955,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 458.6,
-        "protein": 40.3,
+        "kcal": 473,
+        "protein": 40.4,
         "fat": 17.1,
-        "carbs": 34.1
+        "carbs": 37.5
       },
       "reasons": [
         {
@@ -1968,6 +2011,20 @@
         },
         {
           "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -1995,10 +2052,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 640.4,
-        "protein": 61.5,
+        "kcal": 664.4,
+        "protein": 61.7,
         "fat": 16.1,
-        "carbs": 60.4
+        "carbs": 66.1
       },
       "reasons": [
         {
@@ -2015,6 +2072,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt and pepper to taste"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 750,
+            "sourceUnit": "g",
+            "dryAmount": 300,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -2097,12 +2168,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 499.3,
-        "protein": 41.5,
+        "kcal": 508.9,
+        "protein": 41.6,
         "fat": 14.1,
-        "carbs": 51.6
+        "carbs": 53.9
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 300,
+            "sourceUnit": "g",
+            "dryAmount": 120,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2156,10 +2241,10 @@
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 1086.1,
-        "protein": 55.7,
+        "kcal": 1100.5,
+        "protein": 55.9,
         "fat": 52.3,
-        "carbs": 98.9
+        "carbs": 102.3
       },
       "reasons": [
         {
@@ -2176,6 +2261,20 @@
               "miseServing": "0.6 исходной порции",
               "reason": "Высококалорийный боул делится на контейнерную порцию."
             }
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -2613,12 +2712,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 679.4,
-        "protein": 44.3,
+        "kcal": 697.3,
+        "protein": 44.5,
         "fat": 26.9,
-        "carbs": 65
+        "carbs": 69.3
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2637,13 +2750,14 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -2656,12 +2770,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 695.9,
-        "protein": 43.3,
+        "kcal": 707.9,
+        "protein": 43.5,
         "fat": 33.3,
-        "carbs": 58
+        "carbs": 60.9
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 375,
+            "sourceUnit": "g",
+            "dryAmount": 150,
+            "dryUnit": "g",
+            "basis": "source_explicit_dry_weight",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2783,10 +2911,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 699.7,
-        "protein": 43.5,
+        "kcal": 717.7,
+        "protein": 43.7,
         "fat": 29.8,
-        "carbs": 61.6
+        "carbs": 65.9
       },
       "reasons": [
         {
@@ -2811,6 +2939,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "Salt and pepper to taste"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 562.5,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -2965,10 +3107,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 680.6,
-        "protein": 40.1,
+        "kcal": 698.5,
+        "protein": 40.3,
         "fat": 30.9,
-        "carbs": 59.6
+        "carbs": 63.9
       },
       "reasons": [
         {
@@ -2989,12 +3131,27 @@
         },
         {
           "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
             "fields": [
               "kcal",
-              "fat"
+              "fat",
+              "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -3364,10 +3521,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 459.9,
-        "protein": 39.6,
+        "kcal": 474.3,
+        "protein": 39.7,
         "fat": 17,
-        "carbs": 36.1
+        "carbs": 39.6
       },
       "reasons": [
         {
@@ -3436,6 +3593,20 @@
         },
         {
           "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -3463,12 +3634,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 622.8,
-        "protein": 42.8,
+        "kcal": 640.6,
+        "protein": 43,
         "fat": 25.7,
-        "carbs": 54.9
+        "carbs": 59.1
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
@@ -4291,10 +4476,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 547.3,
-        "protein": 44.1,
+        "kcal": 561.7,
+        "protein": 44.2,
         "fat": 21,
-        "carbs": 45.3
+        "carbs": 48.7
       },
       "reasons": [
         {
@@ -4319,6 +4504,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -4510,10 +4709,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 569.1,
-        "protein": 44.3,
+        "kcal": 578.7,
+        "protein": 44.4,
         "fat": 22,
-        "carbs": 50.7
+        "carbs": 53
       },
       "reasons": [
         {
@@ -4530,6 +4729,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt and pepper to taste"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 300,
+            "sourceUnit": "g",
+            "dryAmount": 120,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -4946,10 +5159,10 @@
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 1077.9,
-        "protein": 72.7,
+        "kcal": 1101.9,
+        "protein": 73,
         "fat": 33.9,
-        "carbs": 121.3
+        "carbs": 127
       },
       "reasons": [
         {
@@ -5018,6 +5231,20 @@
         },
         {
           "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 750,
+            "sourceUnit": "g",
+            "dryAmount": 300,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -5026,13 +5253,14 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -5212,12 +5440,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 483.1,
-        "protein": 43.7,
+        "kcal": 497.5,
+        "protein": 43.9,
         "fat": 15,
-        "carbs": 42.7
+        "carbs": 46.2
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -5287,12 +5529,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 538.3,
-        "protein": 42.7,
+        "kcal": 557.5,
+        "protein": 42.9,
         "fat": 13.3,
-        "carbs": 61.7
+        "carbs": 66.2
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 600,
+            "sourceUnit": "g",
+            "dryAmount": 240,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -5323,10 +5579,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 547.6,
-        "protein": 46.2,
+        "kcal": 565.5,
+        "protein": 46.4,
         "fat": 18.1,
-        "carbs": 50
+        "carbs": 54.3
       },
       "reasons": [
         {
@@ -5407,6 +5663,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "water"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -5623,12 +5893,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 707.8,
-        "protein": 41,
-        "fat": 34.1,
-        "carbs": 56.6
+        "kcal": 731.8,
+        "protein": 41.3,
+        "fat": 34,
+        "carbs": 62.3
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 750,
+            "sourceUnit": "g",
+            "dryAmount": 300,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -5801,12 +6085,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 427.6,
-        "protein": 37.2,
+        "kcal": 444.2,
+        "protein": 37.3,
         "fat": 8.9,
-        "carbs": 47.1
+        "carbs": 51
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 568,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -5814,8 +6112,7 @@
           "detail": {
             "fields": [
               "kcal",
-              "fat",
-              "carbs"
+              "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -6196,12 +6493,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 622,
-        "protein": 38.8,
+        "kcal": 636.4,
+        "protein": 38.9,
         "fat": 33.8,
-        "carbs": 39.7
+        "carbs": 43.1
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 450,
+            "sourceUnit": "g",
+            "dryAmount": 180,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6527,10 +6838,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 273.9,
+        "kcal": 275.1,
         "protein": 41.4,
         "fat": 5.1,
-        "carbs": 11.6
+        "carbs": 11.9
       },
       "reasons": [
         {
@@ -6563,6 +6874,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "gochugaru"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 100,
+            "sourceUnit": "g",
+            "dryAmount": 40,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -6656,10 +6981,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 531.2,
-        "protein": 37.6,
+        "kcal": 549.1,
+        "protein": 37.8,
         "fat": 21.6,
-        "carbs": 48.1
+        "carbs": 52.4
       },
       "reasons": [
         {
@@ -6716,6 +7041,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "Salt and pepper to taste"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -6807,12 +7146,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 705.4,
-        "protein": 41.1,
+        "kcal": 723.3,
+        "protein": 41.3,
         "fat": 31.1,
-        "carbs": 65.8
+        "carbs": 70.1
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6835,6 +7188,7 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
               "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -7153,10 +7507,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 740.3,
-        "protein": 47.3,
+        "kcal": 758.3,
+        "protein": 47.5,
         "fat": 34.2,
-        "carbs": 62.7
+        "carbs": 67
       },
       "reasons": [
         {
@@ -7173,6 +7527,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "minced ginger"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 675,
+            "sourceUnit": "g",
+            "dryAmount": 270,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {
@@ -7503,12 +7871,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 507.7,
-        "protein": 36.8,
+        "kcal": 525.7,
+        "protein": 37,
         "fat": 12.2,
-        "carbs": 61.4
+        "carbs": 65.7
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 675,
+            "sourceUnit": "g",
+            "dryAmount": 270,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7855,12 +8237,26 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 516.3,
-        "protein": 51.2,
+        "kcal": 534.1,
+        "protein": 51.4,
         "fat": 11.1,
-        "carbs": 51.4
+        "carbs": 55.7
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 563,
+            "sourceUnit": "g",
+            "dryAmount": 225,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7871,13 +8267,14 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "kcal"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -7890,10 +8287,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 480.2,
-        "protein": 39.8,
-        "fat": 15.4,
-        "carbs": 41.4
+        "kcal": 491.4,
+        "protein": 40,
+        "fat": 15.3,
+        "carbs": 44
       },
       "reasons": [
         {
@@ -7910,6 +8307,20 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "rice_dry_weight_conversion_applied",
+          "severity": "info",
+          "detail": {
+            "sourceName": "dry rice",
+            "sourceAmount": 350,
+            "sourceUnit": "g",
+            "dryAmount": 140,
+            "dryUnit": "g",
+            "basis": "same_publisher_explicit_cooked_to_dry_yield",
+            "evidenceRecipeId": "tmpm-26429"
           }
         },
         {

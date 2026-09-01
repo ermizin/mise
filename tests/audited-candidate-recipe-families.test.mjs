@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { auditRecipeRelease } from "../scripts/audit-recipe-release.mjs";
+import { loadRecipeCorpusWithOverlays } from "../scripts/recipe-corpus-overlay.mjs";
 import { loadTypeScriptModule } from "./typescript-module.mjs";
 
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
-const corpus = JSON.parse(await readFile(new URL("../data/mealprepmanual-candidates.json", import.meta.url), "utf8"));
+const corpusWithOverlays = await loadRecipeCorpusWithOverlays();
+const corpus = corpusWithOverlays.documents.find((document) => document.source === "The Meal Prep Manual");
+assert.ok(corpus);
 const audit = await auditRecipeRelease();
 const readyIds = new Set(audit.cards.filter((card) => card.verdict === "ready").map((card) => card.id));
 const ready = corpus.candidates.filter((candidate) => readyIds.has(candidate.id));

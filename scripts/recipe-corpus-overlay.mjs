@@ -7,6 +7,143 @@ const datasets = [
   "data/simple-home-candidates.json",
 ];
 
+const cookedRicePattern = /\bcooked\s+(?:brown\s+|brown basmati\s+|basmati\s+)?rice\b/iu;
+
+function isCookedRiceSourceIngredient(ingredient) {
+  return cookedRicePattern.test(`${ingredient?.name ?? ""} ${ingredient?.original ?? ""}`);
+}
+
+function roundedTo(value, step) {
+  return Math.round(value / step) * step;
+}
+
+function applyRiceDryWeightPolicy({ document, policy }) {
+  if (
+    policy?.kind !== "rice_dry_weight_only_v1" ||
+    policy.approvedBy !== "owner" ||
+    policy.targetCanonicalIngredientId !== "rice_raw" ||
+    !Array.isArray(policy.expectedRecipeIds) ||
+    !policy.expectedRecipeIds.length
+  ) {
+    throw new Error("Rice dry-weight owner policy is missing or invalid.");
+  }
+  const conversion = policy.conversion;
+  if (
+    conversion?.basis !== "same_publisher_explicit_cooked_to_dry_yield" ||
+    !Number.isFinite(conversion.sourceCookedGrams) ||
+    !Number.isFinite(conversion.sourceDryGrams) ||
+    conversion.sourceCookedGrams <= 0 ||
+    conversion.sourceDryGrams <= 0 ||
+    conversion.cookedToDryFactor !== conversion.sourceDryGrams / conversion.sourceCookedGrams ||
+    !Number.isFinite(conversion.roundToGrams) ||
+    conversion.roundToGrams <= 0
+  ) {
+    throw new Error("Rice dry-weight conversion evidence is missing or invalid.");
+  }
+  const approvedIds = new Set(policy.expectedRecipeIds);
+  if (approvedIds.size !== policy.expectedRecipeIds.length) {
+    throw new Error("Rice dry-weight owner policy contains duplicate recipe ids.");
+  }
+  const convertedIds = new Set();
+  const candidates = document.candidates.map((candidate) => {
+    const sourceIngredients = Array.isArray(candidate.ingredients) ? candidate.ingredients : [];
+    const cookedIndexes = sourceIngredients
+      .map((ingredient, index) => isCookedRiceSourceIngredient(ingredient) ? index : -1)
+      .filter((index) => index >= 0);
+    if (!cookedIndexes.length) return candidate;
+    if (!approvedIds.has(candidate.id)) {
+      throw new Error(`${candidate.id}: cooked rice has no owner-approved dry-weight conversion.`);
+    }
+    if (cookedIndexes.length !== 1) {
+      throw new Error(`${candidate.id}: expected exactly one cooked-rice ingredient.`);
+    }
+    const converted = sourceIngredients.map((ingredient, index) => {
+      if (index !== cookedIndexes[0]) return { ...ingredient };
+      const sourceAmount = Number(ingredient.amountMetric);
+      const sourceUnit = String(ingredient.unitMetric ?? "").toLowerCase();
+      if (!Number.isFinite(sourceAmount) || sourceAmount <= 0 || sourceUnit !== "g") {
+        throw new Error(`${candidate.id}: cooked rice needs a positive source gram amount.`);
+      }
+      const explicitDryMatch = String(ingredient.original ?? "").match(/([\d.]+)\s*g\s*dry rice\b/iu);
+      const explicitDryGrams = explicitDryMatch ? Number(explicitDryMatch[1]) : null;
+      const dryGrams = explicitDryGrams ?? roundedTo(
+        sourceAmount * conversion.cookedToDryFactor,
+        conversion.roundToGrams,
+      );
+      if (!Number.isFinite(dryGrams) || dryGrams <= 0) {
+        throw new Error(`${candidate.id}: dry-rice conversion produced an invalid amount.`);
+      }
+      return {
+        ...ingredient,
+        id: policy.targetCanonicalIngredientId,
+        name: policy.targetName,
+        displayNameRu: policy.targetDisplayNameRu,
+        amountMetric: dryGrams,
+        unitMetric: "g",
+        miseSourceStateConversion: {
+          kind: "cooked_rice_to_dry_weight_v1",
+          sourceState: "cooked",
+          sourceAmount,
+          sourceUnit: "g",
+          targetState: "raw",
+          targetAmount: dryGrams,
+          targetUnit: "g",
+          targetCanonicalIngredientId: policy.targetCanonicalIngredientId,
+          factor: dryGrams / sourceAmount,
+          basis: explicitDryGrams
+            ? "source_explicit_dry_weight"
+            : conversion.basis,
+          evidenceRecipeId: explicitDryGrams ? candidate.id : conversion.sourceRecipeId,
+        },
+      };
+    });
+    const sourceIngredientId = `source-ingredient-${cookedIndexes[0] + 1}`;
+    const steps = Array.isArray(candidate.paraphrasedInstructionDraft)
+      ? candidate.paraphrasedInstructionDraft.map((step) => ({ ...step }))
+      : [];
+    if (steps.some((step) => step.id === "mise-rice-dry-prep")) {
+      throw new Error(`${candidate.id}: duplicate Mise dry-rice preparation step.`);
+    }
+    convertedIds.add(candidate.id);
+    const conversionRecord = converted[cookedIndexes[0]].miseSourceStateConversion;
+    return {
+      ...candidate,
+      ingredients: converted,
+      ...(Array.isArray(candidate.sourceIngredients)
+        ? {
+            sourceIngredients: candidate.sourceIngredients.map((ingredient, index) =>
+              index === cookedIndexes[0] ? { ...converted[index] } : { ...ingredient },
+            ),
+          }
+        : {}),
+      paraphrasedInstructionDraft: [
+        {
+          id: "mise-rice-dry-prep",
+          order: 0,
+          actions: ["cook"],
+          action: "cook",
+          text: policy.instructionRu,
+          ingredientIds: [sourceIngredientId],
+          dependsOn: [],
+        },
+        ...steps,
+      ],
+      miseRiceDryWeightNormalization: {
+        kind: policy.kind,
+        reviewedAt: policy.reviewedAt,
+        registry: "data/mealprep-owner-decisions.json",
+        sourceIngredientIndex: cookedIndexes[0] + 1,
+        ...conversionRecord,
+      },
+    };
+  });
+  const missing = policy.expectedRecipeIds.filter((id) => !convertedIds.has(id));
+  if (missing.length) {
+    throw new Error(`Rice dry-weight policy references cards without cooked rice: ${missing.join(", ")}`);
+  }
+  return { ...document, candidates };
+}
+
 async function assertSimpleHomeRuntimeApproval({ document }) {
   const approval = JSON.parse(
     await readFile(new URL("../data/simple-home-runtime-approval.json", import.meta.url), "utf8"),
@@ -157,7 +294,10 @@ async function applyMealPrepOwnerDecisions({ document }) {
   });
   const missing = [...decisions.keys()].filter((id) => !seen.has(id));
   if (missing.length) throw new Error(`Meal Prep owner decisions reference missing cards: ${missing.join(", ")}`);
-  return { ...document, candidates };
+  return applyRiceDryWeightPolicy({
+    document: { ...document, candidates },
+    policy: registry.riceDryWeightPolicy,
+  });
 }
 
 /**

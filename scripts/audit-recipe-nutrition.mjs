@@ -37,6 +37,8 @@ export const NUTRITION_AUDIT_REASON = Object.freeze({
   ML_DENSITY_MISSING: "ml_density_missing",
   PIECE_WEIGHT_MISSING: "piece_weight_missing",
   INVALID_CANONICAL_NUTRITION: "invalid_canonical_nutrition",
+  COOKED_RICE_WITHOUT_DRY_EQUIVALENT: "cooked_rice_without_dry_equivalent",
+  RICE_DRY_WEIGHT_CONVERSION_APPLIED: "rice_dry_weight_conversion_applied",
   LABEL_REQUIRED: "label_required",
   FRACTIONAL_YIELD: "fractional_yield",
   DELTA_OUTSIDE_TOLERANCE: "nutrition_delta_outside_tolerance",
@@ -61,6 +63,35 @@ function round(value, digits = 1) {
 
 function reason(code, severity, detail) {
   return { code, severity, ...(detail ? { detail } : {}) };
+}
+
+function cookedRiceSourceIngredient(sourceIngredient, mapping) {
+  const sourceText = `${sourceIngredient?.name ?? ""} ${sourceIngredient?.original ?? ""}`;
+  return /\bcooked\s+(?:brown\s+|brown basmati\s+|basmati\s+)?rice\b/iu.test(sourceText) ||
+    /^rice(?:_|-)cooked(?:_|-|$)/iu.test(String(mapping?.canonicalIngredientId ?? ""));
+}
+
+function verifiedRiceDryWeightConversion(sourceIngredient, mapping) {
+  const conversion = sourceIngredient?.miseSourceStateConversion;
+  const measured = sourceAmount(sourceIngredient);
+  if (
+    conversion?.kind !== "cooked_rice_to_dry_weight_v1" ||
+    conversion.sourceState !== "cooked" ||
+    !finitePositive(conversion.sourceAmount) ||
+    conversion.sourceUnit !== "g" ||
+    conversion.targetState !== "raw" ||
+    !finitePositive(conversion.targetAmount) ||
+    conversion.targetUnit !== "g" ||
+    conversion.targetCanonicalIngredientId !== "rice_raw" ||
+    mapping?.canonicalIngredientId !== "rice_raw" ||
+    measured?.unit !== "g" ||
+    Math.abs(Number(measured.amount) - Number(conversion.targetAmount)) > 0.001 ||
+    typeof conversion.basis !== "string" ||
+    !conversion.basis ||
+    typeof conversion.evidenceRecipeId !== "string" ||
+    !conversion.evidenceRecipeId
+  ) return null;
+  return conversion;
 }
 
 function sourceNutritionFor(candidate) {
@@ -135,6 +166,19 @@ function deltaReport(calculated, source) {
 
 function auditIngredient(sourceIngredient, mapping, policy, acceptsEditorialAverage) {
   const sourceName = String(sourceIngredient?.name ?? sourceIngredient?.id ?? "").trim();
+  const cookedRiceInput = cookedRiceSourceIngredient(sourceIngredient, mapping);
+  const riceConversion = cookedRiceInput
+    ? verifiedRiceDryWeightConversion(sourceIngredient, mapping)
+    : null;
+  if (cookedRiceInput && !riceConversion) {
+    return {
+      complete: false,
+      reason: reason(NUTRITION_AUDIT_REASON.COOKED_RICE_WITHOUT_DRY_EQUIVALENT, "blocked", {
+        sourceName,
+        canonicalId: mapping?.canonicalIngredientId ?? null,
+      }),
+    };
+  }
   if (mapping.status === "unresolved") {
     return { complete: false, reason: reason(NUTRITION_AUDIT_REASON.UNRESOLVED_INGREDIENT, "blocked", { sourceName }) };
   }
@@ -171,7 +215,17 @@ function auditIngredient(sourceIngredient, mapping, policy, acceptsEditorialAver
   if (!nutrition) {
     return { complete: false, reason: reason(NUTRITION_AUDIT_REASON.INVALID_CANONICAL_NUTRITION, "blocked", { sourceName, canonicalId: canonical.id }) };
   }
-  const warnings = [];
+  const warnings = riceConversion
+    ? [reason(NUTRITION_AUDIT_REASON.RICE_DRY_WEIGHT_CONVERSION_APPLIED, "info", {
+        sourceName,
+        sourceAmount: riceConversion.sourceAmount,
+        sourceUnit: riceConversion.sourceUnit,
+        dryAmount: riceConversion.targetAmount,
+        dryUnit: riceConversion.targetUnit,
+        basis: riceConversion.basis,
+        evidenceRecipeId: riceConversion.evidenceRecipeId,
+      })]
+    : [];
   if (canonical.reference?.dataType === "label_required") {
     const averaged = acceptsEditorialAverage && (
       policy?.labelProfiles?.canonicalIds?.has(canonical.id) ||

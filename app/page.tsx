@@ -757,6 +757,8 @@ function normalizedIngredientName(id: string, name: string) {
     return "Говяжий фарш 85/15";
   if (id === "berries" && /^замороженные ягоды$/iu.test(name.trim()))
     return "Замороженная черника";
+  if (["rice", "brown-rice", "rice_raw"].includes(id) && !/сух/iu.test(name))
+    return `${name}, сухой вес`;
   return name;
 }
 
@@ -4246,7 +4248,7 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
     return {
       id: familyIngredient.sourceIngredientId,
       canonicalIngredientId: source.canonicalIngredientId,
-      name: source.nameRu,
+      name: normalizedIngredientName(source.canonicalIngredientId, source.nameRu),
       quantity: runtimeBaseAmount(familyIngredient.baseAmount),
       unit:
         familyIngredient.unit === "piece"

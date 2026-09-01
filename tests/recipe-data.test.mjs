@@ -669,6 +669,19 @@ test("shopping canonicalizes legacy ids and converts only evidenced units", () =
   assert.equal(normalizedShoppingKey(legacyMilk), "milk_processed:мл");
   assert.equal(normalizedShoppingKey(runtimeMilk), "milk_processed:мл");
 
+  const legacyRice = { id: "rice", name: "Рис", unit: "г" };
+  const runtimeRice = {
+    id: "source-rice",
+    canonicalIngredientId: "rice_raw",
+    name: "Рис сухой",
+    unit: "г",
+  };
+  assert.equal(normalizeShoppingIngredient(legacyRice, 100).canonicalIngredientId, "rice_raw");
+  assert.equal(normalizeShoppingIngredient(runtimeRice, 100).canonicalIngredientId, "rice_raw");
+  assert.equal(normalizedShoppingKey(legacyRice), "rice_raw:г");
+  assert.equal(normalizedShoppingKey(runtimeRice), "rice_raw:г");
+  assert.equal(Object.keys(canonicalIngredients).some((id) => /^rice(?:_|-)cooked(?:_|-|$)/iu.test(id)), false);
+
   const butter = normalizeShoppingIngredient({ id: "butter", name: "Сливочное масло", unit: "г" }, 10);
   assert.equal(butter.unit, "г");
   assert.equal(butter.quantity, 10);
@@ -684,6 +697,14 @@ test("shopping canonicalizes legacy ids and converts only evidenced units", () =
   const egg = normalizeShoppingIngredient({ id: "egg", name: "Яйцо", unit: "шт." }, 2);
   assert.equal(egg.unit, "шт.");
   assert.equal(egg.quantity, 2);
+});
+
+test("every recipe labels measured rice as dry weight", () => {
+  const riceIngredients = recipes.flatMap((item) => item.ingredients).filter((ingredient) =>
+    ["rice", "brown-rice"].includes(ingredient.id) || ingredient.canonicalIngredientId === "rice_raw",
+  );
+  assert.ok(riceIngredients.length > 0);
+  assert.ok(riceIngredients.every((ingredient) => /сух/iu.test(ingredient.name)));
 });
 
 test("mixed legacy and runtime recipes produce one milk shopping row", () => {

@@ -53,6 +53,9 @@ test("owner-approved mirin alternatives retain mirin and expose measured water-s
     assert.equal(sugar.name, "brown sugar");
     assert.ok(Math.abs(water.grams / sugar.grams - 3) < 0.15);
     assert.match(candidate.ingredients.find((ingredient) => ingredient.name === "mirin").displayNameRu, /3:1/u);
-    assert.match(candidate.paraphrasedInstructionDraft[0].text, /несколько капель рисового уксуса/iu);
+    assert.ok(
+      candidate.paraphrasedInstructionDraft.some((step) => /несколько капель рисового уксуса/iu.test(step.text)),
+      `${id} keeps the optional vinegar note after prep steps are normalized`,
+    );
   }
 });

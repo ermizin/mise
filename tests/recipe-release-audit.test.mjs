@@ -32,6 +32,8 @@ test("checked-in release audit is the exact current gate output", async () => {
   );
   assert.deepEqual(stored, report);
   assert.ok(report.counts.ready >= 200, "the public catalog gate requires at least 200 ready cards");
+  assert.equal(report.reasonCounts["nutrition:rice_dry_weight_conversion_applied"], 29);
+  assert.equal(report.reasonCounts["nutrition:cooked_rice_without_dry_equivalent"] ?? 0, 0);
 });
 
 test("owner resolutions remove only their exact reviewed reason", async () => {

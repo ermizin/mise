@@ -101,6 +101,55 @@ test("cheese and pasta stay in grams while liquid broth uses millilitres", () =>
   }
 });
 
+test("every runtime rice amount is dry, gram-based, and source-auditable", async () => {
+  const registry = JSON.parse(
+    await readFile(new URL("../data/mealprep-owner-decisions.json", import.meta.url), "utf8"),
+  );
+  const expectedConvertedIds = [...registry.riceDryWeightPolicy.expectedRecipeIds].sort();
+  const convertedRecipes = catalog.recipes.filter((recipe) =>
+    recipe.shoppingIngredients.some(
+      (ingredient) => ingredient.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+    ),
+  );
+  assert.deepEqual(convertedRecipes.map((recipe) => recipe.id).sort(), expectedConvertedIds);
+  for (const recipe of catalog.recipes) {
+    const rawRice = recipe.shoppingIngredients.filter(
+      (ingredient) => ingredient.canonicalIngredientId === "rice_raw",
+    );
+    assert.ok(rawRice.every((ingredient) => ingredient.nameRu === "Рис сухой"));
+    const allCanonicalIds = [
+      ...recipe.shoppingIngredients.map((ingredient) => ingredient.canonicalIngredientId),
+      ...recipe.recipeFamily.ingredients.map((ingredient) => ingredient.canonicalIngredientId),
+    ];
+    assert.equal(
+      allCanonicalIds.some((id) => /^rice(?:_|-)cooked(?:_|-|$)/iu.test(id)),
+      false,
+      `${recipe.id}: cooked rice cannot reach runtime`,
+    );
+  }
+  for (const recipe of convertedRecipes) {
+    const rice = recipe.shoppingIngredients.find(
+      (ingredient) => ingredient.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+    );
+    assert.ok(rice);
+    assert.equal(rice.canonicalIngredientId, "rice_raw");
+    assert.equal(rice.nameRu, "Рис сухой");
+    assert.equal(rice.massStatus, "normalized_source_state");
+    assert.equal(rice.sourceMeasurement.state, "cooked");
+    assert.equal(rice.measurementNormalization.state, "raw");
+    assert.equal(rice.measurementNormalization.unit, "g");
+    const familyRice = recipe.recipeFamily.ingredients.find(
+      (ingredient) => ingredient.sourceIngredientId === rice.sourceIngredientId,
+    );
+    assert.equal(familyRice?.canonicalIngredientId, "rice_raw");
+    assert.equal(familyRice?.unit, "g");
+    assert.ok(recipe.recipeFamily.editorialAudit.ingredientMapping.stateConversions?.some(
+      (conversion) => conversion.targetCanonicalIngredientId === "rice_raw" && conversion.targetUnit === "g",
+    ));
+    assert.ok(recipe.steps.some((step) => /указанное Mise количество сухого риса/iu.test(step)));
+  }
+});
+
 test("owner product decisions are visible in production recipe ingredients", () => {
   for (const id of ["tmpm-28247", "tmpm-22884"]) {
     const recipe = catalog.recipes.find((item) => item.id === id);

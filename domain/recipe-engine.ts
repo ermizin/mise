@@ -87,6 +87,19 @@ export type RecipeFamilyEditorialAudit = {
         skippedOptionalSourceIngredients?: string[];
         /** Non-metric source quantities that were converted under a stated basis. */
         inferredMeasurements?: { sourceName: string; amount: number; unit: RecipeUnit; basis: string }[];
+        /** Source-state conversions preserved separately from the dry Mise quantity. */
+        stateConversions?: {
+          sourceName: string;
+          sourceState: string;
+          sourceAmount: number;
+          sourceUnit: RecipeUnit;
+          targetState: string;
+          targetAmount: number;
+          targetUnit: RecipeUnit;
+          targetCanonicalIngredientId: string;
+          basis: string;
+          evidenceRecipeId: string;
+        }[];
       }
     | {
         source: "curated_source_audit";
@@ -508,7 +521,6 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   pumpkin: fdcReference("168448", "Pumpkin, raw"),
   "red-beans": fdcReference("175194", "Beans, kidney, red, mature seeds, cooked, boiled, without salt"),
   rice: fdcReference("168877", "Rice, white, long-grain, regular, raw, enriched"),
-  "rice-cooked": fdcReference("168878", "Rice, white, long-grain, regular, cooked, enriched"),
   "roasted-pepper": fdcReference("170110", "Peppers, sweet, red, cooked, boiled, drained, without salt", "Прокси для запечённого перца без масла."),
   salmon: fdcReference("175167", "Fish, salmon, Atlantic, farmed, raw"),
   salsa: fdcReference("174524", "Sauce, salsa, ready-to-serve", "Готовая сальса зависит от марки; сверить этикетку."),
@@ -738,7 +750,6 @@ const ingredientSeeds: IngredientSeed[] = [
   ["pumpkin", "Тыква", "vegetable", "raw", n(26, 1, 0.1, 6.5), 900],
   ["red-beans", "Красная фасоль", "legume", "cooked", n(127, 8.7, 0.5, 22.8)],
   ["rice", "Рис сухой", "grain", "raw", n(365, 7.13, 0.66, 79.95)],
-  ["rice-cooked", "Рис готовый", "grain", "cooked", n(130, 2.69, 0.28, 28.17)],
   ["roasted-pepper", "Запечённый перец", "vegetable", "cooked", n(28, 0.92, 0.2, 6.7), 150],
   ["salmon", "Лосось", "fish", "raw", n(208, 20.42, 13.42, 0), 150, ["fish"]],
   ["salsa", "Томатная сальса", "sauce", "processed", n(29, 1.52, 0.17, 6.64)],
@@ -950,7 +961,6 @@ const densityByLegacyId: Record<string, number> = {
   breadcrumbs: 0.45,
   "pine-nuts": 0.56,
   "red-wine": 0.99,
-  "rice-cooked": 0.78,
   "sesame-oil": 0.91,
   "sesame-seeds": 0.6,
   soy: 1.16,
@@ -1052,7 +1062,6 @@ const ingredientAliasTargets: Record<string, string> = {
   cilantro: "greens",
   "chopped parsley": "greens",
   "chopped parsley for garnish": "greens",
-  "cooked rice": "rice-cooked",
   "cottage cheese": "cottage",
   "cream cheese": "cream-cheese",
   "double cream": "heavy-cream",
@@ -1222,11 +1231,6 @@ const ingredientAliasTargets: Record<string, string> = {
   "cavolo nero shredded": "kale",
   "curly kale": "kale",
   "kale shredded": "kale",
-  "frozen rice": "rice-cooked",
-  "cooked brown rice": "rice-cooked",
-  "cooked brown rice to serve": "rice-cooked",
-  "cooked rice (we used brown basmati)": "rice-cooked",
-  "cooked rice to serve (optional)": "rice-cooked",
   "low-salt soy sauce": "soy",
   "malt vinegar": "vinegar",
   "english mustard": "mustard",
@@ -1557,7 +1561,6 @@ const ingredientAliasTargets: Record<string, string> = {
   "pack chestnut mushrooms sliced": "mushrooms",
   "pack portobello mushrooms sliced": "mushrooms",
   "pack prosciutto or salami": "charcuterie",
-  "pack wholegrain rice mix with seaweed (merchant gourmet)": "rice-cooked",
   peaches: "peaches",
   "peanut or almond butter plus extra to serve": "peanut-butter",
   "pecans or walnuts, chopped": "walnuts",
@@ -1734,8 +1737,6 @@ const sourceIngredientPatterns: Array<[RegExp, string]> = [
   [/^ground chicken thighs?$/, "chicken-mince"],
   [/^(?:ground pork 90\/10|90\/10 ground pork|pork mince)$/, "pork-mince"],
   [/^ground beef(?: \(?(?:93\/7)\)?)?$/, "beef-mince"],
-  [/^cooked basmati rice$/, "rice-cooked"],
-  [/^cooked (?:brown |brown basmati |basmati )?rice(?: to serve(?: \(optional\))?)?$/, "rice-cooked"],
   [/^(?:cooked spaghetti|leftover pasta shapes?)(?:,? .*)?$/, "pasta-cooked"],
   [/^(?:rigatoni|farfalle(?: \(pasta bows\))?|long pasta|rice sticks)$/, "pasta"],
   [/^flour tortillas?$/, "tortilla"],
@@ -2735,18 +2736,64 @@ export function deriveRecipeFamilyFromAuditedCandidate(
   const ingredients: RecipeFamilyIngredient[] = [];
   const skippedOptionalSourceIngredients: string[] = [];
   const inferredMeasurements: { sourceName: string; amount: number; unit: RecipeUnit; basis: string }[] = [];
+  const stateConversions: NonNullable<Extract<RecipeFamilyEditorialAudit["ingredientMapping"], { source: "raw_candidate" }>["stateConversions"]> = [];
   for (const [index, mapping] of draft.ingredientMappings.entries()) {
     if (mapping.status === "ignored_microcomponent" || mapping.status === "ignored_noncaloric") continue;
     if (mapping.status !== "mapped" || !mapping.canonicalIngredientId) {
       return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Исходный компонент не имеет прямого измеримого canonical mapping.");
     }
-    const sourceIngredient = draft.sourceIngredients[index] as { amountMetric?: unknown; unitMetric?: unknown; original?: unknown };
+    const sourceIngredient = draft.sourceIngredients[index] as {
+      amountMetric?: unknown;
+      unitMetric?: unknown;
+      original?: unknown;
+      miseSourceStateConversion?: {
+        sourceState?: unknown;
+        sourceAmount?: unknown;
+        sourceUnit?: unknown;
+        targetState?: unknown;
+        targetAmount?: unknown;
+        targetUnit?: unknown;
+        targetCanonicalIngredientId?: unknown;
+        basis?: unknown;
+        evidenceRecipeId?: unknown;
+      };
+    };
     if (rawOptionalSourceIngredient(sourceIngredient) && !mapping.sourceAmount) {
       skippedOptionalSourceIngredients.push(mapping.sourceName);
       continue;
     }
     const canonical = canonicalIngredients[mapping.canonicalIngredientId];
     if (!canonical) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Canonical ingredient отсутствует в Recipe Family.");
+    const stateConversion = sourceIngredient.miseSourceStateConversion;
+    if (stateConversion) {
+      const valid =
+        stateConversion.sourceState === "cooked" &&
+        Number.isFinite(Number(stateConversion.sourceAmount)) &&
+        Number(stateConversion.sourceAmount) > 0 &&
+        stateConversion.sourceUnit === "g" &&
+        stateConversion.targetState === "raw" &&
+        Number.isFinite(Number(stateConversion.targetAmount)) &&
+        Number(stateConversion.targetAmount) > 0 &&
+        stateConversion.targetUnit === "g" &&
+        stateConversion.targetCanonicalIngredientId === canonical.id &&
+        typeof stateConversion.basis === "string" &&
+        Boolean(stateConversion.basis) &&
+        typeof stateConversion.evidenceRecipeId === "string" &&
+        Boolean(stateConversion.evidenceRecipeId);
+      if (!valid) return noteDerivationIssue(candidate.id, "raw", mapping.sourceName, "Source-state conversion не имеет полного доказательства.");
+      stateConversions.push({
+        sourceName: mapping.sourceName,
+        sourceState: stateConversion.sourceState,
+        sourceAmount: Number(stateConversion.sourceAmount),
+        sourceUnit: stateConversion.sourceUnit,
+        targetState: stateConversion.targetState,
+        targetAmount: Number(stateConversion.targetAmount),
+        targetUnit: stateConversion.targetUnit,
+        targetCanonicalIngredientId: stateConversion.targetCanonicalIngredientId,
+        basis: stateConversion.basis,
+        evidenceRecipeId: stateConversion.evidenceRecipeId,
+      });
+    }
     const original = String(sourceIngredient?.original ?? "");
     const originalMetric = original.match(/(\d+(?:\.\d+)?)\s*(g|ml)\b/i);
     const inferredMeasurement = rawFamilyMeasurement(sourceIngredient, canonical);
@@ -2834,6 +2881,7 @@ export function deriveRecipeFamilyFromAuditedCandidate(
         sourceSlug: candidate.id,
         ...(skippedOptionalSourceIngredients.length ? { skippedOptionalSourceIngredients } : {}),
         ...(inferredMeasurements.length ? { inferredMeasurements } : {}),
+        ...(stateConversions.length ? { stateConversions } : {}),
       },
       nutrition: { scope: "per_serving", sourceServings: servings, miseServingToSourceServingRatio: 1, quantitativeCoverage: "verified", comparableToMise: true, reviewedAt: context.accessedAt, note: "Все измеримые mapped-компоненты исходной карточки входят в вычисляемую Recipe Family; source delta хранится как audit fact." },
     },

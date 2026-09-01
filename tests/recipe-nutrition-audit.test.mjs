@@ -33,6 +33,61 @@ test("nutrition audit refuses incompatible units instead of inventing a conversi
   assert.equal(convertIngredientToGrams({ amount: 1, unit: "piece" }, canonical()).code, NUTRITION_AUDIT_REASON.PIECE_WEIGHT_MISSING);
 });
 
+test("cooked rice is blocked until an auditable dry-weight equivalent is applied", () => {
+  const withoutConversion = auditNutritionEntry({
+    id: "cooked-rice-without-conversion",
+    title: "Cooked rice",
+    sourceUrl: "https://example.test",
+    servings: 4,
+    macros: { kcal: 195, protein: 4, fat: 0.4, carbs: 42.3 },
+    ingredients: [{
+      name: "cooked rice",
+      amountMetric: 600,
+      unitMetric: "g",
+      original: "600 g cooked rice",
+    }],
+  });
+  assert.equal(withoutConversion.verdict, "blocked");
+  assert.equal(withoutConversion.calculatedNutrition, null);
+  assert.ok(withoutConversion.reasons.some(
+    (item) => item.code === NUTRITION_AUDIT_REASON.COOKED_RICE_WITHOUT_DRY_EQUIVALENT,
+  ));
+
+  const withConversion = auditNutritionEntry({
+    id: "cooked-rice-with-conversion",
+    title: "Dry-equivalent rice",
+    sourceUrl: "https://example.test",
+    servings: 4,
+    macros: { kcal: 219, protein: 4.3, fat: 0.4, carbs: 48 },
+    ingredients: [{
+      id: "rice_raw",
+      name: "dry rice",
+      displayNameRu: "Рис сухой",
+      amountMetric: 240,
+      unitMetric: "g",
+      original: "600 g cooked rice",
+      miseSourceStateConversion: {
+        kind: "cooked_rice_to_dry_weight_v1",
+        sourceState: "cooked",
+        sourceAmount: 600,
+        sourceUnit: "g",
+        targetState: "raw",
+        targetAmount: 240,
+        targetUnit: "g",
+        targetCanonicalIngredientId: "rice_raw",
+        factor: 0.4,
+        basis: "same_publisher_explicit_cooked_to_dry_yield",
+        evidenceRecipeId: "source-evidence",
+      },
+    }],
+  });
+  assert.equal(withConversion.verdict, "ready");
+  assert.deepEqual(withConversion.calculatedNutrition, { kcal: 219, protein: 4.3, fat: 0.4, carbs: 48 });
+  assert.ok(withConversion.reasons.some(
+    (item) => item.code === NUTRITION_AUDIT_REASON.RICE_DRY_WEIGHT_CONVERSION_APPLIED,
+  ));
+});
+
 test("standard household measures use fixed conversions without an uncertainty warning", () => {
   assert.deepEqual(sourceAmount({ original: "2 tbsp olive oil" }), { amount: 30, unit: "ml", status: "standard_household" });
   assert.deepEqual(sourceAmount({ original: "1 tsp olive oil" }), { amount: 5, unit: "ml", status: "standard_household" });
@@ -144,6 +199,7 @@ test("nutrition audit emits one machine verdict for every scraped recipe", async
   assert.equal(new Set(report.cards.map((card) => card.id)).size, report.total);
   assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, report.total);
   assert.equal(report.reasonCounts.ml_density_missing ?? 0, 0, "all current household-volume ingredients use an explicit standard density");
+  assert.equal(report.reasonCounts.rice_dry_weight_conversion_applied, 29);
   for (const card of report.cards.filter((item) => item.verdict === "ready")) {
     assert.equal(card.calculationComplete, true);
     assert.ok(card.comparison);

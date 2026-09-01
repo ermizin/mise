@@ -122,6 +122,10 @@ function optionalServingSourceIngredient(sourceIngredient) {
   );
 }
 
+function nonRawRiceCanonicalId(value) {
+  return /^rice(?:_|-)cooked(?:_|-|$)/iu.test(String(value ?? ""));
+}
+
 function hasPositive(value) {
   return Number.isFinite(Number(value)) && Number(value) > 0;
 }
@@ -319,6 +323,12 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
     accessedAt: dataset.importedAt,
   });
   const failures = [];
+  const nonRawRiceMapping = normalized.ingredientMappings.find((mapping) =>
+    nonRawRiceCanonicalId(mapping.canonicalIngredientId),
+  );
+  if (nonRawRiceMapping) {
+    failures.push(["rice_non_raw_runtime_ingredient", `${nonRawRiceMapping.sourceName} is not normalized to dry rice.`]);
+  }
   const sourceImage = recipeImages.get(candidate.id);
   if (!sourceImage) {
     failures.push(["missing_local_source_image", "A verified local source image is required for runtime."]);
@@ -339,6 +349,9 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
     accessedAt: dataset.importedAt,
   });
   if (!recipeFamily) failures.push(["recipe_family_derivation_failed", "No auditable RecipeFamily can be derived from the candidate."]);
+  if (recipeFamily?.ingredients.some((ingredient) => nonRawRiceCanonicalId(ingredient.canonicalIngredientId))) {
+    failures.push(["rice_non_raw_runtime_ingredient", "RecipeFamily contains non-raw rice."]);
+  }
   if (!allowedSlots.has(candidate.slot)) failures.push(["unsupported_slot", `Unsupported slot: ${candidate.slot}`]);
   if (!candidate.titleRu?.trim()) failures.push(["missing_russian_title", "No Russian editorial title."]);
   if (!hasPositive(candidate.time?.totalMinutes)) failures.push(["missing_time", "No positive total time."]);
@@ -408,19 +421,37 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
         sourceIngredientIndex: index + 1,
         sourceIngredientId,
         canonicalIngredientId: canonical.id,
-        nameRu: ["beef_mince_raw", "beef_mince_90_raw", "beef_mince_85_raw"].includes(canonical.id)
+        nameRu: ["beef_mince_raw", "beef_mince_90_raw", "beef_mince_85_raw", "rice_raw"].includes(canonical.id)
           ? canonical.canonicalName
           : sourceIngredient.displayNameRu?.trim() || canonical.canonicalName,
         group: groupFor(canonical),
         quantityGrams: mass.grams,
-        sourceMeasurement: { amount: mass.sourceAmount, unit: mass.sourceUnit },
+        sourceMeasurement: sourceIngredient.miseSourceStateConversion
+          ? {
+              amount: sourceIngredient.miseSourceStateConversion.sourceAmount,
+              unit: sourceIngredient.miseSourceStateConversion.sourceUnit,
+              state: sourceIngredient.miseSourceStateConversion.sourceState,
+            }
+          : { amount: mass.sourceAmount, unit: mass.sourceUnit },
+        measurementNormalization: sourceIngredient.miseSourceStateConversion
+          ? {
+              kind: sourceIngredient.miseSourceStateConversion.kind,
+              amount: mass.grams,
+              unit: "g",
+              state: "raw",
+              basis: sourceIngredient.miseSourceStateConversion.basis,
+              evidenceRecipeId: sourceIngredient.miseSourceStateConversion.evidenceRecipeId,
+            }
+          : undefined,
         averagePieceWeightGrams: canonical.unit.sensibleUnit === "piece" && canonical.unit.gramsPerUnit > 1
           ? canonical.unit.gramsPerUnit
           : undefined,
         pieceEstimate,
         allergens: canonical.allergens,
         checkLabel: canonical.reference.dataType === "label_required",
-        massStatus: mass.estimated ? "estimated_from_standard_conversion" : "source_metric",
+        massStatus: sourceIngredient.miseSourceStateConversion
+          ? "normalized_source_state"
+          : mass.estimated ? "estimated_from_standard_conversion" : "source_metric",
       });
       estimatedCookedBatchMass += retainedMass(mass.grams, canonical);
       return;
@@ -447,6 +478,9 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
   });
 
   if (!shoppingIngredients.length) failures.push(["no_shopping_ingredients", "No measured canonical ingredients."]);
+  if (shoppingIngredients.some((ingredient) => nonRawRiceCanonicalId(ingredient.canonicalIngredientId))) {
+    failures.push(["rice_non_raw_runtime_ingredient", "Shopping projection contains non-raw rice."]);
+  }
   if (recipeFamily) {
     const familyIngredientIds = new Set(recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
     const unalignedShopping = shoppingIngredients.find((ingredient) => !familyIngredientIds.has(ingredient.sourceIngredientId));
