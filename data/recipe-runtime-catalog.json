@@ -192846,15 +192846,13 @@
             {
               "sourceIngredientIndex": 1,
               "sourceIngredientId": "source-ingredient-1",
-              "nameRu": "Мясо куриного бедра",
-              "quantityGrams": 900,
+              "nameRu": "Куриный фарш",
+              "quantityGrams": 750,
               "sourceMeasurement": {
-                "amount": 900,
+                "amount": 750,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 100,
-              "pieceEstimate": 9
+              "massStatus": "source_metric"
             }
           ]
         },
