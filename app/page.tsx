@@ -11173,9 +11173,15 @@ function PlanBuilder({
           )}
         </button>
         <div>
-          <h1>{mode === "settings" ? "Настройки плана" : "Мастер плана"}</h1>
+          <h1>
+            {mode === "settings"
+              ? "Настройки плана"
+              : step === 3
+                ? "Кто ест"
+                : "Мастер плана"}
+          </h1>
           <p className="kicker">
-            {steps[step]} · {step + 1} из {steps.length}
+            {step === 3 ? "Кто ест" : steps[step]} · {step + 1} из {steps.length}
           </p>
         </div>
         <span className="builder-header-spacer" aria-hidden />
@@ -11396,15 +11402,14 @@ function PlanBuilder({
                 onMealSlotToggle={togglePersonMealSlot}
                 onMacro={updateMacro}
                 onPreset={applyMacroPreset}
-                onAdd={() => {
-                  if (people.length < 4)
-                    setPeople((current) => [
-                      ...current,
-                      {
-                        ...newPerson(current.length),
-                        includedSlots: [...mealSlots],
-                      },
-                    ]);
+                onAdd={(onAdded) => {
+                  if (people.length >= 4) return;
+                  const added = {
+                    ...newPerson(people.length),
+                    includedSlots: [...mealSlots],
+                  };
+                  onAdded(added.id);
+                  setPeople((current) => [...current, added]);
                 }}
                 onRemove={(id) => {
                   if (people.length > 1)
@@ -11539,7 +11544,11 @@ function PlanBuilder({
         ) : step < 6 ? (
           <button
             className="builder-chat-send"
-            aria-label="Отправить ответ"
+            aria-label={
+              step === 3
+                ? `Отправить ответ: ${withPlural(people.length, FORMS.person)}`
+                : "Отправить ответ"
+            }
             aria-describedby={
               showManualMenuChoice ? undefined : "builder-composer-status"
             }
@@ -11552,7 +11561,12 @@ function PlanBuilder({
                 : "Отправить меню"
               : step === 5
                 ? "Отправить меню"
-                : "Отправить ответ"}{" "}
+                : "Отправить ответ"}
+            {step === 3 && (
+              <span className="builder-chat-send-count">
+                {withPlural(people.length, FORMS.person)}
+              </span>
+            )}{" "}
             <Icon name="chevron" size={16} />
           </button>
         ) : (
@@ -11971,10 +11985,11 @@ function PeopleStep({
   onMealSlotToggle: (id: string, slot: MealSlot) => void;
   onMacro: (id: string, key: MacroKey, value: number) => void;
   onPreset: (id: string, preset: MacroPresetOption) => void;
-  onAdd: () => void;
+  onAdd: (onAdded: (id: string) => void) => void;
   onRemove: (id: string) => void;
 }) {
   const [activeId, setActiveId] = useState(people[0]?.id ?? "");
+  const [addedTileId, setAddedTileId] = useState<string | null>(null);
   const [normExplanation, setNormExplanation] = useState<string | null>(null);
   const [updatedVisible, setUpdatedVisible] = useState(false);
   const [liveAnnouncement, setLiveAnnouncement] = useState("");
@@ -11982,6 +11997,7 @@ function PeopleStep({
   const changeWindowTimerRef = useRef<number | null>(null);
   const updatedTimerRef = useRef<number | null>(null);
   const announcementTimerRef = useRef<number | null>(null);
+  const addedTileTimerRef = useRef<number | null>(null);
   const person = people.find((item) => item.id === activeId) ?? people[0];
 
   useEffect(
@@ -11992,6 +12008,8 @@ function PeopleStep({
         window.clearTimeout(announcementTimerRef.current);
       if (changeWindowTimerRef.current !== null)
         window.clearTimeout(changeWindowTimerRef.current);
+      if (addedTileTimerRef.current !== null)
+        window.clearTimeout(addedTileTimerRef.current);
     },
     [],
   );
@@ -12024,6 +12042,19 @@ function PeopleStep({
       window.clearTimeout(updatedTimerRef.current);
     if (announcementTimerRef.current !== null)
       window.clearTimeout(announcementTimerRef.current);
+  }
+
+  function addPerson() {
+    onAdd((id) => {
+      selectPerson(id);
+      setAddedTileId(id);
+      if (addedTileTimerRef.current !== null)
+        window.clearTimeout(addedTileTimerRef.current);
+      addedTileTimerRef.current = window.setTimeout(
+        () => setAddedTileId(null),
+        380,
+      );
+    });
   }
 
   function announceAutoCalculation(nextDaily: Macros, explanation: string) {
@@ -12136,29 +12167,63 @@ function PeopleStep({
 
   return (
     <>
+      <section className="eater-tiles" aria-label="Едоки">
+        <div className="eater-tiles-head">
+          <h2>Едоки · {people.length}</h2>
+          <p>
+            {people.length === 1
+              ? "готовим на одного"
+              : `одна готовка, ${people.length} раскладки`}
+          </p>
+        </div>
+        <div
+          className={`eater-tile-layout${people.length >= 3 ? " is-scrollable" : ""}`}
+          style={{ "--eater-tabs": Math.min(people.length, 2) } as CSSProperties}
+        >
+          <div className="eater-tile-tablist" role="tablist" aria-label="Едоки">
+            {people.map((item, index) => {
+              const active = item.id === person.id;
+              return (
+                <button
+                  key={item.id}
+                  className={`eater-tile glass-card${active ? " is-active" : ""}${addedTileId === item.id ? " is-added" : ""}`}
+                  role="tab"
+                  aria-selected={active}
+                  aria-label={`${item.name || "Человек"}, ${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
+                  onClick={() => selectPerson(item.id)}
+                >
+                  <span className={`eater-tile-avatar tone-${index % 4}`} aria-hidden="true">
+                    {(item.name || "Человек").trim().slice(0, 1).toUpperCase()}
+                  </span>
+                  <span className="eater-tile-name">{item.name || "Человек"}</span>
+                  <span className="eater-tile-meta">
+                    {active
+                      ? "Настраиваю"
+                      : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          {people.length < 4 && (
+            <button
+              type="button"
+              className="eater-tile eater-tile-add glass-card"
+              aria-label="Добавить человека"
+              onClick={addPerson}
+            >
+              <span className="eater-tile-add-icon" aria-hidden="true">+</span>
+              <span className="eater-tile-name">Человек</span>
+              <span className="eater-tile-meta">своя норма</span>
+            </button>
+          )}
+        </div>
+      </section>
+
       <p className="people-step-lead">
         Норма задаёт размер порции. «Не люблю» влияет на
         рекомендации, «Аллергия / мне нельзя» полностью запрещает блюдо.
       </p>
-
-      <div className="chip-row person-tabs" role="tablist" aria-label="Люди">
-        {people.map((item) => (
-          <button
-            key={item.id}
-            className="chip"
-            role="tab"
-            aria-selected={item.id === person.id}
-            onClick={() => selectPerson(item.id)}
-          >
-            {item.name || "Человек"}
-          </button>
-        ))}
-        {people.length < 4 && (
-          <button className="chip is-add" onClick={onAdd}>
-            <Icon name="plus" size={13} /> человек
-          </button>
-        )}
-      </div>
 
       <section className="glass-card person-card">
         <label className="field">

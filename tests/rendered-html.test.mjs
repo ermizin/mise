@@ -254,8 +254,13 @@ test("includes the complete plan-builder and private persistence model", async (
 
   // Шаг «Люди и цели» (9d): один человек за раз, поля читаются полями,
   // расчёт Mise не перетирает введённую вручную норму.
-  assert.match(page, /className="chip-row person-tabs" role="tablist"/);
-  assert.match(page, /role="tab"\s+aria-selected=\{item\.id === person\.id\}/);
+  assert.match(page, /className="eater-tile-tablist" role="tablist" aria-label="Едоки"/);
+  assert.match(page, /className=\{`eater-tile glass-card\$\{active \? " is-active"/);
+  assert.match(page, /aria-label="Добавить человека"/);
+  assert.match(page, /Настраиваю/);
+  assert.match(page, /builder-chat-send-count/);
+  assert.match(css, /\.eater-tile-layout\.is-scrollable \{/);
+  assert.match(css, /\.eater-tile-add \{[\s\S]*?border-style: dashed/s);
   assert.match(page, /className="field-box"/);
   assert.match(css, /\.field-box \{/);
   assert.match(page, /const manual = person\.nutritionTargetMode !== "auto"/);
