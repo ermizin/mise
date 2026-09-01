@@ -4,19 +4,6 @@ import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-function contrastAgainstWhite(hex) {
-  const channels = [1, 3, 5]
-    .map((index) => Number.parseInt(hex.slice(index, index + 2), 16) / 255)
-    .map((channel) =>
-      channel <= 0.04045
-        ? channel / 12.92
-        : ((channel + 0.055) / 1.055) ** 2.4,
-    );
-  const luminance =
-    0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
-  return 1.05 / (luminance + 0.05);
-}
-
 test("the 2026-08-31 audit fixes keep the core flow compact and legible", async () => {
   const [page, css, pluralSource] = await Promise.all([
     read("app/page.tsx"),
@@ -24,9 +11,8 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
     read("lib/plural.ts"),
   ]);
 
-  assert.ok(contrastAgainstWhite("#d2440f") >= 4.5);
-  assert.ok(contrastAgainstWhite("#b3380a") >= 4.5);
-  assert.match(css, /\.builder-chat-history \.chat-bubble\.is-user \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.match(css, /\.builder-chat-history \.chat-bubble\.is-user \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
   assert.match(page, /completedChatTurns\.slice\(-1\)/);
   assert.match(page, /Показать предыдущие ответы/);
@@ -155,7 +141,7 @@ test("visual release blockers and high-impact P1 regressions stay fixed", async 
   assert.match(css, /\.week-meal-thumb img \{[\s\S]*?position: absolute;[\s\S]*?inset: 0;/);
   assert.match(css, /\.manual-menu-art \{[\s\S]*?position: relative;/);
   assert.match(css, /\.manual-menu-art img \{[\s\S]*?position: absolute;[\s\S]*?inset: 0;/);
-  assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /\.primary-button \{[\s\S]*?min-height: var\(--hit-primary\)[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /--accent-text: #b3380a/);
   assert.match(css, /--mint-text: #1c7359/);

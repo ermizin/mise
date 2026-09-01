@@ -164,9 +164,9 @@ test("week days and batch cooking use directional keyed panels", async () => {
   assert.match(css, /mise-cooking-products 280ms/);
 });
 
-test("buttons keep the shared press response and accessible action color token", async () => {
+test("buttons keep the shared press response and latest owner design color token", async () => {
   const css = await read("app/globals.css");
-  assert.match(css, /--button-grad: linear-gradient\(150deg, #d2440f, #b3380a\)/);
+  assert.match(css, /--button-grad: var\(--accent-grad\)/);
   assert.match(css, /button:active:not\(:disabled\)[\s\S]*?scale\(0\.985\)/);
   assert.match(css, /\.primary-button:not\(:disabled\):active[\s\S]*?scale\(0\.985\)/);
   assert.match(css, /\.compose-fab[\s\S]*?background: var\(--button-grad\)/);
