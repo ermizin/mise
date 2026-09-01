@@ -5,6 +5,7 @@
 - If a requested change expands or conflicts with that contract, point out the conflict before implementing it instead of silently widening the MVP.
 - When a product decision changes, update `PRODUCT.md` in the same change so the code and product contract do not drift.
 - Before recipe catalog, Recipe Engine, or recipe photo work, read `RECIPE_HANDOFF.md`: it records the frozen decisions, the confirmed engine defects with file references, and which items require owner approval before implementation.
+
 ## Validation and publishing
 
 - The only production publication target for Mise is the VPS serving `https://mise.ermizinm.ru`. Do not publish or deploy a Mise release through Sites unless the user explicitly asks for a separate Sites deployment; a saved or deployed Sites version is not the public Mise release.

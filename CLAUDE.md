@@ -1,13 +1,5 @@
-# Mise — instructions for Claude Code
+# Mise — инструкции для Claude Code
 
-Before changing Mise, read `AGENTS.md` and `PRODUCT.md` completely. Treat
-`PRODUCT.md` as the product contract. Before recipe catalog, Recipe Engine, or
-recipe-photo work, also read `RECIPE_HANDOFF.md`.
+Перед изменениями полностью прочитай `AGENTS.md` и `PRODUCT.md`; для каталога, Recipe Engine и фото — ещё `RECIPE_HANDOFF.md`. `PRODUCT.md` имеет приоритет над макетами, аудитами и backlog.
 
-When the user explicitly asks to publish or deploy to production, use the
-project skill `/deploy-prod`. Do not interpret requests to explain, configure,
-or teach deployment as authorization to publish.
-
-Never claim a production release from a successful local build or Git push.
-A release is complete only after Sites reports a successful production
-deployment and `https://mise.ermizinm.ru` passes the production smoke checks.
+Публикация требует явного запроса владельца в текущем сообщении. Используй `/deploy-prod`; единственный production-таргет — VPS на `https://mise.ermizinm.ru`, не Sites. Локальная сборка, Git push, архив или запущенный service сами по себе не доказывают релиз: нужны exact-HEAD validation, активный `/opt/mise/current`, health origin и публичный smoke-check.
