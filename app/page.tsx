@@ -10284,6 +10284,8 @@ function PlanBuilder({
   >(initialPlan?.selectionAssignments ?? {});
   const [menuMode, setMenuMode] = useState<MenuBuildMode>("auto");
   const [choiceIndex, setChoiceIndex] = useState(initialChoiceIndex);
+  const [manualCuisineFilter, setManualCuisineFilter] =
+    useState<Cuisine | null>(null);
   const [stepMotionDirection, setStepMotionDirection] = useState<-1 | 1>(1);
   const [manualMotionDirection, setManualMotionDirection] = useState<-1 | 1>(1);
   /* Ключи позиций, где блюдо выбрано вручную. Автосборка их не трогает —
@@ -10389,6 +10391,7 @@ function PlanBuilder({
     setMenuMode("auto");
     setPinned(initialPlan?.pinnedSelectionKeys ?? []);
     setChoiceIndex(initialChoiceIndex);
+    setManualCuisineFilter(null);
   }
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -10837,6 +10840,21 @@ function PlanBuilder({
   }
   function goToManualChoice(index: number) {
     const bounded = Math.max(0, Math.min(positions.length - 1, index));
+    const nextPosition = positions[bounded];
+    if (nextPosition) {
+      const nextCuisines = availableCuisines(
+        candidateRecipes(
+          nextPosition.slot,
+          menuStyle,
+          people,
+          nextPosition.batch.days,
+          { limit: "all" },
+        ),
+      );
+      setManualCuisineFilter((current) =>
+        carryCuisineFilter(current, nextCuisines),
+      );
+    }
     setManualMotionDirection(bounded < choiceIndex ? -1 : 1);
     setChoiceIndex(bounded);
   }
@@ -10985,6 +11003,7 @@ function PlanBuilder({
     setMenuMode("manual");
     setManualMotionDirection(1);
     setChoiceIndex(0);
+    setManualCuisineFilter(null);
   }
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
@@ -11631,6 +11650,7 @@ function PlanBuilder({
                 motionDirection={manualMotionDirection}
                 people={people}
                 style={menuStyle}
+                cuisineFilter={manualCuisineFilter}
                 selections={validSelections}
                 selectionAssignments={validSelectionAssignments}
                 onSelect={replaceSelection}
@@ -11638,6 +11658,7 @@ function PlanBuilder({
                 onSplit={assembleCurrentPosition}
                 onAssist={assembleRemainingAndReview}
                 onGo={goToManualChoice}
+                onCuisineChange={setManualCuisineFilter}
               />
             )}
             {step === 6 && (
@@ -13028,6 +13049,7 @@ function ManualMenuStep({
   motionDirection,
   people,
   style,
+  cuisineFilter,
   selections,
   selectionAssignments,
   onSelect,
@@ -13035,12 +13057,14 @@ function ManualMenuStep({
   onSplit,
   onAssist,
   onGo,
+  onCuisineChange,
 }: {
   positions: { batch: Batch; slot: MealSlot }[];
   choiceIndex: number;
   motionDirection: -1 | 1;
   people: Person[];
   style: MenuStyle;
+  cuisineFilter: Cuisine | null;
   selections: Record<string, string>;
   selectionAssignments: Record<string, RecipeAssignment[]>;
   onSelect: (key: string, personIds: string[], recipeId: string) => void;
@@ -13048,11 +13072,11 @@ function ManualMenuStep({
   onSplit: () => boolean;
   onAssist: () => void;
   onGo: (index: number) => void;
+  onCuisineChange: (cuisine: Cuisine | null) => void;
 }) {
   const [showAll, setShowAll] = useState(false);
   const [includeDisliked, setIncludeDisliked] = useState(false);
   const [splitError, setSplitError] = useState(false);
-  const [cuisineFilter, setCuisineFilter] = useState<Cuisine | null>(null);
   const [selectionEffect, setSelectionEffect] = useState<{
     entering: string;
     leaving: string | null;
@@ -13176,7 +13200,7 @@ function ManualMenuStep({
           <CuisineMenu
             value={activeCuisine}
             options={slotCuisines}
-            onChange={setCuisineFilter}
+            onChange={onCuisineChange}
           />
         </div>
       </div>
@@ -13260,7 +13284,7 @@ function ManualMenuStep({
           </Note>
           <button
             className="manual-menu-more glass-3"
-            onClick={() => setCuisineFilter(null)}
+            onClick={() => onCuisineChange(null)}
           >
             Показать все кухни — {slotOptions.length}
           </button>

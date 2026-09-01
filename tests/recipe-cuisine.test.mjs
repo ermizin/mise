@@ -291,6 +291,14 @@ test("moving between wizard slots carries a cuisine that still exists and drops 
   assert.equal(carryCuisineFilter("georgian", ["russian", "italian"]), null);
   assert.equal(carryCuisineFilter("italian", []), null);
 
+  // A → B → C: once an unavailable cuisine is dropped in B, it must not
+  // silently revive merely because C happens to offer it again.
+  let remembered = "asian";
+  remembered = carryCuisineFilter(remembered, ["russian", "italian"]);
+  assert.equal(remembered, null);
+  remembered = carryCuisineFilter(remembered, ["asian", "american"]);
+  assert.equal(remembered, null);
+
   // На настоящих данных: кухня, которой в следующем слоте нет, обязана уйти,
   // иначе пользователь увидит пустой список без видимой причины.
   const eater = person(2100, ["breakfast", "lunch", "dinner"]);
@@ -326,7 +334,18 @@ test("the catalog screen and the manual step are wired to the shared filter", as
 
   // Ручной выбор.
   assert.match(page, /function CuisineMenu\(/);
-  assert.match(page, /const \[cuisineFilter, setCuisineFilter\] = useState<Cuisine \| null>\(null\);/);
+  assert.match(
+    page,
+    /const \[manualCuisineFilter, setManualCuisineFilter\] =\s*useState<Cuisine \| null>\(null\);/,
+    "the cuisine selection lives above the keyed slot panel",
+  );
+  assert.match(
+    page,
+    /setManualCuisineFilter\(\(current\) =>\s*carryCuisineFilter\(current, nextCuisines\),\s*\);/,
+    "slot navigation persists or clears the actual stored filter",
+  );
+  assert.match(page, /cuisineFilter=\{manualCuisineFilter\}/);
+  assert.match(page, /onCuisineChange=\{setManualCuisineFilter\}/);
   assert.match(
     page,
     /const activeCuisine = carryCuisineFilter\(cuisineFilter, slotCuisines\);/,
