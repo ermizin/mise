@@ -254,9 +254,9 @@ test("the interface stays legible", async () => {
   // Decorative accents stay light while text-bearing actions use an AA ramp.
   assert.match(css, /--accent-grad-a: #ff8143/);
   assert.match(css, /--accent-grad-b: #ee4c13/);
-  assert.match(css, /--button-grad: linear-gradient\(150deg, #d2440f, #b3380a\)/);
-  assert.match(css, /--accent-grad-aa: var\(--button-grad\)/);
-  assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--accent-grad-aa\)/);
+  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.doesNotMatch(css, /--accent-grad-aa/, "the approved light ramp is not mislabeled as WCAG AA");
+  assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);
   assert.doesNotMatch(css, /@media \(prefers-color-scheme: dark\)(?![^\n]*min-width)/, "the dark theme is disabled");
   assert.match(css, /color-scheme: light;/, "native controls stay light");

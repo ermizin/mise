@@ -58,9 +58,10 @@
   --accent-grad: linear-gradient(150deg, #ff8143, #ee4c13);
   --accent-text: #b3380a; /* AA: оранжевый текст на фоне приложения */
   --accent-text-strong: #b33a0b;
-  /* Действия используют более тёмную рампу: белый текст держит WCAG AA. */
-  --button-grad: linear-gradient(150deg, #d2440f, #b3380a);
-  --accent-grad-aa: var(--button-grad);
+  /* Единая светлая рампа действий — та же, что в основном дизайн-коде. */
+  --button-grad: var(--accent-grad);
+  --accent-select-bg: rgba(255, 242, 235, 0.72);
+  --accent-select-border: rgba(242, 87, 26, 0.32);
 
   /* ---------- Смысловые цвета ----------
      Мята = хранение и заморозка. Оранжевый = действие и предупреждение.
@@ -452,7 +453,7 @@ body {
 
 .btn-primary {
   min-height: var(--hit-primary);
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   color: #fff;
   box-shadow: var(--shadow-accent), inset 0 1px 0 rgba(255, 255, 255, 0.42);
 }
@@ -534,7 +535,7 @@ body {
 }
 .chip[aria-checked="true"],
 .chip[aria-selected="true"] {
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   border-color: transparent;
   color: #fff;
   font-weight: var(--weight-semibold);
@@ -570,7 +571,7 @@ body {
 }
 [aria-checked="true"] > .check-box,
 .check-row[aria-checked="true"] .check-box {
-  background: linear-gradient(150deg, #ff9558, #ee4c13);
+  background: var(--button-grad);
   border-color: transparent;
   color: #fff;
   box-shadow: 0 4px 10px rgba(226, 80, 26, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -594,7 +595,7 @@ body {
   transition: background 0.18s ease;
 }
 .toggle[aria-checked="true"] {
-  background: linear-gradient(150deg, #ff9558, #ee4c13);
+  background: var(--button-grad);
 }
 .toggle::after {
   content: "";
@@ -1527,7 +1528,7 @@ p {
   border-bottom: 0;
 }
 .toggle-row[aria-checked="true"] .toggle {
-  background: linear-gradient(150deg, #ff9558, #ee4c13);
+  background: var(--button-grad);
 }
 .toggle-row[aria-checked="true"] .toggle::after {
   transform: translateX(19px);
@@ -2032,7 +2033,7 @@ p {
 .date-strip button.selected {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.88);
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   box-shadow: 0 12px 24px rgba(224, 83, 38, 0.24);
 }
 .macro-top {
@@ -2300,7 +2301,7 @@ p {
 }
 /* Акцент — только когда есть что сбросить. */
 .catalog-filter-button.is-active {
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   border-color: transparent;
   color: #fff;
   box-shadow: var(--shadow-accent-s), inset 0 1px 0 rgba(255, 255, 255, 0.42);
@@ -3345,7 +3346,7 @@ p {
   border-color: rgba(255, 255, 255, 0.38);
   border-radius: var(--r-row) var(--r-row) var(--r-chip-sq) var(--r-row);
   color: #fff;
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   font-weight: var(--weight-semibold);
   animation: mise-builder-answer 380ms var(--motion-spring) both;
 }
@@ -3767,7 +3768,7 @@ p {
 }
 .quick-periods button.selected {
   color: #fff;
-  background: var(--mint-deep);
+  background: var(--button-grad);
 }
 
 .choice-grid {
@@ -3795,15 +3796,15 @@ p {
   margin-top: 4px;
   color: var(--muted);
 }
-.choice-card.selected {
-  border-color: rgba(46, 158, 126, 0.5);
-  background: rgba(223, 250, 240, 0.7);
+.builder-shell .builder-content .choice-card.selected {
+  border-color: var(--accent-select-border);
+  background: var(--accent-select-bg);
   box-shadow:
-    0 18px 44px rgba(45, 135, 109, 0.15),
+    var(--shadow-accent-s),
     inset 0 1px #fff;
 }
-.choice-card.selected small {
-  color: var(--mint-deep);
+.builder-shell .builder-content .choice-card.selected small {
+  color: var(--accent-text);
   font-weight: var(--weight-bold);
 }
 
@@ -3845,19 +3846,19 @@ p {
   height: 27px;
   display: grid;
   place-items: center;
-  border: 2px solid rgba(41, 114, 94, 0.18);
+  border: 2px solid rgba(42, 29, 20, 0.18);
   border-radius: 50%;
   color: #fff;
   font-style: normal;
 }
-.style-card.selected {
-  border-color: rgba(46, 158, 126, 0.5);
-  background: rgba(224, 250, 241, 0.7);
+.builder-shell .builder-content .style-card.selected {
+  border-color: var(--accent-select-border);
+  background: var(--accent-select-bg);
 }
 .style-card.selected i,
 .remainder-sheet button.selected i {
-  border-color: var(--mint-deep);
-  background: var(--mint-deep);
+  border-color: transparent;
+  background: var(--button-grad);
 }
 
 .day-scale {
@@ -3887,7 +3888,7 @@ p {
 }
 .day-scale button.selected {
   color: #fff;
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
   box-shadow: 0 9px 19px rgba(220, 79, 34, 0.2);
 }
 .day-scale button.selected b {
@@ -3976,9 +3977,9 @@ p {
   color: var(--muted);
   font-size: var(--text-min);
 }
-.remainder-sheet button.selected {
-  border-color: rgba(44, 157, 126, 0.45);
-  background: rgba(210, 246, 234, 0.62);
+.builder-shell .builder-content .remainder-sheet button.selected {
+  border-color: var(--accent-select-border);
+  background: var(--accent-select-bg);
 }
 
 .allergy-warning {
@@ -4255,7 +4256,7 @@ p {
   transition: 0.18s ease;
 }
 .toggle-control.active {
-  background: var(--mint-deep);
+  background: var(--button-grad);
 }
 .toggle-control.active i {
   transform: translateX(17px);
@@ -6823,7 +6824,7 @@ p {
 .week-screen .date-strip button.selected {
   border-color: rgba(255, 255, 255, 0.88);
   color: #fff;
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
 }
 .week-screen .date-strip button small {
   margin-bottom: 2px;
@@ -7280,7 +7281,7 @@ p {
   place-items: center;
   border-radius: var(--r-tile);
   color: #fff;
-  background: var(--accent-grad-aa);
+  background: var(--accent-grad);
 }
 .batch-cooking-entry b,
 .batch-cooking-entry small {
@@ -7544,7 +7545,7 @@ p {
 .batch-step-list li.is-current > button {
   color: #fff;
   border-color: transparent;
-  background: var(--accent-grad-aa);
+  background: var(--button-grad);
 }
 .batch-step-list li.is-complete > button {
   color: var(--mint-text);
