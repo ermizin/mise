@@ -45,6 +45,15 @@ import {
   type RecipeStep,
 } from "@/domain/recipe-engine";
 import {
+  availableCuisines,
+  carryCuisineFilter,
+  cuisineLabels,
+  filterByCuisine,
+  matchesCuisine,
+  recipeCuisine,
+  type Cuisine,
+} from "@/domain/recipe-cuisine";
+import {
   mealOccurrenceKey,
   normalizeMealExecution,
   reconcileMealExecution,
@@ -200,6 +209,9 @@ type Recipe = {
   id: string;
   slot: MealSlot;
   title: string;
+  /* Редакционная кухня карточки: берётся из data/recipe-cuisines.json,
+     никогда не выводится из названия. */
+  cuisine: Cuisine;
   emoji: string;
   time: number;
   macros: Macros;
@@ -233,6 +245,7 @@ type RuntimeRecipeRecord = {
   id: string;
   slot: MealSlot;
   title: string;
+  cuisine: Cuisine;
   macros: Macros;
   timeMinutes: number;
   menuTags: ("protein" | "budget")[];
@@ -1320,6 +1333,7 @@ const r = (
     id,
     slot,
     title,
+    cuisine: recipeCuisine(id),
     emoji,
     time,
     macros,
@@ -4281,6 +4295,7 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
     id: record.id,
     slot: record.slot,
     title: record.title,
+    cuisine: record.cuisine,
     emoji:
       preview.kind === "graphic_fallback"
         ? preview.emoji
@@ -8925,6 +8940,7 @@ type CatalogProperty = "freezable" | "no-cook" | "protein";
 type CatalogState = {
   q: string;
   slot: MealSlot | null;
+  cuisine: Cuisine | null;
   effort: "low" | "high" | null;
   time: "quick" | "medium" | "long" | null;
   properties: CatalogProperty[];
@@ -8934,6 +8950,7 @@ type CatalogState = {
 const emptyCatalogState: CatalogState = {
   q: "",
   slot: null,
+  cuisine: null,
   effort: null,
   time: null,
   properties: [],
@@ -9016,6 +9033,7 @@ function catalogMatches(recipe: Recipe, state: CatalogState) {
     if (!hit) return false;
   }
   if (state.slot && recipe.slot !== state.slot) return false;
+  if (!matchesCuisine(recipe.cuisine, state.cuisine)) return false;
   if (state.effort && recipe.effort.level !== state.effort) return false;
   if (state.time && timeBand(recipe) !== state.time) return false;
   return state.properties.every((property) => hasProperty(recipe, property));
@@ -9036,6 +9054,12 @@ function activeCatalogFilters(state: CatalogState): ActiveCatalogFilter[] {
       id: "slot",
       label: mealMeta[state.slot].label,
       clear: () => ({ ...state, slot: null }),
+    });
+  if (state.cuisine)
+    active.push({
+      id: "cuisine",
+      label: cuisineLabels[state.cuisine],
+      clear: () => ({ ...state, cuisine: null }),
     });
   if (state.time)
     active.push({
@@ -9059,6 +9083,104 @@ function activeCatalogFilters(state: CatalogState): ActiveCatalogFilter[] {
       }),
     });
   return active;
+}
+
+/* Компактное меню выбора кухни. Не Sheet: контрол должен быть уместен и в
+   шапке каталога, и внутри шага мастера, поэтому это лёгкий поповер с одним
+   выбором. Закрытие ждёт анимацию выхода, иначе панель исчезает рывком. */
+function CuisineMenu({
+  value,
+  options,
+  onChange,
+  label = "Кухня",
+}: {
+  value: Cuisine | null;
+  options: Cuisine[];
+  onChange: (next: Cuisine | null) => void;
+  label?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  const close = () => {
+    setClosing(true);
+    window.setTimeout(() => {
+      setClosing(false);
+      setOpen(false);
+    }, 160);
+  };
+
+  useEffect(() => {
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      if (!rootRef.current?.contains(event.target as Node)) close();
+    };
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close();
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  if (options.length < 2) return null;
+
+  return (
+    <div className="cuisine-menu" ref={rootRef}>
+      <button
+        type="button"
+        className={`cuisine-menu-trigger${value ? " is-active" : ""}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={value ? `${label}: ${cuisineLabels[value]}` : `${label}: любая`}
+        onClick={() => (open ? close() : setOpen(true))}
+      >
+        {value ? cuisineLabels[value] : label}
+        <Icon name="chevron" size={14} />
+      </button>
+      {open && (
+        <div
+          className={`cuisine-menu-panel glass-1${closing ? " is-closing" : ""}`}
+          role="menu"
+          aria-label={label}
+        >
+          <button
+            type="button"
+            role="menuitemradio"
+            aria-checked={value === null}
+            className={`cuisine-menu-option${value === null ? " is-selected" : ""}`}
+            style={{ "--cuisine-delay": "0ms" } as CSSProperties}
+            onClick={() => {
+              onChange(null);
+              close();
+            }}
+          >
+            Любая кухня
+          </button>
+          {options.map((cuisine, index) => (
+            <button
+              key={cuisine}
+              type="button"
+              role="menuitemradio"
+              aria-checked={value === cuisine}
+              className={`cuisine-menu-option${value === cuisine ? " is-selected" : ""}`}
+              style={{ "--cuisine-delay": `${(index + 1) * 22}ms` } as CSSProperties}
+              onClick={() => {
+                onChange(cuisine === value ? null : cuisine);
+                close();
+              }}
+            >
+              {cuisineLabels[cuisine]}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function RecipesScreen({
@@ -9108,6 +9230,13 @@ function RecipesScreen({
     return () => observer.disconnect();
   }, []);
 
+  /* Список кухонь строится по всему производственному каталогу, а не по уже
+     отфильтрованной выборке: иначе выбранная кухня выкидывает из меню все
+     остальные и фильтр становится необратимым. */
+  const catalogCuisines = useMemo(
+    () => availableCuisines(productionRecipes),
+    [],
+  );
   const active = activeCatalogFilters(state);
   const visible = useMemo(() => {
     const matched = productionRecipes.filter((recipe) =>
@@ -9144,6 +9273,11 @@ function RecipesScreen({
             <h1>Рецепты</h1>
           </div>
           <div className="catalog-head-actions">
+            <CuisineMenu
+              value={state.cuisine}
+              options={catalogCuisines}
+              onChange={(next) => updateCatalog({ ...state, cuisine: next })}
+            />
             <button
               className="btn btn-icon catalog-sort-button"
               aria-label={`Сортировка: ${catalogSortLabels[state.sort]}`}
@@ -12913,6 +13047,7 @@ function ManualMenuStep({
   const [showAll, setShowAll] = useState(false);
   const [includeDisliked, setIncludeDisliked] = useState(false);
   const [splitError, setSplitError] = useState(false);
+  const [cuisineFilter, setCuisineFilter] = useState<Cuisine | null>(null);
   const [selectionEffect, setSelectionEffect] = useState<{
     entering: string;
     leaving: string | null;
@@ -12951,7 +13086,7 @@ function ManualMenuStep({
         ),
     ),
   ).length;
-  const allOptions = candidateRecipes(
+  const slotOptions = candidateRecipes(
     current.slot,
     style,
     people,
@@ -12965,6 +13100,16 @@ function ManualMenuStep({
     current.batch.days,
     { limit: "all" },
   ).length;
+  const slotCuisines = availableCuisines(slotOptions);
+  /* Переход к другому слоту: кухня, которой в новом слоте нет, оставила бы
+     пользователя перед пустым списком без видимой причины — она не применяется
+     и не показывается как выбранная. Кухня, которая в новом слоте есть,
+     переносится. Правило выводится из данных слота, а не синхронизируется
+     эффектом, поэтому рассинхрона состояния и списка не бывает. */
+  const activeCuisine = carryCuisineFilter(cuisineFilter, slotCuisines);
+  /* `allOptions` — это то, что пользователь реально может пролистать: список
+     после фильтра кухни. Счётчик «смотреть все» обязан совпадать с ним. */
+  const allOptions = filterByCuisine(slotOptions, activeCuisine);
   const options = showAll
     ? allOptions
     : allOptions.slice(0, initialManualRecipeCount);
@@ -13022,6 +13167,13 @@ function ManualMenuStep({
           Выберите общее блюдо. Если оно не подходит всем, Mise разделит только
           этот слот на персональные назначения.
         </p>
+        <div className="manual-slot-cuisine">
+          <CuisineMenu
+            value={activeCuisine}
+            options={slotCuisines}
+            onChange={setCuisineFilter}
+          />
+        </div>
       </div>
       {groups.length > 1 && (
         <Note tone="mint" label="Персональный слот">
@@ -13095,7 +13247,21 @@ function ManualMenuStep({
           );
         })}
       </div>
-      {!options.length && (
+      {!options.length && activeCuisine && slotOptions.length > 0 && (
+        <>
+          <Note tone="warn" role="status" label="В этой кухне ничего нет">
+            Для этого слота нет блюд выбранной кухни. Снимите фильтр —
+            подходящие варианты есть.
+          </Note>
+          <button
+            className="manual-menu-more glass-3"
+            onClick={() => setCuisineFilter(null)}
+          >
+            Показать все кухни — {slotOptions.length}
+          </button>
+        </>
+      )}
+      {!options.length && !activeCuisine && (
         <Note tone="warn" role="status" label="Общего блюда не нашлось">
           Подберём отдельный вариант только тем, кому общее блюдо не подходит.
         </Note>
@@ -13116,7 +13282,7 @@ function ManualMenuStep({
             : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
         </button>
       )}
-      {!options.length && (
+      {!options.length && !activeCuisine && (
         <button
           className="secondary-button manual-split-button"
           onClick={() => {

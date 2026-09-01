@@ -9,6 +9,7 @@ import { loadRecipeCorpusWithOverlays } from "../scripts/recipe-corpus-overlay.m
 async function loadRecipeCatalog() {
   const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
   const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+const recipeCuisineModule = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
   const mealExecution = await loadTypeScriptModule(new URL("../domain/meal-execution.ts", import.meta.url));
   const runtimeRecipeCatalogJson = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
@@ -24,6 +25,13 @@ async function loadRecipeCatalog() {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
+    recipeCuisine: recipeCuisineModule.recipeCuisine,
+    cuisineOrder: recipeCuisineModule.cuisineOrder,
+    cuisineLabels: recipeCuisineModule.cuisineLabels,
+    matchesCuisine: recipeCuisineModule.matchesCuisine,
+    filterByCuisine: recipeCuisineModule.filterByCuisine,
+    availableCuisines: recipeCuisineModule.availableCuisines,
+    carryCuisineFilter: recipeCuisineModule.carryCuisineFilter,
     runtimeRecipeCatalogJson,
     legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,

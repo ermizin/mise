@@ -6,6 +6,7 @@ import ts from "typescript";
 import { loadTypeScriptModule } from "./typescript-module.mjs";
 
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+const recipeCuisineModule = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
 const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
 
 async function automaticMenuRuntime() {
@@ -24,6 +25,13 @@ async function automaticMenuRuntime() {
     await readFile(new URL("../data/legacy-recipe-image-download-sources.json", import.meta.url), "utf8"),
   );
   const sandbox = {
+    recipeCuisine: recipeCuisineModule.recipeCuisine,
+    cuisineOrder: recipeCuisineModule.cuisineOrder,
+    cuisineLabels: recipeCuisineModule.cuisineLabels,
+    matchesCuisine: recipeCuisineModule.matchesCuisine,
+    filterByCuisine: recipeCuisineModule.filterByCuisine,
+    availableCuisines: recipeCuisineModule.availableCuisines,
+    carryCuisineFilter: recipeCuisineModule.carryCuisineFilter,
     runtimeRecipeCatalogJson,
     legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,

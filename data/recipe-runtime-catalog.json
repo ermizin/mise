@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "generatedFrom": "audit-ready editorial cards only",
   "constraints": {
     "releaseMenuTags": [
@@ -29,6 +29,18 @@
       "budget": 202,
       "protein": 155
     },
+    "byCuisine": {
+      "russian": 13,
+      "georgian": 1,
+      "asian": 21,
+      "indian": 6,
+      "mexican": 21,
+      "italian": 18,
+      "mediterranean": 18,
+      "american": 50,
+      "european": 20,
+      "international": 34
+    },
     "failureReasons": {}
   },
   "recipes": [
@@ -36,6 +48,7 @@
       "id": "tmpm-28584",
       "slot": "lunch",
       "title": "Рис с брокколи и чеддером",
+      "cuisine": "american",
       "macros": {
         "kcal": 266.2,
         "protein": 9.7,
@@ -964,6 +977,7 @@
       "id": "tmpm-28572",
       "slot": "lunch",
       "title": "Рис с овощами",
+      "cuisine": "international",
       "macros": {
         "kcal": 285.1,
         "protein": 4.7,
@@ -1971,6 +1985,7 @@
       "id": "tmpm-28533",
       "slot": "dinner",
       "title": "Куриные боулы со сливочным соусом из кинзы и лайма",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 528.6,
         "protein": 43.2,
@@ -3471,6 +3486,7 @@
       "id": "tmpm-28513",
       "slot": "dinner",
       "title": "Курица чипотле для боулов-буррито",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 321.3,
         "protein": 45,
@@ -4310,6 +4326,7 @@
       "id": "tmpm-28504",
       "slot": "lunch",
       "title": "Рис с чипотле, кинзой и лаймом",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 255.5,
         "protein": 4.7,
@@ -4870,6 +4887,7 @@
       "id": "tmpm-28499",
       "slot": "dinner",
       "title": "Чёрная фасоль с чипотле",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 174.3,
         "protein": 10,
@@ -5570,6 +5588,7 @@
       "id": "tmpm-28302",
       "slot": "lunch",
       "title": "Хрустящая говядина с чили и лапшой",
+      "cuisine": "asian",
       "macros": {
         "kcal": 740.2,
         "protein": 43.4,
@@ -6882,6 +6901,7 @@
       "id": "tmpm-28247",
       "slot": "dinner",
       "title": "Курица терияки с овощами на противне",
+      "cuisine": "asian",
       "macros": {
         "kcal": 578.1,
         "protein": 43.8,
@@ -8290,6 +8310,7 @@
       "id": "tmpm-28083",
       "slot": "dinner",
       "title": "Макароны тако",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 779.9,
         "protein": 49.4,
@@ -9393,6 +9414,7 @@
       "id": "tmpm-27802",
       "slot": "lunch",
       "title": "Средиземноморские роллы с курицей",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 546.4,
         "protein": 39.7,
@@ -10936,6 +10958,7 @@
       "id": "tmpm-27343",
       "slot": "dinner",
       "title": "Боулы со стейком чипотле и перцем",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 493,
         "protein": 36.3,
@@ -12381,6 +12404,7 @@
       "id": "tmpm-27328",
       "slot": "lunch",
       "title": "Сливочная паста с курицей из одной формы",
+      "cuisine": "italian",
       "macros": {
         "kcal": 565.6,
         "protein": 47.2,
@@ -13657,6 +13681,7 @@
       "id": "tmpm-27306",
       "slot": "lunch",
       "title": "Паста с колбасками и перцем в одной кастрюле",
+      "cuisine": "italian",
       "macros": {
         "kcal": 698.3,
         "protein": 50.9,
@@ -14920,6 +14945,7 @@
       "id": "tmpm-27287",
       "slot": "dinner",
       "title": "Боулы с бургером барбекю и чеддером",
+      "cuisine": "american",
       "macros": {
         "kcal": 747.6,
         "protein": 42.8,
@@ -15896,6 +15922,7 @@
       "id": "tmpm-26996",
       "slot": "lunch",
       "title": "Курица с чили, лаймом и золотистым рисом",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 528.4,
         "protein": 42.9,
@@ -17233,6 +17260,7 @@
       "id": "tmpm-26965",
       "slot": "snack1",
       "title": "Куриные наггетсы для перекуса",
+      "cuisine": "american",
       "macros": {
         "kcal": 208.5,
         "protein": 18.9,
@@ -17992,6 +18020,7 @@
       "id": "tmpm-26920",
       "slot": "breakfast",
       "title": "Завтрачные такитос с картофелем, колбасой и сыром",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 305.2,
         "protein": 18,
@@ -19287,6 +19316,7 @@
       "id": "tmpm-26872",
       "slot": "lunch",
       "title": "Курица с лимоном и травами",
+      "cuisine": "international",
       "macros": {
         "kcal": 628.7,
         "protein": 42.1,
@@ -20599,6 +20629,7 @@
       "id": "tmpm-26720",
       "slot": "lunch",
       "title": "Говяжий строганов в медленноварке",
+      "cuisine": "russian",
       "macros": {
         "kcal": 1023.5,
         "protein": 76.4,
@@ -21952,6 +21983,7 @@
       "id": "tmpm-26689",
       "slot": "breakfast",
       "title": "Протеиновые панкейки на противне",
+      "cuisine": "american",
       "macros": {
         "kcal": 275,
         "protein": 17.9,
@@ -22938,6 +22970,7 @@
       "id": "tmpm-26676",
       "slot": "lunch",
       "title": "Жареный рис с курицей и карри",
+      "cuisine": "asian",
       "macros": {
         "kcal": 473,
         "protein": 40.4,
@@ -24309,6 +24342,7 @@
       "id": "tmpm-26660",
       "slot": "lunch",
       "title": "Курица энчилада в медленноварке",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 708.2,
         "protein": 62.6,
@@ -25391,6 +25425,7 @@
       "id": "tmpm-26647",
       "slot": "breakfast",
       "title": "Запечённая овсянка с тыквой и пряностями",
+      "cuisine": "american",
       "macros": {
         "kcal": 442.3,
         "protein": 26.8,
@@ -26325,6 +26360,7 @@
       "id": "tmpm-26617",
       "slot": "dinner",
       "title": "Куриные боулы со шрирачей и лаймом",
+      "cuisine": "asian",
       "macros": {
         "kcal": 508.9,
         "protein": 41.6,
@@ -27387,6 +27423,7 @@
       "id": "tmpm-26583",
       "slot": "dinner",
       "title": "Боулы «небрежный Джо» с чизстейком",
+      "cuisine": "american",
       "macros": {
         "kcal": 1100.5,
         "protein": 55.9,
@@ -28771,6 +28808,7 @@
       "id": "tmpm-26528",
       "slot": "lunch",
       "title": "Картофель с говядиной и соусом кесо",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 745.3,
         "protein": 45.3,
@@ -30123,6 +30161,7 @@
       "id": "tmpm-26441",
       "slot": "dinner",
       "title": "Индейка стир-фрай с арахисом",
+      "cuisine": "asian",
       "macros": {
         "kcal": 697.3,
         "protein": 44.5,
@@ -31105,6 +31144,7 @@
       "id": "tmpm-26429",
       "slot": "dinner",
       "title": "Осенние боулы с курицей и поблано",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 707.9,
         "protein": 43.5,
@@ -32573,6 +32613,7 @@
       "id": "tmpm-26414",
       "slot": "breakfast",
       "title": "Французские тосты из протеиновых вафель с корицей",
+      "cuisine": "american",
       "macros": {
         "kcal": 437.6,
         "protein": 43.2,
@@ -33501,6 +33542,7 @@
       "id": "tmpm-26358",
       "slot": "lunch",
       "title": "Японское карри с говяжьим фаршем",
+      "cuisine": "asian",
       "macros": {
         "kcal": 717.7,
         "protein": 43.7,
@@ -34705,6 +34747,7 @@
       "id": "tmpm-26232",
       "slot": "lunch",
       "title": "Мак-энд-чиз для большой порции",
+      "cuisine": "american",
       "macros": {
         "kcal": 1002.1,
         "protein": 73.2,
@@ -36020,6 +36063,7 @@
       "id": "tmpm-26138",
       "slot": "lunch",
       "title": "Говядина и овощи в глазури кочуджан",
+      "cuisine": "asian",
       "macros": {
         "kcal": 698.5,
         "protein": 40.3,
@@ -37236,6 +37280,7 @@
       "id": "tmpm-25453",
       "slot": "dinner",
       "title": "Протеиновые тефтели из говядины",
+      "cuisine": "international",
       "macros": {
         "kcal": 314.5,
         "protein": 26.3,
@@ -37877,6 +37922,7 @@
       "id": "tmpm-25304",
       "slot": "lunch",
       "title": "Куриная грудка для заморозки",
+      "cuisine": "international",
       "macros": {
         "kcal": 158.3,
         "protein": 25.5,
@@ -38521,6 +38567,7 @@
       "id": "tmpm-25290",
       "slot": "breakfast",
       "title": "Запечённая овсянка для большой порции",
+      "cuisine": "american",
       "macros": {
         "kcal": 969.1,
         "protein": 49.5,
@@ -39503,6 +39550,7 @@
       "id": "tmpm-25244",
       "slot": "lunch",
       "title": "Жареный рис с курицей фахитас",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 474.3,
         "protein": 39.7,
@@ -40890,6 +40938,7 @@
       "id": "tmpm-25175",
       "slot": "dinner",
       "title": "Стир-фрай из свинины с острым мёдом",
+      "cuisine": "asian",
       "macros": {
         "kcal": 640.6,
         "protein": 43,
@@ -41986,6 +42035,7 @@
       "id": "tmpm-25159",
       "slot": "dinner",
       "title": "Запечённые пенне для большой порции",
+      "cuisine": "italian",
       "macros": {
         "kcal": 1046.9,
         "protein": 68.4,
@@ -43060,6 +43110,7 @@
       "id": "tmpm-25092",
       "slot": "lunch",
       "title": "Морковь с хумусом",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 282,
         "protein": 10.5,
@@ -43681,6 +43732,7 @@
       "id": "tmpm-25082",
       "slot": "lunch",
       "title": "Запеканка из батата, ветчины и яиц",
+      "cuisine": "american",
       "macros": {
         "kcal": 428.6,
         "protein": 36.6,
@@ -44457,6 +44509,7 @@
       "id": "tmpm-25071",
       "slot": "dinner",
       "title": "Куриные боулы с рисом и чечевицей",
+      "cuisine": "international",
       "macros": {
         "kcal": 608,
         "protein": 50.7,
@@ -45306,6 +45359,7 @@
       "id": "tmpm-25044",
       "slot": "lunch",
       "title": "Корейская говядина с рисовыми клецками ттокпокки",
+      "cuisine": "asian",
       "macros": {
         "kcal": 755.1,
         "protein": 32.6,
@@ -46264,6 +46318,7 @@
       "id": "tmpm-25030",
       "slot": "breakfast",
       "title": "Протеиновые панкейки для милпрепа",
+      "cuisine": "american",
       "macros": {
         "kcal": 250.9,
         "protein": 30.6,
@@ -47061,6 +47116,7 @@
       "id": "tmpm-25006-hash-brown-breakfast-bowl",
       "slot": "snack1",
       "title": "Завтрак с хашбрауном и яичным белком",
+      "cuisine": "american",
       "macros": {
         "kcal": 338.5,
         "protein": 22.9,
@@ -47735,6 +47791,7 @@
       "id": "tmpm-25006-avocado-bean-rice-cakes",
       "slot": "snack1",
       "title": "Рисовые хлебцы с авокадо и белой фасолью",
+      "cuisine": "international",
       "macros": {
         "kcal": 440.5,
         "protein": 14.6,
@@ -48232,6 +48289,7 @@
       "id": "tmpm-25006-breakfast-quesadilla",
       "slot": "snack1",
       "title": "Кесадилья с яйцом, курицей и сыром",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 364.2,
         "protein": 25,
@@ -48717,6 +48775,7 @@
       "id": "tmpm-25006-apple-yogurt-granola",
       "slot": "snack1",
       "title": "Йогурт с яблоком, гранолой и мёдом",
+      "cuisine": "international",
       "macros": {
         "kcal": 397.4,
         "protein": 18.5,
@@ -49213,6 +49272,7 @@
       "id": "tmpm-24974",
       "slot": "lunch",
       "title": "Говяжьи тефтели барбекю",
+      "cuisine": "american",
       "macros": {
         "kcal": 722.8,
         "protein": 42.3,
@@ -50078,6 +50138,7 @@
       "id": "tmpm-24968",
       "slot": "lunch",
       "title": "Говяжьи тефтели барбекю для большой порции",
+      "cuisine": "american",
       "macros": {
         "kcal": 1091.8,
         "protein": 55.1,
@@ -51280,6 +51341,7 @@
       "id": "tmpm-24949",
       "slot": "dinner",
       "title": "Куриные рисовые боулы со шрирачей и арахисом",
+      "cuisine": "asian",
       "macros": {
         "kcal": 561.7,
         "protein": 44.2,
@@ -52751,6 +52813,7 @@
       "id": "tmpm-24917",
       "slot": "breakfast",
       "title": "Завтрачные маффины со скрытыми овощами",
+      "cuisine": "american",
       "macros": {
         "kcal": 247.9,
         "protein": 8,
@@ -53649,6 +53712,7 @@
       "id": "tmpm-24909",
       "slot": "dinner",
       "title": "Быстрое карри с куриным фаршем",
+      "cuisine": "indian",
       "macros": {
         "kcal": 652.3,
         "protein": 39.8,
@@ -54727,6 +54791,7 @@
       "id": "tmpm-24899",
       "slot": "dinner",
       "title": "Боулы с индейкой, лимоном и чесноком",
+      "cuisine": "international",
       "macros": {
         "kcal": 578.7,
         "protein": 44.4,
@@ -55825,6 +55890,7 @@
       "id": "tmpm-24851",
       "slot": "breakfast",
       "title": "Завтрачные булочки с колбасой",
+      "cuisine": "american",
       "macros": {
         "kcal": 201.2,
         "protein": 13.6,
@@ -57050,6 +57116,7 @@
       "id": "tmpm-24799",
       "slot": "dinner",
       "title": "Мини-тако с говядиной, чили и сыром",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 262,
         "protein": 15.3,
@@ -57841,6 +57908,7 @@
       "id": "tmpm-24729",
       "slot": "dinner",
       "title": "Сковорода «чизбургер»",
+      "cuisine": "american",
       "macros": {
         "kcal": 648.3,
         "protein": 40.5,
@@ -58745,6 +58813,7 @@
       "id": "tmpm-24619",
       "slot": "dinner",
       "title": "Боулы-буррито на 1000 ккал",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 1101.9,
         "protein": 73,
@@ -60210,6 +60279,7 @@
       "id": "tmpm-24608",
       "slot": "breakfast",
       "title": "Завтрачный скрэмбл с бататом и колбасой",
+      "cuisine": "american",
       "macros": {
         "kcal": 295.3,
         "protein": 20.2,
@@ -61213,6 +61283,7 @@
       "id": "tmpm-24579",
       "slot": "snack1",
       "title": "Брокколи-байты с халапеньо и чеддером",
+      "cuisine": "american",
       "macros": {
         "kcal": 154.6,
         "protein": 7.7,
@@ -61946,6 +62017,7 @@
       "id": "tmpm-24542",
       "slot": "lunch",
       "title": "Рисовые боулы с чили и лимоном",
+      "cuisine": "international",
       "macros": {
         "kcal": 497.5,
         "protein": 43.9,
@@ -63426,6 +63498,7 @@
       "id": "tmpm-23797",
       "slot": "dinner",
       "title": "Баттер-чикен с овощами и рисом",
+      "cuisine": "indian",
       "macros": {
         "kcal": 565.5,
         "protein": 46.4,
@@ -64783,6 +64856,7 @@
       "id": "tmpm-23554",
       "slot": "lunch",
       "title": "Сытный чили",
+      "cuisine": "american",
       "macros": {
         "kcal": 1099.8,
         "protein": 56.7,
@@ -66389,6 +66463,7 @@
       "id": "tmpm-23545",
       "slot": "breakfast",
       "title": "Запечённая овсянка с бананом и корицей",
+      "cuisine": "american",
       "macros": {
         "kcal": 358.9,
         "protein": 20.9,
@@ -67296,6 +67371,7 @@
       "id": "tmpm-23544",
       "slot": "lunch",
       "title": "Боулы с говяжьим фаршем в терияки",
+      "cuisine": "asian",
       "macros": {
         "kcal": 731.8,
         "protein": 41.3,
@@ -68225,6 +68301,7 @@
       "id": "tmpm-23518",
       "slot": "snack1",
       "title": "Протеиновые тыквенные маффины",
+      "cuisine": "american",
       "macros": {
         "kcal": 352,
         "protein": 16.4,
@@ -69121,6 +69198,7 @@
       "id": "tmpm-23501",
       "slot": "dinner",
       "title": "Боулы с курицей в медово-чесночном соусе и лапшой",
+      "cuisine": "asian",
       "macros": {
         "kcal": 480.3,
         "protein": 35.9,
@@ -70257,6 +70335,7 @@
       "id": "tmpm-23462",
       "slot": "breakfast",
       "title": "Запечённая овсянка с персиками и сливочным сыром",
+      "cuisine": "american",
       "macros": {
         "kcal": 395.1,
         "protein": 22,
@@ -71147,6 +71226,7 @@
       "id": "tmpm-23431",
       "slot": "dinner",
       "title": "Боулы с курицей-гриль в терияки",
+      "cuisine": "asian",
       "macros": {
         "kcal": 444.2,
         "protein": 37.3,
@@ -72218,6 +72298,7 @@
       "id": "tmpm-23316",
       "slot": "breakfast",
       "title": "Запечённая овсянка с двойным шоколадом",
+      "cuisine": "american",
       "macros": {
         "kcal": 383.2,
         "protein": 25.6,
@@ -73125,6 +73206,7 @@
       "id": "tmpm-23306",
       "slot": "lunch",
       "title": "Боулы с индейкой и кейлом",
+      "cuisine": "international",
       "macros": {
         "kcal": 625.8,
         "protein": 42.7,
@@ -74431,6 +74513,7 @@
       "id": "tmpm-23261",
       "slot": "dinner",
       "title": "Мак-н-чиз со скрытыми овощами",
+      "cuisine": "american",
       "macros": {
         "kcal": 635.8,
         "protein": 54,
@@ -75220,6 +75303,7 @@
       "id": "tmpm-23228",
       "slot": "snack1",
       "title": "Куриные наггетсы по-нэшвиллски",
+      "cuisine": "american",
       "macros": {
         "kcal": 194.6,
         "protein": 15.7,
@@ -76335,6 +76419,7 @@
       "id": "tmpm-23194",
       "slot": "lunch",
       "title": "Боулы с лапшой в сладком чили",
+      "cuisine": "asian",
       "macros": {
         "kcal": 494.4,
         "protein": 43.7,
@@ -77657,6 +77742,7 @@
       "id": "tmpm-23113",
       "slot": "dinner",
       "title": "Боулы с говядиной и сальса-верде",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 636.4,
         "protein": 38.9,
@@ -78784,6 +78870,7 @@
       "id": "tmpm-23090",
       "slot": "breakfast",
       "title": "Буррито на завтрак",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 365.4,
         "protein": 16.8,
@@ -79990,6 +80077,7 @@
       "id": "tmpm-22980",
       "slot": "lunch",
       "title": "Домашняя паста с говядиной в одной кастрюле",
+      "cuisine": "italian",
       "macros": {
         "kcal": 729.4,
         "protein": 46.4,
@@ -81183,6 +81271,7 @@
       "id": "tmpm-22968",
       "slot": "lunch",
       "title": "Сытная паста с ветчиной",
+      "cuisine": "italian",
       "macros": {
         "kcal": 1008.7,
         "protein": 61.9,
@@ -82379,6 +82468,7 @@
       "id": "tmpm-22922",
       "slot": "breakfast",
       "title": "Запечённая овсянка со вкусом апельсинового пломбира",
+      "cuisine": "american",
       "macros": {
         "kcal": 375.9,
         "protein": 20.9,
@@ -83403,6 +83493,7 @@
       "id": "tmpm-22550",
       "slot": "lunch",
       "title": "Куриные фрикадельки",
+      "cuisine": "international",
       "macros": {
         "kcal": 217.7,
         "protein": 24.8,
@@ -84037,6 +84128,7 @@
       "id": "tmpm-22571",
       "slot": "dinner",
       "title": "Тако-боулы с куриным фаршем",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 549.1,
         "protein": 37.8,
@@ -85343,6 +85435,7 @@
       "id": "tmpm-22531",
       "slot": "breakfast",
       "title": "Запечённая овсянка с арахисовой пастой и джемом",
+      "cuisine": "american",
       "macros": {
         "kcal": 397.2,
         "protein": 23.6,
@@ -86251,6 +86344,7 @@
       "id": "tmpm-22442",
       "slot": "lunch",
       "title": "Острая говядина с брюссельской капустой",
+      "cuisine": "international",
       "macros": {
         "kcal": 723.3,
         "protein": 41.3,
@@ -87435,6 +87529,7 @@
       "id": "tmpm-22428",
       "slot": "lunch",
       "title": "Курица с белым энчилада-соусом и картофелем",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 519.1,
         "protein": 46.6,
@@ -88842,6 +88937,7 @@
       "id": "tmpm-22331",
       "slot": "dinner",
       "title": "Острая курица в хрустящей панировке",
+      "cuisine": "american",
       "macros": {
         "kcal": 217.6,
         "protein": 27.6,
@@ -89554,6 +89650,7 @@
       "id": "tmpm-22278",
       "slot": "lunch",
       "title": "Лапша с мёдом и мисо",
+      "cuisine": "asian",
       "macros": {
         "kcal": 572.6,
         "protein": 47.7,
@@ -90725,6 +90822,7 @@
       "id": "tmpm-22144",
       "slot": "lunch",
       "title": "Тайское красное карри с кокосом и курицей",
+      "cuisine": "asian",
       "macros": {
         "kcal": 758.3,
         "protein": 47.5,
@@ -92184,6 +92282,7 @@
       "id": "tmpm-22181",
       "slot": "snack1",
       "title": "Брокколи-боллы",
+      "cuisine": "international",
       "macros": {
         "kcal": 157.1,
         "protein": 7.2,
@@ -92782,6 +92881,7 @@
       "id": "tmpm-21976",
       "slot": "breakfast",
       "title": "Запечённая овсянка с тёмным шоколадом и вишней",
+      "cuisine": "american",
       "macros": {
         "kcal": 383.6,
         "protein": 21.6,
@@ -93726,6 +93826,7 @@
       "id": "tmpm-21841",
       "slot": "dinner",
       "title": "Паста э фаджоли для набора массы",
+      "cuisine": "italian",
       "macros": {
         "kcal": 1027.2,
         "protein": 64.5,
@@ -94800,6 +94901,7 @@
       "id": "tmpm-21839",
       "slot": "dinner",
       "title": "Паста э фаджоли",
+      "cuisine": "italian",
       "macros": {
         "kcal": 733.7,
         "protein": 46.1,
@@ -95874,6 +95976,7 @@
       "id": "tmpm-19895",
       "slot": "dinner",
       "title": "Суп с ветчиной и фасолью",
+      "cuisine": "american",
       "macros": {
         "kcal": 657.6,
         "protein": 65,
@@ -96938,6 +97041,7 @@
       "id": "tmpm-18874",
       "slot": "lunch",
       "title": "Пансит со свиным фаршем",
+      "cuisine": "asian",
       "macros": {
         "kcal": 699.1,
         "protein": 41.2,
@@ -98030,6 +98134,7 @@
       "id": "tmpm-18557",
       "slot": "dinner",
       "title": "Корейское куриное рагу дакдоритан",
+      "cuisine": "asian",
       "macros": {
         "kcal": 525.7,
         "protein": 37,
@@ -99243,6 +99348,7 @@
       "id": "tmpm-17591",
       "slot": "dinner",
       "title": "Острый куриный сэндвич",
+      "cuisine": "american",
       "macros": {
         "kcal": 563.2,
         "protein": 47.3,
@@ -100277,6 +100383,7 @@
       "id": "tmpm-17393",
       "slot": "dinner",
       "title": "Куриные крылышки баффало без костей в аэрогриле",
+      "cuisine": "american",
       "macros": {
         "kcal": 724.3,
         "protein": 39,
@@ -100646,6 +100753,7 @@
       "id": "tmpm-17381",
       "slot": "dinner",
       "title": "Крылышки без костей в кленово-шрирача соусе",
+      "cuisine": "american",
       "macros": {
         "kcal": 768.3,
         "protein": 38.8,
@@ -101067,6 +101175,7 @@
       "id": "tmpm-17115",
       "slot": "dinner",
       "title": "Сковорода с бататом и колбасками",
+      "cuisine": "american",
       "macros": {
         "kcal": 459,
         "protein": 29.7,
@@ -101798,6 +101907,7 @@
       "id": "tmpm-16850",
       "slot": "lunch",
       "title": "Курица в медово-чесночном соусе",
+      "cuisine": "asian",
       "macros": {
         "kcal": 534.1,
         "protein": 51.4,
@@ -102763,6 +102873,7 @@
       "id": "tmpm-16479",
       "slot": "dinner",
       "title": "Куриные стрипсы в аэрогриле",
+      "cuisine": "american",
       "macros": {
         "kcal": 199.4,
         "protein": 27,
@@ -103415,6 +103526,7 @@
       "id": "tmpm-16454",
       "slot": "lunch",
       "title": "Запечённые пенне",
+      "cuisine": "italian",
       "macros": {
         "kcal": 701.4,
         "protein": 48.1,
@@ -104417,6 +104529,7 @@
       "id": "tmpm-16300",
       "slot": "breakfast",
       "title": "Запечённая овсянка с лимоном и черникой",
+      "cuisine": "american",
       "macros": {
         "kcal": 408.4,
         "protein": 21.9,
@@ -105475,6 +105588,7 @@
       "id": "tmpm-16283",
       "slot": "dinner",
       "title": "Фаршированные картофельные рёшти",
+      "cuisine": "european",
       "macros": {
         "kcal": 276.5,
         "protein": 8.4,
@@ -106223,6 +106337,7 @@
       "id": "tmpm-16249",
       "slot": "breakfast",
       "title": "Панкейк-боллы с двойным шоколадом",
+      "cuisine": "american",
       "macros": {
         "kcal": 179.4,
         "protein": 11.6,
@@ -106935,6 +107050,7 @@
       "id": "tmpm-16046",
       "slot": "breakfast",
       "title": "Запечённая овсянка «Морковный торт»",
+      "cuisine": "american",
       "macros": {
         "kcal": 422.7,
         "protein": 24,
@@ -108044,6 +108160,7 @@
       "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
       "slot": "dinner",
       "title": "Овощной пастуший пирог с пюре из батата",
+      "cuisine": "european",
       "macros": {
         "kcal": 635.7,
         "protein": 21.8,
@@ -108981,6 +109098,7 @@
       "id": "goodfood-chicken-pasta-bake",
       "slot": "dinner",
       "title": "Запеканка из пасты с курицей",
+      "cuisine": "european",
       "macros": {
         "kcal": 579.7,
         "protein": 39.6,
@@ -109931,6 +110049,7 @@
       "id": "goodfood-satay-sweet-potato-curry",
       "slot": "dinner",
       "title": "Карри с бататом и арахисом",
+      "cuisine": "asian",
       "macros": {
         "kcal": 616,
         "protein": 12.2,
@@ -110998,6 +111117,7 @@
       "id": "goodfood-kadala-curry",
       "slot": "dinner",
       "title": "Карри с нутом",
+      "cuisine": "indian",
       "macros": {
         "kcal": 693.1,
         "protein": 18.5,
@@ -112017,6 +112137,7 @@
       "id": "goodfood-slow-cooker-lamb-curry",
       "slot": "dinner",
       "title": "Карри с ягнёнком в медленноварке",
+      "cuisine": "indian",
       "macros": {
         "kcal": 774.5,
         "protein": 47.9,
@@ -112954,6 +113075,7 @@
       "id": "goodfood-sausage-leek-mash-pie",
       "slot": "lunch",
       "title": "Пирог с колбасками, пореем и картофельным пюре",
+      "cuisine": "european",
       "macros": {
         "kcal": 647.5,
         "protein": 23.1,
@@ -113906,6 +114028,7 @@
       "id": "goodfood-10minute-couscous-salad",
       "slot": "lunch",
       "title": "Салат с кускусом за 10 минут",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 450,
         "protein": 14.3,
@@ -114650,6 +114773,7 @@
       "id": "goodfood-big-batch-bolognese",
       "slot": "lunch",
       "title": "Большая порция болоньезе",
+      "cuisine": "italian",
       "macros": {
         "kcal": 459.3,
         "protein": 31.3,
@@ -115700,6 +115824,7 @@
       "id": "goodfood-slow-cooker-beef-bourguignon",
       "slot": "dinner",
       "title": "Беф-бургиньон в медленноварке",
+      "cuisine": "european",
       "macros": {
         "kcal": 588.7,
         "protein": 45.1,
@@ -116977,6 +117102,7 @@
       "id": "goodfood-tuna-pasta-bake",
       "slot": "lunch",
       "title": "Запеканка из пасты с тунцом",
+      "cuisine": "european",
       "macros": {
         "kcal": 494.4,
         "protein": 25.7,
@@ -117815,6 +117941,7 @@
       "id": "goodfood-vegan-shepherds-pie",
       "slot": "lunch",
       "title": "Веганский пастуший пирог",
+      "cuisine": "european",
       "macros": {
         "kcal": 402,
         "protein": 13.7,
@@ -119279,6 +119406,7 @@
       "id": "goodfood-vegetarian-bolognese",
       "slot": "dinner",
       "title": "Вегетарианская болоньезе",
+      "cuisine": "italian",
       "macros": {
         "kcal": 578.8,
         "protein": 33.5,
@@ -120335,6 +120463,7 @@
       "id": "goodfood-slow-cooker-sausage-casserole",
       "slot": "lunch",
       "title": "Рагу с колбасками в медленноварке",
+      "cuisine": "european",
       "macros": {
         "kcal": 677.4,
         "protein": 25,
@@ -121208,6 +121337,7 @@
       "id": "goodfood-italian-vegetable-soup",
       "slot": "dinner",
       "title": "Итальянский овощной суп",
+      "cuisine": "italian",
       "macros": {
         "kcal": 272.8,
         "protein": 14.7,
@@ -122255,6 +122385,7 @@
       "id": "goodfood-aubergine-tomato-halloumi-pie",
       "slot": "lunch",
       "title": "Пирог с баклажаном, томатами и халлуми",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 665.5,
         "protein": 16.2,
@@ -123266,6 +123397,7 @@
       "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
       "slot": "dinner",
       "title": "Рисовый боул с курицей фахита и обожжённым лаймом",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 539,
         "protein": 35.6,
@@ -124277,6 +124409,7 @@
       "id": "goodfood-mini-lentil-shepherds-pies",
       "slot": "dinner",
       "title": "Мини-пастушьи пироги с чечевицей",
+      "cuisine": "european",
       "macros": {
         "kcal": 473.3,
         "protein": 18.7,
@@ -125504,6 +125637,7 @@
       "id": "goodfood-family-meals-chicken-veg-casserole",
       "slot": "dinner",
       "title": "Куриное рагу с овощами",
+      "cuisine": "european",
       "macros": {
         "kcal": 364,
         "protein": 37.5,
@@ -126455,6 +126589,7 @@
       "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
       "slot": "lunch",
       "title": "Салат из киноа, зелени и изюма",
+      "cuisine": "international",
       "macros": {
         "kcal": 447.7,
         "protein": 11.1,
@@ -127340,6 +127475,7 @@
       "id": "goodfood-big-batch-pressure-cooker-bolognese",
       "slot": "lunch",
       "title": "Большая порция болоньезе в скороварке",
+      "cuisine": "italian",
       "macros": {
         "kcal": 560.6,
         "protein": 32.9,
@@ -128735,6 +128871,7 @@
       "id": "goodfood-creamy-bean-kale-pasta",
       "slot": "dinner",
       "title": "Паста со сливочной фасолью и кейлом",
+      "cuisine": "italian",
       "macros": {
         "kcal": 499.5,
         "protein": 22,
@@ -129585,6 +129722,7 @@
       "id": "goodfood-courgette-tomato-soup",
       "slot": "lunch",
       "title": "Суп из кабачка и томатов",
+      "cuisine": "international",
       "macros": {
         "kcal": 442.6,
         "protein": 18.4,
@@ -130369,6 +130507,7 @@
       "id": "goodfood-banana-overnight-oats",
       "slot": "breakfast",
       "title": "Ночная овсянка с бананом",
+      "cuisine": "american",
       "macros": {
         "kcal": 521.4,
         "protein": 32.3,
@@ -131014,6 +131153,7 @@
       "id": "goodfood-creamy-chicken-sweetcorn-soup",
       "slot": "lunch",
       "title": "Сливочный суп с курицей и кукурузой",
+      "cuisine": "international",
       "macros": {
         "kcal": 347.7,
         "protein": 26.9,
@@ -132197,6 +132337,7 @@
       "id": "goodfood-smoky-black-bean-chilli",
       "slot": "lunch",
       "title": "Копчёный чили с чёрной фасолью",
+      "cuisine": "mexican",
       "macros": {
         "kcal": 705.3,
         "protein": 36.4,
@@ -133513,6 +133654,7 @@
       "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
       "slot": "dinner",
       "title": "Говяжье рагу с шапкой из батата",
+      "cuisine": "european",
       "macros": {
         "kcal": 516,
         "protein": 32.8,
@@ -134644,6 +134786,7 @@
       "id": "goodfood-family-meals-mild-chicken-curry",
       "slot": "lunch",
       "title": "Нежное куриное карри",
+      "cuisine": "indian",
       "macros": {
         "kcal": 503.2,
         "protein": 64.1,
@@ -135640,6 +135783,7 @@
       "id": "goodfood-beef-red-wine-potato-pie",
       "slot": "dinner",
       "title": "Пирог с говядиной, красным вином и картофелем",
+      "cuisine": "european",
       "macros": {
         "kcal": 753.2,
         "protein": 32.6,
@@ -137065,6 +137209,7 @@
       "id": "goodfood-vegan-breakfast-muffins",
       "slot": "breakfast",
       "title": "Веганские маффины на завтрак",
+      "cuisine": "american",
       "macros": {
         "kcal": 229.5,
         "protein": 4.8,
@@ -137952,6 +138097,7 @@
       "id": "goodfood-tuna-nicoise-protein-pots",
       "slot": "snack1",
       "title": "Протеиновые контейнеры с тунцом нисуаз",
+      "cuisine": "european",
       "macros": {
         "kcal": 325.9,
         "protein": 39.6,
@@ -138572,6 +138718,7 @@
       "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
       "slot": "dinner",
       "title": "Гратен из нута и шпината с сальса-верде",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 632,
         "protein": 34.9,
@@ -139525,6 +139672,7 @@
       "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
       "slot": "lunch",
       "title": "Маринованная курица с орзо, томатами и фетой",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 589.8,
         "protein": 36.9,
@@ -141190,6 +141338,7 @@
       "id": "goodfood-family-meals-easy-fish-cakes",
       "slot": "dinner",
       "title": "Простые рыбные котлеты",
+      "cuisine": "european",
       "macros": {
         "kcal": 385.2,
         "protein": 28.7,
@@ -142219,6 +142368,7 @@
       "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
       "slot": "dinner",
       "title": "Лимонное орзо с форелью, пряной брокколи и пеперонатой",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 435.3,
         "protein": 13.8,
@@ -144208,6 +144358,7 @@
       "id": "goodfood-steak-broccoli-protein-pots",
       "slot": "lunch",
       "title": "Протеиновые контейнеры со стейком и брокколи",
+      "cuisine": "international",
       "macros": {
         "kcal": 488.3,
         "protein": 34,
@@ -144925,6 +145076,7 @@
       "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
       "slot": "dinner",
       "title": "Мини-киши с томатами и панчеттой",
+      "cuisine": "european",
       "macros": {
         "kcal": 339.1,
         "protein": 8.8,
@@ -145856,6 +146008,7 @@
       "id": "goodfood-vegan-ragu",
       "slot": "dinner",
       "title": "Веганское рагу",
+      "cuisine": "italian",
       "macros": {
         "kcal": 292.1,
         "protein": 15.3,
@@ -146910,6 +147063,7 @@
       "id": "goodfood-summery-beans-herby-green-aioli",
       "slot": "lunch",
       "title": "Летняя фасоль с зелёным айоли",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 754.1,
         "protein": 16,
@@ -148042,6 +148196,7 @@
       "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
       "slot": "dinner",
       "title": "Карри с фрикадельками, нутом, рисом и маринованной капустой",
+      "cuisine": "asian",
       "macros": {
         "kcal": 718.9,
         "protein": 32.2,
@@ -150204,6 +150359,7 @@
       "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
       "slot": "lunch",
       "title": "Лепёшки с запечённой лимонной брокколи и маскарпоне",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 684.1,
         "protein": 16.7,
@@ -152211,6 +152367,7 @@
       "id": "goodfood-bulgur-quinoa-lunch-bowls",
       "slot": "lunch",
       "title": "Боулы из булгура и киноа: два варианта",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 448.8,
         "protein": 14.2,
@@ -153388,6 +153545,7 @@
       "id": "goodfood-vegan-paella",
       "slot": "dinner",
       "title": "Веганская паэлья",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 446.5,
         "protein": 13.7,
@@ -154514,6 +154672,7 @@
       "id": "goodfood-spiced-lentil-butternut-squash-soup",
       "slot": "lunch",
       "title": "Пряный суп из чечевицы и тыквы баттернат",
+      "cuisine": "international",
       "macros": {
         "kcal": 324.8,
         "protein": 14.6,
@@ -155426,6 +155585,7 @@
       "id": "goodfood-pork-harissa-meatballs",
       "slot": "dinner",
       "title": "Свиные фрикадельки с хариссой",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 693.7,
         "protein": 50.4,
@@ -156579,6 +156739,7 @@
       "id": "goodfood-crunchy-broccoli-cranberry-salad",
       "slot": "dinner",
       "title": "Хрустящий салат из брокколи и клюквы",
+      "cuisine": "american",
       "macros": {
         "kcal": 527.8,
         "protein": 19.1,
@@ -157515,6 +157676,7 @@
       "id": "goodfood-chicken-sweet-potato-peanut-stew",
       "slot": "dinner",
       "title": "Куриное рагу с бататом и арахисом",
+      "cuisine": "international",
       "macros": {
         "kcal": 460.8,
         "protein": 35.8,
@@ -158613,6 +158775,7 @@
       "id": "goodfood-mozzarella-pepper-aubergine-calzone",
       "slot": "snack1",
       "title": "Кальцоне с моцареллой, перцем и баклажаном",
+      "cuisine": "italian",
       "macros": {
         "kcal": 556.9,
         "protein": 19.7,
@@ -159646,6 +159809,7 @@
       "id": "goodfood-lentil-kofta-orzo-feta",
       "slot": "dinner",
       "title": "Кофта из чечевицы с орзо и фетой",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 683,
         "protein": 30.1,
@@ -160575,6 +160739,7 @@
       "id": "goodfood-apple-penne-slaw-walnuts",
       "slot": "dinner",
       "title": "Салат из пенне, яблока и капусты с грецкими орехами",
+      "cuisine": "european",
       "macros": {
         "kcal": 488.8,
         "protein": 18.9,
@@ -161504,6 +161669,7 @@
       "id": "goodfood-sausage-egg-muffins",
       "slot": "breakfast",
       "title": "Маффины с колбасками и яйцом",
+      "cuisine": "european",
       "macros": {
         "kcal": 494,
         "protein": 33,
@@ -162325,6 +162491,7 @@
       "id": "goodfood-mushroom-lentil-beef-ragu",
       "slot": "lunch",
       "title": "Рагу из говядины, грибов и чечевицы",
+      "cuisine": "italian",
       "macros": {
         "kcal": 657.7,
         "protein": 55.5,
@@ -163348,6 +163515,7 @@
       "id": "goodfood-black-bean-spicy-beef-pasta",
       "slot": "lunch",
       "title": "Острая паста с говядиной и чёрной фасолью",
+      "cuisine": "international",
       "macros": {
         "kcal": 715.7,
         "protein": 34.1,
@@ -165207,6 +165375,7 @@
       "id": "goodfood-harissa-beef-tomato-bulgur",
       "slot": "dinner",
       "title": "Булгур с говядиной, хариссой и томатами",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 676.9,
         "protein": 39.6,
@@ -167221,6 +167390,7 @@
       "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
       "slot": "lunch",
       "title": "Цельнозерновые роллы с мятным хумусом из горошка и свёклой",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 441.4,
         "protein": 18.3,
@@ -168215,6 +168385,7 @@
       "id": "goodfood-orange-oregano-pulled-pork",
       "slot": "dinner",
       "title": "Томлёная свинина с апельсином и орегано",
+      "cuisine": "american",
       "macros": {
         "kcal": 655.8,
         "protein": 38.5,
@@ -169345,6 +169516,7 @@
       "id": "goodfood-tomato-pepper-bean-one-pot",
       "slot": "dinner",
       "title": "Томаты, перец и фасоль в одной сковороде",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 387.7,
         "protein": 21.9,
@@ -170460,6 +170632,7 @@
       "id": "goodfood-scandi-beetroot-salmon-pasta",
       "slot": "dinner",
       "title": "Паста со свёклой и лососем в скандинавском стиле",
+      "cuisine": "european",
       "macros": {
         "kcal": 566.5,
         "protein": 26,
@@ -171229,6 +171402,7 @@
       "id": "goodfood-chicken-squash-pesto-lasagne",
       "slot": "dinner",
       "title": "Лазанья с курицей, тыквой и песто",
+      "cuisine": "italian",
       "macros": {
         "kcal": 740.3,
         "protein": 35.6,
@@ -172420,6 +172594,7 @@
       "id": "goodfood-prawn-rice-mango-jar-salad",
       "slot": "dinner",
       "title": "Салат в банке с креветками, рисом и манго",
+      "cuisine": "international",
       "macros": {
         "kcal": 363.6,
         "protein": 18.8,
@@ -173162,6 +173337,7 @@
       "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
       "slot": "breakfast",
       "title": "Йогуртовые боулы с апельсином и тёмным шоколадом",
+      "cuisine": "international",
       "macros": {
         "kcal": 483.5,
         "protein": 25,
@@ -173806,6 +173982,7 @@
       "id": "goodfood-black-bean-soup-with-chunky-raita",
       "slot": "lunch",
       "title": "Суп из чёрной фасоли с густой райтой",
+      "cuisine": "international",
       "macros": {
         "kcal": 398.4,
         "protein": 17.3,
@@ -174823,6 +175000,7 @@
       "id": "goodfood-wild-salmon-with-radish-orange-slaw",
       "slot": "lunch",
       "title": "Дикий лосось со слоу из редиса и апельсина",
+      "cuisine": "european",
       "macros": {
         "kcal": 355.8,
         "protein": 13.5,
@@ -175882,6 +176060,7 @@
       "id": "goodfood-fragrant-biryani-with-coriander-cod",
       "slot": "lunch",
       "title": "Ароматный бирьяни с треской и кинзой",
+      "cuisine": "indian",
       "macros": {
         "kcal": 507.7,
         "protein": 37.8,
@@ -176962,6 +177141,7 @@
       "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
       "slot": "lunch",
       "title": "Киноа с запечённой спаржей, яйцами и каперсами",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 539.4,
         "protein": 27,
@@ -177932,6 +178112,7 @@
       "id": "goodfood-pork-with-cucumber-apricot-couscous",
       "slot": "lunch",
       "title": "Свинина с кускусом, огурцом и абрикосами",
+      "cuisine": "mediterranean",
       "macros": {
         "kcal": 563,
         "protein": 32.9,
@@ -179110,6 +179291,7 @@
       "id": "goodfood-veggie-nuggets-with-summer-slaw",
       "slot": "lunch",
       "title": "Овощные наггетсы с летним слоу",
+      "cuisine": "european",
       "macros": {
         "kcal": 511.7,
         "protein": 24,
@@ -180359,6 +180541,7 @@
       "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
       "slot": "dinner",
       "title": "Ньокки из батата с томатным соусом",
+      "cuisine": "italian",
       "macros": {
         "kcal": 553.4,
         "protein": 17.5,
@@ -181230,6 +181413,7 @@
       "id": "new-home-buckwheat-legs",
       "slot": "dinner",
       "title": "Гречка с куриными бёдрами и йогуртовым соусом",
+      "cuisine": "russian",
       "macros": {
         "kcal": 542.2,
         "protein": 49.4,
@@ -182258,6 +182442,7 @@
       "id": "new-home-cutlets-mash",
       "slot": "dinner",
       "title": "Куриные котлеты с пюре и быстрым соусом",
+      "cuisine": "russian",
       "macros": {
         "kcal": 617.9,
         "protein": 45.9,
@@ -183325,6 +183510,7 @@
       "id": "new-home-merchant-buckwheat",
       "slot": "lunch",
       "title": "Гречка по-купечески с курицей",
+      "cuisine": "russian",
       "macros": {
         "kcal": 538.8,
         "protein": 49,
@@ -184026,6 +184212,7 @@
       "id": "new-home-simple-buckwheat",
       "slot": "lunch",
       "title": "Простая гречка с курицей",
+      "cuisine": "russian",
       "macros": {
         "kcal": 486.3,
         "protein": 49,
@@ -184687,6 +184874,7 @@
       "id": "new-home-stewed-cabbage",
       "slot": "dinner",
       "title": "Тушёная капуста со свиной вырезкой",
+      "cuisine": "russian",
       "macros": {
         "kcal": 415.1,
         "protein": 42.3,
@@ -185383,6 +185571,7 @@
       "id": "new-oats-banana-blueberry",
       "slot": "breakfast",
       "title": "Ночная овсянка с бананом и черникой",
+      "cuisine": "american",
       "macros": {
         "kcal": 653.9,
         "protein": 46.7,
@@ -186068,6 +186257,7 @@
       "id": "new-oats-chocolate",
       "slot": "breakfast",
       "title": "Шоколадная ночная овсянка",
+      "cuisine": "american",
       "macros": {
         "kcal": 550.4,
         "protein": 46.1,
@@ -186693,6 +186883,7 @@
       "id": "new-oats-apple",
       "slot": "breakfast",
       "title": "Ночная овсянка «Яблочный пирог»",
+      "cuisine": "american",
       "macros": {
         "kcal": 585.9,
         "protein": 45.3,
@@ -187322,6 +187513,7 @@
       "id": "new-oats-carrot",
       "slot": "breakfast",
       "title": "Ночная овсянка «Морковный торт»",
+      "cuisine": "american",
       "macros": {
         "kcal": 540.7,
         "protein": 45.6,
@@ -187951,6 +188143,7 @@
       "id": "new-oats-blueberry-almond",
       "slot": "breakfast",
       "title": "Ночная овсянка с черникой и миндалём",
+      "cuisine": "american",
       "macros": {
         "kcal": 628.4,
         "protein": 47.4,
@@ -188632,6 +188825,7 @@
       "id": "new-oats-cinnamon-raisin",
       "slot": "breakfast",
       "title": "Ночная овсянка с корицей и изюмом",
+      "cuisine": "american",
       "macros": {
         "kcal": 638.9,
         "protein": 46.4,
@@ -189317,6 +189511,7 @@
       "id": "new-sandwich-boiled-chicken",
       "slot": "breakfast",
       "title": "Сэндвич с варёной курицей и низкокалорийный соус без сахараом",
+      "cuisine": "international",
       "macros": {
         "kcal": 558.5,
         "protein": 47.3,
@@ -189896,6 +190091,7 @@
       "id": "new-sandwich-smoked-chicken",
       "slot": "breakfast",
       "title": "Сэндвич с копчёной курицей и яйцом",
+      "cuisine": "international",
       "macros": {
         "kcal": 561.6,
         "protein": 45.8,
@@ -190479,6 +190675,7 @@
       "id": "new-sandwich-turkey-ham",
       "slot": "breakfast",
       "title": "Сэндвич с ветчиной из индейки",
+      "cuisine": "international",
       "macros": {
         "kcal": 542.5,
         "protein": 39.2,
@@ -191114,6 +191311,7 @@
       "id": "new-sandwich-balyk",
       "slot": "breakfast",
       "title": "Простой сэндвич с балыком",
+      "cuisine": "russian",
       "macros": {
         "kcal": 505.5,
         "protein": 40,
@@ -191704,6 +191902,7 @@
       "id": "new-sandwich-caesar",
       "slot": "breakfast",
       "title": "Открытый сэндвич «Цезарь» с курицей",
+      "cuisine": "american",
       "macros": {
         "kcal": 552.1,
         "protein": 53.3,
@@ -192648,6 +192847,7 @@
       "id": "new-sandwich-paprika",
       "slot": "breakfast",
       "title": "Чиабатта с курицей и копчёной паприкой",
+      "cuisine": "international",
       "macros": {
         "kcal": 590.4,
         "protein": 45,
@@ -193424,6 +193624,7 @@
       "id": "foodru-oblomov-potato-mushroom",
       "slot": "dinner",
       "title": "Картофель с грибным соусом и курицей",
+      "cuisine": "russian",
       "macros": {
         "kcal": 643.4,
         "protein": 51.6,
@@ -194285,6 +194486,7 @@
       "id": "foodru-oblomov-meatballs",
       "slot": "dinner",
       "title": "Фрикадельки с пастой",
+      "cuisine": "international",
       "macros": {
         "kcal": 788.2,
         "protein": 50.4,
@@ -195354,6 +195556,7 @@
       "id": "foodru-oblomov-beef-veg",
       "slot": "dinner",
       "title": "Мясо с овощами",
+      "cuisine": "international",
       "macros": {
         "kcal": 353.8,
         "protein": 44.3,
@@ -196135,6 +196338,7 @@
       "id": "foodru-oblomov-chashushuli",
       "slot": "dinner",
       "title": "Чашушули",
+      "cuisine": "georgian",
       "macros": {
         "kcal": 364.7,
         "protein": 43.1,
@@ -197155,6 +197359,7 @@
       "id": "foodru-oblomov-borscht",
       "slot": "dinner",
       "title": "Борщ с увеличенной порцией мяса",
+      "cuisine": "russian",
       "macros": {
         "kcal": 332.1,
         "protein": 37.5,
@@ -198297,6 +198502,7 @@
       "id": "foodru-oblomov-pepper-beef",
       "slot": "dinner",
       "title": "Перечная говядина с подливой",
+      "cuisine": "russian",
       "macros": {
         "kcal": 405.7,
         "protein": 43.3,
@@ -199041,6 +199247,7 @@
       "id": "foodru-oblomov-pepper-chicken",
       "slot": "dinner",
       "title": "Перечная курица с подливой",
+      "cuisine": "russian",
       "macros": {
         "kcal": 371.7,
         "protein": 47.5,
@@ -199790,6 +199997,7 @@
       "id": "foodru-oblomov-seabass",
       "slot": "dinner",
       "title": "Сибас с картофелем",
+      "cuisine": "international",
       "macros": {
         "kcal": 533.7,
         "protein": 50.1,
@@ -200393,6 +200601,7 @@
       "id": "foodru-oblomov-sandwich",
       "slot": "lunch",
       "title": "Бутерброд с курицей и авокадо",
+      "cuisine": "international",
       "macros": {
         "kcal": 610.1,
         "protein": 49.4,
@@ -201344,6 +201553,7 @@
       "id": "foodru-blogger-chicken-bombs",
       "slot": "dinner",
       "title": "Куриные «бомбочки» с рисом и жюльеном",
+      "cuisine": "russian",
       "macros": {
         "kcal": 477,
         "protein": 40.9,
@@ -202248,6 +202458,7 @@
       "id": "foodru-blogger-cottage-waffles",
       "slot": "breakfast",
       "title": "Творожные вафли с яблоком",
+      "cuisine": "russian",
       "macros": {
         "kcal": 300.4,
         "protein": 30.8,
@@ -202852,6 +203063,7 @@
       "id": "foodru-oats-chocolate-shell",
       "slot": "breakfast",
       "title": "Ленивая овсянка с шоколадной корочкой",
+      "cuisine": "international",
       "macros": {
         "kcal": 716.5,
         "protein": 47.5,
@@ -203542,6 +203754,7 @@
       "id": "foodru-oats-no-cook",
       "slot": "breakfast",
       "title": "Нежная овсянка без варки",
+      "cuisine": "international",
       "macros": {
         "kcal": 549.7,
         "protein": 46,
@@ -204153,6 +204366,7 @@
       "id": "foodru-oats-tomato",
       "slot": "breakfast",
       "title": "Томатная овсянка с яйцом и пармезаном",
+      "cuisine": "international",
       "macros": {
         "kcal": 523.8,
         "protein": 41.8,

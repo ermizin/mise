@@ -2295,12 +2295,14 @@ p {
     background-color 200ms linear;
 }
 .catalog-filter-button:active:not(:disabled),
+.cuisine-menu-trigger:active:not(:disabled),
 .catalog-chips .chip:active:not(:disabled),
 .catalog-filters-sheet .chip:active:not(:disabled) {
   transform: scale(0.94);
 }
 /* Акцент — только когда есть что сбросить. */
-.catalog-filter-button.is-active {
+.catalog-filter-button.is-active,
+.cuisine-menu-trigger.is-active {
   background: var(--button-grad);
   border-color: transparent;
   color: #fff;
@@ -8501,6 +8503,130 @@ p {
 @keyframes mise-norm-updated { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: none; } }
 @keyframes mise-norm-reason { from { opacity: 0; } to { opacity: 1; } }
 
+
+/* ── Меню выбора кухни ──────────────────────────────────────────────────
+   Лёгкий поповер, а не Sheet: тот же контрол стоит и в шапке каталога, и
+   внутри шага мастера, где полноэкранная шторка перекрыла бы список блюд. */
+.cuisine-menu {
+  position: relative;
+  flex: none;
+}
+.cuisine-menu-trigger {
+  min-height: var(--hit-min);
+  max-width: 168px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--r-tile);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    transform var(--motion-press) ease,
+    color 200ms linear,
+    border-color 200ms linear,
+    background-color 200ms linear;
+}
+.cuisine-menu-trigger svg {
+  flex: none;
+  transform: rotate(90deg);
+  transition: transform 200ms var(--motion-spring);
+}
+.cuisine-menu-trigger[aria-expanded="true"] svg {
+  transform: rotate(-90deg);
+}
+.cuisine-menu-trigger.is-active svg {
+  color: #fff;
+}
+.cuisine-menu-panel {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 208px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: var(--r-card);
+  transform-origin: top right;
+  animation: mise-cuisine-panel-in 180ms var(--motion-spring) both;
+}
+.cuisine-menu-panel.is-closing {
+  animation: mise-cuisine-panel-out 160ms ease both;
+}
+.cuisine-menu-option {
+  min-height: var(--hit-min);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--r-tile);
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-medium);
+  text-align: left;
+  animation: mise-cuisine-option-in 220ms var(--motion-spring) both;
+  animation-delay: var(--cuisine-delay, 0ms);
+}
+.cuisine-menu-panel.is-closing .cuisine-menu-option {
+  animation: none;
+}
+.cuisine-menu-option.is-selected {
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--accent-text);
+  font-weight: var(--weight-semibold);
+}
+.cuisine-menu-option:active:not(:disabled) {
+  transform: scale(0.97);
+}
+.manual-slot-cuisine {
+  margin-top: 10px;
+  display: flex;
+}
+.manual-slot-cuisine .cuisine-menu-panel {
+  right: auto;
+  left: 0;
+  transform-origin: top left;
+}
+@keyframes mise-cuisine-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes mise-cuisine-panel-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+@keyframes mise-cuisine-option-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .app-boot-progress i,
   img.is-loading,
@@ -8656,5 +8782,14 @@ p {
   .primary-button:not(:disabled):hover,
   button:active:not(:disabled) {
     transform: none !important;
+  }
+  .cuisine-menu-panel,
+  .cuisine-menu-panel.is-closing,
+  .cuisine-menu-option {
+    animation: none;
+  }
+  .cuisine-menu-trigger svg,
+  .cuisine-menu-trigger[aria-expanded="true"] svg {
+    transition: none;
   }
 }

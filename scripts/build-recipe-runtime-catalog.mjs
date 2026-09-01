@@ -366,6 +366,30 @@ async function loadRecipeImages() {
   return images;
 }
 
+/* Кухня приходит из редакционной разметки `data/recipe-cuisines.json`.
+   Генератор ничего не угадывает по названию: карточка без явной строки в
+   разметке не попадает в каталог и падает в failures. */
+async function loadRecipeCuisines() {
+  const markup = JSON.parse(
+    await readFile(new URL("../data/recipe-cuisines.json", import.meta.url), "utf8"),
+  );
+  if (markup.schemaVersion !== 1 || !Array.isArray(markup.assignments)) {
+    throw new Error("Unsupported editorial cuisine markup.");
+  }
+  const allowed = new Set(markup.cuisines);
+  const byId = new Map();
+  for (const assignment of markup.assignments) {
+    if (!allowed.has(assignment.cuisine)) {
+      throw new Error(`Unknown cuisine ${assignment.cuisine} for ${assignment.id}.`);
+    }
+    if (byId.has(assignment.id)) {
+      throw new Error(`Duplicate cuisine assignment for ${assignment.id}.`);
+    }
+    byId.set(assignment.id, assignment);
+  }
+  return { cuisines: markup.cuisines, byId };
+}
+
 function candidateWithFamilyMeasurements(candidate, sourceIngredients) {
   return {
     ...candidate,
@@ -377,7 +401,7 @@ function candidateWithFamilyMeasurements(candidate, sourceIngredients) {
   };
 }
 
-function projectReadyCard(releaseCard, entry, recipeImages) {
+function projectReadyCard(releaseCard, entry, recipeImages, cuisines) {
   const { candidate, dataset } = entry;
   const normalized = normalizeRawRecipeCandidate(candidate, {
     publisher: dataset.source,
@@ -415,6 +439,15 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
   }
   if (!allowedSlots.has(candidate.slot)) failures.push(["unsupported_slot", `Unsupported slot: ${candidate.slot}`]);
   if (!candidate.titleRu?.trim()) failures.push(["missing_russian_title", "No Russian editorial title."]);
+  const cuisineAssignment = cuisines.byId.get(candidate.id);
+  if (!cuisineAssignment) {
+    failures.push(["missing_editorial_cuisine", "Recipe has no editorial cuisine assignment in data/recipe-cuisines.json."]);
+  } else if (candidate.titleRu?.trim() && cuisineAssignment.title !== candidate.titleRu.trim()) {
+    failures.push([
+      "stale_editorial_cuisine",
+      `Cuisine markup was reviewed for "${cuisineAssignment.title}" but the card is now "${candidate.titleRu.trim()}".`,
+    ]);
+  }
   if (!hasPositive(candidate.time?.totalMinutes)) failures.push(["missing_time", "No positive total time."]);
   const macros = releaseCard.calculatedNutrition;
   if (!hasPositive(macros.kcal) || ![macros.protein, macros.fat, macros.carbs].every(hasNonNegative)) {
@@ -574,6 +607,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
       id: candidate.id,
       slot: candidate.slot,
       title: candidate.titleRu.trim(),
+      cuisine: cuisineAssignment.cuisine,
       macros: Object.fromEntries(Object.entries(macros).map(([key, value]) => [key, round(value)])),
       timeMinutes: Math.max(
         Number(candidate.time.totalMinutes),
@@ -661,10 +695,11 @@ function jsonStableCatalog(value) {
 }
 
 export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
-  const [release, candidates, recipeImages] = await Promise.all([
+  const [release, candidates, recipeImages, cuisines] = await Promise.all([
     auditRecipeRelease(),
     loadCandidates(),
     loadRecipeImages(),
+    loadRecipeCuisines(),
   ]);
   const failures = [];
   const recipes = [];
@@ -674,7 +709,7 @@ export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
       failures.push(normalizationFailure(releaseCard, "missing_candidate", "Audit-ready card is missing candidate data."));
       continue;
     }
-    const projection = projectReadyCard(releaseCard, entry, recipeImages);
+    const projection = projectReadyCard(releaseCard, entry, recipeImages, cuisines);
     failures.push(...projection.failures);
     if (projection.recipe) recipes.push(projection.recipe);
   }
@@ -684,12 +719,17 @@ export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
     runtimeReadyRecipes: recipes.length,
     bySlot: Object.fromEntries([...allowedSlots].sort().map((slot) => [slot, recipes.filter((recipe) => recipe.slot === slot).length])),
     byReleaseMenuTag: Object.fromEntries([...allowedTags].sort().map((tag) => [tag, recipes.filter((recipe) => recipe.menuTags.includes(tag)).length])),
+    byCuisine: Object.fromEntries(
+      cuisines.cuisines
+        .map((cuisine) => [cuisine, recipes.filter((recipe) => recipe.cuisine === cuisine).length])
+        .filter(([, count]) => count > 0),
+    ),
     failureReasons: Object.fromEntries(
       [...new Set(failures.map((failure) => failure.code))].sort().map((code) => [code, failures.filter((failure) => failure.code === code).length]),
     ),
   };
   const catalog = {
-    schemaVersion: 2,
+    schemaVersion: 3,
     generatedFrom: "audit-ready editorial cards only",
     constraints: {
       releaseMenuTags: [...allowedTags],

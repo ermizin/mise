@@ -19,12 +19,16 @@ function stableFingerprint(value) {
 }
 
 test("runtime projection is complete for every recipe it admits", () => {
-  assert.equal(catalog.schemaVersion, 2);
+  assert.equal(catalog.schemaVersion, 3);
   assert.equal(catalog.constraints.mediaRequired, "verified_local_source_image");
   assert.ok(catalog.recipes.length > 0, "current audit should yield some runtime recipes");
   assert.equal(new Set(catalog.recipes.map((recipe) => recipe.id)).size, catalog.recipes.length);
   for (const recipe of catalog.recipes) {
     assert.match(recipe.title, /[А-Яа-яЁё]/u);
+    assert.ok(
+      catalog.coverage.byCuisine[recipe.cuisine] > 0,
+      `${recipe.id}: carries an editorial cuisine counted in coverage`,
+    );
     assert.ok(recipe.steps.length > 0);
     assert.ok(recipe.shoppingIngredients.length > 0);
     assert.equal(

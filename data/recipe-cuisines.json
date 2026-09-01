@@ -1,0 +1,2218 @@
+{
+  "schemaVersion": 1,
+  "basis": "editorial_manual_assignment_not_keyword_inference",
+  "reviewedOn": "2026-09-01",
+  "cuisines": [
+    "russian",
+    "georgian",
+    "asian",
+    "indian",
+    "mexican",
+    "italian",
+    "mediterranean",
+    "american",
+    "european",
+    "international"
+  ],
+  "assignments": [
+    {
+      "id": "aji-chicken",
+      "title": "Курица ахи-верде с картофелем",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "apple-almond",
+      "title": "Яблоко с миндальной пастой",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "beef-wok",
+      "title": "Говядина вок с овощами",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "chia-cacao",
+      "title": "Чиа-крем с какао",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "chia-coconut",
+      "title": "Чиа-пудинг с кокосом",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "cod-potato",
+      "title": "Треска с молодым картофелем",
+      "origin": "legacy",
+      "cuisine": "european"
+    },
+    {
+      "id": "cottage-cucumber",
+      "title": "Творог с огурцом и зеленью",
+      "origin": "legacy",
+      "cuisine": "russian"
+    },
+    {
+      "id": "egg-hummus",
+      "title": "Яйца с хумусом и овощами",
+      "origin": "legacy",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "foodru-blogger-chicken-bombs",
+      "title": "Куриные «бомбочки» с рисом и жюльеном",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "foodru-blogger-cottage-waffles",
+      "title": "Творожные вафли с яблоком",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "foodru-oats-chocolate-shell",
+      "title": "Ленивая овсянка с шоколадной корочкой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "foodru-oats-no-cook",
+      "title": "Нежная овсянка без варки",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "foodru-oats-tomato",
+      "title": "Томатная овсянка с яйцом и пармезаном",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "foodru-oblomov-beef-veg",
+      "title": "Мясо с овощами",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "foodru-oblomov-borscht",
+      "title": "Борщ с увеличенной порцией мяса",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "foodru-oblomov-chashushuli",
+      "title": "Чашушули",
+      "origin": "runtime",
+      "cuisine": "georgian",
+      "note": "Чашушули — грузинское блюдо."
+    },
+    {
+      "id": "foodru-oblomov-meatballs",
+      "title": "Фрикадельки с пастой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "foodru-oblomov-pepper-beef",
+      "title": "Перечная говядина с подливой",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "foodru-oblomov-pepper-chicken",
+      "title": "Перечная курица с подливой",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "foodru-oblomov-potato-mushroom",
+      "title": "Картофель с грибным соусом и курицей",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "foodru-oblomov-sandwich",
+      "title": "Бутерброд с курицей и авокадо",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "foodru-oblomov-seabass",
+      "title": "Сибас с картофелем",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-breakfast-0",
+      "title": "Овсяная запеканка с яблоком",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-budget-breakfast-1",
+      "title": "Ленивые сырники",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-breakfast-2",
+      "title": "Омлет с замороженными овощами",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-breakfast-3",
+      "title": "Гречневые панкейки",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-breakfast-4",
+      "title": "Яичные маффины с морковью",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-budget-dinner-0",
+      "title": "Тефтели с картофельным пюре",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-dinner-1",
+      "title": "Курица с капустой в духовке",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-dinner-2",
+      "title": "Рыбные котлеты с гречкой",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-dinner-3",
+      "title": "Ленивые голубцы",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-dinner-4",
+      "title": "Чечевица с индейкой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-lunch-0",
+      "title": "Куриные бёдра с гречкой",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-lunch-1",
+      "title": "Чечевичная похлёбка с курицей",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-lunch-2",
+      "title": "Рис с индейкой и капустой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-lunch-3",
+      "title": "Тушёная фасоль с фаршем",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-lunch-4",
+      "title": "Куриный плов с овощами",
+      "origin": "generated",
+      "cuisine": "asian",
+      "note": "Плов — среднеазиатское блюдо, укоренившееся в русской домашней кухне; отнесено к азиатской кухне по происхождению."
+    },
+    {
+      "id": "gen-budget-snack1-0",
+      "title": "Овсяные квадратики",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-budget-snack1-1",
+      "title": "Яичные маффины",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-budget-snack1-2",
+      "title": "Творожное печенье",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-snack1-3",
+      "title": "Морковные сырники",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-snack1-4",
+      "title": "Домашний хумус с лепёшкой",
+      "origin": "generated",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "gen-budget-snack2-0",
+      "title": "Запечённая овсянка мини",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-budget-snack2-1",
+      "title": "Куриные маффины",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-budget-snack2-2",
+      "title": "Творожные батончики",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-budget-snack2-3",
+      "title": "Яблочные оладьи",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-budget-snack2-4",
+      "title": "Яичные рулетики",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-breakfast-0",
+      "title": "Яичные маффины с беконом",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-keto-breakfast-1",
+      "title": "Омлет с лососем и шпинатом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-breakfast-2",
+      "title": "Кето-сырники",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-keto-breakfast-3",
+      "title": "Фриттата с курицей",
+      "origin": "generated",
+      "cuisine": "italian"
+    },
+    {
+      "id": "gen-keto-breakfast-4",
+      "title": "Запеканка с индейкой и сыром",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-dinner-0",
+      "title": "Куриные бёдра с брокколи",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-dinner-1",
+      "title": "Лосось со шпинатом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-dinner-2",
+      "title": "Говяжьи котлеты с цветной капустой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-dinner-3",
+      "title": "Индейка с кабачком",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-dinner-4",
+      "title": "Треска с авокадо-соусом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-lunch-0",
+      "title": "Курица с пюре из цветной капусты",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-lunch-1",
+      "title": "Лосось с брокколи и авокадо",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-lunch-2",
+      "title": "Говядина с кабачковой лапшой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-lunch-3",
+      "title": "Индейка в сливочном соусе",
+      "origin": "generated",
+      "cuisine": "european"
+    },
+    {
+      "id": "gen-keto-lunch-4",
+      "title": "Тунец с зелёной фасолью",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-snack1-0",
+      "title": "Кето-маффины с яйцом",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-keto-snack1-1",
+      "title": "Сырные шарики с индейкой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-snack1-2",
+      "title": "Кокосовые жир-бомбы",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-keto-snack1-3",
+      "title": "Мини-фриттата с тунцом",
+      "origin": "generated",
+      "cuisine": "italian"
+    },
+    {
+      "id": "gen-keto-snack1-4",
+      "title": "Ореховые батончики без сахара",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-snack2-0",
+      "title": "Яичные маффины с лососем",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-keto-snack2-1",
+      "title": "Куриные рулетики с сыром",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-snack2-2",
+      "title": "Кето-брауни мини",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-keto-snack2-3",
+      "title": "Запечённое авокадо с яйцом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-keto-snack2-4",
+      "title": "Сырные крекеры с индейкой",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-paleo-breakfast-0",
+      "title": "Фриттата с индейкой и шпинатом",
+      "origin": "generated",
+      "cuisine": "italian"
+    },
+    {
+      "id": "gen-paleo-breakfast-1",
+      "title": "Батат с яйцом и зеленью",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-breakfast-2",
+      "title": "Куриные маффины с овощами",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-paleo-breakfast-3",
+      "title": "Яблоко с запечёнными яйцами",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-breakfast-4",
+      "title": "Омлет с лососем",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-dinner-0",
+      "title": "Стейк с печёными овощами",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-paleo-dinner-1",
+      "title": "Курица с кабачком и травами",
+      "origin": "generated",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "gen-paleo-dinner-2",
+      "title": "Индейка с тыквенным пюре",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-dinner-3",
+      "title": "Белая рыба с брокколи",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-dinner-4",
+      "title": "Говяжьи котлеты с бататом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-lunch-0",
+      "title": "Курица с бататом и брокколи",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-lunch-1",
+      "title": "Говядина с тыквой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-lunch-2",
+      "title": "Лосось с овощами гриль",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-lunch-3",
+      "title": "Индейка с цветной капустой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-lunch-4",
+      "title": "Треска с корнеплодами",
+      "origin": "generated",
+      "cuisine": "european"
+    },
+    {
+      "id": "gen-paleo-snack1-0",
+      "title": "Куриные мини-котлеты",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-snack1-1",
+      "title": "Яичные маффины со шпинатом",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-paleo-snack1-2",
+      "title": "Орехово-яблочные шарики",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-snack1-3",
+      "title": "Роллы из индейки и огурца",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-snack1-4",
+      "title": "Запечённый тунец с овощами",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-snack2-0",
+      "title": "Кокосовые шарики с орехами",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-snack2-1",
+      "title": "Мини-фриттата с лососем",
+      "origin": "generated",
+      "cuisine": "italian"
+    },
+    {
+      "id": "gen-paleo-snack2-2",
+      "title": "Бататовые маффины с индейкой",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-paleo-snack2-3",
+      "title": "Куриное суфле с зеленью",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-paleo-snack2-4",
+      "title": "Яблочные дольки с орехами",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-breakfast-0",
+      "title": "Яичные маффины с индейкой",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-protein-breakfast-1",
+      "title": "Творожная запеканка с ягодами",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-protein-breakfast-2",
+      "title": "Белковые панкейки",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-protein-breakfast-3",
+      "title": "Омлет-ролл с курицей",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-breakfast-4",
+      "title": "Сырники с протеиновым кремом",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-protein-dinner-0",
+      "title": "Лосось с зелёными овощами",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-dinner-1",
+      "title": "Курица с чечевицей",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-dinner-2",
+      "title": "Индейка с печёным картофелем",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-dinner-3",
+      "title": "Треска с фасолью",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-dinner-4",
+      "title": "Говяжьи тефтели с гречкой",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-protein-lunch-0",
+      "title": "Курица терияки с гречкой",
+      "origin": "generated",
+      "cuisine": "asian"
+    },
+    {
+      "id": "gen-protein-lunch-1",
+      "title": "Индейка с булгуром и овощами",
+      "origin": "generated",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "gen-protein-lunch-2",
+      "title": "Тунец с пастой и томатами",
+      "origin": "generated",
+      "cuisine": "italian"
+    },
+    {
+      "id": "gen-protein-lunch-3",
+      "title": "Говядина с рисом и брокколи",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-lunch-4",
+      "title": "Куриные тефтели с киноа",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack1-0",
+      "title": "Творожные маффины",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-protein-snack1-1",
+      "title": "Белковые конфеты с какао",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack1-2",
+      "title": "Яичные мини-запеканки",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack1-3",
+      "title": "Протеиновое печенье",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack1-4",
+      "title": "Роллы из индейки",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack2-0",
+      "title": "Творожный брауни",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack2-1",
+      "title": "Маффины с тунцом",
+      "origin": "generated",
+      "cuisine": "american"
+    },
+    {
+      "id": "gen-protein-snack2-2",
+      "title": "Белковые сырники мини",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "gen-protein-snack2-3",
+      "title": "Куриные суфле-кубики",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "gen-protein-snack2-4",
+      "title": "Протеиновые шарики",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-10minute-couscous-salad",
+      "title": "Салат с кускусом за 10 минут",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-apple-penne-slaw-walnuts",
+      "title": "Салат из пенне, яблока и капусты с грецкими орехами",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-aubergine-tomato-halloumi-pie",
+      "title": "Пирог с баклажаном, томатами и халлуми",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-banana-overnight-oats",
+      "title": "Ночная овсянка с бананом",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "goodfood-beef-red-wine-potato-pie",
+      "title": "Пирог с говядиной, красным вином и картофелем",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-big-batch-bolognese",
+      "title": "Большая порция болоньезе",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-big-batch-pressure-cooker-bolognese",
+      "title": "Большая порция болоньезе в скороварке",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-black-bean-soup-with-chunky-raita",
+      "title": "Суп из чёрной фасоли с густой райтой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-black-bean-spicy-beef-pasta",
+      "title": "Острая паста с говядиной и чёрной фасолью",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-bulgur-quinoa-lunch-bowls",
+      "title": "Боулы из булгура и киноа: два варианта",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-chicken-pasta-bake",
+      "title": "Запеканка из пасты с курицей",
+      "origin": "runtime",
+      "cuisine": "european",
+      "note": "Британская будничная запеканка из пасты, а не итальянское блюдо."
+    },
+    {
+      "id": "goodfood-chicken-squash-pesto-lasagne",
+      "title": "Лазанья с курицей, тыквой и песто",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-chicken-sweet-potato-peanut-stew",
+      "title": "Куриное рагу с бататом и арахисом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+      "title": "Гратен из нута и шпината с сальса-верде",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-courgette-tomato-soup",
+      "title": "Суп из кабачка и томатов",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-creamy-bean-kale-pasta",
+      "title": "Паста со сливочной фасолью и кейлом",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-creamy-chicken-sweetcorn-soup",
+      "title": "Сливочный суп с курицей и кукурузой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-crunchy-broccoli-cranberry-salad",
+      "title": "Хрустящий салат из брокколи и клюквы",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
+      "title": "Рисовый боул с курицей фахита и обожжённым лаймом",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "goodfood-family-meals-chicken-veg-casserole",
+      "title": "Куриное рагу с овощами",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
+      "title": "Говяжье рагу с шапкой из батата",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-cakes",
+      "title": "Простые рыбные котлеты",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-family-meals-mild-chicken-curry",
+      "title": "Нежное куриное карри",
+      "origin": "runtime",
+      "cuisine": "indian"
+    },
+    {
+      "id": "goodfood-fragrant-biryani-with-coriander-cod",
+      "title": "Ароматный бирьяни с треской и кинзой",
+      "origin": "runtime",
+      "cuisine": "indian"
+    },
+    {
+      "id": "goodfood-harissa-beef-tomato-bulgur",
+      "title": "Булгур с говядиной, хариссой и томатами",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-italian-vegetable-soup",
+      "title": "Итальянский овощной суп",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-kadala-curry",
+      "title": "Карри с нутом",
+      "origin": "runtime",
+      "cuisine": "indian"
+    },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "title": "Лимонное орзо с форелью, пряной брокколи и пеперонатой",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-lentil-kofta-orzo-feta",
+      "title": "Кофта из чечевицы с орзо и фетой",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
+      "title": "Маринованная курица с орзо, томатами и фетой",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "title": "Карри с фрикадельками, нутом, рисом и маринованной капустой",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "goodfood-mini-lentil-shepherds-pies",
+      "title": "Мини-пастушьи пироги с чечевицей",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-mozzarella-pepper-aubergine-calzone",
+      "title": "Кальцоне с моцареллой, перцем и баклажаном",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-mushroom-lentil-beef-ragu",
+      "title": "Рагу из говядины, грибов и чечевицы",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
+      "title": "Йогуртовые боулы с апельсином и тёмным шоколадом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-orange-oregano-pulled-pork",
+      "title": "Томлёная свинина с апельсином и орегано",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "goodfood-pork-harissa-meatballs",
+      "title": "Свиные фрикадельки с хариссой",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-pork-with-cucumber-apricot-couscous",
+      "title": "Свинина с кускусом, огурцом и абрикосами",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-prawn-rice-mango-jar-salad",
+      "title": "Салат в банке с креветками, рисом и манго",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
+      "title": "Салат из киноа, зелени и изюма",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+      "title": "Киноа с запечённой спаржей, яйцами и каперсами",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
+      "title": "Лепёшки с запечённой лимонной брокколи и маскарпоне",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
+      "title": "Мини-киши с томатами и панчеттой",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-satay-sweet-potato-curry",
+      "title": "Карри с бататом и арахисом",
+      "origin": "runtime",
+      "cuisine": "asian",
+      "note": "Сатай — индонезийско-тайская основа соуса, отсюда азиатская кухня, а не индийская."
+    },
+    {
+      "id": "goodfood-sausage-egg-muffins",
+      "title": "Маффины с колбасками и яйцом",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-sausage-leek-mash-pie",
+      "title": "Пирог с колбасками, пореем и картофельным пюре",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-scandi-beetroot-salmon-pasta",
+      "title": "Паста со свёклой и лососем в скандинавском стиле",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-slow-cooker-beef-bourguignon",
+      "title": "Беф-бургиньон в медленноварке",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-slow-cooker-lamb-curry",
+      "title": "Карри с ягнёнком в медленноварке",
+      "origin": "runtime",
+      "cuisine": "indian"
+    },
+    {
+      "id": "goodfood-slow-cooker-sausage-casserole",
+      "title": "Рагу с колбасками в медленноварке",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-smoky-black-bean-chilli",
+      "title": "Копчёный чили с чёрной фасолью",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "goodfood-spiced-lentil-butternut-squash-soup",
+      "title": "Пряный суп из чечевицы и тыквы баттернат",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-steak-broccoli-protein-pots",
+      "title": "Протеиновые контейнеры со стейком и брокколи",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "goodfood-summery-beans-herby-green-aioli",
+      "title": "Летняя фасоль с зелёным айоли",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+      "title": "Ньокки из батата с томатным соусом",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-tomato-pepper-bean-one-pot",
+      "title": "Томаты, перец и фасоль в одной сковороде",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-tuna-nicoise-protein-pots",
+      "title": "Протеиновые контейнеры с тунцом нисуаз",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-tuna-pasta-bake",
+      "title": "Запеканка из пасты с тунцом",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-vegan-breakfast-muffins",
+      "title": "Веганские маффины на завтрак",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "goodfood-vegan-paella",
+      "title": "Веганская паэлья",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-vegan-ragu",
+      "title": "Веганское рагу",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-vegan-shepherds-pie",
+      "title": "Веганский пастуший пирог",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-vegetarian-bolognese",
+      "title": "Вегетарианская болоньезе",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "goodfood-veggie-nuggets-with-summer-slaw",
+      "title": "Овощные наггетсы с летним слоу",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+      "title": "Овощной пастуший пирог с пюре из батата",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+      "title": "Цельнозерновые роллы с мятным хумусом из горошка и свёклой",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "goodfood-wild-salmon-with-radish-orange-slaw",
+      "title": "Дикий лосось со слоу из редиса и апельсина",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "kefir-smoothie",
+      "title": "Кефирный смузи с ягодами",
+      "origin": "legacy",
+      "cuisine": "russian"
+    },
+    {
+      "id": "korean-bowl",
+      "title": "Куриный боул по-корейски",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "lentil-stew",
+      "title": "Чечевица с курицей и томатами",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "mozzarella-tomato",
+      "title": "Моцарелла с томатами",
+      "origin": "legacy",
+      "cuisine": "italian"
+    },
+    {
+      "id": "new-home-buckwheat-legs",
+      "title": "Гречка с куриными бёдрами и йогуртовым соусом",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "new-home-cutlets-mash",
+      "title": "Куриные котлеты с пюре и быстрым соусом",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "new-home-merchant-buckwheat",
+      "title": "Гречка по-купечески с курицей",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "new-home-simple-buckwheat",
+      "title": "Простая гречка с курицей",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "new-home-stewed-cabbage",
+      "title": "Тушёная капуста со свиной вырезкой",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "new-oats-apple",
+      "title": "Ночная овсянка «Яблочный пирог»",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "new-oats-banana-blueberry",
+      "title": "Ночная овсянка с бананом и черникой",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "new-oats-blueberry-almond",
+      "title": "Ночная овсянка с черникой и миндалём",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "new-oats-carrot",
+      "title": "Ночная овсянка «Морковный торт»",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "new-oats-chocolate",
+      "title": "Шоколадная ночная овсянка",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "new-oats-cinnamon-raisin",
+      "title": "Ночная овсянка с корицей и изюмом",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "new-sandwich-balyk",
+      "title": "Простой сэндвич с балыком",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "new-sandwich-boiled-chicken",
+      "title": "Сэндвич с варёной курицей и низкокалорийный соус без сахараом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "new-sandwich-caesar",
+      "title": "Открытый сэндвич «Цезарь» с курицей",
+      "origin": "runtime",
+      "cuisine": "american",
+      "note": "«Цезарь» придуман в Тихуане итальянским эмигрантом и закрепился как североамериканское блюдо; итальянской кухней он не является."
+    },
+    {
+      "id": "new-sandwich-paprika",
+      "title": "Чиабатта с курицей и копчёной паприкой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "new-sandwich-smoked-chicken",
+      "title": "Сэндвич с копчёной курицей и яйцом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "new-sandwich-turkey-ham",
+      "title": "Сэндвич с ветчиной из индейки",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "oats-berry",
+      "title": "Овсянка с ягодами и творогом",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "omelet-green",
+      "title": "Омлет со шпинатом и фетой",
+      "origin": "legacy",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "panang",
+      "title": "Пананг карри с курицей",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "protein-pudding",
+      "title": "Шоколадный протеин-пудинг",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "salmon-quinoa",
+      "title": "Лосось с киноа и брокколи",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-banana-oat-bake",
+      "title": "Банановая овсяная запеканка для набора",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-bbq-burger-bowl",
+      "title": "Говяжий боул с картофелем, сыром и BBQ-соусом",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-beefy-cheese-potatoes",
+      "title": "Картофель с говядиной, овощами и сырным соусом",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-berry-smoothie",
+      "title": "Ягодный смузи с кефиром и творогом",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-breakfast-rolls",
+      "title": "Завтрачные роллы со свининой, яйцом и картофелем",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-chicken-bean-bowl",
+      "title": "Курица с рисом, фасолью и томатами",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-chicken-buckwheat",
+      "title": "Гречка с курицей и морковью",
+      "origin": "legacy",
+      "cuisine": "russian"
+    },
+    {
+      "id": "src-chicken-nuggets",
+      "title": "Куриные наггетсы с бататом без панировки",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-chicken-rice-veg",
+      "title": "Курица с рисом и овощами",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-chile-lime-chicken",
+      "title": "Курица с лаймом, золотым рисом и брокколи",
+      "origin": "legacy",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "src-cinnamon-granola",
+      "title": "Гранола с корицей и изюмом",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-cottage-bake",
+      "title": "Творожная запеканка без сахара",
+      "origin": "legacy",
+      "cuisine": "russian",
+      "note": "Русской кухней карточку делает творожная основа, а не слово «запеканка» в названии."
+    },
+    {
+      "id": "src-creamy-chicken-pasta",
+      "title": "Сливочная паста с курицей и овощным соусом",
+      "origin": "legacy",
+      "cuisine": "italian"
+    },
+    {
+      "id": "src-crispy-beef-noodles",
+      "title": "Острая лапша с хрустящим говяжьим фаршем",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-curry-fried-rice",
+      "title": "Жареный рис с карри и курицей",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-fajita-rice",
+      "title": "Жареный рис с курицей и сладким перцем",
+      "origin": "legacy",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "src-frozen-yogurt",
+      "title": "Замороженный йогурт с черникой",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-gochujang-beef",
+      "title": "Говядина кочудян с капустой и рисом",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-halal-chicken",
+      "title": "Пряная курица с золотым рисом и овощами",
+      "origin": "legacy",
+      "cuisine": "international",
+      "note": "Halal — религиозное требование к продуктам, а не кухня; блюдо без выраженного национального акцента."
+    },
+    {
+      "id": "src-honey-lime-steak",
+      "title": "Говядина с лаймом, рисом, фасолью и кукурузой",
+      "origin": "legacy",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "src-hot-honey-pork",
+      "title": "Свинина с рисом, фасолью и острым мёдом",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-japanese-beef-curry",
+      "title": "Говяжье карри с картофелем и рисом",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-lemon-chicken",
+      "title": "Лимонная курица с картофельным пюре и морковью",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-light-stroganoff",
+      "title": "Говядина по-строгановски с грибами и пастой",
+      "origin": "legacy",
+      "cuisine": "russian"
+    },
+    {
+      "id": "src-mediterranean-wrap",
+      "title": "Ролл с пряной курицей, овощами и хумусом",
+      "origin": "legacy",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "src-oat-syrniki",
+      "title": "Сырники с овсяными хлопьями",
+      "origin": "legacy",
+      "cuisine": "russian"
+    },
+    {
+      "id": "src-one-pot-chicken",
+      "title": "Курица с бурым рисом в одной кастрюле",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-peanut-turkey",
+      "title": "Индейка с овощами в арахисовом соусе",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-protein-oats",
+      "title": "Ночная овсянка с протеином и черникой",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-pumpkin-oat-bake",
+      "title": "Тыквенная овсяная запеканка",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-red-pepper-chicken-dip",
+      "title": "Куриный дип с запечённым перцем",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-salmon-rice-veg",
+      "title": "Лосось с рисом и печёными овощами",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "src-sausage-pepper-pasta",
+      "title": "Паста со свиным фаршем, перцем и шпинатом",
+      "origin": "legacy",
+      "cuisine": "italian"
+    },
+    {
+      "id": "src-sheet-pan-pancakes",
+      "title": "Белковый овсяный блин на противне",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "src-sriracha-lime-chicken",
+      "title": "Курица в соусе шрирача с бататом, рисом и брокколи",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-taco-mac",
+      "title": "Макароны с говядиной, томатами и сыром",
+      "origin": "legacy",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "src-teriyaki-tray",
+      "title": "Курица терияки с рисом, бататом и брокколи",
+      "origin": "legacy",
+      "cuisine": "asian"
+    },
+    {
+      "id": "src-waffle-french-toast",
+      "title": "Белковая вафля-френч-тост с ягодами",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "syrniki",
+      "title": "Сырники с йогуртом",
+      "origin": "legacy",
+      "cuisine": "russian"
+    },
+    {
+      "id": "tmpm-16046",
+      "title": "Запечённая овсянка «Морковный торт»",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-16249",
+      "title": "Панкейк-боллы с двойным шоколадом",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-16283",
+      "title": "Фаршированные картофельные рёшти",
+      "origin": "runtime",
+      "cuisine": "european"
+    },
+    {
+      "id": "tmpm-16300",
+      "title": "Запечённая овсянка с лимоном и черникой",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-16454",
+      "title": "Запечённые пенне",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-16479",
+      "title": "Куриные стрипсы в аэрогриле",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-16850",
+      "title": "Курица в медово-чесночном соусе",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-17115",
+      "title": "Сковорода с бататом и колбасками",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-17381",
+      "title": "Крылышки без костей в кленово-шрирача соусе",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-17393",
+      "title": "Куриные крылышки баффало без костей в аэрогриле",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-17591",
+      "title": "Острый куриный сэндвич",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-18557",
+      "title": "Корейское куриное рагу дакдоритан",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-18874",
+      "title": "Пансит со свиным фаршем",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-19895",
+      "title": "Суп с ветчиной и фасолью",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-21839",
+      "title": "Паста э фаджоли",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-21841",
+      "title": "Паста э фаджоли для набора массы",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-21976",
+      "title": "Запечённая овсянка с тёмным шоколадом и вишней",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-22144",
+      "title": "Тайское красное карри с кокосом и курицей",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-22181",
+      "title": "Брокколи-боллы",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-22278",
+      "title": "Лапша с мёдом и мисо",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-22331",
+      "title": "Острая курица в хрустящей панировке",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-22428",
+      "title": "Курица с белым энчилада-соусом и картофелем",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-22442",
+      "title": "Острая говядина с брюссельской капустой",
+      "origin": "runtime",
+      "cuisine": "international",
+      "note": "Без источникового маркера кухни: имбирь, чили или соевый соус сами по себе не делают блюдо азиатским."
+    },
+    {
+      "id": "tmpm-22531",
+      "title": "Запечённая овсянка с арахисовой пастой и джемом",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-22550",
+      "title": "Куриные фрикадельки",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-22571",
+      "title": "Тако-боулы с куриным фаршем",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-22922",
+      "title": "Запечённая овсянка со вкусом апельсинового пломбира",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-22968",
+      "title": "Сытная паста с ветчиной",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-22980",
+      "title": "Домашняя паста с говядиной в одной кастрюле",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-23090",
+      "title": "Буррито на завтрак",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-23113",
+      "title": "Боулы с говядиной и сальса-верде",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-23194",
+      "title": "Боулы с лапшой в сладком чили",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-23228",
+      "title": "Куриные наггетсы по-нэшвиллски",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23261",
+      "title": "Мак-н-чиз со скрытыми овощами",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23306",
+      "title": "Боулы с индейкой и кейлом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-23316",
+      "title": "Запечённая овсянка с двойным шоколадом",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23431",
+      "title": "Боулы с курицей-гриль в терияки",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-23462",
+      "title": "Запечённая овсянка с персиками и сливочным сыром",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23501",
+      "title": "Боулы с курицей в медово-чесночном соусе и лапшой",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-23518",
+      "title": "Протеиновые тыквенные маффины",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23544",
+      "title": "Боулы с говяжьим фаршем в терияки",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-23545",
+      "title": "Запечённая овсянка с бананом и корицей",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23554",
+      "title": "Сытный чили",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-23797",
+      "title": "Баттер-чикен с овощами и рисом",
+      "origin": "runtime",
+      "cuisine": "indian"
+    },
+    {
+      "id": "tmpm-24542",
+      "title": "Рисовые боулы с чили и лимоном",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-24579",
+      "title": "Брокколи-байты с халапеньо и чеддером",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-24608",
+      "title": "Завтрачный скрэмбл с бататом и колбасой",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-24619",
+      "title": "Боулы-буррито на 1000 ккал",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-24729",
+      "title": "Сковорода «чизбургер»",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-24799",
+      "title": "Мини-тако с говядиной, чили и сыром",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-24851",
+      "title": "Завтрачные булочки с колбасой",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-24899",
+      "title": "Боулы с индейкой, лимоном и чесноком",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-24909",
+      "title": "Быстрое карри с куриным фаршем",
+      "origin": "runtime",
+      "cuisine": "indian"
+    },
+    {
+      "id": "tmpm-24917",
+      "title": "Завтрачные маффины со скрытыми овощами",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-24949",
+      "title": "Куриные рисовые боулы со шрирачей и арахисом",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-24968",
+      "title": "Говяжьи тефтели барбекю для большой порции",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-24974",
+      "title": "Говяжьи тефтели барбекю",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "title": "Йогурт с яблоком, гранолой и мёдом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "title": "Рисовые хлебцы с авокадо и белой фасолью",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "title": "Кесадилья с яйцом, курицей и сыром",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
+      "title": "Завтрак с хашбрауном и яичным белком",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-25030",
+      "title": "Протеиновые панкейки для милпрепа",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-25044",
+      "title": "Корейская говядина с рисовыми клецками ттокпокки",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-25071",
+      "title": "Куриные боулы с рисом и чечевицей",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-25082",
+      "title": "Запеканка из батата, ветчины и яиц",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-25092",
+      "title": "Морковь с хумусом",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "tmpm-25159",
+      "title": "Запечённые пенне для большой порции",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-25175",
+      "title": "Стир-фрай из свинины с острым мёдом",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-25244",
+      "title": "Жареный рис с курицей фахитас",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-25290",
+      "title": "Запечённая овсянка для большой порции",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-25304",
+      "title": "Куриная грудка для заморозки",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-25453",
+      "title": "Протеиновые тефтели из говядины",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-26138",
+      "title": "Говядина и овощи в глазури кочуджан",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-26232",
+      "title": "Мак-энд-чиз для большой порции",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-26358",
+      "title": "Японское карри с говяжьим фаршем",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-26414",
+      "title": "Французские тосты из протеиновых вафель с корицей",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-26429",
+      "title": "Осенние боулы с курицей и поблано",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-26441",
+      "title": "Индейка стир-фрай с арахисом",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-26528",
+      "title": "Картофель с говядиной и соусом кесо",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-26583",
+      "title": "Боулы «небрежный Джо» с чизстейком",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-26617",
+      "title": "Куриные боулы со шрирачей и лаймом",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-26647",
+      "title": "Запечённая овсянка с тыквой и пряностями",
+      "origin": "runtime",
+      "cuisine": "american",
+      "note": "Baked oatmeal с тыквенными пряностями — североамериканский завтрак; «запеканка» здесь не признак русской кухни."
+    },
+    {
+      "id": "tmpm-26660",
+      "title": "Курица энчилада в медленноварке",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-26676",
+      "title": "Жареный рис с курицей и карри",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-26689",
+      "title": "Протеиновые панкейки на противне",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-26720",
+      "title": "Говяжий строганов в медленноварке",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "tmpm-26872",
+      "title": "Курица с лимоном и травами",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-26920",
+      "title": "Завтрачные такитос с картофелем, колбасой и сыром",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-26965",
+      "title": "Куриные наггетсы для перекуса",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-26996",
+      "title": "Курица с чили, лаймом и золотистым рисом",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-27287",
+      "title": "Боулы с бургером барбекю и чеддером",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tmpm-27306",
+      "title": "Паста с колбасками и перцем в одной кастрюле",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-27328",
+      "title": "Сливочная паста с курицей из одной формы",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "tmpm-27343",
+      "title": "Боулы со стейком чипотле и перцем",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-27802",
+      "title": "Средиземноморские роллы с курицей",
+      "origin": "runtime",
+      "cuisine": "mediterranean"
+    },
+    {
+      "id": "tmpm-28083",
+      "title": "Макароны тако",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-28247",
+      "title": "Курица терияки с овощами на противне",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-28302",
+      "title": "Хрустящая говядина с чили и лапшой",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "tmpm-28499",
+      "title": "Чёрная фасоль с чипотле",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-28504",
+      "title": "Рис с чипотле, кинзой и лаймом",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-28513",
+      "title": "Курица чипотле для боулов-буррито",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-28533",
+      "title": "Куриные боулы со сливочным соусом из кинзы и лайма",
+      "origin": "runtime",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "tmpm-28572",
+      "title": "Рис с овощами",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "tmpm-28584",
+      "title": "Рис с брокколи и чеддером",
+      "origin": "runtime",
+      "cuisine": "american"
+    },
+    {
+      "id": "tofu-curry",
+      "title": "Тофу карри с цветной капустой",
+      "origin": "legacy",
+      "cuisine": "indian"
+    },
+    {
+      "id": "tuna-crisp",
+      "title": "Тунец с хрустящими овощами",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "turkey-meatballs",
+      "title": "Тефтели из индейки в томатах",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "turkey-roll",
+      "title": "Роллы из индейки с творожным сыром",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "turkey-toast",
+      "title": "Тост с индейкой и авокадо",
+      "origin": "legacy",
+      "cuisine": "american"
+    },
+    {
+      "id": "turkey-veg",
+      "title": "Индейка с печёными овощами",
+      "origin": "legacy",
+      "cuisine": "international"
+    },
+    {
+      "id": "yogurt-berries",
+      "title": "Йогурт с ягодами и семенами",
+      "origin": "legacy",
+      "cuisine": "international"
+    }
+  ]
+}

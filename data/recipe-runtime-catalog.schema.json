@@ -4,7 +4,7 @@
   "type": "object",
   "required": ["schemaVersion", "constraints", "coverage", "recipes", "failures"],
   "properties": {
-    "schemaVersion": { "const": 2 },
+    "schemaVersion": { "const": 3 },
     "constraints": {
       "type": "object",
       "properties": {
@@ -19,9 +19,13 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "slot", "title", "macros", "timeMinutes", "menuTags", "costTier", "servingMass", "shoppingIngredients", "steps", "storage", "packing", "provenance", "visualFallback", "recipeFamily", "adapter"],
+        "required": ["id", "slot", "title", "cuisine", "macros", "timeMinutes", "menuTags", "costTier", "servingMass", "shoppingIngredients", "steps", "storage", "packing", "provenance", "visualFallback", "recipeFamily", "adapter"],
         "properties": {
           "slot": { "enum": ["breakfast", "lunch", "dinner", "snack1", "snack2"] },
+          "cuisine": {
+            "description": "Editorial cuisine assignment from data/recipe-cuisines.json; never inferred from the title.",
+            "enum": ["russian", "georgian", "asian", "indian", "mexican", "italian", "mediterranean", "american", "european", "international"]
+          },
           "menuTags": { "type": "array", "minItems": 1, "items": { "enum": ["protein", "budget"] } },
           "costTier": { "type": "object", "properties": { "value": { "minimum": 1, "maximum": 3 }, "basis": { "const": "relative_editorial_ingredient_complexity_not_rubles" } }, "required": ["value", "basis"] },
           "servingMass": { "type": "object", "properties": { "status": { "const": "estimated_not_verified_cooked_yield" } }, "required": ["grams", "status", "method"] },
