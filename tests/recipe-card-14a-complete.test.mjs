@@ -28,21 +28,40 @@ test("14A projects timed recipe instructions and preserves their timeline order"
     let previousAt = -1;
     for (const step of recipe.instructions) {
       assert.equal(typeof step.text, "string", `${recipe.id}: step text`);
-      assert.ok(Number.isFinite(step.minutes) && step.minutes >= 0, `${recipe.id}: non-negative minutes`);
+      assert.ok(Number.isFinite(step.minutes) && step.minutes > 0, `${recipe.id}: positive minutes`);
       assert.equal(typeof step.hands, "boolean", `${recipe.id}: hands is explicit`);
       assert.ok(Number.isFinite(step.at) && step.at >= previousAt, `${recipe.id}: at is monotonic`);
       previousAt = step.at;
     }
+    const explicitTimes = recipe.recipeFamily.miseInstructions.filter(
+      (step) => /\d+(?:[.,]\d+)?(?:\s*(?:–|-|до)\s*\d+(?:[.,]\d+)?)?\s*(?:сек|мин|ч(?:ас)?)/iu.test(step.text),
+    );
+    if (explicitTimes.length > 0) {
+      assert.ok(
+        recipe.instructions.some((step) => step.minutes > 0),
+        `${recipe.id}: visible times are not projected as zero-minute steps`,
+      );
+    }
   }
+  assert.match(
+    engine,
+    /recipeInstructionMinutes\([\s\S]{0,120}instruction\.duration,[\s\S]{0,80}instruction\.text/,
+    "timeline falls back from structured duration to the visible instruction text",
+  );
 });
 
 test("14A calculates the approved three-level difficulty in the engine", async () => {
-  const { engine, runtime } = await recipeSources();
+  const { page, engine, runtime } = await recipeSources();
+  const recipeView = page.slice(page.indexOf("function RecipeView("));
 
   assert.match(engine, /RecipeEffortLevel\s*=\s*"low"\s*\|\s*"medium"\s*\|\s*"high"/, "the engine owns all three levels");
   assert.match(engine, /activeMinutes\s*<=\s*15\s*&&\s*cookware\s*<=\s*1/, "simple is at most 15 active minutes and one vessel");
   assert.match(engine, /activeMinutes\s*<=\s*30\s*\|\|\s*cookware\s*>=\s*2/, "medium follows the approved OR rule");
   assert.ok(runtime.recipes.every((recipe) => ["low", "medium", "high"].includes(recipe.effort.level)), "runtime keeps the engine difficulty level");
+  assert.match(page, /level:\s*recipeEffortLevel\(activeMinutes, cookware\)/, "legacy estimation uses the engine helper");
+  assert.match(page, /level:\s*recipeEffortLevel\([\s\S]{0,180}effortInputs\.cookware/, "legacy overrides are normalized through the engine");
+  assert.match(recipeView, /const difficulty = recipe\.effort\.difficulty;/, "the card reads the projected level without recalculating it");
+  assert.doesNotMatch(recipeView, /recipe\.effort\.level\s*===/, "the UI never maps levels itself");
 });
 
 test("14A analytics distinguish opening, tab switching, and reaching cooking steps", async () => {
@@ -81,13 +100,15 @@ test("14A renders a real timeline with a permanent legacy fallback and reduced-m
   const recipeView = page.slice(page.indexOf("function RecipeView("));
 
   assert.match(recipeView, /className="recipe-timeline/);
+  assert.match(recipeView, /timelineHasEstimates/);
+  assert.match(recipeView, /step\.estimated\s*\?\s*"≈ "/);
   assert.match(recipeView, /recipe\.instructions\s*(?:\?\.|&&|\?)/, "missing instructions fall back instead of breaking old recipes");
   assert.match(recipeView, /className="cooking-steps/, "numbered legacy steps remain available");
   assert.match(css, /\.recipe-timeline\s*\{/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]{0,4000}recipe-timeline/, "timeline motion is covered by reduced-motion rules");
 });
 
-test("14A opens with a larger cover and supports an accessible swipe expansion", async () => {
+test("14A opens with a larger cover, swipe expansion, and no top photo button", async () => {
   const { page, css } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
 
@@ -96,5 +117,37 @@ test("14A opens with a larger cover and supports an accessible swipe expansion",
   assert.match(recipeView, /onTouchStart=/);
   assert.match(recipeView, /onTouchEnd=/);
   assert.match(recipeView, /end\s*-\s*start\s*>=\s*48[\s\S]{0,100}setPhotoExpanded\(true\)/);
-  assert.match(recipeView, /aria-label=\{photoExpanded\s*\?\s*"Уменьшить фото"\s*:\s*"Увеличить фото"\}/);
+  assert.doesNotMatch(recipeView, /recipe-photo-expand/);
+  assert.doesNotMatch(css, /\.recipe-photo-expand/);
+});
+
+test("14A explains difficulty with equipment and parallel-process evidence", async () => {
+  const { page, css } = await recipeSources();
+  const recipeView = page.slice(page.indexOf("function RecipeView("));
+
+  assert.match(page, /effortDescription:\s*recipeEffortDescription/);
+  assert.match(page, /"весы"/);
+  assert.match(page, /Два процесса/);
+  assert.match(page, /идут параллельно, ничего не остывает критично/);
+  assert.match(recipeView, /\{recipe\.effortDescription\}/);
+  assert.match(css, /\.recipe-difficulty\s*>\s*\.recipe-difficulty-evidence/);
+});
+
+test("14A follows the supplied visual reference without adding pantry states", async () => {
+  const { css } = await recipeSources();
+
+  assert.match(
+    css,
+    /\.recipe-detail\s*>\s*\.detail-tabs button\.selected\s*\{[^}]*color:\s*#fff;[^}]*background:\s*var\(--accent-grad\)/s,
+  );
+  assert.match(
+    css,
+    /\.recipe-timeline-node\s*\{[^}]*background:\s*var\(--accent\)/s,
+    "hands-on steps use the action colour",
+  );
+  assert.match(
+    css,
+    /\.recipe-timeline \.is-passive small\s*\{[^}]*color:\s*var\(--mint-text\)/s,
+    "passive steps use the waiting colour",
+  );
 });

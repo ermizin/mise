@@ -37,6 +37,8 @@ import {
   aggregateCookingAmounts,
   canonicalIngredients,
   deriveRecipeFamilyFromCatalog,
+  recipeEffortDifficulty,
+  recipeEffortLevel,
   recipeToFamily,
   solveRecipeFamily,
   type RecipeFamily,
@@ -185,7 +187,7 @@ type RecipeEffort = {
   activeActions: number;
   activeMinutes: number;
   parallelProcesses?: number;
-  difficulty?: 1 | 2 | 3;
+  difficulty: 1 | 2 | 3;
 };
 type RecipeLocalization = {
   fit: "familiar" | "adapted" | "niche";
@@ -215,6 +217,7 @@ type Recipe = {
   packing: RecipePacking;
   flex: RecipeFlex;
   effort: RecipeEffort;
+  effortDescription: string;
   localization: RecipeLocalization;
   procedureIngredients?: {
     id: string;
@@ -879,23 +882,93 @@ function estimateEffort(
     Math.max(3, steps.length * 3 + knifeActions * 2),
   );
   return {
-    level:
-      activeMinutes <= 15 && cookware <= 1
-        ? "low"
-        : activeMinutes <= 30 || cookware >= 2
-          ? "medium"
-          : "high",
+    level: recipeEffortLevel(activeMinutes, cookware),
     knifeActions,
     cookware,
     activeActions,
     activeMinutes,
-    difficulty:
-      activeMinutes <= 15 && cookware <= 1
-        ? 1
-        : activeMinutes <= 30 || cookware >= 2
-          ? 2
-          : 3,
+    difficulty: recipeEffortDifficulty(activeMinutes, cookware),
   };
+}
+
+type RecipeEffortEvidenceStep = {
+  text: string;
+  equipment?: string[];
+};
+
+const equipmentLabels: [RegExp, string][] = [
+  [/(?:large_)?(?:sauce)?pan|pot|kettle|heavy_pan/u, "кастрюля"],
+  [/(?:frying_pan|skillet|wok|deep_frying_pan)/u, "сковорода"],
+  [/oven/u, "духовка"],
+  [/(?:baking|sheet)_tray|baking_sheet|roasting_tin/u, "противень"],
+  [/(?:baking|casserole|ceramic|pie|shallow)_dish|muffin_tin/u, "форма"],
+  [/slow_cooker/u, "медленноварка"],
+  [/pressure_cooker/u, "скороварка"],
+  [/(?:immersion_)?blender|food_processor/u, "блендер"],
+  [/microwave/u, "микроволновка"],
+  [/air_fryer/u, "аэрогриль"],
+  [/waffle_iron/u, "вафельница"],
+  [/grill/u, "гриль"],
+  [/(?:mixing|heatproof)_bowl|mortar/u, "миска"],
+  [/sieve|steamer/u, "сито"],
+  [/whisk/u, "венчик"],
+  [/potato_masher/u, "толкушка"],
+];
+
+function naturalList(items: string[]) {
+  if (items.length <= 1) return items[0] ?? "";
+  if (items.length === 2) return `${items[0]} и ${items[1]}`;
+  return `${items.slice(0, -1).join(", ")} и ${items.at(-1)}`;
+}
+
+function capitalize(value: string) {
+  return value ? `${value[0].toUpperCase()}${value.slice(1)}` : value;
+}
+
+function recipeEffortDescription(
+  steps: RecipeEffortEvidenceStep[],
+  effort: RecipeEffort,
+) {
+  const sourceEquipment = new Set(
+    steps.flatMap((step) => step.equipment ?? []).map((item) => item.toLowerCase()),
+  );
+  const text = steps.map((step) => step.text).join(" ").toLowerCase();
+  const primary = new Set<string>();
+  for (const equipment of sourceEquipment) {
+    const mapped = equipmentLabels.find(([pattern]) => pattern.test(equipment));
+    if (mapped) primary.add(mapped[1]);
+  }
+  if (/кастрюл|варить|отварить|кипящ/u.test(text)) primary.add("кастрюля");
+  if (/сковород|обжар|жарить/u.test(text)) primary.add("сковорода");
+  if (/духов|выпек|запек/u.test(text)) primary.add("духовка");
+  if (/блендер|измельчить до однород/u.test(text)) primary.add("блендер");
+  if (!primary.size) {
+    primary.add(
+      effort.cookware === 1
+        ? "одна рабочая ёмкость"
+        : `${effort.cookware} предмета посуды`,
+    );
+  }
+
+  const segments = [
+    capitalize(naturalList([...primary].slice(0, 3))),
+    effort.knifeActions > 0 || sourceEquipment.has("knife") ? "нож" : null,
+    "весы",
+  ].filter((item): item is string => Boolean(item));
+  const parallel = Math.max(1, effort.parallelProcesses ?? 1);
+  const processDescription =
+    parallel === 1
+      ? "Один процесс, можно готовить по порядку."
+      : `${
+          parallel === 2
+            ? "Два процесса"
+            : parallel === 3
+              ? "Три процесса"
+              : parallel === 4
+                ? "Четыре процесса"
+                : `${parallel} процессов`
+        } идут параллельно, ничего не остывает критично.`;
+  return `${segments.join(" · ")}. ${processDescription}`;
 }
 type RecipeMeta = {
   provenance?: RecipeProvenance;
@@ -1219,6 +1292,21 @@ const r = (
       ...(meta.allergens ?? []),
     ]),
   ];
+  const effortInputs = {
+    ...estimateEffort(title, time, ingredients, steps),
+    ...meta.effort,
+  };
+  const effort: RecipeEffort = {
+    ...effortInputs,
+    level: recipeEffortLevel(
+      effortInputs.activeMinutes,
+      effortInputs.cookware,
+    ),
+    difficulty: recipeEffortDifficulty(
+      effortInputs.activeMinutes,
+      effortInputs.cookware,
+    ),
+  };
   return {
     id,
     slot,
@@ -1246,10 +1334,11 @@ const r = (
       carbs: [0.7, 1.3],
       ...meta.flex,
     },
-    effort: {
-      ...estimateEffort(title, time, ingredients, steps),
-      ...meta.effort,
-    },
+    effort,
+    effortDescription: recipeEffortDescription(
+      steps.map((text) => ({ text })),
+      effort,
+    ),
     storage: {
       ...storageFor(storageDays, freezable, ingredients),
       ...meta.storage,
@@ -4247,6 +4336,10 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
       carbs: runtimeFlexFor(record.recipeFamily, ["carb"]),
     },
     effort: record.effort,
+    effortDescription: recipeEffortDescription(
+      record.recipeFamily.miseInstructions,
+      record.effort,
+    ),
     localization: {
       fit: record.localization.fit,
       availability: record.localization.availability,
@@ -14406,6 +14499,8 @@ function RecipeView({
       (sum, step) => sum + (step.hands ? 0 : step.minutes),
       0,
     ) ?? 0;
+  const timelineHasEstimates =
+    timelineSteps?.some((step) => step.estimated) ?? false;
   const sortedIngredients = [...recipe.ingredients].sort(
     (left, right) =>
       ingredientSortableAmount(
@@ -14420,17 +14515,9 @@ function RecipeView({
   const sectionMotionClass = sectionMotion.epoch
     ? ` recipe-section-motion ${sectionMotion.direction > 0 ? "motion-enter-right" : "motion-enter-left"}`
     : "";
-  const difficulty =
-    recipe.effort.difficulty ??
-    (recipe.effort.level === "low" ? 1 : recipe.effort.level === "medium" ? 2 : 3);
+  const difficulty = recipe.effort.difficulty;
   const difficultyLabel = ["Просто", "Средне", "Сложно"][difficulty - 1];
   const cookingPortions = Math.max(1, (batch?.days ?? 1) * Math.max(1, eaters.length));
-  const cookwareLabel =
-    recipe.effort.cookware === 1
-      ? "1 предмет посуды"
-      : recipe.effort.cookware < 5
-        ? `${recipe.effort.cookware} предмета посуды`
-        : `${recipe.effort.cookware} предметов посуды`;
   return (
     <main
       className={`app-shell recipe-detail${photoExpanded ? " photo-expanded" : ""}`}
@@ -14462,18 +14549,6 @@ function RecipeView({
           aria-label="Назад"
         >
           <Icon name="chevron" className="back-chevron" />
-        </button>
-        <button
-          className="icon-button glass recipe-photo-expand"
-          type="button"
-          aria-label={photoExpanded ? "Уменьшить фото" : "Увеличить фото"}
-          aria-expanded={photoExpanded}
-          onClick={() => setPhotoExpanded((current) => !current)}
-        >
-          <Icon
-            name="chevron"
-            className={photoExpanded ? "photo-chevron-up" : "photo-chevron-down"}
-          />
         </button>
         <span className="glass recipe-source-pill">
           {originLabel}
@@ -14691,7 +14766,9 @@ function RecipeView({
                   ))}
                 </span>
               </div>
-              <p>{cookwareLabel}</p>
+              <p className="recipe-difficulty-evidence">
+                {recipe.effortDescription}
+              </p>
               <dl>
                 <div><dt>Активно</dt><dd>{recipe.effort.activeMinutes} мин</dd></div>
                 <div><dt>Всего</dt><dd>{recipe.time} мин</dd></div>
@@ -14729,6 +14806,7 @@ function RecipeView({
               {timelineSteps ? (
                 <>
                   <p className="recipe-timeline-summary">
+                    {timelineHasEstimates ? "≈ " : ""}
                     {timelineHandsMinutes > 0
                       ? `${timelineHandsMinutes} мин руками`
                       : "Активное время без точной отметки"}
@@ -14742,12 +14820,18 @@ function RecipeView({
                         className={step.hands ? "is-hands" : "is-passive"}
                         key={`${step.at}-${step.text}-${index}`}
                       >
-                        <time>{step.at === 0 ? "Старт" : `${step.at} мин`}</time>
+                        <time>
+                          {step.at === 0
+                            ? "Старт"
+                            : `${timelineHasEstimates ? "≈ " : ""}${step.at} мин`}
+                        </time>
                         <span className="recipe-timeline-node" aria-hidden />
                         <div>
                           <small>
                             {step.hands ? "Руками" : "Без вашего участия"}
-                            {step.minutes > 0 ? ` · ${step.minutes} мин` : " · время не указано"}
+                            {step.minutes > 0
+                              ? ` · ${step.estimated ? "≈ " : ""}${step.minutes} мин`
+                              : " · время не указано"}
                           </small>
                           <p>{step.text}</p>
                         </div>

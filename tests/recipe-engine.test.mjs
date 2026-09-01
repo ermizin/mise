@@ -47,6 +47,8 @@ async function recipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    recipeEffortDifficulty: engine.recipeEffortDifficulty,
+    recipeEffortLevel: engine.recipeEffortLevel,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;
@@ -97,6 +99,81 @@ function ingredient(sourceIngredientId, canonicalIngredientId, amount, unit, rol
     optional: false,
   };
 }
+
+test("recipe difficulty follows all approved boundary cases", () => {
+  const cases = [
+    { activeMinutes: 15, cookware: 1, level: "low", difficulty: 1 },
+    { activeMinutes: 16, cookware: 1, level: "medium", difficulty: 2 },
+    { activeMinutes: 30, cookware: 1, level: "medium", difficulty: 2 },
+    { activeMinutes: 31, cookware: 1, level: "high", difficulty: 3 },
+    { activeMinutes: 45, cookware: 2, level: "medium", difficulty: 2 },
+  ];
+
+  for (const item of cases) {
+    assert.equal(
+      engine.recipeEffortLevel(item.activeMinutes, item.cookware),
+      item.level,
+    );
+    assert.equal(
+      engine.recipeEffortDifficulty(item.activeMinutes, item.cookware),
+      item.difficulty,
+    );
+  }
+});
+
+test("recipe timeline reads explicit minutes from the instruction text", () => {
+  assert.equal(
+    engine.recipeInstructionMinutes(undefined, "Томите 20–25 минут до загустения."),
+    25,
+  );
+  assert.equal(
+    engine.recipeInstructionMinutes("8 минут", "Запекайте 20 минут."),
+    8,
+    "structured duration remains authoritative when it is present",
+  );
+
+  const steps = engine.recipeStepsFromInstructions([
+    {
+      id: "prepare",
+      text: "Нарежьте овощи 4 минуты.",
+      ingredientIds: [],
+    },
+    {
+      id: "cook",
+      text: "Томите 10–12 минут.",
+      ingredientIds: [],
+      dependsOn: ["prepare"],
+    },
+  ]);
+
+  assert.deepEqual(
+    steps.map(({ at, minutes }) => ({ at, minutes })),
+    [
+      { at: 0, minutes: 4 },
+      { at: 4, minutes: 12 },
+    ],
+  );
+
+  const estimated = engine.recipeStepsFromInstructions(
+    [
+      {
+        id: "prepare",
+        text: "Нарежьте овощи.",
+        ingredientIds: [],
+      },
+      {
+        id: "cook",
+        text: "Доведите блюдо до готовности.",
+        ingredientIds: [],
+        dependsOn: ["prepare"],
+      },
+    ],
+    { activeMinutes: 8, totalMinutes: 20 },
+  );
+  assert.ok(estimated.every((step) => step.minutes > 0));
+  assert.ok(estimated.every((step) => step.estimated));
+  assert.equal(estimated[1].at, estimated[0].minutes);
+});
 
 test("BBQ burger bowl with 85/15 mince is viable inside its working range", () => {
   const family = engine.recipeToFamily(legacyRecipe());

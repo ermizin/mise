@@ -173,6 +173,12 @@ export type RecipeStep = {
   hands: boolean;
   at: number;
   ingredientIds: string[];
+  estimated?: boolean;
+};
+
+export type RecipeTimelineBudget = {
+  activeMinutes?: number;
+  totalMinutes?: number;
 };
 
 export type RecipeEffortProjection = {
@@ -202,9 +208,9 @@ export function recipeEffortDifficulty(
   return level === "low" ? 1 : level === "medium" ? 2 : 3;
 }
 
-export function recipeInstructionMinutes(duration?: string): number {
-  if (!duration?.trim()) return 0;
-  const normalized = duration.replaceAll(",", ".").replaceAll("−", "–");
+function minutesFromInstructionText(value?: string): number {
+  if (!value?.trim()) return 0;
+  const normalized = value.replaceAll(",", ".").replaceAll("−", "–");
   const expressions = normalized.matchAll(
     /(\d+(?:\.\d+)?)(?:\s*(?:–|-|до)\s*(\d+(?:\.\d+)?))?\s*(сек(?:унд[аы]?)?|мин(?:ут[аы]?)?|ч(?:ас(?:а|ов)?)?)/giu,
   );
@@ -219,7 +225,15 @@ export function recipeInstructionMinutes(duration?: string): number {
         ? upper / 60
         : upper;
   }
-  return Math.max(0, Math.round(minutes));
+  return minutes > 0 ? Math.max(1, Math.round(minutes)) : 0;
+}
+
+export function recipeInstructionMinutes(
+  duration?: string,
+  instructionText?: string,
+): number {
+  const structuredMinutes = minutesFromInstructionText(duration);
+  return structuredMinutes || minutesFromInstructionText(instructionText);
 }
 
 export function recipeInstructionHands(
@@ -234,10 +248,48 @@ export function recipeInstructionHands(
 
 export function recipeStepsFromInstructions(
   instructions: RecipeInstruction[],
+  budget?: RecipeTimelineBudget,
 ): RecipeStep[] {
+  const projected = instructions.map((instruction) => ({
+    instruction,
+    hands: recipeInstructionHands(instruction),
+    minutes: recipeInstructionMinutes(
+      instruction.duration,
+      instruction.text,
+    ),
+  }));
+  const inferredMinutes = (hands: boolean) => {
+    const unknown = projected.filter(
+      (step) => step.hands === hands && step.minutes === 0,
+    );
+    if (!unknown.length || !budget) return new Map<RecipeInstruction, number>();
+    const explicit = projected
+      .filter((step) => step.hands === hands)
+      .reduce((sum, step) => sum + step.minutes, 0);
+    const target = hands
+      ? Number(budget.activeMinutes ?? 0)
+      : Math.max(
+          0,
+          Number(budget.totalMinutes ?? 0) - Number(budget.activeMinutes ?? 0),
+        );
+    const remaining = Math.max(unknown.length, Math.round(target) - explicit);
+    const base = Math.floor(remaining / unknown.length);
+    const remainder = remaining % unknown.length;
+    return new Map(
+      unknown.map((step, index) => [
+        step.instruction,
+        base + (index < remainder ? 1 : 0),
+      ]),
+    );
+  };
+  const inferredHands = inferredMinutes(true);
+  const inferredPassive = inferredMinutes(false);
   const scheduled = new Map<string, RecipeStep>();
-  const indexed = instructions.map((instruction, index) => {
-    const minutes = recipeInstructionMinutes(instruction.duration);
+  const indexed = projected.map(({ instruction, hands, minutes: explicitMinutes }, index) => {
+    const inferred = hands
+      ? inferredHands.get(instruction)
+      : inferredPassive.get(instruction);
+    const minutes = explicitMinutes || inferred || 0;
     const dependencyEnds = (instruction.dependsOn ?? []).flatMap((dependencyId) => {
       const dependency = scheduled.get(dependencyId);
       return dependency ? [dependency.at + dependency.minutes] : [];
@@ -245,9 +297,10 @@ export function recipeStepsFromInstructions(
     const step: RecipeStep = {
       text: instruction.text,
       minutes,
-      hands: recipeInstructionHands(instruction),
+      hands,
       at: dependencyEnds.length ? Math.max(...dependencyEnds) : 0,
       ingredientIds: [...instruction.ingredientIds],
+      ...(inferred ? { estimated: true } : {}),
     };
     scheduled.set(instruction.id, step);
     return { ...step, index };
@@ -260,6 +313,7 @@ export function recipeStepsFromInstructions(
       hands: step.hands,
       at: step.at,
       ingredientIds: step.ingredientIds,
+      ...(step.estimated ? { estimated: true } : {}),
     }));
 }
 

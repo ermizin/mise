@@ -47,6 +47,8 @@ async function recipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    recipeEffortDifficulty: engine.recipeEffortDifficulty,
+    recipeEffortLevel: engine.recipeEffortLevel,
   };
   vm.runInNewContext(output, sandbox);
   return sandbox.__catalog;

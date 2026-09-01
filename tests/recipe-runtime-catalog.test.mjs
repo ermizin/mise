@@ -42,7 +42,7 @@ test("runtime projection is complete for every recipe it admits", () => {
           : 3;
     assert.equal(recipe.effort.difficulty, expectedDifficulty);
     assert.ok(recipe.instructions.length > 0);
-    assert.ok(recipe.instructions.every((step) => Number.isFinite(step.minutes) && step.minutes >= 0));
+    assert.ok(recipe.instructions.every((step) => Number.isFinite(step.minutes) && step.minutes > 0));
     assert.ok(recipe.instructions.every((step) => typeof step.hands === "boolean"));
     assert.ok(recipe.instructions.every((step, index) => index === 0 || step.at >= recipe.instructions[index - 1].at));
     const familyIngredientIds = new Set(recipe.recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
@@ -55,6 +55,16 @@ test("timeline inference distinguishes active work from passive waiting", () => 
   assert.ok(steps.some((step) => step.hands), "some instructions require hands-on work");
   assert.ok(steps.some((step) => !step.hands), "passive cooking or waiting is explicit");
   assert.ok(steps.some((step) => step.minutes > 0), "source durations reach the runtime timeline");
+  for (const recipe of catalog.recipes) {
+    const timedTextSteps = recipe.recipeFamily.miseInstructions.filter(
+      (step) => /\d+(?:[.,]\d+)?(?:\s*(?:–|-|до)\s*\d+(?:[.,]\d+)?)?\s*(?:сек|мин|ч(?:ас)?)/iu.test(step.text),
+    );
+    const projectedTimedSteps = recipe.instructions.filter((step) => step.minutes > 0);
+    assert.ok(
+      projectedTimedSteps.length >= timedTextSteps.length,
+      `${recipe.id}: explicit times in step text reach the timeline`,
+    );
+  }
 });
 
 test("every source ingredient is accounted for or blocks projection", () => {

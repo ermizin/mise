@@ -4797,9 +4797,12 @@ p {
 .recipe-hero-photo > .recipe-cover-shade {
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(180deg, rgba(29, 20, 14, 0.42), rgba(29, 20, 14, 0.08) 42%, rgba(29, 20, 14, 0.74)),
-    linear-gradient(90deg, rgba(29, 20, 14, 0.24), transparent 65%);
+  background: linear-gradient(
+    180deg,
+    rgba(29, 20, 14, 0.42),
+    rgba(29, 20, 14, 0.08) 42%,
+    rgba(29, 20, 14, 0.74)
+  );
 }
 .recipe-detail .detail-header {
   position: relative;
@@ -4820,16 +4823,6 @@ p {
   color: #fff;
   background: rgba(30, 22, 17, 0.28);
   border-color: rgba(255, 255, 255, 0.48);
-}
-.recipe-detail .recipe-photo-expand {
-  margin-left: auto;
-  margin-right: 8px;
-}
-.recipe-detail .recipe-photo-expand .photo-chevron-down {
-  transform: rotate(90deg);
-}
-.recipe-detail .recipe-photo-expand .photo-chevron-up {
-  transform: rotate(-90deg);
 }
 .recipe-detail .detail-hero {
   position: relative;
@@ -4880,7 +4873,12 @@ p {
   font-size: var(--text-link);
 }
 .recipe-detail > .detail-tabs button.selected {
-  background: rgba(255, 255, 255, 0.9);
+  color: #fff;
+  background: var(--accent-grad);
+  font-weight: var(--weight-bold);
+}
+.recipe-detail > .detail-tabs button:active {
+  transform: scale(0.96);
 }
 .recipe-detail > .detail-macros,
 .recipe-detail > .recipe-allergens,
@@ -4946,11 +4944,13 @@ p {
   border-color: var(--accent);
   background: var(--accent);
 }
-.recipe-difficulty > p {
+.recipe-difficulty > .recipe-difficulty-evidence {
+  grid-column: 1 / -1;
   margin: 0;
   color: var(--ink-soft);
   font-size: var(--text-link);
-  text-align: right;
+  line-height: 1.45;
+  text-align: left;
 }
 .recipe-difficulty dl {
   grid-column: 1 / -1;
@@ -4959,12 +4959,13 @@ p {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  border-top: 1px solid rgba(77, 103, 94, 0.1);
+  border-top: 1px solid var(--ink-line);
 }
 .recipe-difficulty dl > div {
   padding: 9px 10px;
+  border: 1px solid var(--glass-3-border);
   border-radius: var(--r-tile);
-  background: rgba(255, 255, 255, 0.46);
+  background: var(--glass-3-bg);
 }
 .recipe-difficulty dt {
   color: var(--muted);
@@ -4972,9 +4973,9 @@ p {
 }
 .recipe-difficulty dd {
   margin: 3px 0 0;
-  font-family: var(--font-num);
   font-size: var(--text-link);
   font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
 }
 .recipe-products-preview > header,
 .recipe-products-content > header {
@@ -4998,7 +4999,7 @@ p {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid rgba(77, 103, 94, 0.1);
+  border-bottom: 1px solid var(--ink-line);
 }
 .recipe-product-list > div:last-of-type {
   border-bottom: 0;
@@ -5010,8 +5011,9 @@ p {
   line-height: 1.35;
 }
 .recipe-product-list b {
-  font-family: var(--font-num);
   font-size: var(--text-link);
+  font-weight: var(--weight-label);
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .recipe-product-list > small {
@@ -5021,7 +5023,7 @@ p {
   font-size: var(--text-min);
 }
 .recipe-steps-card > .kicker {
-  color: var(--mint-text);
+  color: var(--accent-text);
 }
 .recipe-timeline-summary,
 .recipe-products-neutral {
@@ -5051,12 +5053,12 @@ p {
   top: 19px;
   bottom: -18px;
   left: 67px;
-  width: 1px;
-  background: rgba(77, 103, 94, 0.24);
+  width: 2px;
+  background: rgba(242, 87, 26, 0.28);
 }
 .recipe-timeline time {
   padding-top: 2px;
-  color: var(--muted);
+  color: var(--accent-text);
   font-family: var(--font-num);
   font-size: var(--text-min);
   text-align: right;
@@ -5064,32 +5066,30 @@ p {
 .recipe-timeline-node {
   position: relative;
   z-index: 1;
-  width: 13px;
-  height: 13px;
-  margin-top: 2px;
+  width: 12px;
+  height: 12px;
+  margin-top: 3px;
   display: block;
-  border: 2px solid var(--mint-text);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--accent);
 }
 .recipe-timeline .is-passive .recipe-timeline-node {
-  border-style: double;
-  border-color: var(--accent-dark);
-  background: rgba(255, 234, 217, 0.96);
+  border: 2px solid rgba(242, 87, 26, 0.45);
+  background: rgba(255, 255, 255, 0.95);
 }
 .recipe-timeline > li > div {
   padding: 12px 13px;
-  border: 1px solid rgba(77, 103, 94, 0.12);
+  border: 1px solid var(--glass-3-border);
   border-radius: var(--r-tile);
-  background: rgba(255, 255, 255, 0.48);
+  background: var(--glass-3-bg);
 }
 .recipe-timeline small {
-  color: var(--mint-text);
+  color: var(--accent-text);
   font-size: var(--text-min);
   font-weight: var(--weight-bold);
 }
 .recipe-timeline .is-passive small {
-  color: var(--accent-dark);
+  color: var(--mint-text);
 }
 .recipe-timeline p {
   margin: 5px 0 0;

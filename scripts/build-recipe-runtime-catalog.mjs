@@ -354,7 +354,18 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
     failures.push(["missing_packing", "Packing guidance is incomplete."]);
   }
   const steps = instructionDraft.map((step) => step.text).filter(Boolean);
-  const instructions = recipeStepsFromInstructions(instructionDraft);
+  const projectedEffort = effortFor(
+    candidate,
+    normalized.paraphrasedInstructionDraft,
+  );
+  const instructions = recipeStepsFromInstructions(instructionDraft, {
+    activeMinutes: projectedEffort.activeMinutes,
+    totalMinutes: Number(candidate.time.totalMinutes),
+  });
+  const effort = {
+    ...projectedEffort,
+    parallelProcesses: parallelRecipeProcesses(instructions),
+  };
   if (!steps.length) failures.push(["missing_paraphrased_steps", "No editorial paraphrased steps."]);
 
   const shoppingIngredients = [];
@@ -493,7 +504,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
       },
       packing: candidate.packing,
       localization: candidate.localization,
-      effort: effortFor(candidate, normalized.paraphrasedInstructionDraft),
+      effort,
       provenance: {
         kind: "parsed",
         publisher: dataset.source,

@@ -48,6 +48,8 @@ async function loadRecipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    recipeEffortDifficulty: engine.recipeEffortDifficulty,
+    recipeEffortLevel: engine.recipeEffortLevel,
     normalizeMealExecution: mealExecution.normalizeMealExecution,
   };
   vm.runInNewContext(output, sandbox);
@@ -79,6 +81,47 @@ test("calorie profiles recalculate macros and keep their advertised energy share
     assert.ok(Math.abs((result.fat * 9) / 2000 - fatShare) < 0.005, `${preset} fat share`);
     assert.ok(Math.abs((result.carbs * 4) / 2000 - carbShare) < 0.005, `${preset} carb share`);
     assert.ok(Math.abs(macroCalories(result) - result.kcal) <= 5, `${preset} stays near entered calories`);
+  }
+});
+
+test("every recipe uses the approved engine-owned difficulty levels", () => {
+  const expectedLevel = (activeMinutes, cookware) =>
+    activeMinutes <= 15 && cookware <= 1
+      ? "low"
+      : activeMinutes <= 30 || cookware >= 2
+        ? "medium"
+        : "high";
+
+  for (const item of recipes) {
+    const expected = expectedLevel(
+      item.effort.activeMinutes,
+      item.effort.cookware,
+    );
+    assert.equal(item.effort.level, expected, `${item.title}: level`);
+    assert.equal(
+      item.effort.difficulty,
+      expected === "low" ? 1 : expected === "medium" ? 2 : 3,
+      `${item.title}: difficulty`,
+    );
+  }
+});
+
+test("every recipe explains its difficulty with equipment and process evidence", () => {
+  assert.ok(
+    recipes.some((item) =>
+      /Два процесса идут параллельно, ничего не остывает критично\./u.test(
+        item.effortDescription,
+      ),
+    ),
+    "the catalog includes a concrete two-process explanation",
+  );
+  for (const item of recipes) {
+    assert.match(item.effortDescription, /Весы|весы/u, `${item.title}: scale`);
+    assert.match(
+      item.effortDescription,
+      /(?:Один процесс|процесса|процессов)/u,
+      `${item.title}: process guidance`,
+    );
   }
 });
 
