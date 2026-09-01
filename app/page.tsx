@@ -6718,6 +6718,7 @@ export default function Home() {
           setActivePlan(plan);
           navigate(destination);
         }}
+        onOpenRecipe={(recipe) => openRecipe({ recipe })}
         persistPlan={persistPlan}
       />
     );
@@ -10071,6 +10072,7 @@ function PlanBuilder({
   addPerson = false,
   onClose,
   onSaved,
+  onOpenRecipe,
   persistPlan,
 }: {
   initialPlan: ActivePlan | null;
@@ -10084,6 +10086,7 @@ function PlanBuilder({
   addPerson?: boolean;
   onClose: () => void;
   onSaved: (plan: ActivePlan, destination: Tab) => void;
+  onOpenRecipe: (recipe: Recipe) => void;
   persistPlan: (plan: ActivePlan) => Promise<void>;
 }) {
   const flowIdRef = useRef(flowId);
@@ -11452,6 +11455,7 @@ function PlanBuilder({
                   pinned={validPinned}
                   shopping={draftPlan.shopping}
                   onReplace={replaceSelection}
+                  onOpenRecipe={onOpenRecipe}
                   onReassemble={() => assembleMenu("reset")}
                 />
                 {!allSelected && (
@@ -11485,6 +11489,7 @@ function PlanBuilder({
                 selections={validSelections}
                 selectionAssignments={validSelectionAssignments}
                 onSelect={replaceSelection}
+                onOpenRecipe={onOpenRecipe}
                 onSplit={assembleCurrentPosition}
                 onAssist={assembleRemainingAndReview}
                 onGo={goToManualChoice}
@@ -12818,6 +12823,7 @@ function ManualMenuStep({
   selections,
   selectionAssignments,
   onSelect,
+  onOpenRecipe,
   onSplit,
   onAssist,
   onGo,
@@ -12830,6 +12836,7 @@ function ManualMenuStep({
   selections: Record<string, string>;
   selectionAssignments: Record<string, RecipeAssignment[]>;
   onSelect: (key: string, personIds: string[], recipeId: string) => void;
+  onOpenRecipe: (recipe: Recipe) => void;
   onSplit: () => boolean;
   onAssist: () => void;
   onGo: (index: number) => void;
@@ -12972,7 +12979,7 @@ function ManualMenuStep({
             ? " manual-effect-a"
             : " manual-effect-b";
           return (
-            <button
+            <div
               key={recipe.id}
               className={`manual-menu-option glass-card${active ? " is-selected" : ""}${selecting ? ` is-selecting${effectClass}` : ""}${deselecting ? ` is-deselecting${effectClass}` : ""}${index < 6 ? " is-motion-card" : ""}`}
               style={
@@ -12980,29 +12987,42 @@ function ManualMenuStep({
                   ? ({ "--manual-delay": `${index * 40}ms` } as CSSProperties)
                   : undefined
               }
-              role="radio"
-              aria-checked={active}
-              onClick={() => {
-                if (active) return;
-                setSelectionEffect((currentEffect) => ({
-                  entering: recipe.id,
-                  leaving: groups.length === 1 ? groups[0]?.recipeId ?? null : null,
-                  epoch: (currentEffect?.epoch ?? 0) + 1,
-                }));
-                onSelect(key, eaterIds, recipe.id);
-              }}
             >
-              <span className={`manual-menu-art art-${index % 5}`} aria-hidden>
-                <RecipeMedia recipe={recipe} />
-              </span>
-              <span>
-                <b>{recipe.title}</b>
-                <small>
-                  {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
-                </small>
-              </span>
-              <i>{active || deselecting ? <Icon name="check" size={15} /> : null}</i>
-            </button>
+              <button
+                type="button"
+                className="manual-recipe-open"
+                onClick={() => onOpenRecipe(recipe)}
+                aria-label={`Открыть карточку рецепта ${recipe.title}`}
+              >
+                <span className={`manual-menu-art art-${index % 5}`} aria-hidden>
+                  <RecipeMedia recipe={recipe} />
+                </span>
+                <span>
+                  <b>{recipe.title}</b>
+                  <small>
+                    {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
+                  </small>
+                </span>
+              </button>
+              <button
+                type="button"
+                className="manual-menu-select"
+                role="radio"
+                aria-checked={active}
+                aria-label={`Выбрать рецепт ${recipe.title}`}
+                onClick={() => {
+                  if (active) return;
+                  setSelectionEffect((currentEffect) => ({
+                    entering: recipe.id,
+                    leaving: groups.length === 1 ? groups[0]?.recipeId ?? null : null,
+                    epoch: (currentEffect?.epoch ?? 0) + 1,
+                  }));
+                  onSelect(key, eaterIds, recipe.id);
+                }}
+              >
+                <i>{active || deselecting ? <Icon name="check" size={15} /> : null}</i>
+              </button>
+            </div>
           );
         })}
       </div>
@@ -13063,6 +13083,7 @@ function MenuReviewStep({
   pinned,
   shopping,
   onReplace,
+  onOpenRecipe,
   onReassemble,
 }: {
   batches: Batch[];
@@ -13078,6 +13099,7 @@ function MenuReviewStep({
     personIds: string[],
     recipeId: string,
   ) => string | null;
+  onOpenRecipe: (recipe: Recipe) => void;
   onReassemble: () => void;
 }) {
   const [replacing, setReplacing] = useState<{
@@ -13089,9 +13111,7 @@ function MenuReviewStep({
   const [expanded, setExpanded] = useState<string[]>([]);
   const [lastReplaced, setLastReplaced] = useState<string | null>(null);
   const [replacementCycle, setReplacementCycle] = useState(0);
-  /* «Не люблю» — мягкое исключение: блюдо прячется из первых рекомендаций,
-     но остаётся доступным явно (PRODUCT.md §5). */
-  const [includeDisliked, setIncludeDisliked] = useState(false);
+  const [showAllReplacements, setShowAllReplacements] = useState(false);
   const replacementMotion = replacementCycle % 2 ? "motion-a" : "motion-b";
   useEffect(() => {
     if (!lastReplaced) return;
@@ -13124,6 +13144,21 @@ function MenuReviewStep({
     selections,
     selectionAssignments,
   );
+  const replacementPeople = replacing
+    ? people.filter((person) => replacing.personIds.includes(person.id))
+    : [];
+  const replacementOptions = replacing
+    ? candidateRecipes(
+        replacing.slot,
+        style,
+        replacementPeople,
+        replacing.batch.days,
+        { limit: "all" },
+      )
+    : [];
+  const visibleReplacementOptions = showAllReplacements
+    ? replacementOptions
+    : replacementOptions.slice(0, 6);
   return (
     <>
       <div
@@ -13195,25 +13230,32 @@ function MenuReviewStep({
                     className={`menu-row${isPinned ? " is-pinned" : ""}${lastReplaced === rowKey ? ` is-replaced-anim ${replacementMotion}` : ""}`}
                     key={rowKey}
                   >
-                    <span className={`menu-row-art art-${index % 5}`} aria-hidden>
-                      <RecipeMedia recipe={recipe} />
-                    </span>
-                    <div>
-                      <small>
-                        {personal
-                          ? `Отдельно для ${personNames}`
-                          : mealMeta[slot].label}
-                        {isPinned
-                          ? " · заменено вами"
-                          : ` · ${withPlural(batch.days * personIds.length, FORMS.portion)}`}
-                      </small>
-                      <b>{recipe.title}</b>
-                    </div>
+                    <button
+                      type="button"
+                      className="menu-recipe-open"
+                      onClick={() => onOpenRecipe(recipe)}
+                      aria-label={`Открыть карточку рецепта ${recipe.title}`}
+                    >
+                      <span className={`menu-row-art art-${index % 5}`} aria-hidden>
+                        <RecipeMedia recipe={recipe} />
+                      </span>
+                      <span>
+                        <small>
+                          {personal
+                            ? `Отдельно для ${personNames}`
+                            : mealMeta[slot].label}
+                          {isPinned
+                            ? " · заменено вами"
+                            : ` · ${withPlural(batch.days * personIds.length, FORMS.portion)}`}
+                        </small>
+                        <b>{recipe.title}</b>
+                      </span>
+                    </button>
                     <button
                       className="menu-swap"
                       aria-label={`Заменить блюдо: ${personal ? `для ${personNames}` : mealMeta[slot].label}, ${recipe.title}`}
                       onClick={() => {
-                        setIncludeDisliked(false);
+                        setShowAllReplacements(false);
                         setReplacing({ key, batch, slot, personIds });
                       }}
                     >
@@ -13295,16 +13337,7 @@ function MenuReviewStep({
             </button>
           </div>
           <div className="replace-list" role="radiogroup" aria-label="Чем заменить">
-            {candidateRecipes(
-              replacing.slot,
-              style,
-              people.filter((person) => replacing.personIds.includes(person.id)),
-              replacing.batch.days,
-              {
-              limit: 6,
-              includeDisliked,
-              },
-            ).map((recipe, index) => {
+            {visibleReplacementOptions.map((recipe, index) => {
               const active = assignmentGroupsFor(
                 plan,
                 replacing.batch,
@@ -13317,60 +13350,57 @@ function MenuReviewStep({
                   ),
               );
               return (
-                <button
+                <div
                   key={recipe.id}
-                  className="replace-option glass-3"
-                  role="radio"
-                  aria-checked={active}
-                  onClick={() => {
-                    const replacedRowKey = onReplace(
-                      replacing.key,
-                      replacing.personIds,
-                      recipe.id,
-                    );
-                    setLastReplaced(replacedRowKey);
-                    setReplacementCycle((value) => value + 1);
-                    setReplacing(null);
-                  }}
+                  className={`replace-option glass-3${active ? " is-selected" : ""}`}
                 >
-                  <span className={`menu-row-art art-${index % 5}`} aria-hidden>
-                    <RecipeMedia recipe={recipe} />
-                  </span>
-                  <div>
-                    <b>{recipe.title}</b>
-                    <small>
-                      {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин
-                    </small>
-                  </div>
-                  {active && <Icon name="check" size={16} />}
-                </button>
+                  <button
+                    type="button"
+                    className="replace-recipe-open"
+                    onClick={() => onOpenRecipe(recipe)}
+                    aria-label={`Открыть карточку рецепта ${recipe.title}`}
+                  >
+                    <span className={`menu-row-art art-${index % 5}`} aria-hidden>
+                      <RecipeMedia recipe={recipe} />
+                    </span>
+                    <span>
+                      <b>{recipe.title}</b>
+                      <small>
+                        {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин
+                      </small>
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    className="replace-select"
+                    role="radio"
+                    aria-checked={active}
+                    aria-label={`Выбрать замену ${recipe.title}`}
+                    onClick={() => {
+                      const replacedRowKey = onReplace(
+                        replacing.key,
+                        replacing.personIds,
+                        recipe.id,
+                      );
+                      setLastReplaced(replacedRowKey);
+                      setReplacementCycle((value) => value + 1);
+                      setReplacing(null);
+                    }}
+                  >
+                    {active ? <Icon name="check" size={16} /> : null}
+                  </button>
+                </div>
               );
             })}
           </div>
-          {(() => {
-            const hidden = Math.max(
-              0,
-              candidateRecipes(replacing.slot, style, people.filter((person) => replacing.personIds.includes(person.id)), replacing.batch.days, {
-                limit: "all",
-                includeDisliked: true,
-              }).length -
-                candidateRecipes(replacing.slot, style, people.filter((person) => replacing.personIds.includes(person.id)), replacing.batch.days, {
-                  limit: "all",
-                }).length,
-            );
-            if (!hidden) return null;
-            return (
-              <button
-                className="btn btn-secondary"
-                aria-pressed={includeDisliked}
-                onClick={() => setIncludeDisliked((value) => !value)}
-              >
-                {includeDisliked
-                  ? "Скрыть варианты из «не люблю»"
-                  : `Показать варианты из «не люблю» — ${hidden}`}
-              </button>
-            );
-          })()}
+          {!showAllReplacements && replacementOptions.length > 6 && (
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowAllReplacements(true)}
+            >
+              Посмотреть все подходящие — {replacementOptions.length}
+            </button>
+          )}
         </Sheet>
       )}
     </>

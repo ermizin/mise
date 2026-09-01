@@ -32,6 +32,11 @@ test("the wizard offers manual menu building without skipping required answers",
   assert.match(page, /const initialManualRecipeCount = 5/);
   assert.match(page, /allOptions\.slice\(0, initialManualRecipeCount\)/);
   assert.match(page, /Смотреть все подходящие — \{allOptions\.length\}/);
+  assert.match(page, /onOpenRecipe=\{onOpenRecipe\}/);
+  assert.match(page, /className="manual-recipe-open"/);
+  assert.match(page, /className="menu-recipe-open"/);
+  assert.match(page, /className="replace-recipe-open"/);
+  assert.match(page, /Посмотреть все подходящие — \{replacementOptions\.length\}/);
   assert.match(page, /function automaticAssignmentsFor/);
   assert.match(page, /Подобрать персональные варианты/);
   assert.match(page, /Собрать остальные \{remaining\} за меня/);
@@ -45,6 +50,25 @@ test("the wizard offers manual menu building without skipping required answers",
     automaticAssembly,
     /includeDisliked:\s*true/,
     "automatic assembly never bypasses a person's dislikes",
+  );
+  const menuReview = page.slice(
+    page.indexOf("function MenuReviewStep("),
+    page.indexOf("function ReviewStep("),
+  );
+  assert.match(menuReview, /replacementOptions\.slice\(0, 6\)/);
+  assert.match(menuReview, /\{ limit: "all" \}/);
+  assert.doesNotMatch(menuReview, /includeDisliked/);
+});
+
+test("recipes open from the wizard and the week without losing their context", async () => {
+  const page = await read("app/page.tsx");
+  assert.match(page, /onOpenRecipe=\{\(recipe\) => openRecipe\(\{ recipe \}\)\}/);
+  assert.match(
+    page,
+    /onOpenRecipe\(\{[\s\S]*?recipe: row\.recipe,[\s\S]*?batch: row\.sourceBatch,[\s\S]*?slot: row\.slot,[\s\S]*?plan: activePlan/,
+  );
+  assert.ok(
+    (page.match(/aria-label=\{`Открыть карточку рецепта \$\{recipe\.title\}`\}/g) ?? []).length >= 3,
   );
 });
 

@@ -5690,7 +5690,7 @@ p {
 }
 .menu-row {
   display: grid;
-  grid-template-columns: 46px 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 11px;
   align-items: center;
   padding: 7px;
@@ -5701,10 +5701,10 @@ p {
     background-color 320ms linear,
     border-color 320ms linear;
 }
-.menu-row.is-replaced-anim.motion-a > div {
+.menu-row.is-replaced-anim.motion-a .menu-recipe-open {
   animation: ms-swap-a 380ms cubic-bezier(0.22, 0.9, 0.28, 1) both;
 }
-.menu-row.is-replaced-anim.motion-b > div {
+.menu-row.is-replaced-anim.motion-b .menu-recipe-open {
   animation: ms-swap-b 380ms cubic-bezier(0.22, 0.9, 0.28, 1) both;
 }
 /* Заменённое вручную видно и не перетирается пересборкой. */
@@ -5752,6 +5752,17 @@ p {
   font-size: var(--text-link);
   font-weight: var(--weight-label);
   line-height: 1.25;
+}
+.menu-recipe-open {
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 11px;
+  align-items: center;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
 }
 .menu-swap {
   position: relative;
@@ -5860,7 +5871,7 @@ p {
 }
 .manual-menu-option {
   display: grid;
-  grid-template-columns: 78px minmax(0, 1fr) 28px;
+  grid-template-columns: minmax(0, 1fr) var(--hit-min);
   align-items: center;
   gap: 13px;
   min-height: 94px;
@@ -5871,6 +5882,25 @@ p {
     transform 130ms ease,
     border-color 260ms linear,
     background-color 260ms linear;
+}
+.manual-recipe-open {
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  align-items: center;
+  gap: 13px;
+  color: var(--ink);
+  background: transparent;
+  text-align: left;
+}
+.manual-menu-select {
+  width: var(--hit-min);
+  height: var(--hit-min);
+  padding: 0;
+  display: grid;
+  place-items: center;
+  background: transparent;
 }
 .manual-menu-option.is-motion-card {
   animation: mise-manual-card-in 320ms var(--motion-settled) var(--manual-delay, 0ms) both;
@@ -5924,7 +5954,7 @@ p {
   font-size: var(--text-min);
   line-height: 1.3;
 }
-.manual-menu-option i {
+.manual-menu-select i {
   width: 26px;
   height: 26px;
   display: grid;
@@ -5937,26 +5967,26 @@ p {
     background-color 260ms linear,
     border-color 260ms linear;
 }
-.manual-menu-option.is-selected i {
+.manual-menu-option.is-selected .manual-menu-select i {
   border-color: transparent;
   color: #fff;
   background: var(--button-grad);
 }
-.manual-menu-option.is-selecting.manual-effect-a i svg {
+.manual-menu-option.is-selecting.manual-effect-a .manual-menu-select i svg {
   animation: mise-manual-tick-in-a 300ms var(--motion-spring) both;
 }
-.manual-menu-option.is-selecting.manual-effect-b i svg {
+.manual-menu-option.is-selecting.manual-effect-b .manual-menu-select i svg {
   animation: mise-manual-tick-in-b 300ms var(--motion-spring) both;
 }
-.manual-menu-option.is-deselecting i {
+.manual-menu-option.is-deselecting .manual-menu-select i {
   border-color: transparent;
   color: #fff;
   background: var(--button-grad);
 }
-.manual-menu-option.is-deselecting.manual-effect-a i svg {
+.manual-menu-option.is-deselecting.manual-effect-a .manual-menu-select i svg {
   animation: mise-manual-tick-out-a 260ms var(--motion-settled) both;
 }
-.manual-menu-option.is-deselecting.manual-effect-b i svg {
+.manual-menu-option.is-deselecting.manual-effect-b .manual-menu-select i svg {
   animation: mise-manual-tick-out-b 260ms var(--motion-settled) both;
 }
 .manual-menu-more,
@@ -6090,15 +6120,15 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .menu-row.is-replaced-anim > div,
+  .menu-row.is-replaced-anim .menu-recipe-open,
   .menu-summary.is-updated .summary-tile b,
   .freeze-note.is-updated,
   .menu-row.is-replaced-anim .menu-swap svg,
   .manual-slot-panel.motion-enter-right,
   .manual-slot-panel.motion-enter-left,
   .manual-menu-option.is-motion-card,
-  .manual-menu-option.is-selecting i svg,
-  .manual-menu-option.is-deselecting i svg {
+  .manual-menu-option.is-selecting .manual-menu-select i svg,
+  .manual-menu-option.is-deselecting .manual-menu-select i svg {
     animation: wizard-state-fade 160ms ease both !important;
   }
   .menu-row {
@@ -6177,7 +6207,7 @@ p {
 }
 .replace-option {
   display: grid;
-  grid-template-columns: 46px 1fr auto;
+  grid-template-columns: minmax(0, 1fr) var(--hit-min);
   gap: 11px;
   align-items: center;
   min-height: var(--hit-min);
@@ -6188,9 +6218,35 @@ p {
   text-align: left;
   color: var(--accent-text);
 }
-.replace-option[aria-checked="true"] {
+.replace-option.is-selected {
   border-color: rgba(242, 87, 26, 0.55);
   background: rgba(255, 244, 236, 0.8);
+}
+.replace-recipe-open {
+  min-width: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 11px;
+  align-items: center;
+  color: var(--accent-text);
+  background: transparent;
+  text-align: left;
+}
+.replace-select {
+  width: var(--hit-min);
+  height: var(--hit-min);
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1.8px solid rgba(42, 29, 20, 0.2);
+  border-radius: var(--r-pill);
+  color: #fff;
+  background: transparent;
+}
+.replace-select[aria-checked="true"] {
+  border-color: transparent;
+  background: var(--button-grad);
 }
 .replace-option b {
   display: block;
@@ -8406,8 +8462,8 @@ p {
   .manual-slot-panel.motion-enter-right,
   .manual-slot-panel.motion-enter-left,
   .manual-menu-option.is-motion-card,
-  .manual-menu-option.is-selecting i svg,
-  .manual-menu-option.is-deselecting i svg,
+  .manual-menu-option.is-selecting .manual-menu-select i svg,
+  .manual-menu-option.is-deselecting .manual-menu-select i svg,
   .app-shell.is-tab-forward .tab-panel > :not(.has-stable-tab-header),
   .app-shell.is-tab-forward
     .tab-panel
