@@ -16,23 +16,43 @@ const GENERIC_PROCEDURE_PHRASES = [
   /готовьте до полной готовности и нужной текстуры/i,
   /соедините готовые компоненты, перемешайте до равномерности/i,
 ];
-const THERMAL_ACTIONS = new Set(["cook", "bake", "roast", "grill", "boil", "simmer", "saute", "fry", "air_fry", "reheat"]);
+const THERMAL_ACTIONS = new Set([
+  "cook", "bake", "roast", "grill", "boil", "simmer", "saute", "fry", "air_fry", "reheat",
+  "heat", "preheat", "sear", "steam", "poach", "blanch", "broil", "toast", "warm", "microwave",
+]);
 const STORAGE_REFERENCE = "https://www.fsis.usda.gov/food-safety/safe-food-handling-and-preparation/food-safety-basics/leftovers-and-food-safety";
+const THERMAL_TEXT = /(?:запека|обжар|жар(?:ьте|ить|ка)|вар(?:ите|ить|ка)|туш(?:ите|ить|ё)|том(?:ите|ить|лён)|готов(?:ьте|ить|ка)|прогре(?:йте|вать|в)|подогре(?:йте|вать|в)|разогре(?:йте|вать|в)|кипят|бланш|припуст|пассер|грил(?:ь|е|ю)|на\s+пару|паровар)/i;
+const FREEZE_TEXT = /(?:\bfreez(?:e|er|ing|ahead)\b|замороз|подмороз)/i;
+const COLD_DISH_TEXT = /(?:\bsalad\b|салат|\bgranola\b|гранол|\byog(?:u)?rt\b|йогурт|\bsorbet\b|сорбет|\bovernight[ -]?oats\b|ночн(?:ая|ой|ую)\s+овсян|\b(?:chia|smoothie|parfait|muesli)\b|(?:чиа|смузи|парфе|мюсл)[\s-]|пода(?:вайте|ть)\s+(?:холодн|охлажд)|без\s+(?:повторного\s+)?нагрев)/i;
 
-function editorialStorage(candidate, card) {
-  const actions = new Set(card.paraphrasedInstructionDraft.map((step) => step.action).filter(Boolean));
-  const thermal = [...actions].some((action) => THERMAL_ACTIONS.has(action));
-  const explicitFreeze = actions.has("freeze") || /\bfreez(?:e|er|ing)|freeze-ahead\b/i.test(`${candidate.title} ${candidate.sourceTitle}`);
+function instructionText(card) {
+  return card.paraphrasedInstructionDraft.map((step) => step.text ?? "").join("\n");
+}
+
+function normalizedAction(action) {
+  return String(action ?? "").trim().toLowerCase().replace(/[\s-]+/g, "_");
+}
+
+function isColdDish(candidate, card) {
+  return COLD_DISH_TEXT.test([candidate.title, candidate.sourceTitle, card.titleRu, instructionText(card)].filter(Boolean).join("\n"));
+}
+
+export function editorialStorage(candidate, card) {
+  const actions = new Set(card.paraphrasedInstructionDraft.map((step) => normalizedAction(step.action)).filter(Boolean));
+  const text = instructionText(card);
+  const thermal = [...actions].some((action) => THERMAL_ACTIONS.has(action)) || THERMAL_TEXT.test(text);
+  const explicitFreeze = actions.has("freeze") || FREEZE_TEXT.test(text);
+  const coldDish = isColdDish(candidate, card);
   return {
     refrigeratorDays: 3,
     freezerDays: explicitFreeze ? 60 : 0,
     freezable: explicitFreeze,
     coolWithinHours: 2,
-    reheatToC: thermal ? 74 : null,
+    reheatToC: thermal && !coldDish ? 74 : null,
     refrigerator: "До 3 суток при температуре не выше 4°C; убрать в холодильник не позднее чем через 2 часа после приготовления.",
     freezer: explicitFreeze ? "До 60 суток при −18°C для сохранения качества." : "Заморозка не подтверждена для этой карточки.",
     thaw: explicitFreeze ? "Размораживать в холодильнике; после разморозки использовать в течение 3 суток." : "Не требуется.",
-    reheat: thermal ? "Разогреть до 74°C в центре порции." : "Подавать без повторного нагрева.",
+    reheat: thermal && !coldDish ? "Разогреть до 74°C в центре порции." : "Подавать без повторного нагрева.",
     reference: STORAGE_REFERENCE,
   };
 }

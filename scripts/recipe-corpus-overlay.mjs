@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { applyGoodFoodRehabilitation } from "./apply-goodfood-rehabilitation.mjs";
+import { applyRecipeProofreadPolicy } from "./apply-recipe-proofread-policy.mjs";
 
 const datasets = [
   "data/mealprepmanual-candidates.json",
@@ -334,8 +335,9 @@ export async function loadRecipeCorpusWithOverlays({ cwd = process.cwd() } = {})
   const simpleHomeIndex = documents.findIndex((document) => document.source === "Mise — Простые и домашние (owner-reviewed adaptations)");
   if (simpleHomeIndex < 0) throw new Error("Simple Home corpus document is missing.");
   documents[simpleHomeIndex] = await assertSimpleHomeRuntimeApproval({ document: documents[simpleHomeIndex] });
+  const proofreadDocuments = await applyRecipeProofreadPolicy({ documents });
   return {
-    documents,
+    documents: proofreadDocuments,
     rehabilitation: {
       appliedCards: rehabilitation.reports.length,
       reports: rehabilitation.reports,

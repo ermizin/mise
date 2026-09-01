@@ -134,6 +134,56 @@ function hasNonNegative(value) {
   return Number.isFinite(Number(value)) && Number(value) >= 0;
 }
 
+function instructionEndMinutes(instructions) {
+  return instructions.reduce(
+    (latest, step) => Math.max(latest, Number(step.at) + Number(step.minutes)),
+    0,
+  );
+}
+
+function aggregateShoppingIngredients(sourceRows) {
+  const byCanonicalId = new Map();
+  for (const row of sourceRows) {
+    const sourceAudit = {
+      sourceIngredientIndex: row.sourceIngredientIndex,
+      sourceIngredientId: row.sourceIngredientId,
+      nameRu: row.nameRu,
+      quantityGrams: row.quantityGrams,
+      sourceMeasurement: row.sourceMeasurement,
+      massStatus: row.massStatus,
+      ...(row.measurementNormalization
+        ? { measurementNormalization: row.measurementNormalization }
+        : {}),
+      ...(row.averagePieceWeightGrams !== undefined
+        ? { averagePieceWeightGrams: row.averagePieceWeightGrams }
+        : {}),
+      ...(row.pieceEstimate !== undefined
+        ? { pieceEstimate: row.pieceEstimate }
+        : {}),
+    };
+    const existing = byCanonicalId.get(row.canonicalIngredientId);
+    if (existing) {
+      existing.quantityGrams = round(existing.quantityGrams + row.quantityGrams);
+      existing.sourceIngredientIds.push(row.sourceIngredientId);
+      existing.sourceIngredientIndexes.push(row.sourceIngredientIndex);
+      existing.sourceAudit.push(sourceAudit);
+      existing.nameRu = [...new Set(existing.sourceAudit.map((source) => source.nameRu))].join(" + ");
+      existing.allergens = [...new Set([...existing.allergens, ...row.allergens])];
+      existing.checkLabel ||= row.checkLabel;
+      continue;
+    }
+    byCanonicalId.set(row.canonicalIngredientId, {
+      ...row,
+      // The first source remains available to older consumers. The arrays and
+      // audit preserve every source row contributing to this canonical total.
+      sourceIngredientIds: [row.sourceIngredientId],
+      sourceIngredientIndexes: [row.sourceIngredientIndex],
+      sourceAudit: [sourceAudit],
+    });
+  }
+  return [...byCanonicalId.values()];
+}
+
 function sourceMass(ingredient, canonical) {
   const measured = sourceAmount(ingredient);
   if (!measured || !hasPositive(measured.amount)) return null;
@@ -381,7 +431,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
   };
   if (!steps.length) failures.push(["missing_paraphrased_steps", "No editorial paraphrased steps."]);
 
-  const shoppingIngredients = [];
+  const shoppingSourceRows = [];
   const procedureIngredients = [];
   let estimatedCookedBatchMass = 0;
   normalized.ingredientMappings.forEach((mapping, index) => {
@@ -417,7 +467,7 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
         failures.push(["recipe_family_shopping_misalignment", `${sourceIngredientId} is not present in the derived RecipeFamily.`]);
         return;
       }
-      shoppingIngredients.push({
+      shoppingSourceRows.push({
         sourceIngredientIndex: index + 1,
         sourceIngredientId,
         canonicalIngredientId: canonical.id,
@@ -477,13 +527,15 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
     });
   });
 
+  const shoppingIngredients = aggregateShoppingIngredients(shoppingSourceRows);
+
   if (!shoppingIngredients.length) failures.push(["no_shopping_ingredients", "No measured canonical ingredients."]);
   if (shoppingIngredients.some((ingredient) => nonRawRiceCanonicalId(ingredient.canonicalIngredientId))) {
     failures.push(["rice_non_raw_runtime_ingredient", "Shopping projection contains non-raw rice."]);
   }
   if (recipeFamily) {
     const familyIngredientIds = new Set(recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
-    const unalignedShopping = shoppingIngredients.find((ingredient) => !familyIngredientIds.has(ingredient.sourceIngredientId));
+    const unalignedShopping = shoppingSourceRows.find((ingredient) => !familyIngredientIds.has(ingredient.sourceIngredientId));
     if (unalignedShopping) {
       failures.push(["recipe_family_shopping_misalignment", `${unalignedShopping.sourceIngredientId} is not present in the derived RecipeFamily.`]);
     }
@@ -510,7 +562,10 @@ function projectReadyCard(releaseCard, entry, recipeImages) {
       slot: candidate.slot,
       title: candidate.titleRu.trim(),
       macros: Object.fromEntries(Object.entries(macros).map(([key, value]) => [key, round(value)])),
-      timeMinutes: Number(candidate.time.totalMinutes),
+      timeMinutes: Math.max(
+        Number(candidate.time.totalMinutes),
+        instructionEndMinutes(instructions),
+      ),
       menuTags,
       costTier: {
         value: costTier,

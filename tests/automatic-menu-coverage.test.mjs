@@ -167,6 +167,7 @@ test("high-protein daily targets keep real menu variety at 1600 and 3100 kcal", 
 
 test("snack slots stay viable across the pilot calorie, protein, and batch grid", async (t) => {
   const { candidateRecipes, allMealSlots, recipeCookingSession, targetFor } = await automaticMenuRuntime();
+  const expectedSnackRecipeIds = new Set(["tmpm-26965", "tmpm-23228"]);
   const failures = [];
   let checks = 0;
 
@@ -184,7 +185,7 @@ test("snack slots stay viable across the pilot calorie, protein, and batch grid"
             failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: no candidates`);
           if (optionIds.includes("tmpm-26746"))
             failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: tmpm-26746 must stay lunch-only`);
-          if (optionIds.some((id) => id !== "tmpm-26965"))
+          if (optionIds.some((id) => !expectedSnackRecipeIds.has(id)))
             failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: unexpected ${optionIds.join(",")}`);
           const target = targetFor(person, slot);
           for (const recipe of options) {

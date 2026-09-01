@@ -16,6 +16,10 @@ test("the flavour gate fails when a restored spice disappears", () => {
   const recipe = catalog.recipes.find((item) => item.id === "foodru-oblomov-chashushuli");
   assert.ok(recipe);
   recipe.procedureIngredients = recipe.procedureIngredients.filter((ingredient) => ingredient.nameRu !== "Хмели-сунели");
-  const violations = validateRecipeFlavourIntegrity({ catalog, registry: inputs.registry });
+  const violations = validateRecipeFlavourIntegrity({
+    catalog,
+    registry: inputs.registry,
+    releaseAudit: inputs.releaseAudit,
+  });
   assert.ok(violations.some((violation) => violation.id === recipe.id && violation.kind === "missing_ingredient" && violation.term === "Хмели-сунели"));
 });

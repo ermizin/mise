@@ -344,8 +344,16 @@ test("new Meal Prep Manual recipes keep reviewed portions, localization and stor
     "src-beefy-cheese-potatoes",
   ];
   const promoted = ids.map((id) => recipes.find((item) => item.id === id));
+  const retainedLegacyWithoutLocalPhoto = new Set([
+    "src-honey-lime-steak",
+    "src-red-pepper-chicken-dip",
+  ]);
   assert.ok(promoted.every(Boolean));
-  assert.ok(promoted.every((item) => item.provenance.kind === "parsed" && item.provenance.imageUrl && item.provenance.adaptation));
+  assert.ok(promoted.every((item) => item.provenance.kind === "parsed" && item.provenance.adaptation));
+  for (const item of promoted) {
+    const hasLocalSourcePhoto = !retainedLegacyWithoutLocalPhoto.has(item.id);
+    assert.equal(Boolean(item.provenance.imageUrl), hasLocalSourcePhoto, item.id);
+  }
 
   const stroganoff = promoted.find((item) => item.id === "src-light-stroganoff");
   assert.equal(stroganoff.macros.kcal, 507);

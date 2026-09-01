@@ -199,7 +199,7 @@ test("nutrition audit emits one machine verdict for every scraped recipe", async
   assert.equal(new Set(report.cards.map((card) => card.id)).size, report.total);
   assert.equal(report.counts.ready + report.counts.review_required + report.counts.blocked, report.total);
   assert.equal(report.reasonCounts.ml_density_missing ?? 0, 0, "all current household-volume ingredients use an explicit standard density");
-  assert.equal(report.reasonCounts.rice_dry_weight_conversion_applied, 29);
+  assert.equal(report.reasonCounts.rice_dry_weight_conversion_applied, 28, "the current normalized corpus records 28 cooked-to-dry nutrition conversions");
   for (const card of report.cards.filter((item) => item.verdict === "ready")) {
     assert.equal(card.calculationComplete, true);
     assert.ok(card.comparison);

@@ -2,22 +2,27 @@
   "schemaVersion": 1,
   "total": 255,
   "counts": {
-    "ready": 243,
-    "review_required": 6,
-    "blocked": 6
+    "ready": 202,
+    "review_required": 0,
+    "blocked": 53
   },
   "reasonCounts": {
     "editorial:extreme_kcal": 18,
+    "editorial:ingredient_step_mismatch": 1,
+    "editorial:invalid_serving_definition": 4,
     "editorial:invalid_yield": 2,
+    "editorial:missing_storage_profile": 1,
     "editorial:missing_yield": 2,
     "editorial:niche_localization": 9,
+    "editorial:owner_excluded": 47,
     "editorial:procedure_review_required": 2,
+    "editorial:recipe_scope_mismatch": 8,
     "nutrition:ignored_component_not_calculable": 223,
-    "nutrition:independent_calculation_complete": 128,
+    "nutrition:independent_calculation_complete": 126,
     "nutrition:invalid_yield": 4,
-    "nutrition:nutrition_delta_outside_tolerance": 123,
-    "nutrition:nutrition_delta_within_tolerance": 128,
-    "nutrition:rice_dry_weight_conversion_applied": 29
+    "nutrition:nutrition_delta_outside_tolerance": 125,
+    "nutrition:nutrition_delta_within_tolerance": 126,
+    "nutrition:rice_dry_weight_conversion_applied": 28
   },
   "cards": [
     {
@@ -416,8 +421,8 @@
       "id": "tmpm-28492",
       "title": "Chipotle Fajita Vegetables",
       "sourceUrl": "https://mealprepmanual.com/chipotle-fajita-vegetables/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 56,
@@ -426,6 +431,19 @@
         "carbs": 6.9
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем после проверки низкой калорийности.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "extreme_kcal",
@@ -1068,8 +1086,8 @@
       "id": "tmpm-27270",
       "title": "Honey Lime Steak Burrito Bowls",
       "sourceUrl": "https://mealprepmanual.com/honey-lime-steak-burrito-bowls/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 607,
@@ -1078,6 +1096,16 @@
         "carbs": 76.1
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-1"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -1151,8 +1179,8 @@
       "id": "tmpm-27230",
       "title": "Halal Cart Style Chicken Buffet Prep",
       "sourceUrl": "https://mealprepmanual.com/halal-cart-style-chicken-buffet-prep/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 767.8,
@@ -1161,6 +1189,16 @@
         "carbs": 56
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-3"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -1579,8 +1617,8 @@
       "id": "tmpm-26895",
       "title": "Broccoli Cheddar Tots",
       "sourceUrl": "https://mealprepmanual.com/broccoli-cheddar-tots/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 24.5,
@@ -1589,6 +1627,20 @@
         "carbs": 2.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-26895",
+              "code": "invalid_serving_definition",
+              "note": "Источник даёт 139 изделий без пригодной порции перекуса.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "extreme_kcal",
@@ -1737,8 +1789,8 @@
       "id": "tmpm-26746",
       "title": "Roasted Red Pepper Chicken Dip",
       "sourceUrl": "https://mealprepmanual.com/roasted-red-pepper-chicken-dip/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 121.6,
@@ -1747,6 +1799,20 @@
         "carbs": 3.1
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-26746",
+              "code": "recipe_scope_mismatch",
+              "note": "Дип не является самостоятельным обедом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "extreme_kcal",
@@ -2052,10 +2118,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 664.4,
-        "protein": 61.7,
-        "fat": 16.1,
-        "carbs": 66.1
+        "kcal": 708.2,
+        "protein": 62.6,
+        "fat": 16.2,
+        "carbs": 75.7
       },
       "reasons": [
         {
@@ -2076,20 +2142,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "rice_dry_weight_conversion_applied",
-          "severity": "info",
-          "detail": {
-            "sourceName": "dry rice",
-            "sourceAmount": 750,
-            "sourceUnit": "g",
-            "dryAmount": 300,
-            "dryUnit": "g",
-            "basis": "same_publisher_explicit_cooked_to_dry_yield",
-            "evidenceRecipeId": "tmpm-26429"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
@@ -2098,13 +2150,15 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "kcal",
+              "carbs"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -2326,8 +2380,8 @@
       "id": "tmpm-26566",
       "title": "Sausage Egg and Cheese Savory Baked Oatmeal",
       "sourceUrl": "https://mealprepmanual.com/sausage-egg-and-cheese-savory-baked-oatmeal/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 3421.7,
@@ -2336,6 +2390,19 @@
         "carbs": 264.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем после второго прохода ревью.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -2532,8 +2599,8 @@
       "id": "tmpm-26514",
       "title": "Buffalo Chicken Biscuits",
       "sourceUrl": "https://mealprepmanual.com/buffalo-chicken-biscuits/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 197,
@@ -2542,6 +2609,20 @@
         "carbs": 12.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-26514",
+              "code": "recipe_scope_mismatch",
+              "note": "Небольшая выпечка-компонент не является самостоятельным обедом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -2604,8 +2685,8 @@
       "id": "tmpm-26489",
       "title": "Mediterranean Chicken Pasta Salad",
       "sourceUrl": "https://mealprepmanual.com/mediterranean-chicken-pasta-salad/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 510.3,
@@ -2614,6 +2695,19 @@
         "carbs": 20.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем после второго прохода ревью.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -3175,6 +3269,19 @@
       "reasons": [
         {
           "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем: неопределённые составные фрикадельки и соус.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
+        {
+          "gate": "editorial",
           "code": "procedure_review_required",
           "severity": "blocked",
           "detail": {
@@ -3203,8 +3310,8 @@
       "id": "tmpm-25463",
       "title": "Teriyaki Beef Meatballs",
       "sourceUrl": "https://mealprepmanual.com/teriyaki-beef-meatballs/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 666.5,
@@ -3213,6 +3320,20 @@
         "carbs": 74.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-25463",
+              "code": "ingredient_step_mismatch",
+              "note": "Карточка скрыто зависит от отдельной большой заготовки фрикаделек.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3275,6 +3396,19 @@
         "carbs": 28.9
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем: покупные фрикадельки и маринара остаются внешними компонентами.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "procedure_review_required",
@@ -3738,8 +3872,8 @@
       "id": "tmpm-25126",
       "title": "Cinnamon Raisin Granola",
       "sourceUrl": "https://mealprepmanual.com/cinnamon-raisin-granola/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 263.3,
@@ -3748,6 +3882,20 @@
         "carbs": 39.8
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-25126",
+              "code": "recipe_scope_mismatch",
+              "note": "Гранола-компонент не является самостоятельным приёмом пищи.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3789,8 +3937,8 @@
       "id": "tmpm-25125",
       "title": "Double Dark Chocolate Granola",
       "sourceUrl": "https://mealprepmanual.com/double-dark-chocolate-granola/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 323.5,
@@ -3799,6 +3947,20 @@
         "carbs": 34.5
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-25125",
+              "code": "recipe_scope_mismatch",
+              "note": "Гранола-компонент не является самостоятельным приёмом пищи.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -3832,8 +3994,8 @@
       "id": "tmpm-25121",
       "title": "Peanut Butter Protein Cluster Granola",
       "sourceUrl": "https://mealprepmanual.com/peanut-butter-protein-cluster-granola/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 258.6,
@@ -3842,6 +4004,20 @@
         "carbs": 32.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-25121",
+              "code": "recipe_scope_mismatch",
+              "note": "Гранола-компонент не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4259,8 +4435,8 @@
       "id": "tmpm-25006-strawberry-lime-sorbet",
       "title": "Strawberry Lime Sorbet",
       "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 280.4,
@@ -4269,6 +4445,25 @@
         "carbs": 72
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-25006-strawberry-lime-sorbet",
+              "code": "recipe_scope_mismatch",
+              "note": "Карточка безопасна только для немедленной подачи и не даёт подтверждённого окна хранения для meal prep.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "missing_storage_profile",
+          "severity": "blocked"
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4802,8 +4997,8 @@
       "id": "tmpm-24866",
       "title": "Dijon Chicken and Pasta Salad",
       "sourceUrl": "https://mealprepmanual.com/dijon-chicken-and-pasta-salad/",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 664.6,
@@ -4812,6 +5007,19 @@
         "carbs": 62.5
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем после второго прохода ревью.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -5525,8 +5733,8 @@
       "id": "tmpm-24018",
       "title": "Honey Sriracha Rice Bowls",
       "sourceUrl": "https://mealprepmanual.com/honey-sriracha-rice-bowls/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 557.5,
@@ -5535,6 +5743,16 @@
         "carbs": 66.2
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-1"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "rice_dry_weight_conversion_applied",
@@ -5696,8 +5914,8 @@
       "id": "tmpm-10514",
       "title": "Protein Waffles",
       "sourceUrl": "https://mealprepmanual.com/protein-waffles/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 231.6,
@@ -5706,6 +5924,20 @@
         "carbs": 21.5
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-10514",
+              "code": "recipe_scope_mismatch",
+              "note": "Выпечка-компонент не является самостоятельным обедом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6124,8 +6356,8 @@
       "id": "tmpm-23405",
       "title": "Easy Breakfast Tacos",
       "sourceUrl": "https://mealprepmanual.com/easy-breakfast-tacos/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 225.9,
@@ -6134,6 +6366,20 @@
         "carbs": 24.6
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-23405",
+              "code": "ingredient_step_mismatch",
+              "note": "Не определена доля отдельной заготовки маринованного лука.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -6834,8 +7080,8 @@
       "id": "tmpm-22884",
       "title": "Stir Fry Meal Prep",
       "sourceUrl": "https://mealprepmanual.com/stir-fry-meal-prep/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 275.1,
@@ -6844,6 +7090,20 @@
         "carbs": 11.9
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-22884",
+              "code": "ingredient_step_mismatch",
+              "note": "Одна карточка смешивает несколько заготовок с несовместимым выходом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7276,8 +7536,8 @@
       "id": "tmpm-22345",
       "title": "Deconstructed Big Mac Bowls",
       "sourceUrl": "https://mealprepmanual.com/deconstructed-big-mac-bowls/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 656,
@@ -7286,6 +7546,16 @@
         "carbs": 33.6
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-1"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7464,8 +7734,8 @@
       "id": "tmpm-22261",
       "title": "Chocolate Chip Protein Crescent Rolls",
       "sourceUrl": "https://mealprepmanual.com/chocolate-chip-protein-crescent-rolls/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 52.2,
@@ -7474,6 +7744,20 @@
         "carbs": 6.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-22261",
+              "code": "recipe_scope_mismatch",
+              "note": "Выпечка-компонент не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -7924,8 +8208,8 @@
       "id": "tmpm-18065",
       "title": "Tater Tots",
       "sourceUrl": "https://mealprepmanual.com/tater-tots/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 290.9,
@@ -7934,6 +8218,20 @@
         "carbs": 45.8
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-18065",
+              "code": "recipe_scope_mismatch",
+              "note": "Гарнир не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8058,8 +8356,8 @@
       "id": "tmpm-17409",
       "title": "Apple and Greek Yogurt",
       "sourceUrl": "https://mealprepmanual.com/apple-and-greek-yogurt/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 296.5,
@@ -8068,6 +8366,20 @@
         "carbs": 33.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-17409",
+              "code": "recipe_scope_mismatch",
+              "note": "Яблоко с йогуртом не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -8182,8 +8494,8 @@
       "id": "tmpm-16861",
       "title": "Air Fryer Crinkle Cut Fries",
       "sourceUrl": "https://mealprepmanual.com/air-fryer-crinkle-cut-fries/",
-      "verdict": "ready",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 116.4,
@@ -8192,6 +8504,20 @@
         "carbs": 26.4
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "tmpm-16861",
+              "code": "recipe_scope_mismatch",
+              "note": "Малая порция компонента не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "extreme_kcal",
@@ -8283,8 +8609,8 @@
       "id": "tmpm-16615",
       "title": "Honey Garlic Chicken Lettuce Wraps",
       "sourceUrl": "https://mealprepmanual.com/honey-garlic-chicken-lettuce-wraps/",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 491.4,
@@ -8293,6 +8619,16 @@
         "carbs": 44
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-1"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8746,8 +9082,8 @@
       "id": "goodfood-slow-cooker-chicken-tikka-masala",
       "title": "Slow cooker chicken tikka masala",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/slow-cooker-chicken-tikka-masala",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 493.8,
@@ -8756,6 +9092,29 @@
         "carbs": 22.4
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем; slow cooker локализуется как мультиварка в отдельной задаче по кухонной утвари.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-1"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -8797,8 +9156,8 @@
       "id": "goodfood-family-meals-easy-fish-pie-recipe",
       "title": "Family meals: Easy fish pie recipe",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/family-meals-easy-fish-pie-recipe",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 529.1,
@@ -8807,6 +9166,19 @@
         "carbs": 73.2
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9079,8 +9451,8 @@
       "id": "goodfood-power-packed-pasta-boxes",
       "title": "Meal prep: pasta",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/power-packed-pasta-boxes",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 755,
@@ -9089,6 +9461,20 @@
         "carbs": 87.6
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-power-packed-pasta-boxes",
+              "code": "ingredient_step_mismatch",
+              "note": "Страница объединяет три разных блюда и три набора КБЖУ.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9212,10 +9598,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 445.7,
-        "protein": 29,
-        "fat": 17,
-        "carbs": 47.5
+        "kcal": 578.8,
+        "protein": 33.5,
+        "fat": 17.4,
+        "carbs": 74.9
       },
       "reasons": [
         {
@@ -9240,6 +9626,8 @@
           "severity": "info",
           "detail": {
             "fields": [
+              "kcal",
+              "protein",
               "fat",
               "carbs"
             ],
@@ -9462,8 +9850,8 @@
       "id": "goodfood-freezer-ratatouille",
       "title": "For-the-freezer ratatouille",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/freezer-ratatouille",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 162.5,
@@ -9472,6 +9860,48 @@
         "carbs": 32.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-freezer-ratatouille",
+              "code": "ingredient_step_mismatch",
+              "note": "База рататуя смешана с ингредиентами трёх отдельных вариантов подачи.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "ingredient_step_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "unknownIds": [],
+            "unusedSourceRows": [
+              "source-ingredient-12",
+              "source-ingredient-13",
+              "source-ingredient-14",
+              "source-ingredient-15",
+              "source-ingredient-16",
+              "source-ingredient-17",
+              "source-ingredient-18",
+              "source-ingredient-19",
+              "source-ingredient-20",
+              "source-ingredient-21",
+              "source-ingredient-22",
+              "source-ingredient-23",
+              "source-ingredient-24",
+              "source-ingredient-25",
+              "source-ingredient-26",
+              "source-ingredient-27",
+              "source-ingredient-28",
+              "source-ingredient-29"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -9874,8 +10304,8 @@
       "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
       "title": "Roasted cauliflower cheese toad-in-the-hole with red onion gravy",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 661.5,
@@ -9884,6 +10314,20 @@
         "carbs": 64
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-roasted-cauliflower-cheese-toad-in-the-hole-with-red-onion-gravy",
+              "code": "ingredient_step_mismatch",
+              "note": "Три непроверенных внешних компонента не восстановлены полностью.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -9964,8 +10408,8 @@
       "id": "goodfood-black-pepper-hasselback-potatoes",
       "title": "Black pepper hasselback potatoes",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/black-pepper-hasselback-potatoes",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 396.8,
@@ -9974,6 +10418,20 @@
         "carbs": 44.1
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-black-pepper-hasselback-potatoes",
+              "code": "recipe_scope_mismatch",
+              "note": "Картофельный гарнир не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10106,8 +10564,8 @@
       "id": "goodfood-coconut-rice-with-prawn-stir-fry",
       "title": "Coconut rice with prawn stir-fry",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/coconut-rice-with-prawn-stir-fry",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 406.3,
@@ -10116,6 +10574,20 @@
         "carbs": 63.4
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-coconut-rice-with-prawn-stir-fry",
+              "code": "ingredient_step_mismatch",
+              "note": "Неполный состав внешнего кокосового соуса и неверная исходная масса риса.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10190,8 +10662,8 @@
       "id": "goodfood-spiced-broccoli",
       "title": "Spiced broccoli",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/spiced-broccoli",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 158.9,
@@ -10200,6 +10672,20 @@
         "carbs": 15.5
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-spiced-broccoli",
+              "code": "recipe_scope_mismatch",
+              "note": "Гарнир-компонент не является самостоятельным обедом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10463,6 +10949,27 @@
         },
         {
           "gate": "editorial",
+          "code": "invalid_serving_definition",
+          "severity": "blocked",
+          "detail": {
+            "value": null
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено из самостоятельных блюд: это заправка-компонент.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
+        {
+          "gate": "editorial",
           "code": "extreme_kcal",
           "severity": "review_required",
           "detail": {
@@ -10497,8 +11004,8 @@
       "id": "goodfood-spiced-meatballs",
       "title": "Spiced meatballs",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/spiced-meatballs",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 151.5,
@@ -10507,6 +11014,20 @@
         "carbs": 0.9
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-spiced-meatballs",
+              "code": "ingredient_step_mismatch",
+              "note": "У сырого фарша индейки нет проверенного шага термообработки.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -10556,8 +11077,8 @@
       "id": "goodfood-storecupboard-pasta-salad",
       "title": "Storecupboard pasta salad",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/storecupboard-pasta-salad",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 286.4,
@@ -10566,6 +11087,19 @@
         "carbs": 22.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем после второго прохода ревью.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -10608,6 +11142,27 @@
           "severity": "blocked",
           "detail": {
             "value": 0
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "invalid_serving_definition",
+          "severity": "blocked",
+          "detail": {
+            "value": 0
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено из самостоятельных блюд: это компонент для основных карточек.",
+              "reviewedAt": "2026-09-01"
+            }
           }
         },
         {
@@ -10674,14 +11229,6 @@
         },
         {
           "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "tartlet tins (about 7.5cm diameter each)"
-          }
-        },
-        {
-          "gate": "nutrition",
           "code": "nutrition_delta_within_tolerance",
           "severity": "info"
         },
@@ -10708,6 +11255,27 @@
           "severity": "blocked",
           "detail": {
             "value": 0
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "invalid_serving_definition",
+          "severity": "blocked",
+          "detail": {
+            "value": 0
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено из самостоятельных блюд: это соус-компонент.",
+              "reviewedAt": "2026-09-01"
+            }
           }
         },
         {
@@ -11024,8 +11592,8 @@
       "id": "goodfood-lemon-orzo",
       "title": "Lemon orzo",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/lemon-orzo",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 568.5,
@@ -11034,6 +11602,20 @@
         "carbs": 95.8
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-lemon-orzo",
+              "code": "recipe_scope_mismatch",
+              "note": "Гарнир не является самостоятельным ужином.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -11055,8 +11637,8 @@
       "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
       "title": "Speedy turkey wraps with pickled red cabbage",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/speedy-turkey-wraps-with-pickled-red-cabbage",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 427,
@@ -11065,6 +11647,20 @@
         "carbs": 38
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-speedy-turkey-wraps-with-pickled-red-cabbage",
+              "code": "ingredient_step_mismatch",
+              "note": "Состав двух внешних компонентов не подтверждён.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11094,10 +11690,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 683.9,
+        "kcal": 684.1,
         "protein": 16.7,
-        "fat": 29.5,
-        "carbs": 88.2
+        "fat": 29.6,
+        "carbs": 88.3
       },
       "reasons": [
         {
@@ -11134,6 +11730,22 @@
         },
         {
           "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "smoked paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "cayenne pepper"
+          }
+        },
+        {
+          "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
           "severity": "info",
           "detail": {
@@ -11150,8 +11762,8 @@
       "id": "goodfood-flatbread-dough",
       "title": "Flatbread dough",
       "sourceUrl": "https://www.bbcgoodfood.com/premium/flatbread-dough",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 531.9,
@@ -11160,6 +11772,20 @@
         "carbs": 99.1
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-flatbread-dough",
+              "code": "recipe_scope_mismatch",
+              "note": "Сырое тесто-компонент не является самостоятельным обедом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11202,6 +11828,27 @@
           "gate": "editorial",
           "code": "missing_yield",
           "severity": "blocked"
+        },
+        {
+          "gate": "editorial",
+          "code": "invalid_serving_definition",
+          "severity": "blocked",
+          "detail": {
+            "value": null
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено из самостоятельных блюд: это овощной компонент для основных карточек.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
         },
         {
           "gate": "editorial",
@@ -11400,8 +12047,8 @@
       "id": "goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash",
       "title": "Beef, mushroom & marsala stroganoff with herby mash",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/beef-mushroom-marsala-stroganoff-with-herby-mash",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 780.5,
@@ -11410,6 +12057,20 @@
         "carbs": 70.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-beef-mushroom-marsala-stroganoff-with-herby-mash",
+              "code": "ingredient_step_mismatch",
+              "note": "В карточку встроено чужое самостоятельное рагу.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11615,8 +12276,8 @@
       "id": "goodfood-freeze-ahead-roasties",
       "title": "Freeze-ahead roasties",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/freeze-ahead-roasties",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 210.1,
@@ -11625,6 +12286,20 @@
         "carbs": 5.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-freeze-ahead-roasties",
+              "code": "recipe_scope_mismatch",
+              "note": "Картофельный гарнир не является самостоятельным обедом.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "nutrition_delta_outside_tolerance",
@@ -11696,8 +12371,8 @@
       "id": "goodfood-crispy-lamb-pea-tabbouleh",
       "title": "Crispy lamb & pea tabbouleh",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/crispy-lamb-pea-tabbouleh",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 770.5,
@@ -11706,6 +12381,20 @@
         "carbs": 96.4
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-crispy-lamb-pea-tabbouleh",
+              "code": "ingredient_state_mismatch",
+              "note": "Источник требует готовые leftover lamb kebabs, а текущая проекция подменяет их сырой бараниной.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11933,8 +12622,8 @@
       "id": "goodfood-turmeric-granola",
       "title": "Turmeric granola",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/turmeric-granola",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 490.7,
@@ -11943,6 +12632,20 @@
         "carbs": 49.1
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-turmeric-granola",
+              "code": "recipe_scope_mismatch",
+              "note": "Источник даёт 750 г компонента-гранолы, а не восемь самостоятельных завтраков.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -12169,8 +12872,8 @@
       "id": "goodfood-indian-rice-salad-chicken",
       "title": "Indian rice salad with chicken",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/indian-rice-salad-chicken",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 685.8,
@@ -12179,6 +12882,20 @@
         "carbs": 127.7
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "goodfood-indian-rice-salad-chicken",
+              "code": "ingredient_state_mismatch",
+              "note": "Готовая курица тикка ошибочно считается сырой; нужен отдельный canonical-профиль.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -12261,10 +12978,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 582.6,
-        "protein": 23.1,
-        "fat": 5.9,
-        "carbs": 108
+        "kcal": 363.6,
+        "protein": 18.8,
+        "fat": 5.5,
+        "carbs": 60.1
       },
       "reasons": [
         {
@@ -12303,8 +13020,8 @@
       "id": "goodfood-deli-pasta-salad",
       "title": "Quick and easy pasta salad",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/deli-pasta-salad",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 499.2,
@@ -12313,6 +13030,19 @@
         "carbs": 76.1
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -12342,8 +13072,8 @@
       "id": "goodfood-salmon-pasta-salad-lemon-capers",
       "title": "Salmon pasta salad with lemon & capers",
       "sourceUrl": "https://www.bbcgoodfood.com/recipes/salmon-pasta-salad-lemon-capers",
-      "verdict": "review_required",
-      "editorialVerdict": "review_required",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 438.3,
@@ -12352,6 +13082,19 @@
         "carbs": 46.3
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "code": "owner_excluded",
+              "note": "Исключено владельцем после второго прохода ревью.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "editorial",
           "code": "niche_localization",
@@ -12880,9 +13623,9 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 580.4,
+        "kcal": 617.9,
         "protein": 45.9,
-        "fat": 22.7,
+        "fat": 27,
         "carbs": 49.1
       },
       "reasons": [
@@ -13434,12 +14177,20 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 579.3,
-        "protein": 55.2,
-        "fat": 16.1,
-        "carbs": 50
+        "kcal": 552.1,
+        "protein": 53.3,
+        "fat": 14.6,
+        "carbs": 48.9
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13469,12 +14220,28 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 520.5,
-        "protein": 49.8,
-        "fat": 12.4,
-        "carbs": 49.5
+        "kcal": 590.4,
+        "protein": 45,
+        "fat": 23.5,
+        "carbs": 47.2
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "smoked paprika"
+          }
+        },
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "salt"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -13485,13 +14252,14 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_within_tolerance",
-          "severity": "info"
-        },
-        {
-          "gate": "nutrition",
-          "code": "independent_calculation_complete",
-          "severity": "info"
+          "code": "nutrition_delta_outside_tolerance",
+          "severity": "info",
+          "detail": {
+            "fields": [
+              "fat"
+            ],
+            "policy": "independent_calculation_is_runtime_truth"
+          }
         }
       ],
       "resolvedReasons": []
@@ -13594,8 +14362,8 @@
       "id": "foodru-oblomov-chicken-legs",
       "title": "Куриные бёдра с йогуртовым соусом",
       "sourceUrl": "https://food.ru/recipes/223398-slavnye-kurinye-nozhki-na-grile-1721575870",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 430.3,
@@ -13604,6 +14372,20 @@
         "carbs": 6.2
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "foodru-oblomov-chicken-legs",
+              "code": "ingredient_step_mismatch",
+              "note": "Голени подменены бёдрами, потеряны измеренные специи и исходный выход.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -14028,8 +14810,8 @@
       "id": "foodru-oblomov-ginger-pork",
       "title": "Имбирная свинина",
       "sourceUrl": "https://food.ru/recipes/209701-slavnaia-imbirnaia-svinina",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 341.3,
@@ -14038,6 +14820,30 @@
         "carbs": 23.5
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "owner_excluded",
+          "severity": "blocked",
+          "detail": {
+            "quarantine": {
+              "kind": "recipe_proofread_quarantine_v1",
+              "id": "foodru-oblomov-ginger-pork",
+              "code": "ingredient_step_mismatch",
+              "note": "Шаги и состав не восстанавливают опубликованный соус и жарку.",
+              "reviewedAt": "2026-09-01"
+            }
+          }
+        },
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-3"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -14071,8 +14877,8 @@
       "id": "foodru-oblomov-ginger-chicken",
       "title": "Имбирная курица",
       "sourceUrl": "https://food.ru/recipes/209701-slavnaia-imbirnaia-svinina",
-      "verdict": "ready",
-      "editorialVerdict": "ready",
+      "verdict": "blocked",
+      "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
         "kcal": 341.3,
@@ -14081,6 +14887,16 @@
         "carbs": 23.5
       },
       "reasons": [
+        {
+          "gate": "editorial",
+          "code": "recipe_scope_mismatch",
+          "severity": "blocked",
+          "detail": {
+            "vagueSteps": [
+              "editorial-step-3"
+            ]
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",

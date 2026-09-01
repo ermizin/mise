@@ -1,12 +1,22 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import {
   assertRuntimeCatalogMinimum,
   buildRecipeRuntimeCatalog,
 } from "../scripts/build-recipe-runtime-catalog.mjs";
+import { AUDIT_REASON, auditRecipeCorpus } from "../scripts/audit-recipe-corpus.mjs";
 
 const catalog = await buildRecipeRuntimeCatalog();
+const audit = await auditRecipeCorpus();
+const blockedRecipeIds = new Set(
+  audit.verdicts.filter((item) => item.verdict === "blocked").map((item) => item.id),
+);
+
+function stableFingerprint(value) {
+  return createHash("sha256").update(JSON.stringify(value)).digest("hex");
+}
 
 test("runtime projection is complete for every recipe it admits", () => {
   assert.equal(catalog.schemaVersion, 2);
@@ -17,6 +27,32 @@ test("runtime projection is complete for every recipe it admits", () => {
     assert.match(recipe.title, /[А-Яа-яЁё]/u);
     assert.ok(recipe.steps.length > 0);
     assert.ok(recipe.shoppingIngredients.length > 0);
+    assert.equal(
+      new Set(recipe.shoppingIngredients.map((ingredient) => ingredient.canonicalIngredientId)).size,
+      recipe.shoppingIngredients.length,
+      `${recipe.id}: shopping ingredients are grouped by canonical identity`,
+    );
+    for (const ingredient of recipe.shoppingIngredients) {
+      assert.equal(ingredient.sourceIngredientId, ingredient.sourceIngredientIds[0]);
+      assert.equal(ingredient.sourceIngredientIndex, ingredient.sourceIngredientIndexes[0]);
+      assert.deepEqual(
+        ingredient.sourceAudit.map((source) => source.sourceIngredientId),
+        ingredient.sourceIngredientIds,
+      );
+      assert.deepEqual(
+        ingredient.sourceAudit.map((source) => source.sourceIngredientIndex),
+        ingredient.sourceIngredientIndexes,
+      );
+      assert.equal(
+        ingredient.nameRu,
+        [...new Set(ingredient.sourceAudit.map((source) => source.nameRu))].join(" + "),
+        `${recipe.id}: grouped shopping name preserves every source product`,
+      );
+      assert.equal(
+        ingredient.quantityGrams,
+        Math.round(ingredient.sourceAudit.reduce((sum, source) => sum + source.quantityGrams, 0) * 10) / 10,
+      );
+    }
     assert.ok(recipe.shoppingIngredients.every((ingredient) => ingredient.quantityGrams > 0));
     assert.ok(recipe.shoppingIngredients.every((ingredient) => ingredient.nameRu && ingredient.group));
     assert.ok(recipe.menuTags.length > 0 && recipe.menuTags.every((tag) => ["protein", "budget"].includes(tag)));
@@ -45,8 +81,24 @@ test("runtime projection is complete for every recipe it admits", () => {
     assert.ok(recipe.instructions.every((step) => Number.isFinite(step.minutes) && step.minutes > 0));
     assert.ok(recipe.instructions.every((step) => typeof step.hands === "boolean"));
     assert.ok(recipe.instructions.every((step, index) => index === 0 || step.at >= recipe.instructions[index - 1].at));
+    assert.ok(
+      recipe.timeMinutes >= Math.max(...recipe.instructions.map((step) => step.at + step.minutes)),
+      `${recipe.id}: total time covers the timeline end`,
+    );
     const familyIngredientIds = new Set(recipe.recipeFamily.ingredients.map((ingredient) => ingredient.sourceIngredientId));
-    assert.ok(recipe.shoppingIngredients.every((ingredient) => familyIngredientIds.has(ingredient.sourceIngredientId)));
+    assert.ok(recipe.shoppingIngredients.every((ingredient) => ingredient.sourceIngredientIds.every((id) => familyIngredientIds.has(id))));
+  }
+});
+
+test("runtime projection exactly excludes the final blocked audit set", () => {
+  assert.equal(catalog.recipes.length, 202);
+  assert.equal(blockedRecipeIds.size, 53);
+  assert.deepEqual(
+    new Set(catalog.recipes.map((recipe) => recipe.id)),
+    new Set(audit.verdicts.filter((item) => item.verdict !== "blocked").map((item) => item.id)),
+  );
+  for (const id of blockedRecipeIds) {
+    assert.equal(catalog.recipes.some((recipe) => recipe.id === id), false, `${id}: blocked card cannot reach runtime`);
   }
 });
 
@@ -70,7 +122,7 @@ test("timeline inference distinguishes active work from passive waiting", () => 
 test("every source ingredient is accounted for or blocks projection", () => {
   for (const recipe of catalog.recipes) {
     const accounted = new Set([
-      ...recipe.shoppingIngredients.map((ingredient) => ingredient.sourceIngredientIndex),
+      ...recipe.shoppingIngredients.flatMap((ingredient) => ingredient.sourceIngredientIndexes),
       ...recipe.procedureIngredients.map((ingredient) => ingredient.sourceIngredientIndex),
     ]);
     const maxIndex = Math.max(...accounted);
@@ -108,10 +160,16 @@ test("every runtime rice amount is dry, gram-based, and source-auditable", async
   const expectedConvertedIds = [...registry.riceDryWeightPolicy.expectedRecipeIds].sort();
   const convertedRecipes = catalog.recipes.filter((recipe) =>
     recipe.shoppingIngredients.some(
-      (ingredient) => ingredient.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+      (ingredient) => ingredient.sourceAudit.some(
+        (source) => source.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+      ),
     ),
   );
-  assert.deepEqual(convertedRecipes.map((recipe) => recipe.id).sort(), expectedConvertedIds);
+  const expectedRuntimeConvertedIds = expectedConvertedIds.filter((id) => !blockedRecipeIds.has(id));
+  assert.deepEqual(convertedRecipes.map((recipe) => recipe.id).sort(), expectedRuntimeConvertedIds);
+  for (const id of expectedConvertedIds.filter((id) => blockedRecipeIds.has(id))) {
+    assert.equal(catalog.recipes.some((recipe) => recipe.id === id), false, `${id}: blocked rice card cannot reach runtime`);
+  }
   for (const recipe of catalog.recipes) {
     const rawRice = recipe.shoppingIngredients.filter(
       (ingredient) => ingredient.canonicalIngredientId === "rice_raw",
@@ -129,34 +187,40 @@ test("every runtime rice amount is dry, gram-based, and source-auditable", async
   }
   for (const recipe of convertedRecipes) {
     const rice = recipe.shoppingIngredients.find(
-      (ingredient) => ingredient.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+      (ingredient) => ingredient.sourceAudit.some(
+        (source) => source.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+      ),
     );
     assert.ok(rice);
     assert.equal(rice.canonicalIngredientId, "rice_raw");
     assert.equal(rice.nameRu, "Рис сухой");
-    assert.equal(rice.massStatus, "normalized_source_state");
-    assert.equal(rice.sourceMeasurement.state, "cooked");
-    assert.equal(rice.measurementNormalization.state, "raw");
-    assert.equal(rice.measurementNormalization.unit, "g");
+    const normalizedRiceSource = rice.sourceAudit.find(
+      (source) => source.measurementNormalization?.kind === "cooked_rice_to_dry_weight_v1",
+    );
+    assert.equal(normalizedRiceSource?.massStatus, "normalized_source_state");
+    assert.equal(normalizedRiceSource?.sourceMeasurement.state, "cooked");
+    assert.equal(normalizedRiceSource?.measurementNormalization.state, "raw");
+    assert.equal(normalizedRiceSource?.measurementNormalization.unit, "g");
     const familyRice = recipe.recipeFamily.ingredients.find(
-      (ingredient) => ingredient.sourceIngredientId === rice.sourceIngredientId,
+      (ingredient) => ingredient.sourceIngredientId === normalizedRiceSource?.sourceIngredientId,
     );
     assert.equal(familyRice?.canonicalIngredientId, "rice_raw");
     assert.equal(familyRice?.unit, "g");
     assert.ok(recipe.recipeFamily.editorialAudit.ingredientMapping.stateConversions?.some(
       (conversion) => conversion.targetCanonicalIngredientId === "rice_raw" && conversion.targetUnit === "g",
     ));
-    assert.ok(recipe.steps.some((step) => /указанное Mise количество сухого риса/iu.test(step)));
+    assert.ok(recipe.steps.some((step) => /(?:количество\s+)?сухо(?:го|й)\s+риса/iu.test(step)), `${recipe.id}: dry rice has an executable cooking step`);
   }
 });
 
 test("owner product decisions are visible in production recipe ingredients", () => {
-  for (const id of ["tmpm-28247", "tmpm-22884"]) {
-    const recipe = catalog.recipes.find((item) => item.id === id);
-    assert.ok(recipe, `${id} remains in the runtime catalog`);
-    assert.ok(recipe.shoppingIngredients.some((ingredient) => ingredient.canonicalIngredientId === "mirin_processed" && /3:1/u.test(ingredient.nameRu)));
-    assert.ok(recipe.steps.some((step) => /несколько капель рисового уксуса/iu.test(step)));
-  }
+  const mirinRecipe = catalog.recipes.find((item) => item.id === "tmpm-28247");
+  assert.ok(mirinRecipe, "tmpm-28247 remains in the runtime catalog");
+  assert.ok(mirinRecipe.shoppingIngredients.some((ingredient) => ingredient.canonicalIngredientId === "mirin_processed" && /3:1/u.test(ingredient.nameRu)));
+  assert.ok(mirinRecipe.steps.some((step) => /несколько капель рисового уксуса/iu.test(step)));
+  const excludedMirin = audit.verdicts.find((item) => item.id === "tmpm-22884");
+  assert.ok(excludedMirin?.reasons.some((reason) => reason.code === AUDIT_REASON.OWNER_EXCLUDED));
+  assert.equal(catalog.recipes.some((recipe) => recipe.id === "tmpm-22884"), false, "quarantined mirin card cannot reach runtime");
   const waffle = catalog.recipes.find((item) => item.id === "tmpm-26414");
   assert.ok(waffle);
   assert.ok(waffle.shoppingIngredients.some((ingredient) => /12,5 г сывороточного протеина.*12,5 г казеина.*20 г овсяной муки.*10 г кукурузного крахмала.*1 г разрыхлителя/iu.test(ingredient.nameRu)));
@@ -180,7 +244,7 @@ test("checked-in runtime catalog is the exact hard-gated projection", async () =
   const stored = JSON.parse(
     await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
   );
-  assert.deepEqual(stored, catalog);
+  assert.equal(stableFingerprint(stored), stableFingerprint(catalog), "checked-in runtime catalog is byte-for-byte equivalent to the projection");
   assert.ok(stored.recipes.every((recipe) => recipe.recipeFamily?.ingredients?.length));
 });
 

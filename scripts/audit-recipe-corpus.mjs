@@ -26,6 +26,11 @@ export const AUDIT_REASON = Object.freeze({
   FRACTIONAL_SERVINGS: "fractional_servings",
   LABEL_DEPENDENT_INGREDIENT: "label_dependent_ingredient",
   NICHE_LOCALIZATION: "niche_localization",
+  INGREDIENT_STEP_MISMATCH: "ingredient_step_mismatch",
+  RECIPE_SCOPE_MISMATCH: "recipe_scope_mismatch",
+  INGREDIENT_STATE_MISMATCH: "ingredient_state_mismatch",
+  INVALID_SERVING_DEFINITION: "invalid_serving_definition",
+  OWNER_EXCLUDED: "owner_excluded",
 });
 
 function reason(code, severity, detail) {
@@ -44,6 +49,60 @@ function validUrl(value) {
 
 function isFiniteNonNegative(value) {
   return Number.isFinite(value) && value >= 0;
+}
+
+const vagueProcedurePatterns = [
+  /введите\s+остальные\s+ингредиенты/i,
+  /смешайте\s+компоненты(?:\s*\.\s*\.\.|…)?/i,
+  /приготовьте\s+овощи/i,
+];
+
+// Ingredient ids in editorial steps have two accepted spellings.  The source-row
+// id is authoritative: an explicit ingredient.id is only an alias for that row.
+export function auditIngredientStepGate(candidate) {
+  const ingredients = Array.isArray(candidate.ingredients) ? candidate.ingredients : [];
+  const steps = Array.isArray(candidate.paraphrasedInstructionDraft) ? candidate.paraphrasedInstructionDraft : [];
+  const rows = ingredients.map((ingredient, index) => ({
+    sourceId: `source-ingredient-${index + 1}`,
+    alias: typeof ingredient?.id === "string" && ingredient.id.trim() ? ingredient.id : null,
+    ingredient,
+  }));
+  const aliasToSource = new Map();
+  for (const row of rows) {
+    if (row.alias && !aliasToSource.has(row.alias)) aliasToSource.set(row.alias, row.sourceId);
+  }
+
+  const referenced = new Set();
+  const unknownIds = [];
+  for (const step of steps) {
+    for (const value of Array.isArray(step?.ingredientIds) ? step.ingredientIds : []) {
+      const id = String(value ?? "");
+      const sourceId = rows.some((row) => row.sourceId === id) ? id : aliasToSource.get(id);
+      if (sourceId) referenced.add(sourceId);
+      else unknownIds.push({ stepId: step?.id ?? null, ingredientId: id });
+    }
+  }
+  const unusedSourceRows = rows.filter((row) => !referenced.has(row.sourceId)).map((row) => row.sourceId);
+  const vagueSteps = steps
+    .filter((step) => vagueProcedurePatterns.some((pattern) => pattern.test(String(step?.text ?? ""))))
+    .map((step) => step?.id ?? null);
+
+  const stateMismatches = rows
+    .filter(({ ingredient }) => ingredient?.miseSourceStateConversion)
+    .flatMap(({ sourceId, ingredient }) => {
+      const conversion = ingredient.miseSourceStateConversion;
+      const expectedId = conversion.targetCanonicalIngredientId;
+      if (conversion.targetState !== "raw" || !expectedId || ingredient.id !== expectedId) {
+        return [{ sourceId, expectedId: expectedId ?? null, actualId: ingredient.id ?? null }];
+      }
+      const hasPreparation = steps.some((step) =>
+        Array.isArray(step?.ingredientIds) && step.ingredientIds.includes(sourceId) &&
+        /сухого\s+риса/i.test(String(step?.text ?? "")),
+      );
+      return hasPreparation ? [] : [{ sourceId, expectedId, actualId: ingredient.id }];
+    });
+
+  return { unknownIds, unusedSourceRows, vagueSteps, stateMismatches };
 }
 
 async function loadNormalizer() {
@@ -77,6 +136,13 @@ export async function auditRecipeCorpus() {
     if (candidate.servings == null || candidate.servings === "") add(AUDIT_REASON.MISSING_YIELD, "blocked");
     else if (!Number.isFinite(servings) || servings <= 0) add(AUDIT_REASON.INVALID_YIELD, "blocked", { value: candidate.servings });
     else if (!Number.isInteger(servings)) add(AUDIT_REASON.FRACTIONAL_SERVINGS, isMealPrep ? "info" : "review_required", { servings });
+    if (candidate.servings == null || candidate.servings === "" || !Number.isFinite(servings) || servings <= 0) {
+      add(AUDIT_REASON.INVALID_SERVING_DEFINITION, "blocked", { value: candidate.servings ?? null });
+    }
+
+    if (candidate.miseProofreadQuarantine) {
+      add(AUDIT_REASON.OWNER_EXCLUDED, "blocked", { quarantine: candidate.miseProofreadQuarantine });
+    }
 
     const macros = candidate.macros ?? candidate.sourceNutrition;
     const macroKeys = ["kcal", "protein", "fat", "carbs"];
@@ -113,6 +179,19 @@ export async function auditRecipeCorpus() {
       /соедините готовые компоненты, перемешайте до равномерности/i,
     ].some((pattern) => pattern.test(String(step?.text ?? ""))))) {
       add(AUDIT_REASON.GENERIC_PROCEDURE_PLACEHOLDER, "blocked");
+    }
+    const ingredientStepGate = auditIngredientStepGate(candidate);
+    if (ingredientStepGate.unknownIds.length || ingredientStepGate.unusedSourceRows.length) {
+      add(AUDIT_REASON.INGREDIENT_STEP_MISMATCH, "blocked", {
+        unknownIds: ingredientStepGate.unknownIds,
+        unusedSourceRows: ingredientStepGate.unusedSourceRows,
+      });
+    }
+    if (ingredientStepGate.vagueSteps.length) {
+      add(AUDIT_REASON.RECIPE_SCOPE_MISMATCH, "blocked", { vagueSteps: ingredientStepGate.vagueSteps });
+    }
+    if (ingredientStepGate.stateMismatches.length) {
+      add(AUDIT_REASON.INGREDIENT_STATE_MISMATCH, "blocked", { ingredients: ingredientStepGate.stateMismatches });
     }
     if (typeof candidate.titleRu !== "string" || !/[А-Яа-яЁё]/.test(candidate.titleRu)) add(AUDIT_REASON.MISSING_RUSSIAN_TITLE, "blocked");
     if (candidate.proceduralStatus === "review_required") {

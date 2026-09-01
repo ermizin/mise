@@ -31,8 +31,8 @@ test("checked-in release audit is the exact current gate output", async () => {
     await readFile(new URL("../data/recipe-release-audit.json", import.meta.url), "utf8"),
   );
   assert.deepEqual(stored, report);
-  assert.ok(report.counts.ready >= 200, "the public catalog gate requires at least 200 ready cards");
-  assert.equal(report.reasonCounts["nutrition:rice_dry_weight_conversion_applied"], 29);
+  assert.deepEqual(report.counts, { ready: 202, review_required: 0, blocked: 53 }, "the final owner-approved release register remains complete");
+  assert.equal(report.reasonCounts["nutrition:rice_dry_weight_conversion_applied"], 28);
   assert.equal(report.reasonCounts["nutrition:cooked_rice_without_dry_equivalent"] ?? 0, 0);
 });
 

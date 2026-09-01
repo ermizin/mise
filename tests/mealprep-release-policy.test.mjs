@@ -21,7 +21,8 @@ test("Meal Prep Manual release policy classifies every current source card witho
     {},
   );
   assert.equal(Object.values(counts).reduce((total, count) => total + count, 0), corpus.candidates.length);
-  assert.ok((counts.ready ?? 0) >= 120);
+  assert.equal(counts.review_required ?? 0, 0, "the final owner-approved register has no unresolved release cards");
+  assert.equal((counts.ready ?? 0) + (counts.blocked ?? 0), corpus.candidates.length);
   assert.ok(mealPrepCards.filter((card) => card.verdict !== "ready").every((card) => card.reasons.length > 0));
   const informationalDeltas = mealPrepCards.flatMap((card) => card.reasons)
     .filter((reason) => reason.code === "nutrition_delta_outside_tolerance");

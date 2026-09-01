@@ -237,6 +237,7 @@ type RuntimeRecipeRecord = {
   servingMass: { grams: number };
   shoppingIngredients: {
     sourceIngredientId: string;
+    sourceIngredientIds: string[];
     canonicalIngredientId: string;
     nameRu: string;
     group: string;
@@ -4234,10 +4235,12 @@ function runtimeBaseAmount(value: number) {
 }
 function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
   const shoppingBySourceId = new Map(
-    record.shoppingIngredients.map((ingredient) => [
-      ingredient.sourceIngredientId,
-      ingredient,
-    ]),
+    record.shoppingIngredients.flatMap((ingredient) =>
+      ingredient.sourceIngredientIds.map((sourceIngredientId) => [
+        sourceIngredientId,
+        ingredient,
+      ] as const),
+    ),
   );
   const ingredients = record.recipeFamily.ingredients.map((familyIngredient) => {
     const source = shoppingBySourceId.get(familyIngredient.sourceIngredientId);

@@ -11,11 +11,13 @@ assert.ok(corpus);
 const audit = await auditRecipeRelease();
 const readyIds = new Set(audit.cards.filter((card) => card.verdict === "ready").map((card) => card.id));
 const ready = corpus.candidates.filter((candidate) => readyIds.has(candidate.id));
+const blocked = corpus.candidates.filter((candidate) => audit.cards.some((card) => card.id === candidate.id && card.verdict === "blocked"));
 const context = { publisher: "Meal Prep Manual", accessedAt: "2026-08-30" };
 const families = ready.map((candidate) => ({ candidate, family: engine.deriveRecipeFamilyFromAuditedCandidate(candidate, context) }));
 
 test("every audit-ready Meal Prep Manual card derives an honest Recipe Family", () => {
-  assert.ok(ready.length >= 120, `expected at least 120 audited Meal Prep Manual families, received ${ready.length}`);
+  assert.equal(ready.length + blocked.length, corpus.candidates.length, "every source card has a final release verdict");
+  assert.ok(blocked.every((candidate) => audit.cards.find((card) => card.id === candidate.id)?.reasons.length), "excluded cards retain their audit evidence");
   const failures = families.filter(({ family }) => !family);
   assert.deepEqual(failures.map(({ candidate }) => candidate.id), []);
   for (const { candidate, family } of families) {
