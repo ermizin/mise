@@ -2401,6 +2401,14 @@ p {
   box-shadow: 0 12px 28px rgba(122, 72, 32, 0.12), var(--glint);
   text-align: left;
 }
+.catalog-result-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .recipe-card-open {
   width: 100%;
   height: 100%;
@@ -2444,17 +2452,17 @@ p {
   line-height: 1;
 }
 .recipe-favorite-heart.has-effect-a {
-  animation: ms-heart-a 380ms cubic-bezier(0.34, 1.3, 0.5, 1) both;
+  animation: ms-heart-a 220ms var(--motion-settled) both;
 }
 .recipe-favorite-heart.has-effect-b {
-  animation: ms-heart-b 380ms cubic-bezier(0.34, 1.3, 0.5, 1) both;
+  animation: ms-heart-b 220ms var(--motion-settled) both;
 }
 @keyframes ms-heart-a {
   0% {
     transform: scale(1);
   }
   38% {
-    transform: scale(1.34);
+    transform: scale(1.08);
   }
   100% {
     transform: scale(1);
@@ -2465,7 +2473,7 @@ p {
     transform: scale(1);
   }
   38% {
-    transform: scale(1.34);
+    transform: scale(1.08);
   }
   100% {
     transform: scale(1);
@@ -4183,6 +4191,9 @@ p {
   -webkit-backdrop-filter: var(--glass-3-blur);
   overflow: hidden;
 }
+.modal-backdrop > [role="dialog"] {
+  animation: sheet-up 240ms var(--motion-settled) both;
+}
 .success-sheet {
   width: min(580px, calc(100vw - 40px));
   max-height: calc(100dvh - 40px);
@@ -4221,7 +4232,7 @@ p {
 }
 @keyframes sheet-up {
   from {
-    transform: translateY(30px);
+    transform: translateY(16px);
     opacity: 0;
   }
 }
@@ -4288,7 +4299,7 @@ p {
   align-items: center;
   border-radius: var(--r-pill);
   background: rgba(83, 103, 96, 0.18);
-  transition: 0.18s ease;
+  transition: background-color 180ms ease;
 }
 .toggle-control i {
   width: 19px;
@@ -4296,7 +4307,7 @@ p {
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 3px 8px rgba(42, 61, 55, 0.18);
-  transition: 0.18s ease;
+  transition: transform 180ms var(--motion-settled);
 }
 .toggle-control.active {
   background: var(--button-grad);
@@ -5230,6 +5241,26 @@ p {
   }
 }
 
+/* Keep the composer compact before its status column becomes too narrow. */
+@media (max-width: 600px) {
+  .builder-chat-composer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .builder-chat-composer.has-menu-choice {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .builder-shell.has-menu-choice .builder-content {
+    padding-bottom: calc(190px + env(safe-area-inset-bottom));
+  }
+  .builder-chat-composer > div {
+    display: none;
+  }
+  .builder-chat-alternative,
+  .builder-chat-send {
+    width: 100%;
+  }
+}
+
 @media (max-width: 380px) {
   .app-shell {
     padding-left: 14px;
@@ -5666,16 +5697,16 @@ p {
   gap: var(--space-2);
 }
 .menu-summary.is-updated.motion-a .summary-tile b {
-  animation: ms-pop-a 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 160ms both;
+  animation: ms-pop-a 220ms var(--motion-settled) both;
 }
 .menu-summary.is-updated.motion-b .summary-tile b {
-  animation: ms-pop-b 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 160ms both;
+  animation: ms-pop-b 220ms var(--motion-settled) both;
 }
 .freeze-note.is-updated.motion-a {
-  animation: ms-pop-a 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 240ms both;
+  animation: ms-pop-a 220ms var(--motion-settled) both;
 }
 .freeze-note.is-updated.motion-b {
-  animation: ms-pop-b 340ms cubic-bezier(0.34, 1.3, 0.5, 1) 240ms both;
+  animation: ms-pop-b 220ms var(--motion-settled) both;
 }
 .summary-tile {
   padding: 12px 13px;
@@ -5828,10 +5859,10 @@ p {
   inset: -5px;
 }
 .menu-row.is-replaced-anim.motion-a .menu-swap svg {
-  animation: ms-spin-a 420ms cubic-bezier(0.34, 1.3, 0.5, 1);
+  animation: wizard-state-fade 180ms ease both;
 }
 .menu-row.is-replaced-anim.motion-b .menu-swap svg {
-  animation: ms-spin-b 420ms cubic-bezier(0.34, 1.3, 0.5, 1);
+  animation: wizard-state-fade 180ms ease both;
 }
 .menu-swap,
 .manual-menu-option {
@@ -6203,22 +6234,6 @@ p {
   }
   .builder-chat-header {
     gap: 8px;
-  }
-  .builder-chat-composer {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .builder-chat-composer.has-menu-choice {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .builder-shell.has-menu-choice .builder-content {
-    padding-bottom: calc(190px + env(safe-area-inset-bottom));
-  }
-  .builder-chat-composer > div {
-    display: none;
-  }
-  .builder-chat-alternative,
-  .builder-chat-send {
-    width: 100%;
   }
   .menu-summary {
     gap: 5px;
@@ -8479,8 +8494,8 @@ p {
 @keyframes mise-week-row-out-b { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(38px); } }
 @keyframes mise-week-row-in-a { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
 @keyframes mise-week-row-in-b { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
-@keyframes mise-week-pop-a { 0%, 100% { transform: scale(1); } 55% { transform: scale(1.16); } }
-@keyframes mise-week-pop-b { 0%, 100% { transform: scale(1); } 55% { transform: scale(1.16); } }
+@keyframes mise-week-pop-a { 0%, 100% { transform: scale(1); } 55% { transform: scale(1.04); } }
+@keyframes mise-week-pop-b { 0%, 100% { transform: scale(1); } 55% { transform: scale(1.04); } }
 @keyframes mise-toast-in-a { from { opacity: 0; transform: translate(-50%, 22px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-toast-in-b { from { opacity: 0; transform: translate(-50%, 22px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-toast-out { from { opacity: 1; transform: translate(-50%, 0); } to { opacity: 0; transform: translate(-50%, 22px); } }
@@ -8500,7 +8515,7 @@ p {
 @keyframes mise-shopping-toast-fixed { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-shopping-toast-fixed-fade { from { opacity: 0.45; transform: translate(-50%, 0); } to { opacity: 1; transform: translate(-50%, 0); } }
 @keyframes mise-motion-fade { from { opacity: 0.45; } to { opacity: 1; } }
-@keyframes mise-norm-updated { from { opacity: 0; transform: scale(0.82); } to { opacity: 1; transform: none; } }
+@keyframes mise-norm-updated { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: none; } }
 @keyframes mise-norm-reason { from { opacity: 0; } to { opacity: 1; } }
 
 
@@ -8654,6 +8669,10 @@ p {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .modal-backdrop > [role="dialog"] {
+    animation: mise-motion-fade 120ms ease both !important;
+  }
+
   .app-boot-progress i,
   img.is-loading,
   .week-loading-placeholder,

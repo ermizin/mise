@@ -107,10 +107,10 @@ test("manual menu choice stays available as a separate bottom action", async () 
     builder,
     /step === 4 \? "menu" : "step"/,
   );
-  assert.match(builder, /const menuRevealDelay = reducedMotion \? 60 : 220/);
+  assert.match(builder, /const menuRevealDelay = 120/);
   assert.match(
     builder,
-    /const menuStageStartDelay =\s*menuRevealDelay \+ \(reducedMotion \? 80 : 320\)/,
+    /const menuStageStartDelay = menuRevealDelay \+ 160/,
   );
   assert.doesNotMatch(builder, /scrollIntoView\(/);
   assert.match(
@@ -118,8 +118,8 @@ test("manual menu choice stays available as a separate bottom action", async () 
     /menuStageStartDelay \+ assemblyStage \* stageDuration/,
   );
   assert.match(builder, /builder-chat-current\$\{chatTransition\?\.kind === "menu"/);
-  assert.match(builder, /const stageDuration = reducedMotion \? 140 : 420/);
-  assert.match(builder, /const questionDelay = reducedMotion \? 140 : 560/);
+  assert.match(builder, /const stageDuration = 180/);
+  assert.match(builder, /const questionDelay = 240/);
   assert.match(builder, /className="builder-menu-assembly glass-3"/);
   assert.match(builder, /Считаю нормы/);
   assert.match(builder, /Подбираю блюда/);

@@ -173,7 +173,7 @@ test("recipe card 14A keeps inline products and dish data actionable", async () 
     /\.recipe-favorite-button \{[\s\S]*?width: 44px;[\s\S]*?height: 44px;/,
     "favorite keeps a 44px touch target",
   );
-  assert.match(css, /ms-heart-a 380ms/, "favorite keeps the supplied spring response");
+  assert.match(css, /ms-heart-a 220ms/, "favorite keeps a short restrained acknowledgement");
   assert.match(css, /\.recipe-hero-photo img \{[\s\S]*?object-fit: cover;/, "the source photo fills the 14A hero");
   for (const label of ["Готовка", "Блюдо"]) assert.match(page, new RegExp(label));
   assert.match(page, /useState<RecipeSection>\("cooking"\)/, "every opening starts on cooking");

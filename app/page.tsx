@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -8305,6 +8306,15 @@ function WeekScreen({
     epoch: number;
   } | null>(null);
   const [motionEpoch, setMotionEpoch] = useState(0);
+  useEffect(() => {
+    if (!executionMotion) return;
+    const timer = window.setTimeout(() => {
+      setExecutionMotion((current) =>
+        current?.epoch === executionMotion.epoch ? null : current,
+      );
+    }, 320);
+    return () => window.clearTimeout(timer);
+  }, [executionMotion]);
   const stripRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const strip = stripRef.current;
@@ -8514,7 +8524,6 @@ function WeekScreen({
       rowKey: row.key,
       epoch,
     });
-    window.setTimeout(() => setExecutionMotion(null), 320);
     const nextExecution = toggleBaseEaten(executionPlanFor(activePlan), execution, {
       personId: person.id,
       date: selectedDate,
@@ -9170,22 +9179,50 @@ function CuisineMenu({
   const [open, setOpen] = useState(false);
   const [closing, setClosing] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const closeTimerRef = useRef<number | null>(null);
 
-  const close = () => {
+  const focusSelected = useCallback(() => {
+    rootRef.current?.querySelector<HTMLButtonElement>('[role="menuitemradio"][aria-checked="true"]')?.focus();
+  }, []);
+
+  const close = useCallback((restoreFocus = false, immediate = false) => {
+    if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
     setClosing(true);
-    window.setTimeout(() => {
+    const finish = () => {
+      closeTimerRef.current = null;
       setClosing(false);
       setOpen(false);
-    }, 160);
-  };
+    };
+    if (restoreFocus) rootRef.current?.querySelector<HTMLButtonElement>(".cuisine-menu-trigger")?.focus();
+    if (immediate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) finish();
+    else closeTimerRef.current = window.setTimeout(finish, 160);
+  }, []);
+
+  useEffect(() => () => {
+    if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
+    focusSelected();
     const onPointerDown = (event: PointerEvent) => {
       if (!rootRef.current?.contains(event.target as Node)) close();
     };
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape") close(true);
+      if (!rootRef.current?.contains(event.target as Node)) return;
+      if (event.key === "Tab") {
+        // Restore the trigger before native Tab advances beyond the menu.
+        close(true, true);
+        return;
+      }
+      if (!["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) return;
+      event.preventDefault();
+      const items = Array.from(rootRef.current.querySelectorAll<HTMLButtonElement>('[role="menuitemradio"]'));
+      const current = items.indexOf(document.activeElement as HTMLButtonElement);
+      const next = event.key === "Home" ? 0 : event.key === "End" ? items.length - 1
+        : (current + (event.key === "ArrowUp" ? -1 : 1) + items.length) % items.length;
+      items[next]?.focus();
     };
     document.addEventListener("pointerdown", onPointerDown);
     document.addEventListener("keydown", onKeyDown);
@@ -9193,7 +9230,7 @@ function CuisineMenu({
       document.removeEventListener("pointerdown", onPointerDown);
       document.removeEventListener("keydown", onKeyDown);
     };
-  }, [open]);
+  }, [open, close, focusSelected]);
 
   if (options.length < 2) return null;
 
@@ -9205,7 +9242,15 @@ function CuisineMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={value ? `${label}: ${cuisineLabels[value]}` : `${label}: любая`}
-        onClick={() => (open ? close() : setOpen(true))}
+        onClick={() => {
+          if (closing) {
+            if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+            closeTimerRef.current = null;
+            setClosing(false);
+            focusSelected();
+          } else if (open) close();
+          else setOpen(true);
+        }}
       >
         {value ? cuisineLabels[value] : label}
         <Icon name="chevron" size={14} />
@@ -9219,12 +9264,13 @@ function CuisineMenu({
           <button
             type="button"
             role="menuitemradio"
+            tabIndex={-1}
             aria-checked={value === null}
             className={`cuisine-menu-option${value === null ? " is-selected" : ""}`}
             style={{ "--cuisine-delay": "0ms" } as CSSProperties}
             onClick={() => {
               onChange(null);
-              close();
+              close(true);
             }}
           >
             Любая кухня
@@ -9234,12 +9280,13 @@ function CuisineMenu({
               key={cuisine}
               type="button"
               role="menuitemradio"
+              tabIndex={-1}
               aria-checked={value === cuisine}
               className={`cuisine-menu-option${value === cuisine ? " is-selected" : ""}`}
               style={{ "--cuisine-delay": `${(index + 1) * 22}ms` } as CSSProperties}
               onClick={() => {
                 onChange(cuisine === value ? null : cuisine);
-                close();
+                close(true);
               }}
             >
               {cuisineLabels[cuisine]}
@@ -9459,8 +9506,11 @@ function RecipesScreen({
             </button>
           )}
         </div>
+        <span className="catalog-result-status" role="status" aria-atomic="true">
+          Найдено рецептов: {visible.length}
+        </span>
         {visible.length ? (
-          <div className="catalog-grid" aria-live="polite">
+          <div className="catalog-grid">
             {visible.map((recipe, index) => (
               <RecipeCard
                 key={recipe.id}
@@ -10833,12 +10883,16 @@ function PlanBuilder({
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
-    const thinkingDelay = reducedMotion ? 30 : 80;
+    if (reducedMotion) {
+      setChatTransition(null);
+      changeStep(nextStep);
+      return;
+    }
+    const thinkingDelay = 80;
     if (kind === "menu") {
-      const menuRevealDelay = reducedMotion ? 60 : 220;
-      const menuStageStartDelay =
-        menuRevealDelay + (reducedMotion ? 80 : 320);
-      const stageDuration = reducedMotion ? 140 : 420;
+      const menuRevealDelay = 120;
+      const menuStageStartDelay = menuRevealDelay + 160;
+      const stageDuration = 180;
       chatTimersRef.current = [
         window.setTimeout(
           () =>
@@ -10879,12 +10933,12 @@ function PlanBuilder({
           },
           menuStageStartDelay +
             menuAssemblyStages.length * stageDuration +
-            (reducedMotion ? 120 : 160),
+            100,
         ),
       ];
       return;
     }
-    const questionDelay = reducedMotion ? 140 : 560;
+    const questionDelay = 240;
     chatTimersRef.current = [
       window.setTimeout(
         () =>
@@ -13870,6 +13924,8 @@ function Sheet({
 }) {
   const dialogRef = useRef<HTMLElement | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  useLayoutEffect(() => { onCloseRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
     const opener = document.activeElement as HTMLElement | null;
@@ -13882,7 +13938,7 @@ function Sheet({
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
       if (event.key === "Tab") {
@@ -13897,7 +13953,7 @@ function Sheet({
         }
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
+        if (event.shiftKey && (document.activeElement === first || document.activeElement === node)) {
           event.preventDefault();
           last.focus();
         } else if (!event.shiftKey && document.activeElement === last) {
@@ -13912,7 +13968,7 @@ function Sheet({
       inertSiblings.forEach((node) => node.removeAttribute("inert"));
       opener?.focus();
     };
-  }, [onClose]);
+  }, []);
 
   return createPortal(
     // The backdrop's click-to-dismiss is a mouse-only convenience layered on
