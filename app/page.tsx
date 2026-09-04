@@ -36,6 +36,7 @@ import {
 import {
   aggregateCookingAmounts,
   canonicalIngredients,
+  nutritionForFamily,
   deriveRecipeFamilyFromCatalog,
   recipeEffortDifficulty,
   recipeEffortLevel,
@@ -4836,18 +4837,30 @@ function migratedShoppingChecked(
   // bought only when every former row had already been checked.
   return previous.length > 0 && previous.every((item) => item.checked);
 }
+function ingredientMatchesGroup(ingredient: Ingredient, group: Set<string>) {
+  const canonical = canonicalShoppingIngredient(ingredient);
+  return group.has(canonicalIdForIngredient(ingredient)) || Boolean(
+    canonical && (group.has(canonical.id) || canonical.aliases.some((alias) => group.has(alias))),
+  );
+}
 function portionComponents(recipe: Recipe): PortionComponent[] {
   const text = recipe.title.toLowerCase();
   const mixed =
-    /паста|макарон|лапш|карри|плов|похл[её]б|туш[её]н|чечевиц|фасол|запеканк|смузи|пудинг|омлет|фриттат|маффин/.test(
+    /паста|макарон|лапш|карри|плов|жареный рис|похл[её]б|туш[её]н|чечевиц|фасол|запеканк|смузи|пудинг|омлет|фриттат|маффин/.test(
       text,
     );
-  if (mixed) return [];
+  const joinsComponents = recipe.steps.some((step) =>
+    /(?:вмешайте|верните)\s+(?:курицу|стейк|фарш|мясо)/iu.test(step) ||
+    /(?:смешайте|соедините|перемешайте)/iu.test(step) &&
+      /(?:рис|паст|макарон|круп|картоф)/iu.test(step) &&
+      /(?:куриц|стейк|фарш|мяс|говядин|индейк|рыб)/iu.test(step),
+  );
+  if (mixed || joinsComponents) return [];
   const protein = recipe.ingredients.filter((ingredient) =>
-    proteinIngredientIds.has(canonicalIdForIngredient(ingredient)),
+    ingredientMatchesGroup(ingredient, proteinIngredientIds),
   );
   const carbs = recipe.ingredients.filter((ingredient) =>
-    carbIngredientIds.has(canonicalIdForIngredient(ingredient)),
+    ingredientMatchesGroup(ingredient, carbIngredientIds),
   );
   const components: PortionComponent[] = [];
   if (protein.length)
@@ -5123,17 +5136,65 @@ function recipeCookingSession(
 ): RecipeCookingSession {
   const portionCount = cookingPortionCount(eaters.length, days);
   const family = recipeFamilyFor(recipe);
-  const portions = eaters.map((person) =>
+  const proposals = eaters.map((person) =>
     portionFor(person, slot, recipe, tuningFor(person), { portionCount }),
   );
-  const viable =
-    !family || portions.every((portion) => portion.engine === "recipe-family-v1");
-  return {
-    viable,
-    portionCount,
-    portions,
-    cookingAmounts: viable ? recipeCookingAmounts(recipe, portions, days) : {},
+  if (!family || !proposals.every((portion) => portion.engine === "recipe-family-v1"))
+    return {
+      viable: !family,
+      portionCount,
+      portions: proposals,
+      cookingAmounts: !family ? recipeCookingAmounts(recipe, proposals, days) : {},
+    };
+
+  // A cooking session makes one composition. Independent solves are only
+  // proposals for its ingredient totals, not recipes that survive mixing.
+  // Allocate every ingredient in that real batch by the same personal share:
+  // this is executable both for a mixed dish and for separately weighed parts.
+  const cookingAmounts = recipeCookingAmounts(recipe, proposals, days);
+  const totalCalories = proposals.reduce((sum, portion) => sum + portion.actual.kcal, 0);
+  const batchDays = Math.max(1, days);
+  const ingredientGrams = (id: string, amount: number) => {
+    const ingredient = family.ingredients.find((item) => item.sourceIngredientId === id);
+    if (!ingredient) return 0;
+    const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+    return amount * (ingredient.unit === "piece"
+      ? canonical.unit.gramsPerUnit
+      : ingredient.unit === "ml" ? canonical.densityGPerMl ?? 1 : 1);
   };
+  const baseGrams = family.ingredients.reduce(
+    (sum, ingredient) => sum + ingredientGrams(ingredient.sourceIngredientId, ingredient.baseAmount), 0,
+  );
+  const portions = proposals.map((proposal) => {
+    const share = totalCalories > 0 ? proposal.actual.kcal / totalCalories / batchDays : 0;
+    // These are ingredient shares in the cooked batch, not separately rounded
+    // shopping quantities. Whole eggs/wraps remain whole in cookingAmounts.
+    const solvedAmounts = Object.fromEntries(
+      Object.entries(cookingAmounts).map(([id, amount]) => [id, amount * share]),
+    );
+    const grams = Object.entries(solvedAmounts).reduce(
+      (sum, [id, amount]) => sum + ingredientGrams(id, amount), 0,
+    );
+    return {
+      ...proposal,
+      solvedAmounts,
+      actual: nutritionForFamily(family, solvedAmounts),
+      grams: round(grams),
+      factor: grams / Math.max(1, baseGrams),
+    };
+  });
+  const viable = portions.every((portion) =>
+    portion.actual.kcal >= portion.target.kcal * 0.9 &&
+    portion.actual.kcal <= portion.target.kcal * 1.05 &&
+    portion.actual.protein + 0.2 >= Math.max(
+      family.minimumProtein,
+      nutritionMealProteinFloor(portion.target.kcal, Math.min(
+        portion.target.kcal / 8, portion.target.protein * portion.ratios.protein,
+      )),
+    ),
+  );
+  return { viable, portionCount, portions, cookingAmounts };
+
 }
 function recipeCookingSessionForAssignment(
   plan: Pick<
@@ -5859,11 +5920,18 @@ function automaticAssignmentsFor(
     >();
     for (const personId of uncovered) {
       for (const [index, recipe] of (optionsByPerson.get(personId) ?? []).entries()) {
+        // One recipe ID is one physical cooking session, not two incompatible
+        // private variants that will be merged again by the rest of the plan.
+        if (assignments.some((assignment) => assignment.recipeId === recipe.id)) continue;
         const current = candidates.get(recipe.id) ?? {
           recipe,
           personIds: [],
           rank: 0,
         };
+        const groupedEaters = eaters.filter((person) =>
+          person.id === personId || current.personIds.includes(person.id),
+        );
+        if (!recipeCookingSession(groupedEaters, slot, recipe, batchDays).viable) continue;
         current.personIds.push(personId);
         current.rank += index;
         candidates.set(recipe.id, current);

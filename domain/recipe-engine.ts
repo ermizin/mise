@@ -2572,7 +2572,146 @@ export function deriveRecipeFamilyFromCatalog(recipe: LegacyRecipeForEngine) {
  * mapped source ingredient is retained; unresolved/replaced or unmeasured
  * caloric components reject the derivation and leave a visible issue.
  */
-function rawRoleForCanonical(canonical: CanonicalIngredient): RecipeIngredientRole {
+type RawEdibleFatOverride = {
+  canonicalIngredientId: string;
+  instructionId: string;
+  evidence: string;
+};
+
+/**
+ * `fat_cooking` is reserved for the audited pan/form input that is used once
+ * for a physical cooking session. Parsed source cards otherwise begin with a
+ * conservative legacy default, so an edible fat must be moved deliberately
+ * with its exact editorial instruction. This keeps unreviewed pan use fixed
+ * while preventing sauce, mash, batter and marinade fats from being counted
+ * only once across several containers.
+ */
+const rawEdibleFatOverrides: Readonly<
+  Record<string, Readonly<Record<string, RawEdibleFatOverride>>>
+> = Object.freeze({
+  "tmpm-28584": {
+    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is the base of the béchamel that is mixed into the rice." },
+  },
+  "tmpm-28504": {
+    "source-ingredient-3": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is stirred into the finished rice." },
+  },
+  "tmpm-26872": {
+    "source-ingredient-13": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mashed into the potato garnish." },
+  },
+  "tmpm-26660": {
+    "source-ingredient-11": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-3", evidence: "Butter is stirred into the cooked rice." },
+  },
+  "tmpm-26441": {
+    "source-ingredient-7": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Peanut butter is mixed into the finished sauce." },
+    "source-ingredient-9": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1-part-2", evidence: "Sesame oil is mixed into the finished sauce." },
+  },
+  "tmpm-25290": {
+    "source-ingredient-9": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Melted butter is mixed into the oat-bake batter." },
+    "source-ingredient-12": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2-part-2", evidence: "Peanut butter is the oat-bake topping." },
+  },
+  "tmpm-24949": {
+    "source-ingredient-2": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Peanut butter is mixed into the sauce." },
+    "source-ingredient-7": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2-part-1", evidence: "Sesame oil is mixed into the sauce." },
+  },
+  "tmpm-23797": {
+    "source-ingredient-20": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is blended into the curry sauce." },
+    "source-ingredient-21": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Peanut butter is blended into the curry sauce." },
+  },
+  "tmpm-23545": {
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Melted butter is mixed into the oat-bake batter." },
+  },
+  "tmpm-23462": {
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mixed into the oat-bake batter." },
+  },
+  "tmpm-23316": {
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mixed into the oat-bake batter." },
+  },
+  "tmpm-22922": {
+    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is mixed into the oat-bake batter." },
+  },
+  "tmpm-22428": {
+    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-1", evidence: "Butter is the base of the white sauce." },
+  },
+  "tmpm-21976": {
+    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mixed into the oat-bake batter." },
+  },
+  "tmpm-16046": {
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is mixed into the oat-bake batter." },
+  },
+  "tmpm-23501": {
+    "source-ingredient-14": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1-part-3", evidence: "Sesame oil is a component of the noodle sauce." },
+  },
+  "tmpm-22531": {
+    "source-ingredient-4": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-4", evidence: "Peanut butter is melted and applied as topping." },
+    "source-ingredient-11": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-4", evidence: "Peanut butter is melted and applied as topping." },
+  },
+  "tmpm-22144": {
+    "source-ingredient-12": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-4", evidence: "Peanut butter is stirred into curry." },
+  },
+  "tmpm-16850": {
+    "source-ingredient-6": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1-part-2", evidence: "Sesame oil is a chicken marinade component." },
+  },
+  "goodfood-satay-sweet-potato-curry": {
+    "source-ingredient-6": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Peanut butter is stirred into curry." },
+  },
+  "goodfood-vegan-breakfast-muffins": {
+    "source-ingredient-8": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Peanut butter is mixed into muffin batter." },
+  },
+  "goodfood-chicken-sweet-potato-peanut-stew": {
+    "source-ingredient-8": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Peanut butter thickens the stew." },
+  },
+  "goodfood-prawn-rice-mango-jar-salad": {
+    "source-ingredient-8": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2-part-1", evidence: "Sesame oil is whisked into jar dressing." },
+  },
+  "goodfood-veggie-nuggets-with-summer-slaw": {
+    "source-ingredient-6": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Peanut butter is mixed into nugget batter." },
+  },
+  "goodfood-veggie-shepherds-pie-sweet-potato-mash": {
+    "source-ingredient-10": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is mashed into the sweet-potato topping." },
+  },
+  "goodfood-tuna-pasta-bake": {
+    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is the base of the white sauce." },
+  },
+  "goodfood-courgette-tomato-soup": {
+    "source-ingredient-1": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-1", evidence: "Butter is incorporated into the soup base." },
+  },
+  "goodfood-creamy-chicken-sweetcorn-soup": {
+    "source-ingredient-8": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-1", evidence: "Butter is the base of the soup's roux." },
+  },
+  "goodfood-family-meals-easy-beef-stew-sweet-potato-topping": {
+    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is mashed into the sweet-potato topping." },
+  },
+  "goodfood-beef-red-wine-potato-pie": {
+    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is worked into the pastry dough." },
+    "source-ingredient-15": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-2", evidence: "Butter is mixed with the potato filling." },
+  },
+  "goodfood-roasted-tomato-pancetta-picnic-quiches": {
+    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is worked into the pastry dough." },
+  },
+  "new-home-cutlets-mash": {
+    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is mashed into the edible potato garnish." },
+  },
+  "foodru-oblomov-meatballs": {
+    "source-ingredient-15": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is cooked into the tomato sauce." },
+  },
+  "foodru-oblomov-pepper-beef": {
+    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is worked into the thickened gravy." },
+  },
+  "foodru-oblomov-pepper-chicken": {
+    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is worked into the thickened gravy." },
+  },
+  "foodru-oblomov-seabass": {
+    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is layered into the baked fish and potato dish." },
+  },
+});
+
+function rawRoleForCanonical(
+  candidateId: string,
+  sourceIngredientId: string,
+  canonical: CanonicalIngredient,
+): RecipeIngredientRole {
+  const override = rawEdibleFatOverrides[candidateId]?.[sourceIngredientId];
+  if (override?.canonicalIngredientId === canonical.id) return "fat";
   const { category, nutritionPer100g, id } = canonical;
   if (/(?:oil|butter|ghee|coconut_oil)/.test(id)) return "fat_cooking";
   if (
@@ -2825,7 +2964,7 @@ export function deriveRecipeFamilyFromAuditedCandidate(
     const baseAmount = familyMeasurement.amount / servings;
     const unit = familyMeasurement.unit;
     const sourceIngredientId = `source-ingredient-${index + 1}`;
-    const role = rawRoleForCanonical(canonical);
+    const role = rawRoleForCanonical(candidate.id, sourceIngredientId, canonical);
     const ingredientBounds = bounds(baseAmount, role);
     const portionFloor = rawPortionFloorRatios[candidate.id];
     if (portionFloor && role !== "fat_cooking")

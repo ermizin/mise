@@ -47,6 +47,7 @@ async function recipeCatalog() {
     nutritionShareForSlots: nutritionModule.shareForSlots,
     materializeInstructions: engine.materializeInstructions,
     canonicalIngredients: engine.canonicalIngredients,
+    nutritionForFamily: engine.nutritionForFamily,
     PILOT_RAW_SOURCE_SLUGS: engine.PILOT_RAW_SOURCE_SLUGS,
     recipeToFamily: engine.recipeToFamily,
     deriveRecipeFamilyFromCatalog: engine.deriveRecipeFamilyFromCatalog,
