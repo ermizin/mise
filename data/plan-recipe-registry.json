@@ -1,0 +1,2139 @@
+{
+  "schemaVersion": 1,
+  "recipeCount": 210,
+  "recipes": [
+    {
+      "id": "foodru-blogger-chicken-bombs",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-blogger-cottage-waffles",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oats-chocolate-shell",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oats-no-cook",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oats-tomato",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-beef-veg",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-borscht",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-chashushuli",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-meatballs",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-pepper-beef",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-pepper-chicken",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-potato-mushroom",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-sandwich",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "foodru-oblomov-seabass",
+      "slot": "dinner",
+      "allergens": [
+        "fish",
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-10minute-couscous-salad",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-apple-penne-slaw-walnuts",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-aubergine-tomato-halloumi-pie",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "sesame",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-banana-overnight-oats",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-beef-red-wine-potato-pie",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-big-batch-bolognese",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-big-batch-pressure-cooker-bolognese",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-black-bean-soup-with-chunky-raita",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-black-bean-spicy-beef-pasta",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-bulgur-quinoa-lunch-bowls",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-chicken-pasta-bake",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-chicken-squash-pesto-lasagne",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-chicken-sweet-potato-peanut-stew",
+      "slot": "dinner",
+      "allergens": [
+        "peanut"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-courgette-tomato-soup",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-creamy-bean-kale-pasta",
+      "slot": "dinner",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-creamy-chicken-sweetcorn-soup",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-crunchy-broccoli-cranberry-salad",
+      "slot": "dinner",
+      "allergens": [
+        "milk",
+        "mustard",
+        "sesame",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-family-meals-chicken-veg-casserole",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-cakes",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "fish",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-family-meals-mild-chicken-curry",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-fragrant-biryani-with-coriander-cod",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-harissa-beef-tomato-bulgur",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-italian-vegetable-soup",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-kadala-curry",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "slot": "dinner",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk",
+        "mustard",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-lentil-kofta-orzo-feta",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-mini-lentil-shepherds-pies",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-mozzarella-pepper-aubergine-calzone",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-mushroom-lentil-beef-ragu",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-orange-oregano-pulled-pork",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-pork-harissa-meatballs",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-pork-with-cucumber-apricot-couscous",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-prawn-rice-mango-jar-salad",
+      "slot": "dinner",
+      "allergens": [
+        "crustaceans",
+        "gluten",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 1,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+      "slot": "lunch",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-satay-sweet-potato-curry",
+      "slot": "dinner",
+      "allergens": [
+        "crustaceans",
+        "peanut"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-sausage-egg-muffins",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-sausage-leek-mash-pie",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-scandi-beetroot-salmon-pasta",
+      "slot": "dinner",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-slow-cooker-beef-bourguignon",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-slow-cooker-lamb-curry",
+      "slot": "dinner",
+      "allergens": [
+        "crustaceans",
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-slow-cooker-sausage-casserole",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-smoky-black-bean-chilli",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-spiced-lentil-butternut-squash-soup",
+      "slot": "lunch",
+      "allergens": [
+        "milk",
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-steak-broccoli-protein-pots",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-summery-beans-herby-green-aioli",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-tomato-pepper-bean-one-pot",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-tuna-nicoise-protein-pots",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "fish",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-tuna-pasta-bake",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-vegan-breakfast-muffins",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "peanut",
+        "soy",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-vegan-paella",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-vegan-ragu",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-vegan-shepherds-pie",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-vegetarian-bolognese",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-veggie-nuggets-with-summer-slaw",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "mustard",
+        "peanut",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "goodfood-wild-salmon-with-radish-orange-slaw",
+      "slot": "lunch",
+      "allergens": [
+        "fish"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "new-home-buckwheat-legs",
+      "slot": "dinner",
+      "allergens": [
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "new-home-cutlets-mash",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "mustard",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "new-home-merchant-buckwheat",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "new-home-simple-buckwheat",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "new-home-stewed-cabbage",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "new-oats-apple",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "new-oats-banana-blueberry",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "new-oats-blueberry-almond",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "new-oats-carrot",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "new-oats-chocolate",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "new-oats-cinnamon-raisin",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": false
+    },
+    {
+      "id": "new-sandwich-balyk",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "new-sandwich-boiled-chicken",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "new-sandwich-caesar",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "new-sandwich-paprika",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "new-sandwich-smoked-chicken",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "mustard"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "new-sandwich-turkey-ham",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 2,
+      "freezable": false
+    },
+    {
+      "id": "src-beefy-cheese-potatoes",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "src-creamy-chicken-pasta",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "src-curry-fried-rice",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "src-fajita-rice",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "src-gochujang-beef",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "src-halal-chicken",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "src-lemon-chicken",
+      "slot": "dinner",
+      "allergens": [
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "src-light-stroganoff",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "src-mediterranean-wrap",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "src-sausage-pepper-pasta",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 4,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-16046",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-16249",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-16283",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-16300",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-16454",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-16479",
+      "slot": "dinner",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-16850",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "molluscs",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-17115",
+      "slot": "dinner",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-17381",
+      "slot": "dinner",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-17591",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-18557",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-18874",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "molluscs",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-19895",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-21839",
+      "slot": "dinner",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-21841",
+      "slot": "dinner",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-21976",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22144",
+      "slot": "lunch",
+      "allergens": [
+        "crustaceans",
+        "peanut"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22181",
+      "slot": "snack1",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-22278",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22331",
+      "slot": "dinner",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-22428",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22442",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22531",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "peanut"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22550",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-22571",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22922",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22968",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-22980",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23090",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-23113",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23194",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23228",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-23261",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23306",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23316",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23431",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23462",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23501",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "molluscs",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23518",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23544",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23545",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23554",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-23797",
+      "slot": "dinner",
+      "allergens": [
+        "milk",
+        "peanut"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24542",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24579",
+      "slot": "snack1",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-24608",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-24619",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24729",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24799",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-24851",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-24899",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24909",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24917",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-24949",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten",
+        "peanut",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24968",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-24974",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "slot": "snack1",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "milk",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25030",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-25044",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25071",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25082",
+      "slot": "lunch",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25092",
+      "slot": "lunch",
+      "allergens": [
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25159",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25175",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25244",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25290",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk",
+        "peanut",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-25453",
+      "slot": "dinner",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-26138",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26232",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26358",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26414",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26429",
+      "slot": "dinner",
+      "allergens": [
+        "milk",
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26441",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "peanut",
+        "sesame",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26528",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26583",
+      "slot": "dinner",
+      "allergens": [
+        "fish",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26617",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26647",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26660",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26676",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26689",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-26720",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26872",
+      "slot": "lunch",
+      "allergens": [
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-26920",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-26965",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-26996",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-27287",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-27306",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-27328",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-27343",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-27802",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-28083",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-28247",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-28302",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "molluscs",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-28499",
+      "slot": "dinner",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-28504",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-28513",
+      "slot": "dinner",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-28533",
+      "slot": "dinner",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false
+    },
+    {
+      "id": "tmpm-28572",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    },
+    {
+      "id": "tmpm-28584",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": true
+    }
+  ]
+}

@@ -15,14 +15,14 @@ const activeRuntimeRecipes = runtimeCatalog.recipes.filter(
     recipe.recipeFamily.ingredients.length >= 3,
 );
 
-function validPlan() {
+function validPlan(slot = "lunch") {
   return {
-    id: "plan-1", start: "2026-08-29", end: "2026-09-01", periodDays: 4, cookEveryDays: 2,
-    menuStyle: "protein", mealSlots: ["lunch"],
-    people: [{ id: "person-1", name: "Alex", daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 }, includedSlots: ["lunch"] }],
-    batches: [{ id: "batch-1", index: 0, start: "2026-08-29", end: "2026-08-30", days: 2 }],
-    selections: { "batch-1:lunch": "tmpm-28584" },
-    selectionAssignments: { "batch-1:lunch": [{ recipeId: "tmpm-28584", personIds: ["person-1"] }] },
+    id: "plan-1", start: "2026-08-29", end: "2026-08-29", periodDays: 1, cookEveryDays: 1,
+    menuStyle: "protein", mealSlots: [slot],
+    people: [{ id: "person-1", name: "Alex", daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 }, includedSlots: [slot] }],
+    batches: [{ id: "batch-1", index: 0, start: "2026-08-29", end: "2026-08-29", days: 1 }],
+    selections: { [`batch-1:${slot}`]: "tmpm-28584" },
+    selectionAssignments: { [`batch-1:${slot}`]: [{ recipeId: "tmpm-28584", personIds: ["person-1"] }] },
     shopping: [],
   };
 }
@@ -30,9 +30,9 @@ function validPlan() {
 test("plan persistence accepts the current audited recipe references", () => {
   assert.equal(validatePlanForPersistence(validPlan()).valid, true);
   for (const recipe of activeRuntimeRecipes) {
-    const plan = validPlan();
-    plan.selections["batch-1:lunch"] = recipe.id;
-    plan.selectionAssignments["batch-1:lunch"][0].recipeId = recipe.id;
+    const plan = validPlan(recipe.slot);
+    plan.selections[`batch-1:${recipe.slot}`] = recipe.id;
+    plan.selectionAssignments[`batch-1:${recipe.slot}`][0].recipeId = recipe.id;
     assert.equal(validatePlanForPersistence(plan).valid, true, recipe.id);
   }
 });
@@ -65,7 +65,7 @@ test("plan persistence rejects malformed plans before they reach D1", () => {
   assert.equal(result.status, 400);
 });
 
-test("plan persistence rejects obsolete recipes in selections and assignments", () => {
+test("plan persistence rejects obsolete recipes in selected and explicit assignments", () => {
   const selected = validPlan();
   selected.selections["batch-1:lunch"] = "removed-recipe";
   const selectedResult = validatePlanForPersistence(selected);
