@@ -3304,7 +3304,12 @@ function familyFingerprint(family: RecipeFamily) {
 }
 
 function cloneVariant(variant: SolvedRecipeVariant): SolvedRecipeVariant {
-  return { ...variant, amounts: { ...variant.amounts }, explanation: [...variant.explanation] };
+  return {
+    ...variant,
+    amounts: { ...variant.amounts },
+    nutrition: { ...variant.nutrition },
+    explanation: [...variant.explanation],
+  };
 }
 
 /** Clears the memoized solutions. Only needed by tests and hot reloads. */
