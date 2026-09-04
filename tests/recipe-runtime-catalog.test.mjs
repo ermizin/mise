@@ -266,12 +266,12 @@ test("checked-in runtime catalog is the exact hard-gated projection", async () =
   assert.ok(stored.recipes.every((recipe) => recipe.recipeFamily?.ingredients?.length));
 });
 
-test("every release build refreshes the audited wizard catalog", async () => {
+test("every release build refreshes the audited wizard catalog and server registry", async () => {
   const packageJson = JSON.parse(
     await readFile(new URL("../package.json", import.meta.url), "utf8"),
   );
   const refreshCommand =
-    "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs";
+    "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json";
   assert.equal(packageJson.scripts.prebuild, refreshCommand);
   assert.equal(packageJson.scripts["recipes:runtime:refresh"], refreshCommand);
 });
