@@ -35,7 +35,7 @@ async function appRuntime() {
   const output = ts.transpileModule(
     `${page.slice(start, catalogEnd)}
 ${page.slice(procedureStart, procedureEnd)}
-globalThis.__simpleRuntime = { recipes, candidateRecipes, recipeCookingSession, procedureIngredientAmountLabel };`,
+globalThis.__simpleRuntime = { recipes, candidateRecipes, recipeCookingSession, procedureIngredientAmountLabel, recipeSupportsEquipment };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const legacyImages = await readJson("../data/legacy-recipe-image-download-sources.json");
@@ -186,6 +186,19 @@ test("hot sandwiches use an oven and baking dish matching their 200 C baking ste
   assert.equal(recipe.cookware, 1, "one baking vessel; the oven is an appliance");
   const runtime = simpleRuntime.find(record => record.id === recipe.id);
   assert.deepEqual(runtime.recipeFamily.equipment, recipe.equipment);
+  assert.deepEqual(runtime.equipmentOptions, [{ id: "original", label: "По рецепту", requiredEquipment: ["oven", "baking_dish"] }]);
+});
+
+test("every simple recipe has a canonical kitchen method and equipment filtering stays truthful", () => {
+  for (const recipe of simpleRuntime) {
+    assert.equal(recipe.equipmentOptions.length, 1, `${recipe.id}: one reviewed original method`);
+    assert.equal(recipe.equipmentOptions[0].id, "original");
+    assert.ok(recipe.equipmentOptions[0].requiredEquipment.every((id) => ["stove", "pot", "pan", "oven", "baking_dish"].includes(id)), `${recipe.id}: canonical equipment only`);
+  }
+  const sandwiches = ui.recipes.find((recipe) => recipe.id === "simple-generated-b03");
+  assert.equal(ui.recipeSupportsEquipment(sandwiches, ["stove", "pan"]), false);
+  assert.equal(ui.recipeSupportsEquipment(sandwiches, ["oven", "baking_dish"]), true);
+  assert.ok(simpleRuntime.some((recipe) => recipe.equipmentOptions[0].requiredEquipment.length === 0), "no-heat simple recipes remain available without selected appliances");
 });
 
 test("simple candidates are strict-simple for every slot, including dinner and snack2", () => {

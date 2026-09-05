@@ -10,6 +10,27 @@ function requireValue(condition, message) {
   if (!condition) throw new Error(`Simple catalog: ${message}`);
 }
 
+function simpleEquipmentOptions(card) {
+  const required = new Set();
+  for (const rawName of card.equipment ?? []) {
+    const name = String(rawName).toLowerCase();
+    if (name === "oven") required.add("oven");
+    else if (name === "baking_dish") required.add("baking_dish");
+    else if (name.includes("духов")) required.add("oven");
+    else if (name.includes("форм") || name.includes("против")) required.add("baking_dish");
+    else if (name.includes("кастрюл")) {
+      required.add("stove");
+      required.add("pot");
+    } else if (name.includes("сковород")) {
+      required.add("stove");
+      required.add("pan");
+    } else if (!name.includes("миск") && !name.includes("тёрк") && !name.includes("фольг")) {
+      throw new Error(`Simple catalog: ${card.id}: unsupported equipment ${rawName}`);
+    }
+  }
+  return [{ id: "original", label: "По рецепту", requiredEquipment: [...required] }];
+}
+
 export function projectSimpleRecipe(card, media) {
   requireValue(/^simple-(?:generated|parsed)-[a-z0-9-]+$/.test(card.id), `${card.id}: id`);
   requireValue(["generated", "parsed"].includes(card.origin), `${card.id}: origin`);
@@ -69,6 +90,7 @@ export function projectSimpleRecipe(card, media) {
     imageOrigin: card.origin === "generated" ? "generated" : "source",
     editoriallyApproved: true,
   };
+  const equipmentOptions = simpleEquipmentOptions(card);
   const recipeFamily = {
     id: card.id, title: card.title,
     mealSlots: card.slot === "lunch" || card.slot === "dinner" ? ["lunch", "dinner"] : card.slot === "snack1" ? ["snack1", "snack2"] : [card.slot],
@@ -90,6 +112,7 @@ export function projectSimpleRecipe(card, media) {
   };
   return {
     id: card.id, title: card.title, slot: card.slot, cuisine: card.cuisine, macros,
+    equipmentOptions,
     timeMinutes: card.totalMinutes, menuTags: ["simple"], costTier: { value: 1 },
     servingMass: { grams: card.ingredients.reduce((sum, item) => sum + item.grams, 0), basis: "input_mass_not_cooked_yield" },
     shoppingIngredients: ingredients.map((item, index) => ({ sourceIngredientId: item.sourceIngredientId, sourceIngredientIds: [item.sourceIngredientId], canonicalIngredientId: item.canonicalIngredientId, nameRu: card.ingredients[index].name, quantityGrams: card.ingredients[index].grams, group: groups[canonicalIngredients[item.canonicalIngredientId].category] ?? "Бакалея", allergens: canonicalIngredients[item.canonicalIngredientId].allergens, checkLabel: ["label_required", "brand_label"].includes(canonicalIngredients[item.canonicalIngredientId].reference.dataType) })),

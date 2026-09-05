@@ -2142,7 +2142,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-b02",
@@ -2153,7 +2161,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-b03",
@@ -2165,7 +2181,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-b04",
@@ -2176,7 +2200,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-b05",
@@ -2187,7 +2219,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d01",
@@ -2197,7 +2237,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d02",
@@ -2205,7 +2253,16 @@
       "allergens": [],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d03",
@@ -2215,7 +2272,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d04",
@@ -2223,7 +2289,16 @@
       "allergens": [],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d05",
@@ -2233,7 +2308,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d06",
@@ -2243,7 +2326,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d07",
@@ -2253,7 +2344,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d08",
@@ -2263,7 +2363,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d09",
@@ -2274,7 +2383,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d10",
@@ -2285,7 +2403,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d11",
@@ -2293,7 +2420,16 @@
       "allergens": [],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d12",
@@ -2303,7 +2439,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d13",
@@ -2313,7 +2457,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d14",
@@ -2323,7 +2476,17 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d15",
@@ -2333,7 +2496,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-d16",
@@ -2343,7 +2515,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-s01",
@@ -2354,7 +2535,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-s02",
@@ -2365,7 +2554,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-s03",
@@ -2376,7 +2573,15 @@
       ],
       "storageDays": 3,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-generated-s04",
@@ -2386,7 +2591,12 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "simple-parsed-breakfast-eggs-cheese-pan",
@@ -2398,7 +2608,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-breakfast-lazy-vareniki-tvorog",
@@ -2410,7 +2628,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-breakfast-rice-porridge-milk",
@@ -2420,7 +2646,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-breakfast-syrniki-tvorog",
@@ -2432,7 +2666,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-breakfast-zucchini-fritters-sourcream",
@@ -2444,7 +2686,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-baked-chicken-potato-sourcream",
@@ -2454,7 +2704,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-baked-cod-potato",
@@ -2465,7 +2723,15 @@
       ],
       "storageDays": 2,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-buckwheat-mushrooms-chicken",
@@ -2473,7 +2739,16 @@
       "allergens": [],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-bulgur-chicken-vegetables",
@@ -2483,7 +2758,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-chicken-cutlets-buckwheat",
@@ -2493,7 +2777,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-chicken-green-beans-bulgur",
@@ -2503,7 +2796,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-chicken-meatballs-rice-sourcream",
@@ -2514,7 +2816,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-chicken-noodle-soup",
@@ -2524,7 +2835,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-chicken-vegetables-bulgur",
@@ -2535,7 +2855,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-cod-tomato-pasta",
@@ -2546,7 +2875,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-lazy-cabbage-rolls",
@@ -2554,7 +2892,16 @@
       "allergens": [],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-pasta-nests-beef-cheese",
@@ -2565,7 +2912,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-pasta-salmon-cream",
@@ -2577,7 +2932,16 @@
       ],
       "storageDays": 2,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-pasta-tuna-tomato",
@@ -2588,7 +2952,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-rice-beef-sourcream",
@@ -2598,7 +2971,16 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-main-rice-beef-tomato",
@@ -2606,7 +2988,16 @@
       "allergens": [],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-snack-carrot-cheese-salad",
@@ -2616,7 +3007,12 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "simple-parsed-snack-cheese-tomato-toast",
@@ -2627,7 +3023,15 @@
       ],
       "storageDays": 3,
       "freezable": true,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-snack-eggs-tomato-cheese",
@@ -2638,7 +3042,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "simple-parsed-snack-tomato-egg-cheese",
@@ -2649,7 +3061,15 @@
       ],
       "storageDays": 1,
       "freezable": false,
-      "equipmentOptions": []
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "src-beefy-cheese-potatoes",

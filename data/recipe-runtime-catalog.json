@@ -11,6 +11,16 @@
         "fat": 29.1,
         "carbs": 37.9
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 15,
       "menuTags": [
         "simple"
@@ -441,6 +451,16 @@
         "fat": 16.5,
         "carbs": 70.1
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 10,
       "menuTags": [
         "simple"
@@ -805,6 +825,16 @@
         "fat": 24.4,
         "carbs": 46.6
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ],
       "timeMinutes": 20,
       "menuTags": [
         "simple"
@@ -1194,6 +1224,16 @@
         "fat": 18.3,
         "carbs": 54.6
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 7,
       "menuTags": [
         "simple"
@@ -1558,6 +1598,16 @@
         "fat": 19.8,
         "carbs": 59.6
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -1972,6 +2022,16 @@
         "fat": 23.5,
         "carbs": 53.8
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 30,
       "menuTags": [
         "simple"
@@ -2365,6 +2425,17 @@
         "fat": 17.3,
         "carbs": 78.9
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -2768,6 +2839,17 @@
         "fat": 25.8,
         "carbs": 66.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -3171,6 +3253,17 @@
         "fat": 10.4,
         "carbs": 76.5
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -3574,6 +3667,16 @@
         "fat": 20.8,
         "carbs": 74.1
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 40,
       "menuTags": [
         "simple"
@@ -3976,6 +4079,16 @@
         "fat": 25.6,
         "carbs": 37.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 35,
       "menuTags": [
         "simple"
@@ -4378,6 +4491,17 @@
         "fat": 29.2,
         "carbs": 62
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 35,
       "menuTags": [
         "simple"
@@ -4815,6 +4939,17 @@
         "fat": 18.4,
         "carbs": 72.7
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -5252,6 +5387,17 @@
         "fat": 14.7,
         "carbs": 69.6
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 30,
       "menuTags": [
         "simple"
@@ -5657,6 +5803,17 @@
         "fat": 25.2,
         "carbs": 94
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -6062,6 +6219,17 @@
         "fat": 19.8,
         "carbs": 69.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -6465,6 +6633,16 @@
         "fat": 9.3,
         "carbs": 60.1
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 30,
       "menuTags": [
         "simple"
@@ -6867,6 +7045,17 @@
         "fat": 21.1,
         "carbs": 95.2
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -7272,6 +7461,18 @@
         "fat": 34.3,
         "carbs": 56.5
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ],
       "timeMinutes": 65,
       "menuTags": [
         "simple"
@@ -7701,6 +7902,17 @@
         "fat": 13.2,
         "carbs": 101.7
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -8138,6 +8350,17 @@
         "fat": 21.1,
         "carbs": 61.5
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -8543,6 +8766,16 @@
         "fat": 4.1,
         "carbs": 35.9
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 5,
       "menuTags": [
         "simple"
@@ -8892,6 +9125,16 @@
         "fat": 10.3,
         "carbs": 29.2
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 7,
       "menuTags": [
         "simple"
@@ -9277,6 +9520,16 @@
         "fat": 11.6,
         "carbs": 36.8
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 10,
       "menuTags": [
         "simple"
@@ -9666,6 +9919,13 @@
         "fat": 8.1,
         "carbs": 24.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": []
+        }
+      ],
       "timeMinutes": 3,
       "menuTags": [
         "simple"
@@ -10029,6 +10289,16 @@
         "fat": 20,
         "carbs": 41.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 17,
       "menuTags": [
         "simple"
@@ -10425,6 +10695,16 @@
         "fat": 19,
         "carbs": 44
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 20,
       "menuTags": [
         "simple"
@@ -10832,6 +11112,16 @@
         "fat": 13.5,
         "carbs": 68
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 35,
       "menuTags": [
         "simple"
@@ -11205,6 +11495,16 @@
         "fat": 29.4,
         "carbs": 37.5
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 15,
       "menuTags": [
         "simple"
@@ -11644,6 +11944,16 @@
         "fat": 29.8,
         "carbs": 42.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 23,
       "menuTags": [
         "simple"
@@ -12058,6 +12368,16 @@
         "fat": 19.5,
         "carbs": 7.5
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 10,
       "menuTags": [
         "simple"
@@ -12462,6 +12782,16 @@
         "fat": 15.7,
         "carbs": 10.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ],
       "timeMinutes": 20,
       "menuTags": [
         "simple"
@@ -12893,6 +13223,16 @@
         "fat": 13.6,
         "carbs": 20.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 7,
       "menuTags": [
         "simple"
@@ -13244,6 +13584,17 @@
         "fat": 16.9,
         "carbs": 78.8
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -13658,6 +14009,17 @@
         "fat": 17.9,
         "carbs": 70.7
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -14162,6 +14524,17 @@
         "fat": 17,
         "carbs": 74.6
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -14574,6 +14947,17 @@
         "fat": 31,
         "carbs": 52
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 27,
       "menuTags": [
         "simple"
@@ -15063,6 +15447,17 @@
         "fat": 25.5,
         "carbs": 70.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 34,
       "menuTags": [
         "simple"
@@ -15565,6 +15960,17 @@
         "fat": 11.3,
         "carbs": 86.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -16054,6 +16460,17 @@
         "fat": 9.9,
         "carbs": 59.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 30,
       "menuTags": [
         "simple"
@@ -16498,6 +16915,17 @@
         "fat": 16.5,
         "carbs": 83.2
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -16921,6 +17349,17 @@
         "fat": 14.7,
         "carbs": 71.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -17367,6 +17806,16 @@
         "fat": 18.2,
         "carbs": 56.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ],
       "timeMinutes": 42,
       "menuTags": [
         "simple"
@@ -17747,6 +18196,16 @@
         "fat": 27.4,
         "carbs": 41.1
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 30,
       "menuTags": [
         "simple"
@@ -18183,6 +18642,17 @@
         "fat": 33.4,
         "carbs": 64.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -18638,6 +19108,17 @@
         "fat": 26.7,
         "carbs": 67
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -19068,6 +19549,17 @@
         "fat": 29.4,
         "carbs": 39.9
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 25,
       "menuTags": [
         "simple"
@@ -19495,6 +19987,17 @@
         "fat": 19,
         "carbs": 61.3
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ],
       "timeMinutes": 40,
       "menuTags": [
         "simple"
@@ -19973,6 +20476,13 @@
         "fat": 16.9,
         "carbs": 18.4
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": []
+        }
+      ],
       "timeMinutes": 10,
       "menuTags": [
         "simple"
@@ -20323,6 +20833,16 @@
         "fat": 16.4,
         "carbs": 60.2
       },
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ],
       "timeMinutes": 60,
       "menuTags": [
         "simple"
