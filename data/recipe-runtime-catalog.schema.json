@@ -19,8 +19,24 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "slot", "title", "cuisine", "macros", "timeMinutes", "menuTags", "costTier", "servingMass", "shoppingIngredients", "steps", "storage", "packing", "provenance", "visualFallback", "recipeFamily", "adapter"],
+        "required": ["id", "slot", "title", "cuisine", "macros", "timeMinutes", "menuTags", "costTier", "servingMass", "shoppingIngredients", "steps", "storage", "packing", "provenance", "visualFallback", "recipeFamily", "adapter", "equipmentOptions"],
         "properties": {
+          "equipmentOptions": {
+            "type": "array", "minItems": 1,
+            "items": {
+              "type": "object", "required": ["id", "label", "requiredEquipment"],
+              "properties": {
+                "id": { "type": "string", "minLength": 1 },
+                "label": { "type": "string", "minLength": 1 },
+                "requiredEquipment": { "type": "array", "uniqueItems": true, "items": { "enum": ["stove", "pot", "pan", "oven", "baking_dish", "multicooker", "air_fryer", "blender", "microwave", "waffle_iron", "pressure_cooker"] } },
+                "steps": { "type": "array", "minItems": 3, "items": { "type": "string", "minLength": 1 } },
+                "timeMinutes": { "type": "number", "exclusiveMinimum": 0 },
+                "activeMinutes": { "type": "number", "exclusiveMinimum": 0 },
+                "difficulty": { "enum": [1, 2, 3] },
+                "note": { "type": "string", "minLength": 1 }
+              }
+            }
+          },
           "slot": { "enum": ["breakfast", "lunch", "dinner", "snack1", "snack2"] },
           "cuisine": {
             "description": "Editorial cuisine assignment from data/recipe-cuisines.json; never inferred from the title.",

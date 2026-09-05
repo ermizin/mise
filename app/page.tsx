@@ -225,6 +225,7 @@ type Recipe = {
   allergens: Allergen[];
   steps: string[];
   instructions?: RecipeStep[];
+  equipmentOptions?: EquipmentMethod[];
   storageDays: number;
   freezable: boolean;
   provenance: RecipeProvenance;
@@ -274,6 +275,7 @@ type RuntimeRecipeRecord = {
   }[];
   steps: string[];
   instructions?: RecipeStep[];
+  equipmentOptions?: EquipmentMethod[];
   storage: {
     refrigerator: string;
     freezer: string;
@@ -299,6 +301,17 @@ type RuntimeRecipeRecord = {
   };
   visualFallback: { emoji: string };
   recipeFamily: RecipeFamily;
+};
+type KitchenEquipment = "stove" | "pot" | "pan" | "oven" | "baking_dish" | "multicooker" | "air_fryer" | "blender" | "microwave" | "waffle_iron" | "pressure_cooker";
+type EquipmentMethod = {
+  id: string;
+  label: string;
+  requiredEquipment: KitchenEquipment[];
+  steps?: string[];
+  timeMinutes?: number;
+  activeMinutes?: number;
+  difficulty?: 1 | 2 | 3;
+  note?: string;
 };
 type RecipeTuning = { protein: number; fat: number; carbs: number };
 type CookedWeights = Record<string, number>;
@@ -337,6 +350,7 @@ type ActivePlan = {
   end: string;
   periodDays: number;
   cookEveryDays: number;
+  kitchenEquipment?: KitchenEquipment[];
   menuStyle: MenuStyle;
   mealSlots: MealSlot[];
   people: Person[];
@@ -410,6 +424,7 @@ type BuilderDraft = {
   menuStyle: MenuStyle;
   people: Person[];
   cookEveryDays: number;
+  kitchenEquipment?: KitchenEquipment[];
   remainderDecision: "separate" | "extend" | "shorten" | null;
   menuMode?: MenuBuildMode;
   selections: Record<string, string>;
@@ -920,6 +935,62 @@ type RecipeEffortEvidenceStep = {
   text: string;
   equipment?: string[];
 };
+
+const kitchenEquipmentChoices: { id: KitchenEquipment; label: string; hint?: string }[] = [
+  { id: "multicooker", label: "Мультиварка", hint: "Тушение, жарка и томление без давления" },
+  { id: "air_fryer", label: "Аэрогриль", hint: "Запекание и хрустящая корочка" },
+  { id: "stove", label: "Плита" },
+  { id: "pot", label: "Кастрюля" },
+  { id: "pan", label: "Сковорода" },
+  { id: "oven", label: "Духовка" },
+  { id: "baking_dish", label: "Форма или противень" },
+  { id: "blender", label: "Блендер / измельчитель" },
+  { id: "microwave", label: "Микроволновка" },
+  { id: "waffle_iron", label: "Вафельница" },
+  { id: "pressure_cooker", label: "Скороварка" },
+];
+const defaultKitchenEquipment: KitchenEquipment[] = ["stove", "pot", "pan", "oven", "baking_dish"];
+function normalizeKitchenEquipment(value: unknown): KitchenEquipment[] | undefined {
+  if (value === undefined) return undefined;
+  if (!Array.isArray(value)) return [];
+  return kitchenEquipmentChoices.filter(({ id }) => value.includes(id)).map(({ id }) => id);
+}
+function equipmentLabel(id: KitchenEquipment) {
+  return kitchenEquipmentChoices.find((item) => item.id === id)?.label ?? id;
+}
+function equipmentMethods(recipe: Recipe): EquipmentMethod[] {
+  if (recipe.equipmentOptions?.length) return recipe.equipmentOptions;
+  // The ten retained legacy recipes use the same documented kitchen as their source.
+  const legacy: Record<string, KitchenEquipment[]> = {
+    "src-beefy-cheese-potatoes": ["stove", "pan", "oven", "baking_dish", "blender", "microwave"],
+    "src-creamy-chicken-pasta": ["oven", "baking_dish", "blender"],
+    "src-curry-fried-rice": ["stove", "pot", "pan"],
+    "src-fajita-rice": ["stove", "pot", "pan"],
+    "src-gochujang-beef": ["stove", "pot", "pan"],
+    "src-halal-chicken": ["stove", "pot", "pan"],
+    "src-lemon-chicken": ["stove", "pot", "pan", "oven", "baking_dish"],
+    "src-light-stroganoff": ["multicooker", "stove", "pot"],
+    "src-mediterranean-wrap": ["oven", "baking_dish"],
+    "src-sausage-pepper-pasta": ["stove", "pot"],
+  };
+  const required = legacy[recipe.id];
+  return required ? [{ id: "original", label: "По рецепту", requiredEquipment: required }] : [];
+}
+function availableEquipmentMethods(recipe: Recipe, equipment?: KitchenEquipment[]) {
+  const methods = equipmentMethods(recipe);
+  return equipment === undefined ? methods : methods.filter((method) =>
+    method.requiredEquipment.every((id) => equipment.includes(id)),
+  );
+}
+function recipeSupportsEquipment(recipe: Recipe, equipment?: KitchenEquipment[]) {
+  return equipment === undefined || availableEquipmentMethods(recipe, equipment).length > 0;
+}
+function cookingMethodFor(recipe: Recipe, equipment?: KitchenEquipment[], methodId?: string) {
+  const methods = availableEquipmentMethods(recipe, equipment);
+  return methods.find((method) => method.id === methodId) ??
+    (equipment === undefined ? methods.find((method) => method.id === "original") :
+      methods.find((method) => method.id !== "original" && method.requiredEquipment.some((id) => id === "multicooker" || id === "air_fryer"))) ?? methods[0];
+}
 
 const equipmentLabels: [RegExp, string][] = [
   [/(?:large_)?(?:sauce)?pan|pot|kettle|heavy_pan/u, "кастрюля"],
@@ -4321,6 +4392,7 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
       ...record.steps,
     ],
     instructions: record.instructions,
+    equipmentOptions: record.equipmentOptions,
     storageDays: Math.max(1, record.storage.refrigeratorDays ?? 3),
     freezable: record.storage.freezable,
     provenance: {
@@ -5224,7 +5296,9 @@ function recipeCookingSessionForAssignment(
     ),
   };
 }
-function recipeDisplaySteps(recipe: Recipe) {
+function recipeDisplaySteps(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string) {
+  const method = cookingMethodFor(recipe, kitchenEquipment, methodId);
+  if (method?.steps) return method.steps;
   const family = recipeFamilyFor(recipe);
   return family
     ? family.miseInstructions
@@ -5261,10 +5335,10 @@ function buildBatchCookingModel(
       batch.days,
       (person) => plan.tuning?.[tuningKey(batch, slot, person)],
     );
-    const displaySteps = recipeDisplaySteps(recipe);
+    const displaySteps = recipeDisplaySteps(recipe, plan.kitchenEquipment);
     const fallbackMinutes = Math.max(
       1,
-      Math.round(recipe.effort.activeMinutes / Math.max(1, displaySteps.length + 1)),
+      Math.round((cookingMethodFor(recipe, plan.kitchenEquipment)?.activeMinutes ?? recipe.effort.activeMinutes) / Math.max(1, displaySteps.length + 1)),
     );
     if (!session.viable) {
       steps.push({
@@ -5277,8 +5351,8 @@ function buildBatchCookingModel(
       });
       continue;
     }
-    activeMinutes += recipe.effort.activeMinutes;
-    totalMinutes += recipe.time;
+    activeMinutes += cookingMethodFor(recipe, plan.kitchenEquipment)?.activeMinutes ?? recipe.effort.activeMinutes;
+    totalMinutes += cookingMethodFor(recipe, plan.kitchenEquipment)?.timeMinutes ?? recipe.time;
     const products = recipe.ingredients.map(
       (ingredient) =>
         `${ingredient.name} — ${ingredientAmountLabel(
@@ -5768,8 +5842,9 @@ type CatalogFilters = {
   limit?: number | "all";
   includeDisliked?: boolean;
 };
-function timeBand(recipe: Recipe): NonNullable<CatalogFilters["time"]> {
-  return recipe.time <= 20 ? "quick" : recipe.time <= 40 ? "medium" : "long";
+function timeBand(recipe: Recipe, kitchenEquipment?: KitchenEquipment[]): NonNullable<CatalogFilters["time"]> {
+  const time = kitchenEquipment === undefined ? recipe.time : cookingMethodFor(recipe, kitchenEquipment)?.timeMinutes ?? recipe.time;
+  return time <= 20 ? "quick" : time <= 40 ? "medium" : "long";
 }
 /**
  * A family still awaiting nutrition review is not releasable, whoever eats it.
@@ -5810,11 +5885,13 @@ function candidateRecipes(
   people: Person[] = [],
   batchDays = 1,
   filters: CatalogFilters = {},
+  kitchenEquipment?: KitchenEquipment[],
 ) {
   const eaters = relevantPeople(people, slot);
   const sorted = recipes
     .flatMap((recipe) => {
       if (
+        !recipeSupportsEquipment(recipe, kitchenEquipment) ||
         !recipeSupportsSlot(recipe, slot) ||
         !recipe.tags.includes(style) ||
         belongsToHiddenDietPlan(recipe) ||
@@ -5826,7 +5903,7 @@ function candidateRecipes(
           !eaters.every((person) => dislikeMatches(recipe, person).length === 0)) ||
         (filters.origin && recipe.provenance.kind !== filters.origin) ||
         (filters.effort && recipe.effort.level !== filters.effort) ||
-        (filters.time && timeBand(recipe) !== filters.time)
+        (filters.time && timeBand(recipe, kitchenEquipment) !== filters.time)
       )
         return [];
       const session = eaters.length
@@ -5892,12 +5969,13 @@ function automaticAssignmentsFor(
   used: Set<string>,
   avoid: Set<string>,
   selectedRecipes: Recipe[],
+  kitchenEquipment?: KitchenEquipment[],
 ) {
   const eaters = relevantPeople(people, slot);
   if (!eaters.length) return [];
   const sharedOptions = candidateRecipes(slot, style, people, batchDays, {
     limit: "all",
-  });
+  }, kitchenEquipment);
   const shared = chooseMenuCandidate(
     sharedOptions,
     used,
@@ -5910,7 +5988,7 @@ function automaticAssignmentsFor(
   const optionsByPerson = new Map(
     eaters.map((person) => [
       person.id,
-      candidateRecipes(slot, style, [person], batchDays, { limit: "all" }),
+      candidateRecipes(slot, style, [person], batchDays, { limit: "all" }, kitchenEquipment),
     ]),
   );
   const uncovered = new Set(eaters.map((person) => person.id));
@@ -5981,9 +6059,11 @@ function recipeCoverageFor(
   person: Person,
   style: MenuStyle,
   batchDays: number,
+  kitchenEquipment?: KitchenEquipment[],
 ) {
   const possible = recipes.filter(
     (recipe) =>
+      recipeSupportsEquipment(recipe, kitchenEquipment) &&
       person.includedSlots.some((slot) => recipeSupportsSlot(recipe, slot)) &&
       recipe.tags.includes(style) &&
       isProductionReadyRecipe(recipe) &&
@@ -6069,11 +6149,12 @@ function normalizePerson(person: Person): Person {
 }
 function normalizePlan(plan: ActivePlan): ActivePlan {
   const normalizedPeople = plan.people.map(normalizePerson);
+  const kitchenEquipment = normalizeKitchenEquipment(plan.kitchenEquipment);
   const removedRecipeIds = new Set(plan.catalogMigration?.removedRecipeIds ?? []);
   const selections = Object.fromEntries(
     Object.entries(plan.selections ?? {}).flatMap(([key, recipeId]) => {
       const recipe = recipesById[recipeId];
-      if (recipe && isProductionReadyRecipe(recipe)) return [[key, recipeId]];
+      if (recipe && isProductionReadyRecipe(recipe) && recipeSupportsEquipment(recipe, kitchenEquipment)) return [[key, recipeId]];
       if (typeof recipeId === "string") removedRecipeIds.add(recipeId);
       return [];
     }),
@@ -6084,7 +6165,7 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
         const retained = (Array.isArray(assignments) ? assignments : []).filter(
           (assignment) => {
             const recipe = recipesById[assignment.recipeId];
-            const ready = Boolean(recipe && isProductionReadyRecipe(recipe));
+            const ready = Boolean(recipe && isProductionReadyRecipe(recipe) && recipeSupportsEquipment(recipe, kitchenEquipment));
             if (!ready && typeof assignment.recipeId === "string")
               removedRecipeIds.add(assignment.recipeId);
             return ready;
@@ -6109,6 +6190,7 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
     }
   const normalizedPlan = {
     ...plan,
+    kitchenEquipment,
     menuStyle: releaseMenuStyles.includes(plan.menuStyle)
       ? plan.menuStyle
       : "protein",
@@ -8555,7 +8637,7 @@ function WeekScreen({
       )
     : 0;
   const nextCookMinutes = nextCookRecipes.reduce(
-    (sum, { recipe }) => sum + recipe.time,
+    (sum, { recipe }) => sum + (cookingMethodFor(recipe, plan.kitchenEquipment)?.timeMinutes ?? recipe.time),
     0,
   );
   const macroRows: {
@@ -9158,7 +9240,7 @@ function propertyChipFor(recipe: Recipe, plan: ActivePlan | null) {
   return withPlural(recipe.storageDays, FORMS.day);
 }
 
-function catalogMatches(recipe: Recipe, state: CatalogState) {
+function catalogMatches(recipe: Recipe, state: CatalogState, kitchenEquipment?: KitchenEquipment[]) {
   const query = state.q.trim().toLowerCase();
   const exclude = query.startsWith("без ") ? query.slice(4).trim() : "";
   const names = recipe.ingredients.map((ingredient) =>
@@ -9174,7 +9256,7 @@ function catalogMatches(recipe: Recipe, state: CatalogState) {
   if (state.slot && recipe.slot !== state.slot) return false;
   if (!matchesCuisine(recipe.cuisine, state.cuisine)) return false;
   if (state.effort && recipe.effort.level !== state.effort) return false;
-  if (state.time && timeBand(recipe) !== state.time) return false;
+  if (state.time && timeBand(recipe, kitchenEquipment) !== state.time) return false;
   return state.properties.every((property) => hasProperty(recipe, property));
 }
 
@@ -9422,22 +9504,23 @@ function RecipesScreen({
   const active = activeCatalogFilters(state);
   const visible = useMemo(() => {
     const matched = productionRecipes.filter((recipe) =>
-      catalogMatches(recipe, state),
+      recipeSupportsEquipment(recipe, plan?.kitchenEquipment) && catalogMatches(recipe, state, plan?.kitchenEquipment),
     );
     const missing = new Map(
       matched.map((recipe) => [recipe.id, missingCountFor(recipe, plan) ?? 0]),
     );
     return [...matched].sort((a, b) => {
-      if (state.sort === "time") return a.time - b.time;
+      const timeDifference = (cookingMethodFor(a, plan?.kitchenEquipment)?.timeMinutes ?? a.time) - (cookingMethodFor(b, plan?.kitchenEquipment)?.timeMinutes ?? b.time);
+      if (state.sort === "time") return timeDifference;
       if (state.sort === "protein") return b.macros.protein - a.macros.protein;
       const diff = (missing.get(a.id) ?? 0) - (missing.get(b.id) ?? 0);
-      return diff || a.time - b.time;
+      return diff || timeDifference;
     });
   }, [plan, state]);
 
   const fromYourProducts = plan
     ? productionRecipes.filter(
-        (recipe) => missingCountFor(recipe, plan) === 0,
+        (recipe) => recipeSupportsEquipment(recipe, plan.kitchenEquipment) && missingCountFor(recipe, plan) === 0,
       ).length
     : null;
 
@@ -9787,7 +9870,7 @@ function RecipeCard({
         <div className="recipe-body">
           <h2>{recipe.title}</h2>
           <p className="recipe-meta">
-            {recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
+            {cookingMethodFor(recipe, plan?.kitchenEquipment)?.timeMinutes ?? recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
           </p>
           <div className="recipe-chips">
             {missing !== null && (
@@ -10453,6 +10536,7 @@ function PlanBuilder({
         : initialPeople;
     },
   );
+  const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
   const [cookEveryDays, setCookEveryDays] = useState(
     initialPlan?.cookEveryDays ?? 3,
   );
@@ -10571,6 +10655,7 @@ function PlanBuilder({
         { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
       ],
     );
+    setKitchenEquipment(initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(null);
     setSelections(initialPlan?.selections ?? {});
@@ -10595,6 +10680,7 @@ function PlanBuilder({
           setMealSlots(draft.mealSlots);
           setMenuStyle(draft.menuStyle);
           setPeople(draft.people.map(normalizePerson));
+          setKitchenEquipment(normalizeKitchenEquipment(draft.kitchenEquipment));
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
           setSelections(draft.selections);
@@ -10684,6 +10770,7 @@ function PlanBuilder({
   const unassignedSlots = mealSlots.filter(
     (slot) => !people.some((person) => person.includedSlots.includes(slot)),
   );
+  // Kitchen is chosen at step 4; step 2 must remain reachable when its equipment needs editing.
   const unavailableMenuStyles = Object.fromEntries(
     releaseMenuStyles.flatMap((style) => {
       const missingSlots = mealSlots.filter((slot) => {
@@ -10730,6 +10817,7 @@ function PlanBuilder({
           return Boolean(
             recipe &&
               isProductionReadyRecipe(recipe) &&
+              recipeSupportsEquipment(recipe, kitchenEquipment) &&
               recipeSupportsSlot(recipe, slot) &&
               recipe.tags.includes(menuStyle) &&
               (recipe.storageDays >= batch.days || recipe.freezable) &&
@@ -10796,6 +10884,7 @@ function PlanBuilder({
       menuStyle,
       people,
       cookEveryDays,
+      kitchenEquipment,
       remainderDecision,
       menuMode,
       selections,
@@ -10816,6 +10905,7 @@ function PlanBuilder({
     menuStyle,
     people,
     cookEveryDays,
+    kitchenEquipment,
     remainderDecision,
     menuMode,
     selections,
@@ -10837,6 +10927,7 @@ function PlanBuilder({
       end: resolvedEnd,
       periodDays: resolvedDays,
       cookEveryDays,
+      kitchenEquipment,
       menuStyle,
       mealSlots,
       people,
@@ -10919,7 +11010,7 @@ function PlanBuilder({
     },
     {
       question: "Как часто удобно готовить?",
-      answer: `Раз в ${withPlural(cookEveryDays, FORMS.day)}`,
+      answer: `Раз в ${withPlural(cookEveryDays, FORMS.day)} · ${kitchenEquipment === undefined ? "утварь не указана" : kitchenEquipment.map(equipmentLabel).join(", ") || "без техники"}`,
     },
     {
       question: allSelected ? readyMenuMessage : "Собираю готовое меню…",
@@ -11040,6 +11131,7 @@ function PlanBuilder({
           people,
           nextPosition.batch.days,
           { limit: "all" },
+          kitchenEquipment,
         ),
       );
       setManualCuisineFilter((current) =>
@@ -11252,6 +11344,7 @@ function PlanBuilder({
         used,
         avoid,
         selectedRecipes,
+        kitchenEquipment,
       );
       if (!assignmentCoverageComplete(people, slot, assignments)) continue;
       updatedAssignments[key] = assignments;
@@ -11282,7 +11375,7 @@ function PlanBuilder({
       return () => window.cancelAnimationFrame(frame);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- пересобирать на каждый рендер нельзя: производные карты создаются заново
-  }, [step, positions, menuMode]);
+  }, [step, positions, menuMode, kitchenEquipment]);
   function replaceSelection(
     key: string,
     personIds: string[],
@@ -11291,7 +11384,7 @@ function PlanBuilder({
     const position = positions.find(
       ({ batch, slot }) => selectionKey(batch, slot) === key,
     );
-    if (!position) return null;
+    if (!position || !recipesById[recipeId] || !recipeSupportsEquipment(recipesById[recipeId], kitchenEquipment)) return null;
     const moving = new Set(personIds);
     const nextGroups = (validSelectionAssignments[key] ?? []).flatMap(
       (assignment) => {
@@ -11358,6 +11451,7 @@ function PlanBuilder({
       used,
       new Set(),
       selectedRecipes,
+      kitchenEquipment,
     );
     if (!assignmentCoverageComplete(people, position.slot, assignments))
       return false;
@@ -11602,6 +11696,13 @@ function PlanBuilder({
           <div
             className={`builder-chat-current${chatTransition?.kind === "menu" ? " is-assembling-menu" : ""}`}
           >
+            {step === 5 && (
+              <section className="glass-card kitchen-plan-summary">
+                <p>{kitchenEquipment === undefined ? "Утварь пока не указана" : kitchenEquipment.map(equipmentLabel).join(" · ") || "Без техники"}</p>
+                <button type="button" className="text-button" onClick={() => changeStep(4)}>Изменить утварь</button>
+                {!allSelected && <p role="status">Если блюд не хватает, добавьте доступную технику или измените позиции меню.</p>}
+              </section>
+            )}
             {step === 5 && menuMode === "auto" && allSelected ? (
               <div
                 className="builder-chat-menu-ready tint-mint"
@@ -11743,6 +11844,7 @@ function PlanBuilder({
             )}
             {step === 3 && (
               <PeopleStep
+                kitchenEquipment={kitchenEquipment}
                 people={people}
                 availableMealSlots={mode === "settings" ? allMealSlots : mealSlots}
                 menuStyle={menuStyle}
@@ -11782,6 +11884,8 @@ function PlanBuilder({
             )}
             {step === 4 && (
               <CookingStep
+                kitchenEquipment={kitchenEquipment}
+                onEquipment={setKitchenEquipment}
                 periodDays={rawDays}
                 cookEveryDays={cookEveryDays}
                 remainder={remainder}
@@ -11801,6 +11905,7 @@ function PlanBuilder({
             {step === 5 && menuMode === "auto" && (
               <>
                 <MenuReviewStep
+                kitchenEquipment={kitchenEquipment}
                   batches={batches}
                   mealSlots={mealSlots}
                   people={people}
@@ -11835,6 +11940,7 @@ function PlanBuilder({
             )}
             {step === 5 && menuMode === "manual" && (
               <ManualMenuStep
+                  kitchenEquipment={kitchenEquipment}
                 key={choiceIndex}
                 positions={positions}
                 choiceIndex={choiceIndex}
@@ -12317,6 +12423,7 @@ function estimateOf(person: Person): NutritionWizardInput {
 }
 
 function PeopleStep({
+  kitchenEquipment,
   people,
   availableMealSlots,
   menuStyle,
@@ -12328,6 +12435,7 @@ function PeopleStep({
   onAdd,
   onRemove,
 }: {
+  kitchenEquipment?: KitchenEquipment[];
   people: Person[];
   availableMealSlots: MealSlot[];
   menuStyle: MenuStyle;
@@ -12371,7 +12479,7 @@ function PeopleStep({
   const draft = estimateOf(person);
   const calculation = calculateNutritionTarget(draft);
   const computed = "target" in calculation ? calculation.target : null;
-  const coverage = recipeCoverageFor(person, menuStyle, batchDays);
+  const coverage = recipeCoverageFor(person, menuStyle, batchDays, kitchenEquipment);
   const fromMacros = macroCalories(person.daily);
   const gap = Math.abs(fromMacros - person.daily.kcal);
   const converges = gap / Math.max(person.daily.kcal, 1) <= 0.03;
@@ -13064,6 +13172,8 @@ function PeopleStep({
 }
 
 function CookingStep({
+  kitchenEquipment,
+  onEquipment,
   periodDays,
   cookEveryDays,
   remainder,
@@ -13074,6 +13184,8 @@ function CookingStep({
   onDays,
   onDecision,
 }: {
+  kitchenEquipment?: KitchenEquipment[];
+  onEquipment: (value: KitchenEquipment[]) => void;
   periodDays: number;
   cookEveryDays: number;
   remainder: number;
@@ -13093,6 +13205,28 @@ function CookingStep({
         title="На сколько дней готовим за раз?"
         text="Выберите размер одной партии. Мы учтём хранение и заморозку."
       />
+      <section className="kitchen-equipment glass-card" aria-labelledby="kitchen-equipment-title">
+        <p className="kicker">Ваша кухня</p>
+        <h3 id="kitchen-equipment-title">Что есть под рукой?</h3>
+        <p>Отметьте технику и посуду. Mise подберёт блюда, которые можно приготовить на вашей кухне.</p>
+        {kitchenEquipment === undefined && <p role="status">В старом плане утварь не указана. Отметьте её, чтобы учитывать при подборе.</p>}
+        <div className="kitchen-equipment-grid">
+          {kitchenEquipmentChoices.map(({ id, label, hint }) => {
+            const selected = kitchenEquipment?.includes(id) ?? false;
+            return <button type="button" key={id} role="checkbox" aria-checked={selected}
+              className={`kitchen-equipment-choice${hint ? " is-featured" : ""}${selected ? " is-selected" : ""}`}
+              onClick={() => onEquipment(selected ? (kitchenEquipment ?? []).filter((item) => item !== id) : [...(kitchenEquipment ?? []), id])}>
+              <span className="kitchen-equipment-check" aria-hidden="true">{selected && <Icon name="check" size={16} />}</span>
+              <span><b>{label}</b>{hint && <small>{hint} · {productionRecipes.filter((recipe) => equipmentMethods(recipe).some((method) => method.id === id)).length} рецептов</small>}</span>
+            </button>;
+          })}
+        </div>
+        <div className="kitchen-equipment-actions">
+          <button type="button" className="text-button" onClick={() => onEquipment([...defaultKitchenEquipment])}>Обычная кухня</button>
+          <button type="button" className="text-button" onClick={() => onEquipment([])}>Без техники</button>
+        </div>
+        <p className="kitchen-equipment-note">Нож, доска и миска нужны по умолчанию. {kitchenEquipment?.length === 0 ? "Выбраны только блюда без нагрева." : "Для гарниров Mise тоже учтёт нужную посуду."}</p>
+      </section>
       <section className="glass-card">
         <div className="day-scale" role="radiogroup" aria-label="Дней на партию">
           {[1, 2, 3, 4, 5, 6, 7].map((days) => (
@@ -13235,6 +13369,7 @@ function freezeSummary(
 }
 
 function ManualMenuStep({
+  kitchenEquipment,
   positions,
   choiceIndex,
   motionDirection,
@@ -13250,6 +13385,7 @@ function ManualMenuStep({
   onGo,
   onCuisineChange,
 }: {
+  kitchenEquipment?: KitchenEquipment[];
   positions: { batch: Batch; slot: MealSlot }[];
   choiceIndex: number;
   motionDirection: -1 | 1;
@@ -13312,6 +13448,7 @@ function ManualMenuStep({
     people,
     current.batch.days,
     { limit: "all", includeDisliked },
+    kitchenEquipment,
   );
   const preferredCount = candidateRecipes(
     current.slot,
@@ -13319,6 +13456,7 @@ function ManualMenuStep({
     people,
     current.batch.days,
     { limit: "all" },
+    kitchenEquipment,
   ).length;
   const slotCuisines = availableCuisines(slotOptions);
   /* Переход к другому слоту: кухня, которой в новом слоте нет, оставила бы
@@ -13338,7 +13476,7 @@ function ManualMenuStep({
     candidateRecipes(current.slot, style, people, current.batch.days, {
       limit: "all",
       includeDisliked: true,
-    }).length - preferredCount,
+    }, kitchenEquipment).length - preferredCount,
   );
   const remaining = Math.max(0, positions.length - selectedCount);
   return (
@@ -13441,7 +13579,7 @@ function ManualMenuStep({
                 <span>
                   <b>{recipe.title}</b>
                   <small>
-                    {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
+                    {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment)?.timeMinutes ?? recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
                   </small>
                 </span>
               </button>
@@ -13529,6 +13667,7 @@ function ManualMenuStep({
 }
 
 function MenuReviewStep({
+  kitchenEquipment,
   batches,
   mealSlots,
   people,
@@ -13541,6 +13680,7 @@ function MenuReviewStep({
   onOpenRecipe,
   onReassemble,
 }: {
+  kitchenEquipment?: KitchenEquipment[];
   batches: Batch[];
   mealSlots: MealSlot[];
   people: Person[];
@@ -13609,6 +13749,7 @@ function MenuReviewStep({
         replacementPeople,
         replacing.batch.days,
         { limit: "all" },
+        kitchenEquipment,
       )
     : [];
   const visibleReplacementOptions = showAllReplacements
@@ -13821,7 +13962,7 @@ function MenuReviewStep({
                     <span>
                       <b>{recipe.title}</b>
                       <small>
-                        {formatMacro(recipe.macros.kcal)} ккал · {recipe.time} мин
+                        {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment)?.timeMinutes ?? recipe.time} мин
                       </small>
                     </span>
                   </button>
@@ -14694,6 +14835,10 @@ function RecipeView({
   onReplace?: () => void;
 }) {
   const { recipe, batch, slot, plan } = context;
+  const [methodId, setMethodId] = useState<string | undefined>();
+  const cookingMethod = cookingMethodFor(recipe, plan?.kitchenEquipment, plan ? undefined : methodId);
+  const cookingTime = cookingMethod?.timeMinutes ?? recipe.time;
+  const cookingActiveMinutes = cookingMethod?.activeMinutes ?? recipe.effort.activeMinutes;
   const sectionOrder: RecipeSection[] = ["cooking", "dish"];
   const [section, setSection] = useState<RecipeSection>("cooking");
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
@@ -14936,8 +15081,8 @@ function RecipeView({
 
     return previewSession?.cookingAmounts ?? {};
   })();
-  const displaySteps = recipeDisplaySteps(recipe);
-  const timelineSteps = recipe.instructions?.length ? recipe.instructions : null;
+  const displaySteps = recipeDisplaySteps(recipe, plan?.kitchenEquipment, plan ? undefined : methodId);
+  const timelineSteps = !cookingMethod?.steps && recipe.instructions?.length ? recipe.instructions : null;
   const timelineHandsMinutes =
     timelineSteps?.reduce(
       (sum, step) => sum + (step.hands ? step.minutes : 0),
@@ -14964,7 +15109,7 @@ function RecipeView({
   const sectionMotionClass = sectionMotion.epoch
     ? ` recipe-section-motion ${sectionMotion.direction > 0 ? "motion-enter-right" : "motion-enter-left"}`
     : "";
-  const difficulty = recipe.effort.difficulty;
+  const difficulty = cookingMethod?.difficulty ?? recipe.effort.difficulty;
   const difficultyLabel = ["Просто", "Средне", "Сложно"][difficulty - 1];
   const cookingPortions = Math.max(1, (batch?.days ?? 1) * Math.max(1, eaters.length));
   const totalProductCount =
@@ -15087,6 +15232,18 @@ function RecipeView({
             key={`cooking-${sectionMotion.epoch}`}
             className={`recipe-cooking-content${sectionMotionClass}`}
           >
+            <section className="recipe-equipment glass-card">
+              <p className="kicker">Способ приготовления</p>
+              {!plan && equipmentMethods(recipe).length > 1 ? (
+                <label>Готовить с помощью
+                  <select aria-label="Способ приготовления" value={cookingMethod?.id ?? "original"} onChange={(event) => setMethodId(event.target.value)}>
+                    {equipmentMethods(recipe).map((method) => <option key={method.id} value={method.id}>{method.label}</option>)}
+                  </select>
+                </label>
+              ) : <h3>{cookingMethod?.label ?? "По рецепту"}</h3>}
+              {cookingMethod?.note && <p>{cookingMethod.note}</p>}
+              {cookingMethod && <p>Понадобится: {cookingMethod.requiredEquipment.map(equipmentLabel).join(" · ") || "нож, доска и миска"}.</p>}
+            </section>
             <section className="recipe-difficulty glass-card">
               <div>
                 <p className="kicker">Сложность</p>
@@ -15098,11 +15255,11 @@ function RecipeView({
                 </span>
               </div>
               <p className="recipe-difficulty-evidence">
-                {recipe.effortDescription}
+                {cookingMethod?.steps ? cookingMethod.requiredEquipment.map(equipmentLabel).join(" · ") : recipe.effortDescription}
               </p>
               <dl>
-                <div><dt>Активно</dt><dd>{recipe.effort.activeMinutes} мин</dd></div>
-                <div><dt>Всего</dt><dd>{recipe.time} мин</dd></div>
+                <div><dt>Активно</dt><dd>{cookingActiveMinutes} мин</dd></div>
+                <div><dt>Всего</dt><dd>{cookingTime} мин</dd></div>
               </dl>
             </section>
             <section className="recipe-products-preview glass-card">
@@ -15355,7 +15512,7 @@ function RecipeView({
           )}
           {onStartCooking && (
             <button className="primary-button" onClick={onStartCooking}>
-              Начать готовку <span>· {recipe.time} мин</span>
+              Начать готовку <span>· {cookingTime} мин</span>
             </button>
           )}
         </footer>

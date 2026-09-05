@@ -1,5 +1,18 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
+  "kitchenEquipmentIds": [
+    "stove",
+    "pot",
+    "pan",
+    "oven",
+    "baking_dish",
+    "multicooker",
+    "air_fryer",
+    "blender",
+    "microwave",
+    "waffle_iron",
+    "pressure_cooker"
+  ],
   "recipeCount": 210,
   "recipes": [
     {
@@ -9,7 +22,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-blogger-cottage-waffles",
@@ -19,7 +43,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "waffle_iron"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oats-chocolate-shell",
@@ -30,7 +63,13 @@
         "treeNuts"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "foodru-oats-no-cook",
@@ -40,7 +79,13 @@
         "milk"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "foodru-oats-tomato",
@@ -51,21 +96,48 @@
         "milk"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-beef-veg",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-borscht",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-chashushuli",
@@ -74,7 +146,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-meatballs",
@@ -85,7 +166,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-pepper-beef",
@@ -95,7 +186,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-pepper-chicken",
@@ -105,7 +206,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-potato-mushroom",
@@ -114,7 +224,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-sandwich",
@@ -124,7 +245,16 @@
         "soy"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "foodru-oblomov-seabass",
@@ -134,7 +264,16 @@
         "milk"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-10minute-couscous-salad",
@@ -145,7 +284,16 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-apple-penne-slaw-walnuts",
@@ -157,7 +305,16 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-aubergine-tomato-halloumi-pie",
@@ -170,7 +327,18 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-banana-overnight-oats",
@@ -181,7 +349,13 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "goodfood-beef-red-wine-potato-pie",
@@ -193,7 +367,19 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-big-batch-bolognese",
@@ -202,7 +388,25 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-big-batch-pressure-cooker-bolognese",
@@ -212,7 +416,15 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pressure_cooker"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-black-bean-soup-with-chunky-raita",
@@ -223,7 +435,24 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-black-bean-spicy-beef-pasta",
@@ -233,7 +462,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-bulgur-quinoa-lunch-bowls",
@@ -244,7 +483,16 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-chicken-pasta-bake",
@@ -254,7 +502,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-chicken-squash-pesto-lasagne",
@@ -265,7 +525,19 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "microwave",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-chicken-sweet-potato-peanut-stew",
@@ -274,7 +546,22 @@
         "peanut"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
@@ -283,7 +570,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-courgette-tomato-soup",
@@ -293,7 +591,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-creamy-bean-kale-pasta",
@@ -302,7 +610,17 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-creamy-chicken-sweetcorn-soup",
@@ -312,7 +630,25 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-crunchy-broccoli-cranberry-salad",
@@ -324,14 +660,34 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-family-meals-chicken-veg-casserole",
@@ -342,7 +698,22 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
@@ -353,7 +724,19 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-family-meals-easy-fish-cakes",
@@ -365,7 +748,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-family-meals-mild-chicken-curry",
@@ -377,7 +771,23 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-fragrant-biryani-with-coriander-cod",
@@ -389,7 +799,20 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-harissa-beef-tomato-bulgur",
@@ -400,7 +823,17 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-italian-vegetable-soup",
@@ -410,14 +843,51 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-kadala-curry",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
@@ -430,7 +900,20 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-lentil-kofta-orzo-feta",
@@ -441,7 +924,20 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
@@ -453,14 +949,48 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan",
+            "pot",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-mini-lentil-shepherds-pies",
@@ -469,7 +999,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-mozzarella-pepper-aubergine-calzone",
@@ -480,7 +1021,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-mushroom-lentil-beef-ragu",
@@ -489,7 +1041,23 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
@@ -501,14 +1069,43 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-orange-oregano-pulled-pork",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "oven",
+            "baking_dish",
+            "stove",
+            "pot"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-pork-harissa-meatballs",
@@ -518,7 +1115,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-pork-with-cucumber-apricot-couscous",
@@ -528,7 +1134,17 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-prawn-rice-mango-jar-salad",
@@ -540,7 +1156,16 @@
         "soy"
       ],
       "storageDays": 1,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
@@ -549,7 +1174,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
@@ -558,7 +1192,18 @@
         "egg"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
@@ -569,7 +1214,19 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
@@ -580,7 +1237,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-satay-sweet-potato-curry",
@@ -590,7 +1259,24 @@
         "peanut"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-sausage-egg-muffins",
@@ -601,7 +1287,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-sausage-leek-mash-pie",
@@ -612,7 +1309,17 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-scandi-beetroot-salmon-pasta",
@@ -624,7 +1331,16 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-slow-cooker-beef-bourguignon",
@@ -634,7 +1350,27 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan",
+            "pot"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-slow-cooker-lamb-curry",
@@ -645,7 +1381,25 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-slow-cooker-sausage-casserole",
@@ -655,7 +1409,25 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-smoky-black-bean-chilli",
@@ -665,7 +1437,28 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-spiced-lentil-butternut-squash-soup",
@@ -675,14 +1468,43 @@
         "sesame"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-steak-broccoli-protein-pots",
       "slot": "lunch",
       "allergens": [],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-summery-beans-herby-green-aioli",
@@ -692,7 +1514,18 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
@@ -702,7 +1535,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-tomato-pepper-bean-one-pot",
@@ -712,7 +1557,23 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-tuna-nicoise-protein-pots",
@@ -723,7 +1584,16 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-tuna-pasta-bake",
@@ -734,7 +1604,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-vegan-breakfast-muffins",
@@ -746,7 +1627,16 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-vegan-paella",
@@ -756,7 +1646,16 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-vegan-ragu",
@@ -766,7 +1665,25 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-vegan-shepherds-pie",
@@ -776,7 +1693,19 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-vegetarian-bolognese",
@@ -787,7 +1716,25 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-veggie-nuggets-with-summer-slaw",
@@ -801,7 +1748,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
@@ -812,7 +1769,19 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
@@ -823,7 +1792,17 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "goodfood-wild-salmon-with-radish-orange-slaw",
@@ -832,7 +1811,18 @@
         "fish"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-home-buckwheat-legs",
@@ -842,7 +1832,18 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-home-cutlets-mash",
@@ -855,28 +1856,71 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-home-merchant-buckwheat",
       "slot": "lunch",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-home-simple-buckwheat",
       "slot": "lunch",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-home-stewed-cabbage",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "new-oats-apple",
@@ -887,7 +1931,13 @@
         "treeNuts"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-oats-banana-blueberry",
@@ -898,7 +1948,13 @@
         "treeNuts"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-oats-blueberry-almond",
@@ -909,7 +1965,13 @@
         "treeNuts"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-oats-carrot",
@@ -920,7 +1982,13 @@
         "treeNuts"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-oats-chocolate",
@@ -930,7 +1998,13 @@
         "milk"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-oats-cinnamon-raisin",
@@ -941,7 +2015,13 @@
         "treeNuts"
       ],
       "storageDays": 4,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-sandwich-balyk",
@@ -953,7 +2033,13 @@
         "mustard"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-sandwich-boiled-chicken",
@@ -965,7 +2051,13 @@
         "mustard"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-sandwich-caesar",
@@ -975,7 +2067,16 @@
         "milk"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-sandwich-paprika",
@@ -985,7 +2086,16 @@
         "gluten"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "new-sandwich-smoked-chicken",
@@ -996,7 +2106,13 @@
         "mustard"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "new-sandwich-turkey-ham",
@@ -1008,7 +2124,13 @@
         "mustard"
       ],
       "storageDays": 2,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "src-beefy-cheese-potatoes",
@@ -1017,7 +2139,20 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "oven",
+            "baking_dish",
+            "blender",
+            "microwave"
+          ]
+        }
+      ]
     },
     {
       "id": "src-creamy-chicken-pasta",
@@ -1028,7 +2163,17 @@
         "soy"
       ],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "src-curry-fried-rice",
@@ -1037,14 +2182,34 @@
         "milk"
       ],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "src-fajita-rice",
       "slot": "lunch",
       "allergens": [],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "src-gochujang-beef",
@@ -1054,7 +2219,17 @@
         "soy"
       ],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "src-halal-chicken",
@@ -1064,7 +2239,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "src-lemon-chicken",
@@ -1074,7 +2259,19 @@
         "mustard"
       ],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "src-light-stroganoff",
@@ -1086,7 +2283,17 @@
         "mustard"
       ],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "src-mediterranean-wrap",
@@ -1097,7 +2304,16 @@
         "sesame"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "src-sausage-pepper-pasta",
@@ -1107,7 +2323,16 @@
         "milk"
       ],
       "storageDays": 4,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16046",
@@ -1118,7 +2343,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16249",
@@ -1129,7 +2363,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "microwave",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16283",
@@ -1138,7 +2382,23 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave",
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "microwave"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16300",
@@ -1149,7 +2409,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16454",
@@ -1159,7 +2428,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16479",
@@ -1168,7 +2449,21 @@
         "egg"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-16850",
@@ -1180,7 +2475,26 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-17115",
@@ -1189,7 +2503,17 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "microwave",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-17381",
@@ -1198,7 +2522,15 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-17591",
@@ -1209,7 +2541,25 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pan"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-18557",
@@ -1219,7 +2569,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-18874",
@@ -1230,7 +2590,16 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-19895",
@@ -1240,7 +2609,23 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-21839",
@@ -1249,7 +2634,17 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-21841",
@@ -1258,7 +2653,17 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-21976",
@@ -1269,7 +2674,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22144",
@@ -1279,14 +2693,46 @@
         "peanut"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22181",
       "slot": "snack1",
       "allergens": [],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22278",
@@ -1297,7 +2743,18 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22331",
@@ -1306,7 +2763,21 @@
         "egg"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22428",
@@ -1316,14 +2787,57 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer",
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "baking_dish",
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22442",
       "slot": "lunch",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan",
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22531",
@@ -1335,7 +2849,18 @@
         "peanut"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22550",
@@ -1345,14 +2870,51 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22571",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan",
+            "air_fryer",
+            "blender"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot",
+            "pan",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22922",
@@ -1363,7 +2925,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22968",
@@ -1373,7 +2944,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-22980",
@@ -1383,7 +2964,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23090",
@@ -1394,14 +2984,33 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23113",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23194",
@@ -1412,7 +3021,25 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23228",
@@ -1422,7 +3049,23 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23261",
@@ -1432,7 +3075,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23306",
@@ -1442,7 +3097,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23316",
@@ -1453,7 +3118,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23431",
@@ -1464,7 +3138,16 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23462",
@@ -1475,7 +3158,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23501",
@@ -1487,7 +3179,16 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23518",
@@ -1498,7 +3199,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23544",
@@ -1508,7 +3218,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23545",
@@ -1519,7 +3239,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23554",
@@ -1530,7 +3259,29 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-23797",
@@ -1540,7 +3291,20 @@
         "peanut"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24542",
@@ -1549,7 +3313,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24579",
@@ -1558,7 +3334,24 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave",
+            "blender",
+            "air_fryer"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "microwave"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24608",
@@ -1568,7 +3361,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24619",
@@ -1577,7 +3379,29 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "air_fryer",
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24729",
@@ -1586,7 +3410,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24799",
@@ -1596,7 +3431,26 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24851",
@@ -1607,7 +3461,27 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pan",
+            "baking_dish"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24899",
@@ -1616,7 +3490,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24909",
@@ -1625,7 +3511,25 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24917",
@@ -1636,7 +3540,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24949",
@@ -1649,7 +3562,18 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24968",
@@ -1659,7 +3583,19 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-24974",
@@ -1669,7 +3605,16 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25006-apple-yogurt-granola",
@@ -1680,14 +3625,26 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "tmpm-25006-avocado-bean-rice-cakes",
       "slot": "snack1",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
     },
     {
       "id": "tmpm-25006-breakfast-quesadilla",
@@ -1698,7 +3655,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25006-hash-brown-breakfast-bowl",
@@ -1710,7 +3676,15 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25030",
@@ -1721,7 +3695,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25044",
@@ -1731,7 +3714,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25071",
@@ -1741,7 +3734,19 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25082",
@@ -1751,7 +3756,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25092",
@@ -1760,7 +3776,15 @@
         "sesame"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25159",
@@ -1770,7 +3794,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25175",
@@ -1781,14 +3817,34 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25244",
       "slot": "lunch",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25290",
@@ -1801,7 +3857,16 @@
         "treeNuts"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-25453",
@@ -1811,7 +3876,22 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26138",
@@ -1821,7 +3901,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26232",
@@ -1831,7 +3921,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26358",
@@ -1842,7 +3944,25 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26414",
@@ -1853,7 +3973,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave",
+            "waffle_iron",
+            "stove",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26429",
@@ -1863,7 +3994,20 @@
         "sesame"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26441",
@@ -1875,7 +4019,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26528",
@@ -1884,7 +4038,29 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pan",
+            "microwave",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26583",
@@ -1895,14 +4071,38 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26617",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26647",
@@ -1913,7 +4113,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26660",
@@ -1922,7 +4132,29 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "blender",
+            "microwave",
+            "stove",
+            "pot"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot",
+            "blender",
+            "microwave"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26676",
@@ -1931,7 +4163,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26689",
@@ -1942,7 +4184,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26720",
@@ -1954,7 +4206,25 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "stove",
+            "pot"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26872",
@@ -1964,7 +4234,19 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26920",
@@ -1974,7 +4256,28 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26965",
@@ -1984,7 +4287,24 @@
         "gluten"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven"
+          ]
+        },
+        {
+          "id": "air_fryer",
+          "requiredEquipment": [
+            "air_fryer",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-26996",
@@ -1994,7 +4314,20 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "microwave",
+            "oven",
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-27287",
@@ -2003,7 +4336,18 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-27306",
@@ -2013,7 +4357,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-27328",
@@ -2024,7 +4378,18 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "microwave",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-27343",
@@ -2034,7 +4399,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-27802",
@@ -2045,7 +4420,16 @@
         "sesame"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28083",
@@ -2055,7 +4439,17 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28247",
@@ -2065,7 +4459,18 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28302",
@@ -2076,14 +4481,39 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28499",
       "slot": "dinner",
       "allergens": [],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28504",
@@ -2092,7 +4522,16 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28513",
@@ -2102,7 +4541,24 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven"
+          ]
+        },
+        {
+          "id": "multicooker",
+          "requiredEquipment": [
+            "multicooker",
+            "blender"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28533",
@@ -2111,7 +4567,19 @@
         "milk"
       ],
       "storageDays": 3,
-      "freezable": false
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28572",
@@ -2122,7 +4590,17 @@
         "soy"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     },
     {
       "id": "tmpm-28584",
@@ -2133,7 +4611,17 @@
         "mustard"
       ],
       "storageDays": 3,
-      "freezable": true
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "microwave",
+            "pot",
+            "stove"
+          ]
+        }
+      ]
     }
   ]
 }

@@ -60,7 +60,8 @@ test("14A calculates the approved three-level difficulty in the engine", async (
   assert.ok(runtime.recipes.every((recipe) => ["low", "medium", "high"].includes(recipe.effort.level)), "runtime keeps the engine difficulty level");
   assert.match(page, /level:\s*recipeEffortLevel\(activeMinutes, cookware\)/, "legacy estimation uses the engine helper");
   assert.match(page, /level:\s*recipeEffortLevel\([\s\S]{0,180}effortInputs\.cookware/, "legacy overrides are normalized through the engine");
-  assert.match(recipeView, /const difficulty = recipe\.effort\.difficulty;/, "the card reads the projected level without recalculating it");
+  assert.match(recipeView, /const difficulty = cookingMethod\?\.difficulty \?\? recipe\.effort\.difficulty;/, "the card reads the selected method or original projected level");
+  assert.doesNotMatch(recipeView, /recipeEffortDifficulty\(/, "difficulty is projected by the engine, never recalculated in the card");
   assert.doesNotMatch(recipeView, /recipe\.effort\.level\s*===/, "the UI never maps levels itself");
 });
 
@@ -126,7 +127,7 @@ test("14A explains difficulty with equipment and parallel-process evidence", asy
   assert.match(page, /"весы"/);
   assert.match(page, /Два процесса/);
   assert.match(page, /идут параллельно, ничего не остывает критично/);
-  assert.match(recipeView, /\{recipe\.effortDescription\}/);
+  assert.match(recipeView, /cookingMethod\?\.steps \? cookingMethod\.requiredEquipment\.map\(equipmentLabel\)\.join\(" · "\) : recipe\.effortDescription/);
   assert.match(css, /\.recipe-difficulty\s*>\s*\.recipe-difficulty-evidence/);
 });
 

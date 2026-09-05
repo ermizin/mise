@@ -1,3 +1,4 @@
+import { kitchenEquipmentIds } from "./recipe-equipment.mjs";
 import { readFile, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
@@ -35,7 +36,7 @@ async function productionRecipes() {
   const end = source.indexOf("export default function Home");
   if (start < 0 || end <= start) throw new Error("Could not locate the client recipe catalogue.");
   const output = ts.transpileModule(
-    `${source.slice(start, end)}\nglobalThis.__planRecipeRegistry = productionRecipes;`,
+    `${source.slice(start, end)}\nglobalThis.__planRecipeRegistry = productionRecipes.map(recipe => ({ ...recipe, equipmentOptions: equipmentMethods(recipe) }));`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -88,11 +89,12 @@ export async function buildPlanRecipeRegistry() {
       allergens: [...new Set(recipe.allergens)].sort(),
       storageDays: recipe.storageDays,
       freezable: recipe.freezable,
+      equipmentOptions: recipe.equipmentOptions.map(({ id, requiredEquipment }) => ({ id, requiredEquipment })),
     }))
     .sort((left, right) => left.id.localeCompare(right.id));
   if (new Set(entries.map((entry) => entry.id)).size !== entries.length)
     throw new Error("Client production recipes contain duplicated ids.");
-  return { schemaVersion: 1, recipeCount: entries.length, recipes: entries };
+  return { schemaVersion: 2, kitchenEquipmentIds, recipeCount: entries.length, recipes: entries };
 }
 
 export async function writePlanRecipeRegistry(outputPath = new URL("../data/plan-recipe-registry.json", import.meta.url)) {

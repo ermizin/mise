@@ -1,3 +1,4 @@
+import { recipeEquipmentFor, equipmentCoverage } from "./recipe-equipment.mjs";
 import { auditRecipeRelease } from "./audit-recipe-release.mjs";
 import { sourceAmount } from "./recipe-corpus-normalize.mjs";
 import {
@@ -627,6 +628,7 @@ function projectReadyCard(releaseCard, entry, recipeImages, cuisines) {
       shoppingIngredients,
       procedureIngredients,
       steps,
+      equipmentOptions: recipeEquipmentFor(candidate.id, candidate.titleRu.trim(), steps),
       instructions,
       storage: {
         refrigerator: candidate.storage.refrigerator,
@@ -714,6 +716,7 @@ export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
     if (projection.recipe) recipes.push(projection.recipe);
   }
   const coverage = {
+    equipment: equipmentCoverage(recipes),
     releaseAudit: release.counts,
     auditReadyCandidates: release.cards.filter((card) => card.verdict === "ready").length,
     runtimeReadyRecipes: recipes.length,

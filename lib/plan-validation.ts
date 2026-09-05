@@ -9,10 +9,12 @@ type RegistryRecipe = {
   allergens: string[];
   storageDays: number;
   freezable: boolean;
+  equipmentOptions: { id: string; requiredEquipment: string[] }[];
 };
 
 const planRecipeRegistry = planRecipeRegistryJson as unknown as {
   recipes: RegistryRecipe[];
+  kitchenEquipmentIds: string[];
 };
 const productionRecipesById = new Map(
   planRecipeRegistry.recipes.map((recipe) => [recipe.id, recipe]),
@@ -62,8 +64,9 @@ function recipeSupportsSlot(recipe: RegistryRecipe, slot: string) {
     (recipe.slot === "snack2" && slot === "snack1");
 }
 
-function validForBatch(recipe: RegistryRecipe, slot: string, days: number) {
-  return recipeSupportsSlot(recipe, slot) && (recipe.storageDays >= days || recipe.freezable);
+function validForBatch(recipe: RegistryRecipe, slot: string, days: number, equipment?: string[]) {
+  const compatible = equipment === undefined || recipe.equipmentOptions.some((method) => method.requiredEquipment.every((item) => equipment.includes(item)));
+  return compatible && recipeSupportsSlot(recipe, slot) && (recipe.storageDays >= days || recipe.freezable);
 }
 
 function validDailyNutrition(value: unknown) {
@@ -98,6 +101,10 @@ export function validatePlanForPersistence(value: unknown): PlanValidationResult
   if (typeof value.menuStyle !== "string" || !menuStyles.has(value.menuStyle) || !Array.isArray(value.mealSlots) || value.mealSlots.length < 1 || value.mealSlots.length > 5 || !value.mealSlots.every((slot) => typeof slot === "string" && mealSlots.has(slot)) || new Set(value.mealSlots).size !== value.mealSlots.length) {
     return { valid: false, error: "plan has invalid meal settings", status: 400 };
   }
+  if (value.kitchenEquipment !== undefined && (!Array.isArray(value.kitchenEquipment) || value.kitchenEquipment.some((item) => typeof item !== "string" || !planRecipeRegistry.kitchenEquipmentIds.includes(item)) || new Set(value.kitchenEquipment).size !== value.kitchenEquipment.length)) {
+    return { valid: false, error: "plan has invalid kitchen equipment", status: 400 };
+  }
+  const kitchenEquipment = value.kitchenEquipment as string[] | undefined;
   const planMealSlots = value.mealSlots as string[];
   if (!Array.isArray(value.people) || value.people.length < 1 || value.people.length > 4 || !Array.isArray(value.batches) || value.batches.length < 1 || value.batches.length > 14 || !record(value.selections) || !Array.isArray(value.shopping)) {
     return { valid: false, error: "plan has an invalid structure", status: 400 };
@@ -141,7 +148,7 @@ export function validatePlanForPersistence(value: unknown): PlanValidationResult
   for (const batch of orderedBatches) for (const slot of planMealSlots) {
     const key = `${batch.id}:${slot}`;
     const selected = recipeReference(value.selections[key]);
-    if (!selected || !validForBatch(selected, slot, batch.days)) return { valid: false, error: "plan references an unavailable recipe", status: 422 };
+    if (!selected || !validForBatch(selected, slot, batch.days, kitchenEquipment)) return { valid: false, error: "plan references an unavailable recipe", status: 422 };
     const eaters = [...people.values()].filter((person) => person.includedSlots.includes(slot));
     if (!eaters.length) return { valid: false, error: "plan has incomplete recipe assignments", status: 422 };
     let effective: { recipe: RegistryRecipe; personIds: string[] }[];
@@ -156,7 +163,7 @@ export function validatePlanForPersistence(value: unknown): PlanValidationResult
       for (const assignment of raw) {
         if (!record(assignment) || !Array.isArray(assignment.personIds) || assignment.personIds.length < 1) return { valid: false, error: "plan has invalid recipe assignments", status: 400 };
         const recipe = recipeReference(assignment.recipeId);
-        if (!recipe || !validForBatch(recipe, slot, batch.days)) return { valid: false, error: "plan references an unavailable recipe", status: 422 };
+        if (!recipe || !validForBatch(recipe, slot, batch.days, kitchenEquipment)) return { valid: false, error: "plan references an unavailable recipe", status: 422 };
         if (recipeIds.has(recipe.id)) return { valid: false, error: "plan has invalid recipe assignments", status: 400 };
         recipeIds.add(recipe.id);
         const personIds: string[] = [];

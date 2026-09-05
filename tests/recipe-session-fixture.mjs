@@ -8,6 +8,8 @@ const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", 
 const recipeCuisineModule = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
 const nutritionModule = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
 
+const pluralModule = await loadTypeScriptModule(new URL("../lib/plural.ts", import.meta.url));
+
 export async function recipeCatalog() {
   const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
   const runtimeRecipeCatalogJson = JSON.parse(
@@ -19,10 +21,13 @@ export async function recipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, recipeFamiliesById, recipeFamilyFor, portionFor, recipeCookingSession, portionComponents, allocationPeopleForDish, automaticAssignmentsFor, candidateRecipes, allMealSlots, recipesById, ingredientScaleFor };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, recipeFamiliesById, recipeFamilyFor, portionFor, recipeCookingSession, portionComponents, allocationPeopleForDish, automaticAssignmentsFor, candidateRecipes, equipmentMethods, recipeSupportsEquipment, cookingMethodFor, recipeDisplaySteps, buildBatchCookingModel, normalizeKitchenEquipment, allMealSlots, recipesById, ingredientScaleFor };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
+    ...pluralModule,
+    ingredientAmountLabel: (_ingredient, quantity) => String(quantity),
+    procedureIngredientAmountLabel: (_ingredient, count) => String(count),
     recipeCuisine: recipeCuisineModule.recipeCuisine,
     cuisineOrder: recipeCuisineModule.cuisineOrder,
     cuisineLabels: recipeCuisineModule.cuisineLabels,
