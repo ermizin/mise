@@ -6843,6 +6843,7 @@ export default function Home() {
         (tab === "week" || tab === "shopping") && (
         <header className="app-header">
           <div>
+          <MiseWordmark />
             <p className="kicker">{currentTitle.kicker}</p>
             <h1>{currentTitle.title}</h1>
           </div>
@@ -7349,10 +7350,7 @@ function OnboardingWelcome({
     >
       <div className="onboarding-top">
         <div className="onboarding-brand">
-          <span className="mise-mark glass-3" aria-hidden>
-            M
-          </span>
-          <span className="onboarding-wordmark">Mise</span>
+          <MiseWordmark />
         </div>
         <button className="pill-button" onClick={onOpenGuide}>
           Как это работает
@@ -8548,6 +8546,7 @@ function WeekScreen({
     <section className="screen week-screen has-stable-tab-header">
       <header className="week-screen-header">
         <div>
+          <MiseWordmark />
           <button
             className="week-period-button"
             onClick={onEditPeriod}
@@ -9162,6 +9161,11 @@ function activeCatalogFilters(state: CatalogState): ActiveCatalogFilter[] {
   return active;
 }
 
+function MiseWordmark() {
+  // eslint-disable-next-line @next/next/no-img-element -- Self-contained SVG needs no raster optimization.
+  return <img className="mise-wordmark" src="/brand/mise-wordmark.svg" width={84} height={28} alt="Mise" />;
+}
+
 /* Компактное меню выбора кухни. Не Sheet: контрол должен быть уместен и в
    шапке каталога, и внутри шага мастера, поэтому это лёгкий поповер с одним
    выбором. Закрытие ждёт анимацию выхода, иначе панель исчезает рывком. */
@@ -9377,6 +9381,7 @@ function RecipesScreen({
   return (
     <section className="screen catalog-screen has-stable-tab-header">
       <header className="catalog-header glass-1" ref={headerRef}>
+        <MiseWordmark />
         <div className="catalog-head-row">
           <div>
             <p className="catalog-kicker">
@@ -9893,6 +9898,7 @@ function ShoppingScreen({
     <section className="screen shopping-screen has-stable-tab-header">
       <header className="shopping-header">
         <div>
+          <MiseWordmark />
           <p className="kicker">
             {formatDate(plan.start)} — {formatDate(plan.end)} ·{" "}
             {withPlural(plan.people.length, FORMS.person)}

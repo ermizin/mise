@@ -136,7 +136,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.match(css, /\.onboarding-shell \{[^}]*height: 100dvh/);
 
   // Стекло описано токенами, а не литералами: блюр приходит из --glass-*-blur.
-  assert.match(css, /--glass-2-blur: blur\(28px\) saturate\(180%\)/);
+  assert.match(css, /--glass-2-blur: blur\(14px\) saturate\(120%\)/);
   assert.match(css, /backdrop-filter: var\(--glass-2-blur\)/);
 
   // Шкалы. Ни одного литерального кегля и веса ниже слоя токенов;

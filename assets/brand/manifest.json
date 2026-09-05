@@ -1,0 +1,22 @@
+{
+  "ownerDecision": "2026-09-05: owner selected current-polish and logo for implementation",
+  "source": "Project-owned Mise container icon, extended with an outlined wordmark; canonical vector masters in public/brand",
+  "assets": [
+    {
+      "path": "public/brand/mise-wordmark.svg",
+      "width": 430,
+      "height": 144,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "b4dc6ab8ae3b54a968ad93dcfaa4f04106d7a6f393bd5e572e20301226cc9b44"
+    },
+    {
+      "path": "public/brand/mise-mark.svg",
+      "width": 154,
+      "height": 144,
+      "format": "svg",
+      "transparent": true,
+      "sha256": "69965f25d9d0dafbaedd72b1797cafe826bd9ea2ae72fd287f0daf59815daf97"
+    }
+  ]
+}

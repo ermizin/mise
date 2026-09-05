@@ -43,10 +43,10 @@
   /* ---------- Чернила ----------
      Альфа — не декоративная величина, а контраст. См. README §Контраст.
      .64 — пол для основного текста. .52 разрешён только на 19px+/600. */
-  --ink: #2a1d14;
+  --ink: #30261f;
   --ink-strong: rgba(42, 29, 20, 1);
-  --ink-body: rgba(42, 29, 20, 0.78);
-  --ink-muted: rgba(42, 29, 20, 0.64); /* пол для текста < 19px */
+  --ink-body: #65594e;
+  --ink-muted: #706256; /* пол для текста < 19px */
   --ink-quiet: rgba(42, 29, 20, 0.52); /* только 19px+/600 */
   --ink-line: rgba(42, 29, 20, 0.07);
   --ink-track: rgba(42, 29, 20, 0.1);
@@ -84,25 +84,24 @@
   --macro-carbs: #8fbfa9;
 
   /* ---------- Фон экрана ----------
-     3 пятна + линейная база. Меняем позиции, не цвета.
+     Два приглушённых цветовых пятна на тёплой линейной базе.
      Лежит в position:absolute; inset:0 под контентом. */
-  --bg-base: linear-gradient(168deg, #fdf6ee, #f6ebe0);
+  --bg-base: linear-gradient(168deg, #fcf7f0, #f6f0e7);
   --bg-spot-warm: #ffc79a;
   --bg-spot-mint: #d8eee2;
   --bg-spot-peach: #f7cbb0;
   --bg-spot-lilac: #c9bcf5; /* онбординг */
   --bg-spot-green: #a8e0c6; /* онбординг */
-  --page: #f6ebe0; /* плоский фолбэк, html background */
+  --page: #f8f3ec; /* плоский фолбэк, html background */
 
   --app-bg:
-    radial-gradient(56% 40% at 82% 4%, #ffc79a 0%, rgba(255, 199, 154, 0) 60%),
-    radial-gradient(50% 38% at 4% 40%, #d8eee2 0%, rgba(216, 238, 226, 0) 60%),
-    radial-gradient(58% 44% at 92% 84%, #f7cbb0 0%, rgba(247, 203, 176, 0) 58%),
-    linear-gradient(168deg, #fdf6ee, #f6ebe0);
+    radial-gradient(65% 50% at 93% 1%, rgba(247, 216, 187, 0.5), transparent 65%),
+    radial-gradient(50% 40% at 0% 52%, rgba(217, 234, 222, 0.44), transparent 65%),
+    var(--bg-base);
 
   /* ---------- Четыре уровня стекла ----------
      Больше уровней не заводим. Не больше двух слоёв друг над другом.
-     Блюр не ниже 18, saturate не ниже 170. */
+     Хром сохраняет глубину; у карточек мягкий блюр 14/10 и saturate 120. */
 
   /* L1 · Хром — шапка, нижняя навигация, панель действий */
   --glass-1-bg: rgba(255, 255, 255, 0.44);
@@ -110,14 +109,14 @@
   --glass-1-border: rgba(255, 255, 255, 0.7);
 
   /* L2 · Карточка — КБЖУ, блюдо, группа покупок */
-  --glass-2-bg: rgba(255, 255, 255, 0.52);
-  --glass-2-blur: blur(28px) saturate(180%);
-  --glass-2-border: rgba(255, 255, 255, 0.72);
+  --glass-2-bg: rgba(255, 253, 249, 0.8);
+  --glass-2-blur: blur(14px) saturate(120%);
+  --glass-2-border: rgba(133, 99, 65, 0.1);
 
   /* L3 · Вложенное — плитка в карточке, реплика мастера, строка-подсказка */
-  --glass-3-bg: rgba(255, 255, 255, 0.66);
-  --glass-3-blur: blur(20px) saturate(170%);
-  --glass-3-border: rgba(255, 255, 255, 0.88);
+  --glass-3-bg: rgba(255, 254, 252, 0.82);
+  --glass-3-blur: blur(10px) saturate(120%);
+  --glass-3-border: rgba(133, 99, 65, 0.09);
 
   /* L4 · Тонированное — один блок на экран */
   --tint-warn-bg: rgba(255, 242, 235, 0.72);
@@ -128,28 +127,33 @@
   --tint-lilac-border: rgba(111, 95, 201, 0.3);
 
   /* ---------- Кромка и блик ----------
-     Кромка светлая, не серая. Внутренний блик обязателен. */
-  --glint: inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  --glint-soft: inset 0 1px 0 rgba(255, 255, 255, 0.92);
+     Мягкий светлый блик и тонкая тёплая граница без тяжёлой рамки. */
+  --glint: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  --glint-soft: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 
   /* ---------- Тени ----------
      Всегда тёплые, коричневые. Никогда в чёрный. */
-  --shadow-s: 0 8px 22px rgba(122, 72, 32, 0.1);
-  --shadow-m: 0 14px 32px rgba(122, 72, 32, 0.13);
-  --shadow-l: 0 18px 40px rgba(122, 72, 32, 0.15);
-  --shadow-chrome: 0 -2px 30px rgba(122, 72, 32, 0.12);
-  --shadow-accent: 0 8px 20px rgba(226, 80, 26, 0.3);
-  --shadow-accent-s: 0 6px 16px rgba(226, 80, 26, 0.26);
+  --surface-control-bg: rgba(255, 255, 255, 0.62);
+  --surface-control-border: rgba(133, 99, 65, 0.12);
+  --surface-recipe-bg: rgba(255, 253, 249, 0.86);
+  --shadow-recipe: 0 3px 12px rgba(91, 64, 35, 0.045);
+  --shadow-s: 0 2px 8px rgba(91, 64, 35, 0.035);
+  --shadow-m: 0 4px 16px rgba(91, 64, 35, 0.045);
+  --shadow-l: 0 10px 32px rgba(91, 64, 35, 0.09);
+  --shadow-chrome: 0 4px 22px rgba(91, 64, 35, 0.1);
+  --shadow-accent: 0 4px 12px rgba(204, 79, 30, 0.15);
+  --shadow-accent-s: 0 3px 9px rgba(204, 79, 30, 0.12);
 
   /* ---------- Радиусы ----------
      Концентричность: вложенный радиус = внешний − padding.
-     Панель 26 при padding 9 → кнопка внутри 18.
-     Карточка 28 при padding 18 → плитка внутри 17–18. */
+     Шкала полировки: карточка 22, строка 18, вложенное 14;
+     фото-карточка 20, нижняя навигация 24. */
   --r-chrome: 30px;
-  --r-card: 26px;
-  --r-row: 22px;
+  --r-card: 22px;
+  --r-row: 18px;
+  --r-recipe: 20px;
   --r-nav: 24px;
-  --r-nested: 18px;
+  --r-nested: 14px;
   --r-tile: 12px;
   --r-chip-sq: 9px;
   --r-bar: 5px; /* полосы прогресса и КБЖУ: h8 r5 */
@@ -314,7 +318,7 @@ body {
   background: var(--tint-warn-bg);
   border: 1px solid var(--tint-warn-border);
   border-radius: var(--r-nested);
-  box-shadow: 0 14px 32px rgba(200, 80, 30, 0.13), var(--glint-soft);
+  box-shadow: none;
   color: var(--ink);
 }
 .tint-warn .note-label {
@@ -324,7 +328,7 @@ body {
   background: var(--tint-mint-bg);
   border: 1px solid var(--tint-mint-border);
   border-radius: var(--r-nested);
-  box-shadow: 0 14px 32px rgba(30, 110, 86, 0.12), var(--glint-soft);
+  box-shadow: none;
 }
 .tint-mint .note-label {
   color: var(--mint-text);
@@ -333,7 +337,7 @@ body {
   background: var(--tint-lilac-bg);
   border: 1px solid var(--tint-lilac-border);
   border-radius: var(--r-nested);
-  box-shadow: var(--shadow-s), var(--glint-soft);
+  box-shadow: none;
 }
 .tint-lilac .note-label {
   color: var(--lilac-text);
@@ -465,11 +469,11 @@ body {
 }
 
 .btn-secondary {
-  background: var(--glass-3-bg);
-  border: 1px solid var(--glass-3-border);
+  background: var(--surface-control-bg);
+  border: 1px solid var(--surface-control-border);
   color: var(--ink-body);
   font-weight: var(--weight-label);
-  box-shadow: var(--glint);
+  box-shadow: none;
 }
 
 .btn-danger {
@@ -783,6 +787,26 @@ p {
   gap: 16px;
   margin: 4px 2px 25px;
 }
+.mise-wordmark {
+  display: block;
+  width: 84px;
+  height: 28px;
+  object-fit: contain;
+  object-position: left center;
+  margin-bottom: 9px;
+  flex: none;
+}
+.onboarding-brand .mise-wordmark {
+  width: 112px;
+  height: 38px;
+  margin-bottom: 0;
+}
+.catalog-header > .mise-wordmark {
+  position: absolute;
+  top: max(15px, calc(env(safe-area-inset-top) - 29px));
+  left: max(16px, env(safe-area-inset-left));
+  margin-bottom: 0;
+}
 .app-header h1,
 .builder-header h1 {
   margin: 3px 0 0;
@@ -828,10 +852,6 @@ p {
   border-radius: var(--r-chrome);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow:
-    0 24px 58px rgba(43, 70, 62, 0.22),
-    inset 0 1px rgba(255, 255, 255, 0.94);
 }
 .bottom-nav button {
   min-width: 0;
@@ -853,7 +873,11 @@ p {
 }
 .bottom-nav button small {
   font-size: var(--text-min);
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  line-height: 1.15;
+  text-align: center;
   letter-spacing: -0.2px;
 }
 .bottom-nav button.is-active {
@@ -896,9 +920,9 @@ p {
 }
 .secondary-button {
   padding: 13px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--surface-control-border);
   color: var(--ink-soft);
-  background: rgba(255, 255, 255, 0.53);
+  background: var(--surface-control-bg);
   transition:
     transform var(--motion-press) ease,
     color 220ms linear,
@@ -2337,9 +2361,9 @@ p {
   align-items: center;
   gap: 9px;
   border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  box-shadow: inset 0 1px 3px rgba(122, 72, 32, 0.09);
+  background: rgba(255, 253, 249, 0.9);
+  border: 1px solid var(--surface-control-border);
+  box-shadow: none;
   color: var(--ink-muted);
 }
 .catalog-search input {
@@ -2363,6 +2387,7 @@ p {
   gap: 6px;
   display: inline-flex;
   align-items: center;
+  box-shadow: none;
 }
 
 .catalog-scroll {
@@ -2395,10 +2420,10 @@ p {
   position: relative;
   padding: 0;
   overflow: hidden;
-  border-radius: var(--r-row);
-  background: rgba(255, 255, 255, 0.56);
-  border: 1px solid rgba(255, 255, 255, 0.74);
-  box-shadow: 0 12px 28px rgba(122, 72, 32, 0.12), var(--glint);
+  border-radius: var(--r-recipe);
+  background: var(--surface-recipe-bg);
+  border: 1px solid var(--glass-2-border);
+  box-shadow: var(--shadow-recipe);
   text-align: left;
 }
 .catalog-result-status {
@@ -2535,14 +2560,14 @@ p {
   color: var(--accent-text);
 }
 .recipe-body {
-  padding: 11px 12px 13px;
+  padding: 13px 14px 15px;
 }
 .recipe-body h2 {
   margin: 0;
   font-size: var(--text-h3);
   font-weight: var(--weight-semibold);
-  line-height: 1.2;
-  letter-spacing: var(--tracking-h2);
+  line-height: 1.28;
+  letter-spacing: var(--tracking-h3);
 }
 .recipe-meta {
   margin: 6px 0 0;
@@ -4820,10 +4845,7 @@ p {
 .recipe-detail {
   padding: 0 0 calc(116px + env(safe-area-inset-bottom));
   overflow-x: clip;
-  background:
-    radial-gradient(60% 36% at 4% 46%, rgba(216, 238, 226, 0.82), transparent 68%),
-    radial-gradient(62% 42% at 96% 80%, rgba(247, 203, 176, 0.7), transparent 66%),
-    linear-gradient(168deg, #fbf3ea, #f5ebe1);
+  background: var(--bg-base);
 }
 .recipe-hero-photo {
   position: absolute;
@@ -7961,14 +7983,12 @@ p {
   isolation: isolate;
   overflow: hidden;
   padding: 8px 6px;
-  border: 1px solid rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: var(--r-nav);
-  background: rgba(255, 255, 255, 0.5);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  backdrop-filter: blur(30px) saturate(180%);
-  box-shadow:
-    0 -2px 26px rgba(122, 72, 32, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  background: rgba(255, 252, 247, 0.84);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
+  backdrop-filter: blur(22px) saturate(140%);
+  box-shadow: var(--shadow-chrome), var(--glint);
 }
 .bottom-nav-indicator {
   position: absolute;
@@ -7978,15 +7998,15 @@ p {
   left: 6px;
   width: calc((100% - 12px) / 4);
   border-radius: var(--r-nested);
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 3px 10px rgba(122, 72, 32, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-s);
   transform: translateX(calc(var(--tab) * 100%));
   transition: transform 280ms var(--motion-segment);
 }
 .bottom-nav button {
   position: relative;
   z-index: 1;
-  color: rgba(42, 29, 20, 0.45);
+  color: var(--ink-muted);
   transition: color 200ms linear;
 }
 .bottom-nav button > .icon,
