@@ -32,7 +32,7 @@ test("the wizard offers manual menu building without skipping required answers",
   assert.match(page, /const initialManualRecipeCount = 5/);
   assert.match(page, /allOptions\.slice\(0, initialManualRecipeCount\)/);
   assert.match(page, /Смотреть все подходящие — \{allOptions\.length\}/);
-  assert.match(page, /onOpenRecipe=\{onOpenRecipe\}/);
+  assert.match(page, /onOpenRecipe=\{setPreviewRecipe\}/);
   assert.match(page, /className="manual-recipe-open"/);
   assert.match(page, /className="menu-recipe-open"/);
   assert.match(page, /className="replace-recipe-open"/);
@@ -62,7 +62,9 @@ test("the wizard offers manual menu building without skipping required answers",
 
 test("recipes open from the wizard and the week without losing their context", async () => {
   const page = await read("app/page.tsx");
-  assert.match(page, /onOpenRecipe=\{\(recipe\) => openRecipe\(\{ recipe \}\)\}/);
+  assert.match(page, /onOpenRecipe=\{\(recipe\) => openRecipe\(\{ recipe, plan: activePlan \?\? undefined \}\)\}/);
+  assert.match(page, /context=\{\{ recipe: previewRecipe, plan: draftPlan \}\}/, "wizard preview retains draft methods without saving a draft as the active plan");
+  assert.match(page, /setRecipeMethods\(nextPlan\.recipeMethods\)/);
   assert.match(
     page,
     /onOpenRecipe\(\{[\s\S]*?recipe: row\.recipe,[\s\S]*?batch: row\.sourceBatch,[\s\S]*?slot: row\.slot,[\s\S]*?plan: activePlan/,

@@ -351,6 +351,7 @@ type ActivePlan = {
   periodDays: number;
   cookEveryDays: number;
   kitchenEquipment?: KitchenEquipment[];
+  recipeMethods?: Record<string, string>;
   menuStyle: MenuStyle;
   mealSlots: MealSlot[];
   people: Person[];
@@ -425,6 +426,7 @@ type BuilderDraft = {
   people: Person[];
   cookEveryDays: number;
   kitchenEquipment?: KitchenEquipment[];
+  recipeMethods?: Record<string, string>;
   remainderDecision: "separate" | "extend" | "shorten" | null;
   menuMode?: MenuBuildMode;
   selections: Record<string, string>;
@@ -987,9 +989,24 @@ function recipeSupportsEquipment(recipe: Recipe, equipment?: KitchenEquipment[])
 }
 function cookingMethodFor(recipe: Recipe, equipment?: KitchenEquipment[], methodId?: string) {
   const methods = availableEquipmentMethods(recipe, equipment);
-  return methods.find((method) => method.id === methodId) ??
-    (equipment === undefined ? methods.find((method) => method.id === "original") :
-      methods.find((method) => method.id !== "original" && method.requiredEquipment.some((id) => id === "multicooker" || id === "air_fryer"))) ?? methods[0];
+  return methods.find((method) => method.id === (methodId ?? "original"));
+}
+function normalizeRecipeMethods(value: unknown): Record<string, string> | undefined {
+  if (value === undefined) return undefined;
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  return Object.fromEntries(Object.entries(value).filter(([id, methodId]) =>
+    recipesById[id] && equipmentMethods(recipesById[id]).some((method) => method.id === methodId),
+  ));
+}
+function planMethodId(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
+  return plan.recipeMethods?.[recipe.id] ?? (plan.kitchenEquipment === undefined ? "original" : "");
+}
+function planCookingMethod(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
+  return cookingMethodFor(recipe, plan.kitchenEquipment, planMethodId(recipe, plan));
+}
+function missingPlanMethods(plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods" | "selections" | "selectionAssignments">) {
+  const ids = new Set([...Object.values(plan.selections), ...Object.values(plan.selectionAssignments ?? {}).flatMap((groups) => groups.map((group) => group.recipeId))]);
+  return [...ids].filter((id) => !recipesById[id] || !planCookingMethod(recipesById[id], plan));
 }
 
 const equipmentLabels: [RegExp, string][] = [
@@ -5298,6 +5315,7 @@ function recipeCookingSessionForAssignment(
 }
 function recipeDisplaySteps(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string) {
   const method = cookingMethodFor(recipe, kitchenEquipment, methodId);
+  if (!method) return [];
   if (method?.steps) return method.steps;
   const family = recipeFamilyFor(recipe);
   return family
@@ -5335,10 +5353,15 @@ function buildBatchCookingModel(
       batch.days,
       (person) => plan.tuning?.[tuningKey(batch, slot, person)],
     );
-    const displaySteps = recipeDisplaySteps(recipe, plan.kitchenEquipment);
+    const method = planCookingMethod(recipe, plan);
+    if (!method) {
+      steps.push({ id: `${slot}:${recipe.id}:method`, recipeId: recipe.id, title: `Выберите способ для «${recipe.title}»`, detail: "Откройте рецепт и выберите доступный способ приготовления.", minutes: 0, products: [] });
+      continue;
+    }
+    const displaySteps = recipeDisplaySteps(recipe, plan.kitchenEquipment, method.id);
     const fallbackMinutes = Math.max(
       1,
-      Math.round((cookingMethodFor(recipe, plan.kitchenEquipment)?.activeMinutes ?? recipe.effort.activeMinutes) / Math.max(1, displaySteps.length + 1)),
+      Math.round((method.activeMinutes ?? recipe.effort.activeMinutes) / Math.max(1, displaySteps.length + 1)),
     );
     if (!session.viable) {
       steps.push({
@@ -5351,8 +5374,8 @@ function buildBatchCookingModel(
       });
       continue;
     }
-    activeMinutes += cookingMethodFor(recipe, plan.kitchenEquipment)?.activeMinutes ?? recipe.effort.activeMinutes;
-    totalMinutes += cookingMethodFor(recipe, plan.kitchenEquipment)?.timeMinutes ?? recipe.time;
+    activeMinutes += method.activeMinutes ?? recipe.effort.activeMinutes;
+    totalMinutes += method.timeMinutes ?? recipe.time;
     const products = recipe.ingredients.map(
       (ingredient) =>
         `${ingredient.name} — ${ingredientAmountLabel(
@@ -5841,9 +5864,10 @@ type CatalogFilters = {
   time?: "quick" | "medium" | "long";
   limit?: number | "all";
   includeDisliked?: boolean;
+  firstViable?: boolean;
 };
-function timeBand(recipe: Recipe, kitchenEquipment?: KitchenEquipment[]): NonNullable<CatalogFilters["time"]> {
-  const time = kitchenEquipment === undefined ? recipe.time : cookingMethodFor(recipe, kitchenEquipment)?.timeMinutes ?? recipe.time;
+function timeBand(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string): NonNullable<CatalogFilters["time"]> {
+  const time = kitchenEquipment === undefined && methodId === undefined ? recipe.time : cookingMethodFor(recipe, kitchenEquipment, methodId)?.timeMinutes ?? recipe.time;
   return time <= 20 ? "quick" : time <= 40 ? "medium" : "long";
 }
 /**
@@ -5888,8 +5912,8 @@ function candidateRecipes(
   kitchenEquipment?: KitchenEquipment[],
 ) {
   const eaters = relevantPeople(people, slot);
-  const sorted = recipes
-    .flatMap((recipe) => {
+  const candidates: { recipe: Recipe; fit: number }[] = [];
+  for (const recipe of recipes) {
       if (
         !recipeSupportsEquipment(recipe, kitchenEquipment) ||
         !recipeSupportsSlot(recipe, slot) ||
@@ -5905,18 +5929,15 @@ function candidateRecipes(
         (filters.effort && recipe.effort.level !== filters.effort) ||
         (filters.time && timeBand(recipe, kitchenEquipment) !== filters.time)
       )
-        return [];
+        continue;
       const session = eaters.length
         ? recipeCookingSession(eaters, slot, recipe, batchDays)
         : null;
-      if (session && !session.viable) return [];
-      return [
-        {
-          recipe,
-          fit: session ? fitScoreForSession(session) : 0,
-        },
-      ];
-    })
+      if (session && !session.viable) continue;
+      candidates.push({ recipe, fit: session ? fitScoreForSession(session) : 0 });
+      if (filters.firstViable) break;
+  }
+  const sorted = candidates
     .sort(
       (a, b) =>
         b.fit * 4 +
@@ -6055,6 +6076,9 @@ function automaticAssignmentsFor(
   }
   return assignments;
 }
+function kitchenMenuGaps(people: Person[], slots: MealSlot[], style: MenuStyle, batches: Batch[], equipment?: KitchenEquipment[]) {
+  return slots.filter((slot) => relevantPeople(people, slot).some((person) => [...new Set(batches.map((batch) => batch.days))].some((days) => !candidateRecipes(slot, style, [person], days, { limit: 1, firstViable: true }, equipment).length)));
+}
 function recipeCoverageFor(
   person: Person,
   style: MenuStyle,
@@ -6191,6 +6215,7 @@ function normalizePlan(plan: ActivePlan): ActivePlan {
   const normalizedPlan = {
     ...plan,
     kitchenEquipment,
+    recipeMethods: normalizeRecipeMethods(plan.recipeMethods),
     menuStyle: releaseMenuStyles.includes(plan.menuStyle)
       ? plan.menuStyle
       : "protein",
@@ -6886,7 +6911,6 @@ export default function Home() {
           setActivePlan(plan);
           navigate(destination);
         }}
-        onOpenRecipe={(recipe) => openRecipe({ recipe })}
         persistPlan={persistPlan}
       />
     );
@@ -6983,7 +7007,7 @@ export default function Home() {
           onState={setCatalogState}
           favoriteRecipeIds={favoriteRecipeIds}
           onToggleFavorite={toggleFavoriteRecipe}
-          onOpenRecipe={(recipe) => openRecipe({ recipe })}
+          onOpenRecipe={(recipe) => openRecipe({ recipe, plan: activePlan ?? undefined })}
         />
       )}
       {tab === "shopping" && (
@@ -8637,7 +8661,7 @@ function WeekScreen({
       )
     : 0;
   const nextCookMinutes = nextCookRecipes.reduce(
-    (sum, { recipe }) => sum + (cookingMethodFor(recipe, plan.kitchenEquipment)?.timeMinutes ?? recipe.time),
+    (sum, { recipe }) => sum + (planCookingMethod(recipe, plan)?.timeMinutes ?? recipe.time),
     0,
   );
   const macroRows: {
@@ -9240,7 +9264,7 @@ function propertyChipFor(recipe: Recipe, plan: ActivePlan | null) {
   return withPlural(recipe.storageDays, FORMS.day);
 }
 
-function catalogMatches(recipe: Recipe, state: CatalogState, kitchenEquipment?: KitchenEquipment[]) {
+function catalogMatches(recipe: Recipe, state: CatalogState, kitchenEquipment?: KitchenEquipment[], recipeMethods?: Record<string, string>) {
   const query = state.q.trim().toLowerCase();
   const exclude = query.startsWith("без ") ? query.slice(4).trim() : "";
   const names = recipe.ingredients.map((ingredient) =>
@@ -9256,7 +9280,7 @@ function catalogMatches(recipe: Recipe, state: CatalogState, kitchenEquipment?: 
   if (state.slot && recipe.slot !== state.slot) return false;
   if (!matchesCuisine(recipe.cuisine, state.cuisine)) return false;
   if (state.effort && recipe.effort.level !== state.effort) return false;
-  if (state.time && timeBand(recipe, kitchenEquipment) !== state.time) return false;
+  if (state.time && timeBand(recipe, kitchenEquipment, recipeMethods?.[recipe.id]) !== state.time) return false;
   return state.properties.every((property) => hasProperty(recipe, property));
 }
 
@@ -9504,13 +9528,13 @@ function RecipesScreen({
   const active = activeCatalogFilters(state);
   const visible = useMemo(() => {
     const matched = productionRecipes.filter((recipe) =>
-      recipeSupportsEquipment(recipe, plan?.kitchenEquipment) && catalogMatches(recipe, state, plan?.kitchenEquipment),
+      recipeSupportsEquipment(recipe, plan?.kitchenEquipment) && catalogMatches(recipe, state, plan?.kitchenEquipment, plan?.recipeMethods),
     );
     const missing = new Map(
       matched.map((recipe) => [recipe.id, missingCountFor(recipe, plan) ?? 0]),
     );
     return [...matched].sort((a, b) => {
-      const timeDifference = (cookingMethodFor(a, plan?.kitchenEquipment)?.timeMinutes ?? a.time) - (cookingMethodFor(b, plan?.kitchenEquipment)?.timeMinutes ?? b.time);
+      const timeDifference = ((plan ? planCookingMethod(a, plan) : undefined)?.timeMinutes ?? a.time) - ((plan ? planCookingMethod(b, plan) : undefined)?.timeMinutes ?? b.time);
       if (state.sort === "time") return timeDifference;
       if (state.sort === "protein") return b.macros.protein - a.macros.protein;
       const diff = (missing.get(a.id) ?? 0) - (missing.get(b.id) ?? 0);
@@ -9870,7 +9894,7 @@ function RecipeCard({
         <div className="recipe-body">
           <h2>{recipe.title}</h2>
           <p className="recipe-meta">
-            {cookingMethodFor(recipe, plan?.kitchenEquipment)?.timeMinutes ?? recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
+            {(plan ? planCookingMethod(recipe, plan) : undefined)?.timeMinutes ?? recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
           </p>
           <div className="recipe-chips">
             {missing !== null && (
@@ -10482,7 +10506,6 @@ function PlanBuilder({
   addPerson = false,
   onClose,
   onSaved,
-  onOpenRecipe,
   persistPlan,
 }: {
   initialPlan: ActivePlan | null;
@@ -10496,7 +10519,6 @@ function PlanBuilder({
   addPerson?: boolean;
   onClose: () => void;
   onSaved: (plan: ActivePlan, destination: Tab) => void;
-  onOpenRecipe: (recipe: Recipe) => void;
   persistPlan: (plan: ActivePlan) => Promise<void>;
 }) {
   const flowIdRef = useRef(flowId);
@@ -10537,6 +10559,8 @@ function PlanBuilder({
     },
   );
   const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
+  const [recipeMethods, setRecipeMethods] = useState<Record<string, string> | undefined>(() => normalizeRecipeMethods(initialPlan?.recipeMethods));
+  const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
   const [cookEveryDays, setCookEveryDays] = useState(
     initialPlan?.cookEveryDays ?? 3,
   );
@@ -10656,6 +10680,7 @@ function PlanBuilder({
       ],
     );
     setKitchenEquipment(initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
+    setRecipeMethods(normalizeRecipeMethods(initialPlan?.recipeMethods));
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(null);
     setSelections(initialPlan?.selections ?? {});
@@ -10681,6 +10706,7 @@ function PlanBuilder({
           setMenuStyle(draft.menuStyle);
           setPeople(draft.people.map(normalizePerson));
           setKitchenEquipment(normalizeKitchenEquipment(draft.kitchenEquipment));
+          setRecipeMethods(normalizeRecipeMethods(draft.recipeMethods));
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
           setSelections(draft.selections);
@@ -10885,6 +10911,7 @@ function PlanBuilder({
       people,
       cookEveryDays,
       kitchenEquipment,
+      recipeMethods,
       remainderDecision,
       menuMode,
       selections,
@@ -10906,6 +10933,7 @@ function PlanBuilder({
     people,
     cookEveryDays,
     kitchenEquipment,
+    recipeMethods,
     remainderDecision,
     menuMode,
     selections,
@@ -10928,6 +10956,7 @@ function PlanBuilder({
       periodDays: resolvedDays,
       cookEveryDays,
       kitchenEquipment,
+      recipeMethods,
       menuStyle,
       mealSlots,
       people,
@@ -10946,6 +10975,9 @@ function PlanBuilder({
       shopping: buildShopping(base),
     };
   })();
+  const pendingMethods = missingPlanMethods(draftPlan);
+  const methodRecipes = [...new Set(Object.values(validSelectionAssignments).flatMap((groups) => groups.map((group) => group.recipeId)))].map((id) => recipesById[id]);
+  const kitchenGaps = useMemo(() => kitchenMenuGaps(people, mealSlots, menuStyle, batches, kitchenEquipment), [people, mealSlots, menuStyle, batches, kitchenEquipment]);
   const steps = [
     "Период",
     "Приёмы пищи",
@@ -11234,9 +11266,10 @@ function PlanBuilder({
       );
     if (index === 4)
       return (
-        resolvedPeriodValid && (remainder === 0 || remainderDecision !== null)
+        resolvedPeriodValid && kitchenGaps.length === 0 && (remainder === 0 || remainderDecision !== null)
       );
     if (index === 5) {
+      if (pendingMethods.length) return false;
       if (menuMode === "auto") return allSelected;
       const current = positions[choiceIndex];
       return Boolean(
@@ -11475,10 +11508,14 @@ function PlanBuilder({
         result.assignments[selectionKey(batch, slot)] ?? [],
       ),
     );
-    if (complete) {
+    if (complete && !missingPlanMethods({ ...draftPlan, selections: result.selections, selectionAssignments: result.assignments }).length) {
       setSaveState("idle");
       setSaveMessage("");
       changeStep(6);
+    } else if (complete) {
+      setMenuMode("auto");
+      changeStep(5);
+      setSaveMessage("Выберите способы приготовления для блюд меню.");
     } else {
       setSaveState("error");
       setSaveMessage(
@@ -11487,6 +11524,12 @@ function PlanBuilder({
     }
   }
   async function save() {
+    if (pendingMethods.length) {
+      changeStep(5);
+      setSaveState("error");
+      setSaveMessage("Выберите доступный способ приготовления для каждого блюда.");
+      return;
+    }
     if (!allSelected) {
       const firstMissing = positions.findIndex(
         (position) =>
@@ -11584,6 +11627,7 @@ function PlanBuilder({
           title: "Ваш ответ готов",
           detail: "Можно вернуться к любому ответу выше",
         };
+  if (previewRecipe) return <RecipeView context={{ recipe: previewRecipe, plan: draftPlan }} onBack={() => setPreviewRecipe(null)} onChangePlan={async (nextPlan) => { setRecipeMethods(nextPlan.recipeMethods); }} />;
   return (
     <main
       className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}`}
@@ -11703,6 +11747,13 @@ function PlanBuilder({
                 {!allSelected && <p role="status">Если блюд не хватает, добавьте доступную технику или измените позиции меню.</p>}
               </section>
             )}
+            {step === 5 && methodRecipes.length > 0 && <section className="recipe-equipment glass-card">
+              <h3>Как будем готовить?</h3>
+              <p>Выберите способ для каждого блюда. Он сохранится для всех его порций в этом плане.</p>
+              <button type="button" className="text-button" onClick={() => setRecipeMethods((current) => ({ ...current, ...Object.fromEntries(methodRecipes.filter((recipe) => !planCookingMethod(recipe, draftPlan) && cookingMethodFor(recipe, kitchenEquipment, "original")).map((recipe) => [recipe.id, "original"])) }))}>Подтвердить исходные способы</button>
+              {methodRecipes.map((recipe) => <CookingMethodSelect key={recipe.id} recipe={recipe} equipment={kitchenEquipment} value={planCookingMethod(recipe, draftPlan)?.id ?? ""} label={recipe.title} onChange={(id) => setRecipeMethods((current) => ({ ...current, [recipe.id]: id }))} />)}
+              {pendingMethods.length > 0 && <p role="status">Выберите ещё {withPlural(pendingMethods.length, ["способ", "способа", "способов"])}, чтобы продолжить.</p>}
+            </section>}
             {step === 5 && menuMode === "auto" && allSelected ? (
               <div
                 className="builder-chat-menu-ready tint-mint"
@@ -11884,6 +11935,7 @@ function PlanBuilder({
             )}
             {step === 4 && (
               <CookingStep
+                kitchenGaps={kitchenGaps}
                 kitchenEquipment={kitchenEquipment}
                 onEquipment={setKitchenEquipment}
                 periodDays={rawDays}
@@ -11905,6 +11957,7 @@ function PlanBuilder({
             {step === 5 && menuMode === "auto" && (
               <>
                 <MenuReviewStep
+                  recipeMethods={recipeMethods}
                 kitchenEquipment={kitchenEquipment}
                   batches={batches}
                   mealSlots={mealSlots}
@@ -11915,7 +11968,7 @@ function PlanBuilder({
                   pinned={validPinned}
                   shopping={draftPlan.shopping}
                   onReplace={replaceSelection}
-                  onOpenRecipe={onOpenRecipe}
+                  onOpenRecipe={setPreviewRecipe}
                   onReassemble={() => assembleMenu("reset")}
                 />
                 {!allSelected && (
@@ -11940,6 +11993,7 @@ function PlanBuilder({
             )}
             {step === 5 && menuMode === "manual" && (
               <ManualMenuStep
+                  recipeMethods={recipeMethods}
                   kitchenEquipment={kitchenEquipment}
                 key={choiceIndex}
                 positions={positions}
@@ -11951,7 +12005,7 @@ function PlanBuilder({
                 selections={validSelections}
                 selectionAssignments={validSelectionAssignments}
                 onSelect={replaceSelection}
-                onOpenRecipe={onOpenRecipe}
+                onOpenRecipe={setPreviewRecipe}
                 onSplit={assembleCurrentPosition}
                 onAssist={assembleRemainingAndReview}
                 onGo={goToManualChoice}
@@ -13172,6 +13226,7 @@ function PeopleStep({
 }
 
 function CookingStep({
+  kitchenGaps,
   kitchenEquipment,
   onEquipment,
   periodDays,
@@ -13184,6 +13239,7 @@ function CookingStep({
   onDays,
   onDecision,
 }: {
+  kitchenGaps: MealSlot[];
   kitchenEquipment?: KitchenEquipment[];
   onEquipment: (value: KitchenEquipment[]) => void;
   periodDays: number;
@@ -13227,6 +13283,7 @@ function CookingStep({
         </div>
         <p className="kitchen-equipment-note">Нож, доска и миска нужны по умолчанию. {kitchenEquipment?.length === 0 ? "Выбраны только блюда без нагрева." : "Для гарниров Mise тоже учтёт нужную посуду."}</p>
       </section>
+      {kitchenGaps.length > 0 && <Note tone="warn" role="alert">С этой утварью и текущими целями не получается подобрать: {kitchenGaps.map((slot) => mealMeta[slot].label.toLowerCase()).join(", ")}. Добавьте доступную технику выше или вернитесь к приёмам пищи и целям.</Note>}
       <section className="glass-card">
         <div className="day-scale" role="radiogroup" aria-label="Дней на партию">
           {[1, 2, 3, 4, 5, 6, 7].map((days) => (
@@ -13370,6 +13427,7 @@ function freezeSummary(
 
 function ManualMenuStep({
   kitchenEquipment,
+  recipeMethods,
   positions,
   choiceIndex,
   motionDirection,
@@ -13386,6 +13444,7 @@ function ManualMenuStep({
   onCuisineChange,
 }: {
   kitchenEquipment?: KitchenEquipment[];
+  recipeMethods?: Record<string, string>;
   positions: { batch: Batch; slot: MealSlot }[];
   choiceIndex: number;
   motionDirection: -1 | 1;
@@ -13579,7 +13638,7 @@ function ManualMenuStep({
                 <span>
                   <b>{recipe.title}</b>
                   <small>
-                    {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment)?.timeMinutes ?? recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
+                    {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment, recipeMethods?.[recipe.id])?.timeMinutes ?? recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
                   </small>
                 </span>
               </button>
@@ -13668,6 +13727,7 @@ function ManualMenuStep({
 
 function MenuReviewStep({
   kitchenEquipment,
+  recipeMethods,
   batches,
   mealSlots,
   people,
@@ -13681,6 +13741,7 @@ function MenuReviewStep({
   onReassemble,
 }: {
   kitchenEquipment?: KitchenEquipment[];
+  recipeMethods?: Record<string, string>;
   batches: Batch[];
   mealSlots: MealSlot[];
   people: Person[];
@@ -13962,7 +14023,7 @@ function MenuReviewStep({
                     <span>
                       <b>{recipe.title}</b>
                       <small>
-                        {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment)?.timeMinutes ?? recipe.time} мин
+                        {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment, recipeMethods?.[recipe.id])?.timeMinutes ?? recipe.time} мин
                       </small>
                     </span>
                   </button>
@@ -14821,6 +14882,18 @@ function BatchCookingView({
   );
 }
 
+function CookingMethodSelect({ recipe, equipment, value, label, disabled, onChange }: {
+  recipe: Recipe; equipment?: KitchenEquipment[]; value: string; label: string; disabled?: boolean; onChange: (id: string) => void;
+}) {
+  const methods = availableEquipmentMethods(recipe, equipment);
+  return <label>{label}
+    <select aria-label={`Способ приготовления: ${label}`} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)}>
+      <option value="" disabled>Выберите способ</option>
+      {methods.map((method) => <option key={method.id} value={method.id}>{method.label}</option>)}
+    </select>
+  </label>;
+}
+
 function RecipeView({
   context,
   onBack,
@@ -14836,7 +14909,17 @@ function RecipeView({
 }) {
   const { recipe, batch, slot, plan } = context;
   const [methodId, setMethodId] = useState<string | undefined>();
-  const cookingMethod = cookingMethodFor(recipe, plan?.kitchenEquipment, plan ? undefined : methodId);
+  const [methodSaveState, setMethodSaveState] = useState<"idle" | "saving" | "error">("idle");
+  const cookingMethod = plan ? planCookingMethod(recipe, plan) : cookingMethodFor(recipe, undefined, methodId);
+  async function chooseCookingMethod(id: string) {
+    if (!plan) { setMethodId(id); return; }
+    if (!onChangePlan || !cookingMethodFor(recipe, plan.kitchenEquipment, id)) return;
+    setMethodSaveState("saving");
+    try {
+      await onChangePlan({ ...plan, recipeMethods: { ...plan.recipeMethods, [recipe.id]: id } });
+      setMethodSaveState("idle");
+    } catch { setMethodSaveState("error"); }
+  }
   const cookingTime = cookingMethod?.timeMinutes ?? recipe.time;
   const cookingActiveMinutes = cookingMethod?.activeMinutes ?? recipe.effort.activeMinutes;
   const sectionOrder: RecipeSection[] = ["cooking", "dish"];
@@ -15081,8 +15164,8 @@ function RecipeView({
 
     return previewSession?.cookingAmounts ?? {};
   })();
-  const displaySteps = recipeDisplaySteps(recipe, plan?.kitchenEquipment, plan ? undefined : methodId);
-  const timelineSteps = !cookingMethod?.steps && recipe.instructions?.length ? recipe.instructions : null;
+  const displaySteps = recipeDisplaySteps(recipe, plan?.kitchenEquipment, plan ? planMethodId(recipe, plan) : methodId);
+  const timelineSteps = cookingMethod && !cookingMethod.steps && recipe.instructions?.length ? recipe.instructions : null;
   const timelineHandsMinutes =
     timelineSteps?.reduce(
       (sum, step) => sum + (step.hands ? step.minutes : 0),
@@ -15234,13 +15317,10 @@ function RecipeView({
           >
             <section className="recipe-equipment glass-card">
               <p className="kicker">Способ приготовления</p>
-              {!plan && equipmentMethods(recipe).length > 1 ? (
-                <label>Готовить с помощью
-                  <select aria-label="Способ приготовления" value={cookingMethod?.id ?? "original"} onChange={(event) => setMethodId(event.target.value)}>
-                    {equipmentMethods(recipe).map((method) => <option key={method.id} value={method.id}>{method.label}</option>)}
-                  </select>
-                </label>
-              ) : <h3>{cookingMethod?.label ?? "По рецепту"}</h3>}
+              <CookingMethodSelect recipe={recipe} equipment={plan?.kitchenEquipment} value={cookingMethod?.id ?? ""} label="Готовить с помощью" disabled={methodSaveState === "saving" || Boolean(plan && !onChangePlan)} onChange={(id) => void chooseCookingMethod(id)} />
+              {methodSaveState === "saving" && <p role="status">Сохраняем способ…</p>}
+              {methodSaveState === "error" && <p role="alert">Не удалось сохранить способ. Попробуйте ещё раз.</p>}
+              {!cookingMethod && <p role="status">Выберите доступный способ, чтобы увидеть инструкции и начать готовку.</p>}
               {cookingMethod?.note && <p>{cookingMethod.note}</p>}
               {cookingMethod && <p>Понадобится: {cookingMethod.requiredEquipment.map(equipmentLabel).join(" · ") || "нож, доска и миска"}.</p>}
             </section>
@@ -15510,7 +15590,7 @@ function RecipeView({
               Заменить
             </button>
           )}
-          {onStartCooking && (
+          {onStartCooking && cookingMethod && (
             <button className="primary-button" onClick={onStartCooking}>
               Начать готовку <span>· {cookingTime} мин</span>
             </button>

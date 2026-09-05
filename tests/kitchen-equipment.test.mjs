@@ -11,11 +11,13 @@ const registry = JSON.parse(await readFile(new URL("../data/plan-recipe-registry
 const app = await recipeCatalog();
 const { validatePlanForPersistence } = await loadTypeScriptModule(new URL("../lib/plan-validation.ts", import.meta.url));
 const plain = (value) => JSON.parse(JSON.stringify(value));
-function planFor(recipe, equipment) {
+function planFor(recipe, equipment, selectedMethod) {
   const slot = recipe.slot;
+  // Fixture models an explicit user selection, not an application default.
+  const method = selectedMethod ?? (Array.isArray(equipment) ? app.equipmentMethods(recipe).find((method) => method.requiredEquipment.every((id) => equipment.includes(id)))?.id : undefined);
   return {
     id: "kitchen-test", start: "2026-09-05", end: "2026-09-05", periodDays: 1, cookEveryDays: 1,
-    menuStyle: "budget", mealSlots: [slot], kitchenEquipment: equipment,
+    menuStyle: "budget", mealSlots: [slot], kitchenEquipment: equipment, recipeMethods: method ? { [recipe.id]: method } : undefined,
     people: [{ id: "p1", name: "Я", daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 }, includedSlots: [slot] }],
     batches: [{ id: "b1", index: 0, start: "2026-09-05", end: "2026-09-05", days: 1 }],
     selections: { [`b1:${slot}`]: recipe.id },
@@ -93,7 +95,7 @@ test("automatic, manual, disliked override and personal fallback never bypass ki
 test("appliance choice changes cooking instructions and batch timeline without changing portions", () => {
   const recipe = app.recipesById["tmpm-25453"];
   const original = plain(app.recipeDisplaySteps(recipe));
-  const air = plain(app.recipeDisplaySteps(recipe, ["air_fryer"]));
+  const air = plain(app.recipeDisplaySteps(recipe, ["air_fryer"], "air_fryer"));
   assert.ok(original.some((step) => /духов/u.test(step)));
   assert.ok(air.some((step) => /аэрогрил/u.test(step)));
   assert.ok(!air.some((step) => /духов|противн/u.test(step)));
@@ -104,7 +106,55 @@ test("appliance choice changes cooking instructions and batch timeline without c
   const originalModel = app.buildBatchCookingModel(originalPlan, originalPlan.batches[0]);
   assert.equal(model.totalPortions, originalModel.totalPortions);
   assert.deepEqual(plain(model.steps[0].products), plain(originalModel.steps[0].products));
-  assert.equal(model.totalMinutes, app.cookingMethodFor(recipe, ["air_fryer"]).timeMinutes);
+  assert.equal(model.totalMinutes, app.planCookingMethod(recipe, plan).timeMinutes);
   assert.equal(app.cookingMethodFor(recipe)?.id, "original");
-  assert.equal(app.cookingMethodFor(recipe, ["air_fryer"]).id, "air_fryer");
+  assert.equal(app.planCookingMethod(recipe, plan).id, "air_fryer");
+});
+
+
+test("saved method is explicit, survives reload and never switches when equipment changes", () => {
+  const recipe = app.recipesById["tmpm-25453"];
+  const both = ["oven", "baking_dish", "air_fryer"];
+  const original = planFor(recipe, both, "original");
+  assert.equal(app.planCookingMethod(recipe, original).id, "original");
+  assert.equal(app.cookingMethodFor(recipe, both).id, "original", "having an appliance never silently selects it");
+  assert.equal(app.cookingMethodFor(recipe, ["air_fryer"]), undefined, "no original route is available; user must choose");
+  const selected = { ...original, recipeMethods: { [recipe.id]: "air_fryer" } };
+  const restored = JSON.parse(JSON.stringify(selected));
+  restored.recipeMethods = app.normalizeRecipeMethods(restored.recipeMethods);
+  assert.equal(app.planCookingMethod(recipe, restored).id, "air_fryer");
+  assert.deepEqual(plain(app.missingPlanMethods(restored)), []);
+  assert.equal(validatePlanForPersistence(restored).valid, true);
+  const removedAppliance = { ...restored, kitchenEquipment: ["oven", "baking_dish"] };
+  assert.equal(app.planCookingMethod(recipe, removedAppliance), undefined, "available original does not overwrite saved appliance");
+  assert.equal(validatePlanForPersistence(removedAppliance).valid, false);
+  assert.deepEqual(plain(app.missingPlanMethods(removedAppliance)), [recipe.id]);
+  assert.ok(!app.buildBatchCookingModel(removedAppliance, removedAppliance.batches[0]).steps.some((step) => /духов/u.test(step.title)));
+  assert.equal(app.planCookingMethod(recipe, planFor(recipe, undefined)).id, "original", "legacy plans keep original instructions");
+  const missing = { ...original, recipeMethods: undefined };
+  assert.equal(validatePlanForPersistence(missing).valid, false, "new kitchen-aware plan needs saved choices");
+  assert.equal(app.planCookingMethod(recipe, missing), undefined);
+  for (const methods of [null, [], "air_fryer", { [recipe.id]: "unknown" }, { nonexistent: "original" }]) {
+    assert.equal(validatePlanForPersistence({ ...original, recipeMethods: methods }).status, 400);
+  }
+});
+
+test("Cooking step identifies unbuildable meal slots before menu assembly", () => {
+  const person = { id: "p1", name: "Я", daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 }, includedSlots: ["breakfast", "lunch", "dinner"] };
+  const batches = [{ id: "b1", days: 1 }];
+  const gaps = plain(app.kitchenMenuGaps([person], person.includedSlots, "budget", batches, []));
+  assert.ok(gaps.includes("lunch"));
+  assert.ok(gaps.includes("dinner"));
+  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "budget", batches, kitchenEquipmentIds)), []);
+});
+
+test("wizard draft, recipe card and next-step guards are wired to the saved method", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(source, /setRecipeMethods\(normalizeRecipeMethods\(draft\.recipeMethods\)\)/);
+  assert.match(source, /kitchenEquipment,\s+recipeMethods,\s+remainderDecision/);
+  assert.match(source, /kitchenEquipment,\s+recipeMethods,\s+menuStyle/);
+  assert.match(source, /resolvedPeriodValid && kitchenGaps\.length === 0/);
+  assert.match(source, /if \(pendingMethods\.length\) return false;/);
+  assert.match(source, /context=\{\{ recipe: previewRecipe, plan: draftPlan \}\}/);
+  assert.match(source, /onChangePlan\(\{ \.\.\.plan, recipeMethods:/);
 });
