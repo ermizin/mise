@@ -1,0 +1,3655 @@
+{
+  "schemaVersion": 1,
+  "sourceRevision": "d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60",
+  "reviews": [
+    {
+      "recipeId": "foodru-blogger-cottage-waffles",
+      "methodId": "original",
+      "sourceSha256": "f42af217882cad7e44f8ba744c792c1878d034c74df235158dc2fcd335f1f404",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "foodru-oats-tomato",
+      "methodId": "original",
+      "sourceSha256": "2e2dc96e19ad8e3bc8e7908b3f82bec1d7c5faf2dc6b66a3440880afd19f0560",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 9,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "foodru-oblomov-chashushuli",
+      "methodId": "original",
+      "sourceSha256": "bb471ba8bbc74a3b5ffcb9b1909f5a2cdad6710b11b41c9ae0e1ff1c7b25ea1d",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 22,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 90,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "foodru-oblomov-pepper-chicken",
+      "methodId": "original",
+      "sourceSha256": "bfd6f1d9dd69b0393f516c18afe33df73508fe24b6ead9892e390f6e4d58fa4d",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 14,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "foodru-oblomov-seabass",
+      "methodId": "original",
+      "sourceSha256": "36b704d03a45798330977c3f4669724300c538652edd093e486ce22f383fccc2",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 45,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-aubergine-tomato-halloumi-pie",
+      "methodId": "original",
+      "sourceSha256": "4b4e8bcb4d9b9279467ceb198f426b0d84a4ce3bed0d8fdfd4f4e3841b91dc61",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 26,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 40,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-big-batch-bolognese",
+      "methodId": "multicooker",
+      "sourceSha256": "68f34f8f012869f4a48c5e5d26339ff2f1d4dd61fcbc4183ab750b0b6d6ebdb2",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 22,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 75,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-big-batch-bolognese",
+      "methodId": "original",
+      "sourceSha256": "2afc54a586c4acad1d1a9cad2482861ea184d8c7ce5b10d26f5988dd22114d15",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 22,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 60,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-black-bean-spicy-beef-pasta",
+      "methodId": "original",
+      "sourceSha256": "1db3af91240f4544fba855a8f90dacec1d5cd6e6a98199b58df0d06788f30b1b",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 20,
+          "resumeMinutes": 1,
+          "waitBasis": "замочите сухие грибы на 20–30 минут"
+        },
+        {
+          "activeMinutes": 22,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 180,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-chicken-squash-pesto-lasagne",
+      "methodId": "original",
+      "sourceSha256": "f5f73970355b8d2b16870cce37b69c660d933e7505e7aae6123c35eda20e62f0",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 40,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-courgette-tomato-soup",
+      "methodId": "original",
+      "sourceSha256": "7bc6ba38bb572c1cee5430495e0ddd43a0e2c6c0ae08ea635b0c8f76381a63fb",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-crunchy-broccoli-cranberry-salad",
+      "methodId": "original",
+      "sourceSha256": "364509567a049b3918d4a4091632fa5ec0f1a8742240f75bcf8e3d3cbc62f8c6",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
+      "methodId": "original",
+      "sourceSha256": "d5a3f3accbe4d336e9a4f229495d74dcff03193fecfb8a903e87b1310cb83abf",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 120,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-fragrant-biryani-with-coriander-cod",
+      "methodId": "original",
+      "sourceSha256": "a2bf439dfab9c46ffe43a3dad9b1f406552125d40d38032a48f0b9c50615bab1",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-kadala-curry",
+      "methodId": "multicooker",
+      "sourceSha256": "d26f3c6174f3947d1000ff15bb6791366c223f71716a67d8fcd2d6adf361d138",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 16,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-kadala-curry",
+      "methodId": "original",
+      "sourceSha256": "bf81391d006667c6e2b986e28dfdaa208fd25f161fcde08136222882970992ae",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-marinated-chicken-with-orzo-tomato-feta",
+      "methodId": "original",
+      "sourceSha256": "284f80bc0c3ee4a121e2d6f0e1f5db23db3cbed59ace4492de16c432bd6d10db",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 30,
+          "resumeMinutes": 1,
+          "waitBasis": "выдержите в холодильнике от 30 минут до 2 часов"
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-mozzarella-pepper-aubergine-calzone",
+      "methodId": "original",
+      "sourceSha256": "4026b3a3be3a3e805e1ff0baadadc6ae7651e4c0ed6b9545bb771a1d76a84971",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-orange-oregano-pulled-pork",
+      "methodId": "multicooker",
+      "sourceSha256": "22e29b0e4f97356fea2e773a0b2c96f985a205a9e9d5ec692fcac06a43f746ff",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 480,
+          "resumeMinutes": 121,
+          "waitBasis": "на Томлении 8–10 часов"
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-orange-oregano-pulled-pork",
+      "methodId": "original",
+      "sourceSha256": "55b4158487e62cee5a76166afc0b7f2e9b43eabddeb12fc1deac39a1413ba22d",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 602,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ],
+      "timingNote": "Текст предлагает 8–10 часов на слабом режиме или 4–6 часов в духовке с доливом воды. Ориентир консервативно резервирует 10 часов внимания без выбора короткой альтернативы."
+    },
+    {
+      "recipeId": "goodfood-prawn-rice-mango-jar-salad",
+      "methodId": "original",
+      "sourceSha256": "873e18db6da92623ccb672b348c1651f587cd715c12c1cc2ee667ebca890dbd9",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
+      "methodId": "original",
+      "sourceSha256": "89cff6de14de3842afb40d76d4cbf35d6a9709d474bc2e1c81ab8999f29b328a",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 120,
+          "resumeMinutes": 1,
+          "waitBasis": "оставьте под крышкой примерно на 2 часа"
+        },
+        {
+          "activeMinutes": 40,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 30,
+          "resumeMinutes": 1,
+          "waitBasis": "за 30–60 минут до работы"
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-sausage-egg-muffins",
+      "methodId": "original",
+      "sourceSha256": "3f5d5f9d5b54ca1a4a54ab59f8169b931ede2558cc42e8a1dac5b9cd9173d16b",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-slow-cooker-beef-bourguignon",
+      "methodId": "multicooker",
+      "sourceSha256": "852bac9c992ea7515481cde061acd5a3af3d8111d954efb3802789757d0ef651",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 32,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 360,
+          "resumeMinutes": 121,
+          "waitBasis": "на Томлении 6–8 часов"
+        },
+        {
+          "activeMinutes": 35,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-slow-cooker-beef-bourguignon",
+      "methodId": "original",
+      "sourceSha256": "d0547293577e67e5b6a8da358ab0b66091b1b170d3b2e83ff1df07f6978508a4",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 360,
+          "resumeMinutes": 121,
+          "waitBasis": "6–8 часов на слабом режиме"
+        },
+        {
+          "activeMinutes": 42,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-smoky-black-bean-chilli",
+      "methodId": "multicooker",
+      "sourceSha256": "c58301c4e68a25eccf3acd5ebeb7d9e712f1ea05c579e8ddbfaa369172d6484e",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 120,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 35,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-smoky-black-bean-chilli",
+      "methodId": "original",
+      "sourceSha256": "4fa4d507104b1d516bbf6c3c87751fc85f8b2e16cde63ceec7368d7428a922ab",
+      "measurementMinutes": 8,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 120,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-summery-beans-herby-green-aioli",
+      "methodId": "original",
+      "sourceSha256": "a4791476d515c91965065a01e75d6e81547502466be3518f01753e444fa270d8",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 480,
+          "resumeMinutes": 1,
+          "waitBasis": "Замочите фасоль в холодной воде на 8–14 часов"
+        },
+        {
+          "activeMinutes": 120,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-tuna-nicoise-protein-pots",
+      "methodId": "original",
+      "sourceSha256": "e5f5d85eacb6c2a04e67649a03136171697bacd01dda98b49274abfddd9f818f",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-vegan-paella",
+      "methodId": "original",
+      "sourceSha256": "82e52c2cae45d41c18a7cd4cac7c187fe2710a0a6571102264ed0e50298aaf92",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-vegetarian-bolognese",
+      "methodId": "multicooker",
+      "sourceSha256": "0f507fbf877a8df34646e1084719c356d5d859a7d0e7ccc8993e5d483ece454c",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-vegetarian-bolognese",
+      "methodId": "original",
+      "sourceSha256": "ed3d46b45bf0576076a532dc3d7c3d19e79b3e945edf5d3c97c12bf203420312",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 40,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+      "methodId": "original",
+      "sourceSha256": "b7557caac52ffb6e6106467de2540c7052d481025c43683f08f997f4a18270fe",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "new-home-cutlets-mash",
+      "methodId": "original",
+      "sourceSha256": "7a2e3048ee8bf01eb5f69f3b7412aa7dc7acc967ddcebc4f18023ff1ec96ec93",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "new-home-stewed-cabbage",
+      "methodId": "multicooker",
+      "sourceSha256": "a639f2c74830c0819fe131bbf9a3f7e57b8fbb00bc45ec53f31ffd8fed54d05f",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "new-home-stewed-cabbage",
+      "methodId": "original",
+      "sourceSha256": "ba546dd7202aba1e682764736ecdd891c453770450ea3c2e188966b26ca31bf7",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "new-oats-blueberry-almond",
+      "methodId": "original",
+      "sourceSha256": "8e15110109445f17ab40711924b2b38073789666689a3d4503af3c070944e388",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 360,
+          "resumeMinutes": 1,
+          "waitBasis": "уберите в холодильник на 6–8 часов"
+        }
+      ]
+    },
+    {
+      "recipeId": "new-oats-cinnamon-raisin",
+      "methodId": "original",
+      "sourceSha256": "b44a0f89f5365da83dc9d727d791284c7f48abeddc52e7845816cd5f8b6c9ed5",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 360,
+          "resumeMinutes": 1,
+          "waitBasis": "уберите в холодильник на 6–8 часов"
+        }
+      ]
+    },
+    {
+      "recipeId": "new-sandwich-caesar",
+      "methodId": "original",
+      "sourceSha256": "b6e5d88bbafeca20a0e89653beb733b1c1172ae87efe3a5e16ebac564cdcfd6d",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 14,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Финальная сборка назначена непосредственно перед едой."
+    },
+    {
+      "recipeId": "new-sandwich-turkey-ham",
+      "methodId": "original",
+      "sourceSha256": "4155b55c00d0d85a6327e1fb7e4979b6089a1e5aa18247a2aac70f0a4128d6a4",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Завершающая сборка прямо назначена непосредственно перед едой."
+    },
+    {
+      "recipeId": "simple-generated-b03",
+      "methodId": "original",
+      "sourceSha256": "b651d360a2b4e17e84a1f06286369aecf71e9af3904eb4cce53a908277f69876",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-d01",
+      "methodId": "original",
+      "sourceSha256": "2ed8d202f89796f61740d27e2d3cf997634756382171ba7c441e9181ea08192c",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 19,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-d04",
+      "methodId": "original",
+      "sourceSha256": "885ec411842f4dcbe5be9cbbce0d494392366a984fa74b7fe2eb1a6fdbb4475a",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 13,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-d07",
+      "methodId": "original",
+      "sourceSha256": "7279838a6913e53c2bf5be84d43a0258f765113828abf8460751168c90a8d194",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 13,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-d10",
+      "methodId": "original",
+      "sourceSha256": "cb807df941caec98455db26797122013861f16f7e29566ec509aeb230fa408b4",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-d13",
+      "methodId": "original",
+      "sourceSha256": "f292874a56438de67b28885be8c510a61617af3617ad185a4ab1f768040cc35f",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-d16",
+      "methodId": "original",
+      "sourceSha256": "b3bae93fdad04fb21522225dc967374a332f445c00efca9bd3913c0346fe3351",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 11,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-generated-s03",
+      "methodId": "original",
+      "sourceSha256": "a8f37599ca93f994954a65242ed97ae762318ba625bf10ee7c167874ecd34a54",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-breakfast-lazy-vareniki-tvorog",
+      "methodId": "original",
+      "sourceSha256": "6a3a5f3a90344ee986a36f532ce5d5b6222de1d8f527a5c1d2ac6b2da05d6d26",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-breakfast-zucchini-fritters-sourcream",
+      "methodId": "original",
+      "sourceSha256": "4a9a38f7206df27bd6b3532013906a7adc96970c1aec7eb29ee9c1b595b7070b",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 5,
+          "resumeMinutes": 3,
+          "waitBasis": "Stored step: grate zucchini, salt, leave five minutes, then squeeze well. Setup is grating; return is squeezing."
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-main-buckwheat-mushrooms-chicken",
+      "methodId": "original",
+      "sourceSha256": "ee34d0b5eec2c7393ac93e89d0d83c37e3c6eeae3d78a1298fec12c58d63aa1c",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-main-chicken-green-beans-bulgur",
+      "methodId": "original",
+      "sourceSha256": "7dfdb69b56b339aba68b77671f02b8b3bf8b45678534b9538ee9e874074ea522",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-main-chicken-vegetables-bulgur",
+      "methodId": "original",
+      "sourceSha256": "fe54d7a44cd8fd722fc775881dbf1e0d7d6d8d1e7056cd984d10e45df9c03b40",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-main-pasta-nests-beef-cheese",
+      "methodId": "original",
+      "sourceSha256": "d4b2dc361bfe1d247e671d65b40b3fcd46850aba18af98c880795872cb12c485",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-main-rice-beef-sourcream",
+      "methodId": "original",
+      "sourceSha256": "b93c9a725e3a15c3c3effb3a85f28306fd45a3871279083c06cfaa19f6370569",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 9,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "simple-parsed-snack-cheese-tomato-toast",
+      "methodId": "original",
+      "sourceSha256": "82d1f71381218dece06f607021b660c7ca4119e9563a5601fc50ae5f5761e505",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "src-beefy-cheese-potatoes",
+      "methodId": "original",
+      "sourceSha256": "42144aa9bda96c441e112e65e39f9960ecc7e8605428f4250c5cf59acb613e39",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 35,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "src-fajita-rice",
+      "methodId": "original",
+      "sourceSha256": "e9ae5d64c2d04ee8a3d39886e53da3ca6f4413b789bbe93516cf9e6a89aec7b9",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "src-lemon-chicken",
+      "methodId": "original",
+      "sourceSha256": "114359785a110a2270f1692b4630fccdc9bb0c08e2c12b5beb87bb6bc1d3347e",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 14,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "src-sausage-pepper-pasta",
+      "methodId": "original",
+      "sourceSha256": "024b325768a2d6f357a4888549b7b0ac31b967bba3794d5776247f62b7ea483d",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-16283",
+      "methodId": "air_fryer",
+      "sourceSha256": "7ab1a638fce568727a2d0c96c0552db270998680ad553b0d3e548cccdd704f2a",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Формование и обязательная заморозка предшествуют дальнейшей готовке; без числового времени заморозки эта цепочка остаётся по исходным инструкциям."
+    },
+    {
+      "recipeId": "tmpm-16283",
+      "methodId": "original",
+      "sourceSha256": "b26328c90850ec68d2c10684cf5544d9d1fd0e70c680a99c736cf6dbfedcdcbd",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Формование и обязательная заморозка предшествуют дальнейшей готовке; без числового времени заморозки эта цепочка остаётся по исходным инструкциям."
+    },
+    {
+      "recipeId": "tmpm-16479",
+      "methodId": "air_fryer",
+      "sourceSha256": "5b99c59dee0d5ca09935d2021db0dc6a556d50e678feb6561e45cb4b7b57cd42",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 14,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Остывание и последующий разогрев завершают рецепт вне текущего расписания."
+    },
+    {
+      "recipeId": "tmpm-16479",
+      "methodId": "original",
+      "sourceSha256": "ede766de78db44d6eafc0e624c0f54219bdeeeb713ffa199e1b22900ae855041",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 14,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Остывание и последующий разогрев завершают рецепт вне текущего расписания."
+    },
+    {
+      "recipeId": "tmpm-17381",
+      "methodId": "original",
+      "sourceSha256": "66cdf342cd91fe4a591cfacb1dc034325f6a1eb71cf9cded8c94100883598d75",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-18874",
+      "methodId": "original",
+      "sourceSha256": "f8368b4bf694e90f55518ce1da76b95e36a112e25e86aaf17781ae9ebb76c896",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-21841",
+      "methodId": "original",
+      "sourceSha256": "6f0dcd2fdcf6d04fc4fc1eff0a775164861ef3d6af867837b7ad9ea2ef0b8ce1",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-22181",
+      "methodId": "air_fryer",
+      "sourceSha256": "0bcb545d455826cb8260866f455f36aab4c001020b7191b63620e4d72ba650fe",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Обязательное замораживание тонкого слоя до твёрдости предшествует нарезке и дальнейшей готовке. Продолжение без текущих минут."
+    },
+    {
+      "recipeId": "tmpm-22181",
+      "methodId": "original",
+      "sourceSha256": "21674b2f78e2337ab1cf4a7398fd291b2c533a788b756e0453c13d7e36b08adc",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Обязательное замораживание тонкого слоя до твёрдости предшествует нарезке и дальнейшей готовке. Продолжение без текущих минут."
+    },
+    {
+      "recipeId": "tmpm-22428",
+      "methodId": "air_fryer",
+      "sourceSha256": "ce06f033df68a6a6f1bfba587ef342ed6dd8e445a552b9dd62460e70a21a40de",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-22428",
+      "methodId": "original",
+      "sourceSha256": "79d8c1c029eb3dbf6b35ac618301fed6198a0f38342e725c0ebeb79f580e35b7",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-22550",
+      "methodId": "air_fryer",
+      "sourceSha256": "0c08714fdf0e0d9877d03cc9ae4c40d20981d87e977fac004e737b6c397403ae",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 16,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Последний шаг прямо описывает разогрев, а не повторную готовку сейчас."
+    },
+    {
+      "recipeId": "tmpm-22550",
+      "methodId": "original",
+      "sourceSha256": "5898dbbc12be33bf364504a5dbaa27c4caadf5babc4e99fc86124da65dadfa9c",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Последний шаг прямо описывает разогрев, а не повторную готовку сейчас."
+    },
+    {
+      "recipeId": "tmpm-22968",
+      "methodId": "original",
+      "sourceSha256": "a7f83ea9abb5c207996ebebbc7aa4a4974a886345414cf215fc5a597c58ed19a",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23113",
+      "methodId": "original",
+      "sourceSha256": "6c7531bfa76a567797c43d79988ed04e7bf7d9abad87c4c3657cb1c70fe093a1",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23261",
+      "methodId": "original",
+      "sourceSha256": "8929af9edd3dc4ade6fc9f301b7b08c90580d7973627971fe009275f20848624",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23431",
+      "methodId": "original",
+      "sourceSha256": "469f61b3d3faa80e68afec7ad84439b0788b92c759ca824d8030b4b2cbe90052",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23518",
+      "methodId": "original",
+      "sourceSha256": "caa69d9be1653c25f73ca8d19756c4dc0302a85742ed15df57ed718abe03c062",
+      "measurementMinutes": 4,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 22,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23554",
+      "methodId": "multicooker",
+      "sourceSha256": "9561bed31f2a4293745d1b4ab64ddbb47b3d86582557e41b65ddcf44d71a0541",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 35,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23554",
+      "methodId": "original",
+      "sourceSha256": "b7dfcde55aa8e7d59c4299fc05bbff647ff3aeb81c8aed24c9d9487bf42842e6",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-24579",
+      "methodId": "air_fryer",
+      "sourceSha256": "3a1d51dfaf52c21ca7ca2c6fd08cc1e1a67e9b2a6ac15973f0a30a749f6ea4fe",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Заморозка пласта до твёрдости предшествует нарезке и дальнейшей готовке; исходная цепочка сохранена без выдуманного времени."
+    },
+    {
+      "recipeId": "tmpm-24579",
+      "methodId": "original",
+      "sourceSha256": "4d4f8fb85b01ba32ae0f62cca5d1eca1e1f44cdfe309fbdc621a2765afa23de2",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Заморозка пласта до твёрдости предшествует нарезке и дальнейшей готовке; исходная цепочка сохранена без выдуманного времени."
+    },
+    {
+      "recipeId": "tmpm-24729",
+      "methodId": "original",
+      "sourceSha256": "b89e87d78de2f4e9ab4d0af4c2c642333525293d8738e70a57b0bad34e29fc37",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 22,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-24899",
+      "methodId": "original",
+      "sourceSha256": "da39d63b8aa05245876551b8c1704ccb50cd1849275ef48928a950410ddf8043",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-24949",
+      "methodId": "original",
+      "sourceSha256": "815242530453d47ca5ddd0d04a873c7f0c56c15768b2cbd79463d045c7694b40",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-25006-apple-yogurt-granola",
+      "methodId": "original",
+      "sourceSha256": "c35bb1fc3623837aa1229f2beb51ec56b9f06af47acf5bdf4aa2311ffb1a5c7d",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Гранола добавляется прямо перед едой, чтобы сохранить хруст."
+    },
+    {
+      "recipeId": "tmpm-25006-hash-brown-breakfast-bowl",
+      "methodId": "original",
+      "sourceSha256": "beae0d818f34df7dada508416d3e665dc4d604610e85538d4111307f41a16e9a",
+      "measurementMinutes": 3,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 1,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-25071",
+      "methodId": "original",
+      "sourceSha256": "d9d62418cc3d57d2a570e309c8b5a5a2ba6dfab0bcf25abf4846f70829df8369",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-25159",
+      "methodId": "original",
+      "sourceSha256": "3355e5342a9ef0c258b75f0a2598c6e7812fb3de19a7ad0d41627345dd69fdbb",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-25290",
+      "methodId": "original",
+      "sourceSha256": "269c571ce2f1d11dab11f553fe24c1c9f280a52c1cc9f2511c68bba0df063904",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 60,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26232",
+      "methodId": "original",
+      "sourceSha256": "4eee9f0fb13cceb0d1ba4da4fa14128bded40bed7c63e758661556db8ac5222d",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 20,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26429",
+      "methodId": "original",
+      "sourceSha256": "db10b01fa24d46271574954f07c845fa7ec1d98a437efce07c033e16d78d4061",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 25,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26583",
+      "methodId": "original",
+      "sourceSha256": "bf947c2d065d66e890a1216364b5063a697ba4eaf9b559d4a1f9de0cf3765b7a",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 35,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26660",
+      "methodId": "multicooker",
+      "sourceSha256": "babb87b7a97cfb1ff3128d523a8f02a5aca482a3dc9a652d8f8490cb061d4d4d",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 300,
+          "resumeMinutes": 62,
+          "waitBasis": "Stored text says six hours with lid opened during the last hour. Only first five hours are unattended; return reserves the last hour and check."
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26660",
+      "methodId": "original",
+      "sourceSha256": "4316af71006526199ebe0f2e32e06d68633b08c01d30fd33e4c306b280e0f8fe",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 300,
+          "resumeMinutes": 62,
+          "waitBasis": "Stored text says six hours with a conditional lid opening during the last hour. Return after five hours, reserving the last hour and check."
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26720",
+      "methodId": "multicooker",
+      "sourceSha256": "9970ddff23a6bb50533ba4a930ce95efdf5cad0ffa223542624b308631e3fbb6",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 330,
+          "resumeMinutes": 35,
+          "waitBasis": "Stored text says six hours, adding carrots and mushrooms thirty minutes before completion. Return after five and a half hours; remaining cooking and addition retain attention."
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26720",
+      "methodId": "original",
+      "sourceSha256": "af98ee07377b597a9ee9c52df18d5f71438a0d19b49936475e3a7745255e29a6",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 362,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 30,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ],
+      "timingNote": "Текст предлагает 4 часа на сильном или 6 на слабом режиме без выбранного режима. Консервативно заняты 6 часов; автоматического окна для этих альтернатив нет."
+    },
+    {
+      "recipeId": "tmpm-26965",
+      "methodId": "air_fryer",
+      "sourceSha256": "4a979bb1152c4fe5cdc465f6625104d8ac2acf708e569b356ad7ad5c40229ca1",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 16,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Остывание, заморозка и упаковка перед будущим разогревом сохранены без назначенных минут."
+    },
+    {
+      "recipeId": "tmpm-26965",
+      "methodId": "original",
+      "sourceSha256": "82090f292cb2411be4d86edbfa6daf808c2fbd3e6688202d8d5dc30b5d4a14e3",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Остывание, заморозка и упаковка перед будущим разогревом сохранены без назначенных минут."
+    },
+    {
+      "recipeId": "tmpm-27306",
+      "methodId": "original",
+      "sourceSha256": "4de535fa3aa3e070153ae5d72ed1e265a91f21b4fc5273f6c860dd8bbe311a24",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-27802",
+      "methodId": "original",
+      "sourceSha256": "8d01066c3b9392c74b7d4a391beb19ca5d7651d99337294fb991c094d5f9ed80",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 30,
+          "resumeMinutes": 1,
+          "waitBasis": "Stored step explicitly marinates chicken for at least 30 minutes after mixing spices, oil and lemon."
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 18,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Шаг 7 — отдельная инструкция на последующее хранение или разогрев, поэтому исключён из текущего таймлайна."
+    },
+    {
+      "recipeId": "tmpm-28302",
+      "methodId": "original",
+      "sourceSha256": "26722d3546cf463c86424bedbef85eb9b3b0d76c2f7d6e7ebb7c6795818028f9",
+      "measurementMinutes": 7,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 10,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-28513",
+      "methodId": "multicooker",
+      "sourceSha256": "ca48bafd908e014a767b30b02bb69adcbdfce91ed8e41e42396213e45945ec08",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 180,
+          "resumeMinutes": 1,
+          "waitBasis": "выдержите 3–4 часа в холодильнике"
+        },
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 55,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-28513",
+      "methodId": "original",
+      "sourceSha256": "61e3e5847c79754492f8cf3ca5720c89d63e7a7ec78b5d955496c6923606615f",
+      "measurementMinutes": 5,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 3,
+          "waitMinutes": 180,
+          "resumeMinutes": 1,
+          "waitBasis": "выдержите в холодильнике 3–4 часа"
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 35,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Остывание и заморозка одним слоем до твёрдости не имеют фиксированного времени."
+    },
+    {
+      "recipeId": "tmpm-28584",
+      "methodId": "original",
+      "sourceSha256": "2767410b1850d97ee8bb1a6f052cec68e8f4c987d6a70c4b7e83a70e2dc2ff35",
+      "measurementMinutes": 6,
+      "reviewBasis": "Individual editorial review of every stored method instruction at d057d4f4b9ff2dca822d2a92b9fd7f1e75153c60; active minutes are manually authored attended estimates, not kitchen validation. Parent reviewed wait boundaries and removed double counting of heating. Source text and order remain exact.",
+      "steps": [
+        {
+          "activeMinutes": 15,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 6,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 8,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "activeMinutes": 0,
+          "waitMinutes": 0,
+          "resumeMinutes": 0,
+          "deferred": true
+        }
+      ],
+      "timingNote": "Остывание и заморозка порций до твёрдости сохранены без назначенных минут."
+    }
+  ]
+}

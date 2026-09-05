@@ -12,6 +12,7 @@ export function ParallelCookingPlan({ kitchen, dishes, planStale, stepDishes = [
   const completeSources = stepDishes.length === dishes.length && dishes.every(dish => stepDishes.some(source => source.id === dish.id && source.methodId === dish.methodId));
   const merged = useMemo(() => mergeSteps ? buildMergedCookingPlan(completeSources ? stepDishes : [], schedulingAnnotations.profiles, kitchenResources(kitchen)) : null, [mergeSteps, stepDishes, kitchen, completeSources]);
   const mergedReady = mergeSteps && merged?.available;
+  const hasDeferred = merged?.steps.some(step => step.kind === "deferred") ?? false;
   const [windows, setWindows] = useState<Record<string, CookingWindow>>({});
   const schedule = useMemo(() => enabled ? buildParallelSchedule(dishes, kitchen, windows) : null, [dishes, kitchen, enabled, windows]);
   const order = schedule ? buildCookingOrder(schedule) : [];
@@ -27,17 +28,18 @@ export function ParallelCookingPlan({ kitchen, dishes, planStale, stepDishes = [
       {mergeSteps && !mergedReady && <Note tone="warn">{merged?.reason === "resources" ? "Для объединения шагов не хватает указанной техники или посуды." : "Для некоторых блюд или выбранных способов этой партии общий пошаговый план пока недоступен."} Продолжайте по обычным шагам ниже.</Note>}
       {mergedReady && merged && <>
         <h3>Общие шаги готовки</h3>
-        <p><b>Около {merged.totalMinutes} мин</b>{merged.totalMinutes < merged.sequentialMinutes ? ` · по одному около ${merged.sequentialMinutes} мин` : " · без пересечения действий"}</p>
+        <p><b>{hasDeferred ? "Эта часть готовки — около" : "Около"} {merged.totalMinutes} мин</b>{merged.totalMinutes < merged.sequentialMinutes ? ` · по одному около ${merged.sequentialMinutes} мин` : " · без пересечения действий"}</p>
         <p>Один повар; время активных действий приблизительное. Ожидание размечено по инструкциям рецептов. При увеличении партии работа может занять дольше: возвращайтесь к проверке блюда вовремя, даже если другое действие ещё не закончено.</p>
         <p>В шагах с ожиданием сначала выполните подготовку. Отдельные строки показывают, когда можно заняться другим блюдом и когда вернуться. Продукты каждого блюда отмеряйте отдельно.</p>
         <ol className="parallel-timeline merged-step-timeline" aria-label="Общие шаги готовки">{merged.steps.map(step => <li key={step.id}>
-          <span className="parallel-time">{step.start}–{step.end} мин</span><div>
+          <span className="parallel-time">{step.kind === "deferred" ? "По инструкции" : `${step.start}–${step.end} мин`}</span><div>
             <small>{step.dishTitle} · {step.instructionNumber ? `шаг ${step.instructionNumber}` : "продукты"}</small>
-            <b>{step.kind === "wait" ? "Ожидание" : step.kind === "resume" ? "Вернуться и проверить" : step.instructionNumber ? "Начать шаг" : "Отмерить продукты"}</b>
+            <b>{step.kind === "deferred" ? "Дальше — в указанное в рецепте время" : step.kind === "wait" ? "Ожидание" : step.kind === "resume" ? "Вернуться и проверить" : step.instructionNumber ? "Начать шаг" : "Отмерить продукты"}</b>
             <p>{step.text}</p>
-            {step.kind === "instruction" && <small>Ориентир на действия: {step.end - step.start} мин.</small>}
+            {step.kind === "instruction" && step.start !== null && step.end !== null && <small>Ориентир на действия: {step.end - step.start} мин.</small>}
             {step.products.length > 0 && <details><summary>Продукты этого блюда</summary><ul>{step.products.map((product, index) => <li key={index}>{product}</li>)}</ul></details>}
           </div></li>)}</ol>
+        {hasDeferred && <p>Строки «По инструкции» продолжают рецепт без назначенных минут: выполните их в исходном порядке и в указанное в тексте время. Долгое охлаждение, хранение и действия перед подачей могут относиться к следующей готовке; они не входят в расчёт выше.</p>}
         <p>Это общий план действий. Он не запускает таймеры и не меняет отметки готовки. Полные исходные инструкции и рассчитанные количества доступны в обычных шагах ниже.</p>
       </>}
       {!mergedReady && <>
