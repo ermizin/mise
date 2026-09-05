@@ -55,22 +55,6 @@ export const pushJobs = sqliteTable("push_jobs", {
   index("idx_push_jobs_subscription_plan").on(table.subscriptionId, table.planId),
 ]);
 
-// Session keys come from the browser, but are never persisted verbatim. The
-// route derives this opaque id from the owner, plan and session key.
-export const cookSessions = sqliteTable("cook_sessions", {
-  id: text("id").primaryKey(),
-  clientId: text("client_id").notNull(),
-  planId: text("plan_id").notNull(),
-  batchId: text("batch_id").notNull(),
-  state: text("state").notNull(),
-  revision: integer("revision").notNull(),
-  mutationId: text("mutation_id").notNull(),
-  updatedAt: integer("updated_at").notNull(),
-}, (table) => [
-  index("idx_cook_sessions_client_plan").on(table.clientId, table.planId),
-  index("idx_cook_sessions_plan_updated_at").on(table.planId, table.updatedAt),
-]);
-
 export const analyticsEvents = sqliteTable("analytics_events", {
   eventId: text("event_id").primaryKey(),
   actorId: text("actor_id").notNull(),
@@ -89,9 +73,3 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   index("idx_analytics_events_name_time").on(table.eventName, table.occurredAt),
   index("idx_analytics_events_flow").on(table.flowId),
 ]);
-
-export const kitchens = sqliteTable("kitchens", {
-  clientId: text("client_id").primaryKey(),
-  payload: text("payload").notNull(),
-  updatedAt: integer("updated_at").notNull(),
-});

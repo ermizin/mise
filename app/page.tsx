@@ -13,17 +13,11 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { useCookSession } from "./use-cook-session";
-import { timerRemainingMs, type CookSessionState } from "@/domain/cook-session";
 import {
   NotificationSetupPanel,
   type NotificationPlan,
 } from "./notification-setup";
 import { Icon, type IconName } from "./ui/icon";
-import { KitchenScreen } from "./kitchen-screen";
-import { useKitchen } from "../hooks/use-kitchen";
-import { kitchenEquipment as equipmentFromKitchen, kitchenSummary, sameEquipment, type KitchenProfile } from "../domain/kitchen";
-import { ParallelCookingPlan } from "./parallel-cooking-plan";
 import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
 import {
@@ -409,8 +403,6 @@ type BatchCookingStep = {
   detail: string;
   minutes: number;
   products: string[];
-  productsScope?: "step" | "dish";
-  activeMinutes?: number;
 };
 type BatchCookingModel = {
   dishes: { recipe: Recipe; slot: MealSlot; personIds: string[] }[];
@@ -432,7 +424,6 @@ type BuilderEntry = {
   startedAt?: number;
   isNextPlan?: boolean;
   addPerson?: boolean;
-  kitchenOverride?: KitchenProfile;
 };
 type BuilderDraft = {
   planId: string | null;
@@ -5406,7 +5397,7 @@ function buildBatchCookingModel(
     );
     if (!session.viable) {
       steps.push({
-        id: `${slot}:${recipe.id}:${[...personIds].sort().join("-")}:unavailable`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:unavailable`,
         recipeId: recipe.id,
         title: `Пересоберите «${recipe.title}»`,
         detail: "Не удалось рассчитать порции по текущим целям.",
@@ -5435,41 +5426,21 @@ function buildBatchCookingModel(
       ),
     );
     steps.push({
-      id: `${slot}:${recipe.id}:${[...personIds].sort().join("-")}:measure`,
+      id: `${slot}:${recipe.id}:${personIds.join("-")}:measure`,
       recipeId: recipe.id,
       title: `Отмерьте продукты для «${recipe.title}»`,
       detail: `${mealMeta[slot].label} · ${withPlural(batch.days * eaters.length, FORMS.portion)}`,
       minutes: fallbackMinutes,
-      activeMinutes: (method.activeMinutes ?? recipe.effort.activeMinutes) / (displaySteps.length + 1),
       products,
-      productsScope: "step",
     });
     displaySteps.forEach((text, index) => {
-      const instruction = recipeFamilyFor(recipe)?.miseInstructions.find((step) => step.text === text)
-        ?? recipe.instructions?.find((step) => step.text === text);
-      // Older editorial records repeat the entire ingredient list on every step.
-      // Such records cannot establish a step-specific mapping.
-      const rawIngredientIds = instruction?.ingredientIds;
-      const ingredientIds = rawIngredientIds && rawIngredientIds.length < recipe.ingredients.length + (recipe.procedureIngredients?.length ?? 0)
-        ? rawIngredientIds : undefined;
-      const stepProducts = ingredientIds ? recipe.ingredients.flatMap((ingredient, productIndex) => {
-        const canonicalId = canonicalIdForIngredient(ingredient);
-        return ingredientIds.some((id) => id === ingredient.id || id === canonicalId)
-          ? [products[productIndex]] : [];
-      }) : [];
-      const procedure = recipe.procedureIngredients ?? [];
-      procedure.forEach((ingredient, productIndex) => {
-        if (ingredientIds?.includes(ingredient.id)) stepProducts.push(products[recipe.ingredients.length + productIndex]);
-      });
       steps.push({
-        id: `${slot}:${recipe.id}:${[...personIds].sort().join("-")}:${index}`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:${index}`,
         recipeId: recipe.id,
         title: text,
         detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
         minutes: minutesInStep(text, fallbackMinutes),
-        activeMinutes: (method.activeMinutes ?? recipe.effort.activeMinutes) / (displaySteps.length + 1),
-        products: ingredientIds ? stepProducts : products,
-        productsScope: ingredientIds ? "step" : "dish",
+        products,
       });
     });
     if (recipe.freezable)
@@ -6342,18 +6313,6 @@ export default function Home() {
   );
   const [batchCookingContext, setBatchCookingContext] =
     useState<BatchCookingContext | null>(null);
-  const restoredCookingPlan = useRef<string | null>(null);
-  useEffect(() => {
-    if (!activePlan || restoredCookingPlan.current === activePlan.id) return;
-    restoredCookingPlan.current = activePlan.id;
-    const url = new URL(location.href);
-    const batchId = url.searchParams.get("cookBatch");
-    if (url.searchParams.get("cookPlan") === activePlan.id && activePlan.batches.some((batch) => batch.id === batchId))
-      // The browser URL is external navigation state restored once the plan loads.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setBatchCookingContext({ batchId: batchId! });
-  }, [activePlan]);
-
   const [builderEntry, setBuilderEntry] = useState<BuilderEntry>({ step: 0 });
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("done");
   const [onboardingReturnTab, setOnboardingReturnTab] = useState<Tab | null>(
@@ -6372,22 +6331,6 @@ export default function Home() {
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
-  const kitchen = useKitchen(clientId, activePlan?.kitchenEquipment, !loadingPlan);
-  const [kitchenOpen, setKitchenOpen] = useState(false);
-  const kitchenReturnScroll = useRef(0);
-  function openKitchen() {
-    kitchenReturnScroll.current = window.scrollY;
-    history.pushState({ ...history.state, miseTab: "profile", kitchenSection: "main" }, "");
-    setKitchenOpen(true);
-    requestAnimationFrame(() => window.scrollTo({top:0,behavior:"auto"}));
-  }
-  function applyKitchen() {
-    if (!kitchen.value) return;
-    setKitchenOpen(false);
-    setBuilderEntry({ step: 4, returnTab: "profile", mode: "onboarding", kitchenOverride: kitchen.value });
-    currentTabRef.current = "builder";
-    setTab("builder");
-  }
   const [planSyncState, setPlanSyncState] = useState<
     "synced" | "pending" | "error"
   >("synced");
@@ -6439,7 +6382,6 @@ export default function Home() {
       const next = event.state?.miseTab;
       const current = currentTabRef.current;
       if (!isPrimaryTab(next) || next === current) return;
-      setKitchenOpen(false);
       if (isPrimaryTab(current))
         captureTabScroll(current, tabScrollPositions.current);
       const currentIndex = isPrimaryTab(current)
@@ -6784,9 +6726,6 @@ export default function Home() {
       localStorage.removeItem(builderDraftKey);
       localStorage.removeItem(localPlanKey(id));
       localStorage.removeItem(pendingPlanKey(id));
-      for (const key of Object.keys(localStorage)) {
-        if (activePlan && (key.startsWith(`mise-cook-session-v1:${activePlan.id}:`) || key.startsWith(`mise-batch-cooking-v2:${activePlan.id}:`))) localStorage.removeItem(key);
-      }
       setNotificationSetupOpen(false);
       setActivePlan(null);
       navigate("week");
@@ -6814,7 +6753,6 @@ export default function Home() {
   function navigate(next: Tab) {
     const current = currentTabRef.current;
     if (next === current) return;
-    setKitchenOpen(false);
     if (next === "builder") {
       startPlanFlow(false);
       return;
@@ -6975,9 +6913,7 @@ export default function Home() {
     if (cookingBatch)
       return (
         <BatchCookingView
-          key={cookingSessionKey(activePlan, cookingBatch, buildBatchCookingModel(activePlan, cookingBatch))}
           plan={activePlan}
-          kitchenProfile={kitchen.value}
           batch={cookingBatch}
           onClose={() => setBatchCookingContext(null)}
           onChangePlan={persistPlan}
@@ -6996,8 +6932,6 @@ export default function Home() {
     return (
       <PlanBuilder
         initialPlan={activePlan}
-        kitchenOverride={builderEntry.kitchenOverride}
-        profileKitchen={kitchen.value}
         initialStep={builderEntry.step}
         initialBatchId={builderEntry.batchId}
         repeat={builderEntry.repeat}
@@ -7128,14 +7062,8 @@ export default function Home() {
           }}
         />
       )}
-      {tab === "profile" && (kitchenOpen ? <KitchenScreen
-        {...kitchen} onChange={kitchen.update} onRetry={kitchen.retry}
-        onBack={() => { setKitchenOpen(false); requestAnimationFrame(() => window.scrollTo({top:kitchenReturnScroll.current,behavior:"auto"})); }} hasPlan={Boolean(activePlan)}
-        planStale={Boolean(activePlan && kitchen.value && !sameEquipment(activePlan.kitchenEquipment, equipmentFromKitchen(kitchen.value)))}
-        onApply={applyKitchen}
-      /> : <ProfileScreen
-          onOpenKitchen={openKitchen}
-          kitchenLabel={kitchen.value ? kitchenSummary(kitchen.value) : "Техника, плита и посуда"}
+      {tab === "profile" && (
+        <ProfileScreen
           people={activePlan?.people ?? [newPerson()]}
           hasPlan={Boolean(activePlan)}
           onConfigure={editPeople}
@@ -10334,8 +10262,6 @@ function ShoppingScreen({
 }
 
 function ProfileScreen({
-  onOpenKitchen,
-  kitchenLabel,
   people,
   hasPlan,
   onConfigure,
@@ -10349,8 +10275,6 @@ function ProfileScreen({
   installPrompt,
   onInstallPromptUsed,
 }: {
-  onOpenKitchen: () => void;
-  kitchenLabel: string;
   people: Person[];
   hasPlan: boolean;
   onConfigure: () => void;
@@ -10387,9 +10311,6 @@ function ProfileScreen({
         <h1>Цели и порции</h1>
       </header>
       <div className="tab-panel-body profile-tab-body">
-      <button type="button" className="kitchen-profile-entry glass-card" onClick={onOpenKitchen}>
-        <Icon name="pot" /><span><b>Кухня и техника</b><small>{kitchenLabel}</small></span><Icon name="chevron" size={18} />
-      </button>
       <div className="profile-people-list">
         {people.map((person, index) => {
           const planned = plannedTargetsFor(person);
@@ -10609,8 +10530,6 @@ function ProfileScreen({
 
 function PlanBuilder({
   initialPlan,
-  kitchenOverride,
-  profileKitchen,
   initialStep = 0,
   initialBatchId,
   repeat = false,
@@ -10624,8 +10543,6 @@ function PlanBuilder({
   persistPlan,
 }: {
   initialPlan: ActivePlan | null;
-  kitchenOverride?: KitchenProfile;
-  profileKitchen?: KitchenProfile | null;
   initialStep?: number;
   initialBatchId?: string;
   repeat?: boolean;
@@ -10675,7 +10592,7 @@ function PlanBuilder({
         : initialPeople;
     },
   );
-  const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => kitchenOverride ? equipmentFromKitchen(kitchenOverride) : initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : profileKitchen ? equipmentFromKitchen(profileKitchen) : [...defaultKitchenEquipment]);
+  const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
   const [recipeMethods, setRecipeMethods] = useState<Record<string, string> | undefined>(() => normalizeRecipeMethods(initialPlan?.recipeMethods));
   const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
   const [cookEveryDays, setCookEveryDays] = useState(
@@ -10796,7 +10713,7 @@ function PlanBuilder({
         { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
       ],
     );
-    setKitchenEquipment(kitchenOverride ? equipmentFromKitchen(kitchenOverride) : initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : profileKitchen ? equipmentFromKitchen(profileKitchen) : [...defaultKitchenEquipment]);
+    setKitchenEquipment(initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
     setRecipeMethods(normalizeRecipeMethods(initialPlan?.recipeMethods));
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(null);
@@ -10822,7 +10739,7 @@ function PlanBuilder({
           setMealSlots(draft.mealSlots);
           setMenuStyle(draft.menuStyle);
           setPeople(draft.people.map(normalizePerson));
-          setKitchenEquipment(kitchenOverride ? equipmentFromKitchen(kitchenOverride) : normalizeKitchenEquipment(draft.kitchenEquipment));
+          setKitchenEquipment(normalizeKitchenEquipment(draft.kitchenEquipment));
           setRecipeMethods(normalizeRecipeMethods(draft.recipeMethods));
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
@@ -14537,116 +14454,107 @@ function batchCookingProgressKey(plan: ActivePlan, batch: Batch) {
   return `mise-batch-cooking-v2:${plan.id}:${batch.id}:${selectionSignature}`;
 }
 
-function cookingSessionKey(plan: ActivePlan, batch: Batch, model: BatchCookingModel) {
-  const source = JSON.stringify([model.steps, batch.days, plan.people.map((person) => [person.id, person.daily]), plan.recipeMethods]);
-  let first = 2166136261;
-  let second = 5381;
-  for (let index = 0; index < source.length; index += 1) {
-    first = Math.imul(first ^ source.charCodeAt(index), 16777619);
-    second = Math.imul(second, 33) ^ source.charCodeAt(index);
-  }
-  return `5b:${batch.id}:${(first >>> 0).toString(36)}${(second >>> 0).toString(36)}`;
-}
-
 function BatchCookingView({
   plan,
-  kitchenProfile,
   batch,
   onClose,
   onChangePlan,
   onComplete,
 }: {
   plan: ActivePlan;
-  kitchenProfile?: KitchenProfile | null;
   batch: Batch;
   onClose: () => void;
   onChangePlan: (plan: ActivePlan) => Promise<void>;
   onComplete: () => void;
 }) {
-  const [sessionKitchen, setSessionKitchen] = useState(kitchenProfile);
-  if (!sessionKitchen && kitchenProfile) setSessionKitchen(kitchenProfile);
   const model = useMemo(() => buildBatchCookingModel(plan, batch), [plan, batch]);
   const progressKey = batchCookingProgressKey(plan, batch);
-  const [initialState] = useState<CookSessionState>(() => {
-    let saved = 0;
-    try { saved = Number(localStorage.getItem(progressKey)); } catch { /* Hook reports unavailable storage. */ }
-    const index = Number.isFinite(saved) ? Math.min(Math.max(0, Math.floor(saved)), Math.max(0, model.steps.length - 1)) : 0;
-    return { version: 1, stepIndex: index, completedStepIds: model.steps.slice(0, index).map((step) => step.id),
-      phase: "cooking", timers: {}, cookedWeights: { ...plan.cookedWeights }, updatedAt: Date.now() };
+  const [stepIndex, setStepIndex] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    const saved = Number(localStorage.getItem(progressKey));
+    return Number.isFinite(saved)
+      ? Math.min(Math.max(0, saved), Math.max(0, model.steps.length - 1))
+      : 0;
   });
-  const session = useCookSession({ planId: plan.id, batchId: batch.id, sessionKey: cookingSessionKey(plan, batch, model), initialState });
-  const { state: cooking, update } = session;
-  const stepIndex = Math.min(cooking.stepIndex, Math.max(0, model.steps.length - 1));
-  const portioning = cooking.phase !== "cooking";
-  const cookedWeights = cooking.cookedWeights;
-  const setCookedWeights = (apply: (current: Record<string, CookedWeights>) => Record<string, CookedWeights>) =>
-    update((state) => ({ ...state, cookedWeights: apply(state.cookedWeights) }));
   const [showAll, setShowAll] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [cookingMotion, setCookingMotion] = useState<{ direction: -1 | 1; epoch: number }>({ direction: 1, epoch: 0 });
-  const [portionSaveState, setPortionSaveState] = useState<"idle" | "saving" | "error">("idle");
-  const [now, setNow] = useState(() => Date.now());
+  const [portioning, setPortioning] = useState(false);
+  const [cookingMotion, setCookingMotion] = useState<{
+    direction: -1 | 1;
+    epoch: number;
+  }>({ direction: 1, epoch: 0 });
+  const [portionSaveState, setPortionSaveState] = useState<
+    "idle" | "saving" | "error"
+  >("idle");
+  const [cookedWeights, setCookedWeights] = useState<
+    Record<string, CookedWeights>
+  >(() => ({ ...plan.cookedWeights }));
   const currentStep = model.steps[stepIndex];
-  const currentTimer = currentStep && cooking.timers[currentStep.id];
-  const remainingSeconds = Math.ceil(currentTimer ? timerRemainingMs(currentTimer, now) / 1000 : (currentStep?.minutes ?? 0) * 60);
-  const timerRunning = currentTimer?.status === "running" && remainingSeconds > 0;
-  const runningTimers = Object.entries(cooking.timers).filter(([, timer]) => timer.status === "running");
-  const timerAlerts = Object.entries(cooking.timers).filter(([, timer]) => timer.status === "running" && timerRemainingMs(timer, now) === 0);
-  const alertedRef = useRef(new Set<string>());
+  const [remainingSeconds, setRemainingSeconds] = useState(
+    () => (currentStep?.minutes ?? 0) * 60,
+  );
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [timerEndsAt, setTimerEndsAt] = useState<number | null>(null);
+  const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
   const backRef = useRef(onClose);
-  useEffect(() => { backRef.current = onClose; });
+  useEffect(() => {
+    backRef.current = onClose;
+  });
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
-    const url = new URL(location.href);
-    url.searchParams.set("cookPlan", plan.id);
-    url.searchParams.set("cookBatch", batch.id);
-    history.pushState({ mise: "batch-cooking" }, "", url);
+  }, []);
+  useEffect(() => {
+    history.pushState({ mise: "batch-cooking" }, "");
     const onPop = () => backRef.current();
     window.addEventListener("popstate", onPop);
-    return () => {
-      window.removeEventListener("popstate", onPop);
-      const clean = new URL(location.href);
-      clean.searchParams.delete("cookPlan"); clean.searchParams.delete("cookBatch");
-      history.replaceState(history.state, "", clean);
-    };
-  }, [plan.id, batch.id]);
-  useEffect(() => { void trackAnalytics("cooking_instructions_opened"); }, []);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
   useEffect(() => {
-    const refresh = () => setNow(Date.now());
-    const interval = window.setInterval(refresh, 1000);
+    void trackAnalytics("cooking_instructions_opened");
+  }, []);
+  useEffect(() => {
+    if (!timerRunning || !timerEndsAt) return;
+    const finishTimer = () => {
+      setTimerRunning(false);
+      setTimerEndsAt(null);
+      setRemainingSeconds(0);
+      if ("vibrate" in navigator) navigator.vibrate([180, 100, 180]);
+      if ("Notification" in window && Notification.permission === "granted")
+        new Notification("Mise · таймер готов", {
+          body: currentStep?.title ?? "Переходите к следующему шагу.",
+          icon: "/icon-192.png",
+        });
+    };
+    const refresh = () => {
+      const next = Math.max(0, Math.ceil((timerEndsAt - Date.now()) / 1_000));
+      setRemainingSeconds(next);
+      if (next === 0) finishTimer();
+    };
+    refresh();
+    const timer = window.setInterval(refresh, 1_000);
     document.addEventListener("visibilitychange", refresh);
-    return () => { clearInterval(interval); document.removeEventListener("visibilitychange", refresh); };
-  }, []);
-  useEffect(() => {
-    for (const [id, timer] of timerAlerts) {
-      const key = `${id}:${timer.endsAt}`;
-      if (alertedRef.current.has(key)) continue;
-      alertedRef.current.add(key);
-      if (document.visibilityState === "visible" && "vibrate" in navigator) navigator.vibrate([180, 100, 180]);
-      // The server owns background delivery. A visible completion banner works without push permission.
-    }
-  }, [timerAlerts]);
-  useEffect(() => {
-    let disposed = false;
-    let lock: { release: () => Promise<void> } | null = null;
-    const wake = navigator as Navigator & { wakeLock?: { request: (kind: "screen") => Promise<{ release: () => Promise<void> }> } };
-    const acquire = async () => {
-      if (document.visibilityState !== "visible" || disposed || lock) return;
-      try {
-        const next = await wake.wakeLock?.request("screen");
-        if (disposed || document.visibilityState !== "visible") await next?.release();
-        else lock = next ?? null;
-      } catch { /* Screen lock is optional. */ }
+    return () => {
+      window.clearInterval(timer);
+      document.removeEventListener("visibilitychange", refresh);
     };
-    const visibility = () => {
-      if (document.visibilityState === "visible") void acquire();
-      else { const old = lock; lock = null; void old?.release().catch(() => undefined); }
+  }, [currentStep?.title, timerEndsAt, timerRunning]);
+  useEffect(() => {
+    const wakeLockNavigator = navigator as Navigator & {
+      wakeLock?: { request: (kind: "screen") => Promise<{ release: () => Promise<void> }> };
     };
-    void acquire();
-    document.addEventListener("visibilitychange", visibility);
-    return () => { disposed = true; document.removeEventListener("visibilitychange", visibility); void lock?.release().catch(() => undefined); };
-  }, []);
+    if (timerRunning && document.visibilityState === "visible")
+      void wakeLockNavigator.wakeLock
+        ?.request("screen")
+        .then((lock) => {
+          wakeLockRef.current = lock;
+        })
+        .catch(() => undefined);
+    return () => {
+      const lock = wakeLockRef.current;
+      wakeLockRef.current = null;
+      if (lock) void lock.release().catch(() => undefined);
+    };
+  }, [timerRunning]);
   if (!currentStep)
     return (
       <main className="app-shell cooking-batch-shell">
@@ -14661,53 +14569,50 @@ function BatchCookingView({
         </section>
       </main>
     );
-  const completed = new Set(cooking.completedStepIds);
-  const totalActive = model.steps.reduce((sum, step) => sum + (step.activeMinutes ?? step.minutes), 0);
-  const doneActive = model.steps.reduce((sum, step) => sum + (completed.has(step.id) ? (step.activeMinutes ?? step.minutes) : 0), 0);
-  const progress = totalActive ? doneActive / totalActive : 0;
+  const completed = stepIndex;
+  const progress = completed / Math.max(1, model.steps.length);
   const progressPercent = Math.round(progress * 100);
   const visibleSteps = showAll ? model.steps : [currentStep];
-  const formatTimer = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  const formatTimer = (seconds: number) =>
+    `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   const contactWarnings = crossContactWarnings(plan, batch);
   function replayCookingMotion(direction: -1 | 1) {
-    setCookingMotion((current) => ({ direction, epoch: current.epoch + 1 }));
+    setCookingMotion((current) => ({
+      direction,
+      epoch: current.epoch + 1,
+    }));
   }
   function goToStep(nextIndex: number) {
     const bounded = Math.max(0, Math.min(model.steps.length - 1, nextIndex));
+    if (bounded === stepIndex) return;
     replayCookingMotion(bounded < stepIndex ? -1 : 1);
-    update((state) => ({ ...state, stepIndex: bounded, phase: "cooking" }));
-    setShowProducts(false); setShowAll(false);
+    setStepIndex(bounded);
+    localStorage.setItem(progressKey, String(bounded));
+    setRemainingSeconds(model.steps[bounded].minutes * 60);
+    setTimerRunning(false);
+    setTimerEndsAt(null);
+    setShowProducts(false);
   }
   function advance() {
-    replayCookingMotion(1);
-    update((state) => ({ ...state,
-      completedStepIds: [...new Set([...state.completedStepIds, currentStep.id])],
-      stepIndex: Math.min(model.steps.length - 1, stepIndex + 1),
-      phase: stepIndex >= model.steps.length - 1 ? "portioning" : "cooking",
-    }));
-  }
-  function toggleTimer() {
-    update((state) => {
-      const timer = state.timers[currentStep.id];
-      const remainingMs = timer ? timerRemainingMs(timer, Date.now()) : currentStep.minutes * 60_000;
-      const paused = timer?.status === "running" && remainingMs > 0;
-      const duration = remainingMs > 0 ? remainingMs : currentStep.minutes * 60_000;
-      return { ...state, timers: { ...state.timers, [currentStep.id]: {
-        title: currentStep.title, remainingMs: duration,
-        endsAt: paused ? null : Date.now() + duration, status: paused ? "paused" : "running",
-      } } };
-    });
+    if (stepIndex >= model.steps.length - 1) {
+      setTimerRunning(false);
+      setTimerEndsAt(null);
+      replayCookingMotion(1);
+      setPortioning(true);
+      return;
+    }
+    goToStep(stepIndex + 1);
   }
   function dishWeightsComplete(dish: BatchCookingModel["dishes"][number]) {
     const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
     const weights = cookedWeights[key] ?? {};
     const components = portionComponents(dish.recipe);
     return components.length === 0
-      ? Number.isFinite(weights.total) && weights.total > 0
-      : components.every((component) => Number.isFinite(weights[component.id]) && weights[component.id] > 0);
+      ? weights.total > 0
+      : components.every((component) => weights[component.id] > 0);
   }
   const allDishWeightsComplete =
-    model.dishes.length > 0 && model.dishes.every(dishWeightsComplete) && model.steps.every((step) => completed.has(step.id));
+    model.dishes.length > 0 && model.dishes.every(dishWeightsComplete);
   async function savePortioningAndComplete() {
     if (!allDishWeightsComplete) return;
     setPortionSaveState("saving");
@@ -14717,8 +14622,7 @@ function BatchCookingView({
         cookedWeights: { ...plan.cookedWeights, ...cookedWeights },
         cookedBatchIds: [...new Set([...(plan.cookedBatchIds ?? []), batch.id])],
       });
-      update((state) => ({ ...state, phase: "complete", timers: {} }));
-      try { localStorage.removeItem(progressKey); } catch { /* Session hook reports storage failures. */ }
+      localStorage.removeItem(progressKey);
       onComplete();
     } catch {
       setPortionSaveState("error");
@@ -14747,22 +14651,6 @@ function BatchCookingView({
         </span>
       </header>
       <div className="cooking-batch-content">
-        {sessionKitchen && <ParallelCookingPlan stepDishes={model.dishes.map(({ recipe, slot, personIds }) => {
-          const key = `${slot}:${recipe.id}:${personIds.join("-")}`;
-          const method = planCookingMethod(recipe, plan);
-          return { id: key, recipeId: recipe.id, title: `${recipe.title} · ${mealMeta[slot].label}`,
-            methodId: method?.id ?? "missing", requiredEquipment: method?.requiredEquipment ?? [],
-            steps: model.steps.filter(step => step.id.startsWith(`${key}:`)).map(step => ({
-              id: step.id, text: step.title, products: step.products, measurement: step.id === `${key}:measure`,
-            })),
-          };
-        })} kitchen={sessionKitchen} planStale={!sameEquipment(plan.kitchenEquipment, equipmentFromKitchen(sessionKitchen))} dishes={model.dishes.map(({recipe, slot, personIds}) => ({
-          id: `${slot}:${recipe.id}:${personIds.join("-")}`, title: `${recipe.title} · ${mealMeta[slot].label}`,
-          methodId: planCookingMethod(recipe, plan)?.id ?? "missing",
-          requiredEquipment: planCookingMethod(recipe, plan)?.requiredEquipment ?? [],
-          totalMinutes: planCookingMethod(recipe, plan)?.timeMinutes ?? recipe.time,
-        }))} />}
-        {sessionKitchen?.custom.some(item => item.count > 0) && <details className="glass-card"><summary>Своя утварь · памятка</summary><p>{sessionKitchen.custom.filter(item => item.count > 0).map(item => `${item.title} — ${item.count}`).join(" · ")}</p></details>}
         <section className="batch-cooking-summary glass-2" aria-live="polite">
           <div className="batch-cooking-summary-top">
             <div>
@@ -14774,23 +14662,6 @@ function BatchCookingView({
             </div>
           </div>
         </section>
-        <div className="cooking-session-status" role="status">
-          <span>{session.syncState === "loading" ? "Восстанавливаем готовку…" : session.syncState === "offline" ? "Без сети · прогресс сохранён на устройстве" : session.syncState === "saved" ? "Прогресс сохранён" : session.syncState === "saving" ? "Сохраняем прогресс…" : session.syncState === "conflict" ? "Есть другая сохранённая версия готовки" : "Не удалось сохранить прогресс"}</span>
-          <span>Готово {progressPercent}% · ~{Math.round(doneActive)} из {Math.round(totalActive)} активных минут</span>
-          {session.syncState === "error" && <button onClick={session.retry}>Повторить сохранение</button>}
-          {session.syncState === "conflict" && <div>
-            <button onClick={() => session.resolveConflict("local")}>Сохранить мои шаги</button>
-            <button onClick={() => session.resolveConflict("server")}>Загрузить сохранённую версию</button>
-          </div>}
-        </div>
-        {runningTimers.length > 0 && <section className="cooking-timers glass-2" aria-label="Таймеры партии">
-          {runningTimers.map(([id, timer]) => <div key={id} role={timerRemainingMs(timer, now) === 0 ? "alert" : undefined}>
-            <span>{timerRemainingMs(timer, now) === 0 ? "Таймер готов" : formatTimer(Math.ceil(timerRemainingMs(timer, now) / 1000))} · {timer.title}</span>
-            <button onClick={() => update((state) => ({ ...state, timers: { ...state.timers, [id]: { ...timer, status: "done", endsAt: null, remainingMs: 0 } } }))}>Выключить</button>
-          </div>)}
-          <small>{session.pushScheduled && session.syncState === "saved" ? "Фоновое уведомление запланировано. Доставка зависит от связи и настроек устройства." : "В фоне сигнал не гарантирован. Без сети держите Mise открытым или поставьте системный таймер."}</small>
-          <button onClick={() => setShowNotifications(true)}>Настроить уведомления</button>
-        </section>}
         {contactWarnings.length > 0 && (
           <Note tone="warn" role="alert" label="Разделите инвентарь и поверхности">
             {contactWarnings
@@ -14809,12 +14680,12 @@ function BatchCookingView({
           }`}
           aria-live="polite"
         >
-          <p className="cooking-card-kicker">Шаг {stepIndex + 1} из {model.steps.length}</p>
+          <p className="cooking-card-kicker">{showAll ? "Все шаги партии" : "Сейчас"}</p>
           <ol className="batch-step-list">
-            {[currentStep].map((step) => {
+            {visibleSteps.map((step) => {
               const absoluteIndex = model.steps.indexOf(step);
               const isCurrent = absoluteIndex === stepIndex;
-              const isComplete = completed.has(step.id);
+              const isComplete = absoluteIndex < stepIndex;
               return (
                 <li
                   className={`${isCurrent ? "is-current" : ""}${isComplete ? " is-complete" : ""}`}
@@ -14839,8 +14710,26 @@ function BatchCookingView({
           </ol>
           <div className="cooking-step-tools">
             <button
-              disabled={currentStep.minutes <= 0 || session.syncState === "loading"}
-              onClick={toggleTimer}
+              onClick={() => {
+                if (timerRunning) {
+                  setRemainingSeconds(
+                    Math.max(
+                      0,
+                      Math.ceil(((timerEndsAt ?? Date.now()) - Date.now()) / 1_000),
+                    ),
+                  );
+                  setTimerRunning(false);
+                  setTimerEndsAt(null);
+                  return;
+                }
+                const seconds =
+                  remainingSeconds === 0
+                    ? currentStep.minutes * 60
+                    : remainingSeconds;
+                setRemainingSeconds(seconds);
+                setTimerEndsAt(Date.now() + seconds * 1_000);
+                setTimerRunning(true);
+              }}
             >
               <Icon name="clock" size={16} />
               {timerRunning ? "Пауза" : "Таймер"} {formatTimer(remainingSeconds)}
@@ -14849,6 +14738,13 @@ function BatchCookingView({
               <Icon name="basket" size={16} /> Продукты шага
             </button>
           </div>
+          {showProducts && (
+            <div className="cooking-step-products" role="status">
+              {currentStep.products.map((product) => (
+                <span key={product}>{product}</span>
+              ))}
+            </div>
+          )}
         </section>
         ) : (
           <section
@@ -14861,8 +14757,6 @@ function BatchCookingView({
             <div className="batch-portioning-heading glass-2">
               <p className="cooking-card-kicker">Финальный шаг</p>
               <h1 id="batch-portioning-title">Разложите по контейнерам</h1>
-              <button onClick={() => goToStep(Math.max(0, model.steps.findIndex((step) => !completed.has(step.id))))}>Вернуться к шагам</button>
-              {!model.steps.every((step) => completed.has(step.id)) && <p role="status">Подтвердите оставшиеся шаги готовки, чтобы завершить партию.</p>}
               <p>Взвесьте каждое готовое блюдо один раз. Mise рассчитает граммы и готовые подписи.</p>
             </div>
             {model.dishes.map((dish) => {
@@ -15014,27 +14908,10 @@ function BatchCookingView({
           </div>
         </section>}
       </div>
-      {showAll && <Sheet titleId="cooking-all-title" onClose={() => setShowAll(false)} className="cooking-session-sheet glass-1">
-        <header><h2 id="cooking-all-title">Все шаги партии</h2><button onClick={() => setShowAll(false)} aria-label="Закрыть все шаги">Закрыть</button></header>
-        <ol className="batch-step-list">{visibleSteps.map((step, index) => <li key={step.id} className={completed.has(step.id) ? "is-complete" : ""}>
-          <button disabled={index > stepIndex && !completed.has(model.steps[index - 1]?.id)} onClick={() => goToStep(index)} aria-label={`Открыть шаг ${index + 1}`}>{index + 1}</button>
-          <div><b>{step.title}</b><small>{step.detail}</small>{completed.has(step.id) && <button onClick={() => update((state) => ({ ...state, completedStepIds: state.completedStepIds.filter((id) => id !== step.id) }))}>Снять отметку</button>}</div>
-        </li>)}</ol>
-      </Sheet>}
-      {showProducts && <Sheet titleId="cooking-products-title" onClose={() => setShowProducts(false)} className="cooking-session-sheet glass-1">
-        <header><h2 id="cooking-products-title">Продукты шага</h2><button onClick={() => setShowProducts(false)}>Закрыть</button></header>
-        <p>{currentStep.title}</p>
-        <p>{currentStep.productsScope === "dish" ? "Для этого шага отдельный состав не размечен. Ниже — продукты всего блюда на вашу партию." : "Отмерено на всю вашу партию. Если продукт используется несколько раз, это его общий запас для блюда."}</p>
-        <div className="cooking-step-products">{currentStep.products.length ? currentStep.products.map((product) => <span key={product}>{product}</span>) : <span>Новые продукты не добавляются.</span>}</div>
-      </Sheet>}
-      {showNotifications && <Sheet titleId="cooking-notifications-title" onClose={() => setShowNotifications(false)} className="cooking-session-sheet glass-1">
-        <h2 id="cooking-notifications-title">Уведомления готовки</h2>
-        <NotificationSetupPanel plan={notificationPlanFor(plan)} clientId={clientId()} deviceId={deviceId()} onCancel={() => setShowNotifications(false)} onDone={() => { setShowNotifications(false); update((state) => ({ ...state })); }} />
-      </Sheet>}
       <footer className="cooking-action-bar glass-1">
         <button
           className="primary-button"
-          disabled={session.syncState === "loading" || session.syncState === "conflict" || (portioning && (!allDishWeightsComplete || portionSaveState === "saving"))}
+          disabled={portioning && (!allDishWeightsComplete || portionSaveState === "saving")}
           onClick={portioning ? savePortioningAndComplete : advance}
         >
           {portioning
