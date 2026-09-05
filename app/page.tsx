@@ -18,6 +18,10 @@ import {
   type NotificationPlan,
 } from "./notification-setup";
 import { Icon, type IconName } from "./ui/icon";
+import { KitchenScreen } from "./kitchen-screen";
+import { useKitchen } from "../hooks/use-kitchen";
+import { kitchenEquipment as equipmentFromKitchen, kitchenSummary, sameEquipment, type KitchenProfile } from "../domain/kitchen";
+import { ParallelCookingPlan } from "./parallel-cooking-plan";
 import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
 import {
@@ -424,6 +428,7 @@ type BuilderEntry = {
   startedAt?: number;
   isNextPlan?: boolean;
   addPerson?: boolean;
+  kitchenOverride?: KitchenProfile;
 };
 type BuilderDraft = {
   planId: string | null;
@@ -6331,6 +6336,22 @@ export default function Home() {
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const kitchen = useKitchen(clientId, activePlan?.kitchenEquipment, !loadingPlan);
+  const [kitchenOpen, setKitchenOpen] = useState(false);
+  const kitchenReturnScroll = useRef(0);
+  function openKitchen() {
+    kitchenReturnScroll.current = window.scrollY;
+    history.pushState({ ...history.state, miseTab: "profile", kitchenSection: "main" }, "");
+    setKitchenOpen(true);
+    requestAnimationFrame(() => window.scrollTo({top:0,behavior:"auto"}));
+  }
+  function applyKitchen() {
+    if (!kitchen.value) return;
+    setKitchenOpen(false);
+    setBuilderEntry({ step: 4, returnTab: "profile", mode: "onboarding", kitchenOverride: kitchen.value });
+    currentTabRef.current = "builder";
+    setTab("builder");
+  }
   const [planSyncState, setPlanSyncState] = useState<
     "synced" | "pending" | "error"
   >("synced");
@@ -6382,6 +6403,7 @@ export default function Home() {
       const next = event.state?.miseTab;
       const current = currentTabRef.current;
       if (!isPrimaryTab(next) || next === current) return;
+      setKitchenOpen(false);
       if (isPrimaryTab(current))
         captureTabScroll(current, tabScrollPositions.current);
       const currentIndex = isPrimaryTab(current)
@@ -6753,6 +6775,7 @@ export default function Home() {
   function navigate(next: Tab) {
     const current = currentTabRef.current;
     if (next === current) return;
+    setKitchenOpen(false);
     if (next === "builder") {
       startPlanFlow(false);
       return;
@@ -6914,6 +6937,7 @@ export default function Home() {
       return (
         <BatchCookingView
           plan={activePlan}
+          kitchenProfile={kitchen.value}
           batch={cookingBatch}
           onClose={() => setBatchCookingContext(null)}
           onChangePlan={persistPlan}
@@ -6932,6 +6956,8 @@ export default function Home() {
     return (
       <PlanBuilder
         initialPlan={activePlan}
+        kitchenOverride={builderEntry.kitchenOverride}
+        profileKitchen={kitchen.value}
         initialStep={builderEntry.step}
         initialBatchId={builderEntry.batchId}
         repeat={builderEntry.repeat}
@@ -7062,8 +7088,14 @@ export default function Home() {
           }}
         />
       )}
-      {tab === "profile" && (
-        <ProfileScreen
+      {tab === "profile" && (kitchenOpen ? <KitchenScreen
+        {...kitchen} onChange={kitchen.update} onRetry={kitchen.retry}
+        onBack={() => { setKitchenOpen(false); requestAnimationFrame(() => window.scrollTo({top:kitchenReturnScroll.current,behavior:"auto"})); }} hasPlan={Boolean(activePlan)}
+        planStale={Boolean(activePlan && kitchen.value && !sameEquipment(activePlan.kitchenEquipment, equipmentFromKitchen(kitchen.value)))}
+        onApply={applyKitchen}
+      /> : <ProfileScreen
+          onOpenKitchen={openKitchen}
+          kitchenLabel={kitchen.value ? kitchenSummary(kitchen.value) : "Техника, плита и посуда"}
           people={activePlan?.people ?? [newPerson()]}
           hasPlan={Boolean(activePlan)}
           onConfigure={editPeople}
@@ -10262,6 +10294,8 @@ function ShoppingScreen({
 }
 
 function ProfileScreen({
+  onOpenKitchen,
+  kitchenLabel,
   people,
   hasPlan,
   onConfigure,
@@ -10275,6 +10309,8 @@ function ProfileScreen({
   installPrompt,
   onInstallPromptUsed,
 }: {
+  onOpenKitchen: () => void;
+  kitchenLabel: string;
   people: Person[];
   hasPlan: boolean;
   onConfigure: () => void;
@@ -10311,6 +10347,9 @@ function ProfileScreen({
         <h1>Цели и порции</h1>
       </header>
       <div className="tab-panel-body profile-tab-body">
+      <button type="button" className="kitchen-profile-entry glass-card" onClick={onOpenKitchen}>
+        <Icon name="pot" /><span><b>Кухня и техника</b><small>{kitchenLabel}</small></span><Icon name="chevron" size={18} />
+      </button>
       <div className="profile-people-list">
         {people.map((person, index) => {
           const planned = plannedTargetsFor(person);
@@ -10530,6 +10569,8 @@ function ProfileScreen({
 
 function PlanBuilder({
   initialPlan,
+  kitchenOverride,
+  profileKitchen,
   initialStep = 0,
   initialBatchId,
   repeat = false,
@@ -10543,6 +10584,8 @@ function PlanBuilder({
   persistPlan,
 }: {
   initialPlan: ActivePlan | null;
+  kitchenOverride?: KitchenProfile;
+  profileKitchen?: KitchenProfile | null;
   initialStep?: number;
   initialBatchId?: string;
   repeat?: boolean;
@@ -10592,7 +10635,7 @@ function PlanBuilder({
         : initialPeople;
     },
   );
-  const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
+  const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => kitchenOverride ? equipmentFromKitchen(kitchenOverride) : initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : profileKitchen ? equipmentFromKitchen(profileKitchen) : [...defaultKitchenEquipment]);
   const [recipeMethods, setRecipeMethods] = useState<Record<string, string> | undefined>(() => normalizeRecipeMethods(initialPlan?.recipeMethods));
   const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
   const [cookEveryDays, setCookEveryDays] = useState(
@@ -10713,7 +10756,7 @@ function PlanBuilder({
         { ...newPerson(0), includedSlots: ["breakfast", "lunch", "dinner"] },
       ],
     );
-    setKitchenEquipment(initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
+    setKitchenEquipment(kitchenOverride ? equipmentFromKitchen(kitchenOverride) : initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : profileKitchen ? equipmentFromKitchen(profileKitchen) : [...defaultKitchenEquipment]);
     setRecipeMethods(normalizeRecipeMethods(initialPlan?.recipeMethods));
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(null);
@@ -10739,7 +10782,7 @@ function PlanBuilder({
           setMealSlots(draft.mealSlots);
           setMenuStyle(draft.menuStyle);
           setPeople(draft.people.map(normalizePerson));
-          setKitchenEquipment(normalizeKitchenEquipment(draft.kitchenEquipment));
+          setKitchenEquipment(kitchenOverride ? equipmentFromKitchen(kitchenOverride) : normalizeKitchenEquipment(draft.kitchenEquipment));
           setRecipeMethods(normalizeRecipeMethods(draft.recipeMethods));
           setCookEveryDays(draft.cookEveryDays);
           setRemainderDecision(draft.remainderDecision);
@@ -14456,17 +14499,21 @@ function batchCookingProgressKey(plan: ActivePlan, batch: Batch) {
 
 function BatchCookingView({
   plan,
+  kitchenProfile,
   batch,
   onClose,
   onChangePlan,
   onComplete,
 }: {
   plan: ActivePlan;
+  kitchenProfile?: KitchenProfile | null;
   batch: Batch;
   onClose: () => void;
   onChangePlan: (plan: ActivePlan) => Promise<void>;
   onComplete: () => void;
 }) {
+  const [sessionKitchen, setSessionKitchen] = useState(kitchenProfile);
+  if (!sessionKitchen && kitchenProfile) setSessionKitchen(kitchenProfile);
   const model = useMemo(() => buildBatchCookingModel(plan, batch), [plan, batch]);
   const progressKey = batchCookingProgressKey(plan, batch);
   const [stepIndex, setStepIndex] = useState(() => {
@@ -14651,6 +14698,13 @@ function BatchCookingView({
         </span>
       </header>
       <div className="cooking-batch-content">
+        {sessionKitchen && <ParallelCookingPlan kitchen={sessionKitchen} planStale={!sameEquipment(plan.kitchenEquipment, equipmentFromKitchen(sessionKitchen))} dishes={model.dishes.map(({recipe, slot, personIds}) => ({
+          id: `${slot}:${recipe.id}:${personIds.join("-")}`, title: `${recipe.title} · ${mealMeta[slot].label}`,
+          methodId: planCookingMethod(recipe, plan)?.id ?? "missing",
+          requiredEquipment: planCookingMethod(recipe, plan)?.requiredEquipment ?? [],
+          totalMinutes: planCookingMethod(recipe, plan)?.timeMinutes ?? recipe.time,
+        }))} />}
+        {sessionKitchen?.custom.some(item => item.count > 0) && <details className="glass-card"><summary>Своя утварь · памятка</summary><p>{sessionKitchen.custom.filter(item => item.count > 0).map(item => `${item.title} — ${item.count}`).join(" · ")}</p></details>}
         <section className="batch-cooking-summary glass-2" aria-live="polite">
           <div className="batch-cooking-summary-top">
             <div>

@@ -73,3 +73,9 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   index("idx_analytics_events_name_time").on(table.eventName, table.occurredAt),
   index("idx_analytics_events_flow").on(table.flowId),
 ]);
+
+export const kitchens = sqliteTable("kitchens", {
+  clientId: text("client_id").primaryKey(),
+  payload: text("payload").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+});
