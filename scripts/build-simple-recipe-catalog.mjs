@@ -108,6 +108,14 @@ export async function buildSimpleRecipeCatalog() {
   for (const origin of ["generated", "parsed"]) requireValue(source.recipes.filter(r => r.origin === origin).length === 25, `25 ${origin} required`);
   const images = new Map();
   for (const item of manifest.images) {
+    if (item.rightsStatus === "owner_publication_risk_accepted_no_license_verified") {
+      const verdict = manifest.ownerPublicationRiskAcceptance;
+      requireValue(item.origin === "source" && verdict?.id === item.ownerVerdictRef &&
+        verdict.decision === "owner_accepts_public_use_risk" && verdict.decisionMaker === "project_owner" &&
+        verdict.copyrightLicenseVerified === false &&
+        verdict.assets?.some(asset => asset.id === item.id && asset.sha256 === item.sha256),
+      `${item.id}: owner risk acceptance must cover this exact source asset without claiming a license`);
+    }
     requireValue(/^\/recipe-images\/simple-[a-z0-9-]+\.(?:png|webp|jpg)$/.test(item.localPath), `${item.id}: local image path`);
     const bytes = await readFile(new URL(`../public${item.localPath}`, import.meta.url));
     requireValue(bytes.length === item.bytes && createHash("sha256").update(bytes).digest("hex") === item.sha256, `${item.id}: media checksum`);

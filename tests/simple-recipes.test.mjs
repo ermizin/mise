@@ -160,6 +160,34 @@ test("all fifty media files match their manifest SHA-256 and source identity", a
   }
 });
 
+test("source photo publication records owner risk acceptance without asserting a license", () => {
+  const photos = media.images.filter(image => image.origin === "source");
+  const verdict = media.ownerPublicationRiskAcceptance;
+  assert.equal(photos.length, 25);
+  assert.equal(verdict.decision, "owner_accepts_public_use_risk");
+  assert.equal(verdict.decisionMaker, "project_owner");
+  assert.equal(verdict.copyrightLicenseVerified, false);
+  assert.equal(verdict.reportedByCoordinatorThread, "01a05869-c331-7950-9ceb-be18337f9e7a");
+  assert.deepEqual(verdict.assets, photos.map(image => ({ id: image.id, sha256: image.sha256 })));
+  for (const photo of photos) {
+    assert.equal(photo.rightsStatus, "owner_publication_risk_accepted_no_license_verified");
+    assert.equal(photo.ownerVerdictRef, verdict.id);
+    const runtime = simpleRuntime.find(recipe => recipe.id === photo.id);
+    assert.equal(runtime.recipeFamily.image.usageStatus, "reference_only");
+    assert.equal(runtime.recipeFamily.image.license, undefined);
+  }
+});
+
+test("hot sandwiches use an oven and baking dish matching their 200 C baking steps", () => {
+  const recipe = simpleSourceById.get("simple-generated-b03");
+  assert.match(recipe.steps.join(" "), /духовку до 200°C/);
+  assert.match(recipe.steps.join(" "), /противень/);
+  assert.deepEqual(recipe.equipment, ["oven", "baking_dish"]);
+  assert.equal(recipe.cookware, 1, "one baking vessel; the oven is an appliance");
+  const runtime = simpleRuntime.find(record => record.id === recipe.id);
+  assert.deepEqual(runtime.recipeFamily.equipment, recipe.equipment);
+});
+
 test("simple candidates are strict-simple for every slot, including dinner and snack2", () => {
   for (const slot of ["breakfast", "lunch", "dinner", "snack1", "snack2"]) {
     const candidates = ui.candidateRecipes(slot, "simple", [], 1, { limit: "all" });
