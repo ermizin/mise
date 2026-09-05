@@ -1,5 +1,7 @@
 # Архив документации Mise
 
+[Карта актуальных документов](../../README.md#документация).
+
 Активные документы содержат только действующие правила и открытые gates. Датированные отчёты удалены из рабочего дерева, но сохранены в Git на базовом срезе `de36592`; они не являются текущим release verdict или backlog.
 
 Исходник можно прочитать без восстановления файла:
@@ -12,12 +14,12 @@ git show de36592:<имя-файла>
 
 | Исторический файл | Что с ним произошло | Текущий источник |
 | --- | --- | --- |
-| `UX_REVIEW.md` (2026-08-27) | Ранний code-only UX-review; основные P0/P1 реализованы или заменены поздними решениями. | `PRODUCT.md`, `REDESIGN_HANDOFF.md`, UX-regression tests |
-| `DESIGN_CRITIQUE.md` (2026-08-27) | Субъективная визуальная критика; не release gate. Системные решения сведены в короткий handoff. | `REDESIGN_HANDOFF.md` |
-| `VISUAL_QA_REPORT_2026-08-29.md` | Проверял старую ветку и окружение; статус `NOT VISUALLY READY` нельзя переносить на текущий HEAD. | `ROADMAP.md` → full visual QA exact HEAD |
-| `PRE_RELEASE_QA_REPORT_2026-08-29.md` | Старый functional baseline. Исправленные пункты защищены тестами; сеть, mobile QA, exact-head release и права на фото остаются gates. | `ROADMAP.md`, `RECIPE_HANDOFF.md`, tests |
-| `RECIPE_RESEARCH.md` | Поисковая история и устаревшие числа удалены; правила provenance, локализации, USDA, хранения и фото сохранены. | `RECIPE_HANDOFF.md` |
-| `RECIPE_ENGINE_VARIETY_AUDIT_2026-08-31.md` | Датированный before/after замер. Принятые protein-floor, calorie-corridor и freeze-инварианты перенесены. | `RECIPE_HANDOFF.md`, engine regression tests |
+| `UX_REVIEW.md` (2026-08-27) | Ранний code-only UX-review; основные P0/P1 реализованы или заменены поздними решениями. | [PRODUCT.md](../../PRODUCT.md), [Дизайн](../design.md), UX-regression tests |
+| `DESIGN_CRITIQUE.md` (2026-08-27) | Субъективная визуальная критика; не release gate. Системные решения сведены в короткий handoff. | [Дизайн](../design.md) |
+| `VISUAL_QA_REPORT_2026-08-29.md` | Проверял старую ветку и окружение; статус `NOT VISUALLY READY` нельзя переносить на текущий HEAD. | [Дорожная карта](../roadmap.md) → full visual QA exact HEAD |
+| `PRE_RELEASE_QA_REPORT_2026-08-29.md` | Старый functional baseline. Исправленные пункты защищены тестами; сеть, mobile QA, exact-head release и права на фото остаются gates. | [Дорожная карта](../roadmap.md), [RECIPE_HANDOFF.md](../../RECIPE_HANDOFF.md), tests |
+| `RECIPE_RESEARCH.md` | Поисковая история и устаревшие числа удалены; правила provenance, локализации, USDA, хранения и фото сохранены. | [RECIPE_HANDOFF.md](../../RECIPE_HANDOFF.md) |
+| `RECIPE_ENGINE_VARIETY_AUDIT_2026-08-31.md` | Датированный before/after замер. Принятые protein-floor, calorie-corridor и freeze-инварианты перенесены. | [RECIPE_HANDOFF.md](../../RECIPE_HANDOFF.md), engine regression tests |
 
 ## Как использовать старый отчёт
 
