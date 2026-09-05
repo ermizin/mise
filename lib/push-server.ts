@@ -1,7 +1,8 @@
 import { and, eq, isNull, lt, lte, or } from "drizzle-orm";
 import { env } from "cloudflare:workers";
 import { getDb } from "../db";
-import { pushJobs, pushPreferences, pushSubscriptions } from "../db/schema";
+import { cookSessions, pushJobs, pushPreferences, pushSubscriptions } from "../db/schema";
+import { parseTimerJobKind, type CookSessionState } from "./cook-session-server";
 
 type PushEnv = {
   VAPID_PUBLIC_KEY?: string;
@@ -130,6 +131,18 @@ export function publicVapidKey() {
 const JOB_LEASE_MS = 60_000;
 const RETIRED_REMINDER_KINDS = new Set(["shopping", "next-plan"]);
 
+async function timerJobIsCurrent(job: typeof pushJobs.$inferSelect, now: number) {
+  const parsed = parseTimerJobKind(job.kind);
+  if (!parsed) return true;
+  const [session] = await getDb().select({ state: cookSessions.state }).from(cookSessions).where(eq(cookSessions.id, parsed.sessionId)).limit(1);
+  if (!session) return false;
+  try {
+    const state = JSON.parse(session.state) as CookSessionState;
+    const timer = state.timers?.[parsed.timerId];
+    return state.phase !== "complete" && timer?.status === "running" && timer.endsAt === job.dueAt && job.dueAt >= now - 5 * 60 * 1000;
+  } catch { return false; }
+}
+
 export async function processDueNotifications(now = Date.now(), options: { jobId?: string } = {}) {
   const db = getDb();
   const dueConditions = [isNull(pushJobs.sentAt), lte(pushJobs.dueAt, now), lt(pushJobs.attempts, 5)];
@@ -161,6 +174,13 @@ export async function processDueNotifications(now = Date.now(), options: { jobId
         leaseUntil: null,
         lastError: "retired reminder kind",
       }).where(eq(pushJobs.id, claimed.id));
+      continue;
+    }
+
+    // Cooking timers are derived state. A cancelled, paused or superseded
+    // session must not surface a late notification from an older job.
+    if (!await timerJobIsCurrent(claimed, now)) {
+      await db.update(pushJobs).set({ sentAt: now, leaseUntil: null, lastError: "stale cooking session" }).where(eq(pushJobs.id, claimed.id));
       continue;
     }
 

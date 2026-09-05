@@ -78,7 +78,7 @@ test("audit accessibility and daily-use regressions stay fixed", async () => {
   assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, person\.daily\.kcal\)/);
   assert.match(page, /setUnassignedConfirmOpen\(true\)/);
   assert.match(page, /Mise не будет удалять их молча/);
-  assert.match(page, /timerEndsAt - Date\.now\(\)/);
+  assert.match(page, /timerRemainingMs\(currentTimer, now\)/);
   assert.match(page, /wakeLock[\s\S]{0,40}\?\.request\("screen"\)/);
   assert.match(page, /navigator\.vibrate/);
   const exposesNextDayMove = /<Icon name="next-day"/.test(page);

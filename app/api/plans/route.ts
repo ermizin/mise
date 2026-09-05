@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "../../../db";
-import { mealPlans, pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
+import { cookSessions, mealPlans, pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
 import {
   validatePlanForPersistence,
 } from "../../../lib/plan-validation";
@@ -93,6 +93,9 @@ export async function DELETE(request: Request) {
         await db.delete(pushPreferences).where(and(eq(pushPreferences.subscriptionId, subscriptionId), eq(pushPreferences.planId, planId)));
       }
     }
+    // Session keys are opaque hashes, but client and plan ids are retained to
+    // make account-scoped deletion complete and retry-safe.
+    await db.delete(cookSessions).where(eq(cookSessions.clientId, clientId));
     await db.delete(mealPlans).where(eq(mealPlans.clientId, clientId));
     return Response.json({ deleted: true });
   } catch (error) {

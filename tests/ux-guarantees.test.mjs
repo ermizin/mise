@@ -129,7 +129,7 @@ test("batch cooking follows screen 5b without inventing a parallel schedule", as
     /function BatchCookingView[\s\S]*?window\.scrollTo\(\{ top: 0, left: 0, behavior: "auto" \}\)/,
     "batch cooking always opens from its summary",
   );
-  assert.match(page, /localStorage\.setItem\(progressKey/, "progress survives an accidental close");
+  assert.match(page, /useCookSession\(/, "the durable cooking session survives an accidental close");
   assert.match(page, /localStorage\.removeItem\(progressKey\)/, "completed progress is cleared");
   assert.doesNotMatch(page, /runCount|runPlan/, "cooking is not split into automatic cookware runs");
   assert.match(page, /session\.cookingAmounts/, "cooking uses one total amount for the selected batch");

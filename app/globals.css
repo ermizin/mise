@@ -9063,3 +9063,14 @@ p {
 .merged-step-timeline > li > div > b { display: block; margin-top: 6px; }
 .merged-step-timeline details ul { padding-left: 18px; }
 .merged-step-timeline details li { display: list-item; padding: 4px 0; border: 0; }
+
+/* Persisted batch cooking controls and accessible sheets. */
+.cooking-session-status { display: grid; gap: 8px; margin: 16px 0; color: var(--ink-secondary); font-size: var(--text-s); }
+.cooking-session-status button, .cooking-timers button { min-height: 44px; text-decoration: underline; }
+.cooking-session-sheet { width: min(640px, calc(100% - 24px)); max-height: 85dvh; overflow-y: auto; padding: 24px; border-radius: var(--r-card); }
+.cooking-session-sheet header { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
+.cooking-session-sheet p { margin: 16px 0; }
+.cooking-session-sheet button { min-height: 44px; }
+.cooking-timers { padding: 16px; display: grid; gap: 12px; margin-bottom: 16px; }
+.cooking-timers > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.cooking-timers span { overflow-wrap: anywhere; }
