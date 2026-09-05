@@ -8,6 +8,7 @@ import { buildRecipeRuntimeCatalog } from "../scripts/build-recipe-runtime-catal
 
 const runtime = JSON.parse(await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"));
 const registry = JSON.parse(await readFile(new URL("../data/plan-recipe-registry.json", import.meta.url), "utf8"));
+const css = await readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 const app = await recipeCatalog();
 const { validatePlanForPersistence } = await loadTypeScriptModule(new URL("../lib/plan-validation.ts", import.meta.url));
 const plain = (value) => JSON.parse(JSON.stringify(value));
@@ -40,6 +41,10 @@ test("50 distinct released recipes have complete appliance methods, not reheat t
       assert.ok(method.requiredEquipment.includes(method.id));
     }
   }
+});
+
+test("the equipment list becomes one readable column on the narrowest supported screen", () => {
+  assert.match(css, /@media \(max-width: 359px\) \{[\s\S]*?\.kitchen-equipment-grid \{ grid-template-columns: 1fr; \}/);
 });
 
 test("equipment generator is deterministic and rejects stale cooking instructions", async () => {

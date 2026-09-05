@@ -8987,6 +8987,10 @@ p {
 .recipe-equipment { margin-bottom: 12px; }
 .recipe-equipment select { display: block; width: 100%; min-height: 44px; margin-top: 8px; border-radius: var(--r-tile); border: 1px solid var(--glass-border, #d7dad5); padding: 8px 12px; background: transparent; color: inherit; font: inherit; }
 .recipe-equipment p { line-height: 1.5; }
+@media (max-width: 359px) {
+  .kitchen-equipment-grid { grid-template-columns: 1fr; }
+  .kitchen-equipment-choice.is-featured { grid-column: auto; }
+}
 
 .kitchen-plan-summary { margin-bottom: 12px; }
 .kitchen-plan-summary p { font-size: var(--text-link); color: var(--ink-muted); line-height: 1.5; }
