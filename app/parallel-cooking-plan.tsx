@@ -1,11 +1,17 @@
 "use client";
 import { useMemo, useState } from "react";
-import { buildCookingOrder, buildParallelSchedule, validCookingWindow, type CookingWindow, type ParallelDish } from "../domain/parallel-cooking";
+import { buildCookingOrder, buildParallelSchedule, kitchenResources, validCookingWindow, type CookingWindow, type ParallelDish } from "../domain/parallel-cooking";
 import type { KitchenProfile } from "../domain/kitchen";
 import { genitiveAfterNumber } from "../lib/plural";
+import { buildMergedCookingPlan, type StepCookingDish } from "../domain/step-cooking";
+import schedulingAnnotations from "../data/recipe-step-scheduling.json";
 import { Note } from "./ui/note";
-export function ParallelCookingPlan({ kitchen, dishes, planStale }: { kitchen: KitchenProfile; dishes: ParallelDish[]; planStale: boolean }) {
+export function ParallelCookingPlan({ kitchen, dishes, planStale, stepDishes = [] }: { kitchen: KitchenProfile; dishes: ParallelDish[]; planStale: boolean; stepDishes?: StepCookingDish[] }) {
   const [enabled, setEnabled] = useState(kitchen.parallelCooking);
+  const [mergeSteps, setMergeSteps] = useState(false);
+  const completeSources = stepDishes.length === dishes.length && dishes.every(dish => stepDishes.some(source => source.id === dish.id && source.methodId === dish.methodId));
+  const merged = useMemo(() => mergeSteps ? buildMergedCookingPlan(completeSources ? stepDishes : [], schedulingAnnotations.profiles, kitchenResources(kitchen)) : null, [mergeSteps, stepDishes, kitchen, completeSources]);
+  const mergedReady = mergeSteps && merged?.available;
   const [windows, setWindows] = useState<Record<string, CookingWindow>>({});
   const schedule = useMemo(() => enabled ? buildParallelSchedule(dishes, kitchen, windows) : null, [dishes, kitchen, enabled, windows]);
   const order = schedule ? buildCookingOrder(schedule) : [];
@@ -17,6 +23,24 @@ export function ParallelCookingPlan({ kitchen, dishes, planStale }: { kitchen: K
     <label aria-label="Параллельная готовка" htmlFor="batch-parallel" className="kitchen-parallel-toggle"><input id="batch-parallel" type="checkbox" checked={enabled} onChange={event => setEnabled(event.target.checked)} /><span><b>Параллельная готовка</b><small>Необязательный расчёт времени для этой партии</small></span></label>
     {schedule && <>
       {planStale && <Note tone="warn">Набор техники в меню не совпадает с профилем или не был сохранён. Расчёт использует кухню на момент открытия этого экрана и проверяет технику выбранных способов.</Note>}
+      <label aria-label="Объединить шаги рецептов" className="kitchen-parallel-toggle" htmlFor="merge-recipe-steps"><input id="merge-recipe-steps" type="checkbox" checked={mergeSteps} onChange={event => setMergeSteps(event.target.checked)} /><span><b>Объединить шаги рецептов</b><small>Автоматически составить единый список действий</small></span></label>
+      {mergeSteps && !mergedReady && <Note tone="warn">{merged?.reason === "resources" ? "Для объединения шагов не хватает указанной техники или посуды." : "Для некоторых блюд или выбранных способов этой партии общий пошаговый план пока недоступен."} Продолжайте по обычным шагам ниже.</Note>}
+      {mergedReady && merged && <>
+        <h3>Общие шаги готовки</h3>
+        <p><b>Около {merged.totalMinutes} мин</b>{merged.totalMinutes < merged.sequentialMinutes ? ` · по одному около ${merged.sequentialMinutes} мин` : " · без пересечения действий"}</p>
+        <p>Один повар; время активных действий приблизительное. Ожидание размечено по инструкциям рецептов. При увеличении партии работа может занять дольше: возвращайтесь к проверке блюда вовремя, даже если другое действие ещё не закончено.</p>
+        <p>В шагах с ожиданием сначала выполните подготовку. Отдельные строки показывают, когда можно заняться другим блюдом и когда вернуться. Продукты каждого блюда отмеряйте отдельно.</p>
+        <ol className="parallel-timeline merged-step-timeline" aria-label="Общие шаги готовки">{merged.steps.map(step => <li key={step.id}>
+          <span className="parallel-time">{step.start}–{step.end} мин</span><div>
+            <small>{step.dishTitle} · {step.instructionNumber ? `шаг ${step.instructionNumber}` : "продукты"}</small>
+            <b>{step.kind === "wait" ? "Ожидание" : step.kind === "resume" ? "Вернуться и проверить" : step.instructionNumber ? "Начать шаг" : "Отмерить продукты"}</b>
+            <p>{step.text}</p>
+            {step.kind === "instruction" && <small>Ориентир на действия: {step.end - step.start} мин.</small>}
+            {step.products.length > 0 && <details><summary>Продукты этого блюда</summary><ul>{step.products.map((product, index) => <li key={index}>{product}</li>)}</ul></details>}
+          </div></li>)}</ol>
+        <p>Это общий план действий. Он не запускает таймеры и не меняет отметки готовки. Полные исходные инструкции и рассчитанные количества доступны в обычных шагах ниже.</p>
+      </>}
+      {!mergedReady && <>
       <p>Укажите интервалы, когда блюдо действительно можно оставить без внимания. По умолчанию вся готовка требует ваших рук. Эти интервалы действуют только пока открыт этот экран.</p>
       <details><summary>Когда блюда готовятся сами</summary>{dishes.map(dish => {
         if (!Number.isFinite(dish.totalMinutes) || dish.totalMinutes < 1 || dish.totalMinutes > 1440) return <p key={dish.id}>{dish.title}: нет времени для расчёта.</p>;
@@ -37,7 +61,8 @@ export function ParallelCookingPlan({ kitchen, dishes, planStale }: { kitchen: K
         <p>Минуты от начала партии. Завершение — ориентир: проверьте готовность по рецепту перед следующим действием.</p>
         <ol className="parallel-timeline" aria-label="Общий порядок готовки">{order.map(event => <li key={`${event.dishId}:${event.kind}`}><span className="parallel-time">{event.minute} мин</span><div><b>{eventLabels[event.kind]}</b><small>{event.title}</small></div></li>)}</ol>
       </>}
-      <p>Это порядок переключений между блюдами, а не автоматическое объединение шагов или запущенные таймеры. Кухня зафиксирована на момент открытия готовки; шаги рецептов и их порядок остаются ниже.</p>
+      </>}
+      {!mergedReady && <p>Это порядок переключений между блюдами, а не автоматическое объединение шагов или запущенные таймеры. Кухня зафиксирована на момент открытия готовки; шаги рецептов и их порядок остаются ниже.</p>}
     </>}
   </section>;
 }

@@ -9056,3 +9056,10 @@ p {
 .parallel-window label { flex: 1; min-width: 110px; font-size: var(--text-min); }
 .parallel-window input { display: block; width: 100%; min-height: 44px; padding: 10px; border: 1px solid var(--stroke); border-radius: var(--r-chip-sq); }
 .parallel-timeline small { display: block; margin-top: 6px; }
+
+/* Optional merged recipe instructions retain separate dish quantities. */
+.merged-step-timeline > li { grid-template-columns: 72px minmax(0, 1fr); }
+.merged-step-timeline > li > div { min-width: 0; overflow-wrap: anywhere; }
+.merged-step-timeline > li > div > b { display: block; margin-top: 6px; }
+.merged-step-timeline details ul { padding-left: 18px; }
+.merged-step-timeline details li { display: list-item; padding: 4px 0; border: 0; }

@@ -14698,7 +14698,16 @@ function BatchCookingView({
         </span>
       </header>
       <div className="cooking-batch-content">
-        {sessionKitchen && <ParallelCookingPlan kitchen={sessionKitchen} planStale={!sameEquipment(plan.kitchenEquipment, equipmentFromKitchen(sessionKitchen))} dishes={model.dishes.map(({recipe, slot, personIds}) => ({
+        {sessionKitchen && <ParallelCookingPlan stepDishes={model.dishes.map(({ recipe, slot, personIds }) => {
+          const key = `${slot}:${recipe.id}:${personIds.join("-")}`;
+          const method = planCookingMethod(recipe, plan);
+          return { id: key, recipeId: recipe.id, title: `${recipe.title} · ${mealMeta[slot].label}`,
+            methodId: method?.id ?? "missing", requiredEquipment: method?.requiredEquipment ?? [],
+            steps: model.steps.filter(step => step.id.startsWith(`${key}:`)).map(step => ({
+              id: step.id, text: step.title, products: step.products, measurement: step.id === `${key}:measure`,
+            })),
+          };
+        })} kitchen={sessionKitchen} planStale={!sameEquipment(plan.kitchenEquipment, equipmentFromKitchen(sessionKitchen))} dishes={model.dishes.map(({recipe, slot, personIds}) => ({
           id: `${slot}:${recipe.id}:${personIds.join("-")}`, title: `${recipe.title} · ${mealMeta[slot].label}`,
           methodId: planCookingMethod(recipe, plan)?.id ?? "missing",
           requiredEquipment: planCookingMethod(recipe, plan)?.requiredEquipment ?? [],

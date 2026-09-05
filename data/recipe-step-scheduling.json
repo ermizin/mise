@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "recipeId": "new-home-buckwheat-legs",
+      "methodId": "original",
+      "sourceRevision": "bc8049971a7e2a5a73d6bef166e705bd1aab5351",
+      "provenance": "Agent review of stored editorial instructions at bc8049971a7e2a5a73d6bef166e705bd1aab5351; active minutes are estimates, with no kitchen validation.",
+      "requiredEquipment": ["baking_dish", "oven", "pan", "stove"],
+      "measurementMinutes": 5,
+      "steps": [
+        {
+          "text": "Смешайте куриные бёдра с горчицей, паприкой, кавказскими травами, половиной чеснока и солью.",
+          "sourceStepId": "editorial-step-1-part-1",
+          "dependsOn": [],
+          "activeMinutes": 5,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "text": "Овощи слегка обжарьте, переложите в форму, добавьте промытую гречку, лавровый лист и 720 мл кипятка.",
+          "sourceStepId": "editorial-step-2-part-1",
+          "dependsOn": ["editorial-step-1-part-1"],
+          "activeMinutes": 12,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "text": "Разложите бёдра сверху и запекайте под фольгой 50–60 минут при 180°C, до 74°C в центре мяса.",
+          "sourceStepId": "editorial-step-3-part-1",
+          "dependsOn": ["editorial-step-2-part-1"],
+          "activeMinutes": 3,
+          "waitMinutes": 50,
+          "resumeMinutes": 10,
+          "waitBasis": "The stored instruction explicitly says to bake covered for 50–60 minutes; return at the lower bound and use the remaining interval to check completion to 74°C."
+        },
+        {
+          "text": "Смешайте йогурт с оставшимся чесноком и разлейте соус по отдельным ёмкостям.",
+          "sourceStepId": "editorial-step-4-part-1",
+          "dependsOn": ["editorial-step-3-part-1"],
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-23462",
+      "methodId": "original",
+      "sourceRevision": "bc8049971a7e2a5a73d6bef166e705bd1aab5351",
+      "provenance": "Agent review of stored editorial instructions at bc8049971a7e2a5a73d6bef166e705bd1aab5351; active minutes are estimates, with no kitchen validation.",
+      "requiredEquipment": ["baking_dish", "oven"],
+      "measurementMinutes": 5,
+      "steps": [
+        {
+          "text": "Разогрейте духовку до 190 °C.",
+          "sourceStepId": "editorial-step-1-part-1",
+          "dependsOn": [],
+          "activeMinutes": 1,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "text": "Смешайте овсянку, протеин, соль и разрыхлитель, затем добавьте белки, молоко, сироп, масло и персики.",
+          "sourceStepId": "editorial-step-1-part-2",
+          "dependsOn": ["editorial-step-1-part-1"],
+          "activeMinutes": 7,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "text": "Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с сахаром и выпекайте 40–45 минут.",
+          "sourceStepId": "editorial-step-1-part-3",
+          "dependsOn": ["editorial-step-1-part-2"],
+          "activeMinutes": 4,
+          "waitMinutes": 40,
+          "resumeMinutes": 5,
+          "waitBasis": "The stored instruction explicitly says to bake for 40–45 minutes; return at the lower bound and use the remaining interval to check that it is baked through."
+        },
+        {
+          "text": "Разделите на 6 порций.",
+          "sourceStepId": "editorial-step-1-part-4",
+          "dependsOn": ["editorial-step-1-part-3"],
+          "activeMinutes": 4,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    },
+    {
+      "recipeId": "tmpm-25006-avocado-bean-rice-cakes",
+      "methodId": "original",
+      "sourceRevision": "bc8049971a7e2a5a73d6bef166e705bd1aab5351",
+      "provenance": "Agent review of stored editorial instructions at bc8049971a7e2a5a73d6bef166e705bd1aab5351; active minutes are estimates, with no kitchen validation.",
+      "requiredEquipment": [],
+      "measurementMinutes": 5,
+      "steps": [
+        {
+          "text": "Разомните авокадо с белой фасолью и лимонным соком, посолите и поперчите.",
+          "sourceStepId": "editorial-step-1-part-1",
+          "dependsOn": [],
+          "activeMinutes": 3,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        },
+        {
+          "text": "Распределите смесь по четырём рисовым хлебцам и посыпьте приправой для бейглов.",
+          "sourceStepId": "editorial-step-2-part-1",
+          "dependsOn": ["editorial-step-1-part-1"],
+          "activeMinutes": 2,
+          "waitMinutes": 0,
+          "resumeMinutes": 0
+        }
+      ]
+    }
+  ]
+}
