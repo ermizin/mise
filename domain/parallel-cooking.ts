@@ -63,3 +63,28 @@ export function buildParallelSchedule(dishes: ParallelDish[], kitchen: KitchenPr
   for (let minute = 0; minute < totalMinutes; minute++) maxParallelDishes = Math.max(maxParallelDishes, reservations.filter(item => item.start <= minute && minute < item.end).length);
   return { dishes: scheduled.sort((a,b) => a.start-b.start || a.id.localeCompare(b.id)), totalMinutes, sequentialMinutes, maxParallelDishes, conflicts };
 }
+
+export type CookingOrderEvent = {
+  dishId: string;
+  title: string;
+  minute: number;
+  kind: "finish" | "wait" | "resume" | "start";
+};
+/** A switch order, not inferred timings for individual recipe instructions. */
+export function buildCookingOrder(schedule: ParallelSchedule): CookingOrderEvent[] {
+  if (schedule.conflicts.length) return [];
+  const events: CookingOrderEvent[] = [];
+  for (const dish of schedule.dishes) {
+    const common = { dishId: dish.id, title: dish.title };
+    events.push({ ...common, minute: dish.start, kind: "start" });
+    if (dish.unattended) {
+      events.push({ ...common, minute: dish.start + dish.unattended.afterMinutes, kind: "wait" });
+      events.push({ ...common, minute: dish.start + dish.unattended.afterMinutes + dish.unattended.minutes, kind: "resume" });
+    }
+    events.push({ ...common, minute: dish.end, kind: "finish" });
+  }
+  // Release work first; return to an existing dish before starting a new one.
+  const priority = { finish: 0, wait: 1, resume: 2, start: 3 };
+  return events.sort((a, b) => a.minute - b.minute || priority[a.kind] - priority[b.kind] ||
+    (a.dishId < b.dishId ? -1 : a.dishId > b.dishId ? 1 : 0));
+}

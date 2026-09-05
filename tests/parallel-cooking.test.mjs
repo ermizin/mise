@@ -43,3 +43,31 @@ test('planner deterministic and does not modify recipe objects',()=>{
  assert.deepEqual(plain(buildParallelSchedule(ds,k,windows)),plain(buildParallelSchedule(ds,k,windows)));
  assert.equal(JSON.stringify(ds),before);
 });
+
+const { buildCookingOrder } = await loadTypeScriptModule(new URL('../domain/parallel-cooking.ts', import.meta.url));
+test('common order switches during explicit windows and returns after other work', () => {
+ const schedule=buildParallelSchedule([dish('a',['oven'],30),dish('b',['stove','pot'],10)],full(),{a:{afterMinutes:5,minutes:20}});
+ const before=JSON.stringify(schedule);
+ assert.deepEqual(plain(buildCookingOrder(schedule).map(e=>[e.minute,e.kind,e.dishId])),[
+  [0,'start','a'],[5,'wait','a'],[5,'start','b'],[15,'finish','b'],[25,'resume','a'],[30,'finish','a']
+ ]);
+ assert.equal(JSON.stringify(schedule),before);
+});
+test('same minute releases work before resuming or starting, regardless of input order', () => {
+ const schedule={conflicts:[],dishes:[
+  {id:'z',title:'z',start:10,end:12,unattended:null},
+  {id:'a',title:'a',start:0,end:10,unattended:null},
+  {id:'b',title:'b',start:1,end:15,unattended:{afterMinutes:1,minutes:8}},
+  {id:'c',title:'c',start:2,end:20,unattended:{afterMinutes:8,minutes:2}}
+ ]};
+ assert.deepEqual(plain(buildCookingOrder(schedule).filter(e=>e.minute===10).map(e=>e.kind)),['finish','wait','resume','start']);
+ assert.deepEqual(plain(buildCookingOrder(schedule)),plain(buildCookingOrder({...schedule,dishes:[...schedule.dishes].reverse()})));
+});
+test('sequential and invalid windows preserve dish order; conflicts expose no partial order', () => {
+ const ds=[dish('a',[],20),dish('b',[],10)];
+ for(const windows of [{},{a:{afterMinutes:0,minutes:10}}]) {
+  assert.deepEqual(plain(buildCookingOrder(buildParallelSchedule(ds,full(),windows)).map(e=>[e.minute,e.kind])),[[0,'start'],[20,'finish'],[20,'start'],[30,'finish']]);
+ }
+ assert.deepEqual(plain(buildCookingOrder(buildParallelSchedule([dish('a',['unknown'])],full()))),[]);
+ assert.deepEqual(plain(buildCookingOrder(buildParallelSchedule([],full()))),[]);
+});

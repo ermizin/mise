@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import { buildParallelSchedule, validCookingWindow, type CookingWindow, type ParallelDish } from "../domain/parallel-cooking";
+import { buildCookingOrder, buildParallelSchedule, validCookingWindow, type CookingWindow, type ParallelDish } from "../domain/parallel-cooking";
 import type { KitchenProfile } from "../domain/kitchen";
 import { genitiveAfterNumber } from "../lib/plural";
 import { Note } from "./ui/note";
@@ -8,6 +8,8 @@ export function ParallelCookingPlan({ kitchen, dishes, planStale }: { kitchen: K
   const [enabled, setEnabled] = useState(kitchen.parallelCooking);
   const [windows, setWindows] = useState<Record<string, CookingWindow>>({});
   const schedule = useMemo(() => enabled ? buildParallelSchedule(dishes, kitchen, windows) : null, [dishes, kitchen, enabled, windows]);
+  const order = schedule ? buildCookingOrder(schedule) : [];
+  const eventLabels = { start: "Начните блюдо", wait: "Можно отойти по вашему плану", resume: "Вернитесь к блюду", finish: "Плановое завершение блюда" };
   function change(id: string, field: keyof CookingWindow, number: string) {
     setWindows(current => ({ ...current, [id]: { ...(current[id] ?? { afterMinutes: 1, minutes: 0 }), [field]: number === "" ? 0 : Number(number) } }));
   }
@@ -30,9 +32,12 @@ export function ParallelCookingPlan({ kitchen, dishes, planStale }: { kitchen: K
         <p><b>Около {schedule.totalMinutes} мин · до {schedule.maxParallelDishes} {genitiveAfterNumber(schedule.maxParallelDishes, ["блюда", "блюд"])} в процессе</b></p>
         {schedule.sequentialMinutes > schedule.totalMinutes && <p>По одному: около {schedule.sequentialMinutes} мин.</p>}
         <p>Ориентир по времени рецептов и вашим интервалам. Один повар; посуда занята до конца блюда. Проверьте, что вся партия помещается: время не масштабируется по весу продуктов.</p>
-        <ol className="parallel-timeline">{schedule.dishes.map(dish => <li key={dish.id}><span className="parallel-time">{dish.start}–{dish.end} мин</span><div><b>{dish.title}</b><small>{dish.unattended ? `Вы указали: можно отойти с ${dish.start + dish.unattended.afterMinutes} по ${dish.start + dish.unattended.afterMinutes + dish.unattended.minutes} мин` : "Весь интервал требует внимания"}</small></div></li>)}</ol>
+        <details><summary>Интервалы блюд</summary><ol className="parallel-timeline">{schedule.dishes.map(dish => <li key={dish.id}><span className="parallel-time">{dish.start}–{dish.end} мин</span><div><b>{dish.title}</b><small>{dish.unattended ? `Вы указали: можно отойти с ${dish.start + dish.unattended.afterMinutes} по ${dish.start + dish.unattended.afterMinutes + dish.unattended.minutes} мин` : "Весь интервал требует внимания"}</small></div></li>)}</ol></details>
+        <h3>Общий порядок готовки</h3>
+        <p>Минуты от начала партии. Завершение — ориентир: проверьте готовность по рецепту перед следующим действием.</p>
+        <ol className="parallel-timeline" aria-label="Общий порядок готовки">{order.map(event => <li key={`${event.dishId}:${event.kind}`}><span className="parallel-time">{event.minute} мин</span><div><b>{eventLabels[event.kind]}</b><small>{event.title}</small></div></li>)}</ol>
       </>}
-      <p>Это план времени, а не запущенные таймеры. Кухня зафиксирована на момент открытия готовки; шаги рецептов и их порядок остаются ниже.</p>
+      <p>Это порядок переключений между блюдами, а не автоматическое объединение шагов или запущенные таймеры. Кухня зафиксирована на момент открытия готовки; шаги рецептов и их порядок остаются ниже.</p>
     </>}
   </section>;
 }
