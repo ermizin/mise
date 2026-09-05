@@ -21,14 +21,13 @@ export default function Dashboard() {
   const [refresh, setRefresh] = useState(0);
   const [tab, setTab] = useState<Tab>("overview");
   useEffect(() => {
-    const read = () => { const params = new URLSearchParams(window.location.search); params.delete("format"); setQuery(params.toString() || initialQuery); };
+    const read = () => { const params = new URLSearchParams(window.location.search); params.delete("format"); setLoading(true); setError(""); setQuery(params.toString() || initialQuery); };
     read(); window.addEventListener("popstate", read);
     return () => window.removeEventListener("popstate", read);
   }, []);
   useEffect(() => {
     if (query === null) return;
     const abort = new AbortController();
-    setLoading(true); setError("");
     fetch(`/api/analytics/dashboard?${query}`, { signal: abort.signal, cache: "no-store" })
       .then(async (response) => { const data = await response.json(); if (!response.ok) throw new Error(response.status === 403 ? "Сессия владельца завершилась. Войдите снова." : data.error || "Не удалось загрузить отчёт."); return data; })
       .then((data: DashboardReport) => { if (!abort.signal.aborted) setReport(data); })
@@ -40,12 +39,13 @@ export default function Dashboard() {
   function change(values: Record<string, string | null>) {
     const next = new URLSearchParams(query ?? initialQuery); next.delete("format");
     for (const [key, value] of Object.entries(values)) { if (value === null) next.delete(key); else next.set(key, value); }
-    const value = next.toString(); window.history.pushState(null, "", `/analytics?${value}`); setQuery(value);
+    const value = next.toString(); window.history.pushState(null, "", `/analytics?${value}`); setLoading(true); setError(""); setQuery(value);
   }
+  function reload() { setLoading(true); setError(""); setRefresh((value) => value + 1); }
   const ready = report && !loading && !error;
   return <main className="mise-dashboard">
     <header className="md-header"><div><Link href="/" className="md-brand">mise<span> / аналитика</span></Link><h1>Как используют Mise</h1></div>
-      <div className="md-header-actions"><Link href="/pilot-analytics">Пилот · 5 участников</Link><button type="button" onClick={() => setRefresh((v) => v + 1)} disabled={loading}>Обновить</button>{ready && <a className="md-export" href={`/api/analytics/dashboard?${query}&format=csv`}>Скачать CSV</a>}</div>
+      <div className="md-header-actions"><Link href="/pilot-analytics">Пилот · 5 участников</Link><button type="button" onClick={reload} disabled={loading}>Обновить</button>{ready && <a className="md-export" href={`/api/analytics/dashboard?${query}&format=csv`}>Скачать CSV</a>}</div>
     </header>
     <section className="md-filters" aria-label="Фильтры отчёта">
       <div className="md-presets" aria-label="Период">{[7, 30, 90].map((days) => <button key={days} type="button" aria-pressed={!params.has("from") && (params.get("days") ?? "30") === String(days)} onClick={() => change({ days: String(days), from: null, to: null })}>{days} дней</button>)}</div>
@@ -57,7 +57,7 @@ export default function Dashboard() {
     </section>
     <nav className="md-tabs" aria-label="Разделы аналитики">{tabs.map((item) => <button key={item.id} aria-current={tab === item.id ? "page" : undefined} onClick={() => setTab(item.id)}>{item.label}</button>)}</nav>
     {loading && <section className="md-status" role="status">Загружаем события и рассчитываем показатели…</section>}
-    {error && <section className="md-status md-failure" role="alert"><h2>Отчёт недоступен</h2><p>{error}</p><button onClick={() => setRefresh((v) => v + 1)}>Повторить</button><a href="/signin-with-chatgpt?return_to=%2Fanalytics">Войти заново</a></section>}
+    {error && <section className="md-status md-failure" role="alert"><h2>Отчёт недоступен</h2><p>{error}</p><button onClick={reload}>Повторить</button><a href="/signin-with-chatgpt?return_to=%2Fanalytics">Войти заново</a></section>}
     {ready && <>
       <p className="md-period">{date(report.options.start)} — {date(report.options.end - 1)} · UTC <span>Сравнение: {time(report.previousStart)} — {time(report.options.start)} · равная длительность</span></p>
       {report.metrics.active === 0 && <section className="md-empty"><h2>За этот период событий нет</h2><p>Выберите другие даты или включите аккаунт владельца. Новые действия появятся здесь после их записи приложением.</p></section>}

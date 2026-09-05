@@ -52,7 +52,7 @@ test("14A analytics distinguish opening, tab switching, and reaching cooking ste
   assert.match(page, /"recipe_opened"/);
   assert.match(page, /"recipe_tab_switched"/);
   assert.match(recipeView, /trackAnalytics\("recipe_opened"/);
-  assert.match(recipeView, /trackAnalytics\("recipe_tab_switched"\s*,\s*\{\s*from:\s*section\s*,\s*to:\s*next\s*\}/);
+  assert.match(recipeView, /trackAnalytics\("recipe_tab_switched"\s*,\s*\{\s*from:\s*section\s*,\s*to:\s*next\s*,\s*recipeId:\s*recipe\.id\s*\}/);
   assert.match(recipeView, /new IntersectionObserver\(/, "reaching steps is observed rather than inferred from the default tab");
   assert.match(recipeView, /IntersectionObserver[\s\S]{0,1000}trackAnalytics\("cooking_instructions_opened"/);
 });
