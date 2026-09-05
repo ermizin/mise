@@ -1,5 +1,7 @@
 export const analyticsEventNames = [
   "first_open",
+  "app_open",
+  "wizard_step_viewed",
   "onboarding_completed",
   "plan_create_started",
   "plan_created",
@@ -35,6 +37,8 @@ export type AnalyticsEventInput = {
   pilotEligible?: boolean;
   from?: AnalyticsRecipeSection;
   to?: AnalyticsRecipeSection;
+  step?: number;
+  recipeId?: string;
   occurredAt?: number;
 };
 
@@ -56,6 +60,8 @@ const inputKeys = new Set([
   "from",
   "to",
   "occurredAt",
+  "step",
+  "recipeId",
 ]);
 
 export function parseAnalyticsEvent(
@@ -115,6 +121,16 @@ export function parseAnalyticsEvent(
     return { error: "occurredAt is out of range" };
 
   const eventName = raw.eventName as AnalyticsEventName;
+  if (eventName === "wizard_step_viewed") {
+    if (!Number.isInteger(raw.step) || (raw.step as number) < 0 || (raw.step as number) > 6)
+      return { error: "step must be an integer from 0 to 6" };
+    if (!raw.flowId) return { error: "flowId is required for wizard_step_viewed" };
+  } else if (raw.step !== undefined) return { error: "step is only allowed for wizard_step_viewed" };
+  if (raw.recipeId !== undefined &&
+      (!["recipe_opened", "recipe_tab_switched"].includes(eventName) ||
+       typeof raw.recipeId !== "string" || !/^[a-z0-9-]{1,80}$/.test(raw.recipeId)))
+    return { error: "recipeId is only allowed for catalog recipe events" };
+
   if (
     ["plan_create_started", "plan_created", "next_plan_created"].includes(
       eventName,
@@ -153,6 +169,8 @@ export function parseAnalyticsEvent(
     event: {
       eventId: raw.eventId,
       eventName,
+      ...(raw.step !== undefined ? { step: raw.step as number } : {}),
+      ...(raw.recipeId !== undefined ? { recipeId: raw.recipeId as string } : {}),
       ...(raw.flowId ? { flowId: raw.flowId } : {}),
       ...(raw.durationMs !== undefined
         ? { durationMs: raw.durationMs as number }

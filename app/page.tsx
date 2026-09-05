@@ -413,33 +413,8 @@ type InstallEnvironment = {
   ios: boolean;
   safari: boolean;
 };
-type ClientAnalyticsEvent =
-  | "first_open"
-  | "onboarding_completed"
-  | "plan_create_started"
-  | "plan_created"
-  | "blocking_error"
-  | "shopping_opened"
-  | "shopping_item_checked"
-  | "recipe_opened"
-  | "recipe_tab_switched"
-  | "cooking_instructions_opened"
-  | "cooking_confirmed"
-  | "reminders_enabled"
-  | "saved_plan_reopened"
-  | "next_plan_created";
-type ClientAnalyticsFields = {
-  flowId?: string;
-  durationMs?: number;
-  errorCode?:
-    | "plan_load"
-    | "plan_save"
-    | "shopping_save"
-    | "reminder_enable";
-  pilotEligible?: boolean;
-  from?: RecipeSection;
-  to?: RecipeSection;
-};
+type ClientAnalyticsEvent = import("../lib/analytics").AnalyticsEventName;
+type ClientAnalyticsFields = Omit<import("../lib/analytics").AnalyticsEventInput, "eventId" | "eventName" | "occurredAt">;
 
 const onboardingStorageKey = "mise-onboarding-v3";
 const onboardingProgressKey = "mise-onboarding-progress-v4";
@@ -6080,6 +6055,15 @@ export default function Home() {
   }, []);
   useEffect(() => {
     void trackAnalytics("first_open", {}, "first-open");
+    // An opening is not a session. Also records foreground returns after 30 minutes.
+    let lastOpen = 0;
+    const recordOpen = () => {
+      if (document.visibilityState !== "visible" || Date.now() - lastOpen < 30 * 60_000) return;
+      lastOpen = Date.now();
+      void trackAnalytics("app_open");
+    };
+    recordOpen();
+    document.addEventListener("visibilitychange", recordOpen);
     const onRemindersEnabled = () => {
       void trackAnalytics("reminders_enabled");
     };
@@ -6094,6 +6078,7 @@ export default function Home() {
       onReminderEnableError,
     );
     return () => {
+      document.removeEventListener("visibilitychange", recordOpen);
       window.removeEventListener(
         "mise:reminders-enabled",
         onRemindersEnabled,
@@ -10001,6 +9986,11 @@ function PlanBuilder({
       : 0;
   const today = isoDate(new Date());
   const [step, setStep] = useState(initialStep);
+  useEffect(() => {
+    const currentFlow = flowIdRef.current;
+    if (mode !== "onboarding" || !currentFlow) return;
+    void trackAnalytics("wizard_step_viewed", { flowId: currentFlow, step }, `wizard-step:${currentFlow}:${step}`);
+  }, [step, mode]);
   const [start, setStart] = useState(
     repeat ? today : (initialPlan?.start ?? today),
   );
@@ -14136,7 +14126,7 @@ function RecipeView({
   function selectSection(next: RecipeSection) {
     if (next === section) return;
     sectionScroll.current[section] = window.scrollY;
-    void trackAnalytics("recipe_tab_switched", { from: section, to: next });
+    void trackAnalytics("recipe_tab_switched", { from: section, to: next, recipeId: recipe.id });
     setSectionMotion((current) => ({
       direction:
         sectionOrder.indexOf(next) > sectionOrder.indexOf(section) ? 1 : -1,
@@ -14212,8 +14202,8 @@ function RecipeView({
     return () => window.removeEventListener("popstate", onPop);
   }, []);
   useEffect(() => {
-    void trackAnalytics("recipe_opened");
-  }, []);
+    void trackAnalytics("recipe_opened", { recipeId: recipe.id });
+  }, [recipe.id]);
   useEffect(() => {
     if (
       section !== "cooking" ||

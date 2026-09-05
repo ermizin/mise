@@ -2,6 +2,9 @@ import { getDb } from "../../../db";
 import { analyticsEvents } from "../../../db/schema";
 import { parseAnalyticsEvent } from "../../../lib/analytics";
 
+import catalog from "../../../data/recipe-runtime-catalog.json";
+const catalogIds = new Set(catalog.recipes.map((recipe) => recipe.id));
+
 const deviceIdPattern =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -75,6 +78,9 @@ export async function POST(request: Request) {
   if ("error" in parsed)
     return Response.json({ error: parsed.error }, { status: 400 });
 
+  if (parsed.event.recipeId && !catalogIds.has(parsed.event.recipeId))
+    return Response.json({ error: "unknown catalog recipe" }, { status: 400 });
+
   const now = Date.now();
   const result = await getDb()
     .insert(analyticsEvents)
@@ -86,6 +92,8 @@ export async function POST(request: Request) {
       durationMs: parsed.event.durationMs ?? null,
       errorCode: parsed.event.errorCode ?? null,
       pilotEligible: parsed.event.pilotEligible ?? null,
+      step: parsed.event.step ?? null,
+      recipeId: parsed.event.recipeId ?? null,
       from: parsed.event.from ?? null,
       to: parsed.event.to ?? null,
       occurredAt: parsed.event.occurredAt ?? now,

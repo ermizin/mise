@@ -64,6 +64,8 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   durationMs: integer("duration_ms"),
   errorCode: text("error_code"),
   pilotEligible: integer("pilot_eligible", { mode: "boolean" }),
+  step: integer("step"),
+  recipeId: text("recipe_id"),
   from: text("from_section"),
   to: text("to_section"),
   occurredAt: integer("occurred_at").notNull(),
@@ -72,4 +74,5 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   index("idx_analytics_events_actor_name_time").on(table.actorId, table.eventName, table.occurredAt),
   index("idx_analytics_events_name_time").on(table.eventName, table.occurredAt),
   index("idx_analytics_events_flow").on(table.flowId),
+  index("idx_analytics_events_recorded_at").on(table.recordedAt),
 ]);

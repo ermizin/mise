@@ -45,6 +45,7 @@ export default async function PilotAnalyticsPage() {
           <p className="kicker">Закрытый пилот · 5 человек</p>
           <h1>Сводка Mise</h1>
           <p>Фактические действия отдельно от простых открытий экранов.</p>
+          <Link className="text-button" href="/analytics">Расширенная аналитика →</Link>
         </div>
         <a
           className="secondary-button"
