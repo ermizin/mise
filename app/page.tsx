@@ -9213,7 +9213,7 @@ function WeekScreen({
    чтобы переезд на сервер был заменой источника, а не переписыванием экрана. */
 
 type CatalogSort = "missing" | "time" | "protein";
-type CatalogProperty = "freezable" | "no-cook" | "protein";
+type CatalogProperty = "simple" | "freezable" | "no-cook" | "protein";
 type CatalogState = {
   q: string;
   slot: MealSlot | null;
@@ -9235,6 +9235,7 @@ const emptyCatalogState: CatalogState = {
 };
 
 const catalogPropertyLabels: Record<CatalogProperty, string> = {
+  simple: "Простые",
   freezable: "Морозится",
   "no-cook": "Без готовки",
   protein: "Много белка",
@@ -9258,6 +9259,7 @@ const catalogSortLabels: Record<CatalogSort, string> = {
 };
 
 function hasProperty(recipe: Recipe, property: CatalogProperty) {
+  if (property === "simple") return recipe.tags.includes("simple");
   if (property === "freezable") return recipe.freezable;
   if (property === "no-cook") return recipe.time <= 10;
   return recipe.macros.protein >= 30;
