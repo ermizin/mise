@@ -48,7 +48,7 @@ test("includes the complete plan-builder and private persistence model", async (
 
   for (const step of ["Период", "Приёмы пищи", "Вид меню", "Люди и цели", "Готовка", "Выбор меню", "Проверка"]) assert.match(page, new RegExp(step));
   for (const style of ["Высокобелковое", "Бюджетное"]) assert.match(page, new RegExp(style));
-  assert.match(page, /const releaseMenuStyles: readonly MenuStyle\[\] = \["protein", "budget"\]/);
+  assert.match(page, /const releaseMenuStyles: readonly MenuStyle\[\] = \["simple", "protein", "budget"\]/);
   assert.match(page, /Приготовить остаток отдельно/);
   assert.match(page, /Сначала взвесьте готовую еду/);
   assert.match(page, /Фактический вес готового блюда/);

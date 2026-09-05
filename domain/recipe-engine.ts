@@ -362,7 +362,7 @@ export type RecipeFamily = {
     fetchedAt?: string;
     confidenceMatch: number;
     manuallyApproved: boolean;
-    photoType: "source" | "licensed" | "stock" | "fallback";
+    photoType: "source" | "generated" | "licensed" | "stock" | "fallback";
   };
   ingredients: RecipeFamilyIngredient[];
   minViableCalories: number;
@@ -467,6 +467,7 @@ const averageReference = (recordId: string, description: string, note = "Уср�
 });
 
 const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
+  "tvorog-5": { provider: "Простоквашино", checkedAt: "2026-09-05", note: "Профиль творога 5% 200 г; для другой марки оценка может отличаться.", sourceUrl: "https://prostokvashino.ru/product/tvorog-5-200-g/", recordId: "prostokvashino-tvorog-5-200g", dataType: "brand_label", description: "Творог 5%: 117 ккал, Б15 Ж5 У3 на 100 г. Отдельный профиль от USDA cottage cheese." },
   "bbq-sauce": fdcReference("174523", "Sauce, barbecue", "Упаковка может заметно отличаться; перед готовкой сверить этикетку."),
   beef: fdcReference("174055", "Beef, top sirloin, steak, separable lean only, raw"),
   "beef-mince": fdcReference("171796", "Beef, ground, 85% lean meat / 15% fat, raw"),
@@ -704,6 +705,7 @@ const sensibleUnitOverrides: Readonly<Partial<Record<string, RecipeUnit>>> = Obj
   pasta: "g",
 });
 const ingredientSeeds: IngredientSeed[] = [
+  ["tvorog-5", "Творог 5% (Простоквашино)", "dairy", "processed", n(117, 15, 5, 3), 1, ["milk"]],
   ["bbq-sauce", "Соус BBQ", "sauce", "processed", n(172, 0.82, 0.63, 40.77)],
   ["beef", "Говядина постная", "meat", "raw", n(131, 22.09, 4.08, 0)],
   ["beef-mince", "Говяжий фарш 85/15", "meat", "raw", n(215, 18.6, 15, 0)],

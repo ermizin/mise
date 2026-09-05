@@ -229,7 +229,7 @@ test("source photos and localization notes remain attached to legacy imported re
   assert.ok(
     productionRecipes.every(
       (item) =>
-        item.provenance.kind === "parsed" &&
+        (item.provenance.kind === "parsed" || (item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true)) &&
         /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl),
     ),
     "every production card uses a verified local source photo",
@@ -1093,7 +1093,7 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   const expectedReadyIds = recipes
     .filter(
       (item) =>
-        item.provenance.kind === "parsed" &&
+        (item.provenance.kind === "parsed" || (item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true)) &&
         /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl ?? "") &&
         item.ingredients.length >= 3 &&
         recipeFamilyFor(item)?.reviewStatus === "pilot",
@@ -1105,7 +1105,8 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   assert.ok(productionRecipes.length >= 200);
   assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
   assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
-  assert.ok(productionRecipes.every((item) => item.provenance.kind === "parsed"));
+  assert.equal(productionRecipes.filter((item) => item.provenance.kind === "generated").length, 25);
+  assert.ok(productionRecipes.filter((item) => item.provenance.kind === "generated").every((item) => item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true));
   assert.ok(productionRecipes.every((item) => item.ingredients.length >= 3));
   assert.ok(productionRecipes.every(isProductionReadyRecipe));
 

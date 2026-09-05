@@ -13,7 +13,7 @@
     "waffle_iron",
     "pressure_cooker"
   ],
-  "recipeCount": 210,
+  "recipeCount": 260,
   "recipes": [
     {
       "id": "foodru-blogger-chicken-bombs",
@@ -2131,6 +2131,525 @@
           "requiredEquipment": []
         }
       ]
+    },
+    {
+      "id": "simple-generated-b01",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-b02",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-b03",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "mustard"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-b04",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-b05",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d01",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d02",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d03",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d04",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d05",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d06",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d07",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d08",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d09",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d10",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d11",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d12",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d13",
+      "slot": "lunch",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d14",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d15",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-d16",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-s01",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-s02",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-s03",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-generated-s04",
+      "slot": "snack1",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-breakfast-eggs-cheese-pan",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-breakfast-lazy-vareniki-tvorog",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-breakfast-rice-porridge-milk",
+      "slot": "breakfast",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-breakfast-syrniki-tvorog",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-breakfast-zucchini-fritters-sourcream",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-baked-chicken-potato-sourcream",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-baked-cod-potato",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-buckwheat-mushrooms-chicken",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-bulgur-chicken-vegetables",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-chicken-cutlets-buckwheat",
+      "slot": "lunch",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-chicken-green-beans-bulgur",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-chicken-meatballs-rice-sourcream",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-chicken-noodle-soup",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-chicken-vegetables-bulgur",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-cod-tomato-pasta",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-lazy-cabbage-rolls",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-pasta-nests-beef-cheese",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-pasta-salmon-cream",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-pasta-tuna-tomato",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-rice-beef-sourcream",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-main-rice-beef-tomato",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-snack-carrot-cheese-salad",
+      "slot": "snack1",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-snack-cheese-tomato-toast",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-snack-eggs-tomato-cheese",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
+    },
+    {
+      "id": "simple-parsed-snack-tomato-egg-cheese",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 1,
+      "freezable": false,
+      "equipmentOptions": []
     },
     {
       "id": "src-beefy-cheese-potatoes",

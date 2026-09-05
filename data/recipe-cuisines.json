@@ -2213,6 +2213,306 @@
       "title": "Йогурт с ягодами и семенами",
       "origin": "legacy",
       "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-b01",
+      "title": "Омлет с сыром, помидором и тостом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-b02",
+      "title": "Овсянка с яблоком и корицей",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-b03",
+      "title": "Горячие бутерброды с куриными колбасками и сыром",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-b04",
+      "title": "Творог с бананом и поджаренной овсянкой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-b05",
+      "title": "Гречка с яйцом и огурцом",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d01",
+      "title": "Картофель с куриными колбасками и салатом",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d02",
+      "title": "Курица с гречкой и морковью",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d03",
+      "title": "Макароны по-флотски",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d04",
+      "title": "Рис с курицей и овощной смесью",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d05",
+      "title": "Жареный картофель с грибами",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d06",
+      "title": "Тушёная капуста с куриными колбасками",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d07",
+      "title": "Куриные котлеты с картофельным пюре",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d08",
+      "title": "Макароны с куриными колбасками и морковью",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d09",
+      "title": "Треска с картофелем и горошком",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d10",
+      "title": "Спагетти с томатным соусом и сыром",
+      "origin": "generated",
+      "cuisine": "italian"
+    },
+    {
+      "id": "simple-generated-d11",
+      "title": "Гречка с говядиной и солёным огурцом",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d12",
+      "title": "Чечевичный суп с куриными колбасками",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d13",
+      "title": "Рис с яйцом и овощами",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d14",
+      "title": "Картофельная запеканка с говяжьим фаршем",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d15",
+      "title": "Фасоль в томате с рисом",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-d16",
+      "title": "Куриное бедро с гречкой и сметанным луком",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-generated-s01",
+      "title": "Йогурт с бананом и овсянкой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-s02",
+      "title": "Тосты с творожным сыром и огурцом",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-generated-s03",
+      "title": "Кесадилья с сыром, помидором и куриными колбасками",
+      "origin": "generated",
+      "cuisine": "mexican"
+    },
+    {
+      "id": "simple-generated-s04",
+      "title": "Яблоко с творогом и корицей",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-breakfast-syrniki-tvorog",
+      "title": "Сырники из творога 5%",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-breakfast-lazy-vareniki-tvorog",
+      "title": "Ленивые вареники из творога 5%",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-breakfast-rice-porridge-milk",
+      "title": "Рисовая каша на молоке",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-breakfast-eggs-cheese-pan",
+      "title": "Яйца с сыром на сковороде",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-breakfast-zucchini-fritters-sourcream",
+      "title": "Кабачковые оладьи со сметаной",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-snack-eggs-tomato-cheese",
+      "title": "Яичница с томатами и сыром",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-snack-tomato-egg-cheese",
+      "title": "Томаты с яично-сырной начинкой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-snack-cheese-tomato-toast",
+      "title": "Горячий тост с сыром и томатом",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-chicken-green-beans-bulgur",
+      "title": "Курица со стручковой фасолью и булгуром",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-chicken-vegetables-bulgur",
+      "title": "Курица с овощами в соевом соусе и булгуром",
+      "origin": "runtime",
+      "cuisine": "asian"
+    },
+    {
+      "id": "simple-parsed-main-buckwheat-mushrooms-chicken",
+      "title": "Гречка с грибами и курицей",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-main-chicken-meatballs-rice-sourcream",
+      "title": "Куриные тефтели с рисом в сметанном соусе",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-main-lazy-cabbage-rolls",
+      "title": "Ленивые голубцы с рисом и томатом",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-main-cod-tomato-pasta",
+      "title": "Треска в томатном соусе с макаронами",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-main-chicken-noodle-soup",
+      "title": "Куриный суп с лапшой",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-bulgur-chicken-vegetables",
+      "title": "Булгур с курицей и овощами",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-pasta-tuna-tomato",
+      "title": "Макароны с тунцом и томатами",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "simple-parsed-main-baked-chicken-potato-sourcream",
+      "title": "Курица с картофелем в сметане",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-main-pasta-nests-beef-cheese",
+      "title": "Макаронные гнёзда с говяжьим фаршем",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-rice-beef-sourcream",
+      "title": "Рис с говяжьим фаршем в сметане",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-rice-beef-tomato",
+      "title": "Рис с говяжьим фаршем в томатном соусе",
+      "origin": "runtime",
+      "cuisine": "international"
+    },
+    {
+      "id": "simple-parsed-main-pasta-salmon-cream",
+      "title": "Паста с лососем в сливочном соусе",
+      "origin": "runtime",
+      "cuisine": "italian"
+    },
+    {
+      "id": "simple-parsed-main-chicken-cutlets-buckwheat",
+      "title": "Куриные котлеты с гречкой",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-snack-carrot-cheese-salad",
+      "title": "Салат из моркови с чесноком и сыром",
+      "origin": "runtime",
+      "cuisine": "russian"
+    },
+    {
+      "id": "simple-parsed-main-baked-cod-potato",
+      "title": "Треска с картофелем в духовке",
+      "origin": "runtime",
+      "cuisine": "russian"
     }
   ]
 }

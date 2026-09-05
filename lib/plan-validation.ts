@@ -1,7 +1,7 @@
 import planRecipeRegistryJson from "../data/plan-recipe-registry.json";
 
 const mealSlots = new Set(["breakfast", "lunch", "dinner", "snack1", "snack2"]);
-const menuStyles = new Set(["protein", "budget"]);
+const menuStyles = new Set(["protein", "budget", "simple"]);
 
 type RegistryRecipe = {
   id: string;
@@ -60,6 +60,7 @@ function daysInclusive(start: string, end: string) {
 
 function recipeSupportsSlot(recipe: RegistryRecipe, slot: string) {
   return recipe.slot === slot ||
+    (recipe.id.startsWith("simple-") && ["lunch", "dinner"].includes(recipe.slot) && ["lunch", "dinner"].includes(slot)) ||
     (recipe.slot === "snack1" && slot === "snack2") ||
     (recipe.slot === "snack2" && slot === "snack1");
 }

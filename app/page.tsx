@@ -137,7 +137,8 @@ function restoreTabScroll(
   });
   window.scrollTo({ top: position.windowY, left: 0, behavior: "auto" });
 }
-type MenuStyle = "protein" | "budget" | "paleo" | "keto";
+type LegacyMenuStyle = "protein" | "budget" | "paleo" | "keto";
+type MenuStyle = LegacyMenuStyle | "simple";
 type RecipeOrigin = "parsed" | "generated";
 type Allergen =
   | "milk"
@@ -178,6 +179,8 @@ type RecipeProvenance =
       kind: "generated";
       basedOn?: string[];
       editoriallyApproved?: boolean;
+      imageUrl?: string;
+      imageAlt?: string;
     };
 type RecipeStorage = {
   refrigerator: string;
@@ -235,6 +238,8 @@ type Recipe = {
   effort: RecipeEffort;
   effortDescription: string;
   localization: RecipeLocalization;
+  flavourTip?: string;
+  substitution?: string;
   procedureIngredients?: {
     id: string;
     name: string;
@@ -243,6 +248,10 @@ type Recipe = {
     classification: "pantry" | "to_taste" | "optional_serving";
     quantityPerServing?: number;
     unit?: "g" | "ml" | "piece";
+    /** A procedure quantity that scales with a measured recipe ingredient,
+     * e.g. water for dry grain. */
+    ratioToSourceIngredientId?: string;
+    ratio?: number;
   }[];
 };
 type RuntimeRecipeRecord = {
@@ -252,7 +261,7 @@ type RuntimeRecipeRecord = {
   cuisine: Cuisine;
   macros: Macros;
   timeMinutes: number;
-  menuTags: ("protein" | "budget")[];
+  menuTags: ("protein" | "budget" | "simple")[];
   costTier: { value: number };
   servingMass: { grams: number };
   shoppingIngredients: {
@@ -272,6 +281,8 @@ type RuntimeRecipeRecord = {
     classification: "pantry" | "to_taste" | "optional_serving";
     quantityPerServing?: number;
     unit?: "g" | "ml" | "piece";
+    ratioToSourceIngredientId?: string;
+    ratio?: number;
   }[];
   steps: string[];
   instructions?: RecipeStep[];
@@ -292,13 +303,17 @@ type RuntimeRecipeRecord = {
   };
   effort: RecipeEffort;
   provenance: {
+    kind?: "parsed" | "generated";
+    adaptation?: string;
     sourceTitle: string;
     sourceUrl: string;
     sourceQuery: string;
     preview:
-      | { kind: "source_preview"; imageUrl: string }
+      | { kind: "source_preview" | "generated_preview"; imageUrl: string }
       | { kind: "graphic_fallback"; emoji: string };
   };
+  flavourTip?: string;
+  substitution?: string;
   visualFallback: { emoji: string };
   recipeFamily: RecipeFamily;
 };
@@ -559,6 +574,10 @@ const allMealSlots: MealSlot[] = [
   "dinner",
 ];
 const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
+  simple: {
+    label: "Простые",
+    description: "Привычные блюда, обычные продукты и минимум действий",
+  },
   protein: {
     label: "Высокобелковое",
     description: "Больше белка для сытости и восстановления",
@@ -576,7 +595,7 @@ const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
     description: "Меньше углеводов, больше полезных жиров",
   },
 };
-const releaseMenuStyles: readonly MenuStyle[] = ["protein", "budget"];
+const releaseMenuStyles: readonly MenuStyle[] = ["simple", "protein", "budget"];
 const macroLabels: Record<MacroKey, string> = {
   kcal: "К",
   protein: "Б",
@@ -3569,7 +3588,7 @@ recipes.push(
   ], 3, true, { provenance: mealPrepManualParsed("Beefy Queso Loaded Potatoes", "beefy-queso-loaded-potatoes", "https://mealprepmanual.com/wp-content/uploads/2024/07/Beefy-Queso-Loaded-Potatoes.jpg", "Картофель с говядиной, овощами и творожно-сырным соусом", "Poblano заменён болгарским перцем, pepper jack — обычным полутвёрдым сыром, chipotle adobo — копчёной паприкой."), localization: { fit: "adapted", availability: "common", note: "Много компонентов и посуды, зато продукты полностью привычные и соус регулируется отдельно." }, storage: { refrigerator: "Мясо, картофель и овощи при ≤4 °C — ориентировочно до 3 суток; сырный соус хранить отдельно.", freezerDays: 45, freezeParts: "Замораживать мясо и картофель. Овощи и творожно-сырный соус лучше приготовить или хранить отдельно в холодильнике." }, packing: { separate: "Сырный соус — в маленькую ёмкость; картофель не смешивать с влажными овощами до разогрева." }, effort: { knifeActions: 5, cookware: 4, activeActions: 16, activeMinutes: 35, level: "high" } }),
 );
 
-const generatedTitles: Record<MenuStyle, Record<MealSlot, string[]>> = {
+const generatedTitles: Record<LegacyMenuStyle, Record<MealSlot, string[]>> = {
   protein: {
     breakfast: [
       "Яичные маффины с индейкой",
@@ -3719,7 +3738,7 @@ const generatedTitles: Record<MenuStyle, Record<MealSlot, string[]>> = {
     ],
   },
 };
-const generatedMacros: Record<MenuStyle, Record<MealSlot, Macros>> = {
+const generatedMacros: Record<LegacyMenuStyle, Record<MealSlot, Macros>> = {
   protein: {
     breakfast: { kcal: 430, protein: 39, fat: 15, carbs: 34 },
     lunch: { kcal: 530, protein: 53, fat: 17, carbs: 42 },
@@ -3750,7 +3769,7 @@ const generatedMacros: Record<MenuStyle, Record<MealSlot, Macros>> = {
   },
 };
 const generatedIngredients: Record<
-  MenuStyle,
+  LegacyMenuStyle,
   Record<MealSlot, Ingredient[]>
 > = {
   protein: {
@@ -4241,7 +4260,7 @@ function ingredientsForTitle(
   }
   return [...merged.values()];
 }
-const generatedReferences: Record<MenuStyle, string[]> = {
+const generatedReferences: Record<LegacyMenuStyle, string[]> = {
   protein: [recipeSources.chickenBowl.url, recipeSources.proteinOats.url],
   budget: [recipeSources.chickenBuckwheat.url, recipeSources.chickenRice.url],
   paleo: [recipeSources.salmonPrep.url],
@@ -4252,7 +4271,7 @@ function generatedRecipeFreezable(title: string) {
     title,
   );
 }
-for (const style of Object.keys(generatedTitles) as MenuStyle[])
+for (const style of Object.keys(generatedTitles) as LegacyMenuStyle[])
   for (const slot of Object.keys(mealMeta) as MealSlot[])
     generatedTitles[style][slot].forEach((title, index) =>
       recipes.push(
@@ -4282,7 +4301,9 @@ for (const style of Object.keys(generatedTitles) as MenuStyle[])
 
 const runtimeRecipeCatalog = runtimeRecipeCatalogJson as unknown as {
   recipes: RuntimeRecipeRecord[];
+  simpleRecipes?: RuntimeRecipeRecord[];
 };
+const allRuntimeRecipeRecords = [...runtimeRecipeCatalog.recipes, ...(runtimeRecipeCatalog.simpleRecipes ?? [])];
 const runtimeAllergenMap: Record<string, Allergen | undefined> = {
   crustaceans: "crustaceans",
   shrimp: "crustaceans",
@@ -4412,15 +4433,23 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
     equipmentOptions: record.equipmentOptions,
     storageDays: Math.max(1, record.storage.refrigeratorDays ?? 3),
     freezable: record.storage.freezable,
-    provenance: {
+    flavourTip: record.flavourTip,
+    substitution: record.substitution,
+    provenance: record.provenance.kind === "generated" ? {
+      kind: "generated",
+      editoriallyApproved: true,
+      imageUrl: preview.kind !== "graphic_fallback" ? preview.imageUrl : undefined,
+      imageAlt: record.title,
+    } : {
       kind: "parsed",
       sourceTitle: record.provenance.sourceTitle,
+      adaptation: record.provenance.adaptation,
       sourceUrl: record.provenance.sourceUrl,
       sourceQuery: record.provenance.sourceQuery,
       // Runtime catalog v2 admits only checksum-verified local source copies.
       // Keep the UI on that local asset; never fall back to the remote source URL.
       imageUrl:
-        preview.kind === "source_preview" ? preview.imageUrl : undefined,
+        preview.kind !== "graphic_fallback" ? preview.imageUrl : undefined,
       imageAlt: record.title,
     },
     storage: {
@@ -4471,13 +4500,15 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
       classification: ingredient.classification,
       quantityPerServing: ingredient.quantityPerServing,
       unit: ingredient.unit,
+      ratioToSourceIngredientId: ingredient.ratioToSourceIngredientId,
+      ratio: ingredient.ratio,
     })),
   };
 }
-const runtimeRecipes = runtimeRecipeCatalog.recipes.map(runtimeRecipe);
+const runtimeRecipes = allRuntimeRecipeRecords.map(runtimeRecipe);
 recipes.push(...runtimeRecipes);
 const runtimeRecipeFamiliesById = Object.fromEntries(
-  runtimeRecipeCatalog.recipes.map((record) => [record.id, record.recipeFamily]),
+  allRuntimeRecipeRecords.map((record) => [record.id, record.recipeFamily]),
 ) as Record<string, RecipeFamily>;
 
 /* Порции плана: по одному контейнеру на человека, приём пищи и день партии. */
@@ -4528,6 +4559,7 @@ function recipeFamilyFor(recipe: Recipe) {
 function recipeSupportsSlot(recipe: Recipe, slot: MealSlot) {
   return (
     recipe.slot === slot ||
+    (recipe.tags.includes("simple") && ["lunch", "dinner"].includes(recipe.slot) && ["lunch", "dinner"].includes(slot)) ||
     (recipe.slot === "snack1" && slot === "snack2") ||
     (recipe.slot === "snack2" && slot === "snack1")
   );
@@ -4535,7 +4567,7 @@ function recipeSupportsSlot(recipe: Recipe, slot: MealSlot) {
 function isProductionReadyRecipe(recipe: Recipe) {
   const family = recipeFamilyFor(recipe);
   const hasVerifiedSourcePhoto =
-    recipe.provenance.kind === "parsed" &&
+    (recipe.provenance.kind === "parsed" || (recipe.id.startsWith("simple-generated-") && recipe.provenance.editoriallyApproved === true)) &&
     /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(
       recipe.provenance.imageUrl ?? "",
     );
@@ -5389,6 +5421,7 @@ function buildBatchCookingModel(
           `${ingredient.name} — ${procedureIngredientAmountLabel(
             ingredient,
             session.portionCount,
+            session.cookingAmounts,
           )}`,
       ),
     );
@@ -5840,6 +5873,7 @@ function shoppingAmountLabel(item: ShoppingItem) {
   return `${item.quantity.toLocaleString("ru-RU")} ${item.unit}`;
 }
 function styleScore(recipe: Recipe, style: MenuStyle) {
+  if (style === "simple") return 100 - recipe.effort.activeMinutes - recipe.ingredients.length;
   if (style === "protein")
     return (
       recipe.macros.protein * 3 -
@@ -7183,7 +7217,7 @@ function RecipeMedia({
   eager?: boolean;
 }) {
   const photo =
-    recipe.provenance.kind === "parsed" ? recipe.provenance.imageUrl : undefined;
+    recipe.provenance.imageUrl;
   const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
   const [loadedPhoto, setLoadedPhoto] = useState<string | null>(null);
   if (!photo || failedPhoto === photo)
@@ -8925,9 +8959,7 @@ function WeekScreen({
           const portion = portionForRow(row);
           const eaten = rowIsEaten(row);
           const photo =
-            row.recipe.provenance.kind === "parsed"
-              ? row.recipe.provenance.imageUrl
-              : undefined;
+            row.recipe.provenance.imageUrl;
           const frozen =
             row.recipe.freezable &&
             daysInclusive(row.sourceBatch.start, selectedDate) - 1 >=
@@ -12329,7 +12361,7 @@ function StyleStep({
         icon={<Icon name="filter" />}
         kicker="Какое меню"
         title="Выберите направление"
-        text="Мы изменим порядок рекомендаций и покажем самые подходящие варианты первыми."
+        text="Выберите блюда, которые хочется готовить. Порции подстроим под ваши цели."
       />
       <div
         className="style-list"
@@ -14368,9 +14400,21 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
 function procedureIngredientAmountLabel(
   ingredient: NonNullable<Recipe["procedureIngredients"]>[number],
   portions: number,
+  cookingAmounts?: Record<string, number>,
 ) {
-  if (ingredient.quantityPerServing && ingredient.unit) {
-    const amount = ingredient.quantityPerServing * Math.max(1, portions);
+  const sourceAmount = ingredient.ratioToSourceIngredientId
+    ? cookingAmounts?.[ingredient.ratioToSourceIngredientId]
+    : undefined;
+  const amount =
+    typeof sourceAmount === "number" &&
+    Number.isFinite(sourceAmount) &&
+    typeof ingredient.ratio === "number" &&
+    Number.isFinite(ingredient.ratio)
+      ? sourceAmount * ingredient.ratio
+      : ingredient.quantityPerServing
+        ? ingredient.quantityPerServing * Math.max(1, portions)
+        : undefined;
+  if (amount !== undefined && ingredient.unit) {
     const rounded =
       amount < 1 ? round(amount, 2) : amount < 10 ? round(amount, 1) : round(amount);
     const unit = ingredient.unit === "piece" ? "шт." : ingredient.unit === "g" ? "г" : "мл";
@@ -15242,6 +15286,7 @@ function RecipeView({
           {batch ? ` · ${cookingPortions} порц.` : " · базовая порция"}
         </p>
         <h1>{recipe.title}</h1>
+        {recipe.id.startsWith("simple-") && <small>{recipe.provenance.kind === "generated" ? "Изображение создано для Mise; размер порции на фото условный." : "Фото исходного рецепта. Гарнир и подача могут отличаться; рассчитанный состав указан ниже."}</small>}
       </section>
       {contactWarnings.length > 0 && (
         <section className="allergy-warning glass-card" role="alert">
@@ -15395,6 +15440,7 @@ function RecipeView({
                       {procedureIngredientAmountLabel(
                         ingredient,
                         productScale === "cooking" ? cookingPortions : 1,
+                        productScale === "cooking" ? cookingAmounts : undefined,
                       )}
                     </b>
                   </div>
@@ -15558,6 +15604,7 @@ function RecipeView({
         )}
         <small>Сроки — консервативные ориентиры, а не гарантия.</small>
       </section>
+      {recipe.flavourTip && <section className="recipe-source glass-card"><p className="kicker">Чтобы было вкуснее</p><p>{recipe.flavourTip}</p>{recipe.substitution && <p>{recipe.substitution}</p>}</section>}
       <section className="recipe-source glass-card">
         <p className="kicker">Происхождение</p>
         <h2>{originLabel}</h2>
@@ -15577,7 +15624,7 @@ function RecipeView({
         ) : (
           <>
             <p>Рецепт собран для курированного каталога Mise.</p>
-            <small>Проверен редакцией Mise.</small>
+            <small>Рецепт и изображение созданы для Mise. КБЖУ рассчитаны по ингредиентам.</small>
           </>
         )}
       </section>
