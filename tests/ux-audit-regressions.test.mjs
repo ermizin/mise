@@ -102,7 +102,12 @@ test("dead and misleading UI patterns from the audit do not return", async () =>
   ]);
   assert.doesNotMatch(css, /min-width:\s*100000px/);
   assert.doesNotMatch(css, /blur\(13px\)/);
-  assert.match(css, /\.week-person-select \{[\s\S]*?font-size: var\(--text-input\)/);
+  // The native select (which needed 16px to prevent iOS input zoom) is now
+  // a disclosure of native buttons with the same selected-person callback.
+  assert.doesNotMatch(page, /className="week-person-select"/);
+  assert.match(page, /<WeekPersonPicker people=\{plan.people\} value=\{person.id\} onChange=\{setPersonId\}/);
+  assert.match(css, /\.week-person-trigger,[\s\S]*?min-height: var\(--hit-min\)/);
+  assert.match(css, /\.week-person-menu \{[^}]*?width: min\(300px, 100%\)/);
   assert.doesNotMatch(page, /scrollIntoView\(/);
   assert.match(page, /strip\.scrollLeft = Math\.max/);
   assert.doesNotMatch(page, /Собрать заново<\/button>[\s\S]{0,120}role="checkbox"/);

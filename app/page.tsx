@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -8259,6 +8260,79 @@ function AnimatedNumber({
   return <span ref={nodeRef}>{value}</span>;
 }
 
+function WeekPersonPicker({ people, value, onChange }: {
+  people: { id: string; name: string }[];
+  value: string;
+  onChange: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
+  const person = people.find((item) => item.id === value) ?? people[0];
+  const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2)
+    .map((part) => Array.from(part)[0] ?? "").join("").toLocaleUpperCase("ru-RU") || "?";
+
+  useEffect(() => {
+    if (!open) return;
+    const dismiss = (event: PointerEvent) => {
+      if (event.target instanceof Node && !pickerRef.current?.contains(event.target)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", dismiss);
+    return () => document.removeEventListener("pointerdown", dismiss);
+  }, [open]);
+
+  function handleKeyDown(event: ReactKeyboardEvent<HTMLButtonElement>) {
+    if (event.key !== "Escape" || !open) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setOpen(false);
+    triggerRef.current?.focus();
+  }
+
+  if (!person) return null;
+  if (people.length === 1) return (
+    <span className="week-person-current">
+      <span className="week-person-avatar" aria-hidden="true">{initials(person.name)}</span>
+      <span className="week-person-name">{person.name}</span>
+    </span>
+  );
+
+  return (
+    <div className="week-person-picker" ref={pickerRef} role="group" aria-label="Выбор едока"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}
+    >
+      <button type="button" className="week-person-trigger" ref={triggerRef}
+        onKeyDown={handleKeyDown}
+        aria-expanded={open} aria-controls={menuId}
+        aria-label={`Выбрать едока: ${person.name}`} onClick={() => setOpen(!open)}>
+        <span className="week-person-avatar" aria-hidden="true">{initials(person.name)}</span>
+        <span className="week-person-name">{person.name}</span>
+        <Icon name="chevron" />
+      </button>
+        <div className="week-person-menu glass-card" id={menuId} hidden={!open} role="group" aria-labelledby={`${menuId}-label`}>
+          <p className="week-person-menu-label" id={`${menuId}-label`}>Показать порции для</p>
+          {people.map((item) => (
+            <button type="button" className="week-person-option" key={item.id}
+              onKeyDown={handleKeyDown}
+              aria-pressed={item.id === person.id}
+              onClick={() => {
+                onChange(item.id);
+                setOpen(false);
+                triggerRef.current?.focus();
+              }}>
+              <span className="week-person-avatar" aria-hidden="true">{initials(item.name)}</span>
+              <span className="week-person-option-name">{item.name}</span>
+              <span className="week-person-check" aria-hidden="true"><Icon name="check" /></span>
+            </button>
+          ))}
+        </div>
+    </div>
+  );
+}
+
 function WeekScreen({
   plan,
   loading,
@@ -8668,18 +8742,7 @@ function WeekScreen({
               )}
             </b>
           </div>
-          <select
-            className="week-person-select"
-            value={person.id}
-            onChange={(event) => setPersonId(event.target.value)}
-            aria-label="Выбрать человека"
-          >
-            {plan.people.map((item) => (
-              <option value={item.id} key={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
+          <WeekPersonPicker people={plan.people} value={person.id} onChange={setPersonId} />
         </div>
         <div className="week-macro-body">
           <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${person.daily.kcal} килокалорий`}>

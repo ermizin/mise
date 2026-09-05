@@ -7072,8 +7072,12 @@ p {
 
 .week-macro-card {
   padding: 18px;
+  position: relative;
+  z-index: 1;
+  overflow: visible;
 }
 .week-macro-head {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -7089,16 +7093,124 @@ p {
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
 }
-.week-person-select {
+.week-person-picker {
+  flex: 0 1 170px;
+  min-width: 0;
+}
+.week-macro-head > div:first-child {
+  min-width: 0;
+}
+.week-person-trigger,
+.week-person-current {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   min-height: var(--hit-min);
-  max-width: 150px;
-  padding: 0 34px 0 13px;
+  max-width: 170px;
+  padding: 6px 11px 6px 6px;
   border: 1px solid var(--glass-3-border);
   border-radius: var(--r-pill);
   color: var(--ink);
-  background: rgba(255, 255, 255, 0.72);
-  font-size: var(--text-input);
+  background: var(--glass-3-bg);
+  font-size: var(--text-link);
   font-weight: var(--weight-semibold);
+}
+.week-person-trigger {
+  width: 100%;
+  margin-left: auto;
+}
+.week-person-trigger[aria-expanded="true"] {
+  border-color: var(--accent-text);
+}
+.week-person-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--accent) 10%, white);
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.week-person-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+  text-align: left;
+}
+.week-person-trigger > .icon {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--ink-muted);
+  transform: rotate(90deg);
+}
+.week-person-trigger[aria-expanded="true"] > .icon {
+  transform: rotate(-90deg);
+}
+.week-person-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 4;
+  width: min(300px, 100%);
+  padding: 9px;
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-recipe);
+  background: #fffaf5;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.week-person-menu[hidden] {
+  display: none;
+}
+.week-macro-head .week-person-menu-label {
+  margin: 9px 11px 12px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+}
+.week-person-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 62px;
+  padding: 12px;
+  border: 0;
+  border-radius: var(--r-tile);
+  background: transparent;
+  text-align: left;
+}
+.week-person-option:hover {
+  background: var(--ink-line);
+}
+.week-person-option[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--accent) 10%, #fffaf5);
+}
+.week-person-option .week-person-avatar {
+  flex-basis: 38px;
+  width: 38px;
+  height: 38px;
+}
+.week-person-option-name {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.week-person-check {
+  flex: 0 0 20px;
+  color: var(--accent-text);
+  visibility: hidden;
+}
+.week-person-option[aria-pressed="true"] .week-person-check {
+  visibility: visible;
 }
 .week-macro-body {
   margin-top: 15px;
