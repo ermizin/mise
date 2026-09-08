@@ -15,6 +15,7 @@ function finiteNonnegative(value) {
 }
 
 function parseOccurrence(key) {
+  if (typeof key !== "string") return null;
   const match = /^([^:]+):(\d{4}-\d{2}-\d{2}):(breakfast|snack1|lunch|snack2|dinner)$/u.exec(key);
   if (!match) return null;
   const [year, month, day] = match[2].split("-").map(Number);
@@ -53,6 +54,7 @@ function assignmentGroups(plan, batch, slot) {
 function sourceForOccurrence(plan, key) {
   const occurrence = parseOccurrence(key);
   if (!occurrence || !isRecord(plan) || !Array.isArray(plan.people) || !Array.isArray(plan.batches)) return null;
+  if (Array.isArray(plan.mealSlots) && !plan.mealSlots.includes(occurrence.slot)) return null;
   const person = plan.people.find((item) => isRecord(item) && item.id === occurrence.personId);
   if (!person || !Array.isArray(person.includedSlots) || !person.includedSlots.includes(occurrence.slot)) return null;
   const batch = plan.batches.find((item) => isRecord(item) && typeof item.id === "string" && typeof item.start === "string" && typeof item.end === "string" && item.start <= occurrence.date && occurrence.date <= item.end);
@@ -76,7 +78,7 @@ function snapshotFor(source, evaluator, capturedAt) {
 
 function validSnapshot(snapshot, source, expectedActual) {
   return isRecord(snapshot) && snapshot.recipeId === source.recipeId && snapshot.calculationVersion === 2 &&
-    isRecord(snapshot.actual) && ["kcal", "protein", "fat", "carbs"].every((field) => snapshot.actual[field] === expectedActual[field]);
+    finiteNonnegative(snapshot.capturedAt) && isRecord(snapshot.actual) && ["kcal", "protein", "fat", "carbs"].every((field) => snapshot.actual[field] === expectedActual[field]);
 }
 
 /**
@@ -96,9 +98,13 @@ export function migrateNutritionHistory({ db, evaluator, dryRun = false, verify 
         counts.failed++;
         continue;
       }
-      const eaten = isRecord(plan) && isRecord(plan.mealExecution) && Array.isArray(plan.mealExecution.eaten)
-        ? plan.mealExecution.eaten.filter((key) => typeof key === "string")
-        : [];
+      if (!isRecord(plan) || (isRecord(plan.mealExecution) &&
+        Object.hasOwn(plan.mealExecution, "eaten") && !Array.isArray(plan.mealExecution.eaten))) {
+        counts.failed++;
+        continue;
+      }
+      const eaten = isRecord(plan.mealExecution) && Array.isArray(plan.mealExecution.eaten)
+        ? plan.mealExecution.eaten : [];
       if (!eaten.length) {
         counts.skipped++;
         continue;
@@ -109,11 +115,14 @@ export function migrateNutritionHistory({ db, evaluator, dryRun = false, verify 
         let verificationFailed = false;
         for (const key of new Set(eaten)) {
           const source = sourceForOccurrence(plan, key);
-          if (!source) continue;
+          if (!source) throw new Error("eaten occurrence cannot be resolved");
           const expected = snapshotFor(source, evaluator, capturedAt);
           if (verify) {
             if (!validSnapshot(history[key], source, expected.actual)) verificationFailed = true;
-          } else if (!Object.hasOwn(history, key)) {
+          } else if (Object.hasOwn(history, key)) {
+            if (!validSnapshot(history[key], source, expected.actual))
+              throw new Error("existing nutrition snapshot is invalid");
+          } else {
             history[key] = expected;
             added = true;
           }
@@ -143,7 +152,10 @@ export function migrateNutritionHistory({ db, evaluator, dryRun = false, verify 
     db.exec("BEGIN IMMEDIATE");
     try {
       run();
-      db.exec("COMMIT");
+      // Release migration is all-or-nothing, including validation failures
+      // collected per row. Never leave a partially migrated database.
+      db.exec(counts.failed ? "ROLLBACK" : "COMMIT");
+      if (counts.failed) counts.changed = 0;
     } catch (error) {
       db.exec("ROLLBACK");
       throw error;
