@@ -57,17 +57,22 @@ function familyFor(recipeId) {
   return recipe.recipeFamily;
 }
 
-test("audited edible fats retain their recipe-specific instruction and scale with the food", () => {
+test("imported edible fats preserve their source-serving basis and unsplit source steps", () => {
   for (const [recipeId, sourceIngredientId, canonicalIngredientId, instructionId] of edibleIngredients) {
     const family = familyFor(recipeId);
     const ingredient = family.ingredients.find((item) => item.sourceIngredientId === sourceIngredientId);
     assert.equal(ingredient?.canonicalIngredientId, canonicalIngredientId, `${recipeId}/${sourceIngredientId}`);
     assert.equal(ingredient?.role, "fat", `${recipeId}/${sourceIngredientId}`);
-    assert.ok(family.miseInstructions.some((step) => step.id === instructionId), `${recipeId}/${instructionId}`);
+    assert.equal(ingredient?.sourceScaling, "fixed_per_serving", `${recipeId}/${sourceIngredientId} keeps source basis`);
+    assert.equal(ingredient?.minAmount, ingredient?.baseAmount, `${recipeId}/${sourceIngredientId} has no 0.25x floor`);
+    assert.equal(ingredient?.maxAmount, ingredient?.baseAmount, `${recipeId}/${sourceIngredientId} has no free fat lever`);
+    const sourceStepId = instructionId.replace(/-part-\d+$/, "");
+    assert.ok(family.miseInstructions.some((step) => step.id === sourceStepId), `${recipeId}/${sourceStepId}`);
+    assert.ok(family.miseInstructions.every((step) => !/-part-\d+$/.test(step.id)), `${recipeId} does not split source step ids`);
   }
 });
 
-test("unreviewed pan-fat records preserve the one-session policy", () => {
+test("imported oils are not inferred as one-session cooking fat", () => {
   for (const [recipeId, sourceIngredientId] of [
     ["tmpm-28572", "source-ingredient-3"],
     ["tmpm-26996", "source-ingredient-10"],
@@ -75,24 +80,23 @@ test("unreviewed pan-fat records preserve the one-session policy", () => {
     ["foodru-oblomov-chashushuli", "source-ingredient-6"],
   ]) {
     const ingredient = familyFor(recipeId).ingredients.find((item) => item.sourceIngredientId === sourceIngredientId);
-    assert.equal(ingredient?.role, "fat_cooking", `${recipeId}/${sourceIngredientId}`);
+    assert.equal(ingredient?.role, "fat", `${recipeId}/${sourceIngredientId}`);
+    assert.equal(ingredient?.sourceScaling, "fixed_per_serving", `${recipeId}/${sourceIngredientId}`);
   }
 });
 
-test("edible sauce and mash fats are multiplied for every portion, pan oil is not", () => {
-  for (const [recipeId, edibleId, panId] of [
-    ["tmpm-24949", "source-ingredient-7", undefined],
-    ["new-home-cutlets-mash", "source-ingredient-7", "source-ingredient-15"],
+test("edible sauce and mash fats are multiplied for every source serving", () => {
+  for (const [recipeId, edibleIds] of [
+    ["tmpm-24949", ["source-ingredient-7"]],
+    ["new-home-cutlets-mash", ["source-ingredient-7", "source-ingredient-15"]],
   ]) {
     const family = familyFor(recipeId);
     const amounts = Object.fromEntries(family.ingredients.map((ingredient) => [ingredient.sourceIngredientId, ingredient.baseAmount]));
     const cooking = engine.aggregateCookingAmounts(family.ingredients, [amounts, amounts, amounts]);
-    const edible = family.ingredients.find((ingredient) => ingredient.sourceIngredientId === edibleId);
-    assert.equal(cooking[edibleId], Math.round(edible.baseAmount * 3 * 10) / 10, `${recipeId} edible fat scales`);
-    if (panId) {
-      const pan = family.ingredients.find((ingredient) => ingredient.sourceIngredientId === panId);
-      assert.equal(pan.role, "fat_cooking", `${recipeId} pan oil remains fixed`);
-      assert.equal(cooking[panId], pan.baseAmount, `${recipeId} pan oil is one-session`);
+    for (const edibleId of edibleIds) {
+      const edible = family.ingredients.find((ingredient) => ingredient.sourceIngredientId === edibleId);
+      assert.equal(edible.role, "fat", `${recipeId}/${edibleId} remains edible`);
+      assert.equal(cooking[edibleId], Math.round(edible.baseAmount * 3 * 10) / 10, `${recipeId}/${edibleId} scales`);
     }
   }
 });

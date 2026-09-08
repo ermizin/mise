@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "policy": "Only explicitly reviewed recipes may expose separately weighed components. Recipes absent from this list remain mixed. Each component lists the source ingredient IDs that must stay with its physical preparation or sauce when allocating containers.",
+  "reviewedAgainst": "current runtime instructions 2026-09-08",
+  "recipes": [
+    {
+      "recipeId": "src-halal-chicken",
+      "title": "Пряная курица с золотым рисом и овощами",
+      "evidence": "Храните рис, курицу, овощи и соус отдельными блоками и собирайте контейнер перед едой.",
+      "components": [
+        { "id": "protein", "label": "Курица и белый соус", "ingredientIds": ["chicken-thigh", "yogurt", "mayonnaise", "lemon"] },
+        { "id": "carbs", "label": "Рис", "ingredientIds": ["rice", "butter"] },
+        { "id": "vegetables", "label": "Овощи", "ingredientIds": ["cucumber", "tomato", "onion", "olive-oil", "vinegar"] }
+      ]
+    },
+    {
+      "recipeId": "src-lemon-chicken",
+      "title": "Лимонная курица с картофельным пюре и морковью",
+      "evidence": "Разложите пюре, морковь и курицу по контейнерам, не закрывая их до прекращения пара.",
+      "components": [
+        { "id": "protein", "label": "Курица", "ingredientIds": ["chicken-thigh", "mustard"] },
+        { "id": "carbs", "label": "Картофельное пюре", "ingredientIds": ["potato", "butter", "milk"] },
+        { "id": "vegetables", "label": "Морковь", "ingredientIds": ["carrot"] }
+      ]
+    },
+    {
+      "recipeId": "src-light-stroganoff",
+      "title": "Говядина по-строгановски с грибами и пастой",
+      "evidence": "Отдельно сварите пасту до состояния аль денте и сохраните немного воды от варки.",
+      "components": [
+        { "id": "protein", "label": "Говядина и соус", "ingredientIds": ["beef", "carrot", "mushrooms", "onion", "cream-cheese", "yogurt", "broth", "mustard", "worcestershire", "starch"] },
+        { "id": "carbs", "label": "Паста", "ingredientIds": ["pasta"] }
+      ]
+    },
+    {
+      "recipeId": "src-beefy-cheese-potatoes",
+      "title": "Картофель с говядиной, овощами и сырным соусом",
+      "evidence": "Разложите картофель, мясо и овощи отдельными секторами, сырный соус налейте в маленькую ёмкость.",
+      "components": [
+        { "id": "protein", "label": "Говядина и сырный соус", "ingredientIds": ["beef-mince", "tomato-sauce", "cottage", "cheese", "milk"] },
+        { "id": "carbs", "label": "Картофель", "ingredientIds": ["potato"] },
+        { "id": "vegetables", "label": "Овощи", "ingredientIds": ["zucchini", "onion", "pepper", "mushrooms"] }
+      ]
+    },
+    {
+      "recipeId": "tmpm-28533",
+      "title": "Куриные боулы со сливочным соусом из кинзы и лайма",
+      "evidence": "Нарежьте курицу, разложите рис, овощи и курицу на 5 порций, соус храните отдельно.",
+      "components": [
+        { "id": "protein", "label": "Курица и зелёный соус", "ingredientIds": ["source-ingredient-1", "source-ingredient-8", "source-ingredient-10", "source-ingredient-15", "source-ingredient-16", "source-ingredient-17", "source-ingredient-21", "source-ingredient-22", "source-ingredient-23"] },
+        { "id": "carbs", "label": "Рис", "ingredientIds": ["source-ingredient-12"] },
+        { "id": "vegetables", "label": "Батат и брокколи", "ingredientIds": ["source-ingredient-11", "source-ingredient-13", "source-ingredient-14"] }
+      ]
+    },
+    {
+      "recipeId": "tmpm-28247",
+      "title": "Курица терияки с овощами на противне",
+      "evidence": "Разложите с рисом и овощами на 5 порций.",
+      "components": [
+        { "id": "protein", "label": "Курица терияки", "ingredientIds": ["source-ingredient-1", "source-ingredient-2", "source-ingredient-3", "source-ingredient-10", "source-ingredient-11", "source-ingredient-13", "source-ingredient-14", "source-ingredient-15"] },
+        { "id": "carbs", "label": "Рис", "ingredientIds": ["source-ingredient-9"] },
+        { "id": "vegetables", "label": "Батат и брокколи", "ingredientIds": ["source-ingredient-6", "source-ingredient-7", "source-ingredient-8"] }
+      ]
+    },
+    {
+      "recipeId": "tmpm-26996",
+      "title": "Курица с чили, лаймом и золотистым рисом",
+      "evidence": "Покройте бёдра маринадом и запекайте 20–25 минут; после отдыха разберите на кусочки и покройте соками противня.",
+      "components": [
+        { "id": "protein", "label": "Курица", "ingredientIds": ["source-ingredient-1", "source-ingredient-2", "source-ingredient-3", "source-ingredient-21"] },
+        { "id": "carbs", "label": "Рис с фидео", "ingredientIds": ["source-ingredient-10", "source-ingredient-11", "source-ingredient-12", "source-ingredient-17"] },
+        { "id": "vegetables", "label": "Брокколини", "ingredientIds": ["source-ingredient-20"] }
+      ]
+    },
+    {
+      "recipeId": "goodfood-steak-broccoli-protein-pots",
+      "title": "Протеиновые контейнеры со стейком и брокколи",
+      "evidence": "Разложите рис, брокколи и нарезанный стейк по двум контейнерам.",
+      "components": [
+        { "id": "protein", "label": "Стейк", "ingredientIds": ["source-ingredient-5"] },
+        { "id": "carbs", "label": "Рис", "ingredientIds": ["source-ingredient-1", "source-ingredient-2"] },
+        { "id": "vegetables", "label": "Брокколи", "ingredientIds": ["source-ingredient-3", "source-ingredient-4"] }
+      ]
+    }
+  ],
+  "rejected": [
+    {
+      "recipeId": "src-chicken-rice-veg",
+      "title": "Курица с рисом и овощами",
+      "reason": "Курица, рис и овощи запекаются вместе в одной форме; отдельное взвешивание после готовки не доказано.",
+      "evidence": "Выложите рис и овощи в форму, сверху распределите курицу и добавьте воду."
+    }
+  ]
+}

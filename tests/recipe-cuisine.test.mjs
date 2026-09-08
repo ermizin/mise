@@ -26,6 +26,12 @@ const {
 const engine = await loadTypeScriptModule(
   new URL("../domain/recipe-engine.ts", import.meta.url),
 );
+const cookingDuration = await loadTypeScriptModule(
+  new URL("../domain/cooking-duration.ts", import.meta.url),
+);
+const nutritionHistory = await loadTypeScriptModule(
+  new URL("../domain/nutrition-history.ts", import.meta.url),
+);
 const nutrition = await loadTypeScriptModule(
   new URL("../domain/nutrition.ts", import.meta.url),
 );
@@ -53,6 +59,7 @@ async function catalogRuntime() {
     availableCuisines,
     carryCuisineFilter,
     runtimeRecipeCatalogJson: await readJson("data/recipe-runtime-catalog.json"),
+    portionComponentsJson: await readJson("data/recipe-portion-components.json"),
     legacyRecipeImageDownloadSourcesJson: await readJson(
       "data/legacy-recipe-image-download-sources.json",
     ),
@@ -79,6 +86,12 @@ async function catalogRuntime() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    physicalBatchAmountsViable: engine.physicalBatchAmountsViable,
+    parseCookingDuration: cookingDuration.parseCookingDuration,
+    formatCookingDuration: cookingDuration.formatCookingDuration,
+    normalizeNutritionHistory: nutritionHistory.normalizeNutritionHistory,
+    preserveNutritionSnapshot: nutritionHistory.preserveNutritionSnapshot,
+    getNutritionSnapshot: nutritionHistory.getNutritionSnapshot,
     recipeEffortDifficulty: engine.recipeEffortDifficulty,
     recipeEffortLevel: engine.recipeEffortLevel,
     normalizeMealExecution: mealExecution.normalizeMealExecution,

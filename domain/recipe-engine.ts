@@ -163,6 +163,8 @@ export type RecipeFamilyIngredient = {
   scalingPriority: number;
   substitutions: string[];
   optional: boolean;
+  /** Keep the source amount for each serving; do not use this edible fat as a calorie lever. */
+  sourceScaling?: "fixed_per_serving";
   preparation?: string;
 };
 
@@ -2581,12 +2583,10 @@ type RawEdibleFatOverride = {
 };
 
 /**
- * `fat_cooking` is reserved for the audited pan/form input that is used once
- * for a physical cooking session. Parsed source cards otherwise begin with a
- * conservative legacy default, so an edible fat must be moved deliberately
- * with its exact editorial instruction. This keeps unreviewed pan use fixed
- * while preventing sauce, mash, batter and marinade fats from being counted
- * only once across several containers.
+ * `fat_cooking` is reserved for an explicitly reviewed pan/form input. Parsed
+ * source cards do not have enough usage metadata to infer that an oil is used
+ * once for the whole cook: it may be a sauce, batter, topping or marinade.
+ * Those fats therefore remain edible and retain their source-serving basis.
  */
 const rawEdibleFatOverrides: Readonly<
   Record<string, Readonly<Record<string, RawEdibleFatOverride>>>
@@ -2714,8 +2714,7 @@ function rawRoleForCanonical(
 ): RecipeIngredientRole {
   const override = rawEdibleFatOverrides[candidateId]?.[sourceIngredientId];
   if (override?.canonicalIngredientId === canonical.id) return "fat";
-  const { category, nutritionPer100g, id } = canonical;
-  if (/(?:oil|butter|ghee|coconut_oil)/.test(id)) return "fat_cooking";
+  const { category, nutritionPer100g } = canonical;
   if (
     category === "meat" ||
     category === "fish" ||
@@ -2738,6 +2737,12 @@ function rawRoleForCanonical(
   // packaged components whose taxonomy is more specific than the role list.
   if (nutritionPer100g.kcal >= 50) return "flavour";
   return "flavour_fixed";
+}
+
+function rawFatUsesSourceServingBasis(canonical: CanonicalIngredient) {
+  return canonical.category === "fat" ||
+    canonical.category === "nut" ||
+    /(?:oil|butter|ghee)/u.test(canonical.id);
 }
 
 // These source recipes explicitly yield divisible gram-based portions. A
@@ -2968,8 +2973,18 @@ export function deriveRecipeFamilyFromAuditedCandidate(
     const sourceIngredientId = `source-ingredient-${index + 1}`;
     const role = rawRoleForCanonical(candidate.id, sourceIngredientId, canonical);
     const ingredientBounds = bounds(baseAmount, role);
+    const sourceScaling = role === "fat" && rawFatUsesSourceServingBasis(canonical)
+      ? "fixed_per_serving" as const
+      : undefined;
+    if (sourceScaling) {
+      ingredientBounds.minAmount = baseAmount;
+      ingredientBounds.preferredMin = baseAmount;
+      ingredientBounds.preferredMax = baseAmount;
+      ingredientBounds.maxAmount = baseAmount;
+      ingredientBounds.scalable = false;
+    }
     const portionFloor = rawPortionFloorRatios[candidate.id];
-    if (portionFloor && role !== "fat_cooking")
+    if (portionFloor && role !== "fat_cooking" && !sourceScaling)
       ingredientBounds.minAmount = Math.min(
         ingredientBounds.minAmount,
         baseAmount * portionFloor,
@@ -2981,6 +2996,7 @@ export function deriveRecipeFamilyFromAuditedCandidate(
       unit,
       role,
       ...ingredientBounds,
+      ...(sourceScaling ? { sourceScaling } : {}),
       substitutions: [],
       optional: false,
     });
@@ -3078,14 +3094,12 @@ type SolverIngredientView = {
  */
 function solverView(family: Pick<RecipeFamily, "ingredients">): SolverIngredientView[] {
   return family.ingredients.map((ingredient) => {
-    const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
     const step = amountStep(ingredient);
     const gridMin = Math.ceil(ingredient.minAmount / step) * step;
-    // Structural whole units cannot be safely truncated (2.9 eggs is three
-    // eggs in practice); ordinary measured ingredients remain hard-clamped.
-    const gridMax = canonical.unit.structuralDiscrete
-      ? Math.ceil(ingredient.maxAmount / step) * step
-      : Math.floor(ingredient.maxAmount / step) * step;
+    // A serving may receive a fractional nutritional share of eggs, but an
+    // individual solver must never round that share above its declared bound.
+    // Physical-batch rounding happens later in aggregateCookingAmounts.
+    const gridMax = Math.floor(ingredient.maxAmount / step) * step;
     return {
       id: ingredient.sourceIngredientId,
       perUnit: nutritionForAmount(ingredient, 1),
@@ -3283,26 +3297,42 @@ export type SolveRecipeFamilyInput = {
    * as the value the search still optimises towards.
    */
   proteinFloor?: number;
+  /**
+   * Keep protein as a scoring preference, but do not reject a calorie-valid
+   * recipe solely because it cannot meet this person's protein goal.
+   */
+  proteinGoalMode?: "strict" | "soft";
 };
 
 const solveCache = new Map<string, SolvedRecipeVariant>();
 const SOLVE_CACHE_LIMIT = 4000;
-const familyFingerprints = new WeakMap<object, string>();
 
 function familyFingerprint(family: RecipeFamily) {
-  const cached = familyFingerprints.get(family);
-  if (cached) return cached;
-  const fingerprint = [
+  // Families are editorial objects and can be updated in-place by a catalog
+  // refresh. Recompute this compact key instead of caching it by object
+  // identity, otherwise a changed role/bound can receive an old solve.
+  return [
     family.id,
     family.minViableCalories,
     family.maxViableCalories,
     family.minimumProtein,
     family.ingredients
-      .map((ingredient) => `${ingredient.sourceIngredientId}:${ingredient.canonicalIngredientId}:${ingredient.baseAmount}:${ingredient.minAmount}:${ingredient.maxAmount}:${ingredient.scalable ? 1 : 0}`)
+      .map((ingredient) => [
+        ingredient.sourceIngredientId,
+        ingredient.canonicalIngredientId,
+        ingredient.baseAmount,
+        ingredient.unit,
+        ingredient.role,
+        ingredient.minAmount,
+        ingredient.preferredMin,
+        ingredient.preferredMax,
+        ingredient.maxAmount,
+        ingredient.scalable ? 1 : 0,
+        ingredient.scalingPriority,
+        ingredient.sourceScaling ?? "",
+      ].join(":"))
       .join(","),
   ].join("|");
-  familyFingerprints.set(family, fingerprint);
-  return fingerprint;
 }
 
 function cloneVariant(variant: SolvedRecipeVariant): SolvedRecipeVariant {
@@ -3328,12 +3358,13 @@ export function solveRecipeFamily(
     ? 1
     : Math.min(1, Math.max(0, input.cookingFatShare));
   const exclusions = [...new Set(input.hardExclusions ?? [])].sort().join(",");
+  const proteinGoalMode = input.proteinGoalMode === "soft" ? "soft" : "strict";
   // The solve is deterministic in these inputs, so memoizing it is safe and
   // removes the repeated full search the catalog filter used to run per render.
-  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.proteinFloor ?? ""}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${cookingFatShare}|${exclusions}`;
+  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.proteinFloor ?? ""}|${proteinGoalMode}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${cookingFatShare}|${exclusions}`;
   const cached = solveCache.get(cacheKey);
   if (cached) return cloneVariant(cached);
-  const solved = solveRecipeFamilyUncached(family, input, targetCalories, cookingFatShare);
+  const solved = solveRecipeFamilyUncached(family, { ...input, proteinGoalMode }, targetCalories, cookingFatShare);
   if (solveCache.size >= SOLVE_CACHE_LIMIT) solveCache.clear();
   solveCache.set(cacheKey, solved);
   return cloneVariant(solved);
@@ -3372,7 +3403,7 @@ function solveRecipeFamilyUncached(
   const viable =
     best.nutrition.kcal >= minimumCalories &&
     best.nutrition.kcal <= maximumCalories &&
-    best.nutrition.protein + 0.2 >= proteinFloor;
+    (input.proteinGoalMode === "soft" || best.nutrition.protein + 0.2 >= proteinFloor);
   const changed = solvedFamily.ingredients.filter((ingredient) => Math.abs(best.amounts[ingredient.sourceIngredientId] - ingredient.baseAmount) > (amountStep(ingredient) < 1 ? 0.05 : 0.5)).sort((a, b) => a.scalingPriority - b.scalingPriority);
   return {
     familyId: family.id,
@@ -3484,10 +3515,16 @@ export function solveRecipeBatch(
 }
 
 export function aggregateCookingAmounts(
-  ingredients: Pick<RecipeFamilyIngredient, "sourceIngredientId" | "baseAmount" | "role">[],
+  ingredients: Pick<RecipeFamilyIngredient, "sourceIngredientId" | "canonicalIngredientId" | "baseAmount" | "minAmount" | "maxAmount" | "role" | "unit">[],
   portionAmounts: Record<string, number>[],
   days = 1,
+  servingMultipliers?: number[],
 ) {
+  const physicalServings = portionAmounts.reduce(
+    (sum, _portion, index) =>
+      sum + Math.max(0, Number.isFinite(servingMultipliers?.[index]) ? servingMultipliers![index] : 1),
+    0,
+  );
   return Object.fromEntries(
     ingredients.map((ingredient) => {
       // Pan and form fat is used once per cooking session regardless of how
@@ -3500,9 +3537,51 @@ export function aggregateCookingAmounts(
         (sum, amounts) => sum + (amounts[ingredient.sourceIngredientId] ?? 0),
         0,
       );
-      return [ingredient.sourceIngredientId, round(total * Math.max(0, days))];
+      const portionCount = physicalServings * Math.max(0, days);
+      const cookedAmount = round(total * Math.max(0, days));
+      // Eggs and other structural units are bought and cooked as whole units
+      // for the physical batch, not rounded independently for each serving.
+      // This leaves per-serving solver amounts intact while making the shared
+      // cooking list actionable without exceeding any serving's own bounds.
+      const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+      if (ingredient.unit !== "piece" || !canonical?.unit.structuralDiscrete)
+        return [ingredient.sourceIngredientId, cookedAmount];
+      const physicalMin = Math.ceil(ingredient.minAmount * portionCount);
+      const physicalMax = Math.floor(ingredient.maxAmount * portionCount);
+      // Choose a whole physical count only inside the sum of the solved
+      // serving bounds. If that interval has no integer, retain the bounded
+      // cooked amount instead of silently exceeding its maximum.
+      const physicalAmount = physicalMin <= physicalMax
+        ? Math.max(physicalMin, Math.min(physicalMax, Math.round(cookedAmount)))
+        : cookedAmount;
+      return [ingredient.sourceIngredientId, physicalAmount];
     }),
   );
+}
+
+/**
+ * A structural counted ingredient may only be cooked when its combined
+ * per-serving bounds contain at least one whole physical unit. Callers use
+ * this before presenting a batch as confirmable; aggregation deliberately
+ * does not invent an out-of-bounds egg or tortilla when it is false.
+ */
+export function physicalBatchAmountsViable(
+  ingredients: Pick<RecipeFamilyIngredient, "canonicalIngredientId" | "minAmount" | "maxAmount" | "unit">[],
+  portionCount: number,
+  days = 1,
+  servingMultipliers?: number[],
+) {
+  const count = (servingMultipliers
+    ? servingMultipliers.reduce(
+      (sum, multiplier) => sum + Math.max(0, Number.isFinite(multiplier) ? multiplier : 1),
+      0,
+    )
+    : Math.max(0, portionCount)) * Math.max(0, days);
+  return ingredients.every((ingredient) => {
+    const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+    if (ingredient.unit !== "piece" || !canonical?.unit.structuralDiscrete) return true;
+    return Math.ceil(ingredient.minAmount * count) <= Math.floor(ingredient.maxAmount * count);
+  });
 }
 
 export function materializeInstructions(

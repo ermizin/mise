@@ -119,7 +119,7 @@ test("batch cooking follows screen 5b without inventing a parallel schedule", as
   assert.match(page, /function buildBatchCookingModel/, "one view model aggregates the batch");
   assert.match(page, /Готовить партию по шагам/, "the week exposes the cooking mode");
   assert.match(page, /Шаг готов — дальше/, "the primary action advances one step");
-  assert.match(page, /Продукты шага/, "calculated products stay available in context");
+  assert.match(page, /Продукты блюда/, "calculated products stay available in context");
   assert.match(page, /Активное время · ориентир/, "time is not presented as an exact schedule");
   assert.match(page, /const visibleSteps = showAll \? model\.steps : \[currentStep\]/, "Now contains only the current step");
   assert.doesNotMatch(page, /className="batch-progress-ring"|className="batch-summary-tiles"/, "duplicate summary data is removed below active time");
@@ -188,8 +188,7 @@ test("recipe card 14A keeps inline products and dish data actionable", async () 
   assert.doesNotMatch(page, /по шагам рецепта|<b>по шагам<\/b>/, "the old amount placeholder is gone");
   assert.doesNotMatch(page, /\["products",\s*"Продукты"\]/, "there is no Products tab");
   assert.doesNotMatch(page, /Как разложить блюдо|Подстройка КБЖУ/, "Dish omits duplicate packing and tuning sections");
-  assert.match(page, /label: "Мясо"/);
-  assert.match(page, /label: "Гарнир"/);
+  assert.match(page, /reviewedPortionComponents/, "separate weights require an explicit reviewed component mapping");
   assert.match(page, /recipe\.instructions\?\.length/, "the card uses structured instructions when available");
   assert.match(page, /className="recipe-timeline"/, "the card renders the projected timeline");
   assert.match(page, /className="cooking-steps"/, "legacy recipes retain the numbered fallback");

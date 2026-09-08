@@ -6,6 +6,8 @@ import ts from "typescript";
 import { loadTypeScriptModule } from "./typescript-module.mjs";
 
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+const cookingDuration = await loadTypeScriptModule(new URL("../domain/cooking-duration.ts", import.meta.url));
+const nutritionHistory = await loadTypeScriptModule(new URL("../domain/nutrition-history.ts", import.meta.url));
 const recipeCuisineModule = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
 const nutritionModule = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
 const nutrition = (kcal, protein = 0, fat = 0, carbs = 0) => ({ kcal, protein, fat, carbs });
@@ -33,6 +35,7 @@ async function recipeCatalog() {
     availableCuisines: recipeCuisineModule.availableCuisines,
     carryCuisineFilter: recipeCuisineModule.carryCuisineFilter,
     runtimeRecipeCatalogJson,
+    portionComponentsJson: JSON.parse(await readFile(new URL("../data/recipe-portion-components.json", import.meta.url), "utf8")),
     legacyRecipeImageDownloadSourcesJson,
     ACTIVITY_FACTORS: nutritionModule.ACTIVITY_FACTORS,
     MEAL_SLOT_SHARES: nutritionModule.MEAL_SLOT_SHARES,
@@ -56,6 +59,12 @@ async function recipeCatalog() {
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    physicalBatchAmountsViable: engine.physicalBatchAmountsViable,
+    parseCookingDuration: cookingDuration.parseCookingDuration,
+    formatCookingDuration: cookingDuration.formatCookingDuration,
+    normalizeNutritionHistory: nutritionHistory.normalizeNutritionHistory,
+    preserveNutritionSnapshot: nutritionHistory.preserveNutritionSnapshot,
+    getNutritionSnapshot: nutritionHistory.getNutritionSnapshot,
     recipeEffortDifficulty: engine.recipeEffortDifficulty,
     recipeEffortLevel: engine.recipeEffortLevel,
   };

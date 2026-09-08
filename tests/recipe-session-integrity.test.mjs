@@ -17,7 +17,7 @@ test("one shared casserole reports the nutrition that its containers can actuall
   const people = [person("A", 2100, 0.2), person("B", 2100, 0.4)];
   for (const days of [1, 3, 6]) {
     const session = catalog.recipeCookingSession(people, "dinner", recipe, days);
-    assert.equal(session.viable, days !== 1, `days=${days}: pooled protein floor must be respected`);
+    assert.equal(session.viable, true, `days=${days}: protein shortfall does not reject a physically valid shared dish`);
     const family = catalog.recipeFamilyFor(recipe);
     const cooked = engine.nutritionForFamily(family, session.cookingAmounts);
     const cookedWeight = 1000 * days;
@@ -43,7 +43,7 @@ test("one shared casserole reports the nutrition that its containers can actuall
 
 test("canonical ingredients expose separate steak and rice without mislabelling mixed rice bowls", () => {
   const components = catalog.portionComponents(catalog.recipesById["goodfood-steak-broccoli-protein-pots"]);
-  assert.deepEqual(Array.from(components, (component) => component.id), ["protein", "carbs"]);
+  assert.deepEqual(Array.from(components, (component) => component.id), ["protein", "carbs", "vegetables"]);
   assert.ok(components[0].ingredients.some((ingredient) => ingredient.canonicalIngredientId?.includes("beef")));
   assert.ok(components[1].ingredients.some((ingredient) => ingredient.canonicalIngredientId === "rice_raw"));
   assert.equal(catalog.portionComponents(catalog.recipesById["tmpm-24949"]).length, 0);

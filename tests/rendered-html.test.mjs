@@ -110,7 +110,7 @@ test("includes the complete plan-builder and private persistence model", async (
     "saved_plan_reopened",
     "next_plan_created",
   ]) assert.match(page, new RegExp(event));
-  assert.match(page, /Отметить, что партия приготовлена/);
+  assert.match(page, /Завершить готовку и раскладку/);
 
   assert.match(route, /where\(eq\(mealPlans\.clientId, clientId\)\)/);
   assert.match(route, /id: `\$\{clientId\}:\$\{plan\.id\}`/);

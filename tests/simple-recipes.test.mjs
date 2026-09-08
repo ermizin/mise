@@ -14,6 +14,8 @@ const [source, media, runtimeCatalog] = await Promise.all([
   readJson("../data/recipe-runtime-catalog.json"),
 ]);
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
+const cookingDuration = await loadTypeScriptModule(new URL("../domain/cooking-duration.ts", import.meta.url));
+const nutritionHistory = await loadTypeScriptModule(new URL("../domain/nutrition-history.ts", import.meta.url));
 const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
 const recipeCuisine = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
 const mealExecution = await loadTypeScriptModule(new URL("../domain/meal-execution.ts", import.meta.url));
@@ -48,6 +50,7 @@ globalThis.__simpleRuntime = { recipes, candidateRecipes, recipeCookingSession, 
     availableCuisines: recipeCuisine.availableCuisines,
     carryCuisineFilter: recipeCuisine.carryCuisineFilter,
     runtimeRecipeCatalogJson: runtimeCatalog,
+    portionComponentsJson: await readJson("../data/recipe-portion-components.json"),
     legacyRecipeImageDownloadSourcesJson: legacyImages,
     ACTIVITY_FACTORS: nutrition.ACTIVITY_FACTORS,
     calculateMealPlanTargets: nutrition.calculateMealPlanTargets,
@@ -71,6 +74,12 @@ globalThis.__simpleRuntime = { recipes, candidateRecipes, recipeCookingSession, 
     normalizeRawRecipeCandidate: engine.normalizeRawRecipeCandidate,
     auditRawCandidateAgainstFamily: engine.auditRawCandidateAgainstFamily,
     aggregateCookingAmounts: engine.aggregateCookingAmounts,
+    physicalBatchAmountsViable: engine.physicalBatchAmountsViable,
+    parseCookingDuration: cookingDuration.parseCookingDuration,
+    formatCookingDuration: cookingDuration.formatCookingDuration,
+    normalizeNutritionHistory: nutritionHistory.normalizeNutritionHistory,
+    preserveNutritionSnapshot: nutritionHistory.preserveNutritionSnapshot,
+    getNutritionSnapshot: nutritionHistory.getNutritionSnapshot,
     recipeEffortDifficulty: engine.recipeEffortDifficulty,
     recipeEffortLevel: engine.recipeEffortLevel,
     normalizeMealExecution: mealExecution.normalizeMealExecution,

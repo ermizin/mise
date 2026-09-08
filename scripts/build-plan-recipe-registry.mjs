@@ -40,6 +40,7 @@ async function productionRecipes() {
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
+    portionComponentsJson: JSON.parse(await readFile(new URL("../data/recipe-portion-components.json", import.meta.url), "utf8")),
     recipeCuisine: recipeCuisineModule.recipeCuisine,
     cuisineOrder: recipeCuisineModule.cuisineOrder,
     cuisineLabels: recipeCuisineModule.cuisineLabels,

@@ -285,50 +285,12 @@ function normalizationFailure(card, code, detail) {
   return { id: card.id, title: card.title, code, detail };
 }
 
-function expandedInstructionDraft(steps) {
-  const terminalIdBySourceId = new Map();
-  const expanded = [];
-  steps.forEach((step, stepIndex) => {
-    const parts = String(step.text ?? "")
-      .split(/(?<=[.!?])\s+(?=[А-ЯЁ])/u)
-      .map((part) => part.trim())
-      .filter(Boolean);
-    const merged = [];
-    for (const part of parts) {
-      if (part.length < 20 && merged.length) merged[merged.length - 1] += ` ${part}`;
-      else merged.push(part);
-    }
-    if (merged.length > 1 && merged[0].length < 20)
-      merged.splice(0, 2, `${merged[0]} ${merged[1]}`);
-    const sourceId = step.id || `editorial-step-${stepIndex + 1}`;
-    const sourceDependencies = (step.dependsOn ?? []).flatMap((dependencyId) => {
-      const terminalId = terminalIdBySourceId.get(dependencyId);
-      return terminalId ? [terminalId] : [];
-    });
-    merged.forEach((text, partIndex) => {
-      const id = `${sourceId}-part-${partIndex + 1}`;
-      const previousPartId = partIndex > 0 ? `${sourceId}-part-${partIndex}` : null;
-      expanded.push({
-        ...step,
-        id,
-        text,
-        ...(partIndex === merged.length - 1 && step.duration
-          ? { duration: step.duration }
-          : { duration: undefined }),
-        dependsOn: previousPartId ? [previousPartId] : sourceDependencies,
-      });
-      terminalIdBySourceId.set(sourceId, id);
-    });
-  });
-  if (expanded.length === 1)
-    expanded.push({
-      ...expanded[0],
-      id: `${expanded[0].id}-pack`,
-      text: "Разделите готовый выход по числу рассчитанных контейнеров, подпишите имя, приём пищи и дату, затем уберите на хранение.",
-      duration: undefined,
-      dependsOn: [expanded[0].id],
-    });
-  return expanded;
+export function expandedInstructionDraft(steps) {
+  // A source step may combine preparation, equipment, time, and doneness across
+  // several sentences. Without structured per-sentence facts, splitting it
+  // changes those facts and can also erase forward dependencies. Keep the
+  // reviewed composite step intact until an editor supplies a safe split.
+  return steps.map((step) => ({ ...step }));
 }
 
 async function loadCandidates() {

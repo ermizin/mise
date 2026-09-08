@@ -1,0 +1,147 @@
+.cooking-method-choice {
+  border: 0;
+  margin: 0;
+  min-inline-size: 0;
+  padding: 0;
+}
+
+.cooking-method-choice legend {
+  color: var(--ink-strong);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-h3);
+  padding: 0;
+}
+
+.cooking-method-choice__hint {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.4;
+  margin: var(--space-1) 0 var(--space-3);
+}
+
+.cooking-method-choice__options {
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 232px), 1fr));
+}
+
+.cooking-method-choice__option {
+  align-items: flex-start;
+  background: var(--glass-3-bg);
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-row);
+  box-shadow: var(--glint-soft), var(--shadow-s);
+  cursor: pointer;
+  display: grid;
+  gap: var(--space-2);
+  grid-template-columns: var(--checkbox) minmax(0, 1fr);
+  min-block-size: var(--hit-min);
+  padding: var(--space-3);
+  transition: border-color var(--motion-press) ease, background var(--motion-press) ease, transform var(--motion-press) ease;
+}
+
+.cooking-method-choice__option:hover {
+  border-color: var(--accent-select-border);
+}
+
+.cooking-method-choice__option.is-selected {
+  background: var(--accent-select-bg);
+  border-color: var(--accent-select-border);
+}
+
+.cooking-method-choice__option:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--accent) 42%, transparent);
+  outline-offset: 2px;
+}
+
+.cooking-method-choice__option:has(input:active) {
+  transform: scale(0.985);
+}
+
+.cooking-method-choice__option input {
+  block-size: 1px;
+  clip: rect(0 0 0 0);
+  inline-size: 1px;
+  margin: -1px;
+  overflow: hidden;
+  position: absolute;
+}
+
+.cooking-method-choice__radio {
+  background: var(--surface-control-bg);
+  border: 1.5px solid var(--surface-control-border);
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: block;
+  height: var(--checkbox);
+  margin-top: 1px;
+  position: relative;
+  width: var(--checkbox);
+}
+
+.cooking-method-choice__option.is-selected .cooking-method-choice__radio {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.cooking-method-choice__option.is-selected .cooking-method-choice__radio::after {
+  background: #fff;
+  border-radius: 50%;
+  content: "";
+  inset: 6px;
+  position: absolute;
+}
+
+.cooking-method-choice__content {
+  display: grid;
+  gap: 2px;
+  min-inline-size: 0;
+}
+
+.cooking-method-choice__title {
+  color: var(--ink-strong);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+
+.cooking-method-choice__context,
+.cooking-method-choice__note,
+.cooking-method-choice__equipment,
+.cooking-method-choice__timing {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.35;
+}
+
+.cooking-method-choice__equipment {
+  color: var(--ink-body);
+}
+
+.cooking-method-choice__note {
+  color: var(--ink-body);
+}
+
+.cooking-method-choice__timing {
+  color: var(--accent-text);
+  font-family: var(--font-num);
+  font-weight: var(--weight-label);
+}
+
+.cooking-method-choice:disabled .cooking-method-choice__option {
+  cursor: default;
+  opacity: 0.58;
+}
+
+@media (max-width: 340px) {
+  .cooking-method-choice__option {
+    padding: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cooking-method-choice__option {
+    transition: none;
+  }
+}

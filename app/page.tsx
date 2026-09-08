@@ -12,6 +12,11 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
 } from "react";
+import { getNutritionSnapshot, normalizeNutritionHistory, preserveNutritionSnapshot, type NutritionHistory } from "@/domain/nutrition-history";
+import portionComponentsJson from "@/data/recipe-portion-components.json";
+import { makeCookingSignature, restoreCookingDraft, cookingProgress, type CookingDraft } from "@/domain/cooking-session";
+import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
+import { CookingMethodChoice } from "./cooking-method-choice";
 import { createPortal } from "react-dom";
 import {
   NotificationSetupPanel,
@@ -37,6 +42,7 @@ import {
 } from "@/domain/portion-allocation";
 import {
   aggregateCookingAmounts,
+  physicalBatchAmountsViable,
   canonicalIngredients,
   nutritionForFamily,
   deriveRecipeFamilyFromCatalog,
@@ -44,6 +50,7 @@ import {
   recipeEffortLevel,
   recipeToFamily,
   solveRecipeFamily,
+  type RecipeInstruction,
   type RecipeFamily,
   type RecipeStep,
 } from "@/domain/recipe-engine";
@@ -70,7 +77,6 @@ import {
   calculateNutritionTarget,
   capMacrosAtCalories,
   macroCalories as nutritionMacroCalories,
-  mealProteinFloor as nutritionMealProteinFloor,
   macrosForCalories as nutritionMacrosForCalories,
   normalizeNutritionTargetMode,
   recalculateDailyMacros as nutritionRecalculateDailyMacros,
@@ -376,9 +382,11 @@ type ActivePlan = {
   pinnedSelectionKeys?: string[];
   tuning?: Record<string, RecipeTuning>;
   cookedWeights?: Record<string, CookedWeights>;
+  cookingSignatures?: Record<string, string>;
   cookedBatchIds?: string[];
   shopping: ShoppingItem[];
   mealExecution?: MealExecution;
+  nutritionHistory?: NutritionHistory;
   catalogMigration?: { removedRecipeIds: string[] };
 };
 type WeekMealRow = {
@@ -396,7 +404,12 @@ type RecipeContext = {
 type BatchCookingContext = {
   batchId: string;
 };
+type BatchCookingBlocker = { recipeId: string; slot: MealSlot; personIds: string[]; title: string; reason: string };
 type BatchCookingStep = {
+  sourceStepId: string;
+  instruction?: RecipeInstruction;
+  duration: CookingDuration;
+  productsScope: "dish";
   id: string;
   recipeId: string;
   title: string;
@@ -405,6 +418,8 @@ type BatchCookingStep = {
   products: string[];
 };
 type BatchCookingModel = {
+  blockers: BatchCookingBlocker[];
+  canComplete: boolean;
   dishes: { recipe: Recipe; slot: MealSlot; personIds: string[] }[];
   steps: BatchCookingStep[];
   totalPortions: number;
@@ -4966,35 +4981,13 @@ function ingredientMatchesGroup(ingredient: Ingredient, group: Set<string>) {
     canonical && (group.has(canonical.id) || canonical.aliases.some((alias) => group.has(alias))),
   );
 }
-function portionComponents(recipe: Recipe): PortionComponent[] {
-  const text = recipe.title.toLowerCase();
-  const mixed =
-    /паста|макарон|лапш|карри|плов|жареный рис|похл[её]б|туш[её]н|чечевиц|фасол|запеканк|смузи|пудинг|омлет|фриттат|маффин/.test(
-      text,
-    );
-  const joinsComponents = recipe.steps.some((step) =>
-    /(?:вмешайте|верните)\s+(?:курицу|стейк|фарш|мясо)/iu.test(step) ||
-    /(?:смешайте|соедините|перемешайте)/iu.test(step) &&
-      /(?:рис|паст|макарон|круп|картоф)/iu.test(step) &&
-      /(?:куриц|стейк|фарш|мяс|говядин|индейк|рыб)/iu.test(step),
-  );
-  if (mixed || joinsComponents) return [];
-  const protein = recipe.ingredients.filter((ingredient) =>
-    ingredientMatchesGroup(ingredient, proteinIngredientIds),
-  );
-  const carbs = recipe.ingredients.filter((ingredient) =>
-    ingredientMatchesGroup(ingredient, carbIngredientIds),
-  );
-  const components: PortionComponent[] = [];
-  if (protein.length)
-    components.push({
-      id: "protein",
-      label: "Мясо",
-      ingredients: protein,
-    });
-  if (carbs.length)
-    components.push({ id: "carbs", label: "Гарнир", ingredients: carbs });
-  return components.length >= 2 ? components : [];
+const reviewedPortionComponents = new Map(portionComponentsJson.recipes.map(entry => [entry.recipeId, entry]));
+function portionComponents(recipe: Recipe, methodId = "original"): PortionComponent[] {
+  if (methodId !== "original") return [];
+  const entry = reviewedPortionComponents.get(recipe.id);
+  if (!entry) return [];
+  return entry.components.map(component => ({ id: component.id as PortionComponent["id"], label: component.label,
+    ingredients: recipe.ingredients.filter(ingredient => component.ingredientIds.includes(ingredient.id)) }));
 }
 /** A cooking session yields `people × days` containers. */
 function cookingPortionCount(personCount: number, days: number) {
@@ -5125,21 +5118,20 @@ function portionFor(
       // The slot's proportional protein share stays the search target, but a
       // share an ordinary dish of this size cannot carry must not delete the
       // dish: the day, not one meal, owns the protein goal.
-      proteinFloor: nutritionMealProteinFloor(target.kcal, mealProteinTarget),
+      proteinFloor: 0,
+      proteinGoalMode: "soft",
       targetFat: target.fat * ratios.fat,
       targetCarbs: target.carbs * ratios.carbs,
       hardExclusions: person.hardExclusions,
       cookingFatShare: 1 / Math.max(1, cooking?.portionCount ?? 1),
     });
     if (solved.viable) {
-      const baseAmount = family.ingredients.reduce(
-        (sum, ingredient) => sum + ingredient.baseAmount,
-        0,
-      );
-      const solvedAmount = Object.values(solved.amounts).reduce(
-        (sum, amount) => sum + amount,
-        0,
-      );
+      const gramsFor = (ingredient: RecipeFamily["ingredients"][number], amount: number) => {
+        const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+        return amount * (ingredient.unit === "piece" ? canonical.unit.gramsPerUnit : ingredient.unit === "ml" ? canonical.densityGPerMl ?? 1 : 1);
+      };
+      const baseAmount = family.ingredients.reduce((sum, ingredient) => sum + gramsFor(ingredient, ingredient.baseAmount), 0);
+      const solvedAmount = family.ingredients.reduce((sum, ingredient) => sum + gramsFor(ingredient, solved.amounts[ingredient.sourceIngredientId] ?? 0), 0);
       return {
         target,
         factor: solvedAmount / Math.max(1, baseAmount),
@@ -5147,6 +5139,7 @@ function portionFor(
         ratios,
         grams: round(solvedAmount),
         solvedAmounts: solved.amounts,
+        sourceServingRepeat: "repeat" in solved ? Number(solved.repeat) : 1,
         engine: "recipe-family-v1" as const,
       };
     }
@@ -5197,10 +5190,9 @@ function portionFor(
   };
 }
 function ingredientRatioFor(ingredient: Ingredient, ratios: RecipeTuning) {
-  const canonicalId = canonicalIdForIngredient(ingredient);
-  if (proteinIngredientIds.has(canonicalId)) return ratios.protein;
-  if (carbIngredientIds.has(canonicalId)) return ratios.carbs;
-  if (fatIngredientIds.has(canonicalId)) return ratios.fat;
+  if (ingredientMatchesGroup(ingredient, proteinIngredientIds)) return ratios.protein;
+  if (ingredientMatchesGroup(ingredient, carbIngredientIds)) return ratios.carbs;
+  if (ingredientMatchesGroup(ingredient, fatIngredientIds)) return ratios.fat;
   return 1;
 }
 function ingredientScaleFor(
@@ -5231,6 +5223,7 @@ function recipeCookingAmounts(
         ),
       ),
       days,
+      portions.map(portion => portion.sourceServingRepeat ?? 1),
     );
   return Object.fromEntries(
     recipe.ingredients.map((ingredient) => [
@@ -5306,15 +5299,10 @@ function recipeCookingSession(
       factor: grams / Math.max(1, baseGrams),
     };
   });
-  const viable = portions.every((portion) =>
+  const viable = physicalBatchAmountsViable(family.ingredients, portions.length, batchDays, portions.map(portion => portion.sourceServingRepeat ?? 1)) && portions.every((portion) =>
+    Object.values(portion.actual).every(value => Number.isFinite(value) && value >= 0) &&
     portion.actual.kcal >= portion.target.kcal * 0.9 &&
-    portion.actual.kcal <= portion.target.kcal * 1.05 &&
-    portion.actual.protein + 0.2 >= Math.max(
-      family.minimumProtein,
-      nutritionMealProteinFloor(portion.target.kcal, Math.min(
-        portion.target.kcal / 8, portion.target.protein * portion.ratios.protein,
-      )),
-    ),
+    portion.actual.kcal <= portion.target.kcal * 1.05,
   );
   return { viable, portionCount, portions, cookingAmounts };
 
@@ -5358,25 +5346,37 @@ function recipeDisplaySteps(recipe: Recipe, kitchenEquipment?: KitchenEquipment[
         (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
       );
 }
-function minutesInStep(text: string, fallback: number) {
-  const match = text.match(/(?:около|примерно|~)?\s*(\d+)\s*мин/iu);
-  return match ? Math.max(1, Number(match[1])) : Math.max(1, fallback);
+function recipeCookingInstructions(recipe: Recipe, equipment?: KitchenEquipment[], methodId?: string): RecipeInstruction[] {
+  const method = cookingMethodFor(recipe, equipment, methodId);
+  if (!method) return [];
+  if (method.steps) return method.steps.map((text, index) => ({ id: `${method.id}:${index}`, text, action: "other", ingredientIds: [], dependsOn: [] } as RecipeInstruction));
+  const family = recipeFamilyFor(recipe);
+  return family ? family.miseInstructions.filter(step => step.action !== "measure") : recipeDisplaySteps(recipe, equipment, methodId).map((text, index) => ({ id: `legacy:${index}`, text, action: "other", ingredientIds: [], dependsOn: [] } as RecipeInstruction));
+}
+function defaultTimerSeconds(duration: CookingDuration) {
+  return duration.kind === "exact" ? duration.seconds : duration.kind === "range" ? duration.minSeconds : 0;
 }
 function buildBatchCookingModel(
   plan: ActivePlan,
   batch: Batch,
 ): BatchCookingModel {
-  const dishes = plan.mealSlots.flatMap((slot) => {
-    return assignmentGroupsFor(plan, batch, slot).flatMap((assignment) => {
+  const blockers: BatchCookingBlocker[] = [];
+  const plannedDishes = plan.mealSlots.flatMap((slot) => {
+    const assignments = assignmentGroupsFor(plan, batch, slot);
+    const missingPeople = plan.people.filter(person => person.includedSlots.includes(slot) && !assignments.some(assignment => assignment.personIds.includes(person.id)));
+    if (missingPeople.length) blockers.push({ recipeId: "", slot, personIds: missingPeople.map(person => person.id), title: "Не выбрано блюдо", reason: "Заполните этот приём пищи в меню." });
+    return assignments.flatMap((assignment) => {
       const recipe = recipesById[assignment.recipeId];
-      return recipe ? [{ recipe, slot, personIds: assignment.personIds }] : [];
+      if (!recipe) blockers.push({ recipeId: assignment.recipeId, slot, personIds: assignment.personIds, title: "Рецепт недоступен", reason: "Выберите замену в меню." });
+      return recipe ? [{ recipe, slot, personIds: [...assignment.personIds].sort() }] : [];
     });
   });
+  const dishes: BatchCookingModel["dishes"] = [];
   const steps: BatchCookingStep[] = [];
   let freezePortions = 0;
   let activeMinutes = 0;
   let totalMinutes = 0;
-  for (const { recipe, slot, personIds } of dishes) {
+  for (const { recipe, slot, personIds } of plannedDishes) {
     const eaters = plan.people.filter((person) => personIds.includes(person.id));
     const session = recipeCookingSession(
       eaters,
@@ -5387,25 +5387,16 @@ function buildBatchCookingModel(
     );
     const method = planCookingMethod(recipe, plan);
     if (!method) {
-      steps.push({ id: `${slot}:${recipe.id}:method`, recipeId: recipe.id, title: `Выберите способ для «${recipe.title}»`, detail: "Откройте рецепт и выберите доступный способ приготовления.", minutes: 0, products: [] });
+      blockers.push({ recipeId: recipe.id, slot, personIds, title: recipe.title, reason: "Выберите доступный способ приготовления в меню." });
       continue;
     }
-    const displaySteps = recipeDisplaySteps(recipe, plan.kitchenEquipment, method.id);
-    const fallbackMinutes = Math.max(
-      1,
-      Math.round((method.activeMinutes ?? recipe.effort.activeMinutes) / Math.max(1, displaySteps.length + 1)),
-    );
+    const displaySteps = recipeCookingInstructions(recipe, plan.kitchenEquipment, method.id);
+    const assignmentId = `${batch.id}:${slot}:${recipe.id}:${personIds.join("-")}`;
     if (!session.viable) {
-      steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:unavailable`,
-        recipeId: recipe.id,
-        title: `Пересоберите «${recipe.title}»`,
-        detail: "Не удалось рассчитать порции по текущим целям.",
-        minutes: 1,
-        products: [],
-      });
+      blockers.push({ recipeId: recipe.id, slot, personIds, title: recipe.title, reason: "Не удалось рассчитать порции по текущим целям. Замените блюдо или измените план." });
       continue;
     }
+    dishes.push({ recipe, slot, personIds });
     activeMinutes += method.activeMinutes ?? recipe.effort.activeMinutes;
     totalMinutes += method.timeMinutes ?? recipe.time;
     const products = recipe.ingredients.map(
@@ -5426,20 +5417,28 @@ function buildBatchCookingModel(
       ),
     );
     steps.push({
-      id: `${slot}:${recipe.id}:${personIds.join("-")}:measure`,
+      id: `${assignmentId}:measure`,
+      sourceStepId: "measure",
+      duration: { kind: "unknown" },
+      productsScope: "dish",
       recipeId: recipe.id,
       title: `Отмерьте продукты для «${recipe.title}»`,
       detail: `${mealMeta[slot].label} · ${withPlural(batch.days * eaters.length, FORMS.portion)}`,
-      minutes: fallbackMinutes,
+      minutes: 0,
       products,
     });
-    displaySteps.forEach((text, index) => {
+    displaySteps.forEach((instruction) => {
+      const duration = parseCookingDuration(instruction.text);
       steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:${index}`,
+        id: `${assignmentId}:${instruction.id}`,
+        sourceStepId: instruction.id,
+        instruction,
+        duration,
+        productsScope: "dish",
         recipeId: recipe.id,
-        title: text,
+        title: instruction.text,
         detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
-        minutes: minutesInStep(text, fallbackMinutes),
+        minutes: defaultTimerSeconds(duration) / 60,
         products,
       });
     });
@@ -5449,6 +5448,8 @@ function buildBatchCookingModel(
   }
   return {
     dishes,
+    blockers,
+    canComplete: blockers.length === 0 && dishes.length > 0,
     steps,
     totalPortions: dishes.reduce(
       (sum, { personIds }) => sum + batch.days * personIds.length,
@@ -5465,6 +5466,38 @@ function buildBatchCookingModel(
         dishes.filter(({ personIds }) => personIds.includes(person.id)).length,
     })),
   };
+}
+function completeBatchCookingPlan(plan: ActivePlan, batch: Batch, weights: Record<string, CookedWeights>): ActivePlan {
+  const model = buildBatchCookingModel(plan, batch);
+  if (plan.cookedBatchIds?.includes(batch.id)) throw new Error("Эта готовка уже завершена.");
+  if (!model.canComplete) throw new Error("Не удалось рассчитать всю готовку. Проверьте блюда.");
+  const ownedWeights: Record<string, CookedWeights> = {};
+  for (const dish of model.dishes) {
+    const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
+    const value = weights[key] ?? {};
+    const components = portionComponents(dish.recipe, planCookingMethod(dish.recipe, plan)?.id);
+    const required = components.length ? components.map(component => component.id) : ["total"];
+    if (!required.every(id => Number.isFinite(value[id]) && value[id] > 0))
+      throw new Error("Введите фактический вес каждого блюда.");
+    ownedWeights[key] = Object.fromEntries(required.map(id => [id, value[id]]));
+  }
+  let nutritionHistory = normalizeNutritionHistory(plan.nutritionHistory);
+  for (const dish of model.dishes) {
+    const { eaters, session } = recipeCookingSessionForAssignment(plan, batch, dish.slot, dish.recipe);
+    eaters.forEach((person, index) => {
+      for (let day = 0; day < batch.days; day++) nutritionHistory = preserveNutritionSnapshot(nutritionHistory,
+        mealOccurrenceKey(person.id, addDays(batch.start, day), dish.slot), dish.recipe.id, session.portions[index].actual, Date.now());
+    });
+  }
+  return { ...plan, nutritionHistory, cookingSignatures: { ...plan.cookingSignatures, [batch.id]: batchCookingSignature(plan, batch, model) }, cookedWeights: { ...plan.cookedWeights, ...ownedWeights }, cookedBatchIds: [...new Set([...(plan.cookedBatchIds ?? []), batch.id])] };
+}
+function batchCookingSignature(plan: ActivePlan, batch: Batch, model: BatchCookingModel) {
+  return makeCookingSignature({ batch: { id: batch.id, start: batch.start, end: batch.end, days: batch.days },
+    dishes: model.dishes.map(dish => ({ slot: dish.slot, recipeId: dish.recipe.id, personIds: [...dish.personIds].sort(),
+      amounts: recipeCookingSessionForAssignment(plan, batch, dish.slot, dish.recipe).session.cookingAmounts })),
+    steps: model.steps.map(step => ({ id: step.id, text: step.title, instruction: step.instruction, duration: step.duration })),
+    blockers: model.blockers,
+  });
 }
 function buildBatches(
   start: string,
@@ -5987,11 +6020,11 @@ function candidateRecipes(
 function combinationBonus(recipe: Recipe, selectedRecipes: Recipe[]) {
   const selectedIngredients = new Set(
     selectedRecipes.flatMap((item) =>
-      item.ingredients.map(canonicalIdForIngredient),
+      item.ingredients.map(ingredient => canonicalShoppingIngredient(ingredient)?.id ?? canonicalIdForIngredient(ingredient)),
     ),
   );
   const shared = recipe.ingredients.filter((ingredient) =>
-    selectedIngredients.has(canonicalIdForIngredient(ingredient)),
+    selectedIngredients.has(canonicalShoppingIngredient(ingredient)?.id ?? canonicalIdForIngredient(ingredient)),
   ).length;
   const newProducts = recipe.ingredients.length - shared;
   return shared * 18 - newProducts * 2;
@@ -6149,7 +6182,7 @@ function fitScoreForSession(session: RecipeCookingSession) {
   const scores = session.portions.map(({ target, actual }) => {
     if (target.kcal <= 0) return 0;
     const p =
-      Math.abs(actual.protein - target.protein) / Math.max(target.protein, 1);
+      Math.max(0, target.protein - actual.protein) / Math.max(target.protein, 1);
     const f = Math.abs(actual.fat - target.fat) / Math.max(target.fat, 1);
     const c = Math.abs(actual.carbs - target.carbs) / Math.max(target.carbs, 1);
     return Math.max(0, Math.round(100 - (p * 45 + f * 25 + c * 20)));
@@ -6157,6 +6190,24 @@ function fitScoreForSession(session: RecipeCookingSession) {
   return Math.round(
     scores.reduce((sum, value) => sum + value, 0) / scores.length,
   );
+}
+function dailyProteinAssessment(plan: Pick<ActivePlan, "people" | "selections" | "selectionAssignments" | "tuning" | "mealSlots" | "nutritionHistory">, batch: Batch, person: Person) {
+  const slots = plan.mealSlots.filter(slot => person.includedSlots.includes(slot));
+  const actual = addMacros(slots.flatMap(slot => {
+    const recipe = recipeForPerson(plan, batch, slot, person);
+    if (!recipe) return [];
+    const { eaters, session } = recipeCookingSessionForAssignment(plan, batch, slot, recipe);
+    const portion = session.portions[eaters.findIndex(eater => eater.id === person.id)];
+    const snapshot = getNutritionSnapshot(plan.nutritionHistory, mealOccurrenceKey(person.id, batch.start, slot), recipe.id);
+    return snapshot ? [snapshot.actual] : portion ? [portion.actual] : [];
+  }));
+  return { actual, target: person.daily.protein, shortfall: Math.max(0, round(person.daily.protein - actual.protein)), partial: slots.length < allMealSlots.length };
+}
+function proteinAssessmentText(assessment: ReturnType<typeof dailyProteinAssessment>) {
+  const { actual, target, shortfall, partial } = assessment;
+  return partial
+    ? `Выбранные блюда дают ${actual.protein} г белка. ${shortfall > 0 ? `До дневной цели остаётся ${shortfall} г за пределами этого плана.` : "Дневная цель по белку достигнута."}`
+    : `По плану ${actual.protein} из ${target} г белка в день.${shortfall > 0 ? ` Ниже цели на ${shortfall} г.` : " Цель достигнута."}`;
 }
 function newPerson(index = 0): Person {
   const estimate = { ...defaultNutritionEstimate };
@@ -8506,10 +8557,7 @@ function WeekScreen({
   );
   const [dayMotionDirection, setDayMotionDirection] = useState<-1 | 1>(1);
   const [personId, setPersonId] = useState(plan?.people[0]?.id ?? "");
-  const [confirmedBatchIds, setConfirmedBatchIds] = useState<string[]>(() =>
-    plan?.cookedBatchIds ?? [],
-  );
-  const [cookingConfirmError, setCookingConfirmError] = useState(false);
+  const confirmedBatchIds = plan?.cookedBatchIds ?? [];
   const [executionError, setExecutionError] = useState("");
   const [savingExecution, setSavingExecution] = useState(false);
   const [executionMotion, setExecutionMotion] = useState<{
@@ -8624,6 +8672,8 @@ function WeekScreen({
       row.recipe,
     );
     const index = eaters.findIndex((eater) => eater.id === person.id);
+    const snapshot = getNutritionSnapshot(activePlan.nutritionHistory ?? {}, row.key, row.recipe.id);
+    if (snapshot && session.portions[index]) return { ...session.portions[index], actual: snapshot.actual };
     return (
       session.portions[index] ??
       portionFor(
@@ -8709,11 +8759,13 @@ function WeekScreen({
   async function saveExecution(
     nextExecution: MealExecution,
     failureMessage: string,
+    nutritionHistory = activePlan.nutritionHistory,
   ) {
     setSavingExecution(true);
     setExecutionError("");
     const nextPlan = {
       ...activePlan,
+      nutritionHistory,
       mealExecution: reconcileMealExecution(
         executionPlanFor(activePlan),
         nextExecution,
@@ -8727,7 +8779,7 @@ function WeekScreen({
     }
     return true;
   }
-  async function toggleEaten(row: WeekMealRow) {
+  async function toggleEaten(row: WeekMealRow, capturedAt: number) {
     const wasEaten = rowIsEaten(row);
     const epoch = motionEpoch + 1;
     setMotionEpoch(epoch);
@@ -8744,17 +8796,8 @@ function WeekScreen({
     await saveExecution(
       nextExecution,
       "Отметка не сохранилась. Проверьте соединение и попробуйте ещё раз.",
+      wasEaten ? activePlan.nutritionHistory : preserveNutritionSnapshot(activePlan.nutritionHistory ?? {}, row.key, row.recipe.id, portionForRow(row).actual, capturedAt),
     );
-  }
-  async function confirmBatch() {
-    if (confirmedBatchIds.includes(batch.id)) return;
-    setCookingConfirmError(false);
-    const dedupeKey = `cooking-confirmed:${activePlan.id}:${batch.id}`;
-    const nextBatchIds = [...new Set([...(activePlan.cookedBatchIds ?? []), batch.id])];
-    if (await onChange({ ...activePlan, cookedBatchIds: nextBatchIds })) {
-      setConfirmedBatchIds((current) => [...current, batch.id]);
-      void trackAnalytics("cooking_confirmed", {}, dedupeKey);
-    } else setCookingConfirmError(true);
   }
   return (
     <section className="screen week-screen has-stable-tab-header">
@@ -8936,6 +8979,7 @@ function WeekScreen({
           )}
         </p>
       </section>
+      <p className="week-balance glass-3">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
       <div className="week-day-heading">
         <div>
           <p className="kicker">
@@ -8981,7 +9025,7 @@ function WeekScreen({
                 aria-checked={eaten}
                 aria-label={`${eaten ? "Снять отметку «съедено»" : "Отметить съеденным"}: ${row.recipe.title}`}
                 disabled={savingExecution}
-                onClick={() => void toggleEaten(row)}
+                onClick={() => void toggleEaten(row, Date.now())}
               >
                 {(eaten || tickLeaving) && (
                   <span
@@ -9149,7 +9193,7 @@ function WeekScreen({
         <button
           className={`cooking-confirm-button glass-card ${confirmedBatchIds.includes(batch.id) ? "confirmed" : ""}`}
           disabled={confirmedBatchIds.includes(batch.id)}
-          onClick={() => void confirmBatch()}
+          onClick={() => onOpenCooking(batch.id)}
         >
           <span>
             {confirmedBatchIds.includes(batch.id) ? (
@@ -9162,19 +9206,13 @@ function WeekScreen({
             <b>
               {confirmedBatchIds.includes(batch.id)
                 ? "Партия отмечена приготовленной"
-                : "Отметить, что партия приготовлена"}
+                : "Завершить готовку и раскладку"}
             </b>
             <small>
-              Только это подтверждение засчитывается как реальная готовка
+              Введите фактический вес и подтвердите раскладку
             </small>
           </div>
         </button>
-        {cookingConfirmError && (
-          <Note tone="warn" role="alert">
-            Не удалось сохранить отметку о готовке. Проверьте соединение и
-            попробуйте ещё раз.
-          </Note>
-        )}
         <button className="tutorial-entry glass-card" onClick={onOpenGuide}>
           <span>
             <Icon name="label" />
@@ -14147,6 +14185,7 @@ function ReviewStep({
           </p>
         </div>
       </section>
+      <section className="glass-card"><h2>Белок в выбранном меню</h2>{plan.batches.map(batch => <div key={batch.id}><h3>{formatDate(batch.start)} — {formatDate(batch.end)}</h3>{plan.people.map(person => <p key={person.id}><b>{person.name}: </b>{proteinAssessmentText(dailyProteinAssessment(plan, batch, person))}</p>)}</div>)}<button type="button" className="text-button" onClick={() => onEdit(5)}>Изменить блюда</button></section>
       <section className="review-list glass-card">
         <button onClick={() => onEdit(0)}>
           <Icon name="clock" />
@@ -14439,46 +14478,42 @@ function ingredientSortableAmount(ingredient: Ingredient, amount: number) {
     : amount;
 }
 
-function batchCookingProgressKey(plan: ActivePlan, batch: Batch) {
-  const selectionSignature = plan.mealSlots
-    .map((slot) =>
-      assignmentGroupsFor(plan, batch, slot)
-        .map(
-          (assignment) =>
-            `${assignment.recipeId}@${[...assignment.personIds].sort().join(",")}`,
-        )
-        .sort()
-        .join("+"),
-    )
-    .join(":");
-  return `mise-batch-cooking-v2:${plan.id}:${batch.id}:${selectionSignature}`;
+function readCookingDraft(key: string, signature: string, stepIds: string[]) {
+  try { return restoreCookingDraft(typeof window === "undefined" ? null : localStorage.getItem(key), signature, stepIds); }
+  catch { return { draft: null, invalidated: false }; }
+}
+function BatchCookingView(props: {
+  plan: ActivePlan; batch: Batch; onClose: () => void; onChangePlan: (plan: ActivePlan) => Promise<void>; onComplete: () => void;
+}) {
+  const model = useMemo(() => buildBatchCookingModel(props.plan, props.batch), [props.plan, props.batch]);
+  const signature = batchCookingSignature(props.plan, props.batch, model);
+  if (props.plan.cookedBatchIds?.includes(props.batch.id)) return <main className="app-shell"><section className="empty-state glass-card"><h1>Готовка завершена</h1><p>Подтверждённые веса и раскладка сохранены.</p><button className="primary-button" onClick={props.onClose}>Вернуться к неделе</button></section></main>;
+  return <BatchCookingSessionView key={signature} {...props} model={model} signature={signature} />;
 }
 
-function BatchCookingView({
+function BatchCookingSessionView({
+  model,
+  signature,
   plan,
   batch,
   onClose,
   onChangePlan,
   onComplete,
 }: {
+  model: BatchCookingModel;
+  signature: string;
   plan: ActivePlan;
   batch: Batch;
   onClose: () => void;
   onChangePlan: (plan: ActivePlan) => Promise<void>;
   onComplete: () => void;
 }) {
-  const model = useMemo(() => buildBatchCookingModel(plan, batch), [plan, batch]);
-  const progressKey = batchCookingProgressKey(plan, batch);
-  const [stepIndex, setStepIndex] = useState(() => {
-    if (typeof window === "undefined") return 0;
-    const saved = Number(localStorage.getItem(progressKey));
-    return Number.isFinite(saved)
-      ? Math.min(Math.max(0, saved), Math.max(0, model.steps.length - 1))
-      : 0;
-  });
+  const progressKey = `mise-batch-cooking-v3:${plan.id}:${batch.id}`;
+  const [restored] = useState(() => readCookingDraft(progressKey, signature, model.steps.map(step => step.id)));
+  const [stepIndex, setStepIndex] = useState(() => Math.max(0, model.steps.findIndex(step => step.id === restored.draft?.currentStepId)));
   const [showAll, setShowAll] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
-  const [portioning, setPortioning] = useState(false);
+  const [portioning, setPortioning] = useState(restored.draft?.phase === "portioning");
   const [cookingMotion, setCookingMotion] = useState<{
     direction: -1 | 1;
     epoch: number;
@@ -14488,13 +14523,27 @@ function BatchCookingView({
   >("idle");
   const [cookedWeights, setCookedWeights] = useState<
     Record<string, CookedWeights>
-  >(() => ({ ...plan.cookedWeights }));
+  >(() => restored.draft?.weights ?? ((restored.invalidated || plan.cookingSignatures?.[batch.id] !== signature) ? {} : Object.fromEntries(model.dishes.map(dish => {
+    const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
+    return [key, plan.cookedWeights?.[key] ?? {}];
+  }))));
   const currentStep = model.steps[stepIndex];
   const [remainingSeconds, setRemainingSeconds] = useState(
-    () => (currentStep?.minutes ?? 0) * 60,
+    () => restored.draft?.timer?.remainingSeconds ?? (currentStep?.minutes ?? 0) * 60,
   );
-  const [timerRunning, setTimerRunning] = useState(false);
-  const [timerEndsAt, setTimerEndsAt] = useState<number | null>(null);
+  const [timerRunning, setTimerRunning] = useState(Boolean(restored.draft?.timer?.endsAt));
+  const [timerEndsAt, setTimerEndsAt] = useState<number | null>(restored.draft?.timer?.endsAt ?? null);
+  const [completedPhase, setCompletedPhase] = useState(false);
+  const [manualMinutes, setManualMinutes] = useState("");
+  useEffect(() => {
+    if (!currentStep) return;
+    const draft: CookingDraft = { schemaVersion: 1, signature,
+      phase: completedPhase ? "completed" : portioning ? "portioning" : "cooking",
+      currentStepId: currentStep.id, weights: cookedWeights,
+      timer: { stepId: currentStep.id, remainingSeconds, endsAt: timerRunning ? timerEndsAt : null },
+    };
+    try { localStorage.setItem(progressKey, JSON.stringify(draft)); } catch { /* Session remains usable without device storage. */ }
+  }, [signature, progressKey, currentStep, portioning, completedPhase, cookedWeights, remainingSeconds, timerRunning, timerEndsAt]);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
   const backRef = useRef(onClose);
   useEffect(() => {
@@ -14555,6 +14604,13 @@ function BatchCookingView({
       if (lock) void lock.release().catch(() => undefined);
     };
   }, [timerRunning]);
+  if (model.blockers.length > 0)
+    return <main className="app-shell cooking-batch-shell"><section className="empty-state glass-card">
+      <h1>Сначала проверьте блюда</h1>
+      <p>Готовку нельзя завершить, пока не рассчитаны все запланированные порции.</p>
+      {model.blockers.map((blocker, index) => <div key={index} role="alert"><h2>{blocker.title} · {mealMeta[blocker.slot].label}</h2><p>{plan.people.filter(person => blocker.personIds.includes(person.id)).map(person => person.name).join(", ")}</p><p>{blocker.reason}</p></div>)}
+      <button className="primary-button" onClick={onClose}>Вернуться к плану</button>
+    </section></main>;
   if (!currentStep)
     return (
       <main className="app-shell cooking-batch-shell">
@@ -14569,8 +14625,7 @@ function BatchCookingView({
         </section>
       </main>
     );
-  const completed = stepIndex;
-  const progress = completed / Math.max(1, model.steps.length);
+  const progress = cookingProgress(completedPhase ? "completed" : portioning ? "portioning" : "cooking", stepIndex, model.steps.length);
   const progressPercent = Math.round(progress * 100);
   const visibleSteps = showAll ? model.steps : [currentStep];
   const formatTimer = (seconds: number) =>
@@ -14585,16 +14640,19 @@ function BatchCookingView({
   function goToStep(nextIndex: number) {
     const bounded = Math.max(0, Math.min(model.steps.length - 1, nextIndex));
     if (bounded === stepIndex) return;
+    if (timerRunning && !window.confirm("Таймер ещё работает. Остановить его и перейти к другому шагу?")) return;
     replayCookingMotion(bounded < stepIndex ? -1 : 1);
     setStepIndex(bounded);
-    localStorage.setItem(progressKey, String(bounded));
+    setManualMinutes("");
     setRemainingSeconds(model.steps[bounded].minutes * 60);
     setTimerRunning(false);
     setTimerEndsAt(null);
     setShowProducts(false);
   }
   function advance() {
+    if (!model.canComplete) return;
     if (stepIndex >= model.steps.length - 1) {
+      if (timerRunning && !window.confirm("Таймер ещё работает. Остановить его и перейти к раскладке?")) return;
       setTimerRunning(false);
       setTimerEndsAt(null);
       replayCookingMotion(1);
@@ -14606,7 +14664,7 @@ function BatchCookingView({
   function dishWeightsComplete(dish: BatchCookingModel["dishes"][number]) {
     const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
     const weights = cookedWeights[key] ?? {};
-    const components = portionComponents(dish.recipe);
+    const components = portionComponents(dish.recipe, planCookingMethod(dish.recipe, plan)?.id);
     return components.length === 0
       ? weights.total > 0
       : components.every((component) => weights[component.id] > 0);
@@ -14614,15 +14672,12 @@ function BatchCookingView({
   const allDishWeightsComplete =
     model.dishes.length > 0 && model.dishes.every(dishWeightsComplete);
   async function savePortioningAndComplete() {
-    if (!allDishWeightsComplete) return;
+    if (!model.canComplete || !allDishWeightsComplete || portionSaveState === "saving") return;
     setPortionSaveState("saving");
     try {
-      await onChangePlan({
-        ...plan,
-        cookedWeights: { ...plan.cookedWeights, ...cookedWeights },
-        cookedBatchIds: [...new Set([...(plan.cookedBatchIds ?? []), batch.id])],
-      });
-      localStorage.removeItem(progressKey);
+      await onChangePlan(completeBatchCookingPlan(plan, batch, cookedWeights));
+      setCompletedPhase(true);
+      try { localStorage.removeItem(progressKey); } catch { /* Completion already persisted. */ }
       onComplete();
     } catch {
       setPortionSaveState("error");
@@ -14651,6 +14706,8 @@ function BatchCookingView({
         </span>
       </header>
       <div className="cooking-batch-content">
+        {!restored.draft && plan.cookingSignatures?.[batch.id] !== signature && model.dishes.some(dish => plan.cookedWeights?.[cookedWeightsKey(batch, dish.slot, dish.recipe.id)]) && <Note tone="warn" role="status">Ранее введённые веса сохранены в плане, но не подтверждены для этого расчёта. Проверьте выход блюд и введите веса заново.</Note>}
+        {restored.invalidated && <Note tone="warn" role="status">План готовки изменился. Проверьте новые количества: шаги и черновые веса начаты заново.</Note>}
         <section className="batch-cooking-summary glass-2" aria-live="polite">
           <div className="batch-cooking-summary-top">
             <div>
@@ -14703,13 +14760,18 @@ function BatchCookingView({
                     <b>{step.title}</b>
                     <small>{step.detail}</small>
                   </div>
-                  <span>{step.minutes} мин</span>
+                  <span>{formatCookingDuration(step.duration)}</span>
                 </li>
               );
             })}
           </ol>
+          {currentStep.duration.kind === "range" && <p>Ориентир: {formatCookingDuration(currentStep.duration)}. Таймер предложит проверить готовность на нижней границе; следуйте признакам готовности в рецепте.</p>}
+          {currentStep.duration.kind === "multiple" && <fieldset disabled={timerRunning}><legend>В шаге несколько интервалов. Выберите, какой отсчитать</legend>{currentStep.duration.options.map((option, index) => <button type="button" key={index} onClick={() => setRemainingSeconds(defaultTimerSeconds(option))}>Интервал {index + 1}: {formatCookingDuration(option)}{option.kind === "range" ? " · проверить по нижней границе" : ""}</button>)}</fieldset>}
+          {currentStep.duration.kind === "unknown" && <p>Время в инструкции не указано. Таймер можно задать вручную.</p>}
+          <label>Свой таймер, минуты <input aria-label="Свой таймер, минуты" type="number" min="0.1" step="0.1" disabled={timerRunning} value={manualMinutes} onChange={event => { setManualMinutes(event.target.value); const seconds = Number(event.target.value) * 60; setRemainingSeconds(Number.isFinite(seconds) && seconds > 0 ? Math.round(seconds) : 0); }} /></label>
           <div className="cooking-step-tools">
             <button
+              disabled={!timerRunning && remainingSeconds <= 0}
               onClick={() => {
                 if (timerRunning) {
                   setRemainingSeconds(
@@ -14735,7 +14797,7 @@ function BatchCookingView({
               {timerRunning ? "Пауза" : "Таймер"} {formatTimer(remainingSeconds)}
             </button>
             <button onClick={() => setShowProducts((value) => !value)}>
-              <Icon name="basket" size={16} /> Продукты шага
+              <Icon name="basket" size={16} /> Продукты блюда
             </button>
           </div>
           {showProducts && (
@@ -14762,7 +14824,7 @@ function BatchCookingView({
             {model.dishes.map((dish) => {
               const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
               const weights = cookedWeights[key] ?? {};
-              const components = portionComponents(dish.recipe);
+              const components = portionComponents(dish.recipe, planCookingMethod(dish.recipe, plan)?.id);
               const people = allocationPeopleForDish(
                 plan,
                 batch,
@@ -14931,13 +14993,8 @@ function BatchCookingView({
 function CookingMethodSelect({ recipe, equipment, value, label, disabled, onChange }: {
   recipe: Recipe; equipment?: KitchenEquipment[]; value: string; label: string; disabled?: boolean; onChange: (id: string) => void;
 }) {
-  const methods = availableEquipmentMethods(recipe, equipment);
-  return <label>{label}
-    <select aria-label={`Способ приготовления: ${label}`} value={value} disabled={disabled} onChange={(event) => onChange(event.target.value)}>
-      <option value="" disabled>Выберите способ</option>
-      {methods.map((method) => <option key={method.id} value={method.id}>{method.label}</option>)}
-    </select>
-  </label>;
+  const methods = availableEquipmentMethods(recipe, equipment).map(method => ({ ...method, timeMinutes: method.timeMinutes ?? recipe.time, activeMinutes: method.activeMinutes ?? recipe.effort.activeMinutes }));
+  return <CookingMethodChoice methods={methods} value={value} label={label} disabled={disabled} onChange={onChange} />;
 }
 
 function RecipeView({
@@ -15119,7 +15176,7 @@ function RecipeView({
     recipe.provenance.kind === "parsed"
       ? "Из источника"
       : "Сгенерирован и отредактирован";
-  const components = portionComponents(recipe);
+  const components = portionComponents(recipe, cookingMethod?.id);
   const allocationPeople: PersonAllocation[] =
     batch && slot
       ? eaters.map((eater, index) => {
@@ -15189,6 +15246,7 @@ function RecipeView({
     try {
       await onChangePlan({
         ...plan,
+        cookingSignatures: { ...plan.cookingSignatures, [batch.id]: batchCookingSignature(plan, batch, buildBatchCookingModel(plan, batch)) },
         cookedWeights: {
           ...plan.cookedWeights,
           [cookedKey]: cookedWeights,

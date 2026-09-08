@@ -35,7 +35,7 @@ test("cooked weights persist and finish the batch through portioning", async () 
   assert.match(page, /cookedWeights\?: Record<string, CookedWeights>/);
   assert.match(page, /cookedWeightsKey\(batch, dish\.slot, dish\.recipe\.id\)/);
   assert.match(page, /savePortioningAndComplete/);
-  assert.match(page, /cookedWeights: \{ \.\.\.plan\.cookedWeights, \.\.\.cookedWeights \}/);
+  assert.match(page, /cookedWeights: \{ \.\.\.plan\.cookedWeights, \.\.\.ownedWeights \}/);
   assert.match(page, /Раскладка готова — завершить/);
   assert.match(page, /plan\?\.cookedWeights\?\.\[cookedKey\]/);
   assert.match(page, /Сохранить раскладку/);

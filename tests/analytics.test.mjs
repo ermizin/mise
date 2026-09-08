@@ -205,7 +205,7 @@ test("client instrumentation and owner report stay inside the privacy contract",
     ]);
   for (const event of analyticsEventNames)
     assert.match(`${page}\n${notificationSetup}`, new RegExp(event));
-  assert.match(page, /Отметить, что партия приготовлена/);
+  assert.match(page, /Завершить готовку и раскладку/);
   assert.match(eventRoute, /SHA-256/);
   assert.match(eventRoute, /onConflictDoNothing/);
   assert.match(summaryRoute, /owner access required/);
