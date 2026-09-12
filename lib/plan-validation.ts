@@ -66,7 +66,7 @@ function recipeSupportsSlot(recipe: RegistryRecipe, slot: string) {
 }
 
 function validForBatch(recipe: RegistryRecipe, slot: string, days: number, equipment?: string[], methods?: Record<string, string>) {
-  const methodId = methods?.[recipe.id] ?? (equipment === undefined ? "original" : "");
+  const methodId = methods?.[recipe.id] ?? "original";
   const method = recipe.equipmentOptions.find((method) => method.id === methodId);
   const compatible = Boolean(method && (equipment === undefined || method.requiredEquipment.every((item) => equipment.includes(item))));
   return compatible && recipeSupportsSlot(recipe, slot) && (recipe.storageDays >= days || recipe.freezable);

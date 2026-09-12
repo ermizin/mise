@@ -1033,7 +1033,7 @@ function normalizeRecipeMethods(value: unknown): Record<string, string> | undefi
   ));
 }
 function planMethodId(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
-  return plan.recipeMethods?.[recipe.id] ?? (plan.kitchenEquipment === undefined ? "original" : "");
+  return plan.recipeMethods?.[recipe.id] ?? "original";
 }
 function planCookingMethod(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
   return cookingMethodFor(recipe, plan.kitchenEquipment, planMethodId(recipe, plan));
@@ -11070,7 +11070,6 @@ function PlanBuilder({
     };
   })();
   const pendingMethods = missingPlanMethods(draftPlan);
-  const methodRecipes = [...new Set(Object.values(validSelectionAssignments).flatMap((groups) => groups.map((group) => group.recipeId)))].map((id) => recipesById[id]);
   const kitchenGaps = useMemo(() => kitchenMenuGaps(people, mealSlots, menuStyle, batches, kitchenEquipment), [people, mealSlots, menuStyle, batches, kitchenEquipment]);
   const steps = [
     "Период",
@@ -11841,12 +11840,9 @@ function PlanBuilder({
                 {!allSelected && <p role="status">Если блюд не хватает, добавьте доступную технику или измените позиции меню.</p>}
               </section>
             )}
-            {step === 5 && methodRecipes.length > 0 && <section className="recipe-equipment glass-card">
-              <h3>Как будем готовить?</h3>
-              <p>Выберите способ для каждого блюда. Он сохранится для всех его порций в этом плане.</p>
-              <button type="button" className="text-button" onClick={() => setRecipeMethods((current) => ({ ...current, ...Object.fromEntries(methodRecipes.filter((recipe) => !planCookingMethod(recipe, draftPlan) && cookingMethodFor(recipe, kitchenEquipment, "original")).map((recipe) => [recipe.id, "original"])) }))}>Подтвердить исходные способы</button>
-              {methodRecipes.map((recipe) => <CookingMethodSelect key={recipe.id} recipe={recipe} equipment={kitchenEquipment} value={planCookingMethod(recipe, draftPlan)?.id ?? ""} label={recipe.title} onChange={(id) => setRecipeMethods((current) => ({ ...current, [recipe.id]: id }))} />)}
-              {pendingMethods.length > 0 && <p role="status">Выберите ещё {withPlural(pendingMethods.length, ["способ", "способа", "способов"])}, чтобы продолжить.</p>}
+            {step === 5 && pendingMethods.length > 0 && <section className="glass-card" role="status">
+              <p>Для этих блюд нужно уточнить способ приготовления в карточке или заменить блюдо:</p>
+              {pendingMethods.map((id) => recipesById[id] && <button key={id} type="button" className="text-button" onClick={() => setPreviewRecipe(recipesById[id])}>{recipesById[id].title}</button>)}
             </section>}
             {step === 5 && menuMode === "auto" && allSelected ? (
               <div

@@ -137,8 +137,11 @@ test("saved method is explicit, survives reload and never switches when equipmen
   assert.ok(!app.buildBatchCookingModel(removedAppliance, removedAppliance.batches[0]).steps.some((step) => /духов/u.test(step.title)));
   assert.equal(app.planCookingMethod(recipe, planFor(recipe, undefined)).id, "original", "legacy plans keep original instructions");
   const missing = { ...original, recipeMethods: undefined };
-  assert.equal(validatePlanForPersistence(missing).valid, false, "new kitchen-aware plan needs saved choices");
-  assert.equal(app.planCookingMethod(recipe, missing), undefined);
+  assert.equal(validatePlanForPersistence(missing).valid, true, "available original needs no extra confirmation");
+  assert.equal(app.planCookingMethod(recipe, missing).id, "original");
+  const unavailableOriginal = { ...missing, kitchenEquipment: ["air_fryer"] };
+  assert.equal(app.planCookingMethod(recipe, unavailableOriginal), undefined);
+  assert.equal(validatePlanForPersistence(unavailableOriginal).valid, false);
   for (const methods of [null, [], "air_fryer", { [recipe.id]: "unknown" }, { nonexistent: "original" }]) {
     assert.equal(validatePlanForPersistence({ ...original, recipeMethods: methods }).status, 400);
   }
