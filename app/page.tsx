@@ -13,6 +13,7 @@ import {
   type ReactNode,
 } from "react";
 import { getNutritionSnapshot, normalizeNutritionHistory, preserveNutritionSnapshot, type NutritionHistory } from "@/domain/nutrition-history";
+import { optimizeDailyProteinBalance, type DailyMenuCandidate, type DailyMenuPosition } from "@/domain/menu-balance";
 import portionComponentsJson from "@/data/recipe-portion-components.json";
 import { makeCookingSignature, restoreCookingDraft, cookingProgress, type CookingDraft } from "@/domain/cooking-session";
 import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
@@ -462,6 +463,7 @@ type BuilderDraft = {
   selections: Record<string, string>;
   selectionAssignments?: Record<string, RecipeAssignment[]>;
   pinnedSelectionKeys?: string[];
+  tuning?: Record<string, RecipeTuning>;
 };
 type OnboardingStep =
   | "welcome"
@@ -6191,14 +6193,14 @@ function fitScoreForSession(session: RecipeCookingSession) {
     scores.reduce((sum, value) => sum + value, 0) / scores.length,
   );
 }
-function dailyProteinAssessment(plan: Pick<ActivePlan, "people" | "selections" | "selectionAssignments" | "tuning" | "mealSlots" | "nutritionHistory">, batch: Batch, person: Person) {
+function dailyProteinAssessment(plan: Pick<ActivePlan, "people" | "selections" | "selectionAssignments" | "tuning" | "mealSlots" | "nutritionHistory">, batch: Batch, person: Person, date = batch.start) {
   const slots = plan.mealSlots.filter(slot => person.includedSlots.includes(slot));
   const actual = addMacros(slots.flatMap(slot => {
     const recipe = recipeForPerson(plan, batch, slot, person);
     if (!recipe) return [];
     const { eaters, session } = recipeCookingSessionForAssignment(plan, batch, slot, recipe);
     const portion = session.portions[eaters.findIndex(eater => eater.id === person.id)];
-    const snapshot = getNutritionSnapshot(plan.nutritionHistory, mealOccurrenceKey(person.id, batch.start, slot), recipe.id);
+    const snapshot = getNutritionSnapshot(plan.nutritionHistory, mealOccurrenceKey(person.id, date, slot), recipe.id);
     return snapshot ? [snapshot.actual] : portion ? [portion.actual] : [];
   }));
   return { actual, target: person.daily.protein, shortfall: Math.max(0, round(person.daily.protein - actual.protein)), partial: slots.length < allMealSlots.length };
@@ -6208,6 +6210,138 @@ function proteinAssessmentText(assessment: ReturnType<typeof dailyProteinAssessm
   return partial
     ? `Выбранные блюда дают ${actual.protein} г белка. ${shortfall > 0 ? `До дневной цели остаётся ${shortfall} г за пределами этого плана.` : "Дневная цель по белку достигнута."}`
     : `По плану ${actual.protein} из ${target} г белка в день.${shortfall > 0 ? ` Ниже цели на ${shortfall} г.` : " Цель достигнута."}`;
+}
+
+function proteinBalanceSignature(plan: ActivePlan) {
+  return makeCookingSignature({ people: plan.people, batches: plan.batches, mealSlots: plan.mealSlots,
+    selections: plan.selections, assignments: plan.selectionAssignments, tuning: plan.tuning,
+    equipment: plan.kitchenEquipment, methods: plan.recipeMethods, pinned: plan.pinnedSelectionKeys,
+    cooked: plan.cookedBatchIds, weights: plan.cookedWeights, history: plan.nutritionHistory,
+    execution: plan.mealExecution, shopping: plan.shopping });
+}
+
+function batchHasRecordedCooking(plan: ActivePlan, batch: Batch) {
+  if (plan.cookedBatchIds?.includes(batch.id)) return true;
+  if (Object.entries(plan.cookedWeights ?? {}).some(([key, weights]) => key.startsWith(`${batch.id}:`) && Object.values(weights).some(weight => weight > 0))) return true;
+  const dates = new Set(Array.from({ length: batch.days }, (_, index) => addDays(batch.start, index)));
+  return [...Object.keys(plan.nutritionHistory ?? {}), ...(plan.mealExecution?.eaten ?? [])]
+    .some(key => dates.has(key.split(":")[1]));
+}
+
+function deviceCookingBatchIds(plan: ActivePlan) {
+  return plan.batches.filter(batch => {
+    try { return typeof localStorage !== "undefined" && Boolean(localStorage.getItem(`mise-batch-cooking-v3:${plan.id}:${batch.id}`)); }
+    catch { return false; }
+  }).map(batch => batch.id);
+}
+
+function dailyCalorieExcesses(plan: ActivePlan) {
+  return plan.batches.filter(batch => !batchHasRecordedCooking(plan, batch)).flatMap(batch => plan.people.flatMap(person => {
+    const actual = dailyProteinAssessment(plan, batch, person).actual;
+    return actual.kcal > person.daily.kcal + 0.01 ? [{ batch, person, actual }] : [];
+  }));
+}
+
+/** Candidate recipes are cooked and evaluated as complete physical assignments. */
+function proposeDailyProteinMenu(plan: ActivePlan, options: { batchIds?: string[]; lockedKeys?: string[]; runningBatchIds?: string[] } = {}) {
+  const next: ActivePlan = { ...plan, selections: { ...plan.selections },
+    selectionAssignments: Object.fromEntries(Object.entries(plan.selectionAssignments ?? {}).map(([key, groups]) => [key, groups.map(group => ({ ...group, personIds: [...group.personIds] }))])),
+    tuning: { ...plan.tuning } };
+  const changes: { key: string; batch: Batch; slot: MealSlot; before: RecipeAssignment[]; after: RecipeAssignment[] }[] = [];
+  const summaries: { batch: Batch; person: Person; before: Macros; after: Macros; target: number }[] = [];
+  const diagnostics: string[] = [];
+  let searchLimited = false;
+  for (const batch of plan.batches) {
+    if (options.batchIds && !options.batchIds.includes(batch.id)) continue;
+    const positions: DailyMenuPosition[] = [];
+    const candidates: DailyMenuCandidate<RecipeAssignment[]>[] = [];
+    const lockedBatch = batchHasRecordedCooking(plan, batch) || options.runningBatchIds?.includes(batch.id);
+    for (const slot of plan.mealSlots) {
+      const key = selectionKey(batch, slot);
+      const eaters = relevantPeople(plan.people, slot);
+      const current = assignmentGroupsFor(plan, batch, slot);
+      if (!assignmentCoverageComplete(plan.people, slot, current)) continue;
+      const locked = Boolean(lockedBatch || options.lockedKeys?.includes(key) || plan.pinnedSelectionKeys?.some(pin => pin === key || pin.startsWith(`${key}::`)));
+      const candidateIds: string[] = [];
+      function addCandidate(groups: RecipeAssignment[], isCurrent = false) {
+        if (!assignmentCoverageComplete(plan.people, slot, groups)) return;
+        // Equal recipe IDs are one physical batch even after a personal replacement.
+        const merged: RecipeAssignment[] = [];
+        for (const group of groups) {
+          const same = merged.find(item => item.recipeId === group.recipeId);
+          if (same) same.personIds.push(...group.personIds);
+          else merged.push({ recipeId: group.recipeId, personIds: [...group.personIds] });
+        }
+        merged.sort((a, b) => a.recipeId.localeCompare(b.recipeId));
+        const id = `${key}|${merged.map(group => `${group.recipeId}:${[...group.personIds].sort().join(",")}`).join("|")}`;
+        if (candidateIds.includes(id)) return;
+        const macrosByPerson: Record<string, Macros> = {};
+        for (const group of merged) {
+          const recipe = recipesById[group.recipeId];
+          const people = eaters.filter(person => group.personIds.includes(person.id));
+          if (!recipe || !isProductionReadyRecipe(recipe) || !recipeSupportsEquipment(recipe, plan.kitchenEquipment) ||
+            people.some(person => hardConflicts(recipe, person).length || (!isCurrent && dislikeMatches(recipe, person).length))) return;
+          const session = recipeCookingSession(people, slot, recipe, batch.days,
+            person => isCurrent ? plan.tuning?.[tuningKey(batch, slot, person)] : undefined);
+          if (!session.viable) return;
+          people.forEach((person, index) => { macrosByPerson[person.id] = session.portions[index].actual; });
+        }
+        candidateIds.push(id);
+        candidates.push({ id, recipeIds: merged.map(group => group.recipeId), macrosByPerson,
+          rank: isCurrent ? 0 : candidateIds.length, cost: merged.length, payload: merged });
+      }
+      addCandidate(current, true);
+      const currentCandidateId = candidateIds[0];
+      if (!currentCandidateId) continue;
+      if (!locked) {
+        const common = candidateRecipes(slot, plan.menuStyle, eaters, batch.days, { limit: "all" }, plan.kitchenEquipment);
+        // Keep both ordinary fit and actual protein-dense candidates available to the daily search.
+        const dense = [...common].sort((a, b) => {
+          const protein = (recipe: Recipe) => recipeCookingSession(eaters, slot, recipe, batch.days).portions.reduce((sum, portion) => sum + portion.actual.protein, 0);
+          return protein(b) - protein(a);
+        });
+        for (const recipe of [...common.slice(0, 8), ...dense.slice(0, 10)])
+          addCandidate([{ recipeId: recipe.id, personIds: eaters.map(person => person.id) }]);
+        if (current.length > 1) for (const [index, group] of current.entries()) {
+          const people = eaters.filter(person => group.personIds.includes(person.id));
+          for (const recipe of candidateRecipes(slot, plan.menuStyle, people, batch.days, { limit: 6 }, plan.kitchenEquipment))
+            addCandidate(current.map((item, groupIndex) => groupIndex === index ? { ...item, recipeId: recipe.id } : item));
+        }
+      }
+      positions.push({ id: key, currentCandidateId, candidateIds, locked,
+        kcalRangesByPerson: Object.fromEntries(eaters.map(person => {
+          const kcal = targetFor(person, slot).kcal;
+          return [person.id, { min: kcal * 0.9, max: kcal * 1.05 }];
+        })) });
+    }
+    if (positions.length !== plan.mealSlots.length) continue;
+    const result = optimizeDailyProteinBalance({
+      people: plan.people.map(person => ({ id: person.id, calorieCeiling: person.daily.kcal,
+        proteinTarget: plan.mealSlots.filter(slot => person.includedSlots.includes(slot)).reduce((sum, slot) => sum + targetFor(person, slot).protein, 0) })),
+      positions, candidateGroups: candidates, proteinTargetScope: "allocated", maxCandidatesPerPosition: 36,
+    });
+    searchLimited ||= result.searchExhausted;
+    if (!result.feasibility.proposalWithinCalorieCeiling)
+      diagnostics.push(`Для партии ${formatDate(batch.start)} не найден вариант в дневном калорийном лимите. Замените блюда вручную.`);
+    else if (!result.feasibility.proteinShortfallsNonworsening)
+      diagnostics.push(`В партии ${formatDate(batch.start)} соблюдение калорийного лимита увеличивает недобор белка у части участников. Проверьте личные значения перед применением.`);
+    for (const person of plan.people) summaries.push({ batch, person,
+      before: result.before[person.id], after: result.after[person.id],
+      target: plan.mealSlots.filter(slot => person.includedSlots.includes(slot)).reduce((sum, slot) => sum + targetFor(person, slot).protein, 0) });
+    for (const key of result.changedPositionIds) {
+      const slot = plan.mealSlots.find(slot => selectionKey(batch, slot) === key)!;
+      const after = result.selectedCandidatesByPosition[key].payload!;
+      changes.push({ key, batch, slot, before: assignmentGroupsFor(plan, batch, slot), after });
+      next.selectionAssignments![key] = after;
+      next.selections[key] = [...after].sort((a, b) => b.personIds.length - a.personIds.length)[0].recipeId;
+      for (const person of plan.people) delete next.tuning![tuningKey(batch, slot, person)];
+    }
+  }
+  if (changes.length) {
+    next.shopping = buildShopping(next).map(item => ({ ...item,
+      checked: Boolean(plan.shopping.find(previous => previous.key === item.key && previous.checked && previous.quantity >= item.quantity)) }));
+  }
+  return { plan: next, sourceSignature: proteinBalanceSignature(plan), changes, summaries, searchLimited, diagnostics };
 }
 function newPerson(index = 0): Person {
   const estimate = { ...defaultNutritionEstimate };
@@ -9184,7 +9318,8 @@ function WeekScreen({
             </>
           )}
         </p>
-        <p className="week-balance">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
+        <p className="week-balance">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person, selectedDate))}</p>
+        <ProteinBalanceControl plan={activePlan} batchIds={[batchFor(selectedDate).id]} onApply={onChange} />
         </details>
       {tomorrowDate && (
         <section className="week-tomorrow-card glass-card">
@@ -10654,6 +10789,7 @@ function PlanBuilder({
   );
   const [kitchenEquipment, setKitchenEquipment] = useState<KitchenEquipment[] | undefined>(() => initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
   const [recipeMethods, setRecipeMethods] = useState<Record<string, string> | undefined>(() => normalizeRecipeMethods(initialPlan?.recipeMethods));
+  const [tuning, setTuning] = useState<Record<string, RecipeTuning>>(() => ({ ...initialPlan?.tuning }));
   const [previewRecipe, setPreviewRecipe] = useState<Recipe | null>(null);
   const [cookEveryDays, setCookEveryDays] = useState(
     initialPlan?.cookEveryDays ?? 3,
@@ -11006,6 +11142,7 @@ function PlanBuilder({
       cookEveryDays,
       kitchenEquipment,
       recipeMethods,
+      tuning,
       remainderDecision,
       menuMode,
       selections,
@@ -11029,6 +11166,7 @@ function PlanBuilder({
     kitchenEquipment,
     recipeMethods,
     remainderDecision,
+    tuning,
     menuMode,
     selections,
     selectionAssignments,
@@ -11043,7 +11181,7 @@ function PlanBuilder({
   ]);
   const draftPlan = ((): ActivePlan => {
     const base: ActivePlan = {
-      id: "draft",
+      id: !repeat && initialPlan ? initialPlan.id : "draft",
       createdAt: new Date().toISOString(),
       start,
       end: resolvedEnd,
@@ -11058,6 +11196,7 @@ function PlanBuilder({
       selections: validSelections,
       selectionAssignments: validSelectionAssignments,
       pinnedSelectionKeys: validPinned,
+      tuning,
       shopping: [],
     };
     return {
@@ -11481,9 +11620,12 @@ function PlanBuilder({
       if (primary) updatedSelections[key] = primary.recipeId;
       assignments.forEach((assignment) => used.add(assignment.recipeId));
     }
-    setSelections(updatedSelections);
-    setSelectionAssignments(updatedAssignments);
-    return { selections: updatedSelections, assignments: updatedAssignments };
+    const protectedKeys = mode === "fill" ? Object.keys(validSelectionAssignments).filter(key => validSelectionAssignments[key]?.length) : [];
+    const balanced = proposeDailyProteinMenu({ ...draftPlan, selections: updatedSelections, selectionAssignments: updatedAssignments }, { lockedKeys: protectedKeys, runningBatchIds: deviceCookingBatchIds(draftPlan) });
+    setSelections(balanced.plan.selections);
+    setSelectionAssignments(balanced.plan.selectionAssignments ?? updatedAssignments);
+    setTuning(balanced.plan.tuning ?? {});
+    return { selections: balanced.plan.selections, assignments: balanced.plan.selectionAssignments ?? updatedAssignments };
   }
   /* Автоматический путь открывает шаг с уже собранным меню.
      Ручной путь намеренно оставляет незаполненные слоты человеку. */
@@ -11658,6 +11800,11 @@ function PlanBuilder({
       setSaveMessage(
         "План не сохранён: выбранное блюдо нарушает «Аллергия/мне нельзя».",
       );
+      return;
+    }
+    if (dailyCalorieExcesses(plan).length) {
+      setSaveState("error");
+      setSaveMessage("Выбранные блюда превышают дневной калорийный лимит. Подберите другой вариант или замените блюдо перед сохранением.");
       return;
     }
     setSaveState("saving");
@@ -12110,6 +12257,13 @@ function PlanBuilder({
               <ReviewStep
                 plan={draftPlan}
                 onEdit={(target) => changeStep(target)}
+                onBalance={async next => {
+                  setSelections(next.selections);
+                  setSelectionAssignments(next.selectionAssignments ?? {});
+                  setRecipeMethods(next.recipeMethods);
+                  setTuning(next.tuning ?? {});
+                  return true;
+                }}
               />
             )}
           </div>
@@ -14158,12 +14312,100 @@ function MenuReviewStep({
   );
 }
 
+function ProteinBalanceControl({ plan, batchIds, onApply }: {
+  plan: ActivePlan;
+  batchIds?: string[];
+  onApply: (plan: ActivePlan) => Promise<boolean>;
+}) {
+  const [proposal, setProposal] = useState<ReturnType<typeof proposeDailyProteinMenu> | null>(null);
+  const [methods, setMethods] = useState<Record<string, string>>({});
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  function runningBatches() {
+    return plan.batches.filter(batch => {
+      try { return Boolean(localStorage.getItem(`mise-batch-cooking-v3:${plan.id}:${batch.id}`)); }
+      catch { return false; }
+    }).map(batch => batch.id);
+  }
+  async function search() {
+    setBusy(true);
+    setMessage("");
+    // Paint the busy state before the bounded deterministic calculation.
+    await new Promise<void>(resolve => window.requestAnimationFrame(() => resolve()));
+    try {
+      const result = proposeDailyProteinMenu(plan, { batchIds, runningBatchIds: runningBatches() });
+      if (!result.changes.length) {
+        setMessage(result.diagnostics.join(" ") || "Среди проверенных вариантов улучшение не найдено. Приготовленные, начатые и закреплённые блюда сохранены.");
+      } else {
+        setProposal(result);
+        setMethods({ ...plan.recipeMethods });
+      }
+    } catch {
+      setMessage("Не удалось пересчитать меню. Ваш выбор сохранён.");
+    } finally { setBusy(false); }
+  }
+  const next = proposal ? { ...proposal.plan, recipeMethods: methods } : null;
+  const pending = next ? missingPlanMethods(next) : [];
+  const shoppingChanges = proposal ? [...new Set([...plan.shopping.map(item => item.key), ...proposal.plan.shopping.map(item => item.key)])].flatMap(key => {
+    const before = plan.shopping.find(item => item.key === key);
+    const after = proposal.plan.shopping.find(item => item.key === key);
+    if (before?.quantity === after?.quantity) return [];
+    return [{ key, name: (after ?? before)!.name, unit: (after ?? before)!.unit, before: before?.quantity ?? 0, after: after?.quantity ?? 0 }];
+  }) : [];
+  async function apply() {
+    if (!proposal || !next || pending.length) return;
+    if (proposal.sourceSignature !== proteinBalanceSignature(plan) || proposal.changes.some(change => runningBatches().includes(change.batch.id))) {
+      setProposal(null);
+      setMessage("План или готовка изменились. Подберите вариант ещё раз.");
+      return;
+    }
+    setBusy(true);
+    try {
+      if (await onApply(next)) {
+        setProposal(null);
+        setMessage("Меню и покупки обновлены. Раскладка использует новые рассчитанные порции.");
+      } else setMessage("Не удалось сохранить изменения. Попробуйте ещё раз.");
+    } catch { setMessage("Не удалось сохранить изменения. Попробуйте ещё раз."); }
+    finally { setBusy(false); }
+  }
+  return <section className="glass-card protein-balance-control">
+    <button type="button" className="text-button" onClick={() => void search()} disabled={busy}>
+      {busy ? "Считаю варианты…" : "Подобрать ближе к цели"}
+    </button>
+    {message && <p role="status">{message}</p>}
+    {proposal && <Sheet titleId="protein-balance-title" onClose={() => { if (!busy) setProposal(null); }} className="glass">
+      <h2 id="protein-balance-title">Предложение для меню</h2>
+      {proposal.diagnostics.map(text => <p key={text} role="status">{text}</p>)}
+      <p>Калорийные доли приёмов пищи сохранены. Изменения затронут меню, покупки и раскладку.</p>
+      {proposal.summaries.filter(summary => proposal.changes.some(change => change.batch.id === summary.batch.id)).map(summary => <p key={`${summary.batch.id}:${summary.person.id}`}>
+        <b>{summary.person.name}, {formatDate(summary.batch.start)}–{formatDate(summary.batch.end)}:</b>{" "}
+        {formatMacro(summary.before.protein)} → {formatMacro(summary.after.protein)} г белка;{" "}
+        {formatMacro(summary.before.kcal)} → {formatMacro(summary.after.kcal)} ккал в день.
+        {summary.after.protein + 0.2 < summary.target && <> До ориентира выбранных приёмов остаётся {formatMacro(summary.target - summary.after.protein)} г.</>}
+      </p>)}
+      <h3>Замены блюд</h3>
+      {proposal.changes.map(change => <p key={change.key}>
+        <b>{formatDate(change.batch.start)}, {mealMeta[change.slot].label.toLowerCase()}:</b>{" "}
+        {change.before.map(group => recipesById[group.recipeId].title).join("; ")} → {change.after.map(group => `${recipesById[group.recipeId].title} (${group.personIds.map(id => plan.people.find(person => person.id === id)?.name).join(", ")})`).join("; ")}
+      </p>)}
+      {pending.map(id => <CookingMethodSelect key={id} recipe={recipesById[id]} equipment={plan.kitchenEquipment} value={methods[id] ?? ""} label={recipesById[id].title} onChange={method => setMethods(current => ({ ...current, [id]: method }))} />)}
+      <details><summary>Что изменится в покупках — {shoppingChanges.length}</summary>
+        {shoppingChanges.map(item => <p key={item.key}>{item.name}: {item.before} → {item.after} {item.unit}</p>)}
+      </details>
+      <button type="button" className="primary-button" disabled={busy || pending.length > 0} onClick={() => void apply()}>Применить изменения</button>
+      <button type="button" className="text-button" disabled={busy} onClick={() => setProposal(null)}>Оставить мой план</button>
+    </Sheet>}
+  </section>;
+}
+
 function ReviewStep({
   plan,
   onEdit,
+  onBalance,
 }: {
   plan: ActivePlan;
   onEdit: (step: number) => void;
+  onBalance: (plan: ActivePlan) => Promise<boolean>;
 }) {
   const recipeIds = new Set(selectionRecipeIds(plan));
   const totalPortions = totalPlanPortions(plan);
@@ -14208,6 +14450,8 @@ function ReviewStep({
         </div>
       </section>
       <section className="glass-card"><h2>Белок в выбранном меню</h2>{plan.batches.map(batch => <div key={batch.id}><h3>{formatDate(batch.start)} — {formatDate(batch.end)}</h3>{plan.people.map(person => <p key={person.id}><b>{person.name}: </b>{proteinAssessmentText(dailyProteinAssessment(plan, batch, person))}</p>)}</div>)}<button type="button" className="text-button" onClick={() => onEdit(5)}>Изменить блюда</button></section>
+      <ProteinBalanceControl plan={plan} onApply={onBalance} />
+      {dailyCalorieExcesses(plan).map(({ batch, person, actual }) => <p role="alert" key={`${batch.id}:${person.id}`}>{person.name}, {formatDate(batch.start)}: по плану {formatMacro(actual.kcal)} ккал при дневном лимите {person.daily.kcal}. Замените блюдо перед сохранением.</p>)}
       <section className="review-list glass-card">
         <button onClick={() => onEdit(0)}>
           <Icon name="clock" />

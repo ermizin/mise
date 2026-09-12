@@ -11,6 +11,7 @@ const portionComponentsJson = JSON.parse(await readFile(new URL("../data/recipe-
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
 const recipeCuisineModule = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
 const nutritionModule = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
+const menuBalanceModule = await loadTypeScriptModule(new URL("../domain/menu-balance.ts", import.meta.url));
 
 const pluralModule = await loadTypeScriptModule(new URL("../lib/plural.ts", import.meta.url));
 
@@ -25,7 +26,7 @@ export async function recipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, recipeFamiliesById, recipeFamilyFor, portionFor, recipeCookingSession, portionComponents, allocationPeopleForDish, automaticAssignmentsFor, candidateRecipes, equipmentMethods, recipeSupportsEquipment, cookingMethodFor, planCookingMethod, normalizeRecipeMethods, missingPlanMethods, kitchenMenuGaps, recipeDisplaySteps, buildBatchCookingModel, completeBatchCookingPlan, batchCookingSignature, dailyProteinAssessment, proteinAssessmentText, ingredientRatioFor, fitScoreForSession, normalizeKitchenEquipment, allMealSlots, recipesById, ingredientScaleFor };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, recipeFamiliesById, recipeFamilyFor, portionFor, recipeCookingSession, portionComponents, allocationPeopleForDish, automaticAssignmentsFor, candidateRecipes, equipmentMethods, recipeSupportsEquipment, cookingMethodFor, planCookingMethod, normalizeRecipeMethods, missingPlanMethods, kitchenMenuGaps, recipeDisplaySteps, buildBatchCookingModel, completeBatchCookingPlan, batchCookingSignature, dailyProteinAssessment, proteinAssessmentText, proteinBalanceSignature, batchHasRecordedCooking, proposeDailyProteinMenu, buildShopping, ingredientRatioFor, fitScoreForSession, normalizeKitchenEquipment, allMealSlots, recipesById, ingredientScaleFor };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
@@ -57,6 +58,7 @@ export async function recipeCatalog() {
     nutritionMacrosForCalories: nutritionModule.macrosForCalories,
     nutritionRecalculateDailyMacros: nutritionModule.recalculateDailyMacros,
     nutritionShareForSlots: nutritionModule.shareForSlots,
+    optimizeDailyProteinBalance: menuBalanceModule.optimizeDailyProteinBalance,
     materializeInstructions: engine.materializeInstructions,
     canonicalIngredients: engine.canonicalIngredients,
     nutritionForFamily: engine.nutritionForFamily,
