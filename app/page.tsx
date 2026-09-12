@@ -42,6 +42,7 @@ import {
   type RecipeFamily,
   type RecipeStep,
 } from "@/domain/recipe-engine";
+import { orderedCookingInstructions } from "@/domain/batch-cooking";
 import {
   mealOccurrenceKey,
   normalizeMealExecution,
@@ -5029,12 +5030,14 @@ function recipeCookingSessionForAssignment(
 function recipeDisplaySteps(recipe: Recipe) {
   const family = recipeFamilyFor(recipe);
   return family
-    ? family.miseInstructions
-        .filter((step) => step.action !== "measure")
-        .map((step) => step.text)
-    : recipe.steps.filter(
-        (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
-      );
+    ? orderedCookingInstructions(family.miseInstructions)
+    : recipe.steps
+        .filter((step) => !/^На одну базовую порцию отмерьте:/iu.test(step))
+        .map((text, index) => ({
+          id: `legacy-step-${index + 1}`,
+          text,
+          dependsOn: index === 0 ? [] : [`legacy-step-${index}`],
+        }));
 }
 function minutesInStep(text: string, fallback: number) {
   const match = text.match(/(?:около|примерно|~)?\s*(\d+)\s*мин/iu);
@@ -5101,9 +5104,10 @@ function buildBatchCookingModel(
       minutes: fallbackMinutes,
       products,
     });
-    displaySteps.forEach((text, index) => {
+    displaySteps.forEach((instruction, index) => {
+      const text = instruction.text;
       steps.push({
-        id: `${slot}:${recipe.id}:${personIds.join("-")}:${index}`,
+        id: `${slot}:${recipe.id}:${personIds.join("-")}:${instruction.id || index}`,
         recipeId: recipe.id,
         title: text,
         detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
@@ -14747,10 +14751,10 @@ function RecipeView({
                 </>
               ) : (
                 <ol className="cooking-steps">
-                  {displaySteps.map((text, index) => (
-                    <li key={`${text}-${index}`}>
+                  {displaySteps.map((instruction, index) => (
+                    <li key={instruction.id}>
                       <span>{index + 1}</span>
-                      <p>{text}</p>
+                      <p>{instruction.text}</p>
                     </li>
                   ))}
                 </ol>
