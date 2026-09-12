@@ -1,7 +1,11 @@
 import manifestJson from "../../data/cooking-operations.json";
 import runtimeJson from "../../data/recipe-runtime-catalog.json";
+import actionCatalogJson from "../../data/cooking-action-catalog.json";
 import { mergeCompatiblePreparations } from "./batch";
+import { formatCookingActionText } from "../cooking-actions";
+import { validGuidedBackgroundResources } from "./guided";
 import type { CompiledSession, CookingOperation, CookingSessionInput, ResourceUse } from "./types";
+import type { GuidedActionConfig } from "./types";
 
 type ManifestOperation = Omit<CookingOperation, "id" | "recipeId" | "methodId" | "dependsOn" | "allocations"> & { key: string; dependsOn?: string[]; preparationCuts?: Record<string, string> };
 type SourceDefinition = {
@@ -18,9 +22,132 @@ type ManifestRecipe = {
 };
 const manifest = manifestJson as unknown as { version: number; recipes: ManifestRecipe[] };
 const runtime = runtimeJson as unknown as { recipes: { id: string; steps: string[]; recipeFamily: { ingredients: SourceDefinition["ingredients"] }; equipmentOptions: { id: string }[] }[] };
+type GuidedAction = { id: string; sourceStepIndex: number; text: string; sourceStart: number; sourceEnd: number; backgroundCandidate?: { durationSeconds: number; durationText: string; category: "oven" | "covered_simmer" | "boil" | "cold_wait" } };
+type GuidedMethod = { methodId: string; sourceSteps: string[]; actions: GuidedAction[]; graphFingerprint?: string; fingerprint?: string; requiredEquipment?: string[] };
+type GuidedRecipe = { recipeId: string; ingredientDefinitions?: { id: string; canonicalId: string; amount: number; unit: string }[]; methods: GuidedMethod[] };
+const actionCatalog = actionCatalogJson as unknown as { schemaVersion?: number; recipes: GuidedRecipe[] };
+const equipmentKinds: Record<string, ResourceUse["kind"]> = {
+  baking_dish: "baking_dish", oven: "oven", pan: "pan", stove: "burner", blender: "blender", waffle_iron: "waffle_iron",
+  pot: "pot", multicooker: "multicooker", pressure_cooker: "pressure_cooker", microwave: "microwave", air_fryer: "air_fryer",
+};
 
 export function cookingOperationManifest(recipeId: string, methodId: string) {
   return manifest.recipes.find(recipe => recipe.recipeId === recipeId && recipe.methodId === methodId);
+}
+
+export function guidedCookingMethod(recipeId: string, methodId: string) {
+  if (cookingOperationManifest(recipeId, methodId)) return undefined;
+  return actionCatalog.recipes.find(recipe => recipe.recipeId === recipeId)?.methods.find(method => method.methodId === methodId);
+}
+
+export function cookingSourceDescriptor(recipeId: string, methodId: string) {
+  const manual = cookingOperationManifest(recipeId, methodId);
+  if (manual) return { kind: "manual" as const, fingerprint: manual.sourceStepsChecksum, sourceStepsChecksum: manual.sourceStepsChecksum, sourceSteps: manual.sourceDefinition.steps };
+  const guided = guidedCookingMethod(recipeId, methodId);
+  const fingerprint = guided?.graphFingerprint ?? guided?.fingerprint ?? "";
+  return guided ? { kind: "guided" as const, fingerprint, sourceStepsChecksum: fingerprint, sourceSteps: guided.sourceSteps, method: guided } : undefined;
+}
+
+function guidedResourceUses(config: GuidedActionConfig, input: CookingSessionInput) {
+  const unique = [...new Set(config.resourceIds)];
+  if (!unique.length || unique.length !== config.resourceIds.length || !config.allBatchFits) return undefined;
+  const resources = unique.map(id => input.kitchen.resources.find(resource => resource.id === id));
+  return resources.every(Boolean) ? resources.map(resource => ({ resourceId: resource!.id, kind: resource!.kind })) : undefined;
+}
+
+function guidedEquipmentUses(selected: CookingSessionInput["recipes"][number], guided: GuidedMethod, input: CookingSessionInput): ResourceUse[] | undefined {
+  const kinds = [...new Set((guided.requiredEquipment ?? []).map(equipment => equipmentKinds[equipment]))];
+  const selectedIndex = input.recipes.indexOf(selected);
+  const result: ResourceUse[] = [];
+  for (const kind of kinds) {
+    if (!kind) return undefined;
+    const available = input.kitchen.resources.filter(resource => resource.kind === kind).sort((a, b) => a.id.localeCompare(b.id));
+    if (!available.length) return undefined;
+    const preceding = input.recipes.slice(0, selectedIndex).filter(recipe => guidedCookingMethod(recipe.recipeId, recipe.methodId)?.requiredEquipment?.some(equipment => equipmentKinds[equipment] === kind)).length;
+    const resource = available[preceding % available.length];
+    result.push({ resourceId: resource.id, kind: resource.kind });
+  }
+  return result;
+}
+
+function uniqueUses(resources: readonly ResourceUse[]) {
+  return [...new Map(resources.map(resource => [resource.resourceId, resource])).values()];
+}
+
+function guidedConfigIsBoundToSelectedActions(input: CookingSessionInput, diagnostics: CompiledSession["diagnostics"]): boolean {
+  const config = input.guidedConfig;
+  if (!config || !config.actions || typeof config.actions !== "object") return false;
+  const candidates = new Map<string, GuidedAction>();
+  for (const selected of input.recipes) {
+    const method = guidedCookingMethod(selected.recipeId, selected.methodId);
+    for (const action of method?.actions ?? []) if (action.backgroundCandidate) candidates.set(`${selected.dishKey}:${action.id}`, action);
+  }
+  for (const key of Object.keys(config.actions)) {
+    const action = candidates.get(key), value = config.actions[key];
+    if (!action || !value || !Array.isArray(value.resourceIds) || !action.backgroundCandidate || value.durationSeconds !== action.backgroundCandidate.durationSeconds || value.allBatchFits !== true) {
+      diagnostics.push({ code: "guided_background_config_invalid", message: "Подтверждение фонового шага не соответствует исходной инструкции." });
+      return false;
+    }
+  }
+  return true;
+}
+
+function compileGuided(selected: CookingSessionInput["recipes"][number], input: CookingSessionInput, diagnostics: CompiledSession["diagnostics"], operations: CookingOperation[]) {
+  const guided = guidedCookingMethod(selected.recipeId, selected.methodId);
+  const config = input.guidedConfig;
+  const fingerprint = guided?.graphFingerprint ?? guided?.fingerprint;
+  const fail = (code: string, message: string) => diagnostics.push({ recipeId: selected.recipeId, code, message });
+  if (!guided || !config || config.schemaVersion !== 1 || !Number.isInteger(config.activeStepSeconds) || config.activeStepSeconds < 1 || config.activeStepSeconds > 3600 || !fingerprint || selected.sourceStepsChecksum !== fingerprint) {
+    fail("guided_config_required", "Подтвердите время и ресурсы для каждого шага исходной инструкции."); return;
+  }
+  const cook = input.kitchen.resources.find(resource => resource.kind === "cook");
+  if (!cook) { fail("resource_unavailable", "Для действий нужен единственный подтверждённый повар."); return; }
+  const cookUse: ResourceUse = { resourceId: cook.id, kind: "cook" };
+  const methodResources = guidedEquipmentUses(selected, guided, input);
+  if (!methodResources) { fail("resource_unavailable", "Подтвердите всё оборудование из исходного способа без замены метода."); return; }
+  const configuredResources = new Map<string, ResourceUse[]>();
+  for (const action of guided.actions) {
+    const actionConfig = config.actions[`${selected.dishKey}:${action.id}`];
+    if (!actionConfig) continue;
+    const resources = guidedResourceUses(actionConfig, input);
+    if (!resources) { fail("guided_resource_not_confirmed", `Выберите уникальные подтверждённые ресурсы для шага: ${action.text.trim()}`); return; }
+    if (!action.backgroundCandidate || !validGuidedBackgroundResources(action.backgroundCandidate.category, resources, methodResources)) {
+      fail("guided_heat_resource_invalid", "Фоновый шаг требует прибор и физическую ёмкость, указанные выбранным исходным способом."); return;
+    }
+    configuredResources.set(action.id, resources);
+  }
+  const dishResources = uniqueUses([...methodResources, ...[...configuredResources.values()].flat()]);
+  const definitions = actionCatalog.recipes.find(recipe => recipe.recipeId === selected.recipeId)?.ingredientDefinitions;
+  if (!definitions || definitions.length !== Object.keys(selected.cookingAmounts).length || definitions.some(definition => {
+    const amount = selected.cookingAmounts[definition.id]; return !amount || amount.canonicalId !== definition.canonicalId || amount.unit !== definition.unit || !Number.isFinite(amount.amount) || amount.amount < 0;
+  })) { fail("invalid_ingredient_amounts", "Количества продуктов не совпали с исходной инструкцией."); return; }
+  const measureId = `${selected.dishKey}:${selected.methodId}:measure`;
+  operations.push({ id: measureId, recipeId: selected.recipeId, methodId: selected.methodId, dishKey: selected.dishKey, kind: "instruction", title: "Подготовьте продукты по исходной инструкции", sourceText: "", dependsOn: [], durationSeconds: config.activeStepSeconds, estimatedActive: true, attention: "required", resources: [cookUse], allocations: definitions.map(definition => ({ ...selected.cookingAmounts[definition.id], ingredientId: definition.id, recipeId: selected.recipeId, dishKey: selected.dishKey, state: selected.cookingAmounts[definition.id].state ?? "raw" })), sourceStepIndexes: [] });
+  const cleanupId = `${selected.dishKey}:${selected.methodId}:cleanup`;
+  let previous = measureId;
+  for (const [actionIndex, action] of guided.actions.entries()) {
+    const key = `${selected.dishKey}:${action.id}`;
+    const actionConfig = config.actions[key];
+    const prefix = `${selected.dishKey}:${selected.methodId}:${action.id}`;
+    const candidate = action.backgroundCandidate;
+    const title = formatCookingActionText(action.text);
+    const sourceText = guided.sourceSteps[action.sourceStepIndex] ?? action.text;
+    const sourceOperationIds = [action.id];
+    if (actionConfig && (!candidate || !Number.isInteger(actionConfig.durationSeconds) || actionConfig.durationSeconds !== candidate.durationSeconds || actionConfig.allBatchFits !== true)) { fail("guided_background_config_invalid", `Фоновый режим доступен только для подтверждённого исходного нагрева: ${title}`); return; }
+    const resources = configuredResources.get(action.id);
+    if (candidate && actionConfig && resources) {
+      const start = `${prefix}:start`, heat = `${prefix}:heat`, check = `${prefix}:check`;
+      const firstHolds = actionIndex === 0 ? dishResources.map(resource => ({ ...resource, releaseAfterOpId: cleanupId })) : undefined;
+      operations.push({ id: start, recipeId: selected.recipeId, methodId: selected.methodId, dishKey: selected.dishKey, kind: "start_heat", title, sourceText, sourceOperationIds, dependsOn: [previous], durationSeconds: config.activeStepSeconds, estimatedActive: true, attention: "required", resources: [cookUse, ...dishResources], resourceHolds: firstHolds, allocations: [], sourceStepIndexes: [action.sourceStepIndex] });
+      operations.push({ id: heat, recipeId: selected.recipeId, methodId: selected.methodId, dishKey: selected.dishKey, kind: "heat", title, sourceText, sourceOperationIds, dependsOn: [start], durationSeconds: candidate.durationSeconds, attention: "background", resources, resourceHolds: resources.map(resource => ({ ...resource, releaseAfterOpId: cleanupId })), allocations: [], requiresCheckAtEnd: true, checkDeadlineSeconds: 0, sourceStepIndexes: [action.sourceStepIndex] });
+      operations.push({ id: check, recipeId: selected.recipeId, methodId: selected.methodId, dishKey: selected.dishKey, kind: "intervention", title: `Проверьте результат: ${title}`, sourceText, sourceOperationIds, dependsOn: [heat], durationSeconds: config.activeStepSeconds, estimatedActive: true, attention: "required", resources: [cookUse, ...dishResources], allocations: [], sourceStepIndexes: [action.sourceStepIndex] });
+      previous = check;
+    } else {
+      operations.push({ id: prefix, recipeId: selected.recipeId, methodId: selected.methodId, dishKey: selected.dishKey, kind: "instruction", title, sourceText, sourceOperationIds, dependsOn: [previous], durationSeconds: config.activeStepSeconds, estimatedActive: true, attention: "required", resources: [cookUse, ...dishResources], resourceHolds: actionIndex === 0 ? dishResources.map(resource => ({ ...resource, releaseAfterOpId: cleanupId })) : undefined, allocations: [], sourceStepIndexes: [action.sourceStepIndex] });
+      previous = prefix;
+    }
+  }
+  operations.push({ id: cleanupId, recipeId: selected.recipeId, methodId: selected.methodId, dishKey: selected.dishKey, kind: "wash", title: "Освободите посуду и вымойте использованный инвентарь", sourceText: "", dependsOn: [previous], durationSeconds: config.activeStepSeconds, estimatedActive: true, attention: "required", resources: [cookUse, ...dishResources], allocations: [], sourceStepIndexes: [] });
 }
 
 function sourceMatches(recipe: ManifestRecipe) {
@@ -73,8 +200,16 @@ export function compileCookingSession(input: CookingSessionInput): CompiledSessi
       input.kitchen.resources.filter(resource => resource.kind === "cook").length !== 1) {
     fail("", "invalid_session", "Проверьте блюда и ресурсы кухни. План рассчитан на одного человека у плиты.");
   }
+  if (input.recipes.some(selected => !!guidedCookingMethod(selected.recipeId, selected.methodId)) && !guidedConfigIsBoundToSelectedActions(input, diagnostics)) {
+    fail("", "guided_config_required", "Подтвердите единый темп действий и только подходящие фоновые шаги.");
+    return { id: input.sessionId, input, operations: [], diagnostics, fallbackReason: "verified_manifest_required" };
+  }
   for (const selected of input.recipes) {
     const recipe = cookingOperationManifest(selected.recipeId, selected.methodId);
+    if (!recipe) {
+      compileGuided(selected, input, diagnostics, operations);
+      continue;
+    }
     if (!recipe || !recipe.reviewed || !sourceMatches(recipe) || recipe.sourceStepsChecksum !== selected.sourceStepsChecksum) {
       fail(selected.recipeId, "manifest_unavailable_or_changed", "Для этого блюда или способа ещё нет проверенного плана операций. Откройте обычную инструкцию.");
       continue;

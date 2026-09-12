@@ -35,20 +35,33 @@ function validAmounts(value: unknown): value is Record<string, unknown> {
   );
 }
 
-/** Uses only durable plan facts and the actual cooking amounts supplied by the UI. */
+/** Binds durable plan facts to the physical amounts used by this saved session. */
 export function cookingPlanSnapshotSignature(
   plan: unknown,
   batchId: string,
   dishes: CookingDishContext[],
+  legacy = false,
 ) {
   const source = record(plan) ? plan : {};
+  const normalizedAssignments = Array.isArray(source.batches) ? Object.fromEntries(source.batches.flatMap(batch => {
+    if (!record(batch) || typeof batch.id !== "string") return [];
+    const planned = plannedCookingDishes(source, batch.id);
+    if (!planned) return [];
+    const grouped = new Map<string, { recipeId: string; personIds: string[] }[]>();
+    for (const dish of planned) {
+      const key = dish.dishKey.slice(0, -(dish.recipeId.length + 1));
+      grouped.set(key, [...(grouped.get(key) ?? []), { recipeId: dish.recipeId, personIds: dish.personIds }]);
+    }
+    return [...grouped].map(([key, groups]) => [key, groups.sort((a, b) => a.recipeId.localeCompare(b.recipeId))]);
+  })) : source.selectionAssignments;
   return stableJson({
+    ...(!legacy ? { snapshotSchemaVersion: 2 } : {}),
     planId: source.id,
     batchId,
     batches: source.batches,
     mealSlots: source.mealSlots,
     selections: source.selections,
-    selectionAssignments: source.selectionAssignments,
+    selectionAssignments: legacy ? source.selectionAssignments : normalizedAssignments,
     people: Array.isArray(source.people) ? source.people.map((person) => record(person) ? {
       id: person.id, includedSlots: person.includedSlots, daily: person.daily, hardExclusions: person.hardExclusions,
     } : person) : source.people,
@@ -60,6 +73,19 @@ export function cookingPlanSnapshotSignature(
       personIds: [...dish.personIds].sort(), cookingAmounts: dish.cookingAmounts,
     })).sort((left, right) => left.dishKey.localeCompare(right.dishKey)),
   });
+}
+
+/** Old sessions retain their original signature; equivalent legacy assignments do not invalidate them. */
+export function cookingPlanSnapshotMatches(signature: string, plan: unknown, batchId: string, dishes: CookingDishContext[]) {
+  const current = cookingPlanSnapshotSignature(plan, batchId, dishes);
+  if (signature === current || signature === cookingPlanSnapshotSignature(plan, batchId, dishes, true)) return true;
+  try {
+    const saved = JSON.parse(signature);
+    if (!record(saved) || saved.snapshotSchemaVersion !== undefined || saved.batchId !== batchId || !Array.isArray(saved.dishes)) return false;
+    const savedDishes = saved.dishes.map(cookingDishContext);
+    if (savedDishes.some(dish => !dish)) return false;
+    return cookingPlanSnapshotSignature({ ...saved, id: saved.planId }, batchId, savedDishes as CookingDishContext[]) === current;
+  } catch { return false; }
 }
 
 /** Derives the only dish identities which a batch session may address. */

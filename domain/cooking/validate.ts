@@ -2,7 +2,7 @@ import type { CompiledSession, CookingOperation, CookingSchedule, CompileDiagnos
 
 type ResourceHold = { resourceId: string; kind: ResourceKind; releaseAfterOpId: string };
 type ExtendedOperation = CookingOperation & { resourceHolds?: readonly ResourceHold[]; checkDeadlineSeconds?: number };
-const kinds = new Set<ResourceKind>(["cook", "burner", "pot", "pan", "oven", "tray", "board", "knife", "sink", "blender", "microwave"]);
+const kinds = new Set<ResourceKind>(["cook", "burner", "pot", "pan", "oven", "tray", "baking_dish", "board", "knife", "sink", "blender", "microwave", "multicooker", "air_fryer", "waffle_iron", "pressure_cooker", "fridge", "bowl"]);
 const finite = (value: unknown) => typeof value === "number" && Number.isFinite(value);
 const overlaps = (a: { start: number; end: number }, b: { start: number; end: number }) => a.start < b.end && b.start < a.end;
 function add(result: CompileDiagnostic[], code: string, message: string, op?: CookingOperation) { result.push({ code, message, recipeId: op?.recipeId }); }

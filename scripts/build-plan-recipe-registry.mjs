@@ -36,7 +36,7 @@ export async function productionRecipes() {
   const end = source.indexOf("export default function Home");
   if (start < 0 || end <= start) throw new Error("Could not locate the client recipe catalogue.");
   const output = ts.transpileModule(
-    `${source.slice(start, end)}\nglobalThis.__planRecipeRegistry = productionRecipes.map(recipe => { const equipmentOptions = equipmentMethods(recipe); return { ...recipe, equipmentOptions, rawCookingSourceStepsByMethod: Object.fromEntries(equipmentOptions.map(method => [method.id, recipeCookingSourceInstructions(recipe, undefined, method.id)?.map(instruction => instruction.text) ?? []])) }; });`,
+    `${source.slice(start, end)}\nglobalThis.__planRecipeRegistry = productionRecipes.map(recipe => { const equipmentOptions = equipmentMethods(recipe); return { ...recipe, cookingFamily: recipeFamilyFor(recipe), equipmentOptions, rawCookingSourceStepsByMethod: Object.fromEntries(equipmentOptions.map(method => [method.id, recipeCookingSourceInstructions(recipe, undefined, method.id)?.map(instruction => instruction.text) ?? []])) }; });`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -104,9 +104,36 @@ export async function writePlanRecipeRegistry(outputPath = new URL("../data/plan
   return registry;
 }
 
+export async function buildCookingPlanCatalog() {
+  const recipes = await productionRecipes();
+  const catalog = {
+    schemaVersion: 1,
+    recipeCount: recipes.length,
+    recipes: Array.from(recipes, (recipe) => ({
+      recipeId: recipe.id,
+      cookingFamily: recipe.cookingFamily ?? null,
+      flex: recipe.flex ?? null,
+      ingredients: Array.from(recipe.cookingFamily?.ingredients ?? [], (ingredient) => ({
+        id: ingredient.sourceIngredientId,
+        canonicalId: ingredient.canonicalIngredientId,
+        amount: ingredient.baseAmount,
+        unit: ingredient.unit,
+      })),
+    })).sort((left, right) => left.recipeId.localeCompare(right.recipeId)),
+  };
+  return JSON.parse(JSON.stringify(catalog));
+}
+
+export async function writeCookingPlanCatalog(outputPath = new URL("../data/cooking-plan-catalog.json", import.meta.url)) {
+  const catalog = await buildCookingPlanCatalog();
+  await writeFile(outputPath, `${JSON.stringify(catalog, null, 2)}\n`);
+  return catalog;
+}
+
 if (process.argv[1] && new URL(`file://${process.argv[1]}`).href === import.meta.url) {
   const outputIndex = process.argv.indexOf("--output");
   const output = outputIndex >= 0 ? pathToFileURL(resolve(process.argv[outputIndex + 1])) : undefined;
   const registry = await writePlanRecipeRegistry(output);
+  await writeCookingPlanCatalog();
   console.log(JSON.stringify({ recipes: registry.recipeCount }));
 }

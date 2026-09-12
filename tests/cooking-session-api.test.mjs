@@ -17,7 +17,7 @@ async function loadTs(path, dependencies = {}) {
   }).outputText;
   const compiledModule = { exports: {} };
   vm.runInNewContext(output, {
-    module: compiledModule, exports: compiledModule.exports, Response, Request, URL, Date, JSON, Array, Map, Set, Object, Math,
+    module: compiledModule, exports: compiledModule.exports, Response, Request, URL, TextEncoder, Date, JSON, Array, Map, Set, Object, Math,
     require: id => dependencies[id] ?? createRequire(url)(id),
   }, { filename: url.pathname });
   return compiledModule.exports;
@@ -49,10 +49,11 @@ function request(method, body) {
 function context() {
   return {
     cookingDishContext: recipe => recipe && typeof recipe === "object" ? {
-      dishKey: recipe.dishKey, recipeId: recipe.recipeId, methodId: recipe.methodId, personIds: recipe.personIds,
+      dishKey: recipe.dishKey, recipeId: recipe.recipeId, methodId: recipe.methodId, personIds: recipe.personIds, cookingAmounts: recipe.cookingAmounts,
     } : null,
     plannedCookingDishes: () => [{ dishKey: "dish", recipeId: "recipe", methodId: "original", personIds: ["person"] }],
     cookingPlanSnapshotSignature: () => "snap",
+    cookingPlanSnapshotMatches: signature => signature === "snap",
   };
 }
 
@@ -80,9 +81,10 @@ async function routeWith({ plan, row, newest, compiled, sourceSignature = "sig",
       "../../../db/schema": { cookingSessions: {}, mealPlans: {} },
       "../../../lib/cooking-session-store": store,
       "../../../lib/cooking-session-context": context(),
+      "../../../lib/cooking-plan-resolver": { resolvePlannedCookingRecipes: () => input().recipes },
       "../../../lib/cooking-session-protocol": protocol,
       "../../../lib/cooking-notifications": { syncCookingStepNotifications: notifications ?? (async () => ({ scheduled: 0 })) },
-      "../../../domain/cooking/compile": { compileCookingSession: () => compiled ?? { id: "session", input: input(), operations: [{ id: "server-op" }], diagnostics: [] } },
+      "../../../domain/cooking/compile": { compileCookingSession: sessionInput => compiled ?? { id: "session", input: sessionInput, operations: [{ id: "server-op" }], diagnostics: [] } },
       "../../../domain/cooking/schedule": { scheduleCookingSession: () => ({ entries: [{ opId: "server-op", startAt: 0, endAt: 1 }], diagnostics: [] }) },
       "../../../domain/cooking/source": { cookingSourceSignature: async () => sourceSignature },
       "../../../domain/cooking/replan": { initialCookingExecution: () => ({ events: [], statusByOperation: {} }), applyCookingEvent: applied ?? ((_compiled, execution, event) => ({ execution: { ...execution, revision: execution.revision + 1, events: [...execution.events, event] }, schedule: { entries: [] }, diagnostics: [] })) },
@@ -209,4 +211,80 @@ test("a concurrent CAS loss returns the actual newest session", async () => {
   assert.equal(body.current.revision, 4);
   assert.equal(body.current.session.execution.events[0].id, "other");
   assert.equal(writes.length, 1);
+});
+
+
+test("new configuration requests send no recipe quantities or compiled graph", async () => {
+  const { route, writes } = await routeWith();
+  const sessionInput = input();
+  const body = { schemaVersion: 2, sessionId: "session", planId: "plan", batchId: "batch",
+    sources: sessionInput.recipes.map(({dishKey, recipeId, methodId, sourceStepsChecksum}) => ({dishKey, recipeId, methodId, sourceStepsChecksum})),
+    configuration: { kitchen: sessionInput.kitchen, pace: sessionInput.pace },
+  };
+  const response = await route.PUT(request("PUT", body));
+  assert.equal(response.status, 201);
+  const saved = await response.json();
+  assert.deepEqual(saved.session.input.recipes, sessionInput.recipes);
+  assert.deepEqual(writes, ["insert"]);
+  body.sources[0].sourceStepsChecksum = "outdated";
+  assert.equal((await (await routeWith()).route.PUT(request("PUT", body))).status, 409);
+});
+
+test("legacy create cannot forge quantities even with a matching client signature", async () => {
+  const { route, writes } = await routeWith();
+  const body = createBody();
+  body.session.input.recipes[0].cookingAmounts.ingredient.amount = 999;
+  const response = await route.PUT(request("PUT", body));
+  assert.equal(response.status, 422);
+  assert.deepEqual(writes, []);
+});
+
+
+test("oversized durable event snapshot is rejected before CAS and preserves the current graph", async () => {
+  const writes = [];
+  const oversized = stored();
+  const session = JSON.parse(oversized.payload);
+  session.padding = "x".repeat(1_800_000);
+  oversized.payload = JSON.stringify(session);
+  const { route } = await routeWith({ row: oversized, writes });
+  const response = await route.POST(request("POST", mutation({ id: "new", type: "started", opId: "server-op", occurredAt: now, endsAt: now + 1000 })));
+  assert.equal(response.status, 422);
+  assert.equal((await response.json()).error, "cooking session storage limit reached");
+  assert.deepEqual(writes, []);
+});
+
+test("durable bounds count UTF-8 bytes and allow a near-limit CAS", async () => {
+  for (const [padding, status] of [["x".repeat(1_700_000), 200], ["я".repeat(950_000), 422]]) {
+    const writes = [], row = stored(), session = JSON.parse(row.payload);
+    session.padding = padding;
+    row.payload = JSON.stringify(session);
+    const { route } = await routeWith({ row, writes });
+    const response = await route.POST(request("POST", mutation({ id: "new", type: "started", opId: "server-op", occurredAt: now, endsAt: now + 1000 })));
+    assert.equal(response.status, status);
+    assert.deepEqual(writes, status === 200 ? ["cas"] : []);
+  }
+});
+
+test("create reserves future event storage before writing a large graph", async () => {
+  const writes = [], sessionInput = input();
+  const compiled = { id: "session", input: sessionInput, operations: [{ id: "server-op", sourceText: "x".repeat(1_799_000) }], diagnostics: [] };
+  const { route } = await routeWith({ compiled, writes });
+  const response = await route.PUT(request("PUT", createBody()));
+  assert.equal(response.status, 422);
+  assert.match((await response.json()).error, /split the batch/);
+  assert.deepEqual(writes, []);
+});
+
+
+test("plan signatures normalize implicit assignments but preserve old sessions and detect actual changes", async () => {
+  const { cookingPlanSnapshotSignature, cookingPlanSnapshotMatches, plannedCookingDishes } = await loadTs("lib/cooking-session-context.ts");
+  const implicit = { id: "plan", batches: [{id: "batch", days: 1}], mealSlots: ["dinner"], people: [{id: "p", includedSlots: ["dinner"], daily: {kcal: 2000}}], selections: {"batch:dinner": "recipe"} };
+  const explicit = {...implicit, selectionAssignments: {"batch:dinner": [{recipeId: "recipe", personIds: ["p"]}]}};
+  const dishes = plannedCookingDishes(implicit, "batch");
+  assert.equal(cookingPlanSnapshotSignature(implicit, "batch", dishes), cookingPlanSnapshotSignature(explicit, "batch", dishes));
+  const legacy = cookingPlanSnapshotSignature(implicit, "batch", dishes, true);
+  assert.ok(cookingPlanSnapshotMatches(legacy, implicit, "batch", dishes));
+  assert.ok(cookingPlanSnapshotMatches(legacy, explicit, "batch", dishes));
+  const changed = structuredClone(implicit); changed.people[0].daily.kcal = 2400;
+  assert.equal(cookingPlanSnapshotMatches(legacy, changed, "batch", dishes), false);
 });

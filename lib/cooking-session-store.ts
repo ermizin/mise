@@ -1,9 +1,38 @@
 export const cookingSessionLimits = {
   sessionBytes: 300_000,
-  operationCount: 300,
-  eventCount: 1_000,
+  // Leave room for graph/signature columns below D1's 2 MB row limit.
+  durableBytes: 1_800_000,
+  operationCount: 1_000,
+  eventCount: 5_000,
   eventAgeMs: 31 * 24 * 60 * 60 * 1_000,
 } as const;
+
+import type { CookingSessionInput } from "../domain/cooking/types";
+
+export type CookingSessionConfigurationCreate = {
+  schemaVersion: 2; sessionId: string; planId: string; batchId: string;
+  sources: { dishKey: string; recipeId: string; methodId: string; sourceStepsChecksum: string }[];
+  configuration: Pick<CookingSessionInput, "kitchen" | "pace" | "durationOverrides" | "guidedConfig">;
+};
+
+/** A creation request names trusted sources and only contains user-confirmed settings. */
+export function validateCookingSessionConfiguration(value: unknown): CookingSessionConfigurationCreate | null {
+  if (!record(value) || value.schemaVersion !== 2 || !identifier(value.sessionId) || !identifier(value.planId) || !identifier(value.batchId) ||
+    !Array.isArray(value.sources) || !value.sources.length || value.sources.length > 20 || !record(value.configuration) || !boundedJson(value)) return null;
+  if (value.sources.some(source => !record(source) || !identifier(source.dishKey, 240) || !identifier(source.recipeId) || !identifier(source.methodId) || !identifier(source.sourceStepsChecksum, 120))) return null;
+  const config = value.configuration;
+  const kinds = new Set(["cook", "burner", "pot", "pan", "oven", "tray", "board", "knife", "sink", "blender", "microwave", "multicooker", "air_fryer", "waffle_iron", "pressure_cooker", "fridge", "bowl", "baking_dish"]);
+  if (!["speed", "comfortable"].includes(config.pace as string) || !record(config.kitchen) || !Array.isArray(config.kitchen.resources) || !config.kitchen.resources.length || config.kitchen.resources.length > 40 ||
+    config.kitchen.resources.some(resource => !record(resource) || !identifier(resource.id) || !kinds.has(resource.kind as string))) return null;
+  if (config.durationOverrides !== undefined && (!record(config.durationOverrides) || Object.keys(config.durationOverrides).length > 400 ||
+    Object.entries(config.durationOverrides).some(([id, seconds]) => !identifier(id, 400) || typeof seconds !== "number" || !Number.isFinite(seconds) || seconds <= 0 || seconds > 86_400))) return null;
+  if (config.guidedConfig !== undefined) {
+    const guided = config.guidedConfig;
+    if (!record(guided) || guided.schemaVersion !== 1 || !Number.isInteger(guided.activeStepSeconds) || (guided.activeStepSeconds as number) < 1 || (guided.activeStepSeconds as number) > 3600 || !record(guided.actions) || Object.keys(guided.actions).length > 400 ||
+      Object.entries(guided.actions).some(([id, action]) => !identifier(id, 400) || !record(action) || action.allBatchFits !== true || !Number.isInteger(action.durationSeconds) || (action.durationSeconds as number) <= 0 || (action.durationSeconds as number) > 86_400 || !Array.isArray(action.resourceIds) || !action.resourceIds.length || action.resourceIds.length > 16 || !action.resourceIds.every(resourceId => identifier(resourceId)))) return null;
+  }
+  return value as unknown as CookingSessionConfigurationCreate;
+}
 
 type RecordValue = Record<string, unknown>;
 

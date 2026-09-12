@@ -1,5 +1,5 @@
-export type ResourceKind = "cook" | "burner" | "pot" | "pan" | "oven" | "tray" | "board" | "knife" | "sink" | "blender" | "microwave";
-export type OperationKind = "prep" | "start_heat" | "heat" | "intervention" | "unload" | "wash" | "portion" | "store";
+export type ResourceKind = "cook" | "burner" | "pot" | "pan" | "oven" | "tray" | "baking_dish" | "board" | "knife" | "sink" | "blender" | "microwave" | "multicooker" | "air_fryer" | "waffle_iron" | "pressure_cooker" | "fridge" | "bowl";
+export type OperationKind = "instruction" | "prep" | "start_heat" | "heat" | "intervention" | "unload" | "wash" | "portion" | "store";
 export type OperationStatus = "pending" | "active" | "needs_check" | "completed" | "blocked";
 
 export type CookingAmount = { amount: number; unit: string; canonicalId: string; state?: string; cut?: string; allergenGroup?: string };
@@ -17,10 +17,17 @@ export type SelectedCookingRecipe = {
   dishKey: string; recipeId: string; methodId: string; personIds: string[];
   cookingAmounts: Record<string, CookingAmount>; sourceStepsChecksum: string;
 };
+export type GuidedActionConfig = { durationSeconds: number; resourceIds: string[]; allBatchFits: true };
+/**
+ * Generic source actions are always hands-on at this explicit pace.  An entry
+ * in `actions` is an opt-in promotion of a source-marked background candidate.
+ */
+export type GuidedCookingConfig = { schemaVersion: 1; activeStepSeconds: number; actions: Record<string, GuidedActionConfig> };
 export type CookingSessionInput = {
   sessionId: string; planId: string; recipes: SelectedCookingRecipe[];
   kitchen: { resources: KitchenResource[]; ovenCompatibility?: { resourceIds: string[]; reviewedKey: string }[] };
   durationOverrides?: Record<string, number>;
+  guidedConfig?: GuidedCookingConfig;
   pace: "speed" | "comfortable";
 };
 export type CompileDiagnostic = { code: string; message: string; recipeId?: string };

@@ -5,11 +5,17 @@ import { createRequire } from "node:module";
 import vm from "node:vm";
 import ts from "typescript";
 import manifest from "../data/cooking-operations.json" with { type: "json" };
+import actionCatalog from "../data/cooking-action-catalog.json" with { type: "json" };
 
 const root = new URL("..", import.meta.url);
 async function compiler() {
   const modules = {};
-  for (const name of ["batch", "validate", "schedule", "compile"]) {
+  const actionsUrl = new URL("domain/cooking-actions.ts", root), actionsModule = { exports: {} };
+  vm.runInNewContext(ts.transpileModule(await readFile(actionsUrl, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, {
+    module: actionsModule, exports: actionsModule.exports, Map, Set, Math, Object, Array, JSON, Number, Infinity, RegExp,
+  }, { filename: actionsUrl.pathname });
+  modules["../cooking-actions"] = actionsModule.exports;
+  for (const name of ["batch", "validate", "schedule", "guided", "compile"]) {
     const url = new URL(`domain/cooking/${name}.ts`, root), compiledModule = { exports: {} };
     vm.runInNewContext(ts.transpileModule(await readFile(url, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, resolveJsonModule: true } }).outputText, {
       module: compiledModule, exports: compiledModule.exports, require: (id) => modules[id] ?? (id.endsWith(".json") ? { default: createRequire(url)(id) } : createRequire(url)(id)), Map, Set, Math, Object, Array, JSON, Number, Infinity,
@@ -42,6 +48,140 @@ test("compiler preserves every exact source ingredient amount across capacity sp
   assert.equal(oilIds.length, 2); assert.notEqual(oilIds[0], oilIds[1]);
   assert.equal(totals.get(oilIds[0]), recipe.sourceDefinition.ingredients.find((item) => item.sourceIngredientId === oilIds[0]).baseAmount);
   assert.equal(totals.get(oilIds[1]), recipe.sourceDefinition.ingredients.find((item) => item.sourceIngredientId === oilIds[1]).baseAmount);
+});
+
+const genericInput = (recipe, method, { dishKey = "guided", actions = {} } = {}) => ({
+  sessionId: `guided-${dishKey}`, planId: "plan", pace: "speed",
+  kitchen: { resources: [{ id: "cook-a", kind: "cook" }, { id: "oven-a", kind: "oven" }, { id: "fridge-a", kind: "fridge" }, { id: "burner-a", kind: "burner" }, { id: "pot-a", kind: "pot" }, { id: "pan-a", kind: "pan" }, { id: "dish-a", kind: "baking_dish" }, { id: "blender-a", kind: "blender" }, { id: "waffle-a", kind: "waffle_iron" }, { id: "microwave-a", kind: "microwave" }, { id: "air-a", kind: "air_fryer" }, { id: "multicooker-a", kind: "multicooker" }, { id: "pressure-a", kind: "pressure_cooker" }] },
+  guidedConfig: { schemaVersion: 1, activeStepSeconds: 45, actions },
+  recipes: [{ dishKey, recipeId: recipe.recipeId, methodId: method.methodId, personIds: ["person"], sourceStepsChecksum: method.graphFingerprint, cookingAmounts: Object.fromEntries(recipe.ingredientDefinitions.map(item => [item.id, { amount: item.amount, unit: item.unit, canonicalId: item.canonicalId, state: "raw" }])) }],
+});
+
+const candidateResourceIds = (method, candidate) => {
+  if (candidate.category === "oven") return ["oven-a", "dish-a"];
+  if (method.requiredEquipment.includes("multicooker")) return ["multicooker-a"];
+  if (method.requiredEquipment.includes("pressure_cooker")) return ["pressure-a"];
+  return ["burner-a", ...method.requiredEquipment.filter(item => item === "pot" || item === "pan").map(item => `${item}-a`)];
+};
+const equipmentKind = { baking_dish: "baking_dish", oven: "oven", pan: "pan", stove: "burner", blender: "blender", waffle_iron: "waffle_iron", pot: "pot", multicooker: "multicooker", pressure_cooker: "pressure_cooker", microwave: "microwave", air_fryer: "air_fryer" };
+
+test("every catalog method compiles with explicit global active pace and exact ingredient identities", async () => {
+  const { compileCookingSession, cookingSourceDescriptor, guidedCookingMethod } = await compiler();
+  let compiledMethods = 0;
+  for (const recipe of actionCatalog.recipes) for (const method of recipe.methods) {
+    const descriptor = cookingSourceDescriptor(recipe.recipeId, method.methodId);
+    assert.ok(descriptor, `${recipe.recipeId}:${method.methodId} descriptor`);
+    if (manifest.recipes.some(item => item.recipeId === recipe.recipeId && item.methodId === method.methodId)) {
+      assert.equal(guidedCookingMethod(recipe.recipeId, method.methodId), undefined);
+      continue;
+    }
+    const compiled = compileCookingSession(genericInput(recipe, method));
+    assert.equal(compiled.diagnostics.length, 0, `${recipe.recipeId}:${method.methodId} ${JSON.stringify(compiled.diagnostics)}`);
+    assert.ok(compiled.operations.length >= method.actions.length + 1);
+    const allocations = compiled.operations.flatMap(operation => operation.allocations);
+    assert.equal(allocations.length, recipe.ingredientDefinitions.length);
+    const requiredKinds = method.requiredEquipment.map(item => equipmentKind[item]);
+    for (const operation of compiled.operations.filter(item => item.attention === "required" && item.sourceOperationIds?.length)) {
+      assert.ok(operation.resources.some(resource => resource.kind === "cook"));
+      for (const kind of requiredKinds) assert.ok(operation.resources.some(resource => resource.kind === kind), `${operation.id} must retain ${kind}`);
+    }
+    compiledMethods += 1;
+  }
+  assert.ok(compiledMethods >= 300);
+});
+
+test("guided oven and stove candidates preserve source evidence, hold equipment, and interleave safely", async () => {
+  const { compileCookingSession, scheduleCookingSession, validateCookingSchedule } = await compiler();
+  const oven = actionCatalog.recipes.flatMap(recipe => recipe.methods.map(method => ({ recipe, method }))).find(({ method }) => method.requiredEquipment.includes("oven") && method.requiredEquipment.includes("baking_dish") && !method.requiredEquipment.some(item => item === "stove" || item === "pot" || item === "pan") && method.actions.some(action => action.backgroundCandidate?.category === "oven"));
+  const stove = actionCatalog.recipes.flatMap(recipe => recipe.methods.map(method => ({ recipe, method }))).find(({ method }) => method.requiredEquipment.includes("stove") && !method.requiredEquipment.includes("multicooker") && method.actions.some(action => action.backgroundCandidate?.category === "boil"));
+  assert.ok(oven && stove);
+  const ovenAction = oven.method.actions.find(action => action.backgroundCandidate?.category === "oven");
+  const stoveAction = stove.method.actions.find(action => action.backgroundCandidate?.category === "boil");
+  const input = genericInput(oven.recipe, oven.method, { dishKey: "oven", actions: { [`oven:${ovenAction.id}`]: { durationSeconds: ovenAction.backgroundCandidate.durationSeconds, resourceIds: candidateResourceIds(oven.method, ovenAction.backgroundCandidate), allBatchFits: true } } });
+  input.recipes.push({ ...genericInput(stove.recipe, stove.method, { dishKey: "stove", actions: { [`stove:${stoveAction.id}`]: { durationSeconds: stoveAction.backgroundCandidate.durationSeconds, resourceIds: candidateResourceIds(stove.method, stoveAction.backgroundCandidate), allBatchFits: true } } }).recipes[0] });
+  input.guidedConfig.actions[`stove:${stoveAction.id}`] = { durationSeconds: stoveAction.backgroundCandidate.durationSeconds, resourceIds: candidateResourceIds(stove.method, stoveAction.backgroundCandidate), allBatchFits: true };
+  const compiled = compileCookingSession(input);
+  assert.equal(compiled.diagnostics.length, 0, JSON.stringify(compiled.diagnostics));
+  const heat = compiled.operations.find(operation => operation.kind === "heat" && operation.dishKey === "oven");
+  const check = compiled.operations.find(operation => operation.kind === "intervention" && operation.dependsOn.includes(heat?.id));
+  const cleanup = compiled.operations.find(operation => operation.kind === "wash" && operation.dishKey === "oven");
+  assert.ok(heat && check && cleanup && heat.resourceHolds?.some(hold => hold.resourceId === "oven-a" && hold.releaseAfterOpId === cleanup.id));
+  assert.ok(heat.resourceHolds?.some(hold => hold.resourceId === "dish-a" && hold.releaseAfterOpId === cleanup.id));
+  const sourceAction = oven.method.actions.find(action => action.id === heat.sourceOperationIds?.[0]);
+  assert.equal(heat.sourceText, oven.method.sourceSteps[sourceAction.sourceStepIndex]);
+  const schedule = scheduleCookingSession(compiled);
+  assert.equal(validateCookingSchedule(compiled, schedule).length, 0);
+  assert.equal(schedule.mode, "optimized");
+  const stoveHeat = compiled.operations.find(operation => operation.kind === "heat" && operation.dishKey === "stove");
+  const ovenInterval = schedule.entries.find(entry => entry.opId === heat.id), stoveInterval = schedule.entries.find(entry => entry.opId === stoveHeat?.id);
+  assert.ok(ovenInterval.startAt < stoveInterval.endAt && stoveInterval.startAt < ovenInterval.endAt, "independent confirmed background chains should interleave");
+  const invalid = structuredClone(input);
+  invalid.guidedConfig.actions[`oven:${ovenAction.id}`].durationSeconds -= 1;
+  assert.ok(compileCookingSession(invalid).diagnostics.some(item => item.code === "guided_background_config_invalid"));
+  const drift = structuredClone(input);
+  drift.recipes[0].sourceStepsChecksum = "changed-source";
+  assert.ok(compileCookingSession(drift).diagnostics.some(item => item.code === "guided_config_required"));
+  const unknown = structuredClone(input);
+  unknown.guidedConfig.actions["oven:not-a-source-action"] = { durationSeconds: 1, resourceIds: ["oven-a", "dish-a"], allBatchFits: true };
+  assert.ok(compileCookingSession(unknown).diagnostics.some(item => item.code === "guided_background_config_invalid"));
+  const missingEquipment = structuredClone(input);
+  missingEquipment.kitchen.resources = missingEquipment.kitchen.resources.filter(resource => resource.kind !== "oven");
+  assert.ok(compileCookingSession(missingEquipment).diagnostics.some(item => item.code === "resource_unavailable"));
+  const missingVessel = structuredClone(input);
+  missingVessel.guidedConfig.actions[`oven:${ovenAction.id}`].resourceIds = ["oven-a"];
+  assert.ok(compileCookingSession(missingVessel).diagnostics.some(item => item.code === "guided_heat_resource_invalid"));
+});
+
+test("every current source-backed candidate compiles with its source appliance and requires an immediate check", async () => {
+  const { compileCookingSession, scheduleCookingSession, validateCookingSchedule } = await compiler();
+  let candidates = 0;
+  for (const recipe of actionCatalog.recipes) for (const method of recipe.methods) for (const action of method.actions.filter(item => item.backgroundCandidate)) {
+    const dishKey = `candidate-${candidates}`;
+    const resources = candidateResourceIds(method, action.backgroundCandidate);
+    const input = genericInput(recipe, method, { dishKey, actions: { [`${dishKey}:${action.id}`]: { durationSeconds: action.backgroundCandidate.durationSeconds, resourceIds: resources, allBatchFits: true } } });
+    const compiled = compileCookingSession(input);
+    assert.equal(compiled.diagnostics.length, 0, `${recipe.recipeId}:${method.methodId}:${action.id} ${JSON.stringify(compiled.diagnostics)}`);
+    const heat = compiled.operations.find(operation => operation.kind === "heat" && operation.sourceOperationIds?.[0] === action.id);
+    const check = compiled.operations.find(operation => operation.kind === "intervention" && operation.dependsOn.includes(heat?.id));
+    assert.ok(heat && check && heat.requiresCheckAtEnd && heat.checkDeadlineSeconds === 0);
+    assert.equal(heat.sourceText, method.sourceSteps[action.sourceStepIndex]);
+    const schedule = scheduleCookingSession(compiled);
+    assert.equal(validateCookingSchedule(compiled, schedule).length, 0);
+    candidates += 1;
+  }
+  assert.equal(candidates, 48);
+});
+
+test("generic cookware is leased to cleanup: disjoint stove work can run during an oven timer, but a second oven waits", async () => {
+  const { compileCookingSession, scheduleCookingSession, validateCookingSchedule } = await compiler();
+  const oven = actionCatalog.recipes.flatMap(recipe => recipe.methods.map(method => ({ recipe, method }))).find(({ method }) => method.actions.some(action => action.backgroundCandidate?.category === "oven"));
+  const stove = actionCatalog.recipes.flatMap(recipe => recipe.methods.map(method => ({ recipe, method }))).find(({ method }) => method.requiredEquipment.includes("stove") && !method.requiredEquipment.includes("multicooker") && method.actions.some(action => action.backgroundCandidate?.category === "boil"));
+  assert.ok(oven && stove);
+  const ovenAction = oven.method.actions.find(action => action.backgroundCandidate?.category === "oven");
+  const stoveAction = stove.method.actions.find(action => action.backgroundCandidate?.category === "boil");
+  const input = genericInput(oven.recipe, oven.method, { dishKey: "oven-a", actions: { [`oven-a:${ovenAction.id}`]: { durationSeconds: ovenAction.backgroundCandidate.durationSeconds, resourceIds: ["oven-a", "dish-a"], allBatchFits: true } } });
+  input.recipes.push({ ...genericInput(stove.recipe, stove.method, { dishKey: "stove", actions: { [`stove:${stoveAction.id}`]: { durationSeconds: stoveAction.backgroundCandidate.durationSeconds, resourceIds: ["burner-a", ...stove.method.requiredEquipment.filter(item => item === "pot" || item === "pan").map(item => `${item}-a`)], allBatchFits: true } } }).recipes[0] });
+  input.guidedConfig.actions[`stove:${stoveAction.id}`] = { durationSeconds: stoveAction.backgroundCandidate.durationSeconds, resourceIds: ["burner-a", ...stove.method.requiredEquipment.filter(item => item === "pot" || item === "pan").map(item => `${item}-a`)], allBatchFits: true };
+  const compiled = compileCookingSession(input), schedule = scheduleCookingSession(compiled);
+  assert.equal(compiled.diagnostics.length, 0, JSON.stringify(compiled.diagnostics));
+  assert.equal(validateCookingSchedule(compiled, schedule).length, 0);
+  const ovenHeat = compiled.operations.find(operation => operation.kind === "heat" && operation.dishKey === "oven-a");
+  const ovenHeatEntry = schedule.entries.find(entry => entry.opId === ovenHeat.id);
+  assert.ok(compiled.operations.filter(operation => operation.dishKey === "stove").some(operation => { const entry = schedule.entries.find(item => item.opId === operation.id); return entry.startAt < ovenHeatEntry.endAt && ovenHeatEntry.startAt < entry.endAt; }));
+  const wrongAppliance = structuredClone(input);
+  wrongAppliance.guidedConfig.actions[`stove:${stoveAction.id}`].resourceIds = ["multicooker-a"];
+  assert.ok(compileCookingSession(wrongAppliance).diagnostics.some(item => item.code === "guided_heat_resource_invalid"), "a stove method cannot silently become multicooker cooking");
+  const duplicate = structuredClone(input);
+  duplicate.recipes = [duplicate.recipes[0], { ...duplicate.recipes[0], dishKey: "oven-b" }];
+  duplicate.guidedConfig.actions = {
+    [`oven-a:${ovenAction.id}`]: { durationSeconds: ovenAction.backgroundCandidate.durationSeconds, resourceIds: ["oven-a", "dish-a"], allBatchFits: true },
+    [`oven-b:${ovenAction.id}`]: { durationSeconds: ovenAction.backgroundCandidate.durationSeconds, resourceIds: ["oven-a", "dish-a"], allBatchFits: true },
+  };
+  const doubleCompiled = compileCookingSession(duplicate), doubleSchedule = scheduleCookingSession(doubleCompiled);
+  assert.equal(validateCookingSchedule(doubleCompiled, doubleSchedule).length, 0);
+  const firstCleanup = doubleCompiled.operations.find(operation => operation.kind === "wash" && operation.dishKey === "oven-a");
+  const secondStart = doubleCompiled.operations.find(operation => operation.kind === "start_heat" && operation.dishKey === "oven-b");
+  assert.ok(doubleSchedule.entries.find(entry => entry.opId === secondStart.id).startAt >= doubleSchedule.entries.find(entry => entry.opId === firstCleanup.id).endAt);
 });
 
 test("capacity and source identity failures fall back rather than compiling guessed work", async () => {

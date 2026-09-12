@@ -49,9 +49,20 @@ export function replanCookingSession(session: CompiledSession, execution: Cookin
     const startAt = starts(execution, op.id), endAt = ends(execution, op.id);
     if (!finite(startAt) || !finite(endAt) || startAt < 0 || endAt < startAt) return { ...base, entries: [], baselineMakespan: 0, optimizedMakespan: 0, usedFallback: true, diagnostics: [...base.diagnostics, { code: "invalid_active_anchor", message: "Для начатой операции нет корректного времени." }] };
     const entry = { opId: op.id, startAt, endAt }; entries.set(op.id, entry);
-    for (const use of op.resources) add(calendar, use.resourceId, { start: entry.startAt, end: entry.endAt <= now ? Infinity : entry.endAt });
-    const check = status[op.id] === "active" ? plannedHeatCheck(session, op, startAt, endAt) : undefined;
-    if (check) for (const use of check.op.resources) add(calendar, use.resourceId, { start: check.startAt, end: check.endAt });
+    const requiredCheck = op.requiresCheckAtEnd && op.attention === "background" ? checkFor(session, op) : undefined;
+    const checkStart = status[op.id] === "needs_check" ? now : endAt;
+    const fixedCheck = requiredCheck && pending.has(requiredCheck.id) && requiredCheck.dependsOn.every(id => id === op.id || completed.has(id) || entries.has(id))
+      ? { op: requiredCheck, startAt: checkStart, endAt: checkStart + requiredCheck.durationSeconds * 1000 }
+      : undefined;
+    // A due check is placed at the real deadline (or immediately when overdue),
+    // before ordinary pending work. It remains pending in execution; this is only
+    // a reservation, never an implicit completion event.
+    if (fixedCheck) {
+      entries.set(fixedCheck.op.id, { opId: fixedCheck.op.id, startAt: fixedCheck.startAt, endAt: fixedCheck.endAt });
+      pending.delete(fixedCheck.op.id);
+      for (const use of fixedCheck.op.resources) add(calendar, use.resourceId, { start: fixedCheck.startAt, end: fixedCheck.endAt });
+    }
+    for (const use of op.resources) add(calendar, use.resourceId, { start: entry.startAt, end: status[op.id] === "needs_check" ? now : entry.endAt });
   }
   // Suspending a non-raw prep frees the cook, but its board/knife remain physically occupied until it is continued or resolved.
   for (const op of session.operations) if (status[op.id] === "blocked") {

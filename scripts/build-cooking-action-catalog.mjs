@@ -8,32 +8,73 @@ import { productionRecipes } from "./build-plan-recipe-registry.mjs";
 
 const sha256 = (value) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 
-async function cookingActionSplitter() {
-  const url = new URL("../domain/cooking-actions.ts", import.meta.url);
+function sourceSentence(text, sourceStart, sourceEnd) {
+  const start = Math.max(text.lastIndexOf(".", sourceStart), text.lastIndexOf("!", sourceStart), text.lastIndexOf("?", sourceStart)) + 1;
+  const tail = text.slice(sourceEnd);
+  const next = tail.search(/[.!?]/u);
+  return text.slice(start, next < 0 ? text.length : sourceEnd + next + 1);
+}
+
+function cookingIngredientDefinitions(recipe) {
+  if (!recipe.cookingFamily?.ingredients) throw new Error(`Production recipe ${recipe.id} is missing its Recipe Family.`);
+  return Array.from(recipe.cookingFamily.ingredients, (ingredient) => ({
+    id: ingredient.sourceIngredientId,
+    canonicalId: ingredient.canonicalIngredientId,
+    amount: ingredient.baseAmount,
+    unit: ingredient.unit,
+  }));
+}
+
+async function loadCookingEvidenceModule(relativePath) {
+  const url = new URL(relativePath, import.meta.url);
   const source = await readFile(url, "utf8");
   const output = ts.transpileModule(source, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
   }).outputText;
   const moduleBox = { exports: {} };
   vm.runInNewContext(output, { module: moduleBox, exports: moduleBox.exports, RegExp, String }, { filename: url.pathname });
-  return moduleBox.exports.splitCookingActions;
+  return moduleBox.exports;
 }
 
 export async function buildCookingActionCatalog() {
-  const [recipes, splitCookingActions] = await Promise.all([productionRecipes(), cookingActionSplitter()]);
+  const [recipes, actionsModule, evidenceModule] = await Promise.all([
+    productionRecipes(),
+    loadCookingEvidenceModule("../domain/cooking-actions.ts"),
+    loadCookingEvidenceModule("../domain/cooking-evidence.ts"),
+  ]);
+  const { splitCookingActions } = actionsModule;
+  const { backgroundCandidateForAction } = evidenceModule;
   const entries = Array.from(recipes, (recipe) => ({
       recipeId: recipe.id,
+      ingredientDefinitions: cookingIngredientDefinitions(recipe),
       methods: Array.from(recipe.equipmentOptions, (method) => {
         const sourceSteps = Array.from(recipe.rawCookingSourceStepsByMethod[method.id] ?? []);
+        const requiredEquipment = Array.from(method.requiredEquipment);
         const actions = sourceSteps.flatMap((text, sourceStepIndex) =>
-          splitCookingActions(text).map((action, index) => ({
-            id: `${recipe.id}:${method.id}:${sourceStepIndex}:${index}`,
-            sourceStepIndex,
-            ...action,
-          })),
+          splitCookingActions(text).map((action, index) => {
+            const backgroundCandidate = backgroundCandidateForAction(
+              action.text,
+              requiredEquipment,
+              sourceSentence(text, action.sourceStart, action.sourceEnd),
+            );
+            return {
+              id: `${recipe.id}:${method.id}:${sourceStepIndex}:${index}`,
+              sourceStepIndex,
+              ...action,
+              ...(backgroundCandidate ? { backgroundCandidate: { ...backgroundCandidate } } : {}),
+            };
+          }),
         );
         const fingerprint = sha256({ recipeId: recipe.id, methodId: method.id, sourceSteps, actions: actions.map(({ sourceStepIndex, text, sourceStart, sourceEnd }) => ({ sourceStepIndex, text, sourceStart, sourceEnd })) });
-        return { methodId: method.id, sourceSteps, actions, fingerprint };
+        const sourceDefinition = {
+          recipeId: recipe.id,
+          ingredients: cookingIngredientDefinitions(recipe),
+          method: { id: method.id, requiredEquipment },
+          sourceSteps,
+          actions: actions.map(({ id, sourceStepIndex, text, sourceStart, sourceEnd }) => ({ id, sourceStepIndex, text, sourceStart, sourceEnd })),
+        };
+        const graphFingerprint = sha256({ sourceDefinition, backgroundCandidates: actions.map(({ id, backgroundCandidate }) => ({ id, backgroundCandidate: backgroundCandidate ?? null })) });
+        return { methodId: method.id, requiredEquipment, sourceSteps, actions, fingerprint, sourceDefinition, graphFingerprint };
       }),
     }))
     .sort((left, right) => left.recipeId.localeCompare(right.recipeId));

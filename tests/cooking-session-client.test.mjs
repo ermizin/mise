@@ -42,6 +42,13 @@ function session() {
   return { input, compiled, schedule: { mode: "sequential", entries: [], baselineMakespan: 0, optimizedMakespan: 0, usedFallback: true, diagnostics: [] }, execution: { revision: 0, statusByOperation: { prep: "completed", heat: "pending" }, events: [], startedAtByOperation: {}, endsAtByOperation: {} } };
 }
 
+function guidedHeatingSession() {
+  const start = { id: "source-start", recipeId: "r", methodId: "original", kind: "start_heat", title: "Запекайте 10 минут.", sourceOperationIds: ["action"], dependsOn: [], durationSeconds: 120, attention: "required", resources: [{ resourceId: "cook", kind: "cook" }, { resourceId: "oven", kind: "oven" }], allocations: [], sourceStepIndexes: [0] };
+  const heat = { id: "source-heat", recipeId: "r", methodId: "original", kind: "heat", title: "Запекайте 10 минут.", sourceOperationIds: ["action"], dependsOn: ["source-start"], durationSeconds: 10, attention: "background", resources: [{ resourceId: "oven", kind: "oven" }], allocations: [], sourceStepIndexes: [0], requiresCheckAtEnd: true };
+  const input = { sessionId: "guided", planId: "plan", pace: "speed", recipes: [{ dishKey: "dish", recipeId: "r", methodId: "original", personIds: ["person"], sourceStepsChecksum: "source" }], kitchen: { resources: [{ id: "cook", kind: "cook" }, { id: "oven", kind: "oven" }] }, guidedConfig: { schemaVersion: 1, activeStepSeconds: 120, actions: {} } };
+  return { input, compiled: { id: "guided", input, operations: [start, heat], diagnostics: [] }, schedule: { mode: "sequential", entries: [], baselineMakespan: 0, optimizedMakespan: 0, usedFallback: true, diagnostics: [] }, execution: { revision: 1, statusByOperation: { "source-start": "active", "source-heat": "pending" }, events: [], startedAtByOperation: { "source-start": epoch - 60_000 }, endsAtByOperation: { "source-start": epoch + 60_000 } } };
+}
+
 function options(overrides = {}) {
   return { fetch: async () => { throw new TypeError("offline"); }, storage: storage(), clientId: () => "client", now: () => epoch, key: "cook", planId: "plan", batchId: "batch", signature: "sig", planSnapshotSignature: "plan-sig", ...overrides };
 }
@@ -66,7 +73,7 @@ test("offline create and start preserve the absolute heat anchor after reload", 
   const { createCookingSessionClient } = await loadClient();
   const config = options();
   const client = createCookingSessionClient(config);
-  await assert.rejects(client.create(session(), { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(session()));
   client.enqueue({ id: "start-heat", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   const restored = createCookingSessionClient(config);
   const snapshot = restored.restore();
@@ -80,7 +87,7 @@ test("invalid dependent action is rejected before storage or network", async () 
   const client = createCookingSessionClient(config);
   const invalid = session();
   invalid.execution.statusByOperation.prep = "pending";
-  await assert.rejects(client.create(invalid, { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(invalid));
   assert.throws(() => client.enqueue({ id: "heat", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt }), /Сначала завершите/);
   assert.equal(client.snapshot().pending.length, 0);
 });
@@ -89,7 +96,7 @@ test("storage failure leaves the in-memory snapshot unchanged", async () => {
   const { createCookingSessionClient } = await loadClient();
   const config = options({ storage: { getItem: () => null, setItem: () => { throw new Error("quota"); } } });
   const client = createCookingSessionClient(config);
-  await assert.rejects(client.create(session(), { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(session()));
   assert.equal(client.snapshot().session, null);
 });
 
@@ -110,7 +117,7 @@ test("offline provisional session retries PUT, then posts the pending start exac
     return reply({ session: serverAfterStart(base, request.event), revision: 1 });
   };
   const client = createCookingSessionClient(options({ fetch }));
-  await assert.rejects(client.create(base, { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(base));
   online = true;
   client.enqueue({ id: "start", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   await client.sync();
@@ -118,6 +125,76 @@ test("offline provisional session retries PUT, then posts the pending start exac
   assert.equal(posts, 1);
   assert.equal(client.snapshot().pending.length, 0);
   assert.equal(client.snapshot().session.execution.endsAtByOperation.heat, heatEndsAt);
+});
+
+test("v2 creation posts only compact sources and confirmed configuration", async () => {
+  const { createCookingSessionClient } = await loadClient();
+  const base = session();
+  base.input.guidedConfig = { schemaVersion: 1, activeStepSeconds: 120, actions: {} };
+  let request;
+  const client = createCookingSessionClient(options({
+    fetch: async (_url, init) => { request = JSON.parse(init.body); return reply({ session: base, revision: 0 }); },
+  }));
+  await client.create(base);
+  assert.deepEqual(request, {
+    schemaVersion: 2,
+    sessionId: "session",
+    planId: "plan",
+    batchId: "batch",
+    sources: [{ dishKey: "dish", recipeId: "r", methodId: "original", sourceStepsChecksum: "source" }],
+    configuration: {
+      kitchen: base.input.kitchen,
+      pace: "speed",
+      guidedConfig: { schemaVersion: 1, activeStepSeconds: 120, actions: {} },
+    },
+  });
+  assert.equal("compiled" in request, false);
+  assert.equal("input" in request, false);
+  assert.equal("signature" in request, false);
+  assert.equal("cookingAmounts" in request.sources[0], false);
+});
+
+test("generic source confirmation completes setup and anchors its timer at the same moment", async () => {
+  const { createCookingSessionClient } = await loadClient();
+  const guided = guidedHeatingSession();
+  const client = createCookingSessionClient(options());
+  await assert.rejects(client.create(guided));
+  client.enqueueBatch([
+    { id: "placed", type: "completed", opId: "source-start", occurredAt: epoch },
+    { id: "timer", type: "started", opId: "source-heat", occurredAt: epoch, endsAt: heatEndsAt },
+  ]);
+  const current = client.snapshot();
+  assert.deepEqual(current.pending.map(item => [item.event.type, item.event.opId, item.event.occurredAt]), [
+    ["completed", "source-start", epoch],
+    ["started", "source-heat", epoch],
+  ]);
+  assert.equal(current.session.execution.statusByOperation["source-heat"], "active");
+  assert.equal(current.session.execution.endsAtByOperation["source-heat"], heatEndsAt);
+});
+
+test("a failed batched heat confirmation never saves only its first event", async () => {
+  const { createCookingSessionClient } = await loadClient();
+  const guided = guidedHeatingSession();
+  let writes = 0;
+  const client = createCookingSessionClient(options({
+    storage: {
+      getItem: () => null,
+      setItem: () => {
+        writes += 1;
+        if (writes === 2) throw new Error("quota");
+      },
+    },
+  }));
+  await assert.rejects(client.create(guided));
+  assert.throws(() => client.enqueueBatch([
+    { id: "placed", type: "completed", opId: "source-start", occurredAt: epoch },
+    { id: "timer", type: "started", opId: "source-heat", occurredAt: epoch, endsAt: heatEndsAt },
+  ]), /Не удалось сохранить/);
+  const current = client.snapshot();
+  assert.equal(current.pending.length, 0);
+  assert.equal(current.session.execution.statusByOperation["source-start"], "active");
+  assert.equal(current.session.execution.statusByOperation["source-heat"], "pending");
+  assert.equal(current.session.execution.endsAtByOperation["source-heat"], undefined);
 });
 
 test("refresh restores a same-signature session from another device", async () => {
@@ -129,6 +206,17 @@ test("refresh restores a same-signature session from another device", async () =
   const restored = await client.refresh();
   assert.equal(restored.revision, 7);
   assert.equal(restored.session.execution.endsAtByOperation.heat, epoch + 50_000);
+});
+
+test("server refresh distinguishes an empty new session from an unavailable server", async () => {
+  const { createCookingSessionClient } = await loadClient();
+  const unavailable = createCookingSessionClient(options({ fetch: async () => { throw new TypeError("offline"); } }));
+  assert.equal((await unavailable.refreshFromServer()).received, false);
+  assert.equal(unavailable.snapshot().session, null);
+
+  const empty = createCookingSessionClient(options({ fetch: async () => reply({ session: null, revision: null }) }));
+  assert.equal((await empty.refreshFromServer()).received, true);
+  assert.equal(empty.snapshot().session, null);
 });
 
 test("acknowledging the first queued action replays the second and preserves its timer", async () => {
@@ -144,7 +232,7 @@ test("acknowledging the first queued action replays the second and preserves its
     throw new TypeError("offline after first ack");
   };
   const client = createCookingSessionClient(options({ fetch }));
-  await client.create(base, { operationIds: ["prep", "heat"], recipeIds: ["r"] });
+  await client.create(base);
   client.enqueue({ id: "start", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   client.enqueue({ id: "pause", type: "paused", occurredAt: epoch + 1_000 });
   releaseFirst(reply({ session: serverAfterStart(base, { id: "start", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt }), revision: 1 }));
@@ -160,7 +248,7 @@ test("same mutation id with a different action is rejected locally", async () =>
   const { createCookingSessionClient } = await loadClient();
   const base = session();
   const client = createCookingSessionClient(options());
-  await assert.rejects(client.create(base, { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(base));
   client.enqueue({ id: "same", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   assert.throws(() => client.enqueue({ id: "same", type: "paused", occurredAt: epoch + 1_000 }), /Идентификатор события/);
   assert.equal(client.snapshot().pending.length, 1);
@@ -177,7 +265,7 @@ test("source mismatch retains local timer and requires explicit user action", as
       return reply({ session: session(), revision: 9, signature: "different", planSnapshotSignature: "plan-sig" });
     },
   }));
-  await assert.rejects(client.create(base, { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(base));
   client.enqueue({ id: "start", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   refresh = true;
   const current = await client.refresh();
@@ -226,7 +314,7 @@ test("changed server plan snapshot retains local timer and requires review", asy
       return reply({ session: base, revision: 8, signature: "sig", planSnapshotSignature: "changed-plan" });
     },
   }));
-  await assert.rejects(client.create(base, { operationIds: ["prep", "heat"], recipeIds: ["r"] }));
+  await assert.rejects(client.create(base));
   client.enqueue({ id: "start", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   refresh = true;
   const current = await client.refresh();
@@ -243,7 +331,7 @@ test("explicit server resolution replaces a stale-conflict queue with server anc
       ? reply({ session: local, revision: 0 })
       : reply({ session: remote, revision: 9, signature: "sig", planSnapshotSignature: "plan-sig" }),
   }));
-  await client.create(local, { operationIds: ["prep", "heat"], recipeIds: ["r"] });
+  await client.create(local);
   client.enqueue({ id: "local", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   const resolved = await client.resolveFromServer();
   assert.equal(resolved.revision, 9);
@@ -258,7 +346,7 @@ test("server resolution never discards local pending actions for a mismatched so
   const client = createCookingSessionClient(options({
     fetch: async () => reply({ session: session(), revision: 9, signature: "other", planSnapshotSignature: "plan-sig" }),
   }));
-  await client.create(local, { operationIds: ["prep", "heat"], recipeIds: ["r"] });
+  await client.create(local);
   client.enqueue({ id: "local", type: "started", opId: "heat", occurredAt: epoch, endsAt: heatEndsAt });
   const resolved = await client.resolveFromServer();
   assert.equal(resolved.requiresUserAction, "source_changed");

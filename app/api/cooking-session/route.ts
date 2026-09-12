@@ -5,20 +5,24 @@ import {
   cookingSessionStorageId,
   type CookingGraphManifest,
   validateCookingSessionCreate,
+  validateCookingSessionConfiguration,
+  cookingSessionLimits,
   validateCookingSessionMutation,
 } from "../../../lib/cooking-session-store";
 import {
   cookingDishContext,
   cookingPlanSnapshotSignature,
+  cookingPlanSnapshotMatches,
   plannedCookingDishes,
 } from "../../../lib/cooking-session-context";
 import { applyCookingEvent, initialCookingExecution } from "../../../domain/cooking/replan";
 import { scheduleCookingSession } from "../../../domain/cooking/schedule";
 import { compileCookingSession } from "../../../domain/cooking/compile";
 import { cookingSourceSignature } from "../../../domain/cooking/source";
+import { resolvePlannedCookingRecipes } from "../../../lib/cooking-plan-resolver";
 import { cookingMutationReplay } from "../../../lib/cooking-session-protocol";
 import { syncCookingStepNotifications, type CookingNotificationEnvelope } from "../../../lib/cooking-notifications";
-import type { CookingExecutionState, CompiledSession } from "../../../domain/cooking/types";
+import type { CookingExecutionState, CompiledSession, CookingSessionInput } from "../../../domain/cooking/types";
 
 type StoredSession = {
   id: string;
@@ -58,6 +62,11 @@ function responseFor(row: StoredSession) {
   return session ? { session, revision: row.revision, signature: row.signature, planSnapshotSignature: row.planSnapshotSignature } : null;
 }
 
+function durablePayload(session: unknown, graph: string, planSignature: string, reserveBytes = 0) {
+  const payload = JSON.stringify(session);
+  return new TextEncoder().encode(payload + graph + planSignature).byteLength + reserveBytes <= cookingSessionLimits.durableBytes ? payload : null;
+}
+
 function submittedDishes(session: Record<string, unknown>) {
   const input = session.input;
   if (!input || typeof input !== "object" || !Array.isArray((input as { recipes?: unknown }).recipes)) return null;
@@ -75,7 +84,8 @@ function sameDishes(expected: NonNullable<ReturnType<typeof plannedCookingDishes
   return received.size === submitted.length && expected.every((dish) => {
     const actual = received.get(dish.dishKey);
     return actual && actual.recipeId === dish.recipeId && actual.methodId === dish.methodId &&
-      actual.personIds.length === dish.personIds.length && actual.personIds.every((id, index) => id === dish.personIds[index]);
+      actual.personIds.length === dish.personIds.length && actual.personIds.every((id, index) => id === dish.personIds[index]) &&
+      JSON.stringify(Object.entries(actual.cookingAmounts).sort()) === JSON.stringify(Object.entries(dish.cookingAmounts).sort());
   });
 }
 
@@ -136,17 +146,34 @@ export async function GET(request: Request) {
 export async function PUT(request: Request) {
   const clientId = clientIdFor(request);
   if (!clientId) return Response.json({ error: "client id is required" }, { status: 400 });
-  const create = validateCookingSessionCreate(await bodyFor(request));
-  if (!create) return Response.json({ error: "invalid cooking session" }, { status: 400 });
+  const body = await bodyFor(request);
+  const configuration = validateCookingSessionConfiguration(body);
+  let create = validateCookingSessionCreate(body);
+  if (!create && !configuration) return Response.json({ error: "invalid cooking session" }, { status: 400 });
   try {
-    const plan = await ownedPlan(clientId, create.planId, create.batchId);
+    const requestIds = configuration ?? create!;
+    const plan = await ownedPlan(clientId, requestIds.planId, requestIds.batchId);
     if (!plan) return Response.json({ error: "plan or batch not found" }, { status: 404 });
-    const expectedDishes = plannedCookingDishes(plan, create.batchId);
+    const expectedDishes = resolvePlannedCookingRecipes(plan, requestIds.batchId);
+    if (!expectedDishes) return Response.json({ error: "could not calculate this plan batch" }, { status: 422 });
+    if (configuration) {
+      if (configuration.sources.length !== expectedDishes.length || new Set(configuration.sources.map(source => source.dishKey)).size !== expectedDishes.length ||
+        configuration.sources.some(source => !expectedDishes.some(dish => dish.dishKey === source.dishKey && dish.recipeId === source.recipeId && dish.methodId === source.methodId && dish.sourceStepsChecksum === source.sourceStepsChecksum)))
+        return Response.json({ error: "cooking sources changed" }, { status: 409 });
+      const input: CookingSessionInput = { ...configuration.configuration, sessionId: configuration.sessionId, planId: configuration.planId, recipes: expectedDishes };
+      const compiled = compileCookingSession(input);
+      if (compiled.diagnostics.length || !compiled.operations.length || compiled.operations.length > cookingSessionLimits.operationCount)
+        return Response.json({ error: "cooking session input cannot be compiled", diagnostics: compiled.diagnostics }, { status: 422 });
+      create = { sessionId: configuration.sessionId, planId: configuration.planId, batchId: configuration.batchId,
+        signature: await cookingSourceSignature(input), planSnapshotSignature: cookingPlanSnapshotSignature(plan, configuration.batchId, expectedDishes),
+        graph: { operationIds: compiled.operations.map(operation => operation.id), recipeIds: [...new Set(expectedDishes.map(dish => dish.recipeId))] }, session: { input } };
+    }
+    if (!create) return Response.json({ error: "invalid cooking session" }, { status: 400 });
     const dishes = submittedDishes(create.session);
     if (!expectedDishes || !dishes || !sameDishes(expectedDishes, dishes) ||
       create.graph.recipeIds.length !== new Set(dishes.map((dish) => dish.recipeId)).size ||
       create.graph.recipeIds.some((id) => !dishes.some((dish) => dish.recipeId === id)) ||
-      create.planSnapshotSignature !== cookingPlanSnapshotSignature(plan, create.batchId, dishes))
+      !cookingPlanSnapshotMatches(create.planSnapshotSignature, plan, create.batchId, dishes))
       return Response.json({ error: "session graph does not match this plan batch" }, { status: 422 });
     const id = cookingSessionStorageId(clientId, create.planId, create.batchId);
     const existing = await storedSession(clientId, create.planId, create.batchId);
@@ -159,10 +186,12 @@ export async function PUT(request: Request) {
     const envelope = create.session as { input?: unknown };
     if (!envelope.input || typeof envelope.input !== "object")
       return Response.json({ error: "cooking session is missing its input" }, { status: 400 });
-    // The server compiles from the submitted input; client compiled/schedule
-    // fields are never trusted as authority for persisted graph execution.
-    const compiled = compileCookingSession(envelope.input as never);
-    if (compiled.diagnostics.length || compiled.id !== create.sessionId)
+    // Bind both the source and physical quantities to the stored plan. Client
+    // compiled/schedule fields, and extra client ingredient annotations, are ignored.
+    const submittedInput = envelope.input as CookingSessionInput;
+    const trustedInput = { ...submittedInput, recipes: expectedDishes };
+    const compiled = compileCookingSession(trustedInput);
+    if (compiled.diagnostics.length || compiled.id !== create.sessionId || compiled.operations.length > cookingSessionLimits.operationCount)
       return Response.json({ error: "cooking session input cannot be compiled" }, { status: 422 });
     const serverGraph = { operationIds: compiled.operations.map((operation) => operation.id), recipeIds: [...new Set(compiled.input.recipes.map((recipe) => recipe.recipeId))] };
     if (JSON.stringify(serverGraph.operationIds) !== JSON.stringify(create.graph.operationIds) || JSON.stringify(serverGraph.recipeIds) !== JSON.stringify(create.graph.recipeIds))
@@ -171,10 +200,14 @@ export async function PUT(request: Request) {
     if (schedule.diagnostics.some(item => item.code !== "optimized_schedule_unavailable") || !schedule.entries.length || await cookingSourceSignature(compiled.input) !== create.signature)
       return Response.json({ error: "source or schedule validation failed" }, { status: 422 });
     const initialSession = {
-      ...create.session, compiled,
+      input: compiled.input, compiled,
       execution: initialCookingExecution(compiled),
       schedule,
     };
+    const graphJson = JSON.stringify(create.graph);
+    // Reserve ordinary start/finish/check history before any cooking begins.
+    const initialPayload = durablePayload(initialSession, graphJson, create.planSnapshotSignature, compiled.operations.length * 1_500);
+    if (!initialPayload) return Response.json({ error: "cooking session is too large; split the batch before starting" }, { status: 422 });
     const now = Date.now();
     await getDb().insert(cookingSessions).values({
       id,
@@ -183,8 +216,8 @@ export async function PUT(request: Request) {
       batchId: create.batchId,
       signature: create.signature,
       planSnapshotSignature: create.planSnapshotSignature,
-      graph: JSON.stringify(create.graph),
-      payload: JSON.stringify(initialSession),
+      graph: graphJson,
+      payload: initialPayload,
       revision: 0,
       createdAt: now,
       updatedAt: now,
@@ -220,10 +253,10 @@ export async function POST(request: Request) {
       await syncCookingStepNotifications(clientId, mutation.planId, mutation.batchId, current.session as CookingNotificationEnvelope);
       return Response.json(current);
     }
-    if (currentExecution.events.length >= 1000)
+    if (currentExecution.events.length >= cookingSessionLimits.eventCount)
       return Response.json({ error: "cooking event limit reached", current }, { status: 422 });
     const currentDishes = submittedDishes(current.session);
-    if (!currentDishes || cookingPlanSnapshotSignature(currentPlan, mutation.batchId, currentDishes) !== row.planSnapshotSignature)
+    if (!currentDishes || !cookingPlanSnapshotMatches(row.planSnapshotSignature, currentPlan, mutation.batchId, currentDishes))
       return Response.json({ error: "cooking session source changed", current }, { status: 409 });
     const compiled = current.session.compiled;
     if (!compiled || typeof compiled !== "object" || (compiled as { id?: unknown }).id !== mutation.sessionId)
@@ -237,10 +270,12 @@ export async function POST(request: Request) {
     });
     if (applied.diagnostics.length) return Response.json({ error: "event is not valid for this cooking graph", diagnostics: applied.diagnostics }, { status: 422 });
     const nextSession = { ...current.session, execution: applied.execution, schedule: applied.schedule };
+    const nextPayload = durablePayload(nextSession, row.graph, row.planSnapshotSignature);
+    if (!nextPayload) return Response.json({ error: "cooking session storage limit reached", current }, { status: 422 });
     const next = { session: nextSession, revision: row.revision + 1, signature: row.signature, planSnapshotSignature: row.planSnapshotSignature };
     const now = Date.now();
     const result = await getDb().update(cookingSessions).set({
-      payload: JSON.stringify(nextSession),
+      payload: nextPayload,
       revision: next.revision,
       lastMutationId: mutation.mutationId,
       updatedAt: now,

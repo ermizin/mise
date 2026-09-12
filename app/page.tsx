@@ -16,7 +16,7 @@ import { getNutritionSnapshot, normalizeNutritionHistory, preserveNutritionSnaps
 import portionComponentsJson from "@/data/recipe-portion-components.json";
 import { makeCookingSignature, restoreCookingDraft, cookingProgress, type CookingDraft } from "@/domain/cooking-session";
 import { ParallelCookingView, type ParallelCookingDish } from "./parallel-cooking";
-import { cookingOperationManifest } from "@/domain/cooking/compile";
+import { cookingSourceDescriptor } from "@/domain/cooking/compile";
 import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
 import { formatCookingActionText, splitCookingActions } from "@/domain/cooking-actions";
 import { CookingMethodChoice } from "./cooking-method-choice";
@@ -14568,12 +14568,12 @@ function BatchCookingView(props: {
   if (!model.canComplete) return fallback;
   const dishes: ParallelCookingDish[] = model.dishes.map(({ recipe, slot, personIds }) => {
     const method = planCookingMethod(recipe, props.plan)!;
-    const manifest = cookingOperationManifest(recipe.id, method.id);
+    const source = cookingSourceDescriptor(recipe.id, method.id);
     const family = recipeFamilyFor(recipe);
     const { session } = recipeCookingSessionForAssignment(props.plan, props.batch, slot, recipe);
     return {
       dishKey: `${props.batch.id}:${slot}:${recipe.id}`, recipeId: recipe.id, methodId: method.id, personIds,
-      title: recipe.title, sourceStepsChecksum: manifest?.sourceStepsChecksum ?? "",
+      title: recipe.title, portionCount: session.portionCount, sourceStepsChecksum: source?.fingerprint ?? "",
       cookingAmounts: Object.fromEntries((family?.ingredients ?? []).map(ingredient => [ingredient.sourceIngredientId, {
         amount: session.cookingAmounts[ingredient.sourceIngredientId] ?? 0, unit: ingredient.unit,
         canonicalId: ingredient.canonicalIngredientId,

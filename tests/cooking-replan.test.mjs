@@ -41,6 +41,30 @@ test("a pending cook action can start during a passive heat but not through its 
   assert.ok(blocked.diagnostics.some((item) => item.code === "resource_conflict"));
 });
 
+test("active heat checks stay at their recorded deadlines and reserve the cook before later work", async () => {
+  const { initialCookingExecution, replanCookingSession } = await core();
+  const first = op("a-heat", "heat", { duration: 30, background: true, resources: [resourceUse("oven", "oven")] });
+  const firstCheck = op("a-check", "intervention", { deps: ["a-heat"], duration: 5, resources: [resourceUse("cook", "cook"), resourceUse("oven", "oven")] });
+  const second = op("b-heat", "heat", { duration: 60, background: true, resources: [resourceUse("pot", "pot")] });
+  const secondCheck = op("b-check", "intervention", { deps: ["b-heat"], duration: 5, resources: [resourceUse("cook", "cook"), resourceUse("pot", "pot")] });
+  const later = op("c-prep", "prep", { duration: 20, resources: [resourceUse("cook", "cook"), resourceUse("board", "board")] });
+  const input = session([first, firstCheck, second, secondCheck, later]);
+  const execution = {
+    ...initialCookingExecution(input),
+    statusByOperation: { "a-heat": "active", "a-check": "pending", "b-heat": "active", "b-check": "pending", "c-prep": "pending" },
+    startedAtByOperation: { "a-heat": at(0), "b-heat": at(0) },
+    endsAtByOperation: { "a-heat": at(30), "b-heat": at(60) },
+  };
+  const plan = replanCookingSession(input, execution, at(10));
+  assert.equal(entry(plan, "a-check").startAt, at(30));
+  assert.equal(entry(plan, "b-check").startAt, at(60));
+  for (const checkId of ["a-check", "b-check"]) for (const item of plan.entries.filter(item => item.opId !== checkId && input.operations.find(operation => operation.id === item.opId)?.attention === "required")) {
+    const check = entry(plan, checkId);
+    assert.ok(item.endAt <= check.startAt || item.startAt >= check.endAt, `${item.opId} cannot overlap ${checkId}`);
+  }
+  assert.equal(execution.statusByOperation["a-check"], "pending", "planning must not complete the check");
+});
+
 test("duplicate event IDs are idempotent only with the exact original payload", async () => {
   const { initialCookingExecution, applyCookingEvent } = await core(); const input = session([op("a-prep", "prep")]); const event = { id: "same", type: "started", opId: "a-prep", occurredAt: at(0), endsAt: at(10) };
   const first = applyCookingEvent(input, initialCookingExecution(input), event, at(0));

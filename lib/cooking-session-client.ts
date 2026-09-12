@@ -93,29 +93,44 @@ export function createCookingSessionClient(options: Options) {
     return snapshot();
   }
 
-  function enqueue(event: CookingEvent) {
+  function enqueueBatch(events: readonly CookingEvent[]) {
     if (!state.session || state.requiresUserAction) throw new Error("Готовка требует проверки перед новым действием.");
-    const immutable = { ...event, id: event.id || crypto.randomUUID(), occurredAt: event.occurredAt || options.now() };
-    const applied = applyCookingEvent(state.session.compiled, state.session.execution, immutable, options.now());
-    if (applied.diagnostics.length) throw new Error(applied.diagnostics[0].message);
+    if (!events.length) throw new Error("Нужно сохранить хотя бы одно действие.");
+    const immutable = events.map(event => ({ ...event, id: event.id || crypto.randomUUID(), occurredAt: event.occurredAt || options.now() }));
+    let nextSession = state.session;
+    for (const event of immutable) {
+      const applied = applyCookingEvent(nextSession.compiled, nextSession.execution, event, options.now());
+      if (applied.diagnostics.length) throw new Error(applied.diagnostics[0].message);
+      nextSession = { ...nextSession, execution: applied.execution, schedule: applied.schedule };
+    }
     commit({
       ...state,
-      session: { ...state.session, execution: applied.execution, schedule: applied.schedule },
-      pending: [...state.pending, { mutationId: immutable.id, event: immutable }],
+      session: nextSession,
+      pending: [...state.pending, ...immutable.map(event => ({ mutationId: event.id, event }))],
     });
     void sync();
     return snapshot();
   }
 
-  async function create(session: CookingEnvelope, graph: { operationIds: string[]; recipeIds: string[] }) {
+  function enqueue(event: CookingEvent) { return enqueueBatch([event]); }
+
+  async function create(session: CookingEnvelope) {
     const provisional = { ...state, session };
     commit(provisional);
     const response = await options.fetch("/api/cooking-session", {
       method: "PUT", headers,
       body: JSON.stringify({
-        sessionId: session.compiled.id, planId: options.planId, batchId: options.batchId,
-        signature: options.signature, planSnapshotSignature: options.planSnapshotSignature, graph,
-        session: { ...session, execution: undefined, schedule: undefined },
+        schemaVersion: 2,
+        sessionId: session.input.sessionId,
+        planId: options.planId,
+        batchId: options.batchId,
+        sources: session.input.recipes.map(({ dishKey, recipeId, methodId, sourceStepsChecksum }) => ({ dishKey, recipeId, methodId, sourceStepsChecksum })),
+        configuration: {
+          kitchen: session.input.kitchen,
+          pace: session.input.pace,
+          durationOverrides: session.input.durationOverrides,
+          guidedConfig: session.input.guidedConfig,
+        },
       }),
     });
     if (!response.ok) throw new Error(`create:${response.status}`);
@@ -127,20 +142,28 @@ export function createCookingSessionClient(options: Options) {
     return snapshot();
   }
 
-  async function refresh() {
-    const response = await options.fetch(`/api/cooking-session?planId=${encodeURIComponent(options.planId)}&batchId=${encodeURIComponent(options.batchId)}`, { headers });
-    if (!response.ok) return snapshot();
-    const body = await response.json() as { session: CookingEnvelope | null; revision: number | null; signature?: string; planSnapshotSignature?: string };
-    if (!body.session) return snapshot();
-    if (body.signature !== options.signature || body.planSnapshotSignature !== options.planSnapshotSignature) {
-      commit({ ...state, requiresUserAction: "source_changed" });
-      return snapshot();
+  async function refreshFromServer() {
+    try {
+      const response = await options.fetch(`/api/cooking-session?planId=${encodeURIComponent(options.planId)}&batchId=${encodeURIComponent(options.batchId)}`, { headers });
+      if (!response.ok) return { received: false, snapshot: snapshot() };
+      const body = await response.json() as { session: CookingEnvelope | null; revision: number | null; signature?: string; planSnapshotSignature?: string };
+      if (!body.session) return { received: true, snapshot: snapshot() };
+      if (body.signature !== options.signature || body.planSnapshotSignature !== options.planSnapshotSignature) {
+        commit({ ...state, requiresUserAction: "source_changed" });
+        return { received: true, snapshot: snapshot() };
+      }
+      const replayed = replay(body.session, state.pending);
+      commit(replayed.error
+        ? { ...state, session: replayed.session, revision: body.revision, requiresUserAction: replayed.error }
+        : { ...state, session: replayed.session, revision: body.revision });
+      return { received: true, snapshot: snapshot() };
+    } catch {
+      return { received: false, snapshot: snapshot() };
     }
-    const replayed = replay(body.session, state.pending);
-    commit(replayed.error
-      ? { ...state, session: replayed.session, revision: body.revision, requiresUserAction: replayed.error }
-      : { ...state, session: replayed.session, revision: body.revision });
-    return snapshot();
+  }
+
+  async function refresh() {
+    return (await refreshFromServer()).snapshot;
   }
 
   /** User-initiated replacement after a conflict. Unsynced device actions are intentionally discarded. */
@@ -167,11 +190,7 @@ export function createCookingSessionClient(options: Options) {
     if (syncing) return syncing;
     syncing = (async () => {
       if (state.session && state.revision === null) {
-        const graph = {
-          operationIds: state.session.compiled.operations.map(op => op.id),
-          recipeIds: [...new Set(state.session.input.recipes.map(recipe => recipe.recipeId))],
-        };
-        try { await create(state.session, graph); } catch { return; }
+        try { await create(state.session); } catch { return; }
       }
       while (state.pending.length && state.session && !state.requiresUserAction) {
         const pending = state.pending[0];
@@ -207,6 +226,6 @@ export function createCookingSessionClient(options: Options) {
   return {
     snapshot,
     subscribe: (listener: (value: CookingClientSnapshot) => void) => { listeners.add(listener); return () => listeners.delete(listener); },
-    restore, create, refresh, resolveFromServer, enqueue, sync,
+    restore, create, refresh, refreshFromServer, resolveFromServer, enqueue, enqueueBatch, sync,
   };
 }
