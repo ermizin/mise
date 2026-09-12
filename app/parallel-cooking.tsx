@@ -106,7 +106,7 @@ export function ParallelCookingView(props: Props) {
   if (portioning) return <>{props.portioning}</>;
   if (setup) return <CookingRun key={setup.signature} {...props} setup={setup} storageKey={key}
     sourceChanged={setup.planSnapshotSignature !== planSnapshotSignature} onPortioning={() => setPortioning(true)} />;
-  if (!supported && loaded) return <>{props.fallback}</>;
+  if (!supported) return loaded ? <>{props.fallback}</> : <main className="app-shell cooking-batch-shell"><header className="cooking-batch-header glass-1"><button onClick={props.onClose}>Закрыть</button><b>Готовка по шагам</b></header><div className="cooking-batch-content"><p role="status">Восстанавливаю готовку…</p></div></main>;
   return <main className="app-shell cooking-batch-shell"><header className="cooking-batch-header glass-1"><button onClick={props.onClose}>Закрыть</button><b>План готовки</b></header>
     <div className="cooking-batch-content">
       <section className="glass-card"><h1>Подтвердите кухню</h1><p>Один человек готовит, пока другие блюда могут находиться на нагреве. Укажите доступную сейчас утварь.</p>
@@ -190,7 +190,8 @@ function CookingRun(props: Props & { setup: Setup; storageKey: string; sourceCha
   const current = active.find(operation => status[operation.id] === "needs_check") ?? active.find(operation => operation.attention === "required") ?? ready[0];
   const initialSchedule = useMemo(() => session ? scheduleCookingSession(session.compiled) : null, [session]);
   const displayedPlan = [...operations].sort((a, b) => (initialSchedule?.entries.find(entry => entry.opId === a.id)?.startAt ?? Infinity) - (initialSchedule?.entries.find(entry => entry.opId === b.id)?.startAt ?? Infinity));
-  const complete = operations.length > 0 && operations.every(operation => status[operation.id] === "completed");
+  const completedCount = operations.filter(operation => status[operation.id] === "completed").length;
+  const complete = operations.length > 0 && completedCount === operations.length;
   const suspended = operations.filter(operation => status[operation.id] === "blocked");
   const background = active.filter(operation => operation !== current);
   const nextIntervention = schedule?.entries.filter(entry => entry.startAt >= now && operations.find(operation => operation.id === entry.opId)?.kind === "intervention").sort((a, b) => a.startAt - b.startAt)[0];
@@ -201,16 +202,16 @@ function CookingRun(props: Props & { setup: Setup; storageKey: string; sourceCha
         const dish = props.dishes.find(item => item.dishKey === allocation.dishKey);
         return <li key={`${allocation.dishKey}:${allocation.ingredientId}:${index}`}>{dish?.ingredientNames[allocation.ingredientId] ?? allocation.canonicalId}: {amount(allocation.amount)} {unit(allocation.unit)} · {dish?.title}</li>;
       })}</ul>}
-      <details><summary>Инструкция и все продукты</summary><p style={{ whiteSpace: "pre-line" }}>{operation.sourceText}</p>{props.dishes.filter(dish => dish.dishKey === operation.dishKey || operation.allocations.some(allocation => allocation.dishKey === dish.dishKey)).map(dish => <div key={dish.dishKey}><b>{dish.title}</b><ul>{dish.products.map((product, index) => <li key={`${dish.dishKey}:${index}`}>{product}</li>)}</ul></div>)}</details>
+      <details><summary>Полная инструкция и все продукты</summary><p style={{ whiteSpace: "pre-line" }}>{operation.sourceText}</p>{props.dishes.filter(dish => dish.dishKey === operation.dishKey || operation.allocations.some(allocation => allocation.dishKey === dish.dishKey)).map(dish => <div key={dish.dishKey}><b>{dish.title}</b><ul>{dish.products.map((product, index) => <li key={`${dish.dishKey}:${index}`}>{product}</li>)}</ul></div>)}</details>
     </>;
   }
-  return <main className="app-shell cooking-batch-shell"><header className="cooking-batch-header glass-1"><button onClick={props.onClose}>Закрыть</button><b>Готовим</b><button onClick={() => setShowAll(value => !value)}>{showAll ? "Текущее действие" : "Весь план"}</button></header><div className="cooking-batch-content">
+  return <main className="app-shell cooking-batch-shell"><header className="cooking-batch-header glass-1"><button onClick={props.onClose}>Закрыть</button><div><b>Готовим</b>{session && <small>Выполнено {completedCount} из {operations.length} действий</small>}</div><button onClick={() => setShowAll(value => !value)}>{showAll ? "Текущее действие" : "Весь план"}</button>{session && <div className="cooking-batch-progress" role="progressbar" aria-label="Выполненные действия" aria-valuemin={0} aria-valuemax={operations.length} aria-valuenow={completedCount}><i style={{ width: `${completedCount / Math.max(1, operations.length) * 100}%` }} /></div>}</header><div className="cooking-batch-content">
     {blocked && <section className="glass-card" role="alert"><p>План или прогресс изменился. Таймеры сохранены. Проверьте активные блюда перед продолжением.</p>{props.sourceChanged ? <p>Восстановите в меню исходные блюда, порции и способ приготовления этой партии, чтобы продолжить сохранённую готовку.</p> : <><p>Можно загрузить сохранённый на сервере прогресс. Несинхронизированные действия этого устройства будут заменены.</p><button className="text-button" onClick={() => { void client.resolveFromServer().catch(() => setMessage("Не удалось связаться с сервером. Прогресс на устройстве сохранён.")); }}>Загрузить актуальный прогресс</button></>}</section>}
     {initialSchedule?.usedFallback && <p role="status">Для этой кухни выбран проверенный последовательный план. Оценка экономии времени не применяется.</p>}
     {snapshot.pending.length > 0 && <p role="status">На устройстве сохранено. Ожидают синхронизации: {snapshot.pending.length}.</p>}
     {message && <p role="alert">{message}</p>}
     {!session && <p role="status">Восстанавливаю готовку…</p>}
-    {session && !complete && <section className="glass-card"><h1>{current ? current.title : execution?.pausedAt ? "Пауза между действиями" : "Пока блюда готовятся"}</h1>
+    {session && !complete && <section className="glass-card cooking-now-card"><p className="cooking-card-kicker">Сейчас</p><h1>{current ? current.title : execution?.pausedAt ? "Пауза между действиями" : "Пока блюда готовятся"}</h1>
       {current && <>
         <p>{props.dishes.find(dish => dish.dishKey === current.dishKey)?.title}</p>{details(current)}
         {status[current.id] === "pending" ? <button className="primary-button" disabled={blocked} onClick={() => dispatch("started", current)}>{current.kind === "heat" ? "Нагрев начался — запустить таймер" : "Начать действие"}</button> : <>

@@ -18,6 +18,7 @@ import { makeCookingSignature, restoreCookingDraft, cookingProgress, type Cookin
 import { ParallelCookingView, type ParallelCookingDish } from "./parallel-cooking";
 import { cookingOperationManifest } from "@/domain/cooking/compile";
 import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
+import { formatCookingActionText, splitCookingActions } from "@/domain/cooking-actions";
 import { CookingMethodChoice } from "./cooking-method-choice";
 import { createPortal } from "react-dom";
 import {
@@ -409,7 +410,7 @@ type BatchCookingContext = {
 type BatchCookingBlocker = { recipeId: string; slot: MealSlot; personIds: string[]; title: string; reason: string };
 type BatchCookingStep = {
   sourceStepId: string;
-  instruction?: RecipeInstruction;
+  instruction?: DetailedCookingInstruction;
   duration: CookingDuration;
   productsScope: "dish";
   id: string;
@@ -590,6 +591,19 @@ const allMealSlots: MealSlot[] = [
   "snack2",
   "dinner",
 ];
+type RecoveredCookingTimer = { endsAt: number; stepId: string };
+function readRecoveredCookingTimer(raw: string | null): RecoveredCookingTimer | null {
+  try {
+    const parsed = raw ? JSON.parse(raw) as { schemaVersion?: unknown; timer?: { endsAt?: unknown; stepId?: unknown } } : null;
+    const endsAt = parsed?.timer?.endsAt;
+    const stepId = parsed?.timer?.stepId;
+    return parsed?.schemaVersion === 1 && typeof endsAt === "number" && Number.isFinite(endsAt) && endsAt > 0 && typeof stepId === "string" && stepId
+      ? { endsAt, stepId }
+      : null;
+  } catch {
+    return null;
+  }
+}
 const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
   simple: {
     label: "Простые",
@@ -1035,7 +1049,7 @@ function normalizeRecipeMethods(value: unknown): Record<string, string> | undefi
   ));
 }
 function planMethodId(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
-  return plan.recipeMethods?.[recipe.id] ?? (plan.kitchenEquipment === undefined ? "original" : "");
+  return plan.recipeMethods?.[recipe.id] ?? "original";
 }
 function planCookingMethod(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
   return cookingMethodFor(recipe, plan.kitchenEquipment, planMethodId(recipe, plan));
@@ -5335,25 +5349,74 @@ function recipeCookingSessionForAssignment(
     ),
   };
 }
-function recipeDisplaySteps(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string) {
+type DetailedCookingInstruction = RecipeInstruction & {
+  sourceText: string;
+  sourceStart: number;
+  sourceEnd: number;
+  sourceInstructionId: string;
+  methodId: string;
+};
+
+function recipeInstructionSources(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string): {
+  methodId: string;
+  instructions: RecipeInstruction[];
+} | null {
   const method = cookingMethodFor(recipe, kitchenEquipment, methodId);
-  if (!method) return [];
-  if (method?.steps) return method.steps;
+  if (!method) return null;
+  if (method.steps) return {
+    methodId: method.id,
+    instructions: method.steps.map((text, index) => ({
+      id: `${method.id}:${index}`,
+      text,
+      action: "other",
+      ingredientIds: [],
+      dependsOn: [],
+    })),
+  };
   const family = recipeFamilyFor(recipe);
-  return family
-    ? family.miseInstructions
-        .filter((step) => step.action !== "measure")
-        .map((step) => step.text)
-    : recipe.steps.filter(
-        (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
-      );
+  return {
+    methodId: method.id,
+    instructions: family
+      ? family.miseInstructions.filter((step) => step.action !== "measure")
+      : recipe.steps
+          .filter((step) => !/^На одну базовую порцию отмерьте:/iu.test(step))
+          .map((text, index) => ({ id: `legacy:${index}`, text, action: "other", ingredientIds: [], dependsOn: [] })),
+  };
 }
-function recipeCookingInstructions(recipe: Recipe, equipment?: KitchenEquipment[], methodId?: string): RecipeInstruction[] {
+/** Original method instructions, before UI-only action splitting. */
+function recipeCookingSourceInstructions(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string): RecipeInstruction[] {
+  return recipeInstructionSources(recipe, kitchenEquipment, methodId)?.instructions.map((instruction) => ({
+    ...instruction,
+    ingredientIds: [...instruction.ingredientIds],
+    dependsOn: instruction.dependsOn ? [...instruction.dependsOn] : [],
+  })) ?? [];
+}
+function recipeCookingInstructions(recipe: Recipe, equipment?: KitchenEquipment[], methodId?: string): DetailedCookingInstruction[] {
   const method = cookingMethodFor(recipe, equipment, methodId);
   if (!method) return [];
-  if (method.steps) return method.steps.map((text, index) => ({ id: `${method.id}:${index}`, text, action: "other", ingredientIds: [], dependsOn: [] } as RecipeInstruction));
-  const family = recipeFamilyFor(recipe);
-  return family ? family.miseInstructions.filter(step => step.action !== "measure") : recipeDisplaySteps(recipe, equipment, methodId).map((text, index) => ({ id: `legacy:${index}`, text, action: "other", ingredientIds: [], dependsOn: [] } as RecipeInstruction));
+  return recipeCookingSourceInstructions(recipe, equipment, method.id).flatMap((source) =>
+    splitCookingActions(source.text).map((action, index) => ({
+      ...source,
+      id: `${method.id}:${source.id}:${index}`,
+      text: action.text,
+      sourceText: source.text,
+      sourceStart: action.sourceStart,
+      sourceEnd: action.sourceEnd,
+      sourceInstructionId: source.id,
+      methodId: method.id,
+      ingredientIds: [...source.ingredientIds],
+      dependsOn: source.dependsOn ? [...source.dependsOn] : [],
+    })),
+  );
+}
+function recipeDisplaySteps(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string) {
+  return recipeCookingInstructions(recipe, kitchenEquipment, methodId).map((instruction) => formatCookingActionText(instruction.text));
+}
+function batchActionTitle(text: string, portionCount: number) {
+  return formatCookingActionText(text).replace(
+    /на\s+\d+\s+порци[июй]/giu,
+    `на ${withPlural(portionCount, FORMS.portion)}`,
+  );
 }
 function defaultTimerSeconds(duration: CookingDuration) {
   return duration.kind === "exact" ? duration.seconds : duration.kind === "range" ? duration.minSeconds : 0;
@@ -5438,7 +5501,7 @@ function buildBatchCookingModel(
         duration,
         productsScope: "dish",
         recipeId: recipe.id,
-        title: instruction.text,
+        title: batchActionTitle(instruction.text, session.portionCount),
         detail: `${recipe.title} · ${mealMeta[slot].label.toLowerCase()}`,
         minutes: defaultTimerSeconds(duration) / 60,
         products,
@@ -11065,7 +11128,6 @@ function PlanBuilder({
     };
   })();
   const pendingMethods = missingPlanMethods(draftPlan);
-  const methodRecipes = [...new Set(Object.values(validSelectionAssignments).flatMap((groups) => groups.map((group) => group.recipeId)))].map((id) => recipesById[id]);
   const kitchenGaps = useMemo(() => kitchenMenuGaps(people, mealSlots, menuStyle, batches, kitchenEquipment), [people, mealSlots, menuStyle, batches, kitchenEquipment]);
   const steps = [
     "Период",
@@ -11836,12 +11898,9 @@ function PlanBuilder({
                 {!allSelected && <p role="status">Если блюд не хватает, добавьте доступную технику или измените позиции меню.</p>}
               </section>
             )}
-            {step === 5 && methodRecipes.length > 0 && <section className="recipe-equipment glass-card">
-              <h3>Как будем готовить?</h3>
-              <p>Выберите способ для каждого блюда. Он сохранится для всех его порций в этом плане.</p>
-              <button type="button" className="text-button" onClick={() => setRecipeMethods((current) => ({ ...current, ...Object.fromEntries(methodRecipes.filter((recipe) => !planCookingMethod(recipe, draftPlan) && cookingMethodFor(recipe, kitchenEquipment, "original")).map((recipe) => [recipe.id, "original"])) }))}>Подтвердить исходные способы</button>
-              {methodRecipes.map((recipe) => <CookingMethodSelect key={recipe.id} recipe={recipe} equipment={kitchenEquipment} value={planCookingMethod(recipe, draftPlan)?.id ?? ""} label={recipe.title} onChange={(id) => setRecipeMethods((current) => ({ ...current, [recipe.id]: id }))} />)}
-              {pendingMethods.length > 0 && <p role="status">Выберите ещё {withPlural(pendingMethods.length, ["способ", "способа", "способов"])}, чтобы продолжить.</p>}
+            {step === 5 && pendingMethods.length > 0 && <section className="glass-card" role="status">
+              <p>Для этих блюд нужно уточнить способ приготовления в карточке или заменить блюдо:</p>
+              {pendingMethods.map((id) => recipesById[id] && <button key={id} type="button" className="text-button" onClick={() => setPreviewRecipe(recipesById[id])}>{recipesById[id].title}</button>)}
             </section>}
             {step === 5 && menuMode === "auto" && allSelected ? (
               <div
@@ -14551,7 +14610,14 @@ function BatchCookingSessionView({
   onComplete: () => void;
 }) {
   const progressKey = `mise-batch-cooking-v3:${plan.id}:${batch.id}`;
+  const timerRecoveryKey = `${progressKey}:timer-recovery`;
   const [restored] = useState(() => readCookingDraft(progressKey, signature, model.steps.map(step => step.id)));
+  const [unmappedTimer, setUnmappedTimer] = useState<RecoveredCookingTimer | null>(() => {
+    const recovery = readRecoveredCookingTimer(typeof window === "undefined" ? null : localStorage.getItem(timerRecoveryKey));
+    if (recovery) return recovery;
+    return restored.invalidated ? readRecoveredCookingTimer(typeof window === "undefined" ? null : localStorage.getItem(progressKey)) : null;
+  });
+  const [timerRecoveryNow, setTimerRecoveryNow] = useState(Date.now);
   const [stepIndex, setStepIndex] = useState(() => Math.max(0, model.steps.findIndex(step => step.id === restored.draft?.currentStepId)));
   const [showAll, setShowAll] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
@@ -14577,15 +14643,23 @@ function BatchCookingSessionView({
   const [timerEndsAt, setTimerEndsAt] = useState<number | null>(restored.draft?.timer?.endsAt ?? null);
   const [completedPhase, setCompletedPhase] = useState(false);
   const [manualMinutes, setManualMinutes] = useState("");
+  // Persist recovery before this mount writes the detailed-flow draft over the
+  // former coarse-step draft. The heat itself is never cancelled here.
   useEffect(() => {
-    if (!currentStep) return;
+    try {
+      if (unmappedTimer) localStorage.setItem(timerRecoveryKey, JSON.stringify({ schemaVersion: 1, timer: unmappedTimer }));
+      else localStorage.removeItem(timerRecoveryKey);
+    } catch { /* An old physical timer remains visible for this session without storage. */ }
+  }, [timerRecoveryKey, unmappedTimer]);
+  useEffect(() => {
+    if (!currentStep || unmappedTimer) return;
     const draft: CookingDraft = { schemaVersion: 1, signature,
       phase: completedPhase ? "completed" : portioning ? "portioning" : "cooking",
       currentStepId: currentStep.id, weights: cookedWeights,
       timer: { stepId: currentStep.id, remainingSeconds, endsAt: timerRunning ? timerEndsAt : null },
     };
     try { localStorage.setItem(progressKey, JSON.stringify(draft)); } catch { /* Session remains usable without device storage. */ }
-  }, [signature, progressKey, currentStep, portioning, completedPhase, cookedWeights, remainingSeconds, timerRunning, timerEndsAt]);
+  }, [signature, progressKey, currentStep, portioning, completedPhase, cookedWeights, remainingSeconds, timerRunning, timerEndsAt, unmappedTimer]);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
   const backRef = useRef(onClose);
   useEffect(() => {
@@ -14629,6 +14703,11 @@ function BatchCookingSessionView({
       document.removeEventListener("visibilitychange", refresh);
     };
   }, [currentStep?.title, timerEndsAt, timerRunning]);
+  useEffect(() => {
+    if (!unmappedTimer) return;
+    const timeout = window.setTimeout(() => setTimerRecoveryNow(Date.now()), Math.max(0, unmappedTimer.endsAt - Date.now()));
+    return () => window.clearTimeout(timeout);
+  }, [unmappedTimer]);
   useEffect(() => {
     const wakeLockNavigator = navigator as Navigator & {
       wakeLock?: { request: (kind: "screen") => Promise<{ release: () => Promise<void> }> };
@@ -14732,7 +14811,7 @@ function BatchCookingSessionView({
         <button onClick={onClose}>Закрыть</button>
         <div>
           <b>Готовка · партия {batch.index + 1}</b>
-          <small>{formatDate(batch.start, true)}</small>
+          <small>{portioning ? "Раскладка по контейнерам" : `Шаг ${stepIndex + 1} из ${model.steps.length} · ${formatDate(batch.start, true)}`}</small>
         </div>
         <button
           className="cooking-all-button"
@@ -14750,6 +14829,12 @@ function BatchCookingSessionView({
       <div className="cooking-batch-content">
         {!restored.draft && plan.cookingSignatures?.[batch.id] !== signature && model.dishes.some(dish => plan.cookedWeights?.[cookedWeightsKey(batch, dish.slot, dish.recipe.id)]) && <Note tone="warn" role="status">Ранее введённые веса сохранены в плане, но не подтверждены для этого расчёта. Проверьте выход блюд и введите веса заново.</Note>}
         {restored.invalidated && <Note tone="warn" role="status">План готовки изменился. Проверьте новые количества: шаги и черновые веса начаты заново.</Note>}
+        {unmappedTimer && <Note tone="warn" role="status" label={unmappedTimer.endsAt > timerRecoveryNow ? "Сохранённый таймер продолжается" : "Сохранённый таймер требует проверки"}>
+          {unmappedTimer.endsAt > timerRecoveryNow
+            ? <>Старый шаг заменён подробными действиями. Таймер идёт до {new Date(unmappedTimer.endsAt).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" })}; новые таймеры пока недоступны.</>
+            : <>Срок сохранённого таймера истёк. Проверьте блюдо, прежде чем запускать новый таймер.</>}
+          {unmappedTimer.endsAt <= timerRecoveryNow && <button className="text-button" onClick={() => setUnmappedTimer(null)}>Блюдо проверено — продолжить</button>}
+        </Note>}
         <section className="batch-cooking-summary glass-2" aria-live="polite">
           <div className="batch-cooking-summary-top">
             <div>
@@ -14807,13 +14892,14 @@ function BatchCookingSessionView({
               );
             })}
           </ol>
+          {!showAll && currentStep.instruction && currentStep.instruction.sourceText !== currentStep.instruction.text && <details className="cooking-source-context"><summary>Весь исходный этап</summary><p>{currentStep.instruction.sourceText}</p></details>}
           {currentStep.duration.kind === "range" && <p>Ориентир: {formatCookingDuration(currentStep.duration)}. Таймер предложит проверить готовность на нижней границе; следуйте признакам готовности в рецепте.</p>}
-          {currentStep.duration.kind === "multiple" && <fieldset disabled={timerRunning}><legend>В шаге несколько интервалов. Выберите, какой отсчитать</legend>{currentStep.duration.options.map((option, index) => <button type="button" key={index} onClick={() => setRemainingSeconds(defaultTimerSeconds(option))}>Интервал {index + 1}: {formatCookingDuration(option)}{option.kind === "range" ? " · проверить по нижней границе" : ""}</button>)}</fieldset>}
+          {currentStep.duration.kind === "multiple" && <fieldset disabled={timerRunning || Boolean(unmappedTimer)}><legend>В шаге несколько интервалов. Выберите, какой отсчитать</legend>{currentStep.duration.options.map((option, index) => <button type="button" key={index} onClick={() => setRemainingSeconds(defaultTimerSeconds(option))}>Интервал {index + 1}: {formatCookingDuration(option)}{option.kind === "range" ? " · проверить по нижней границе" : ""}</button>)}</fieldset>}
           {currentStep.duration.kind === "unknown" && <p>Время в инструкции не указано. Таймер можно задать вручную.</p>}
-          <label>Свой таймер, минуты <input aria-label="Свой таймер, минуты" type="number" min="0.1" step="0.1" disabled={timerRunning} value={manualMinutes} onChange={event => { setManualMinutes(event.target.value); const seconds = Number(event.target.value) * 60; setRemainingSeconds(Number.isFinite(seconds) && seconds > 0 ? Math.round(seconds) : 0); }} /></label>
+          <label className="field">Свой таймер, минуты <input aria-label="Свой таймер, минуты" type="number" min="0.1" step="0.1" disabled={timerRunning || Boolean(unmappedTimer)} value={manualMinutes} onChange={event => { setManualMinutes(event.target.value); const seconds = Number(event.target.value) * 60; setRemainingSeconds(Number.isFinite(seconds) && seconds > 0 ? Math.round(seconds) : 0); }} /></label>
           <div className="cooking-step-tools">
             <button
-              disabled={!timerRunning && remainingSeconds <= 0}
+              disabled={Boolean(unmappedTimer) || (!timerRunning && remainingSeconds <= 0)}
               onClick={() => {
                 if (timerRunning) {
                   setRemainingSeconds(
@@ -15311,19 +15397,6 @@ function RecipeView({
     return previewSession?.cookingAmounts ?? {};
   })();
   const displaySteps = recipeDisplaySteps(recipe, plan?.kitchenEquipment, plan ? planMethodId(recipe, plan) : methodId);
-  const timelineSteps = cookingMethod && !cookingMethod.steps && recipe.instructions?.length ? recipe.instructions : null;
-  const timelineHandsMinutes =
-    timelineSteps?.reduce(
-      (sum, step) => sum + (step.hands ? step.minutes : 0),
-      0,
-    ) ?? 0;
-  const timelinePassiveMinutes =
-    timelineSteps?.reduce(
-      (sum, step) => sum + (step.hands ? 0 : step.minutes),
-      0,
-    ) ?? 0;
-  const timelineHasEstimates =
-    timelineSteps?.some((step) => step.estimated) ?? false;
   const sortedIngredients = [...recipe.ingredients].sort(
     (left, right) =>
       ingredientSortableAmount(
@@ -15553,52 +15626,16 @@ function RecipeView({
               </div>
             </section>
             <section className="recipe-steps-card glass-card" ref={stepsRef}>
-              <p className="kicker">
-                {timelineSteps && (recipe.effort.parallelProcesses ?? 1) > 1
-                  ? `${recipe.effort.parallelProcesses} процесса параллельно`
-                  : "Один повар · по порядку"}
-              </p>
+              <p className="kicker">Один повар · по порядку</p>
               <h2>Шаги</h2>
-              {timelineSteps ? (
-                <>
-                  <p className="recipe-timeline-summary">
-                    {timelineHasEstimates ? "≈ " : ""}
-                    {timelineHandsMinutes > 0
-                      ? `${timelineHandsMinutes} мин руками`
-                      : "Активное время без точной отметки"}
-                    {timelinePassiveMinutes > 0
-                      ? ` · ${timelinePassiveMinutes} мин без вас`
-                      : ""}
-                  </p>
-                  <ol className="recipe-timeline">
-                    {timelineSteps.map((step, index) => (
-                      <li
-                        className={step.hands ? "is-hands" : "is-passive"}
-                        key={`${step.at}-${step.text}-${index}`}
-                      >
-                        <time>
-                          {step.at === 0
-                            ? "Старт"
-                            : `${timelineHasEstimates ? "≈ " : ""}${step.at} мин`}
-                        </time>
-                        <span className="recipe-timeline-node" aria-hidden />
-                        <div>
-                          <p>{step.text}</p>
-                        </div>
-                      </li>
-                    ))}
-                  </ol>
-                </>
-              ) : (
-                <ol className="cooking-steps">
-                  {displaySteps.map((text, index) => (
-                    <li key={`${text}-${index}`}>
-                      <span>{index + 1}</span>
-                      <p>{text}</p>
-                    </li>
-                  ))}
-                </ol>
-              )}
+              <ol className="cooking-steps">
+                {displaySteps.map((text, index) => (
+                  <li key={`${text}-${index}`}>
+                    <span>{index + 1}</span>
+                    <p>{text}</p>
+                  </li>
+                ))}
+              </ol>
             </section>
           </div>
         )}

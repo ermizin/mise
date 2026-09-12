@@ -93,17 +93,28 @@ test("14A keeps products in Cooking and removes duplicate Dish controls", async 
   assert.match(recipeView, /sortedIngredients[\s\S]{0,500}ingredientSortableAmount\(/, "product quantities are shown in descending normalized order");
 });
 
-test("14A renders a real timeline with a permanent legacy fallback and reduced-motion coverage", async () => {
-  const { page, css } = await recipeSources();
+test("RecipeView renders detailed numbered source actions instead of bypassing them with coarse timelines", async () => {
+  const { page } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
 
-  assert.match(recipeView, /className="recipe-timeline/);
-  assert.match(recipeView, /timelineHasEstimates/);
-  assert.match(recipeView, /timelineHasEstimates\s*\?\s*"≈ "/);
-  assert.match(recipeView, /recipe\.instructions\s*(?:\?\.|&&|\?)/, "missing instructions fall back instead of breaking old recipes");
-  assert.match(recipeView, /className="cooking-steps/, "numbered legacy steps remain available");
-  assert.match(css, /\.recipe-timeline\s*\{/);
-  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]{0,4000}recipe-timeline/, "timeline motion is covered by reduced-motion rules");
+  assert.match(page, /import \{ formatCookingActionText, splitCookingActions \} from "@\/domain\/cooking-actions"/);
+  assert.match(page, /function recipeCookingInstructions[\s\S]{0,1200}splitCookingActions\(source\.text\)/);
+  assert.match(recipeView, /const displaySteps = recipeDisplaySteps\(/);
+  assert.match(recipeView, /className="cooking-steps/, "all recipes show numbered detailed actions");
+  assert.doesNotMatch(recipeView, /timelineSteps|recipe-timeline/, "coarse recipe.instructions never bypass the detailed action list");
+});
+
+test("batch migration retains an old running timer until the cook acknowledges the overdue check", async () => {
+  const { page } = await recipeSources();
+  const batchView = page.slice(page.indexOf("function BatchCookingSessionView("), page.indexOf("function CookingMethodSelect("));
+
+  assert.match(page, /function readRecoveredCookingTimer/);
+  assert.match(batchView, /timer-recovery/);
+  assert.match(batchView, /Шаг \$\{stepIndex \+ 1\} из \$\{model\.steps\.length\}/, "the batch header exposes granular progress without opening the full list");
+  assert.match(batchView, /Срок сохранённого таймера истёк\. Проверьте блюдо/);
+  assert.match(batchView, /Блюдо проверено — продолжить/);
+  assert.match(batchView, /if \(!currentStep \|\| unmappedTimer\) return;/, "the new draft cannot overwrite a legacy timer while recovery is pending");
+  assert.match(batchView, /disabled=\{Boolean\(unmappedTimer\) \|\| \(!timerRunning && remainingSeconds <= 0\)\}/, "a migrated timer blocks a new timer rather than cancelling physical cooking");
 });
 
 test("14A opens with a larger cover, swipe expansion, and no top photo button", async () => {

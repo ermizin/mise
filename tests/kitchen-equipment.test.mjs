@@ -116,6 +116,34 @@ test("appliance choice changes cooking instructions and batch timeline without c
   assert.equal(app.planCookingMethod(recipe, plan).id, "air_fryer");
 });
 
+test("every available method expands source instructions into traceable detailed actions", () => {
+  for (const recipe of app.productionRecipes) {
+    for (const method of app.equipmentMethods(recipe)) {
+      const sourceInstructions = plain(app.recipeCookingSourceInstructions(recipe, undefined, method.id));
+      const actions = plain(app.recipeCookingInstructions(recipe, undefined, method.id));
+      assert.ok(actions.length > 0, `${recipe.id}:${method.id} has detailed actions`);
+      const grouped = Map.groupBy(actions, (action) => action.sourceInstructionId);
+      assert.deepEqual([...grouped.values()].map((fragments) => fragments[0].sourceText), sourceInstructions.map((instruction) => instruction.text));
+      for (const [sourceInstructionId, fragments] of grouped) {
+        const source = fragments[0].sourceText;
+        assert.ok(source.length > 0, `${recipe.id}:${method.id}:${sourceInstructionId} source`);
+        assert.equal(fragments.map((action) => action.text).join(""), source, `${recipe.id}:${method.id}:${sourceInstructionId} reconstructs source`);
+        fragments.forEach((action, index) => {
+          assert.equal(source.slice(action.sourceStart, action.sourceEnd), action.text, `${recipe.id}:${method.id}:${sourceInstructionId}:${index} offsets`);
+          assert.equal(action.methodId, method.id);
+          assert.ok(Array.isArray(action.ingredientIds));
+          assert.ok(Array.isArray(action.dependsOn));
+        });
+      }
+      assert.deepEqual(
+        plain(app.recipeDisplaySteps(recipe, undefined, method.id)),
+        actions.map((action) => app.formatCookingActionText(action.text)),
+        `${recipe.id}:${method.id} card and batch share the same detailed actions with display-only labels`,
+      );
+    }
+  }
+});
+
 
 test("saved method is explicit, survives reload and never switches when equipment changes", () => {
   const recipe = app.recipesById["tmpm-25453"];
@@ -137,8 +165,11 @@ test("saved method is explicit, survives reload and never switches when equipmen
   assert.ok(!app.buildBatchCookingModel(removedAppliance, removedAppliance.batches[0]).steps.some((step) => /духов/u.test(step.title)));
   assert.equal(app.planCookingMethod(recipe, planFor(recipe, undefined)).id, "original", "legacy plans keep original instructions");
   const missing = { ...original, recipeMethods: undefined };
-  assert.equal(validatePlanForPersistence(missing).valid, false, "new kitchen-aware plan needs saved choices");
-  assert.equal(app.planCookingMethod(recipe, missing), undefined);
+  assert.equal(validatePlanForPersistence(missing).valid, true, "available original needs no extra confirmation");
+  assert.equal(app.planCookingMethod(recipe, missing).id, "original");
+  const unavailableOriginal = { ...missing, kitchenEquipment: ["air_fryer"] };
+  assert.equal(app.planCookingMethod(recipe, unavailableOriginal), undefined);
+  assert.equal(validatePlanForPersistence(unavailableOriginal).valid, false);
   for (const methods of [null, [], "air_fryer", { [recipe.id]: "unknown" }, { nonexistent: "original" }]) {
     assert.equal(validatePlanForPersistence({ ...original, recipeMethods: methods }).status, 400);
   }

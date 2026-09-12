@@ -189,9 +189,9 @@ test("recipe card 14A keeps inline products and dish data actionable", async () 
   assert.doesNotMatch(page, /\["products",\s*"Продукты"\]/, "there is no Products tab");
   assert.doesNotMatch(page, /Как разложить блюдо|Подстройка КБЖУ/, "Dish omits duplicate packing and tuning sections");
   assert.match(page, /reviewedPortionComponents/, "separate weights require an explicit reviewed component mapping");
-  assert.match(page, /recipe\.instructions\?\.length/, "the card uses structured instructions when available");
-  assert.match(page, /className="recipe-timeline"/, "the card renders the projected timeline");
-  assert.match(page, /className="cooking-steps"/, "legacy recipes retain the numbered fallback");
+  assert.match(page, /const displaySteps = recipeDisplaySteps\(/, "the card uses the detailed action projection for its selected method");
+  assert.match(page, /recipeCookingSourceInstructions[\s\S]{0,1500}splitCookingActions\(source\.text\)/, "detailed actions come from the structured source instructions");
+  assert.match(page, /className="cooking-steps"/, "all recipes retain numbered instructions");
   assert.match(page, /recipe\.effort\.difficulty/, "the card renders the projected difficulty");
   assert.match(page, /Начать готовку/, "a planned recipe connects to cooking mode");
   assert.match(page, /leaveRecipeFor\(\(\) => editDayMenu/, "replace remains connected to menu editing");

@@ -160,7 +160,7 @@
         {
           "key": "prep-vegetables",
           "kind": "prep",
-          "title": "Нарежьте брокколи на соцветия, батат крупными кусочками, чеснок измельчите",
+          "title": "Нарежьте брокколи на соцветия и батат крупными кусочками; измельчите чеснок для терияки",
           "durationSeconds": 240,
           "attention": "required",
           "resources": [
@@ -530,7 +530,7 @@
         {
           "key": "chicken-heat",
           "kind": "heat",
-          "title": "Запекайте курицу на нижней полке",
+          "title": "Запекайте куриные бёдра на нижней полке 25 минут",
           "durationSeconds": 1500,
           "attention": "background",
           "resources": [
@@ -682,7 +682,7 @@
         {
           "key": "vegetable-heat",
           "kind": "heat",
-          "title": "Запекайте батат до добавления брокколи",
+          "title": "Запекайте батат отдельно 10 минут перед добавлением брокколи",
           "durationSeconds": 600,
           "attention": "background",
           "resources": [
@@ -749,7 +749,7 @@
         {
           "key": "vegetable-finish",
           "kind": "heat",
-          "title": "Запекайте батат с брокколи; затем проверьте мягкость",
+          "title": "После брокколи запекайте овощи ещё 8–10 минут; затем проверьте мягкость",
           "durationSeconds": 480,
           "attention": "background",
           "resources": [
@@ -939,7 +939,7 @@
         {
           "key": "sauce-heat",
           "kind": "heat",
-          "title": "Доведите соус до слабого кипения; томите, взбивая, до лёгкого загустения",
+          "title": "Доведите терияки до слабого кипения и взбивайте 8–10 минут до лёгкого загустения",
           "durationSeconds": 480,
           "attention": "required",
           "resources": [
@@ -1044,7 +1044,7 @@
         {
           "key": "glaze",
           "kind": "prep",
-          "title": "Нарежьте курицу, покройте двумя третями соуса и верните на противень",
+          "title": "Нарежьте курицу, покройте двумя третями соуса и верните на противень для гриля",
           "durationSeconds": 150,
           "attention": "required",
           "resources": [
@@ -1127,7 +1127,7 @@
         {
           "key": "grill",
           "kind": "heat",
-          "title": "Подрумянивайте под грилем и постоянно следите, чтобы курица не сгорела",
+          "title": "Подрумянивайте курицу под грилем 3–6 минут, постоянно следя, чтобы не сгорела",
           "durationSeconds": 180,
           "attention": "required",
           "resources": [
@@ -1240,7 +1240,7 @@
         {
           "key": "portion",
           "kind": "portion",
-          "title": "Подготовьте контейнеры; в конце готовки взвесьте курицу, рис и овощи для личной раскладки",
+          "title": "Разложите рис, овощи и курицу по контейнерам; затем взвесьте для личной раскладки",
           "durationSeconds": 120,
           "attention": "required",
           "resources": [
@@ -1539,7 +1539,7 @@
         {
           "key": "load-beef",
           "kind": "start_heat",
-          "title": "Разогрейте масло и выложите говяжий фарш в большую кастрюлю",
+          "title": "Разогрейте масло в большой кастрюле на среднем-сильном огне и выложите фарш",
           "durationSeconds": 60,
           "attention": "required",
           "resources": [
@@ -1664,7 +1664,7 @@
         {
           "key": "spices",
           "kind": "intervention",
-          "title": "Вмешайте специи и прогрейте до аромата",
+          "title": "Вмешайте специи и прогрейте около 1 минуты до аромата",
           "durationSeconds": 60,
           "attention": "required",
           "resources": [
@@ -1738,7 +1738,7 @@
         {
           "key": "pasta-heat",
           "kind": "heat",
-          "title": "Готовьте пасту на слабом огне до перемешивания",
+          "title": "Готовьте пасту под крышкой на слабом огне 5–6 минут до перемешивания",
           "durationSeconds": 300,
           "attention": "background",
           "resources": [
@@ -1805,7 +1805,7 @@
         {
           "key": "pasta-finish",
           "kind": "heat",
-          "title": "Продолжайте готовить пасту до первой проверки готовности",
+          "title": "После перемешивания снова накройте и готовьте ещё 5–6 минут до проверки",
           "durationSeconds": 300,
           "attention": "background",
           "resources": [
@@ -2376,7 +2376,7 @@
         {
           "key": "bake-first",
           "kind": "heat",
-          "title": "Выпекайте наггетсы до переворота",
+          "title": "Выпекайте наггетсы 8 минут до переворота",
           "durationSeconds": 480,
           "attention": "background",
           "resources": [
@@ -2443,7 +2443,7 @@
         {
           "key": "bake-second",
           "kind": "heat",
-          "title": "Выпекайте после переворота",
+          "title": "После переворота выпекайте наггетсы ещё 4 минуты",
           "durationSeconds": 240,
           "attention": "background",
           "resources": [

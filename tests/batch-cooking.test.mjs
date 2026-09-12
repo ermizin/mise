@@ -27,6 +27,17 @@ test("valid cooking preserves measurement once and all recipe actions", () => {
  assert.ok(model.steps.every(step=>step.productsScope === "dish"));
 });
 
+test("batch action label uses the actual two-container count while retaining raw source text", () => {
+ const recipe=app.recipesById["tmpm-28247"];
+ const two={id:"two",index:0,start:"2026-09-08",end:"2026-09-08",days:1};
+ const people=["a","b"].map(id=>({id,name:id.toUpperCase(),daily:{kcal:2200,protein:150,fat:70,carbs:230},includedSlots:["dinner"]}));
+ const current={id:"two-portions",people,mealSlots:["dinner"],selections:{"two:dinner":recipe.id},selectionAssignments:{"two:dinner":[{recipeId:recipe.id,personIds:["a","b"]}]},batches:[two],cookedWeights:{}};
+ const step=app.buildBatchCookingModel(current,two).steps.find(item=>item.instruction?.text.includes("на 5 порций"));
+ assert.ok(step,"the reviewed source contains its original five-portion serving instruction");
+ assert.match(step.instruction.sourceText,/на 5 порций/);
+ assert.match(step.title,/на 2 порции/);
+});
+
 test("saved weights cannot re-complete a cooked batch or overwrite its history", () => {
  const current = {...plan(), cookedBatchIds:[batch.id]};
  assert.throws(() => app.completeBatchCookingPlan(current,batch,{}), /завершена/);
@@ -65,4 +76,14 @@ test("signature ignores names but changes when days or physical quantities chang
  assert.equal(signature(current),signature({...current,people:[{...current.people[0],name:"Renamed"}]}));
  const longer={...batch,days:5,end:"2026-09-12"};
  assert.notEqual(signature(current),app.batchCookingSignature(current,longer,app.buildBatchCookingModel(current,longer)));
+});
+
+test("migrated timer recovery survives repeated reload parsing and retains an overdue check", () => {
+ const timer={endsAt:Date.now()-60_000,stepId:"b:lunch:recipe:old-step"};
+ const stored=JSON.stringify({schemaVersion:1,timer});
+ const first=app.readRecoveredCookingTimer(stored);
+ assert.deepEqual(JSON.parse(JSON.stringify(first)),timer);
+ const second=app.readRecoveredCookingTimer(JSON.stringify({schemaVersion:1,timer:first}));
+ assert.deepEqual(JSON.parse(JSON.stringify(second)),timer,"the overdue anchor is durable until the cook explicitly checks the dish");
+ assert.equal(app.readRecoveredCookingTimer(JSON.stringify({schemaVersion:1,timer:{endsAt:timer.endsAt,stepId:""}})),null);
 });

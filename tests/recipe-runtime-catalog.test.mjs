@@ -271,7 +271,7 @@ test("every release build refreshes the audited wizard catalog and server regist
     await readFile(new URL("../package.json", import.meta.url), "utf8"),
   );
   const refreshCommand =
-    "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/validate-cooking-operations.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json";
+    "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/validate-cooking-operations.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json && node scripts/build-cooking-action-catalog.mjs";
   assert.equal(packageJson.scripts.prebuild, refreshCommand);
   assert.equal(packageJson.scripts["recipes:runtime:refresh"], refreshCommand);
 });
