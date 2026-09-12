@@ -43,6 +43,13 @@
       "when": 1788210000000,
       "tag": "0005_recipe_tab_analytics",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1789171200000,
+      "tag": "0006_cooking_session_state",
+      "breakpoints": true
     }
   ]
 }

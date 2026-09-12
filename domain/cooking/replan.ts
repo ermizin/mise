@@ -12,7 +12,6 @@ export function initialCookingExecution(session: CompiledSession): CookingExecut
   return { revision: 0, statusByOperation: Object.fromEntries(session.operations.map((op) => [op.id, "pending"])), events: [], startedAtByOperation: {}, endsAtByOperation: {} };
 }
 function sameEvent(a: CookingEvent, b: CookingEvent) { return a.type === b.type && a.opId === b.opId && a.occurredAt === b.occurredAt && a.endsAt === b.endsAt; }
-function deadline(op: CookingOperation) { return op.checkDeadlineSeconds ?? 0; }
 function ends(execution: CookingExecutionState, id: string) { return execution.endsAtByOperation?.[id]; }
 function starts(execution: CookingExecutionState, id: string) { return execution.startedAtByOperation?.[id]; }
 function markDue(session: CompiledSession, status: Record<string, CookingExecutionState["statusByOperation"][string]>, execution: CookingExecutionState, now: number) {
@@ -25,7 +24,9 @@ function earliest(op: CookingOperation, at: number, calendar: Map<string, Interv
   for (let tries = 0; tries < 10000; tries++) {
     let next = start; const interval = { start, end: start + op.durationSeconds * 1000 };
     for (const use of op.resources) for (const busy of calendar.get(use.resourceId) ?? []) if (overlaps(interval, busy)) next = Math.max(next, busy.end);
-    if (next === start) return start; start = next;
+    if (next === start) return finite(start) ? start : undefined;
+    if (!finite(next)) return undefined;
+    start = next;
   }
   return undefined;
 }
@@ -51,6 +52,10 @@ export function replanCookingSession(session: CompiledSession, execution: Cookin
     for (const use of op.resources) add(calendar, use.resourceId, { start: entry.startAt, end: entry.endAt <= now ? Infinity : entry.endAt });
     const check = status[op.id] === "active" ? plannedHeatCheck(session, op, startAt, endAt) : undefined;
     if (check) for (const use of check.op.resources) add(calendar, use.resourceId, { start: check.startAt, end: check.endAt });
+  }
+  // Suspending a non-raw prep frees the cook, but its board/knife remain physically occupied until it is continued or resolved.
+  for (const op of session.operations) if (status[op.id] === "blocked") {
+    for (const use of op.resources) if (use.kind !== "cook") add(calendar, use.resourceId, { start: now, end: Infinity });
   }
   for (const holder of session.operations) for (const hold of holder.resourceHolds ?? []) if (status[holder.id] !== "pending" && !completed.has(hold.releaseAfterOpId)) leases.set(hold.resourceId, { dish: dish(holder), releaseAfterOpId: hold.releaseAfterOpId });
   while (pending.size) {
@@ -85,11 +90,23 @@ function startEnd(op: CookingOperation, event: CookingEvent) {
 }
 function startConflicts(session: CompiledSession, execution: CookingExecutionState, op: CookingOperation, startAt: number, endAt: number) {
   const interval = { start: startAt, end: endAt }, status = execution.statusByOperation;
+  if (["prep", "start_heat", "heat"].includes(op.kind) && session.operations.some(candidate =>
+    (candidate.attention === "background" && status[candidate.id] === "needs_check") ||
+    (candidate.kind === "intervention" && status[candidate.id] === "pending" && candidate.dependsOn.every(id => status[id] === "completed")))) return true;
   for (const active of session.operations) if ((status[active.id] === "active" || status[active.id] === "needs_check") && active.id !== op.id) {
     const activeStart = starts(execution, active.id), activeEnd = ends(execution, active.id);
     if (finite(activeStart) && finite(activeEnd) && active.resources.some((use) => op.resources.some((candidate) => candidate.resourceId === use.resourceId)) && overlaps(interval, { start: activeStart, end: activeEnd <= startAt ? Infinity : activeEnd })) return true;
     const check = status[active.id] === "active" && finite(activeStart) ? plannedHeatCheck(session, active, activeStart, activeEnd) : undefined;
     if (check && check.op.resources.some((use) => op.resources.some((candidate) => candidate.resourceId === use.resourceId)) && overlaps(interval, { start: check.startAt, end: check.endAt })) return true;
+  }
+  for (const blocked of session.operations) if (status[blocked.id] === "blocked" && blocked.id !== op.id && blocked.resources.some(resource => resource.kind !== "cook" && op.resources.some(use => use.resourceId === resource.resourceId))) return true;
+  const proposedCheck = plannedHeatCheck(session, op, startAt, endAt);
+  if (proposedCheck) for (const active of session.operations) if (status[active.id] === "active" || status[active.id] === "needs_check") {
+    const activeStart = starts(execution, active.id), activeEnd = ends(execution, active.id);
+    if (!finite(activeStart) || !finite(activeEnd)) continue;
+    if (active.resources.some(resource => proposedCheck.op.resources.some(use => use.resourceId === resource.resourceId)) && overlaps({ start: proposedCheck.startAt, end: proposedCheck.endAt }, { start: activeStart, end: activeEnd <= startAt ? Infinity : activeEnd })) return true;
+    const check = plannedHeatCheck(session, active, activeStart, activeEnd);
+    if (check && check.op.resources.some(resource => proposedCheck.op.resources.some(use => use.resourceId === resource.resourceId)) && overlaps({ start: proposedCheck.startAt, end: proposedCheck.endAt }, { start: check.startAt, end: check.endAt })) return true;
   }
   for (const holder of session.operations) for (const hold of holder.resourceHolds ?? []) if (hold.resourceId && op.resources.some((use) => use.resourceId === hold.resourceId) && status[holder.id] !== "pending" && status[hold.releaseAfterOpId] !== "completed" && dish(holder) !== dish(op)) return true;
   return false;
@@ -108,13 +125,22 @@ export function applyCookingEvent(session: CompiledSession, execution: CookingEx
     if (!end) diagnostics.push({ code: "invalid_start_duration", message: "Укажите конечное время в допустимых границах длительности." });
     else if (execution.pausedAt && op.kind !== "intervention") diagnostics.push({ code: "session_paused", message: "Пауза не разрешает начинать новое действие." });
     else if (startConflicts(session, { ...execution, statusByOperation: status }, op, event.occurredAt, end)) diagnostics.push({ code: "resource_conflict", message: "Этот ресурс уже занят или зарезервирован для обязательной проверки." });
-    else { status[op.id] = "active"; const next: CookingExecutionState = { revision: execution.revision + 1, statusByOperation: status, events: [...execution.events, event], startedAtByOperation: { ...execution.startedAtByOperation, [op.id]: event.occurredAt }, endsAtByOperation: { ...execution.endsAtByOperation, [op.id]: end }, ...(execution.pausedAt ? { pausedAt: execution.pausedAt } : {}) }; return { execution: next, schedule: replanCookingSession(session, next, now), diagnostics: [] }; }
+    else { status[op.id] = "active"; const next: CookingExecutionState = { ...execution, revision: execution.revision + 1, statusByOperation: status, events: [...execution.events, event], startedAtByOperation: { ...execution.startedAtByOperation, [op.id]: event.occurredAt }, endsAtByOperation: { ...execution.endsAtByOperation, [op.id]: end }, ...(execution.pausedAt ? { pausedAt: execution.pausedAt } : {}) }; return { execution: next, schedule: replanCookingSession(session, next, now), diagnostics: [] }; }
   } else if (event.type === "completed" && op && (status[op.id] === "active" || status[op.id] === "needs_check") && (!op.requiresCheckAtEnd || status[op.id] === "needs_check")) status[op.id] = "completed";
-  else if (event.type === "needs_check" && op && (status[op.id] === "active" || status[op.id] === "needs_check")) status[op.id] = "needs_check";
+  else if (event.type === "needs_check" && op && op.requiresCheckAtEnd && finite(ends(execution, op.id)) && ends(execution, op.id)! <= now && (status[op.id] === "active" || status[op.id] === "needs_check")) status[op.id] = "needs_check";
+  else if (event.type === "suspended" && op && status[op.id] === "active" && op.kind === "prep" && !op.rawMeat && !op.resourceHolds?.some(hold => hold.kind === "cook")) status[op.id] = "blocked";
+  else if (event.type === "continued" && op && status[op.id] === "blocked" && !execution.pausedAt) {
+    const end = event.occurredAt + Math.max(1, execution.remainingSecondsByOperation?.[op.id] ?? op.durationSeconds) * 1000;
+    if (startConflicts(session, execution, op, event.occurredAt, end)) diagnostics.push({ code: "resource_conflict", message: "Сначала завершите текущую проверку." });
+    else {
+      const next: CookingExecutionState = { ...execution, revision: execution.revision + 1, statusByOperation: { ...status, [op.id]: "active" }, events: [...execution.events, event], endsAtByOperation: { ...execution.endsAtByOperation, [op.id]: end } };
+      return { execution: next, schedule: replanCookingSession(session, next, now), diagnostics: [] };
+    }
+  }
   else if (event.type === "extended" && op && status[op.id] === "needs_check" && finite(event.endsAt) && event.endsAt > now && event.endsAt - now <= 24 * 3600_000) status[op.id] = "active";
   else if (event.type === "paused" || event.type === "resumed") { /* handled below */ }
   else diagnostics.push({ code: "invalid_transition", message: "Этот переход состояния сейчас недопустим." });
   if (diagnostics.length) return { execution, schedule: replanCookingSession(session, execution, now), diagnostics };
-  const next: CookingExecutionState = { revision: execution.revision + 1, statusByOperation: status, events: [...execution.events, event], startedAtByOperation: execution.startedAtByOperation, endsAtByOperation: event.type === "extended" && op ? { ...execution.endsAtByOperation, [op.id]: event.endsAt! } : execution.endsAtByOperation, ...(event.type === "paused" ? { pausedAt: event.occurredAt } : event.type === "resumed" ? {} : execution.pausedAt ? { pausedAt: execution.pausedAt } : {}) };
+  const next: CookingExecutionState = { ...execution, revision: execution.revision + 1, statusByOperation: status, events: [...execution.events, event], remainingSecondsByOperation: event.type === "suspended" && op ? { ...execution.remainingSecondsByOperation, [op.id]: Math.max(1, ((execution.endsAtByOperation?.[op.id] ?? now) - now) / 1000) } : execution.remainingSecondsByOperation, startedAtByOperation: execution.startedAtByOperation, endsAtByOperation: event.type === "extended" && op ? { ...execution.endsAtByOperation, [op.id]: event.endsAt! } : execution.endsAtByOperation, ...(event.type === "paused" ? { pausedAt: event.occurredAt } : event.type === "resumed" ? { pausedAt: undefined } : execution.pausedAt ? { pausedAt: execution.pausedAt } : {}) };
   return { execution: next, schedule: replanCookingSession(session, next, now), diagnostics: [] };
 }

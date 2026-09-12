@@ -73,3 +73,29 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   index("idx_analytics_events_name_time").on(table.eventName, table.occurredAt),
   index("idx_analytics_events_flow").on(table.flowId),
 ]);
+
+
+/**
+ * Execution state deliberately lives outside the plan blob. Plan saves can be
+ * retried from another tab without erasing a timer or a completed operation.
+ */
+export const cookingSessions = sqliteTable("cooking_sessions", {
+  id: text("id").primaryKey(),
+  clientId: text("client_id").notNull(),
+  planId: text("plan_id").notNull(),
+  batchId: text("batch_id").notNull(),
+  signature: text("signature").notNull(),
+  planSnapshotSignature: text("plan_snapshot_signature").notNull(),
+  graph: text("graph").notNull(),
+  payload: text("payload").notNull(),
+  revision: integer("revision").notNull().default(0),
+  lastMutationId: text("last_mutation_id"),
+  createdAt: integer("created_at").notNull(),
+  updatedAt: integer("updated_at").notNull(),
+}, (table) => [
+  index("idx_cooking_sessions_client_plan_batch").on(
+    table.clientId,
+    table.planId,
+    table.batchId,
+  ),
+]);

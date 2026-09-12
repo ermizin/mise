@@ -8,18 +8,18 @@ import ts from "typescript";
 const root = new URL("..", import.meta.url);
 const EPOCH = 1_700_000_000_000;
 const at = (seconds) => EPOCH + seconds * 1_000;
-async function core() { const modules = {}; for (const name of ["validate", "schedule", "replan"]) { const url = new URL(`domain/cooking/${name}.ts`, root), module = { exports: {} }; vm.runInNewContext(ts.transpileModule(await readFile(url, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, { module, exports: module.exports, require: (id) => modules[id] ?? createRequire(url)(id), Map, Math, Set, Object, Array, JSON, Number, Infinity }, { filename: url.pathname });
- modules[`./${name}`] = module.exports; modules[`./${name}.ts`] = module.exports; } return modules["./replan"]; }
-const use = (resourceId, kind) => ({ resourceId, kind });
-const op = (id, kind, { deps = [], duration = 10, background = false, resources = background ? [use("oven", "oven")] : [use("cook", "cook")], holds } = {}) => ({ id, recipeId: id[0], methodId: "original", dishKey: id[0], kind, title: id, dependsOn: deps, durationSeconds: duration, attention: background ? "background" : "required", resources, allocations: [], sourceStepIndexes: [0], ...(background ? { requiresCheckAtEnd: true } : {}), ...(holds ? { resourceHolds: holds } : {}) });
+async function core() { const modules = {}; for (const name of ["validate", "schedule", "replan"]) { const url = new URL(`domain/cooking/${name}.ts`, root), compiledModule = { exports: {} }; vm.runInNewContext(ts.transpileModule(await readFile(url, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS } }).outputText, { module: compiledModule, exports: compiledModule.exports, require: (id) => modules[id] ?? createRequire(url)(id), Map, Math, Set, Object, Array, JSON, Number, Infinity }, { filename: url.pathname });
+ modules[`./${name}`] = compiledModule.exports; modules[`./${name}.ts`] = compiledModule.exports; } return modules["./replan"]; }
+const resourceUse = (resourceId, kind) => ({ resourceId, kind });
+const op = (id, kind, { deps = [], duration = 10, background = false, resources = background ? [resourceUse("oven", "oven")] : [resourceUse("cook", "cook")], holds } = {}) => ({ id, recipeId: id[0], methodId: "original", dishKey: id[0], kind, title: id, dependsOn: deps, durationSeconds: duration, attention: background ? "background" : "required", resources, allocations: [], sourceStepIndexes: [0], ...(background ? { requiresCheckAtEnd: true } : {}), ...(holds ? { resourceHolds: holds } : {}) });
 const session = (operations) => ({ id: "s", input: {}, diagnostics: [], operations });
 const entry = (schedule, id) => schedule.entries.find((item) => item.opId === id);
 
 test("replan keeps an active interval fixed while delayed prep is newly placed in passive heating time", async () => {
   const { initialCookingExecution, applyCookingEvent, replanCookingSession } = await core();
-  const heat = op("a-heat", "heat", { duration: 100, background: true, resources: [use("oven", "oven")] });
-  const check = op("a-check", "intervention", { deps: ["a-heat"], duration: 10, resources: [use("cook", "cook"), use("oven", "oven")] });
-  const prep = op("b-prep", "prep", { duration: 20, resources: [use("cook", "cook"), use("board", "board")] });
+  const heat = op("a-heat", "heat", { duration: 100, background: true, resources: [resourceUse("oven", "oven")] });
+  const check = op("a-check", "intervention", { deps: ["a-heat"], duration: 10, resources: [resourceUse("cook", "cook"), resourceUse("oven", "oven")] });
+  const prep = op("b-prep", "prep", { duration: 20, resources: [resourceUse("cook", "cook"), resourceUse("board", "board")] });
   const input = session([heat, check, prep]);
   const active = applyCookingEvent(input, initialCookingExecution(input), { id: "start", type: "started", opId: "a-heat", occurredAt: at(0), endsAt: at(100) }, at(0)).execution;
   const result = replanCookingSession(input, active, at(30));
@@ -30,9 +30,9 @@ test("replan keeps an active interval fixed while delayed prep is newly placed i
 
 test("a pending cook action can start during a passive heat but not through its reserved check", async () => {
   const { initialCookingExecution, applyCookingEvent } = await core();
-  const heat = op("a-heat", "heat", { duration: 30, background: true, resources: [use("oven", "oven")] });
-  const check = op("a-check", "intervention", { deps: ["a-heat"], duration: 10, resources: [use("cook", "cook"), use("oven", "oven")] });
-  const prep = op("b-prep", "prep", { duration: 10, resources: [use("cook", "cook")] });
+  const heat = op("a-heat", "heat", { duration: 30, background: true, resources: [resourceUse("oven", "oven")] });
+  const check = op("a-check", "intervention", { deps: ["a-heat"], duration: 10, resources: [resourceUse("cook", "cook"), resourceUse("oven", "oven")] });
+  const prep = op("b-prep", "prep", { duration: 10, resources: [resourceUse("cook", "cook")] });
   const input = session([heat, check, prep]); let state = initialCookingExecution(input);
   state = applyCookingEvent(input, state, { id: "heat", type: "started", opId: "a-heat", occurredAt: at(0), endsAt: at(30) }, at(0)).execution;
   const allowed = applyCookingEvent(input, state, { id: "prep", type: "started", opId: "b-prep", occurredAt: at(5), endsAt: at(15) }, at(5));
@@ -110,10 +110,10 @@ test("completion cannot bypass an unfinished dependency", async () => {
 
 test("a completed load still holds its pot until the recorded unload", async () => {
   const { initialCookingExecution, applyCookingEvent } = await core();
-  const load = op("a-load", "start_heat", { resources: [use("cook", "cook"), use("pot", "pot")], holds: [{ resourceId: "pot", kind: "pot", releaseAfterOpId: "a-unload" }] });
-  const heat = op("a-heat", "heat", { deps: ["a-load"], duration: 30, background: true, resources: [use("pot", "pot")] });
-  const unload = op("a-unload", "unload", { deps: ["a-heat"], resources: [use("cook", "cook"), use("pot", "pot")] });
-  const other = op("b-load", "start_heat", { resources: [use("cook", "cook"), use("pot", "pot")] }); const input = session([load, heat, unload, other]);
+  const load = op("a-load", "start_heat", { resources: [resourceUse("cook", "cook"), resourceUse("pot", "pot")], holds: [{ resourceId: "pot", kind: "pot", releaseAfterOpId: "a-unload" }] });
+  const heat = op("a-heat", "heat", { deps: ["a-load"], duration: 30, background: true, resources: [resourceUse("pot", "pot")] });
+  const unload = op("a-unload", "unload", { deps: ["a-heat"], resources: [resourceUse("cook", "cook"), resourceUse("pot", "pot")] });
+  const other = op("b-load", "start_heat", { resources: [resourceUse("cook", "cook"), resourceUse("pot", "pot")] }); const input = session([load, heat, unload, other]);
   let state = applyCookingEvent(input, initialCookingExecution(input), { id: "load-start", type: "started", opId: "a-load", occurredAt: at(0), endsAt: at(10) }, at(0)).execution;
   state = applyCookingEvent(input, state, { id: "load-end", type: "completed", opId: "a-load", occurredAt: at(10) }, at(10)).execution;
   state = applyCookingEvent(input, state, { id: "heat-start", type: "started", opId: "a-heat", occurredAt: at(10), endsAt: at(40) }, at(10)).execution;

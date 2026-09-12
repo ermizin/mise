@@ -121,3 +121,15 @@ test("stores device subscriptions and scheduled jobs, then sends visible Web Pus
   assert.match(worker, /async scheduled/);
   assert.match(vite, /crons: \["\* \* \* \* \*"\]/);
 });
+
+test("regular push enable keeps server-owned cooking-step timers", async () => {
+  const route = await read("app/api/push/route.ts");
+  const enableStart = route.indexOf('if (body.action !== "enable"');
+  const replacement = route.indexOf("await db.delete(pushJobs)", enableStart);
+  const cookingGuard = route.indexOf('ne(pushJobs.kind, "cooking-step")', replacement);
+  const resync = route.indexOf("syncCookingStepNotifications", replacement);
+  assert.ok(enableStart >= 0 && replacement > enableStart && cookingGuard > replacement,
+    "enabling device reminders removes only its regular unsent jobs");
+  assert.ok(resync > replacement,
+    "enabled subscriptions receive a retryable sync of persisted cooking timers");
+});

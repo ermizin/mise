@@ -10,11 +10,11 @@ const root = new URL("..", import.meta.url);
 async function compiler() {
   const modules = {};
   for (const name of ["batch", "validate", "schedule", "compile"]) {
-    const url = new URL(`domain/cooking/${name}.ts`, root), module = { exports: {} };
+    const url = new URL(`domain/cooking/${name}.ts`, root), compiledModule = { exports: {} };
     vm.runInNewContext(ts.transpileModule(await readFile(url, "utf8"), { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS, resolveJsonModule: true } }).outputText, {
-      module, exports: module.exports, require: (id) => modules[id] ?? (id.endsWith(".json") ? { default: createRequire(url)(id) } : createRequire(url)(id)), Map, Set, Math, Object, Array, JSON, Number, Infinity,
+      module: compiledModule, exports: compiledModule.exports, require: (id) => modules[id] ?? (id.endsWith(".json") ? { default: createRequire(url)(id) } : createRequire(url)(id)), Map, Set, Math, Object, Array, JSON, Number, Infinity,
     }, { filename: url.pathname });
-    modules[`./${name}`] = module.exports; modules[`./${name}.ts`] = module.exports;
+    modules[`./${name}`] = compiledModule.exports; modules[`./${name}.ts`] = compiledModule.exports;
   }
   return { ...modules["./batch"], ...modules["./validate"], ...modules["./schedule"], ...modules["./compile"] };
 }
@@ -22,7 +22,7 @@ const card = (id) => manifest.recipes.find((recipe) => recipe.recipeId === id);
 const inputFor = (recipe, { capacity = 5_000, checksum = recipe.sourceStepsChecksum, methodId = recipe.methodId, omitCapacity = false } = {}) => {
   const amounts = Object.fromEntries(recipe.sourceDefinition.ingredients.map((ingredient) => [ingredient.sourceIngredientId, { amount: ingredient.baseAmount, unit: ingredient.unit, canonicalId: ingredient.canonicalIngredientId, state: "raw", cut: "dice" }]));
   const logicalByKind = new Map();
-  for (const use of recipe.operations.flatMap((operation) => [...operation.resources, ...(operation.resourceHolds ?? [])])) logicalByKind.set(use.kind, new Set([...(logicalByKind.get(use.kind) ?? []), use.resourceId]));
+  for (const resourceUse of recipe.operations.flatMap((operation) => [...operation.resources, ...(operation.resourceHolds ?? [])])) logicalByKind.set(resourceUse.kind, new Set([...(logicalByKind.get(resourceUse.kind) ?? []), resourceUse.resourceId]));
   const resources = [...logicalByKind].flatMap(([kind, logical]) => [...logical].map((_, index) => ({ id: `${kind}-${index + 1}`, kind, ...(kind === "tray" || kind === "pot" || kind === "pan" ? { capacities: omitCapacity ? {} : { g: capacity, ml: capacity } } : {}) })));
   const overrides = Object.fromEntries(recipe.operations.filter((operation) => operation.unknownDuration).map((operation) => [`dish:${operation.key}`, 90]));
   return { sessionId: "session", planId: "plan", pace: "comfortable", kitchen: { resources }, durationOverrides: overrides, recipes: [{ dishKey: "dish", recipeId: recipe.recipeId, methodId, personIds: ["person"], cookingAmounts: amounts, sourceStepsChecksum: checksum }] };
@@ -51,6 +51,32 @@ test("capacity and source identity failures fall back rather than compiling gues
   }
   const low = compileCookingSession(inputFor(recipe, { capacity: 100 })), high = compileCookingSession(inputFor(recipe, { capacity: 5_000 }));
   assert.ok(low.operations.length > high.operations.length, "lower verified capacity must produce more runs");
+});
+
+test("capacity loads include every physically loaded native-unit ingredient", async () => {
+  const { compileCookingSession, cookingRequirements } = await compiler();
+  const chicken = card("tmpm-28247"), nuggets = card("tmpm-26965");
+  const chickenInput = inputFor(chicken);
+  const chickenLoads = cookingRequirements(chickenInput);
+  assert.deepEqual(chickenLoads.filter((load) => load.resourceId === "tray-1").map((load) => [load.capacityUnit, load.ingredientIds]).sort((a, b) => a[0].localeCompare(b[0])), [
+    ["g", ["source-ingredient-1"]], ["ml", ["source-ingredient-2"]],
+  ]);
+  assert.deepEqual(chickenLoads.filter((load) => load.resourceId === "tray-2").map((load) => [load.capacityUnit, load.ingredientIds]).sort((a, b) => a[0].localeCompare(b[0])), [
+    ["g", ["source-ingredient-6", "source-ingredient-7"]], ["ml", ["source-ingredient-8"]],
+  ]);
+  const nuggetInput = inputFor(nuggets);
+  assert.deepEqual(cookingRequirements(nuggetInput).filter((load) => load.resourceId === "tray-1").map((load) => [load.capacityUnit, load.ingredientIds]).sort((a, b) => a[0].localeCompare(b[0])), [
+    ["g", ["source-ingredient-1", "source-ingredient-2", "source-ingredient-3", "source-ingredient-4"]], ["ml", ["source-ingredient-8"]],
+  ]);
+  for (const resource of chickenInput.kitchen.resources.filter((resource) => resource.kind === "tray")) delete resource.capacities.ml;
+  const missingMlCapacity = compileCookingSession(chickenInput);
+  assert.equal(missingMlCapacity.operations.length, 0);
+  assert.ok(missingMlCapacity.diagnostics.some((item) => item.code === "capacity_not_confirmed"));
+  const splitByMl = inputFor(chicken, { capacity: 5_000 });
+  for (const resource of splitByMl.kitchen.resources.filter((resource) => resource.kind === "tray")) resource.capacities.ml = 1;
+  const compiled = compileCookingSession(splitByMl);
+  assert.equal(compiled.diagnostics.length, 0);
+  assert.ok(compiled.operations.some((operation) => operation.title.includes("заход 4 из 4")), "native ml capacity must determine repeated runs without converting units");
 });
 
 test("unknown source durations require an explicit per-operation override", async () => {

@@ -1,7 +1,9 @@
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, desc, eq, isNull, ne } from "drizzle-orm";
 import { getDb } from "../../../db";
-import { pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
+import { cookingSessions, pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
 import { processDueNotifications, publicVapidKey } from "../../../lib/push-server";
+
+import { syncCookingStepNotifications, type CookingNotificationEnvelope } from "../../../lib/cooking-notifications";
 
 type PushSubscriptionInput = {
   endpoint?: string;
@@ -38,7 +40,7 @@ function validSubscription(value: PushSubscriptionInput | undefined) {
 
 function validJob(job: JobInput, now: number): job is Required<JobInput> {
   return Boolean(
-    job.kind && job.kind.length <= 40 &&
+    job.kind && job.kind !== "cooking-step" && job.kind.length <= 40 &&
     job.title && job.title.length <= 100 &&
     job.body && job.body.length <= 240 &&
     job.url?.startsWith("/") && !job.url.startsWith("//") && job.url.length <= 300 &&
@@ -145,7 +147,7 @@ export async function POST(request: Request) {
     set: { endpoint: subscription.endpoint, p256dh: subscription.keys.p256dh, auth: subscription.keys.auth, updatedAt: now },
   });
   await db.update(pushPreferences).set({ enabled: false, updatedAt: now }).where(eq(pushPreferences.subscriptionId, identity.subscriptionId));
-  await db.delete(pushJobs).where(and(eq(pushJobs.subscriptionId, identity.subscriptionId), isNull(pushJobs.sentAt)));
+  await db.delete(pushJobs).where(and(eq(pushJobs.subscriptionId, identity.subscriptionId), isNull(pushJobs.sentAt), ne(pushJobs.kind, "cooking-step")));
   await db.insert(pushPreferences).values({
     id: `${identity.subscriptionId}:${body.planId}`,
     subscriptionId: identity.subscriptionId,
@@ -169,6 +171,13 @@ export async function POST(request: Request) {
       dueAt: job.dueAt,
       createdAt: now,
     })));
+  }
+
+  const sessions = await db.select().from(cookingSessions).where(and(
+    eq(cookingSessions.clientId, identity.clientId), eq(cookingSessions.planId, body.planId),
+  ));
+  for (const session of sessions) {
+    await syncCookingStepNotifications(identity.clientId, body.planId, session.batchId, JSON.parse(session.payload) as CookingNotificationEnvelope);
   }
 
   const testId = crypto.randomUUID();

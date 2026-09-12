@@ -58,6 +58,15 @@ for (const recipe of manifest.recipes) {
     for (const sourceIngredientId of load.sourceIngredientIds) assert.ok(source.recipeFamily.ingredients.some((ingredient) => ingredient.sourceIngredientId === sourceIngredientId && ingredient.unit === load.unit), `load source unit does not match runtime: ${recipe.recipeId}:${sourceIngredientId}`);
   }
   const reaches = (from, target, seen = new Set()) => from === target || (!seen.has(from) && (seen.add(from), (recipe.operations.find((operation) => operation.key === from)?.dependsOn ?? []).some((dependency) => reaches(dependency, target, seen))));
+  const capacitySourceIds = new Set();
+  for (const load of recipe.cookingLoads) for (const sourceIngredientId of load.sourceIngredientIds) {
+    assert.ok(!capacitySourceIds.has(sourceIngredientId), `source ingredient is counted in more than one vessel load: ${recipe.recipeId}:${sourceIngredientId}`);
+    capacitySourceIds.add(sourceIngredientId);
+  }
+  for (const [sourceIngredientId, , operationKey] of recipe.ingredientTrace) {
+    const operation = recipe.operations.find((item) => item.key === operationKey);
+    if (!['portion', 'store'].includes(operation.kind)) assert.ok(capacitySourceIds.has(sourceIngredientId), `physically loaded ingredient is missing from capacity loads: ${recipe.recipeId}:${sourceIngredientId}`);
+  }
   for (const raw of recipe.operations.filter((operation) => operation.rawMeat)) assert.ok(recipe.operations.some((operation) => operation.kind === "wash" && reaches(operation.key, raw.key)), `raw-meat operation needs wash: ${recipe.recipeId}`);
 }
 console.log(`validated ${manifest.recipes.length} reviewed cooking-operation manifests`);

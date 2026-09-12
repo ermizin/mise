@@ -1,6 +1,6 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "../../../db";
-import { mealPlans, pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
+import { cookingSessions, mealPlans, pushJobs, pushPreferences, pushSubscriptions } from "../../../db/schema";
 import {
   validatePlanForPersistence,
 } from "../../../lib/plan-validation";
@@ -93,6 +93,7 @@ export async function DELETE(request: Request) {
         await db.delete(pushPreferences).where(and(eq(pushPreferences.subscriptionId, subscriptionId), eq(pushPreferences.planId, planId)));
       }
     }
+    await db.delete(cookingSessions).where(eq(cookingSessions.clientId, clientId));
     await db.delete(mealPlans).where(eq(mealPlans.clientId, clientId));
     return Response.json({ deleted: true });
   } catch (error) {

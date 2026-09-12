@@ -2,6 +2,7 @@ import { and, eq, isNull, lt, lte, or } from "drizzle-orm";
 import { env } from "cloudflare:workers";
 import { getDb } from "../db";
 import { pushJobs, pushPreferences, pushSubscriptions } from "../db/schema";
+import { currentCookingStepJob } from "./cooking-notifications";
 
 type PushEnv = {
   VAPID_PUBLIC_KEY?: string;
@@ -172,6 +173,11 @@ export async function processDueNotifications(now = Date.now(), options: { jobId
     )).limit(1);
     if (!subscription || !preference) {
       await db.update(pushJobs).set({ sentAt: now, leaseUntil: null, lastError: "disabled" }).where(eq(pushJobs.id, claimed.id));
+      continue;
+    }
+
+    if (claimed.kind === "cooking-step" && !await currentCookingStepJob(subscription.clientId, claimed)) {
+      await db.update(pushJobs).set({ sentAt: now, leaseUntil: null, lastError: "stale cooking timer" }).where(eq(pushJobs.id, claimed.id));
       continue;
     }
 

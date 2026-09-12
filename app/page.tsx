@@ -15,6 +15,8 @@ import {
 import { getNutritionSnapshot, normalizeNutritionHistory, preserveNutritionSnapshot, type NutritionHistory } from "@/domain/nutrition-history";
 import portionComponentsJson from "@/data/recipe-portion-components.json";
 import { makeCookingSignature, restoreCookingDraft, cookingProgress, type CookingDraft } from "@/domain/cooking-session";
+import { ParallelCookingView, type ParallelCookingDish } from "./parallel-cooking";
+import { cookingOperationManifest } from "@/domain/cooking/compile";
 import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
 import { CookingMethodChoice } from "./cooking-method-choice";
 import { createPortal } from "react-dom";
@@ -6364,6 +6366,21 @@ export default function Home() {
   );
   const [batchCookingContext, setBatchCookingContext] =
     useState<BatchCookingContext | null>(null);
+  const cookingLinkOpened = useRef(false);
+  useEffect(() => {
+    if (!activePlan || cookingLinkOpened.current) return;
+    const params = new URLSearchParams(location.search);
+    const batchId = params.get("batchId");
+    if (params.get("planId") !== activePlan.id || !params.get("sessionId") || !batchId) return;
+    if (!activePlan.batches.some(batch => batch.id === batchId)) return;
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (cancelled) return;
+      cookingLinkOpened.current = true;
+      setBatchCookingContext({ batchId });
+    });
+    return () => { cancelled = true; };
+  }, [activePlan]);
   const [builderEntry, setBuilderEntry] = useState<BuilderEntry>({ step: 0 });
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("done");
   const [onboardingReturnTab, setOnboardingReturnTab] = useState<Tab | null>(
@@ -14488,10 +14505,34 @@ function BatchCookingView(props: {
   const model = useMemo(() => buildBatchCookingModel(props.plan, props.batch), [props.plan, props.batch]);
   const signature = batchCookingSignature(props.plan, props.batch, model);
   if (props.plan.cookedBatchIds?.includes(props.batch.id)) return <main className="app-shell"><section className="empty-state glass-card"><h1>Готовка завершена</h1><p>Подтверждённые веса и раскладка сохранены.</p><button className="primary-button" onClick={props.onClose}>Вернуться к неделе</button></section></main>;
-  return <BatchCookingSessionView key={signature} {...props} model={model} signature={signature} />;
+  const fallback = <BatchCookingSessionView key={signature} {...props} model={model} signature={signature} />;
+  if (!model.canComplete) return fallback;
+  const dishes: ParallelCookingDish[] = model.dishes.map(({ recipe, slot, personIds }) => {
+    const method = planCookingMethod(recipe, props.plan)!;
+    const manifest = cookingOperationManifest(recipe.id, method.id);
+    const family = recipeFamilyFor(recipe);
+    const { session } = recipeCookingSessionForAssignment(props.plan, props.batch, slot, recipe);
+    return {
+      dishKey: `${props.batch.id}:${slot}:${recipe.id}`, recipeId: recipe.id, methodId: method.id, personIds,
+      title: recipe.title, sourceStepsChecksum: manifest?.sourceStepsChecksum ?? "",
+      cookingAmounts: Object.fromEntries((family?.ingredients ?? []).map(ingredient => [ingredient.sourceIngredientId, {
+        amount: session.cookingAmounts[ingredient.sourceIngredientId] ?? 0, unit: ingredient.unit,
+        canonicalId: ingredient.canonicalIngredientId,
+      }])),
+      ingredientNames: Object.fromEntries(recipe.ingredients.map(ingredient => [ingredient.id, ingredient.name])),
+      products: [
+        ...recipe.ingredients.map(ingredient => `${ingredient.name} — ${ingredientAmountLabel(ingredient, session.cookingAmounts[ingredient.id] ?? 0)}`),
+        ...(recipe.procedureIngredients ?? []).map(ingredient => `${ingredient.name} — ${procedureIngredientAmountLabel(ingredient, session.portionCount, session.cookingAmounts)}`),
+      ],
+    };
+  });
+  return <ParallelCookingView plan={props.plan} planId={props.plan.id} batchId={props.batch.id} clientId={clientId()}
+    dishes={dishes} equipment={props.plan.kitchenEquipment} onClose={props.onClose} fallback={fallback}
+    portioning={<BatchCookingSessionView key={`${signature}:portioning`} {...props} model={model} signature={signature} initialPortioning />} />;
 }
 
 function BatchCookingSessionView({
+  initialPortioning = false,
   model,
   signature,
   plan,
@@ -14500,6 +14541,7 @@ function BatchCookingSessionView({
   onChangePlan,
   onComplete,
 }: {
+  initialPortioning?: boolean;
   model: BatchCookingModel;
   signature: string;
   plan: ActivePlan;
@@ -14513,7 +14555,7 @@ function BatchCookingSessionView({
   const [stepIndex, setStepIndex] = useState(() => Math.max(0, model.steps.findIndex(step => step.id === restored.draft?.currentStepId)));
   const [showAll, setShowAll] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
-  const [portioning, setPortioning] = useState(restored.draft?.phase === "portioning");
+  const [portioning, setPortioning] = useState(initialPortioning || restored.draft?.phase === "portioning");
   const [cookingMotion, setCookingMotion] = useState<{
     direction: -1 | 1;
     epoch: number;

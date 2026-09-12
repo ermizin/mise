@@ -111,11 +111,35 @@
           "unit": "g"
         },
         {
+          "operationKey": "load-chicken",
+          "resourceId": "tray-1",
+          "sourceIngredientIds": [
+            "source-ingredient-2"
+          ],
+          "unit": "ml"
+        },
+        {
           "operationKey": "add-broccoli",
           "resourceId": "tray-2",
           "sourceIngredientIds": [
             "source-ingredient-6",
             "source-ingredient-7"
+          ],
+          "unit": "g"
+        },
+        {
+          "operationKey": "add-broccoli",
+          "resourceId": "tray-2",
+          "sourceIngredientIds": [
+            "source-ingredient-8"
+          ],
+          "unit": "ml"
+        },
+        {
+          "operationKey": "load-sauce",
+          "resourceId": "pan-1",
+          "sourceIngredientIds": [
+            "source-ingredient-15"
           ],
           "unit": "g"
         },
@@ -2129,6 +2153,14 @@
             "source-ingredient-4"
           ],
           "unit": "g"
+        },
+        {
+          "operationKey": "load-tray",
+          "resourceId": "tray-1",
+          "sourceIngredientIds": [
+            "source-ingredient-8"
+          ],
+          "unit": "ml"
         }
       ],
       "operations": [
