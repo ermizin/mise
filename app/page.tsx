@@ -7014,7 +7014,7 @@ export default function Home() {
   const currentTitle = titles[currentTab];
   return (
     <main
-      className={`app-shell${tab === "recipes" ? " is-catalog" : ""}${
+      className={`app-shell app-workspace${tab === "recipes" ? " is-catalog" : ""}${
         tabMotion.direction > 0 ? " is-tab-forward" : " is-tab-backward"
       }`}
     >
@@ -8277,6 +8277,14 @@ function BottomNav({
   showCompose: boolean;
   bump: Record<PrimaryTab, number>;
 }) {
+  const [desktop, setDesktop] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1100px)");
+    const update = () => setDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
   const activeIndex = Math.max(
     0,
     primaryTabs.findIndex((item) => item.id === tab),
@@ -8286,9 +8294,9 @@ function BottomNav({
     index: number,
   ) {
     let nextIndex: number | null = null;
-    if (event.key === "ArrowRight")
+    if (event.key === "ArrowRight" || (desktop && event.key === "ArrowDown"))
       nextIndex = (index + 1) % primaryTabs.length;
-    if (event.key === "ArrowLeft")
+    if (event.key === "ArrowLeft" || (desktop && event.key === "ArrowUp"))
       nextIndex = (index - 1 + primaryTabs.length) % primaryTabs.length;
     if (event.key === "Home") nextIndex = 0;
     if (event.key === "End") nextIndex = primaryTabs.length - 1;
@@ -8299,7 +8307,8 @@ function BottomNav({
     window.requestAnimationFrame(() => document.getElementById(`tab-${next}`)?.focus());
   }
   return (
-    <>
+    <nav className="app-navigation" aria-label="Навигация Mise">
+      <div className="desktop-brand"><MiseWordmark /></div>
       {showCompose && (
         <button
           className="compose-fab"
@@ -8314,6 +8323,7 @@ function BottomNav({
         className="bottom-nav glass"
         role="tablist"
         aria-label="Разделы"
+        aria-orientation={desktop ? "vertical" : "horizontal"}
         style={{ "--tab": activeIndex } as CSSProperties}
       >
         <span
@@ -8348,7 +8358,8 @@ function BottomNav({
           );
         })}
       </div>
-    </>
+      <p className="desktop-tagline">Готовим раз —<br />едим всю неделю</p>
+    </nav>
   );
 }
 
@@ -8804,6 +8815,7 @@ function WeekScreen({
       <header className="week-screen-header">
         <div>
           <MiseWordmark />
+          <p className="week-desktop-kicker kicker">План на неделю</p>
           <button
             className="week-period-button"
             onClick={onEditPeriod}
@@ -8817,7 +8829,10 @@ function WeekScreen({
             key={selectedDate}
             className={dayMotionDirection < 0 ? "motion-enter-left" : "motion-enter-right"}
           >
-            {formatDayHeading(selectedDate)}
+            <span className="week-mobile-heading">{formatDayHeading(selectedDate)}</span>
+            <button className="week-desktop-heading week-period-title" onClick={onEditPeriod} aria-label={`Изменить период ${formatDate(plan.start)} — ${formatDate(plan.end)}`}>
+              {new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long" }).formatRange(parseDate(plan.start), parseDate(plan.end))}<Icon name="chevron" size={22} />
+            </button>
           </h1>
         </div>
         <button
@@ -8862,16 +8877,6 @@ function WeekScreen({
           <p>Можно заранее проверить покупки и освободить место в морозилке.</p>
         </section>
       ) : null}
-      {planEndingSoon && (
-        <section className="plan-ending-card glass-card" role="status">
-          <div>
-            <p className="kicker">{daysUntilPlanEnd === 0 ? "План заканчивается сегодня" : `План заканчивается через ${withPlural(daysUntilPlanEnd, FORMS.day)}`}</p>
-            <h2>Собрать следующий заранее?</h2>
-            <p>Текущий план останется доступен, пока вы готовите следующий.</p>
-          </div>
-          <button className="primary-button" onClick={onRepeat}>Собрать следующий <Icon name="chevron" size={16} /></button>
-        </section>
-      )}
       <div
         className="date-strip"
         ref={stripRef}
@@ -8905,10 +8910,11 @@ function WeekScreen({
         key={selectedDate}
         className={`week-day-panel${dayMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
       >
+      <aside className="week-overview" aria-label="Питание за выбранный день">
       <section className="week-macro-card glass-card" aria-live="polite">
         <div className="week-macro-head">
           <div>
-            <p className="kicker">План на день</p>
+            <h2>{selectedDate === today ? "Сегодня по плану" : "План на день"}</h2>
             <b
               className={`week-eaten-count${
                 executionMotion?.kind.startsWith("tick")
@@ -8928,6 +8934,12 @@ function WeekScreen({
           <WeekPersonPicker people={plan.people} value={person.id} onChange={setPersonId} />
         </div>
         <div className="week-macro-body">
+          <div className="week-kcal-linear">
+            <p>Съедено <b><AnimatedNumber value={eatenMacros.kcal} /></b> из {person.daily.kcal.toLocaleString("ru-RU")} ккал</p>
+            <span className="macro-bar" role="progressbar" aria-label="Съедено калорий" aria-valuemin={0} aria-valuemax={person.daily.kcal} aria-valuenow={Math.min(eatenMacros.kcal, person.daily.kcal)} aria-valuetext={`${eatenMacros.kcal} из ${person.daily.kcal} ккал`}>
+              <i style={{ width: `${ringProgress * 100}%` }} />
+            </span>
+          </div>
           <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${person.daily.kcal} килокалорий`}>
             <svg viewBox="0 0 100 100" aria-hidden>
               <circle className="week-ring-track" cx="50" cy="50" r="44" />
@@ -8941,20 +8953,21 @@ function WeekScreen({
               />
             </svg>
             <div>
-              <b><AnimatedNumber value={eatenMacros.kcal} step={5} /></b>
-              <small>/ {person.daily.kcal}</small>
+              <b><AnimatedNumber value={eatenMacros.kcal} /></b>
+              <small>из {person.daily.kcal.toLocaleString("ru-RU")} ккал</small>
             </div>
           </div>
           <div className="week-macro-bars">
             {macroRows.map(({ key, label }) => (
               <div className={`week-macro-row macro-${key}`} key={key}>
                 <p>
-                  <span>{label}</span>
+                  <span className="week-macro-label">{label}</span>
+                  <span className="week-macro-short" aria-hidden="true">{label.slice(0, 1)}</span>
                   <b>
-                    <AnimatedNumber value={eatenMacros[key]} /> / {person.daily[key]}
+                    <AnimatedNumber value={eatenMacros[key]} /> / {person.daily[key]}<span className="week-macro-unit"> г</span>
                   </b>
                 </p>
-                <span className="macro-bar">
+                <span className="macro-bar" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={person.daily[key]} aria-valuenow={Math.min(eatenMacros[key], person.daily[key])} aria-valuetext={`${eatenMacros[key]} из ${person.daily[key]} г`}>
                   <i
                     style={{
                       width: `${Math.min(100, (eatenMacros[key] / Math.max(1, person.daily[key])) * 100)}%`,
@@ -8965,21 +8978,9 @@ function WeekScreen({
             ))}
           </div>
         </div>
-        <p className="week-balance glass-3">
-          {eatenCount === 0 ? (
-            <>
-              В плане Mise на этот день <b>{plannedMacros.kcal} ккал</b>.
-              Отмечайте съеденные порции — кольцо покажет факт.
-            </>
-          ) : (
-            <>
-              До дневного ориентира останется <b>≈ {remainingMacros.kcal} ккал</b>:
-              {` ${remainingMacros.protein} Б · ${remainingMacros.fat} Ж · ${remainingMacros.carbs} У`}.
-            </>
-          )}
-        </p>
       </section>
-      <p className="week-balance glass-3">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
+      </aside>
+      <div className="week-meals-panel">
       <div className="week-day-heading">
         <div>
           <p className="kicker">
@@ -8988,14 +8989,15 @@ function WeekScreen({
               ? " день готовки"
               : ` день ${dayIndex + 1} из ${batch.days}`}
           </p>
-          <h2>Порции на день</h2>
+          <h2><span className="week-mobile-heading">Порции на день</span><span className="week-desktop-heading">{formatDayHeading(selectedDate)}</span></h2>
+          <p className="week-desktop-heading week-day-subtitle">Порции на день</p>
         </div>
         <button
           className="text-button"
           aria-label={`Изменить меню на ${formatDate(selectedDate, true)}`}
           onClick={() => onEditMenu(batch.id)}
         >
-          Изменить меню партии
+          <Icon name="edit" size={16} /><span>Изменить меню</span>
         </button>
       </div>
       <div className="week-execution-list" aria-busy={savingExecution}>
@@ -9016,7 +9018,7 @@ function WeekScreen({
             executionMotion.kind === "tick-out";
           return (
             <article
-              className={`week-execution-row glass-card${eaten ? " is-eaten" : ""}${rowMotion}`}
+              className={`week-execution-row${eaten ? " is-eaten" : ""}${rowMotion}`}
               key={row.key}
             >
               <button
@@ -9071,12 +9073,11 @@ function WeekScreen({
               >
                 <span className="week-meal-topline">
                   <span>{mealMeta[row.slot].label}</span>
-                  <b>{formatMacro(portion.actual.kcal)} ккал</b>
                 </span>
                 <strong>{row.recipe.title}</strong>
                 <small>
-                  {portion.grams} г · Б{formatMacro(portion.actual.protein)} Ж
-                  {formatMacro(portion.actual.fat)} У{formatMacro(portion.actual.carbs)}
+                  {formatMacro(portion.actual.kcal)} ккал · {portion.grams} г
+                  <span className="week-portion-macros"> · Б {formatMacro(portion.actual.protein)} · Ж {formatMacro(portion.actual.fat)} · У {formatMacro(portion.actual.carbs)}</span>
                 </small>
                 {frozen && (
                   <span className="week-freeze-badge">
@@ -9093,59 +9094,10 @@ function WeekScreen({
           На этот день порций нет: они не входят в меню {person.name}.
         </p>
       )}
-      {tomorrowDate && (
-        <section className="week-tomorrow-card glass-card">
-          <div>
-            <h2>
-              {selectedDate === today
-                ? `Завтра, ${new Intl.DateTimeFormat("ru-RU", { weekday: "long" }).format(parseDate(tomorrowDate))}`
-                : formatDate(tomorrowDate, true)}
-            </h2>
-            <b>{withPlural(tomorrowRows.length, FORMS.portion)}</b>
-          </div>
-          <p>
-            {tomorrowRows.map((row) => (
-              <span key={row.key}>
-                {row.recipe.title}
-              </span>
-            ))}
-          </p>
-        </section>
-      )}
-      {thawTitles.length > 0 && (
-        <Note
-          tone="mint"
-          icon={<Icon name="snowflake" />}
-          label="Разморозка на завтра"
-          role="status"
-        >
-          Вечером переложите в холодильник: {thawTitles.join(", ")}.
-        </Note>
-      )}
       {executionError && (
         <Note tone="warn" role="alert" label="Изменение не сохранено">
           {executionError}
         </Note>
-      )}
-      {nextCook && (
-        <button
-          className="week-next-cook glass-card"
-          onClick={() => selectWeekDate(nextCook.start)}
-          aria-label={`Открыть следующую готовку ${nextCook.index + 1}`}
-        >
-          <div>
-            <p>Следующая готовка</p>
-            <h3>
-              Партия {nextCook.index + 1} — {formatDate(nextCook.start, true)}
-            </h3>
-            <small>
-              {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
-              {withPlural(nextCookPortions, FORMS.portion)} · ~{nextCookMinutes}{" "}
-              мин
-            </small>
-          </div>
-          <Icon name="chevron" className="soft-chevron" />
-        </button>
       )}
       <div className="week-operation-stack">
         {contactWarnings.length > 0 && (
@@ -9166,30 +9118,20 @@ function WeekScreen({
             </div>
           </section>
         )}
-        <button
-          className="batch-cooking-entry glass-card"
-          onClick={() => onOpenCooking(batch.id)}
-        >
-          <span>
-            <Icon name="pot" />
-          </span>
-          <div>
-            <b>Готовить партию по шагам</b>
-            <small>
-              {withPlural(
-                new Set(
-                  activePlan.mealSlots.flatMap((slot) =>
-                    assignmentGroupsFor(activePlan, batch, slot).map(
-                      (assignment) => assignment.recipeId,
-                    ),
-                  ),
-                ).size,
-                FORMS.dish,
-              )} · подсказки, продукты и таймер
-            </small>
+        <div className="week-cook-entry">
+          <div className="week-cook-context">
+            <span><Icon name="pot" /></span>
+            <div>
+              <b>Готовка на {withPlural(batch.days, FORMS.day)}</b>
+              <small>{withPlural(new Set(activePlan.mealSlots.flatMap((slot) => assignmentGroupsFor(activePlan, batch, slot).map((assignment) => assignment.recipeId))).size, FORMS.dish)} · партия {batch.index + 1}</small>
+            </div>
           </div>
-          <Icon name="chevron" className="entry-chevron" />
-        </button>
+          <button className="primary-button week-cook-primary" onClick={() => onOpenCooking(batch.id)}>
+            Готовить партию <Icon name="chevron" size={18} />
+          </button>
+        </div>
+        <details className="week-cooking-details">
+          <summary>Раскладка и помощь</summary>
         <button
           className={`cooking-confirm-button glass-card ${confirmedBatchIds.includes(batch.id) ? "confirmed" : ""}`}
           disabled={confirmedBatchIds.includes(batch.id)}
@@ -9223,7 +9165,77 @@ function WeekScreen({
           </div>
           <Icon name="chevron" className="entry-chevron" />
         </button>
+        </details>
       </div>
+      </div>
+      <aside className="week-followups">
+        <details className="week-nutrition-details">
+        <summary>Оценка плана</summary>
+        <p className="week-balance">
+          {eatenCount === 0 ? (
+            <>
+              В плане Mise на этот день <b>{plannedMacros.kcal} ккал</b>.
+              Отмечайте съеденные порции — прогресс покажет факт.
+            </>
+          ) : (
+            <>
+              До дневного ориентира останется <b>≈ {remainingMacros.kcal} ккал</b>:
+              {` ${remainingMacros.protein} Б · ${remainingMacros.fat} Ж · ${remainingMacros.carbs} У`}.
+            </>
+          )}
+        </p>
+        <p className="week-balance">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
+        </details>
+      {tomorrowDate && (
+        <section className="week-tomorrow-card glass-card">
+          <div>
+            <h2>
+              {selectedDate === today
+                ? `Завтра, ${new Intl.DateTimeFormat("ru-RU", { weekday: "long" }).format(parseDate(tomorrowDate))}`
+                : formatDate(tomorrowDate, true)}
+            </h2>
+            <b>{withPlural(tomorrowRows.length, FORMS.portion)}</b>
+          </div>
+          <p>
+            {tomorrowRows.map((row) => (
+              <span key={row.key}>
+                {row.recipe.title}
+              </span>
+            ))}
+          </p>
+        </section>
+      )}
+      {thawTitles.length > 0 && (
+        <Note
+          tone="mint"
+          icon={<Icon name="snowflake" />}
+          label="Разморозка на завтра"
+          role="status"
+        >
+          Вечером переложите в холодильник: {thawTitles.join(", ")}.
+        </Note>
+      )}
+      {nextCook && (
+        <button
+          className="week-next-cook glass-card"
+          onClick={() => selectWeekDate(nextCook.start)}
+          aria-label={`Открыть следующую готовку ${nextCook.index + 1}`}
+        >
+          <div>
+            <p>Следующая готовка</p>
+            <h3>
+              Партия {nextCook.index + 1} — {formatDate(nextCook.start, true)}
+            </h3>
+            <small>
+              {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
+              {withPlural(nextCookPortions, FORMS.portion)} · ~{nextCookMinutes}{" "}
+              мин
+            </small>
+          </div>
+          <Icon name="chevron" className="soft-chevron" />
+        </button>
+      )}
+      </aside>
       {selectedDate !== clampDate(today, plan.start, plan.end) && (
         <button
           className="text-button week-today-button"
@@ -9235,6 +9247,16 @@ function WeekScreen({
         </button>
       )}
       </div>
+      {planEndingSoon && (
+        <section className="plan-ending-card glass-card" role="status">
+          <div>
+            <p className="kicker">{daysUntilPlanEnd === 0 ? "План заканчивается сегодня" : `План заканчивается через ${withPlural(daysUntilPlanEnd, FORMS.day)}`}</p>
+            <h2>Собрать следующий заранее?</h2>
+            <p>Текущий план останется доступен, пока вы готовите следующий.</p>
+          </div>
+          <button className="primary-button" onClick={onRepeat}>Собрать следующий <Icon name="chevron" size={16} /></button>
+        </section>
+      )}
       </div>
     </section>
   );

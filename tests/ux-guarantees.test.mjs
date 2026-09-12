@@ -117,7 +117,7 @@ test("batch cooking follows screen 5b without inventing a parallel schedule", as
   ]);
   assert.match(page, /function BatchCookingView/, "batch cooking is a dedicated view");
   assert.match(page, /function buildBatchCookingModel/, "one view model aggregates the batch");
-  assert.match(page, /Готовить партию по шагам/, "the week exposes the cooking mode");
+  assert.match(page, /onClick=\{\(\) => onOpenCooking\(batch\.id\)\}>\s*Готовить партию/, "the approved week action opens the batch cooking mode");
   assert.match(page, /Шаг готов — дальше/, "the primary action advances one step");
   assert.match(page, /Продукты блюда/, "calculated products stay available in context");
   assert.match(page, /Активное время · ориентир/, "time is not presented as an exact schedule");
