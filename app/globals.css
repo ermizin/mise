@@ -7476,15 +7476,24 @@ p {
 }
 .batch-step-list li > button {
   width: 28px;
+  min-width: 28px;
   height: 28px;
+  min-height: 28px;
+  padding: 0;
   display: grid;
   place-items: center;
+  flex: none;
   border: 1px solid var(--glass-3-border);
   border-radius: var(--r-pill);
   color: var(--ink-muted);
   background: var(--glass-3-bg);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.batch-step-list li > button[data-step-digits="3"] {
+  font-size: var(--text-min);
 }
 .batch-step-list li.is-current > button {
   color: #fff;

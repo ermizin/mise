@@ -13859,6 +13859,7 @@ function BatchCookingView({
                   key={step.id}
                 >
                   <button
+                    data-step-digits={String(absoluteIndex + 1).length}
                     disabled={absoluteIndex > stepIndex}
                     onClick={() => isComplete && goToStep(absoluteIndex)}
                     aria-current={isCurrent ? "step" : undefined}
