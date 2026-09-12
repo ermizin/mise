@@ -77,11 +77,17 @@ test("the hardware back button stays inside the app", async () => {
 
 test("the week screen answers what to do today", async () => {
   const page = await read("app/page.tsx");
+  const start = page.indexOf("function WeekScreen(");
+  const end = page.indexOf("function ShoppingScreen(", start);
+  assert.ok(start >= 0 && end > start, "the week screen source is present");
+  const week = page.slice(start, end);
   assert.match(page, /clampDate\(today, plan\.start, plan\.end\)/, "the week opens on today");
   assert.match(page, /Повторить план/, "a finished plan offers the next cycle");
   assert.match(page, /today-dot/, "today is marked in the date strip");
   assert.match(page, /Вечером переложите в холодильник/, "frozen portions are announced a day ahead");
   assert.doesNotMatch(page, /name: index === 0 \? "Максим"/, "no personal name is hardcoded");
+  assert.match(week, /Б\{formatMacro\(portion\.actual\.protein\)\} Ж/, "week rows retain macros");
+  assert.doesNotMatch(week, /\{portion\.grams\}\s*г/, "week rows do not show portion weight");
 });
 
 test("batch cooking follows screen 5b without inventing a parallel schedule", async () => {

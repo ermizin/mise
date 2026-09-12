@@ -8628,8 +8628,8 @@ function WeekScreen({
                 </span>
                 <strong>{row.recipe.title}</strong>
                 <small>
-                  {portion.grams} г · Б{formatMacro(portion.actual.protein)} Ж
-                  {formatMacro(portion.actual.fat)} У{formatMacro(portion.actual.carbs)}
+                  Б{formatMacro(portion.actual.protein)} Ж{formatMacro(portion.actual.fat)} У
+                  {formatMacro(portion.actual.carbs)}
                 </small>
                 {frozen && (
                   <span className="week-freeze-badge">
