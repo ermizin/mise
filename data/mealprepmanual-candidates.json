@@ -39524,8 +39524,168 @@
       "titleRu": "Корейское куриное рагу дакдоритан",
       "paraphrasedInstructionDraft": [
         {
-          "id": "editorial-step-1",
-          "text": "Приготовьте рис. В большой кастрюле обжарьте зелёный лук, морковь, картофель, сельдерей и имбирь 5–7 минут, добавьте чеснок. Подрумяньте курицу 3–4 минуты. Смешайте соевый соус, мёд, кочуджан и кочугару, влейте с бульоном; накройте и томите на среднем-слабом огне 20 минут. Проверьте мягкость картофеля и при необходимости уварите без крышки.",
+          "id": "dakdoritang-rice",
+          "text": "Разрыхлите готовый рис и отложите его до раскладки по контейнерам.",
+          "ingredientIds": [
+            "source-ingredient-1"
+          ],
+          "action": "prepare",
+          "dependsOn": [],
+          "duration": "2 мин",
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "dakdoritang-prep",
+          "text": "Нарежьте сельдерей, морковь, картофель и зелёный лук удобными кусочками; измельчите имбирь и чеснок.",
+          "ingredientIds": [
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8"
+          ],
+          "action": "prepare",
+          "dependsOn": [
+            "dakdoritang-rice"
+          ],
+          "duration": "10 мин",
+          "equipment": [
+            "knife",
+            "cutting_board"
+          ]
+        },
+        {
+          "id": "dakdoritang-sauce",
+          "text": "В отдельной миске смешайте соевый соус, мёд, кочуджан, кочугару и крахмальную смесь до однородности.",
+          "ingredientIds": [
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
+          ],
+          "action": "mix",
+          "dependsOn": [
+            "dakdoritang-prep"
+          ],
+          "duration": "3 мин",
+          "equipment": [
+            "mixing_bowl"
+          ]
+        },
+        {
+          "id": "dakdoritang-vegetables",
+          "text": "Разогрейте масло в большой кастрюле. Добавьте зелёный лук, морковь, картофель, сельдерей и имбирь; обжаривайте 5–7 минут, затем вмешайте чеснок.",
+          "ingredientIds": [
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-10"
+          ],
+          "action": "saute",
+          "dependsOn": [
+            "dakdoritang-sauce"
+          ],
+          "duration": "5–7 мин",
+          "equipment": [
+            "pot"
+          ]
+        },
+        {
+          "id": "dakdoritang-chicken",
+          "text": "Добавьте курицу к овощам и подрумянивайте 3–4 минуты, переворачивая кусочки.",
+          "ingredientIds": [
+            "source-ingredient-2"
+          ],
+          "action": "saute",
+          "dependsOn": [
+            "dakdoritang-vegetables"
+          ],
+          "duration": "3–4 мин",
+          "equipment": [
+            "pot"
+          ]
+        },
+        {
+          "id": "dakdoritang-combine",
+          "text": "Влейте в кастрюлю подготовленный соус и бульон, хорошо перемешайте и доведите до слабого кипения.",
+          "ingredientIds": [
+            "source-ingredient-9",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
+          ],
+          "action": "mix",
+          "dependsOn": [
+            "dakdoritang-chicken"
+          ],
+          "duration": "2 мин",
+          "equipment": [
+            "pot"
+          ]
+        },
+        {
+          "id": "dakdoritang-simmer",
+          "text": "Накройте кастрюлю крышкой и томите рагу на среднем-слабом огне 20 минут.",
+          "ingredientIds": [
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-12",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
+          ],
+          "action": "simmer",
+          "dependsOn": [
+            "dakdoritang-combine"
+          ],
+          "duration": "20 мин",
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "картофель мягкий, курица полностью готова"
+        },
+        {
+          "id": "dakdoritang-finish",
+          "text": "Проверьте мягкость картофеля и готовность курицы. Если соус слишком жидкий, снимите крышку и уварите его ещё 3–5 минут.",
+          "ingredientIds": [
+            "source-ingredient-2",
+            "source-ingredient-5",
+            "source-ingredient-9",
+            "source-ingredient-11",
+            "source-ingredient-13",
+            "source-ingredient-14",
+            "source-ingredient-15"
+          ],
+          "action": "simmer",
+          "dependsOn": [
+            "dakdoritang-simmer"
+          ],
+          "duration": "3–5 мин",
+          "equipment": [
+            "pot"
+          ],
+          "donenessCue": "картофель легко прокалывается, курица полностью готова, соус загустел"
+        },
+        {
+          "id": "dakdoritang-portion",
+          "text": "Разложите готовый рис и рагу по рассчитанным контейнерам.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -39543,14 +39703,14 @@
             "source-ingredient-14",
             "source-ingredient-15"
           ],
-          "action": "simmer",
-          "dependsOn": [],
-          "duration": "5–7 мин; 3–4 мин; затем 20 мин",
-          "equipment": [
-            "pot",
-            "mixing_bowl"
+          "action": "portion",
+          "dependsOn": [
+            "dakdoritang-finish"
           ],
-          "donenessCue": "картофель мягкий, курица готова"
+          "duration": "5 мин",
+          "equipment": [
+            "containers"
+          ]
         }
       ],
       "proceduralStatus": "ready",
