@@ -1,0 +1,2685 @@
+{
+  "version": 4,
+  "reviewScope": "Text comparison with current runtime data; not cooked or food-safety validation.",
+  "recipes": [
+    {
+      "recipeId": "tmpm-28247",
+      "methodId": "original",
+      "reviewed": true,
+      "capacityResourceId": "tray-1",
+      "capacityIngredientIds": [
+        "chicken_thigh_raw"
+      ],
+      "sourceStepsChecksum": "9ce080b8abe94134b89f8919b7c637154c3edd929b264231234c5e93abcd027a",
+      "sourceFingerprint": "c68f2e5f3595406d14a883b5201fa6621e2146ed42ccc157be4e1b700a08d530",
+      "fullSourceText": [
+        "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок.",
+        "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения.",
+        "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+      ],
+      "reviewEvidence": [
+        [
+          0,
+          "Разогрейте духовку до 220 °C"
+        ],
+        [
+          1,
+          "запекайте на нижней полке 25 минут"
+        ],
+        [
+          2,
+          "подрумяньте под грилем 3–6 минут"
+        ]
+      ],
+      "ingredientTrace": [
+        [
+          "source-ingredient-6",
+          "broccoli_raw",
+          "prep-vegetables"
+        ],
+        [
+          "source-ingredient-7",
+          "sweet_potato_raw",
+          "prep-vegetables"
+        ],
+        [
+          "source-ingredient-15",
+          "garlic_raw",
+          "prep-vegetables"
+        ],
+        [
+          "source-ingredient-9",
+          "rice_raw",
+          "rice-rinse"
+        ],
+        [
+          "source-ingredient-1",
+          "chicken_thigh_raw",
+          "load-chicken"
+        ],
+        [
+          "source-ingredient-2",
+          "olive_oil_processed",
+          "load-chicken"
+        ],
+        [
+          "source-ingredient-8",
+          "olive_oil_processed",
+          "load-vegetables"
+        ],
+        [
+          "source-ingredient-3",
+          "soy_processed",
+          "load-sauce"
+        ],
+        [
+          "source-ingredient-10",
+          "soy_processed",
+          "load-sauce"
+        ],
+        [
+          "source-ingredient-11",
+          "mirin_processed",
+          "load-sauce"
+        ],
+        [
+          "source-ingredient-13",
+          "vinegar_processed",
+          "load-sauce"
+        ],
+        [
+          "source-ingredient-14",
+          "brown_sugar_processed",
+          "load-sauce"
+        ]
+      ],
+      "cookingLoads": [
+        {
+          "operationKey": "rice-load",
+          "resourceId": "pot-1",
+          "sourceIngredientIds": [
+            "source-ingredient-9"
+          ],
+          "unit": "g"
+        },
+        {
+          "operationKey": "load-chicken",
+          "resourceId": "tray-1",
+          "sourceIngredientIds": [
+            "source-ingredient-1"
+          ],
+          "unit": "g"
+        },
+        {
+          "operationKey": "add-broccoli",
+          "resourceId": "tray-2",
+          "sourceIngredientIds": [
+            "source-ingredient-6",
+            "source-ingredient-7"
+          ],
+          "unit": "g"
+        },
+        {
+          "operationKey": "load-sauce",
+          "resourceId": "pan-1",
+          "sourceIngredientIds": [
+            "source-ingredient-3",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-13",
+            "source-ingredient-14"
+          ],
+          "unit": "ml"
+        }
+      ],
+      "operations": [
+        {
+          "key": "prep-vegetables",
+          "kind": "prep",
+          "title": "Нарежьте брокколи на соцветия, батат крупными кусочками, чеснок измельчите",
+          "durationSeconds": 240,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-6",
+            "source-ingredient-7",
+            "source-ingredient-15"
+          ],
+          "estimatedActive": true,
+          "preparationCuts": {
+            "source-ingredient-6": "florets",
+            "source-ingredient-7": "large-pieces",
+            "source-ingredient-15": "minced"
+          }
+        },
+        {
+          "key": "rice-rinse",
+          "kind": "prep",
+          "title": "Промойте сухой рис до прозрачной воды",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-9"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "rice-load",
+          "kind": "start_heat",
+          "title": "Поставьте рис с водой на огонь по инструкции на упаковке",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "rice-rinse"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "pot-1",
+              "kind": "pot",
+              "releaseAfterOpId": "wash-rice"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner",
+              "releaseAfterOpId": "rice-unload"
+            }
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "rice-wait",
+          "kind": "heat",
+          "title": "Готовьте рис по времени на упаковке",
+          "durationSeconds": 0,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "rice-load"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0,
+          "unknownDuration": true,
+          "timeInputBeforeCreate": true
+        },
+        {
+          "key": "rice-check",
+          "kind": "intervention",
+          "title": "Проверьте готовность риса и снимите с огня",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "rice-wait"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "rice-unload",
+          "kind": "unload",
+          "title": "Переложите рис из кастрюли в чистую ёмкость",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "rice-check"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "wash-rice",
+          "kind": "wash",
+          "title": "Вымойте освободившуюся кастрюлю",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "rice-unload"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "preheat",
+          "kind": "start_heat",
+          "title": "Разогрейте духовку до 220 °C и подтвердите готовность",
+          "durationSeconds": 0,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "unknownDuration": true,
+          "timeInputBeforeCreate": true,
+          "requiresCheckAtEnd": true
+        },
+        {
+          "key": "load-chicken",
+          "kind": "start_heat",
+          "title": "Выложите курицу с маслом на фольгированный противень и поставьте в духовку",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2"
+          ],
+          "dependsOn": [
+            "preheat"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "tray-1",
+              "kind": "tray",
+              "releaseAfterOpId": "wash-chicken-tray"
+            },
+            {
+              "resourceId": "cook",
+              "kind": "cook",
+              "releaseAfterOpId": "wash-hands"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven",
+              "releaseAfterOpId": "unload-chicken"
+            }
+          ],
+          "estimatedActive": true,
+          "rawMeat": true
+        },
+        {
+          "key": "wash-hands",
+          "kind": "wash",
+          "title": "Вымойте руки и инвентарь после сырой курицы",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-chicken"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "chicken-heat",
+          "kind": "heat",
+          "title": "Запекайте курицу на нижней полке",
+          "durationSeconds": 1500,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-chicken"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "check-chicken",
+          "kind": "intervention",
+          "title": "Проверьте готовность курицы перед нарезкой",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "chicken-heat"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "unload-chicken",
+          "kind": "unload",
+          "title": "Достаньте курицу; противень ещё понадобится для гриля",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "check-chicken"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "load-vegetables",
+          "kind": "start_heat",
+          "title": "Выложите батат с маслом на второй противень и поставьте в духовку",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-8"
+          ],
+          "dependsOn": [
+            "preheat",
+            "prep-vegetables"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "tray-2",
+              "kind": "tray",
+              "releaseAfterOpId": "wash-vegetable-tray"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven",
+              "releaseAfterOpId": "unload-vegetables"
+            }
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "vegetable-heat",
+          "kind": "heat",
+          "title": "Запекайте батат до добавления брокколи",
+          "durationSeconds": 600,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-vegetables"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "add-broccoli",
+          "kind": "intervention",
+          "title": "Добавьте подготовленную брокколи на противень",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "vegetable-heat"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "vegetable-finish",
+          "kind": "heat",
+          "title": "Запекайте батат с брокколи; затем проверьте мягкость",
+          "durationSeconds": 480,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "add-broccoli"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "check-vegetables",
+          "kind": "intervention",
+          "title": "Проверьте мягкость и румяность овощей; при необходимости продолжите нагрев",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "vegetable-finish"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "unload-vegetables",
+          "kind": "unload",
+          "title": "Достаньте овощи и переложите в чистую ёмкость",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "check-vegetables"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "wash-vegetable-tray",
+          "kind": "wash",
+          "title": "Вымойте противень после овощей",
+          "durationSeconds": 120,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "tray-2",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload-vegetables"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "load-sauce",
+          "kind": "start_heat",
+          "title": "Соедините компоненты терияки и подготовленный чеснок в сотейнике",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pan-1",
+              "kind": "pan"
+            },
+            {
+              "resourceId": "burner-2",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-3",
+            "source-ingredient-10",
+            "source-ingredient-11",
+            "source-ingredient-13",
+            "source-ingredient-14"
+          ],
+          "dependsOn": [
+            "prep-vegetables"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "pan-1",
+              "kind": "pan",
+              "releaseAfterOpId": "wash-sauce"
+            },
+            {
+              "resourceId": "burner-2",
+              "kind": "burner",
+              "releaseAfterOpId": "unload-sauce"
+            }
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "sauce-heat",
+          "kind": "heat",
+          "title": "Доведите соус до слабого кипения; томите, взбивая, до лёгкого загустения",
+          "durationSeconds": 480,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pan-1",
+              "kind": "pan"
+            },
+            {
+              "resourceId": "burner-2",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-sauce"
+          ],
+          "requiresCheckAtEnd": true
+        },
+        {
+          "key": "unload-sauce",
+          "kind": "unload",
+          "title": "Снимите соус с огня и перелейте в чистую ёмкость",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pan-1",
+              "kind": "pan"
+            },
+            {
+              "resourceId": "burner-2",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "sauce-heat"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "wash-sauce",
+          "kind": "wash",
+          "title": "Вымойте сотейник",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "pan-1",
+              "kind": "pan"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload-sauce"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "glaze",
+          "kind": "prep",
+          "title": "Нарежьте курицу, покройте двумя третями соуса и верните на противень",
+          "durationSeconds": 150,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload-chicken",
+            "unload-sauce",
+            "wash-hands"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "grill-load",
+          "kind": "start_heat",
+          "title": "Поставьте курицу под гриль",
+          "durationSeconds": 30,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "glaze"
+          ],
+          "estimatedActive": true,
+          "resourceHolds": [
+            {
+              "resourceId": "oven-1",
+              "kind": "oven",
+              "releaseAfterOpId": "unload-final"
+            }
+          ]
+        },
+        {
+          "key": "grill",
+          "kind": "heat",
+          "title": "Подрумянивайте под грилем и постоянно следите, чтобы курица не сгорела",
+          "durationSeconds": 180,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "grill-load"
+          ],
+          "requiresCheckAtEnd": true
+        },
+        {
+          "key": "unload-final",
+          "kind": "unload",
+          "title": "Достаньте курицу и переложите с противня",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "grill"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "wash-chicken-tray",
+          "kind": "wash",
+          "title": "Вымойте противень, нож и доску после курицы",
+          "durationSeconds": 150,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload-final"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "portion",
+          "kind": "portion",
+          "title": "Подготовьте контейнеры; в конце готовки взвесьте курицу, рис и овощи для личной раскладки",
+          "durationSeconds": 120,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload-final",
+            "unload-vegetables",
+            "rice-unload"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "store",
+          "kind": "store",
+          "title": "Уберите приготовленное на хранение по раскладке плана; оставшийся соус сохраните отдельно",
+          "durationSeconds": 120,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "portion"
+          ],
+          "estimatedActive": true
+        }
+      ],
+      "sourceDefinition": {
+        "steps": [
+          "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке. Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок.",
+          "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут. Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут. Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения.",
+          "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
+        ],
+        "ingredients": [
+          {
+            "sourceIngredientId": "source-ingredient-1",
+            "canonicalIngredientId": "chicken_thigh_raw",
+            "baseAmount": 181.6,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-2",
+            "canonicalIngredientId": "olive_oil_processed",
+            "baseAmount": 3.3333333333333335,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-3",
+            "canonicalIngredientId": "soy_processed",
+            "baseAmount": 2.586206896551724,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-6",
+            "canonicalIngredientId": "broccoli_raw",
+            "baseAmount": 90.8,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-7",
+            "canonicalIngredientId": "sweet_potato_raw",
+            "baseAmount": 60,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-8",
+            "canonicalIngredientId": "olive_oil_processed",
+            "baseAmount": 3.3333333333333335,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-9",
+            "canonicalIngredientId": "rice_raw",
+            "baseAmount": 45,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-10",
+            "canonicalIngredientId": "soy_processed",
+            "baseAmount": 10.344827586206897,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-11",
+            "canonicalIngredientId": "mirin_processed",
+            "baseAmount": 11.428571428571427,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-13",
+            "canonicalIngredientId": "vinegar_processed",
+            "baseAmount": 3,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-14",
+            "canonicalIngredientId": "brown_sugar_processed",
+            "baseAmount": 5.217391304347826,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-15",
+            "canonicalIngredientId": "garlic_raw",
+            "baseAmount": 2,
+            "unit": "g"
+          }
+        ],
+        "method": {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "baking_dish",
+            "oven",
+            "pot",
+            "stove"
+          ]
+        }
+      },
+      "reviewScope": "Source text compared with the runtime recipe; active estimates are labelled; unknown heating, cooling and storage durations require explicit input. Not a kitchen test."
+    },
+    {
+      "recipeId": "tmpm-28083",
+      "methodId": "original",
+      "reviewed": true,
+      "capacityResourceId": "pot-1",
+      "capacityIngredientIds": [
+        "beef_mince_raw",
+        "pasta_raw"
+      ],
+      "sourceStepsChecksum": "b336a548fe20a54a733a9e9d2eebead5e09ccc64ea6ce6e14935a671a080ba24",
+      "sourceFingerprint": "eb4c1f49a4568bf83bffae5459114b6a42e33621bd8319025403b51f268e42ed",
+      "fullSourceText": [
+        "Нарежьте перец средним кубиком, зелёный лук — тонкими кольцами, отделив зелёные верхушки. Подготовьте приправы.",
+        "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата.",
+        "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+      ],
+      "reviewEvidence": [
+        [
+          0,
+          "Нарежьте перец средним кубиком"
+        ],
+        [
+          1,
+          "прогрейте около 1 минуты"
+        ],
+        [
+          2,
+          "готовьте на слабом огне 10–12 минут"
+        ]
+      ],
+      "ingredientTrace": [
+        [
+          "source-ingredient-4",
+          "pepper_raw",
+          "prep-vegetables"
+        ],
+        [
+          "source-ingredient-5",
+          "pepper_raw",
+          "prep-vegetables"
+        ],
+        [
+          "source-ingredient-6",
+          "onion_raw",
+          "prep-vegetables"
+        ],
+        [
+          "source-ingredient-1",
+          "beef_mince_raw",
+          "load-beef"
+        ],
+        [
+          "source-ingredient-2",
+          "olive_oil_processed",
+          "load-beef"
+        ],
+        [
+          "source-ingredient-3",
+          "pasta_raw",
+          "load-pasta"
+        ],
+        [
+          "source-ingredient-7",
+          "tomato_passata_processed",
+          "load-pasta"
+        ],
+        [
+          "source-ingredient-8",
+          "broth_processed",
+          "load-pasta"
+        ],
+        [
+          "source-ingredient-9",
+          "milk_processed",
+          "unload"
+        ],
+        [
+          "source-ingredient-15",
+          "cheese_processed",
+          "portion"
+        ]
+      ],
+      "cookingLoads": [
+        {
+          "operationKey": "load-pasta",
+          "resourceId": "pot-1",
+          "sourceIngredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-3",
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6"
+          ],
+          "unit": "g"
+        },
+        {
+          "operationKey": "load-pasta",
+          "resourceId": "pot-1",
+          "sourceIngredientIds": [
+            "source-ingredient-2",
+            "source-ingredient-7",
+            "source-ingredient-8",
+            "source-ingredient-9"
+          ],
+          "unit": "ml"
+        }
+      ],
+      "operations": [
+        {
+          "key": "prep-vegetables",
+          "kind": "prep",
+          "title": "Нарежьте перец средним кубиком, зелёный лук тонкими кольцами; отложите зелёные верхушки",
+          "durationSeconds": 180,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Нарежьте перец средним кубиком, зелёный лук — тонкими кольцами, отделив зелёные верхушки. Подготовьте приправы."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-4",
+            "source-ingredient-5",
+            "source-ingredient-6"
+          ],
+          "estimatedActive": true,
+          "preparationCuts": {
+            "source-ingredient-4": "medium-dice",
+            "source-ingredient-5": "medium-dice",
+            "source-ingredient-6": "thin-rings-reserve-greens"
+          }
+        },
+        {
+          "key": "load-beef",
+          "kind": "start_heat",
+          "title": "Разогрейте масло и выложите говяжий фарш в большую кастрюлю",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2"
+          ],
+          "dependsOn": [
+            "prep-vegetables"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "pot-1",
+              "kind": "pot",
+              "releaseAfterOpId": "wash-pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner",
+              "releaseAfterOpId": "unload"
+            },
+            {
+              "resourceId": "cook",
+              "kind": "cook",
+              "releaseAfterOpId": "wash-hands"
+            }
+          ],
+          "estimatedActive": true,
+          "rawMeat": true
+        },
+        {
+          "key": "wash-hands",
+          "kind": "wash",
+          "title": "Вымойте руки и инвентарь после сырого фарша",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-beef"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "brown-beef",
+          "kind": "heat",
+          "title": "Обжаривайте до румяной корочки, разберите лопаткой; добавьте перец и белые части лука",
+          "durationSeconds": 0,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-beef",
+            "wash-hands"
+          ],
+          "unknownDuration": true,
+          "timeInputBeforeCreate": true,
+          "requiresCheckAtEnd": true
+        },
+        {
+          "key": "spices",
+          "kind": "intervention",
+          "title": "Вмешайте специи и прогрейте до аромата",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "brown-beef"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "load-pasta",
+          "kind": "start_heat",
+          "title": "Влейте томаты и бульон, доведите до кипения; добавьте пасту и накройте",
+          "durationSeconds": 180,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-3",
+            "source-ingredient-7",
+            "source-ingredient-8"
+          ],
+          "dependsOn": [
+            "spices"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "pasta-heat",
+          "kind": "heat",
+          "title": "Готовьте пасту на слабом огне до перемешивания",
+          "durationSeconds": 300,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-pasta"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "stir",
+          "kind": "intervention",
+          "title": "Один раз перемешайте пасту и снова накройте",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "pasta-heat"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "pasta-finish",
+          "kind": "heat",
+          "title": "Продолжайте готовить пасту до первой проверки готовности",
+          "durationSeconds": 300,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "stir"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "check-pasta",
+          "kind": "intervention",
+          "title": "Проверьте готовность пасты; при необходимости продлите нагрев",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "pasta-finish"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "unload",
+          "kind": "unload",
+          "title": "Снимите с огня, вмешайте молоко и переложите блюдо в чистую ёмкость",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "burner-1",
+              "kind": "burner"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-9"
+          ],
+          "dependsOn": [
+            "check-pasta"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "wash-pot",
+          "kind": "wash",
+          "title": "Вымойте кастрюлю, нож и доску",
+          "durationSeconds": 150,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "pot-1",
+              "kind": "pot"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "portion",
+          "kind": "portion",
+          "title": "Взвесьте блюдо при завершении готовки, разложите по контейнерам, добавьте сыр и зелёные верхушки",
+          "durationSeconds": 150,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-15"
+          ],
+          "dependsOn": [
+            "unload"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "store",
+          "kind": "store",
+          "title": "Уберите контейнеры на хранение по раскладке плана",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "portion"
+          ],
+          "estimatedActive": true
+        }
+      ],
+      "sourceDefinition": {
+        "steps": [
+          "Нарежьте перец средним кубиком, зелёный лук — тонкими кольцами, отделив зелёные верхушки. Подготовьте приправы.",
+          "В большой кастрюле на среднем-сильном огне обжарьте говядину в масле; после появления румяной корочки разберите её лопаткой и добавьте перец с белыми частями лука. Вмешайте специи и прогрейте около 1 минуты до аромата.",
+          "Влейте томаты и бульон, доведите до кипения, добавьте пасту, накройте и готовьте на слабом огне 10–12 минут, один раз перемешав через 5–6 минут. Снимите с огня, вмешайте молоко, разложите на 5 порций, сверху добавьте сыр и зелёный лук."
+        ],
+        "ingredients": [
+          {
+            "sourceIngredientId": "source-ingredient-1",
+            "canonicalIngredientId": "beef_mince_raw",
+            "baseAmount": 181.6,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-2",
+            "canonicalIngredientId": "olive_oil_processed",
+            "baseAmount": 3.3333333333333335,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-3",
+            "canonicalIngredientId": "pasta_raw",
+            "baseAmount": 56.6,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-4",
+            "canonicalIngredientId": "pepper_raw",
+            "baseAmount": 30,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-5",
+            "canonicalIngredientId": "pepper_raw",
+            "baseAmount": 30,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-6",
+            "canonicalIngredientId": "onion_raw",
+            "baseAmount": 20,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-7",
+            "canonicalIngredientId": "tomato_passata_processed",
+            "baseAmount": 80.76923076923076,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-8",
+            "canonicalIngredientId": "broth_processed",
+            "baseAmount": 96,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-9",
+            "canonicalIngredientId": "milk_processed",
+            "baseAmount": 46.60194174757281,
+            "unit": "ml"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-15",
+            "canonicalIngredientId": "cheese_processed",
+            "baseAmount": 16.8,
+            "unit": "g"
+          }
+        ],
+        "method": {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "pan",
+            "pot",
+            "stove"
+          ]
+        }
+      },
+      "reviewScope": "Source text compared with the runtime recipe; active estimates are labelled; unknown heating, cooling and storage durations require explicit input. Not a kitchen test."
+    },
+    {
+      "recipeId": "tmpm-26965",
+      "methodId": "original",
+      "reviewed": true,
+      "capacityResourceId": "tray-1",
+      "capacityIngredientIds": [
+        "chicken_mince_raw"
+      ],
+      "sourceStepsChecksum": "4031d22120fa5128bccbbcfc19a71c1f40bf5fa978c52362f46086a2fd84713c",
+      "sourceFingerprint": "ed340cabdcd1ef22e21c0f3295e1a1266d71ee95011d6a7a571dd2c9d3c7b638",
+      "fullSourceText": [
+        "Разогрейте духовку до 205 °C. Измельчите батат до мелкой «рисовой» крошки, нарежьте зелёный лук, смешайте с яйцами, овсяной мукой, приправами и куриным фаршем.",
+        "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты.",
+        "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+      ],
+      "reviewEvidence": [
+        [
+          0,
+          "Разогрейте духовку до 205 °C"
+        ],
+        [
+          1,
+          "Выпекайте 8 минут, переверните и готовьте ещё 4 минуты"
+        ],
+        [
+          2,
+          "Остудите на решётке до прекращения пара"
+        ]
+      ],
+      "ingredientTrace": [
+        [
+          "source-ingredient-2",
+          "sweet_potato_raw",
+          "prep"
+        ],
+        [
+          "source-ingredient-4",
+          "onion_raw",
+          "prep"
+        ],
+        [
+          "source-ingredient-1",
+          "chicken_mince_raw",
+          "mix"
+        ],
+        [
+          "source-ingredient-3",
+          "egg_raw",
+          "mix"
+        ],
+        [
+          "source-ingredient-8",
+          "oat_flour_raw",
+          "mix"
+        ]
+      ],
+      "cookingLoads": [
+        {
+          "operationKey": "load-tray",
+          "resourceId": "tray-1",
+          "sourceIngredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-2",
+            "source-ingredient-3",
+            "source-ingredient-4"
+          ],
+          "unit": "g"
+        }
+      ],
+      "operations": [
+        {
+          "key": "preheat",
+          "kind": "start_heat",
+          "title": "Разогрейте духовку до 205 °C и подтвердите готовность",
+          "durationSeconds": 0,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Разогрейте духовку до 205 °C. Измельчите батат до мелкой «рисовой» крошки, нарежьте зелёный лук, смешайте с яйцами, овсяной мукой, приправами и куриным фаршем."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "unknownDuration": true,
+          "timeInputBeforeCreate": true,
+          "requiresCheckAtEnd": true
+        },
+        {
+          "key": "prep",
+          "kind": "prep",
+          "title": "Измельчите батат до мелкой рисовой крошки и нарежьте зелёный лук",
+          "durationSeconds": 180,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "blender-1",
+              "kind": "blender"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Разогрейте духовку до 205 °C. Измельчите батат до мелкой «рисовой» крошки, нарежьте зелёный лук, смешайте с яйцами, овсяной мукой, приправами и куриным фаршем."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-2",
+            "source-ingredient-4"
+          ],
+          "estimatedActive": true,
+          "preparationCuts": {
+            "source-ingredient-2": "rice-crumbs",
+            "source-ingredient-4": "thin-rings"
+          }
+        },
+        {
+          "key": "mix",
+          "kind": "prep",
+          "title": "Смешайте с яйцом, овсяной мукой, приправами и куриным фаршем",
+          "durationSeconds": 120,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            }
+          ],
+          "sourceStepIndexes": [
+            0
+          ],
+          "sourceCitations": [
+            [
+              0,
+              "Разогрейте духовку до 205 °C. Измельчите батат до мелкой «рисовой» крошки, нарежьте зелёный лук, смешайте с яйцами, овсяной мукой, приправами и куриным фаршем."
+            ]
+          ],
+          "allocationSourceIngredientIds": [
+            "source-ingredient-1",
+            "source-ingredient-3",
+            "source-ingredient-8"
+          ],
+          "dependsOn": [
+            "prep"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "board-1",
+              "kind": "board",
+              "releaseAfterOpId": "wash-raw-tools"
+            },
+            {
+              "resourceId": "cook",
+              "kind": "cook",
+              "releaseAfterOpId": "wash-raw-tools"
+            }
+          ],
+          "estimatedActive": true,
+          "rawMeat": true
+        },
+        {
+          "key": "load-tray",
+          "kind": "start_heat",
+          "title": "Сформуйте диски диаметром 5–7,5 см и толщиной 0,6–1,2 см на застеленном противне и поставьте в духовку",
+          "durationSeconds": 240,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "mix",
+            "preheat"
+          ],
+          "resourceHolds": [
+            {
+              "resourceId": "tray-1",
+              "kind": "tray",
+              "releaseAfterOpId": "wash-tray"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven",
+              "releaseAfterOpId": "unload"
+            }
+          ],
+          "estimatedActive": true,
+          "rawMeat": true
+        },
+        {
+          "key": "wash-raw-tools",
+          "kind": "wash",
+          "title": "Вымойте руки, доску, нож и инвентарь после сырого фарша",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "board-1",
+              "kind": "board"
+            },
+            {
+              "resourceId": "knife-1",
+              "kind": "knife"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-tray"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "bake-first",
+          "kind": "heat",
+          "title": "Выпекайте наггетсы до переворота",
+          "durationSeconds": 480,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "load-tray"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "turn",
+          "kind": "intervention",
+          "title": "Переверните наггетсы",
+          "durationSeconds": 60,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "bake-first"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "bake-second",
+          "kind": "heat",
+          "title": "Выпекайте после переворота",
+          "durationSeconds": 240,
+          "attention": "background",
+          "resources": [
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "turn"
+          ],
+          "requiresCheckAtEnd": true,
+          "checkDeadlineSeconds": 0
+        },
+        {
+          "key": "check-bake",
+          "kind": "intervention",
+          "title": "Проверьте готовность наггетсов; при необходимости продлите нагрев",
+          "durationSeconds": 45,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            1
+          ],
+          "sourceCitations": [
+            [
+              1,
+              "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "bake-second"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "unload",
+          "kind": "unload",
+          "title": "Переложите наггетсы на решётку для охлаждения",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "oven-1",
+              "kind": "oven"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "check-bake"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "wash-tray",
+          "kind": "wash",
+          "title": "Вымойте и обсушите противень",
+          "durationSeconds": 120,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            },
+            {
+              "resourceId": "sink-1",
+              "kind": "sink"
+            },
+            {
+              "resourceId": "tray-1",
+              "kind": "tray"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "cool",
+          "kind": "intervention",
+          "title": "Дождитесь прекращения пара и подтвердите охлаждение",
+          "durationSeconds": 0,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "unload"
+          ],
+          "unknownDuration": true,
+          "timeInputBeforeCreate": true,
+          "requiresCheckAtEnd": true
+        },
+        {
+          "key": "portion",
+          "kind": "portion",
+          "title": "Подготовьте наггетсы к взвешиванию и личной раскладке",
+          "durationSeconds": 90,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "cool"
+          ],
+          "estimatedActive": true
+        },
+        {
+          "key": "freeze",
+          "kind": "store",
+          "title": "Заморозьте в один слой и упакуйте. Позже разогревайте в аэрогриле при 190 °C до горячей середины",
+          "durationSeconds": 0,
+          "attention": "required",
+          "resources": [
+            {
+              "resourceId": "cook",
+              "kind": "cook"
+            }
+          ],
+          "sourceStepIndexes": [
+            2
+          ],
+          "sourceCitations": [
+            [
+              2,
+              "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+            ]
+          ],
+          "allocationSourceIngredientIds": [],
+          "dependsOn": [
+            "portion"
+          ],
+          "unknownDuration": true,
+          "timeInputBeforeCreate": true,
+          "requiresCheckAtEnd": true
+        }
+      ],
+      "sourceDefinition": {
+        "steps": [
+          "Разогрейте духовку до 205 °C. Измельчите батат до мелкой «рисовой» крошки, нарежьте зелёный лук, смешайте с яйцами, овсяной мукой, приправами и куриным фаршем.",
+          "Сформуйте на застеленных противнях диски диаметром 5–7,5 см и толщиной 0,6–1,2 см. Выпекайте 8 минут, переверните и готовьте ещё 4 минуты.",
+          "Остудите на решётке до прекращения пара, заморозьте в один слой и упакуйте. Разогревайте в аэрогриле при 190 °C до горячей середины."
+        ],
+        "ingredients": [
+          {
+            "sourceIngredientId": "source-ingredient-1",
+            "canonicalIngredientId": "chicken_mince_raw",
+            "baseAmount": 90.8,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-2",
+            "canonicalIngredientId": "sweet_potato_raw",
+            "baseAmount": 48,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-3",
+            "canonicalIngredientId": "egg_raw",
+            "baseAmount": 14,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-4",
+            "canonicalIngredientId": "onion_raw",
+            "baseAmount": 3,
+            "unit": "g"
+          },
+          {
+            "sourceIngredientId": "source-ingredient-8",
+            "canonicalIngredientId": "oat_flour_raw",
+            "baseAmount": 10.526315789473683,
+            "unit": "ml"
+          }
+        ],
+        "method": {
+          "id": "original",
+          "label": "По рецепту",
+          "requiredEquipment": [
+            "baking_dish",
+            "blender",
+            "oven"
+          ]
+        }
+      },
+      "reviewScope": "Source text compared with the runtime recipe; active estimates are labelled; unknown heating, cooling and storage durations require explicit input. Not a kitchen test."
+    }
+  ]
+}
