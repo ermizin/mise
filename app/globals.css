@@ -672,7 +672,8 @@ a:hover {
 @media (prefers-reduced-motion: reduce) {
   .btn,
   .toggle,
-  .toggle::after {
+  .toggle::after,
+  .catalog-header {
     transition: none;
   }
   .btn:active {
@@ -2261,7 +2262,12 @@ p {
   border-width: 0 0 1px;
   border-radius: 0;
   /* Без этого плита мерцает на инерционном скролле в iOS Safari. */
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
+  transition: transform 220ms var(--motion-settled);
+  will-change: transform;
+}
+.catalog-header.is-collapsed:not(:focus-within) {
+  transform: translate3d(0, calc(-100% - 8px), 0);
 }
 .catalog-head-row {
   display: flex;

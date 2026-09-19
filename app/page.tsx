@@ -11,6 +11,7 @@ import {
   type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
+  type UIEvent as ReactUIEvent,
 } from "react";
 import { getNutritionSnapshot, normalizeNutritionHistory, preserveNutritionSnapshot, type NutritionHistory } from "@/domain/nutrition-history";
 import portionComponentsJson from "@/data/recipe-portion-components.json";
@@ -9582,15 +9583,35 @@ function RecipesScreen({
 }) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [gridMotionEpoch, setGridMotionEpoch] = useState(0);
+  const [headerCollapsed, setHeaderCollapsed] = useState(false);
   const [favoriteEffects, setFavoriteEffects] = useState<Record<string, number>>(
     {},
   );
   const headerRef = useRef<HTMLElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const lastCatalogScrollTopRef = useRef(0);
 
   function updateCatalog(next: CatalogState) {
     setGridMotionEpoch((current) => current + 1);
     onState(next);
+  }
+
+  function handleCatalogScroll(event: ReactUIEvent<HTMLDivElement>) {
+    const nextScrollTop = Math.max(0, event.currentTarget.scrollTop);
+    const scrollDelta = nextScrollTop - lastCatalogScrollTopRef.current;
+
+    /* У верхней границы шапка всегда видна. В остальных точках
+       накапливаем небольшой сдвиг, чтобы инерция Safari не дёргала
+       меню на каждом пикселе. */
+    if (nextScrollTop <= 12) {
+      setHeaderCollapsed(false);
+      lastCatalogScrollTopRef.current = nextScrollTop;
+      return;
+    }
+    if (Math.abs(scrollDelta) < 10) return;
+
+    setHeaderCollapsed(scrollDelta > 0);
+    lastCatalogScrollTopRef.current = nextScrollTop;
   }
 
   /* Шапка фиксированная, и её высота зависит от длины чисел и от того, сколько
@@ -9644,7 +9665,10 @@ function RecipesScreen({
 
   return (
     <section className="screen catalog-screen has-stable-tab-header">
-      <header className="catalog-header glass-1" ref={headerRef}>
+      <header
+        className={`catalog-header glass-1${headerCollapsed ? " is-collapsed" : ""}`}
+        ref={headerRef}
+      >
         <MiseWordmark />
         <div className="catalog-head-row">
           <div>
@@ -9753,6 +9777,7 @@ function RecipesScreen({
         className="catalog-scroll tab-panel-body"
         ref={scrollRef}
         data-tab-scroll
+        onScroll={handleCatalogScroll}
       >
         <div
           className={`catalog-sort-row${

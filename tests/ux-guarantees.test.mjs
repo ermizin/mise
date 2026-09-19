@@ -74,6 +74,28 @@ test("recipes open from the wizard and the week without losing their context", a
   );
 });
 
+test("the recipe catalog header follows scroll direction without flicker", async () => {
+  const [page, css] = await Promise.all([
+    read("app/page.tsx"),
+    read("app/globals.css"),
+  ]);
+  const catalog = page.slice(
+    page.indexOf("function RecipesScreen("),
+    page.indexOf("function ShoppingScreen("),
+  );
+
+  assert.match(catalog, /const \[headerCollapsed, setHeaderCollapsed\] = useState\(false\)/);
+  assert.match(catalog, /function handleCatalogScroll/);
+  assert.match(catalog, /nextScrollTop <= 12/);
+  assert.match(catalog, /Math\.abs\(scrollDelta\) < 10/);
+  assert.match(catalog, /setHeaderCollapsed\(scrollDelta > 0\)/);
+  assert.match(catalog, /onScroll=\{handleCatalogScroll\}/);
+  assert.match(catalog, /headerCollapsed \? " is-collapsed" : ""/);
+  assert.match(css, /\.catalog-header\.is-collapsed:not\(:focus-within\) \{[\s\S]*?translate3d\(0, calc\(-100% - 8px\), 0\)/);
+  assert.match(css, /\.catalog-header \{[\s\S]*?transition: transform 220ms var\(--motion-settled\)/);
+  assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*?\.catalog-header \{[\s\S]*?transition: none/);
+});
+
 test("the onboarding wizard is a real chat, not the old action bar", async () => {
   const page = await read("app/page.tsx");
   const start = page.indexOf("function PlanBuilder(");
