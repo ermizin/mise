@@ -280,7 +280,7 @@ test("structural counted ingredients advance by whole units", () => {
   }
 });
 
-test("a geometry-locked family rejects an over-capacity combined batch and reports the required runs", () => {
+test("a geometry-locked family preserves capacity as audit metadata without rejecting the batch", () => {
   const beef = engine.canonicalIngredients.beef_mince_raw;
   const family = {
     id: "geometry-locked-bake",
@@ -296,10 +296,11 @@ test("a geometry-locked family rejects an over-capacity combined batch and repor
     { id: "one", targetCalories: 215 },
     { id: "two", targetCalories: 215 },
   ]);
-  assert.equal(batch.viable, false);
-  assert.equal(batch.reason, "geometry_capacity_exceeded");
+  assert.equal(batch.viable, true);
+  assert.equal(batch.reason, undefined);
   assert.equal(batch.geometryBatchCount, 2);
-  assert.equal(JSON.stringify(batch.totals), "{}");
+  assert.equal(batch.geometryStatus, "exceeded");
+  assert.equal(batch.totals.beef, 200);
 });
 
 test("production Recipe Family coverage uses only explicitly safe catalog derivations", async (t) => {

@@ -3482,14 +3482,12 @@ export function solveRecipeBatch(
   const geometryBatchCount = portionsViable
     ? requiredGeometryBatches(family, solved.map((item) => item.variant.amounts))
     : 1;
-  // Until the caller turns `geometryBatchCount` into separately scheduled
-  // cooking runs, reject an over-capacity batch rather than silently giving
-  // one pan/form unsafe scaled quantities.
   const geometryFits = geometryBatchCount === 1;
-  // `geometryLockedMax` is editorial data most families do not have yet, so an
-  // unmodelled family must not read as a confirmed "one pan is enough".
+  // Capacity is editorial audit metadata. A menu never promises an automatic
+  // split into cookware runs, so it must not make an otherwise valid family
+  // unavailable.
   const geometryModelled = typeof family.geometryLockedMax === "number" && family.geometryLockedMax > 0;
-  const viable = portionsViable && geometryFits;
+  const viable = portionsViable;
   const totals: Record<string, number> = {};
   if (viable) for (const { variant } of solved) for (const [id, amount] of Object.entries(variant.amounts)) totals[id] = round((totals[id] ?? 0) + amount);
   const sharedCookingTotals = viable && portions.length
@@ -3500,7 +3498,7 @@ export function solveRecipeBatch(
   return {
     familyId: family.id,
     viable,
-    reason: !portionsViable ? "constraints_unsatisfied" : geometryFits ? undefined : "geometry_capacity_exceeded",
+    reason: !portionsViable ? "constraints_unsatisfied" : undefined,
     geometryBatchCount,
     geometryStatus: !geometryModelled ? "unmodelled" as const : geometryFits ? "fits" as const : "exceeded" as const,
     portions: solved,
