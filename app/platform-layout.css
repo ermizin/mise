@@ -28,6 +28,7 @@
 .app-workspace .week-person-avatar { width: 26px; height: 26px; flex-basis: 26px; }
 .app-workspace .week-macro-body { display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-top: 14px; }
 .app-workspace .week-kcal-ring { display: none; }
+.app-workspace .profile-macro-focus { display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-top: 14px; }
 .week-kcal-linear p { margin: 0 0 10px; font-size: 15px; line-height: 1.4; }
 .week-kcal-linear p b { font-size: 18px; }
 .week-kcal-linear .macro-bar, .week-kcal-linear .macro-bar i { height: 12px; }
@@ -141,6 +142,7 @@
   .app-workspace .week-person-picker { flex: 0 1 auto; margin-left: auto; }
   .app-workspace .week-macro-head > div:first-child { flex: 1 1 145px; }
   .app-workspace .week-kcal-linear, .app-workspace .week-macro-short { display: none; }
+  .app-workspace .profile-macro-focus { display: grid; grid-template-columns: 174px minmax(0, 1fr); align-items: center; gap: 22px; margin-top: 16px; }
   .app-workspace .week-macro-label, .app-workspace .week-macro-unit { display: inline; }
   .app-workspace .week-kcal-ring { display: block; width: 174px; height: 174px; margin: 8px auto 10px; }
   .app-workspace .week-kcal-ring b { font-size: 34px; }

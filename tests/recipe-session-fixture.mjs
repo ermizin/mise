@@ -7,6 +7,7 @@ import { loadTypeScriptModule } from "./typescript-module.mjs";
 const durationModule = await loadTypeScriptModule(new URL("../domain/cooking-duration.ts", import.meta.url));
 const cookingSessionModule = await loadTypeScriptModule(new URL("../domain/cooking-session.ts", import.meta.url));
 const nutritionHistoryModule = await loadTypeScriptModule(new URL("../domain/nutrition-history.ts", import.meta.url));
+const mealExecutionModule = await loadTypeScriptModule(new URL("../domain/meal-execution.ts", import.meta.url));
 const portionComponentsJson = JSON.parse(await readFile(new URL("../data/recipe-portion-components.json", import.meta.url), "utf8"));
 const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url));
 const recipeCuisineModule = await loadTypeScriptModule(new URL("../domain/recipe-cuisine.ts", import.meta.url));
@@ -25,13 +26,14 @@ export async function recipeCatalog() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   assert.ok(start >= 0 && end > start, "recipe data section is present");
-  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, recipeFamiliesById, recipeFamilyFor, portionFor, recipeCookingSession, portionComponents, allocationPeopleForDish, automaticAssignmentsFor, candidateRecipes, equipmentMethods, recipeSupportsEquipment, cookingMethodFor, planCookingMethod, normalizeRecipeMethods, missingPlanMethods, kitchenMenuGaps, recipeDisplaySteps, buildBatchCookingModel, completeBatchCookingPlan, batchCookingSignature, dailyProteinAssessment, proteinAssessmentText, ingredientRatioFor, fitScoreForSession, normalizeKitchenEquipment, allMealSlots, recipesById, ingredientScaleFor };`, {
+  const output = ts.transpileModule(`${source.slice(start, end)}\nglobalThis.__catalog = { recipes, productionRecipes, newMenuRecipes, hiddenPreparationRecipes, isAvailableForNewMenus, recipeFamiliesById, recipeFamilyFor, portionFor, recipeCookingSession, portionComponents, allocationPeopleForDish, automaticAssignmentsFor, candidateRecipes, equipmentMethods, recipeSupportsEquipment, cookingMethodFor, planCookingMethod, retainsExistingRecipeRoute, normalizeRecipeMethods, normalizePlan, missingPlanMethods, kitchenMenuGaps, recipeDisplaySteps, buildBatchCookingModel, completeBatchCookingPlan, batchCookingSignature, dailyProteinAssessment, proteinAssessmentText, ingredientRatioFor, fitScoreForSession, normalizeKitchenEquipment, allMealSlots, recipesById, ingredientScaleFor };`, {
     compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None },
   }).outputText;
   const sandbox = {
     ...durationModule,
     ...nutritionHistoryModule,
     ...cookingSessionModule,
+    ...mealExecutionModule,
     mealOccurrenceKey: (id,date,slot) => `${id}:${date}:${slot}`,
     portionComponentsJson,
     ...pluralModule,
@@ -56,6 +58,7 @@ export async function recipeCatalog() {
     nutritionMealProteinFloor: nutritionModule.mealProteinFloor,
     nutritionMacrosForCalories: nutritionModule.macrosForCalories,
     nutritionRecalculateDailyMacros: nutritionModule.recalculateDailyMacros,
+    nutritionRepairLegacyDailyMacros: nutritionModule.repairLegacyDailyMacros,
     nutritionShareForSlots: nutritionModule.shareForSlots,
     materializeInstructions: engine.materializeInstructions,
     canonicalIngredients: engine.canonicalIngredients,

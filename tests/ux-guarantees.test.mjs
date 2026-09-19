@@ -63,8 +63,8 @@ test("the wizard offers manual menu building without skipping required answers",
 test("recipes open from the wizard and the week without losing their context", async () => {
   const page = await read("app/page.tsx");
   assert.match(page, /onOpenRecipe=\{\(recipe\) => openRecipe\(\{ recipe, plan: activePlan \?\? undefined \}\)\}/);
-  assert.match(page, /context=\{\{ recipe: previewRecipe, plan: draftPlan \}\}/, "wizard preview retains draft methods without saving a draft as the active plan");
-  assert.match(page, /setRecipeMethods\(nextPlan\.recipeMethods\)/);
+  assert.match(page, /context=\{\{ recipe: previewRecipe, plan: draftPlan \}\}/, "wizard preview retains its draft context without saving it as the active plan");
+  assert.match(page, /onEditKitchen=\{\(\) => \{ setPreviewRecipe\(null\); changeStep\(4\); \}\}/, "an unavailable saved route returns directly to kitchen settings");
   assert.match(
     page,
     /onOpenRecipe\(\{[\s\S]*?recipe: row\.recipe,[\s\S]*?batch: row\.sourceBatch,[\s\S]*?slot: row\.slot,[\s\S]*?plan: activePlan/,
@@ -211,9 +211,9 @@ test("recipe card 14A keeps inline products and dish data actionable", async () 
   assert.doesNotMatch(page, /\["products",\s*"Продукты"\]/, "there is no Products tab");
   assert.doesNotMatch(page, /Как разложить блюдо|Подстройка КБЖУ/, "Dish omits duplicate packing and tuning sections");
   assert.match(page, /reviewedPortionComponents/, "separate weights require an explicit reviewed component mapping");
-  assert.match(page, /recipe\.instructions\?\.length/, "the card uses structured instructions when available");
-  assert.match(page, /className="recipe-timeline"/, "the card renders the projected timeline");
-  assert.match(page, /className="cooking-steps"/, "legacy recipes retain the numbered fallback");
+  assert.match(page, /const displaySteps = recipeDisplaySteps\(/, "the card resolves original or retained legacy instructions");
+  assert.match(page, /className="cooking-steps"/, "every recipe renders the numbered sequential steps");
+  assert.doesNotMatch(page, /className="recipe-timeline"/, "the card does not imply a parallel schedule");
   assert.match(page, /recipe\.effort\.difficulty/, "the card renders the projected difficulty");
   assert.match(page, /Начать готовку/, "a planned recipe connects to cooking mode");
   assert.match(page, /leaveRecipeFor\(\(\) => editDayMenu/, "replace remains connected to menu editing");
@@ -247,7 +247,7 @@ test("profile settings can add any standard meal slot", async () => {
 });
 
 test("profile presents the real household goals and keeps its actions connected", async () => {
-  const page = await read("app/page.tsx");
+  const [page, platform] = await Promise.all([read("app/page.tsx"), read("app/platform-layout.css")]);
   const start = page.indexOf("function ProfileScreen(");
   const end = page.indexOf("function PlanBuilder(", start);
   assert.ok(start >= 0 && end > start, "the dedicated profile screen is present");
@@ -269,9 +269,16 @@ test("profile presents the real household goals and keeps its actions connected"
   assert.match(profile, /onClick=\{onOpenTutorial\}/, "onboarding can be reopened");
   assert.match(profile, /onClick=\{onOpenPrepGuide\}/, "prep guidance can be reopened");
   assert.match(profile, /className="profile-settings-list glass-card"/, "settings remain grouped");
-  for (const className of ["profile-kcal-ring", "profile-bars"]) {
+  for (const className of ["profile-bars"]) {
     assert.match(profile, new RegExp(`className="${className}`), `${className} remains in the profile`);
   }
+  assert.match(profile, /className="week-kcal-linear profile-kcal-linear"/, "profile shows the week-style calorie bar on mobile");
+  assert.match(profile, /aria-label="Цель калорий"/, "the calorie goal bar stays accessible");
+  assert.match(profile, /className="week-kcal-ring profile-kcal-ring"/, "profile reuses the week calorie ring");
+  assert.match(profile, /<svg viewBox="0 0 100 100" aria-hidden>/, "profile calorie target uses the same ring markup");
+  assert.match(profile, /<AnimatedNumber value=\{person\.daily\.kcal\} \/>/, "profile calorie target remains readable while matching the week scale");
+  assert.match(platform, /\.app-workspace \.profile-macro-focus \{ display: flex; flex-direction: column;/, "mobile profile lays the calorie bar out instead of hiding it with the week ring");
+  assert.match(platform, /\.app-workspace \.profile-macro-focus \{ display: grid; grid-template-columns: 174px minmax\(0, 1fr\);/, "desktop profile restores the full week-style ring layout");
   assert.doesNotMatch(profile, /profile-compact-macros/, "every person uses the same expanded macro layout");
   assert.match(profile, /Составить план/, "profile exposes the plan creation action");
   assert.match(profile, /Удалить план/, "profile exposes a connected plan deletion action");

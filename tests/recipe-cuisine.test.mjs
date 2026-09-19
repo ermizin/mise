@@ -342,7 +342,7 @@ test("the catalog screen and the manual step are wired to the shared filter", as
   assert.match(page, /if \(!matchesCuisine\(recipe\.cuisine, state\.cuisine\)\) return false;/);
   assert.match(page, /id: "cuisine",\n\s*label: cuisineLabels\[state\.cuisine\],/);
   assert.match(page, /clear: \(\) => \(\{ \.\.\.state, cuisine: null \}\),/);
-  assert.match(page, /const catalogCuisines = useMemo\(\n\s*\(\) => availableCuisines\(productionRecipes\),/);
+  assert.match(page, /const catalogCuisines = useMemo\(\n\s*\(\) => availableCuisines\(newMenuRecipes\),/, "hidden preparations do not contribute choices to the visible catalogue");
   assert.match(page, /<div className="catalog-cuisine-row">\n\s*<CuisineMenu\n\s*value=\{state\.cuisine\}/,
     "кухня стоит отдельной строкой, а не в ряду действий шапки");
 

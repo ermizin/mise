@@ -93,17 +93,15 @@ test("14A keeps products in Cooking and removes duplicate Dish controls", async 
   assert.match(recipeView, /sortedIngredients[\s\S]{0,500}ingredientSortableAmount\(/, "product quantities are shown in descending normalized order");
 });
 
-test("14A renders a real timeline with a permanent legacy fallback and reduced-motion coverage", async () => {
-  const { page, css } = await recipeSources();
+test("14A renders numbered sequential instructions without inventing a schedule", async () => {
+  const { page } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
 
-  assert.match(recipeView, /className="recipe-timeline/);
-  assert.match(recipeView, /timelineHasEstimates/);
-  assert.match(recipeView, /timelineHasEstimates\s*\?\s*"≈ "/);
-  assert.match(recipeView, /recipe\.instructions\s*(?:\?\.|&&|\?)/, "missing instructions fall back instead of breaking old recipes");
-  assert.match(recipeView, /className="cooking-steps/, "numbered legacy steps remain available");
-  assert.match(css, /\.recipe-timeline\s*\{/);
-  assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]{0,4000}recipe-timeline/, "timeline motion is covered by reduced-motion rules");
+  assert.match(recipeView, /const displaySteps = recipeDisplaySteps\(/, "one helper resolves original or retained legacy steps");
+  assert.match(recipeView, /<p className="kicker">По порядку<\/p>/);
+  assert.match(recipeView, /<ol className="cooking-steps">[\s\S]*?displaySteps\.map/, "every recipe has a numbered sequential list");
+  assert.match(recipeView, /<span>\{index \+ 1\}<\/span>/, "steps remain actionable without made-up timestamps");
+  assert.doesNotMatch(recipeView, /recipe-timeline|timelineHasEstimates|timelineSteps/);
 });
 
 test("14A opens with a larger cover, swipe expansion, and no top photo button", async () => {
@@ -119,14 +117,14 @@ test("14A opens with a larger cover, swipe expansion, and no top photo button", 
   assert.doesNotMatch(css, /\.recipe-photo-expand/);
 });
 
-test("14A explains difficulty with equipment and parallel-process evidence", async () => {
+test("14A explains difficulty with equipment and sequential process evidence", async () => {
   const { page, css } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
 
   assert.match(page, /effortDescription:\s*recipeEffortDescription/);
   assert.match(page, /"весы"/);
-  assert.match(page, /Два процесса/);
-  assert.match(page, /идут параллельно, ничего не остывает критично/);
+  assert.match(page, /Готовьте по шагам/);
+  assert.doesNotMatch(page, /идут параллельно, ничего не остывает критично/);
   assert.match(recipeView, /cookingMethod\?\.steps \? cookingMethod\.requiredEquipment\.map\(equipmentLabel\)\.join\(" · "\) : recipe\.effortDescription/);
   assert.match(css, /\.recipe-difficulty\s*>\s*\.recipe-difficulty-evidence/);
 });
@@ -139,10 +137,7 @@ test("14A follows the supplied visual reference without adding pantry states", a
     css,
     /\.recipe-detail\s*>\s*\.detail-tabs button\.selected\s*\{[^}]*color:\s*#fff;[^}]*background:\s*var\(--accent-grad\)/s,
   );
-  assert.match(
-    css,
-    /\.recipe-timeline-node\s*\{[^}]*background:\s*var\(--accent\)/s,
-    "hands-on steps use the action colour",
-  );
-  assert.doesNotMatch(recipeView, /Без вашего участия/, "the timeline does not repeat the passive label in every card");
+  assert.match(recipeView, /<p className="kicker">По порядку<\/p>/);
+  assert.match(recipeView, /<ol className="cooking-steps">/);
+  assert.doesNotMatch(recipeView, /recipe-timeline|Без вашего участия/);
 });

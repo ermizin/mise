@@ -125,21 +125,9 @@ test("every recipe uses the approved engine-owned difficulty levels", () => {
 });
 
 test("every recipe explains its difficulty with equipment and process evidence", () => {
-  assert.ok(
-    recipes.some((item) =>
-      /Два процесса идут параллельно, ничего не остывает критично\./u.test(
-        item.effortDescription,
-      ),
-    ),
-    "the catalog includes a concrete two-process explanation",
-  );
   for (const item of recipes) {
     assert.match(item.effortDescription, /Весы|весы/u, `${item.title}: scale`);
-    assert.match(
-      item.effortDescription,
-      /(?:Один процесс|процесса|процессов)/u,
-      `${item.title}: process guidance`,
-    );
+    assert.match(item.effortDescription, /Готовьте по шагам\./u, `${item.title}: sequential guidance`);
   }
 });
 
