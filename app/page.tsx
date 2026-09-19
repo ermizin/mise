@@ -1038,6 +1038,11 @@ function planMethodId(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" 
 function planCookingMethod(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
   return cookingMethodFor(recipe, plan.kitchenEquipment, planMethodId(recipe, plan));
 }
+// Reading a saved route does not require the appliance to still be available.
+// Execution and persistence must continue to use planCookingMethod instead.
+function planDisplayMethod(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
+  return cookingMethodFor(recipe, undefined, planMethodId(recipe, plan));
+}
 function retainsExistingRecipeRoute(
   recipe: Recipe,
   equipment: KitchenEquipment[] | undefined,
@@ -5353,6 +5358,9 @@ function recipeDisplaySteps(recipe: Recipe, kitchenEquipment?: KitchenEquipment[
         (step) => !/^На одну базовую порцию отмерьте:/iu.test(step),
       );
 }
+function planDisplaySteps(recipe: Recipe, plan: Pick<ActivePlan, "kitchenEquipment" | "recipeMethods">) {
+  return recipeDisplaySteps(recipe, undefined, planMethodId(recipe, plan));
+}
 function recipeCookingInstructions(recipe: Recipe, equipment?: KitchenEquipment[], methodId?: string): RecipeInstruction[] {
   const method = cookingMethodFor(recipe, equipment, methodId);
   if (!method) return [];
@@ -8771,7 +8779,7 @@ function WeekScreen({
       )
     : 0;
   const nextCookMinutes = nextCookRecipes.reduce(
-    (sum, { recipe }) => sum + (planCookingMethod(recipe, plan)?.timeMinutes ?? recipe.time),
+    (sum, { recipe }) => sum + (planDisplayMethod(recipe, plan)?.timeMinutes ?? recipe.time),
     0,
   );
   const macroRows: {
@@ -9663,7 +9671,7 @@ function RecipesScreen({
       matched.map((recipe) => [recipe.id, missingCountFor(recipe, plan) ?? 0]),
     );
     return [...matched].sort((a, b) => {
-      const timeDifference = ((plan ? planCookingMethod(a, plan) : undefined)?.timeMinutes ?? a.time) - ((plan ? planCookingMethod(b, plan) : undefined)?.timeMinutes ?? b.time);
+      const timeDifference = ((plan ? planDisplayMethod(a, plan) : undefined)?.timeMinutes ?? a.time) - ((plan ? planDisplayMethod(b, plan) : undefined)?.timeMinutes ?? b.time);
       if (state.sort === "time") return timeDifference;
       if (state.sort === "protein") return b.macros.protein - a.macros.protein;
       const diff = (missing.get(a.id) ?? 0) - (missing.get(b.id) ?? 0);
@@ -10027,7 +10035,7 @@ function RecipeCard({
         <div className="recipe-body">
           <h2>{recipe.title}</h2>
           <p className="recipe-meta">
-            {(plan ? planCookingMethod(recipe, plan) : undefined)?.timeMinutes ?? recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
+            {(plan ? planDisplayMethod(recipe, plan) : undefined)?.timeMinutes ?? recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
           </p>
           <div className="recipe-chips">
             {missing !== null && (
@@ -15092,8 +15100,9 @@ function RecipeView({
 }) {
   const { recipe, batch, slot, plan } = context;
   const cookingMethod = plan ? planCookingMethod(recipe, plan) : cookingMethodFor(recipe);
-  const cookingTime = cookingMethod?.timeMinutes ?? recipe.time;
-  const cookingActiveMinutes = cookingMethod?.activeMinutes ?? recipe.effort.activeMinutes;
+  const displayMethod = plan ? planDisplayMethod(recipe, plan) : cookingMethod;
+  const cookingTime = displayMethod?.timeMinutes ?? recipe.time;
+  const cookingActiveMinutes = displayMethod?.activeMinutes ?? recipe.effort.activeMinutes;
   const sectionOrder: RecipeSection[] = ["cooking", "dish"];
   const [section, setSection] = useState<RecipeSection>("cooking");
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
@@ -15245,7 +15254,7 @@ function RecipeView({
     recipe.provenance.kind === "parsed"
       ? "Из источника"
       : "Сгенерирован и отредактирован";
-  const components = portionComponents(recipe, cookingMethod?.id);
+  const components = portionComponents(recipe, displayMethod?.id);
   const allocationPeople: PersonAllocation[] =
     batch && slot
       ? eaters.map((eater, index) => {
@@ -15303,6 +15312,7 @@ function RecipeView({
       : null;
   async function saveCookedWeights() {
     if (
+      !cookingMethod ||
       !plan ||
       !batch ||
       !slot ||
@@ -15337,7 +15347,7 @@ function RecipeView({
 
     return previewSession?.cookingAmounts ?? {};
   })();
-  const displaySteps = recipeDisplaySteps(recipe, plan?.kitchenEquipment, plan ? planMethodId(recipe, plan) : undefined);
+  const displaySteps = plan ? planDisplaySteps(recipe, plan) : recipeDisplaySteps(recipe);
   const sortedIngredients = [...recipe.ingredients].sort(
     (left, right) =>
       ingredientSortableAmount(
@@ -15352,7 +15362,7 @@ function RecipeView({
   const sectionMotionClass = sectionMotion.epoch
     ? ` recipe-section-motion ${sectionMotion.direction > 0 ? "motion-enter-right" : "motion-enter-left"}`
     : "";
-  const difficulty = cookingMethod?.difficulty ?? recipe.effort.difficulty;
+  const difficulty = displayMethod?.difficulty ?? recipe.effort.difficulty;
   const difficultyLabel = ["Просто", "Средне", "Сложно"][difficulty - 1];
   const cookingPortions = Math.max(1, (batch?.days ?? 1) * Math.max(1, eaters.length));
   const totalProductCount =
@@ -15480,15 +15490,16 @@ function RecipeView({
               <p className="kicker">Утварь</p>
               {plan && Object.hasOwn(hiddenPreparationRecipes, recipe.id) && <p role="status">Заготовка сохранена в вашем плане. Для новых меню она временно скрыта; при желании замените блюдо в меню.</p>}
               {!cookingMethod && <>
-                <h2>Исходный способ недоступен</h2>
+                <h2>{plan?.recipeMethods?.[recipe.id] ? "Сохранённый способ сейчас недоступен" : "Исходный способ недоступен"}</h2>
                 <p role="status">Добавьте нужную утварь в плане или замените блюдо.</p>
                 <div className="recipe-equipment-actions">
                   {onEditKitchen && <button type="button" className="secondary-button" onClick={onEditKitchen}>Изменить утварь</button>}
                   {onReplace && <button type="button" className="text-button" onClick={onReplace}>Заменить блюдо</button>}
                 </div>
               </>}
-              {cookingMethod?.note && <p>{cookingMethod.note}</p>}
-              {cookingMethod && <p>Понадобится: {cookingMethod.requiredEquipment.map(equipmentLabel).join(" · ") || "нож, доска и миска"}.</p>}
+              {plan?.recipeMethods?.[recipe.id] && displayMethod && <p>Сохранённый способ: {displayMethod.label}.</p>}
+              {displayMethod?.note && <p>{displayMethod.note}</p>}
+              {displayMethod && <p>Понадобится: {displayMethod.requiredEquipment.map(equipmentLabel).join(" · ") || "нож, доска и миска"}.</p>}
             </section>
             <section className="recipe-difficulty glass-card">
               <div>
@@ -15501,7 +15512,7 @@ function RecipeView({
                 </span>
               </div>
               <p className="recipe-difficulty-evidence">
-                {cookingMethod?.steps ? cookingMethod.requiredEquipment.map(equipmentLabel).join(" · ") : recipe.effortDescription}
+                {displayMethod?.steps ? displayMethod.requiredEquipment.map(equipmentLabel).join(" · ") : recipe.effortDescription}
               </p>
               <dl>
                 <div><dt>Активно</dt><dd>{cookingActiveMinutes} мин</dd></div>
@@ -15592,11 +15603,12 @@ function RecipeView({
           >
             {batch && slot && plan ? (
               <>
+                {!cookingMethod && <p role="status">Сохранённые веса доступны для просмотра. Чтобы изменить раскладку, верните нужную утварь или замените блюдо.</p>}
                 <Note tone="mint" icon={<Icon name="scale" />} label="Сначала взвесьте готовую еду">Затем введите фактический вес — Mise сам рассчитает раскладку. После расчёта подпишите имя, приём пищи и даты.</Note>
                 {components.length === 0 ? (
-                  <label className="cooked-weight-field"><span>Взвесьте всё готовое блюдо</span><span className="weight-control"><input aria-label="Фактический вес готового блюда" type="number" inputMode="numeric" min="1" value={cookedWeights.total || ""} onChange={(event) => { setCookedWeights({ total: Number(event.target.value) }); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>
+                  <label className="cooked-weight-field"><span>Взвесьте всё готовое блюдо</span><span className="weight-control"><input aria-label="Фактический вес готового блюда" disabled={!cookingMethod} type="number" inputMode="numeric" min="1" value={cookedWeights.total || ""} onChange={(event) => { setCookedWeights({ total: Number(event.target.value) }); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>
                 ) : (
-                  <div className="component-weight-fields"><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label className="cooked-weight-field" key={component.id}><span>{component.label}</span><span className="weight-control"><input aria-label={`Фактический вес: ${component.label}`} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => { setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) })); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>)}</div>
+                  <div className="component-weight-fields"><p>Взвесьте готовые компоненты отдельно</p>{components.map((component) => <label className="cooked-weight-field" key={component.id}><span>{component.label}</span><span className="weight-control"><input aria-label={`Фактический вес: ${component.label}`} disabled={!cookingMethod} type="number" inputMode="numeric" min="1" value={cookedWeights[component.id] || ""} onChange={(event) => { setCookedWeights((current) => ({ ...current, [component.id]: Number(event.target.value) })); setPortionSaveStatus("idle"); }} /><small>г</small></span></label>)}</div>
                 )}
                 {!mixedAllocation && !componentAllocation && <p className="allocation-prompt" role="status">Введите {components.length ? "вес каждого компонента" : "вес блюда"}, чтобы увидеть точную раскладку.</p>}
                 {mixedAllocation && <div className="allocation-results"><Note tone="mint" icon={<Icon name="container" />} label="Теперь разложите по контейнерам">Граммы рассчитаны из фактического веса всей готовой партии.</Note>{mixedAllocation.allocations.map((allocation, index) => <article className="portion-card" key={allocation.personId}><div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div><div><h3>{allocation.label}</h3><p><b>{containerDistributionLabel(allocation.perContainerG)}</b></p><small>По контейнерам</small><em>Подпись: {allocation.label} / {mealMeta[slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em></div></article>)}</div>}
@@ -15605,7 +15617,7 @@ function RecipeView({
                   <div className="portion-save-row">
                     <button
                       className="primary-button"
-                      disabled={portionSaveStatus === "saving"}
+                      disabled={!cookingMethod || portionSaveStatus === "saving"}
                       onClick={saveCookedWeights}
                     >
                       {portionSaveStatus === "saving"

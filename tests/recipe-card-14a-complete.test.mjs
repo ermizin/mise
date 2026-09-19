@@ -60,7 +60,7 @@ test("14A calculates the approved three-level difficulty in the engine", async (
   assert.ok(runtime.recipes.every((recipe) => ["low", "medium", "high"].includes(recipe.effort.level)), "runtime keeps the engine difficulty level");
   assert.match(page, /level:\s*recipeEffortLevel\(activeMinutes, cookware\)/, "legacy estimation uses the engine helper");
   assert.match(page, /level:\s*recipeEffortLevel\([\s\S]{0,180}effortInputs\.cookware/, "legacy overrides are normalized through the engine");
-  assert.match(recipeView, /const difficulty = cookingMethod\?\.difficulty \?\? recipe\.effort\.difficulty;/, "the card reads the selected method or original projected level");
+  assert.match(recipeView, /const difficulty = displayMethod\?\.difficulty \?\? recipe\.effort\.difficulty;/, "the card reads the selected method or original projected level");
   assert.doesNotMatch(recipeView, /recipeEffortDifficulty\(/, "difficulty is projected by the engine, never recalculated in the card");
   assert.doesNotMatch(recipeView, /recipe\.effort\.level\s*===/, "the UI never maps levels itself");
 });
@@ -97,7 +97,7 @@ test("14A renders numbered sequential instructions without inventing a schedule"
   const { page } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
 
-  assert.match(recipeView, /const displaySteps = recipeDisplaySteps\(/, "one helper resolves original or retained legacy steps");
+  assert.match(recipeView, /const displaySteps = plan \? planDisplaySteps\(recipe, plan\) : recipeDisplaySteps\(recipe\)/, "one helper resolves original or retained legacy steps");
   assert.match(recipeView, /<p className="kicker">По порядку<\/p>/);
   assert.match(recipeView, /<ol className="cooking-steps">[\s\S]*?displaySteps\.map/, "every recipe has a numbered sequential list");
   assert.match(recipeView, /<span>\{index \+ 1\}<\/span>/, "steps remain actionable without made-up timestamps");
@@ -125,7 +125,7 @@ test("14A explains difficulty with equipment and sequential process evidence", a
   assert.match(page, /"весы"/);
   assert.match(page, /Готовьте по шагам/);
   assert.doesNotMatch(page, /идут параллельно, ничего не остывает критично/);
-  assert.match(recipeView, /cookingMethod\?\.steps \? cookingMethod\.requiredEquipment\.map\(equipmentLabel\)\.join\(" · "\) : recipe\.effortDescription/);
+  assert.match(recipeView, /displayMethod\?\.steps \? displayMethod\.requiredEquipment\.map\(equipmentLabel\)\.join\(" · "\) : recipe\.effortDescription/);
   assert.match(css, /\.recipe-difficulty\s*>\s*\.recipe-difficulty-evidence/);
 });
 

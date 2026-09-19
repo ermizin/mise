@@ -135,9 +135,15 @@ test("saved method is explicit, survives reload and never switches when equipmen
   assert.equal(validatePlanForPersistence(restored).valid, true);
   const removedAppliance = { ...restored, kitchenEquipment: ["oven", "baking_dish"] };
   assert.equal(app.planCookingMethod(recipe, removedAppliance), undefined, "available original does not overwrite saved appliance");
+  assert.equal(app.planDisplayMethod(recipe, removedAppliance).id, "air_fryer", "the historical route is still readable without its appliance");
+  assert.deepEqual(plain(app.planDisplaySteps(recipe, removedAppliance)), plain(app.recipeDisplaySteps(recipe, ["air_fryer"], "air_fryer")));
+  assert.ok(app.planDisplaySteps(recipe, removedAppliance).some((step) => /аэрогрил/u.test(step)));
+  assert.ok(!app.planDisplaySteps(recipe, removedAppliance).some((step) => /духов|противн/u.test(step)), "no original instructions leak into saved history");
   assert.equal(validatePlanForPersistence(removedAppliance).valid, false);
   assert.equal(app.retainsExistingRecipeRoute(recipe, removedAppliance.kitchenEquipment, removedAppliance.recipeMethods), true, "the saved assignment stays visible until the user changes kitchen or recipe");
   assert.deepEqual(plain(app.missingPlanMethods(removedAppliance)), [recipe.id]);
+  assert.equal(app.buildBatchCookingModel(removedAppliance, removedAppliance.batches[0]).canComplete, false);
+  assert.throws(() => app.completeBatchCookingPlan(removedAppliance, removedAppliance.batches[0], { "b1:dinner:tmpm-25453": { total: 812 } }), /Не удалось рассчитать/);
   assert.ok(!app.buildBatchCookingModel(removedAppliance, removedAppliance.batches[0]).steps.some((step) => /духов/u.test(step.title)));
   assert.equal(app.planCookingMethod(recipe, planFor(recipe, undefined)).id, "original", "legacy plans keep original instructions");
   const missing = { ...original, recipeMethods: undefined };
@@ -169,6 +175,36 @@ test("normalization keeps an unavailable saved method and its completed-cooking 
   assert.deepEqual(plain(normalized.cookingSignatures), plain(plan.cookingSignatures));
   assert.deepEqual(plain(normalized.cookedWeights), plain(plan.cookedWeights));
   assert.deepEqual(plain(normalized.nutritionHistory), plain(plan.nutritionHistory));
+  assert.equal(app.planDisplayMethod(recipe, normalized).id, "air_fryer");
+  assert.ok(app.planDisplaySteps(recipe, normalized).length > 0);
+});
+
+test("every saved alternative retains its exact display route while an empty kitchen blocks execution", () => {
+  for (const recipe of app.productionRecipes) for (const method of app.equipmentMethods(recipe)) {
+    if (method.id === "original") continue;
+    const unavailable = planFor(recipe, [], method.id);
+    assert.equal(app.planDisplayMethod(recipe, unavailable).id, method.id, recipe.id);
+    assert.deepEqual(plain(app.planDisplaySteps(recipe, unavailable)), plain(method.steps), recipe.id);
+    assert.equal(app.planCookingMethod(recipe, unavailable), undefined, recipe.id);
+    assert.deepEqual(plain(app.missingPlanMethods(unavailable)), [recipe.id]);
+    assert.equal(validatePlanForPersistence(unavailable).valid, false, recipe.id);
+  }
+});
+
+test("RecipeView separates historical rendering from cooking and weight mutation", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  const view = source.slice(source.indexOf("function RecipeView("));
+  assert.match(view, /const cookingMethod = plan \? planCookingMethod\(recipe, plan\) : cookingMethodFor\(recipe\);/);
+  assert.match(view, /const displayMethod = plan \? planDisplayMethod\(recipe, plan\) : cookingMethod;/);
+  assert.match(view, /const displaySteps = plan \? planDisplaySteps\(recipe, plan\) : recipeDisplaySteps\(recipe\);/);
+  assert.match(view, /portionComponents\(recipe, displayMethod\?\.id\)/);
+  assert.match(view, /Сохранённый способ сейчас недоступен/);
+  assert.match(view, /Сохранённый способ: \{displayMethod\.label\}/);
+  assert.match(view, /onStartCooking && cookingMethod &&/);
+  assert.match(view, /async function saveCookedWeights\(\) \{\s*if \(\s*!cookingMethod \|\|/);
+  assert.match(view, /disabled=\{!cookingMethod \|\| portionSaveStatus === "saving"\}/);
+  assert.match(view, /aria-label="Фактический вес готового блюда" disabled=\{!cookingMethod\}/);
+  assert.match(view, /aria-label=\{`Фактический вес: \$\{component\.label\}`\} disabled=\{!cookingMethod\}/);
 });
 
 test("Cooking step identifies unbuildable meal slots before menu assembly", () => {

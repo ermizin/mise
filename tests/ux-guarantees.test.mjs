@@ -211,7 +211,7 @@ test("recipe card 14A keeps inline products and dish data actionable", async () 
   assert.doesNotMatch(page, /\["products",\s*"Продукты"\]/, "there is no Products tab");
   assert.doesNotMatch(page, /Как разложить блюдо|Подстройка КБЖУ/, "Dish omits duplicate packing and tuning sections");
   assert.match(page, /reviewedPortionComponents/, "separate weights require an explicit reviewed component mapping");
-  assert.match(page, /const displaySteps = recipeDisplaySteps\(/, "the card resolves original or retained legacy instructions");
+  assert.match(page, /const displaySteps = plan \? planDisplaySteps\(recipe, plan\) : recipeDisplaySteps\(recipe\)/, "the card resolves original or retained legacy instructions");
   assert.match(page, /className="cooking-steps"/, "every recipe renders the numbered sequential steps");
   assert.doesNotMatch(page, /className="recipe-timeline"/, "the card does not imply a parallel schedule");
   assert.match(page, /recipe\.effort\.difficulty/, "the card renders the projected difficulty");
