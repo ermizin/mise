@@ -3967,6 +3967,112 @@ p {
   color: var(--muted);
   font-size: var(--text-min);
 }
+.protein-review {
+  margin-top: 13px;
+}
+.protein-review-heading,
+.protein-review-values {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.protein-review-heading h2 {
+  margin: 0;
+  font-size: var(--text-h2);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-h2);
+}
+.protein-review-heading > span {
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: var(--text-min);
+}
+.protein-review-caption,
+.protein-review-note {
+  color: var(--muted);
+  font-size: var(--text-min);
+  line-height: 1.5;
+}
+.protein-review-caption { margin: 5px 0 16px; }
+.protein-review-batches { display: grid; gap: 14px; }
+.protein-review-batch + .protein-review-batch {
+  padding-top: 16px;
+  border-top: 1px solid var(--ink-line);
+}
+.protein-review-batch h3 {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.protein-review-batch ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.protein-review-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.protein-review-amount {
+  flex-shrink: 0;
+  font-size: var(--text-min);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--muted);
+}
+.protein-review-amount strong {
+  color: var(--ink);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+}
+.protein-review-detail {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 5px;
+}
+.protein-review-track {
+  flex: 1;
+  min-width: 24px;
+  height: 4px;
+  overflow: hidden;
+  border-radius: var(--r-pill);
+  background: var(--ink-track);
+}
+.protein-review-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+}
+.protein-review-status {
+  flex-shrink: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-min);
+  line-height: 1.4;
+}
+.protein-review-status.is-reached { color: var(--mint-text); }
+.protein-review-note { margin: 18px 0 0; }
+.protein-review .protein-review-edit {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10px;
+  text-align: left;
+}
+@media (forced-colors: active) {
+  .protein-review-track { background: Canvas; border: 1px solid CanvasText; }
+  .protein-review-track > span { background: Highlight; }
+}
 .review-list,
 .shopping-preview {
   margin-top: 13px;

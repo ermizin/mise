@@ -19,6 +19,7 @@ import { makeCookingSignature, restoreCookingDraft, cookingProgress, type Cookin
 import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
 import { createPortal } from "react-dom";
 import { ThinkingOrb } from "thinking-orbs";
+import { ProteinReview } from "./ui/protein-review";
 import { startMenuAssemblyTask } from "@/lib/menu-assembly-task";
 import { ComposePlanGlow, LiquidNavIndicator } from "./ui/library-effects";
 import {
@@ -14214,7 +14215,17 @@ function ReviewStep({
           </p>
         </div>
       </section>
-      <section className="glass-card"><h2>Белок в выбранном меню</h2>{plan.batches.map(batch => <div key={batch.id}><h3>{formatDate(batch.start)} — {formatDate(batch.end)}</h3>{plan.people.map(person => <p key={person.id}><b>{person.name}: </b>{proteinAssessmentText(dailyProteinAssessment(plan, batch, person))}</p>)}</div>)}<button type="button" className="text-button" onClick={() => onEdit(5)}>Изменить блюда</button></section>
+      <ProteinReview
+        batches={plan.batches.map(batch => ({
+          id: batch.id,
+          period: `${formatDate(batch.start)} — ${formatDate(batch.end)}`,
+          people: plan.people.map(person => {
+            const assessment = dailyProteinAssessment(plan, batch, person);
+            return { ...assessment, id: person.id, name: person.name, actual: assessment.actual.protein };
+          }),
+        }))}
+        onEdit={() => onEdit(5)}
+      />
       <section className="review-list glass-card">
         <button onClick={() => onEdit(0)}>
           <Icon name="clock" />
