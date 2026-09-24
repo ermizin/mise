@@ -54,7 +54,7 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
     page,
     /showCompose=\{tab === "week" && !activePlan && !loadingPlan\}/,
   );
-  assert.match(page, /className="bottom-nav-indicator"/);
+  assert.match(page, /<LiquidNavIndicator enabled=\{!showCompose\} \/>/);
   assert.match(page, /const \[gridMotionEpoch, setGridMotionEpoch\] = useState\(0\)/);
   assert.match(page, /gridMotionEpoch && index < 6/);
   assert.match(page, /animationDelay: `\$\{index \* 40\}ms`/);
@@ -97,43 +97,23 @@ test("manual menu choice stays available as a separate bottom action", async () 
     page.indexOf("function StepIntro("),
   );
 
-  assert.match(builder, /kind: "step" \| "menu"[\s\S]*?assemblyStage: number/);
+  assert.match(builder, /kind: "step" \| "menu"/);
   assert.match(
     builder,
-    /if \(step === 4\) \{[\s\S]*?setMenuMode\("auto"\);[\s\S]*?assembleMenu\("fill"\);/,
-    "the menu is assembled while the staged working state covers the form",
-  );
-  assert.match(
-    builder,
-    /step === 4 \? "menu" : "step"/,
-  );
-  assert.match(builder, /const menuRevealDelay = 120/);
-  assert.match(
-    builder,
-    /const menuStageStartDelay = menuRevealDelay \+ 160/,
+    /if \(step === 4\) \{[\s\S]*?setMenuMode\("auto"\);[\s\S]*?startMenuAssembly\("fill", \(\) => changeStep\(5\)\);/,
+    "the menu advances only after real assembly completes",
   );
   assert.doesNotMatch(builder, /scrollIntoView\(/);
-  assert.match(
-    builder,
-    /menuStageStartDelay \+ assemblyStage \* stageDuration/,
-  );
   assert.match(builder, /builder-chat-current\$\{chatTransition\?\.kind === "menu"/);
-  assert.match(builder, /const stageDuration = 180/);
+  assert.match(builder, /startMenuAssemblyTask\(assembleMenuSteps\(mode\)/);
+  assert.match(builder, /onSlow: \(\) => setChatTransition/);
+  assert.match(builder, /<ThinkingOrb state="solving" size=\{20\} theme="light" aria-hidden="true" \/>/);
   assert.match(builder, /const questionDelay = 240/);
   assert.match(builder, /className="builder-menu-assembly glass-3"/);
-  assert.match(builder, /Считаю нормы/);
-  assert.match(builder, /Подбираю блюда/);
-  assert.match(builder, /Делю на партии/);
-  assert.match(builder, /Собираю закупку/);
+  assert.doesNotMatch(builder, /menuStageStartDelay|assemblyStage|menuAssemblyStages/);
   assert.match(builder, /className="builder-chat-menu-ready tint-mint"/);
   assert.match(builder, /Mise собирает меню/);
   assert.match(builder, /Меню на/);
-  assert.match(
-    css,
-    /\.builder-menu-assembly-progress span \{[\s\S]*?width 400ms var\(--motion-settled\)/,
-  );
-  assert.match(css, /mise-builder-stage-spin 900ms linear infinite/);
-  assert.match(css, /mise-builder-stage-tick 300ms var\(--motion-spring\)/);
   assert.match(
     css,
     /\.builder-chat-current\.is-assembling-menu \{[\s\S]*?padding-bottom: clamp\(140px, 22vh, 200px\)/,

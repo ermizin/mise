@@ -9,7 +9,7 @@ const start = page.indexOf('  function beginChatAdvance(');
 const end = page.indexOf('  function setQuickPeriod(', start);
 const scheduler = page.slice(start, end).replace(
   /function beginChatAdvance\([\s\S]*?\) \{/,
-  'function beginChatAdvance(nextStep, kind = "step") {',
+  'function beginChatAdvance(nextStep) {',
 );
 function harness(reducedMotion) {
   let current = 0;
@@ -21,7 +21,6 @@ function harness(reducedMotion) {
     chatTimersRef: {current: []},
     builderChatTurns: [{answer:'Ответ'}],
     step:0,
-    menuAssemblyStages:[0,1,2,3],
     setChatTransition: value => state.push(value),
     changeStep: value => changes.push(value),
     window: {
@@ -35,24 +34,30 @@ function harness(reducedMotion) {
   return {ctx,tasks,changes,state};
 }
 
-test('reduced motion opens both ordinary steps and assembled menu without artificial delays',()=>{
-  for(const kind of ['step','menu']) {
-    const h=harness(true);
-    h.ctx.beginChatAdvance(5,kind);
-    assert.deepEqual(h.changes,[5]);
-    assert.equal(h.tasks.size,0);
-    assert.equal(h.state.at(-1),null);
-  }
+test('reduced motion opens an ordinary step without artificial delay',()=>{
+  const h=harness(true);
+  h.ctx.beginChatAdvance(5);
+  assert.deepEqual(h.changes,[5]);
+  assert.equal(h.tasks.size,0);
+  assert.equal(h.state.at(-1),null);
 });
 
-test('ordinary menu transition keeps ordered feedback and completes within 1200ms',()=>{
+test('ordinary step transition keeps ordered feedback and completes within 240ms',()=>{
   const h=harness(false);
-  h.ctx.beginChatAdvance(5,'menu');
+  h.ctx.beginChatAdvance(5);
   const tasks=[...h.tasks.values()].sort((a,b)=>a.delay-b.delay);
-  assert.ok(tasks.at(-1).delay <= 1200);
+  assert.equal(tasks.at(-1).delay,240);
   for(const task of tasks) task.callback();
   assert.deepEqual(h.changes,[5]);
-  assert.deepEqual(h.state.filter(x=>x?.assemblyStage>=0).map(x=>x.assemblyStage),[0,1,2,3,4]);
+  assert.equal(h.state.at(-1),null);
+  assert.ok(h.state.every(x=>x===null || x.kind==='step'));
+});
+
+test('menu advancement waits for real assembly instead of transition stages',()=>{
+  const next = page.slice(page.indexOf('  function next()'), page.indexOf('  function chooseManualMenu()'));
+  assert.match(next,/startMenuAssembly\("fill", \(\) => changeStep\(5\)\)/);
+  assert.doesNotMatch(next,/beginChatAdvance\(step \+ 1,.*menu/);
+  assert.doesNotMatch(page,/assemblyStage|menuAssemblyStages/);
 });
 
 test('restarting the scheduler cancels every previous callback',()=>{

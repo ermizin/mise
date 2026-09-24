@@ -18,6 +18,9 @@ import portionComponentsJson from "@/data/recipe-portion-components.json";
 import { makeCookingSignature, restoreCookingDraft, cookingProgress, type CookingDraft } from "@/domain/cooking-session";
 import { parseCookingDuration, formatCookingDuration, type CookingDuration } from "@/domain/cooking-duration";
 import { createPortal } from "react-dom";
+import { ThinkingOrb } from "thinking-orbs";
+import { startMenuAssemblyTask } from "@/lib/menu-assembly-task";
+import { ComposePlanGlow, LiquidNavIndicator } from "./ui/library-effects";
 import {
   NotificationSetupPanel,
   type NotificationPlan,
@@ -8333,14 +8336,16 @@ function BottomNav({
     <nav className="app-navigation" aria-label="Навигация Mise">
       <div className="desktop-brand"><MiseWordmark /></div>
       {showCompose && (
-        <button
-          className="compose-fab"
-          onClick={() => onNavigate("builder")}
-          aria-label="Составить план"
-        >
-          <Icon name="plus" />
-          <small>Составить</small>
-        </button>
+        <ComposePlanGlow>
+          <button
+            className="compose-fab"
+            onClick={() => onNavigate("builder")}
+            aria-label="Составить план"
+          >
+            <Icon name="plus" />
+            <small>Составить</small>
+          </button>
+        </ComposePlanGlow>
       )}
       <div
         className="bottom-nav glass"
@@ -8349,10 +8354,7 @@ function BottomNav({
         aria-orientation={desktop ? "vertical" : "horizontal"}
         style={{ "--tab": activeIndex } as CSSProperties}
       >
-        <span
-          className="bottom-nav-indicator"
-          aria-hidden
-        />
+        <LiquidNavIndicator enabled={!showCompose} />
         {primaryTabs.map((item, index) => {
           const selected = tab === item.id;
           const effect = bump[item.id];
@@ -10769,7 +10771,6 @@ function PlanBuilder({
     answer: string;
     thinking: boolean;
     kind: "step" | "menu";
-    assemblyStage: number;
   } | null>(null);
   const activeBuilderDraftKey =
     mode === "settings"
@@ -10781,6 +10782,7 @@ function PlanBuilder({
   const menuAssemblyRef = useRef<HTMLDivElement | null>(null);
   const builderContentRef = useRef<HTMLElement | null>(null);
   const chatTimersRef = useRef<number[]>([]);
+  const menuTaskRef = useRef<{ cancel: () => void } | null>(null);
   useEffect(() => {
     stepRef.current = step;
     closeRef.current = onClose;
@@ -10788,6 +10790,8 @@ function PlanBuilder({
   useEffect(
     () => () => {
       chatTimersRef.current.forEach((timer) => window.clearTimeout(timer));
+      menuTaskRef.current?.cancel();
+      menuTaskRef.current = null;
     },
     [],
   );
@@ -10802,6 +10806,11 @@ function PlanBuilder({
     nextStep: number,
     historyMode: "push" | "replace" | "none" = "push",
   ) {
+    if (menuTaskRef.current) {
+      menuTaskRef.current.cancel();
+      menuTaskRef.current = null;
+      setChatTransition(null);
+    }
     const bounded = Math.max(initialStep, Math.min(6, nextStep));
     setStepMotionDirection(bounded < stepRef.current ? -1 : 1);
     setHistoryExpanded(false);
@@ -10819,11 +10828,18 @@ function PlanBuilder({
     else history.pushState(state, "");
   }
   function backOneStep() {
-    if (chatTransition) return;
+    if (menuTaskRef.current) {
+      menuTaskRef.current.cancel();
+      menuTaskRef.current = null;
+      setChatTransition(null);
+    } else if (chatTransition) return;
     if (stepRef.current === initialStep) closeBuilder();
     else history.back();
   }
   function closeBuilder() {
+    menuTaskRef.current?.cancel();
+    menuTaskRef.current = null;
+    setChatTransition(null);
     clearDraft();
     if (mode === "settings") closeRef.current();
     else {
@@ -10908,6 +10924,9 @@ function PlanBuilder({
       );
     }
     const onPop = (event: PopStateEvent) => {
+      menuTaskRef.current?.cancel();
+      menuTaskRef.current = null;
+      setChatTransition(null);
       if (
         event.state?.mise === "builder" &&
         Number.isInteger(event.state?.builderStep)
@@ -11169,24 +11188,6 @@ function PlanBuilder({
   );
   const readyMenuTitle = `${withPlural(menuDishCount, FORMS.dish)} · ${withPlural(menuPortionCount, FORMS.portion)} · ${withPlural(batches.length, eveningForms)}`;
   const readyMenuMessage = `Меню на ${withPlural(menuDayCount, FORMS.day)} готово. Докупить ${withPlural(draftPlan.shopping.length, FORMS.item)}. Посмотрите — что не нравится, заменю.`;
-  const menuAssemblyStages = [
-    {
-      label: "Считаю нормы",
-      note: `${withPlural(people.length, FORMS.person)}, учитываю разные цели`,
-    },
-    {
-      label: "Подбираю блюда",
-      note: "Ищу пересечения по продуктам",
-    },
-    {
-      label: "Делю на партии",
-      note: `Партия на ${withPlural(cookEveryDays, FORMS.day)}`,
-    },
-    {
-      label: "Собираю закупку",
-      note: "",
-    },
-  ];
   const builderChatTurns = [
     {
       question: "На какие даты собрать план?",
@@ -11232,14 +11233,11 @@ function PlanBuilder({
     if (chatTransition || index >= step) return;
     history.go(index - step);
   }
-  function beginChatAdvance(
-    nextStep: number,
-    kind: "step" | "menu" = "step",
-  ) {
+  function beginChatAdvance(nextStep: number) {
     if (chatTransition) return;
     chatTimersRef.current.forEach((timer) => window.clearTimeout(timer));
     const answer = builderChatTurns[step]?.answer ?? "Готово";
-    setChatTransition({ answer, thinking: false, kind, assemblyStage: -1 });
+    setChatTransition({ answer, thinking: false, kind: "step" });
     const reducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -11249,55 +11247,6 @@ function PlanBuilder({
       return;
     }
     const thinkingDelay = 80;
-    if (kind === "menu") {
-      const menuRevealDelay = 120;
-      const menuStageStartDelay = menuRevealDelay + 160;
-      const stageDuration = 180;
-      chatTimersRef.current = [
-        window.setTimeout(
-          () =>
-            setChatTransition({
-              answer,
-              thinking: true,
-              kind,
-              assemblyStage: -1,
-            }),
-          menuRevealDelay,
-        ),
-        ...menuAssemblyStages.map((_, assemblyStage) =>
-          window.setTimeout(
-            () =>
-              setChatTransition({
-                answer,
-                thinking: true,
-                kind,
-                assemblyStage,
-              }),
-            menuStageStartDelay + assemblyStage * stageDuration,
-          ),
-        ),
-        window.setTimeout(
-          () =>
-            setChatTransition({
-              answer,
-              thinking: true,
-              kind,
-              assemblyStage: menuAssemblyStages.length,
-            }),
-          menuStageStartDelay + menuAssemblyStages.length * stageDuration,
-        ),
-        window.setTimeout(
-          () => {
-            setChatTransition(null);
-            changeStep(nextStep);
-          },
-          menuStageStartDelay +
-            menuAssemblyStages.length * stageDuration +
-            100,
-        ),
-      ];
-      return;
-    }
     const questionDelay = 240;
     chatTimersRef.current = [
       window.setTimeout(
@@ -11305,8 +11254,7 @@ function PlanBuilder({
           setChatTransition({
             answer,
             thinking: true,
-            kind,
-            assemblyStage: -1,
+            kind: "step",
           }),
         thinkingDelay,
       ),
@@ -11472,7 +11420,8 @@ function PlanBuilder({
           ),
       );
       setChoiceIndex(firstMissing >= 0 ? firstMissing : 0);
-      assembleMenu("fill");
+      startMenuAssembly("fill", () => changeStep(5));
+      return;
     }
     if (step === 5 && menuMode === "manual") {
       if (choiceIndex < positions.length - 1) {
@@ -11481,7 +11430,7 @@ function PlanBuilder({
       }
       if (!allSelected) return;
     }
-    beginChatAdvance(step + 1, step === 4 ? "menu" : "step");
+    beginChatAdvance(step + 1);
   }
   function chooseManualMenu() {
     setMenuMode("manual");
@@ -11492,7 +11441,7 @@ function PlanBuilder({
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
      Внутри одного приёма пищи блюда по партиям стараемся не повторять. */
-  function assembleMenu(mode: "fill" | "reset" = "fill") {
+  function* assembleMenuSteps(mode: "fill" | "reset" = "fill") {
     const updatedSelections = { ...validSelections };
     const updatedAssignments = Object.fromEntries(
       Object.entries(validSelectionAssignments).map(([key, assignments]) => [
@@ -11526,6 +11475,7 @@ function PlanBuilder({
       const existing = updatedAssignments[key] ?? [];
       if (assignmentCoverageComplete(people, slot, existing)) {
         existing.forEach((assignment) => used.add(assignment.recipeId));
+        yield;
         continue;
       }
       const avoid = avoidPerSlot.get(slot) ?? new Set<string>();
@@ -11547,22 +11497,51 @@ function PlanBuilder({
         selectedRecipes,
         kitchenEquipment,
       );
-      if (!assignmentCoverageComplete(people, slot, assignments)) continue;
+      if (!assignmentCoverageComplete(people, slot, assignments)) {
+        yield;
+        continue;
+      }
       updatedAssignments[key] = assignments;
       const primary = [...assignments].sort(
         (left, right) => right.personIds.length - left.personIds.length,
       )[0];
       if (primary) updatedSelections[key] = primary.recipeId;
       assignments.forEach((assignment) => used.add(assignment.recipeId));
+      yield;
     }
-    setSelections(updatedSelections);
-    setSelectionAssignments(updatedAssignments);
     return { selections: updatedSelections, assignments: updatedAssignments };
+  }
+  function startMenuAssembly(
+    mode: "fill" | "reset",
+    afterComplete?: (result: {
+      selections: Record<string, string>;
+      assignments: Record<string, RecipeAssignment[]>;
+    }) => void,
+  ) {
+    if (menuTaskRef.current) return;
+    const answer = mode === "reset" ? "Собрать заново" : builderChatTurns[step]?.answer ?? "Собрать меню";
+    setChatTransition({ answer, thinking: false, kind: "menu" });
+    menuTaskRef.current = startMenuAssemblyTask(assembleMenuSteps(mode), {
+      onSlow: () => setChatTransition({ answer, thinking: true, kind: "menu" }),
+      onComplete: (result) => {
+        menuTaskRef.current = null;
+        setSelections(result.selections);
+        setSelectionAssignments(result.assignments);
+        setChatTransition(null);
+        afterComplete?.(result);
+      },
+      onError: () => {
+        menuTaskRef.current = null;
+        setChatTransition(null);
+        setSaveState("error");
+        setSaveMessage("Не удалось собрать меню. Попробуйте ещё раз.");
+      },
+    });
   }
   /* Автоматический путь открывает шаг с уже собранным меню.
      Ручной путь намеренно оставляет незаполненные слоты человеку. */
   useEffect(() => {
-    if (step !== 5 || menuMode !== "auto") return;
+    if (step !== 5 || menuMode !== "auto" || menuTaskRef.current) return;
     const missing = positions.some(
       ({ batch, slot }) =>
         !assignmentCoverageComplete(
@@ -11572,7 +11551,7 @@ function PlanBuilder({
         ),
     );
     if (missing) {
-      const frame = window.requestAnimationFrame(() => assembleMenu("fill"));
+      const frame = window.requestAnimationFrame(() => startMenuAssembly("fill"));
       return () => window.cancelAnimationFrame(frame);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- пересобирать на каждый рендер нельзя: производные карты создаются заново
@@ -11668,27 +11647,28 @@ function PlanBuilder({
     return true;
   }
   function assembleRemainingAndReview() {
-    const result = assembleMenu("fill");
-    const complete = positions.every(({ batch, slot }) =>
-      assignmentCoverageComplete(
-        people,
-        slot,
-        result.assignments[selectionKey(batch, slot)] ?? [],
-      ),
-    );
-    if (complete && !missingPlanMethods({ ...draftPlan, selections: result.selections, selectionAssignments: result.assignments }).length) {
-      setSaveState("idle");
-      setSaveMessage("");
-      changeStep(6);
-    } else if (complete) {
-      changeStep(4);
-      setSaveMessage("Добавьте нужную утварь для сохранённого блюда или выберите замену.");
-    } else {
-      setSaveState("error");
-      setSaveMessage(
-        "Для одной из позиций нет подходящего варианта без ваших «не люблю». Выберите блюдо вручную или измените настройки.",
+    startMenuAssembly("fill", (result) => {
+      const complete = positions.every(({ batch, slot }) =>
+        assignmentCoverageComplete(
+          people,
+          slot,
+          result.assignments[selectionKey(batch, slot)] ?? [],
+        ),
       );
-    }
+      if (complete && !missingPlanMethods({ ...draftPlan, selections: result.selections, selectionAssignments: result.assignments }).length) {
+        setSaveState("idle");
+        setSaveMessage("");
+        changeStep(6);
+      } else if (complete) {
+        changeStep(4);
+        setSaveMessage("Добавьте нужную утварь для сохранённого блюда или выберите замену.");
+      } else {
+        setSaveState("error");
+        setSaveMessage(
+          "Для одной из позиций нет подходящего варианта без ваших «не люблю». Выберите блюдо вручную или измените настройки.",
+        );
+      }
+    });
   }
   async function save() {
     if (pendingMethods.length) {
@@ -11811,7 +11791,7 @@ function PlanBuilder({
               ? () => goToManualChoice(choiceIndex - 1)
               : backOneStep
           }
-          disabled={Boolean(chatTransition)}
+          disabled={chatTransition?.kind === "step"}
           aria-label={
             mode === "settings"
               ? "Назад в настройки"
@@ -11919,7 +11899,7 @@ function PlanBuilder({
               <button type="button" className="secondary-button" onClick={() => changeStep(4)}>Изменить утварь</button>
               {pendingMethods.map((id) => recipesById[id] && <button key={id} type="button" className="text-button" onClick={() => setPreviewRecipe(recipesById[id])}>{recipesById[id].title}</button>)}
             </section>}
-            {step === 5 && menuMode === "auto" && allSelected ? (
+            {step === 5 && menuMode === "auto" && allSelected && chatTransition?.kind !== "menu" ? (
               <div
                 className="builder-chat-menu-ready tint-mint"
                 ref={chatQuestionRef}
@@ -11938,7 +11918,9 @@ function PlanBuilder({
                 <span aria-hidden>M</span>
                 <div>
                   <small>{steps[step]}</small>
-                  <p>{builderChatTurns[step]?.question}</p>
+                  <p>{chatTransition?.kind === "menu"
+                    ? "Подбираю блюда и рассчитываю порции…"
+                    : builderChatTurns[step]?.question}</p>
                 </div>
               </div>
             )}
@@ -11953,56 +11935,10 @@ function PlanBuilder({
                     className="builder-menu-assembly glass-3"
                     ref={menuAssemblyRef}
                     role="status"
-                    aria-label="Mise собирает меню по этапам"
+                    aria-label="Mise собирает меню"
                   >
-                    <small>Собираю ваш план</small>
-                    <strong>Готовлю меню и закупку</strong>
-                    <div className="builder-menu-assembly-progress" aria-hidden>
-                      <span
-                        style={{
-                          width: `${(Math.max(0, chatTransition.assemblyStage) / menuAssemblyStages.length) * 100}%`,
-                        }}
-                      />
-                    </div>
-                    <div className="builder-menu-stages">
-                      {menuAssemblyStages.map((stageItem, index) => {
-                        const done = chatTransition.assemblyStage > index;
-                        const active = chatTransition.assemblyStage === index;
-                        return (
-                          <div
-                            className={`builder-menu-stage${done ? " is-done" : active ? " is-active" : " is-waiting"}`}
-                            key={stageItem.label}
-                          >
-                            <span
-                              className="builder-menu-stage-mark"
-                              aria-hidden
-                            >
-                              {done ? (
-                                <span className="builder-menu-stage-tick">✓</span>
-                              ) : active ? (
-                                <span className="builder-menu-stage-spinner" />
-                              ) : (
-                                <span className="builder-menu-stage-dot" />
-                              )}
-                            </span>
-                            <span>
-                              <b>{stageItem.label}</b>
-                              {stageItem.note && <small>{stageItem.note}</small>}
-                            </span>
-                            {active && (
-                              <span
-                                className="builder-menu-stage-dots"
-                                aria-hidden
-                              >
-                                <i />
-                                <i />
-                                <i />
-                              </span>
-                            )}
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <ThinkingOrb state="solving" size={20} theme="light" aria-hidden="true" />
+                    <strong>Собираю ваше меню</strong>
                   </div>
                 ) : chatTransition.thinking ? (
                   <div
@@ -12134,7 +12070,7 @@ function PlanBuilder({
                   shopping={draftPlan.shopping}
                   onReplace={replaceSelection}
                   onOpenRecipe={setPreviewRecipe}
-                  onReassemble={() => assembleMenu("reset")}
+                  onReassemble={() => startMenuAssembly("reset")}
                 />
                 {!allSelected && (
                   <Note

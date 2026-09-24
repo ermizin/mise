@@ -31,9 +31,12 @@
     "db:local:check": "node scripts/local-d1.mjs check"
   },
   "dependencies": {
+    "border-beam": "1.4.1",
     "drizzle-orm": "0.45.2",
+    "liquid-gooey": "0.2.2",
     "react": "19.2.6",
-    "react-dom": "19.2.6"
+    "react-dom": "19.2.6",
+    "thinking-orbs": "0.3.2"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",

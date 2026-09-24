@@ -211,7 +211,7 @@ test("includes the complete plan-builder and private persistence model", async (
 
   // Шаг «Выбор меню» (9b): меню приходит собранным, шаг — проверка.
   assert.match(page, /Посмотрите — что не нравится, заменю/);
-  assert.match(page, /function assembleMenu/);
+  assert.match(page, /function\* assembleMenuSteps/);
   assert.match(page, /заменено вами/);
   // Заменённое вручную переживает пересборку.
   assert.match(page, /if \(pinned\.includes\(key\)\) continue;/);

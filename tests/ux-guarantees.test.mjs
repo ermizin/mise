@@ -27,7 +27,7 @@ test("the wizard offers manual menu building without skipping required answers",
   assert.match(page, /className="builder-chat-alternative"/);
   assert.match(page, /Выбрать вручную/);
   assert.doesNotMatch(page, /className="builder-menu-mode-options"/);
-  assert.match(page, /step === 4 \? "menu" : "step"/);
+  assert.match(page, /startMenuAssembly\("fill", \(\) => changeStep\(5\)\)/);
   assert.match(page, /function ManualMenuStep/);
   assert.match(page, /const initialManualRecipeCount = 5/);
   assert.match(page, /allOptions\.slice\(0, initialManualRecipeCount\)/);
@@ -43,7 +43,7 @@ test("the wizard offers manual menu building without skipping required answers",
   assert.match(product, /обязательные вопросы нельзя пропустить/i);
   assert.match(product, /пять лучших подходящих вариантов с фотографиями/i);
   const automaticAssembly = page.slice(
-    page.indexOf("function assembleMenu"),
+    page.indexOf("function* assembleMenuSteps"),
     page.indexOf("function replaceSelection"),
   );
   assert.doesNotMatch(

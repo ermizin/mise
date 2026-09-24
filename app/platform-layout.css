@@ -92,6 +92,19 @@
 .app-workspace .week-today-button { grid-column: 1 / -1; }
 .app-workspace .bottom-nav { min-height: 70px; bottom: max(8px, env(safe-area-inset-bottom)); border-radius: 24px; }
 .app-workspace .bottom-nav-indicator { background: rgba(242, 87, 26, .07); box-shadow: none; }
+.app-workspace .liquid-nav-layer { z-index: 0; opacity: .07; }
+.app-workspace .liquid-nav-layer .bottom-nav-indicator { background: transparent; box-shadow: none; }
+.compose-plan-glow {
+  position: fixed;
+  z-index: 21;
+  right: max(20px, calc(env(safe-area-inset-right) + 14px));
+  bottom: calc(104px + env(safe-area-inset-bottom));
+  border-radius: var(--radius-l);
+  box-shadow: 0 14px 28px rgba(154, 52, 18, .34);
+}
+.compose-plan-glow .compose-fab { position: relative; inset: auto; width: 100%; box-shadow: none; }
+.compose-plan-glow:has(:focus-visible) { outline: 3px solid var(--accent-text); outline-offset: 4px; }
+.compose-plan-glow .compose-fab:focus-visible { outline-offset: -4px; }
 @media (max-width: 380px) {
   .app-workspace .week-macro-card { padding: 13px; }
   .app-workspace .week-macro-head h2 { font-size: 18px; }
@@ -121,6 +134,7 @@
   .app-workspace .bottom-nav button { min-height: 60px; padding: 14px 16px; flex-direction: row; justify-content: flex-start; gap: 18px; }
   .app-workspace .bottom-nav button small { font-size: 16px; font-weight: 500; text-align: left; }
   .app-workspace .compose-fab { position: relative; inset: auto; order: 2; width: 100%; transform: none; }
+  .app-workspace .compose-plan-glow { position: relative; inset: auto; order: 2; width: 100%; }
   .app-workspace .week-screen-header .mise-wordmark, .app-workspace .week-period-button, .week-mobile-heading { display: none; }
   .week-desktop-heading, .week-desktop-kicker { display: block; }
   .week-period-title.week-desktop-heading { display: inline-flex; align-items: center; }

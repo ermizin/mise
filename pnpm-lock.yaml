@@ -8,15 +8,24 @@ importers:
 
   .:
     dependencies:
+      border-beam:
+        specifier: 1.4.1
+        version: 1.4.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       drizzle-orm:
         specifier: 0.45.2
         version: 0.45.2
+      liquid-gooey:
+        specifier: 0.2.2
+        version: 0.2.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       react:
         specifier: 19.2.6
         version: 19.2.6
       react-dom:
         specifier: 19.2.6
         version: 19.2.6(react@19.2.6)
+      thinking-orbs:
+        specifier: 0.3.2
+        version: 0.3.2(react@19.2.6)
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: 1.37.1
@@ -1595,6 +1604,12 @@ packages:
   blake3-wasm@2.1.5:
     resolution: {integrity: sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g==}
 
+  border-beam@1.4.1:
+    resolution: {integrity: sha512-YyugmKjrhkg1PBC1ZKX7JvFo/zYzha6NXOq24VWrnvBYmDRvGCgFS9oxZoKJ+oS9Kn436l1etYGlAdGiWK+3ag==}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+
   brace-expansion@1.1.18:
     resolution: {integrity: sha512-Edep/X9fGqVNmzKBVsDYIOtD+z1tuezV70LBjdCst9Tqu76lsnvRiZ6oTic1n+/BIwX6QDGAO94PN4N2SADvtw==}
 
@@ -1962,6 +1977,7 @@ packages:
   eslint@9.39.4:
     resolution: {integrity: sha512-XoMjdBOwe/esVgEvLmNsD3IRHkm7fbKIUGvrleloJXUZgDHig2IPWNniv+GwjyJXzuNqVjlr5+4yVUZjycJwfQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -2516,6 +2532,12 @@ packages:
   linebreak@1.1.0:
     resolution: {integrity: sha512-MHp03UImeVhB7XZtjd0E4n6+3xr5Dq/9xI/5FptGk5FrbDR3zagPa2DS6U8ks/3HjbKWG9Q1M2ufOzxV2qLYSQ==}
 
+  liquid-gooey@0.2.2:
+    resolution: {integrity: sha512-UnnNSYdZoNHXowmHKo2pOF6suI1+pLMKf7qBMj1wT6wG3u0gqXP7qiLVMpCjJM2ETkr/GqF8n4fcuIgWb1fHQQ==}
+    peerDependencies:
+      react: '>=18'
+      react-dom: '>=18'
+
   locate-path@6.0.0:
     resolution: {integrity: sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw==}
     engines: {node: '>=10'}
@@ -2944,6 +2966,11 @@ packages:
     resolution: {integrity: sha512-7A2xlQ5EnGT8KPA92dUh6RbRYTVw8hEaEN9L1K68l4UOXFuV511NnAqObGoRqGOQofQcMypisu1s3xawCEHrvA==}
     engines: {node: '>=10'}
     hasBin: true
+
+  thinking-orbs@0.3.2:
+    resolution: {integrity: sha512-QZFeBaPEzqhjiZoXy961EvDgaXk2WgXacF3Rbz+Sj5IfzDzBvTC86vdREUHniBffYibJFKSwbfllxLUdI/Xv6g==}
+    peerDependencies:
+      react: '>=18.0.0'
 
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
@@ -4393,6 +4420,11 @@ snapshots:
 
   blake3-wasm@2.1.5: {}
 
+  border-beam@1.4.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+
   brace-expansion@1.1.18:
     dependencies:
       balanced-match: 1.0.2
@@ -5385,6 +5417,11 @@ snapshots:
       base64-js: 0.0.8
       unicode-trie: 2.0.0
 
+  liquid-gooey@0.2.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
+    dependencies:
+      react: 19.2.6
+      react-dom: 19.2.6(react@19.2.6)
+
   locate-path@6.0.0:
     dependencies:
       p-locate: 5.0.0
@@ -5884,6 +5921,10 @@ snapshots:
       acorn: 8.18.0
       commander: 2.20.3
       source-map-support: 0.5.21
+
+  thinking-orbs@0.3.2(react@19.2.6):
+    dependencies:
+      react: 19.2.6
 
   tiny-inflate@1.0.3: {}
 
