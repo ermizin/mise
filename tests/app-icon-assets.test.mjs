@@ -27,6 +27,22 @@ function pngHeader(buffer) {
   };
 }
 
+test("native icon regenerates from the shared brand source as opaque 1024 PNG", { skip: process.platform !== "darwin" }, async () => {
+  const directory = await mkdtemp(path.join(tmpdir(), "mise-native-icon-"));
+  try {
+    execFileSync("swift", ["scripts/generate-app-icons.swift", "--native", "--output", directory], {
+      cwd: fileURLToPath(root),
+      env: { ...process.env, CLANG_MODULE_CACHE_PATH: path.join(tmpdir(), "mise-swift-module-cache") },
+      stdio: "pipe",
+    });
+    const committed = await readFile(new URL("../apps/native/assets/icon.png", import.meta.url));
+    assert.deepEqual(pngHeader(committed), { width: 1024, height: 1024, colorType: 2 });
+    assert.deepEqual(await readFile(path.join(directory, "icon.png")), committed);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
+});
+
 test("app icon B exports have the declared sizes and alpha policy", async () => {
   for (const [name, width, height, colorType] of expected) {
     const buffer = await readFile(new URL(`../public/${name}`, import.meta.url));

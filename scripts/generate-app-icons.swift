@@ -262,9 +262,15 @@ private func outputDirectory() -> URL {
 }
 
 let output = outputDirectory()
+let nativeOnly = CommandLine.arguments.contains("--native")
+private let selectedExports: [ExportSpec] = nativeOnly
+  ? [.init(name: "icon.png", width: 1024, height: 1024, alpha: false, kind: .icon(showLid: true))]
+  : exports
 try FileManager.default.createDirectory(at: output, withIntermediateDirectories: true)
-for spec in exports {
+for spec in selectedExports {
   try render(spec).write(to: output.appendingPathComponent(spec.name), options: .atomic)
 }
-try Data(faviconSVG.utf8).write(to: output.appendingPathComponent("favicon.svg"), options: .atomic)
-print("Generated \(exports.count + 1) Mise icon assets in \(output.path)")
+if !nativeOnly {
+  try Data(faviconSVG.utf8).write(to: output.appendingPathComponent("favicon.svg"), options: .atomic)
+}
+print("Generated \(selectedExports.count + (nativeOnly ? 0 : 1)) Mise icon assets in \(output.path)")

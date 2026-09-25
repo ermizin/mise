@@ -17,6 +17,7 @@
     "recipes:import:goodfood": "node scripts/import-goodfood.mjs --limit 100 --output data/goodfood-candidates.json",
     "recipes:images:download": "node scripts/download-recipe-images.mjs",
     "recipes:runtime:refresh": "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json",
+    "mobile:catalog:refresh": "node --experimental-strip-types scripts/build-mobile-bootstrap.ts",
     "recipes:flavour:check": "node scripts/validate-recipe-flavour-integrity.mjs",
     "recipes:enrich:instructions": "node scripts/enrich-recipe-corpus.mjs",
     "recipes:instructions:check": "node scripts/build-recipe-editorial-drafts.mjs --dry-run",

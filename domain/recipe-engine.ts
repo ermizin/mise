@@ -394,6 +394,17 @@ export type RecipeFamily = {
   reviewStatus: "pilot" | "review_required";
 };
 
+/** Minimal projection required to run the deterministic solver offline. */
+export type RecipeFamilySolverInput = Pick<
+  RecipeFamily,
+  | "id"
+  | "ingredients"
+  | "minViableCalories"
+  | "maxViableCalories"
+  | "minimumProtein"
+  | "geometryLockedMax"
+>;
+
 export type SolvedRecipeVariant = {
   familyId: string;
   targetCalories: number;
@@ -3194,7 +3205,7 @@ export function nutritionReachForIngredients(ingredients: RecipeFamilyIngredient
 }
 
 function hillClimb(
-  family: RecipeFamily,
+  family: RecipeFamilySolverInput,
   seed: "min" | "base" | "preferred",
   targets: SolveTargets,
 ) {
@@ -3307,7 +3318,7 @@ export type SolveRecipeFamilyInput = {
 const solveCache = new Map<string, SolvedRecipeVariant>();
 const SOLVE_CACHE_LIMIT = 4000;
 
-function familyFingerprint(family: RecipeFamily) {
+function familyFingerprint(family: RecipeFamilySolverInput) {
   // Families are editorial objects and can be updated in-place by a catalog
   // refresh. Recompute this compact key instead of caching it by object
   // identity, otherwise a changed role/bound can receive an old solve.
@@ -3350,7 +3361,7 @@ export function resetRecipeSolverCache() {
 }
 
 export function solveRecipeFamily(
-  family: RecipeFamily,
+  family: RecipeFamilySolverInput,
   input: SolveRecipeFamilyInput,
 ): SolvedRecipeVariant {
   const targetCalories = Math.round(input.targetCalories);
@@ -3371,7 +3382,7 @@ export function solveRecipeFamily(
 }
 
 function solveRecipeFamilyUncached(
-  family: RecipeFamily,
+  family: RecipeFamilySolverInput,
   input: SolveRecipeFamilyInput,
   targetCalories: number,
   cookingFatShare: number,
@@ -3441,7 +3452,10 @@ export function requiredGeometryBatches(
   return Math.ceil(largestScale / lockedMax);
 }
 
-function familyWithCookingFatShare(family: RecipeFamily, share: number): RecipeFamily {
+function familyWithCookingFatShare(
+  family: RecipeFamilySolverInput,
+  share: number,
+): RecipeFamilySolverInput {
   return {
     ...family,
     ingredients: family.ingredients.map((ingredient) => {
@@ -3460,7 +3474,7 @@ function familyWithCookingFatShare(family: RecipeFamily, share: number): RecipeF
 }
 
 export function solveRecipeBatch(
-  family: RecipeFamily,
+  family: RecipeFamilySolverInput,
   portions: { id: string; targetCalories: number; targetProtein?: number; targetCarbs?: number; targetFat?: number; hardExclusions?: string[] }[],
 ) {
   const cookingFats = family.ingredients.filter((ingredient) => ingredient.role === "fat_cooking");

@@ -1,0 +1,21 @@
+diff --git a/sdks/hermes-engine/hermes-engine.podspec b/sdks/hermes-engine/hermes-engine.podspec
+index 66c399a07ab06fc7b512de92907992b321e82a3f..b8619a18c1c9288d7395ebb67c94e19fb00f9150 100644
+--- a/sdks/hermes-engine/hermes-engine.podspec
++++ b/sdks/hermes-engine/hermes-engine.podspec
+@@ -18,6 +18,7 @@ rescue => e
+   # Fallback to the parent directory if the above command fails (e.g when building locally in OOT Platform)
+   react_native_path = File.join(__dir__, "..", "..")
+ end
++react_native_path = react_native_path.force_encoding(Encoding::UTF_8)
+ 
+ # package.json
+ package = JSON.parse(File.read(File.join(react_native_path, "package.json")))
+@@ -90,7 +91,7 @@ Pod::Spec.new do |spec|
+     # In other cases, when using Hermes V1, the prebuilt versioned binaries can be used.
+     if source_type != HermesEngineSourceType::LOCAL_PREBUILT_TARBALL
+       hermes_compiler_path = File.dirname(Pod::Executable.execute_command('node', ['-p',
+-        "require.resolve(\"hermes-compiler\", {paths: [\"#{react_native_path}\"]})", __dir__]).strip
++        "require.resolve(\"hermes-compiler\", {paths: [\"#{react_native_path}\"]})", __dir__]).strip.force_encoding(Encoding::UTF_8)
+       )
+       hermesc_path = File.join(hermes_compiler_path, 'hermesc', 'osx-bin', 'hermesc')
+ 

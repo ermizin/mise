@@ -1,0 +1,16 @@
+{
+  "name": "@mise/domain",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./meal-execution": "./meal-execution.ts",
+    "./mobile": "./mobile.ts",
+    "./numeric-input": "./numeric-input.ts",
+    "./nutrition": "./nutrition.ts",
+    "./plan-generator": "./plan-generator.ts",
+    "./portion-allocation": "./portion-allocation.ts",
+    "./recipe-engine": "./recipe-engine.ts",
+    "./recipe-geometry-capacity": "./recipe-geometry-capacity.ts"
+  }
+}
