@@ -11781,6 +11781,37 @@ function PlanBuilder({
     !chatTransition;
   const needsRemainderDecision =
     step === 4 && remainder > 0 && remainderDecision === null;
+  /* Неактивная кнопка без причины — тупик: на телефоне статус скрыт ради
+     компактности, поэтому причина блокировки показывается отдельно. */
+  const composerBlocker =
+    chatTransition || mode === "settings" || step > 5 || stepIsValid()
+      ? null
+      : needsRemainderDecision
+        ? {
+            title: "Нужно ваше решение",
+            detail: "Выберите, что делать с остатком дней",
+          }
+        : step === 0
+          ? { title: "Проверьте даты", detail: "План можно составить на срок от 1 до 14 дней" }
+          : step === 1
+            ? { title: "Выберите приём пищи", detail: "Нужна хотя бы одна позиция меню" }
+            : step === 2
+              ? { title: "Выберите направление", detail: "Это направление меню сейчас недоступно" }
+              : step === 3
+                ? {
+                    title: "Проверьте людей и цели",
+                    detail: `Каждому нужны имя, норма ${NUTRITION_CONFIG.minimumTargetCalories}–${NUTRITION_CONFIG.maximumTargetCalories} ккал и хотя бы одно блюдо`,
+                  }
+                : step === 4
+                  ? kitchenGaps.length
+                    ? {
+                        title: "Не хватает блюд",
+                        detail: `Нет вариантов: ${kitchenGaps.map((slot) => mealMeta[slot].label.toLowerCase()).join(", ")}. Добавьте технику или измените цели`,
+                      }
+                    : { title: "Проверьте период", detail: "С этим ритмом план выходит за 14 дней" }
+                  : pendingMethods.length
+                    ? { title: "Не хватает утвари", detail: "Добавьте технику для выбранного блюда или замените его" }
+                    : { title: "Меню не заполнено", detail: "Выберите блюдо для каждой позиции" };
   const composerStatus = chatTransition
     ? {
         title:
@@ -11790,19 +11821,14 @@ function PlanBuilder({
             ? "Подбираем блюда и считаем порции"
             : "Следующий вопрос появится здесь",
       }
-    : needsRemainderDecision
-      ? {
-          title: "Нужно ваше решение",
-          detail: "Выберите, что делать с остатком дней",
-        }
-      : {
-          title: "Ваш ответ готов",
-          detail: "Можно вернуться к любому ответу выше",
-        };
+    : composerBlocker ?? {
+        title: "Ваш ответ готов",
+        detail: "Можно вернуться к любому ответу выше",
+      };
   if (previewRecipe) return <RecipeView context={{ recipe: previewRecipe, plan: draftPlan }} onBack={() => setPreviewRecipe(null)} onEditKitchen={() => { setPreviewRecipe(null); changeStep(4); }} />;
   return (
     <main
-      className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}`}
+      className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}${composerBlocker && !showManualMenuChoice ? " has-composer-blocker" : ""}`}
     >
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
@@ -12160,7 +12186,7 @@ function PlanBuilder({
             Выбрать вручную
           </button>
         ) : (
-          <div id="builder-composer-status" role="status" aria-live="polite">
+          <div id="builder-composer-status" role="status" aria-live="polite" className={composerBlocker ? "is-blocking" : undefined}>
             <span>{composerStatus.title}</span>
             <small>{composerStatus.detail}</small>
           </div>
@@ -13387,29 +13413,8 @@ function CookingStep({
         title="На сколько дней готовим за раз?"
         text="Выберите размер одной партии. Мы учтём хранение и заморозку."
       />
-      <section className="kitchen-equipment glass-card" aria-labelledby="kitchen-equipment-title">
-        <p className="kicker">Ваша кухня</p>
-        <h3 id="kitchen-equipment-title">Что есть под рукой?</h3>
-        <p>Отметьте технику и посуду. Mise подберёт блюда, которые можно приготовить на вашей кухне.</p>
-        {kitchenEquipment === undefined && <p role="status">В старом плане утварь не указана. Отметьте её, чтобы учитывать при подборе.</p>}
-        <div className="kitchen-equipment-grid">
-          {kitchenEquipmentChoices.map(({ id, label }) => {
-            const selected = kitchenEquipment?.includes(id) ?? false;
-            return <button type="button" key={id} role="checkbox" aria-checked={selected}
-              className={`kitchen-equipment-choice${selected ? " is-selected" : ""}`}
-              onClick={() => onEquipment(selected ? (kitchenEquipment ?? []).filter((item) => item !== id) : [...(kitchenEquipment ?? []), id])}>
-              <span className="kitchen-equipment-check" aria-hidden="true">{selected && <Icon name="check" size={16} />}</span>
-              <span><b>{label}</b></span>
-            </button>;
-          })}
-        </div>
-        <div className="kitchen-equipment-actions">
-          <button type="button" className="text-button" onClick={() => onEquipment([...defaultKitchenEquipment])}>Обычная кухня</button>
-          <button type="button" className="text-button" onClick={() => onEquipment([])}>Без техники</button>
-        </div>
-        <p className="kitchen-equipment-note">Нож, доска и миска нужны по умолчанию. {kitchenEquipment?.length === 0 ? "Выбраны только блюда без нагрева." : "Для гарниров Mise тоже учтёт нужную посуду."}</p>
-      </section>
-      {kitchenGaps.length > 0 && <Note tone="warn" role="alert">С этой утварью и текущими целями не получается подобрать: {kitchenGaps.map((slot) => mealMeta[slot].label.toLowerCase()).join(", ")}. Добавьте доступную технику выше или вернитесь к приёмам пищи и целям.</Note>}
+      {/* Сначала то, о чём спрашивает шаг, и обязательное решение об остатке.
+          Кухня уже отмечена по умолчанию и не должна отодвигать их за экран. */}
       <section className="glass-card">
         <div className="day-scale" role="radiogroup" aria-label="Дней на партию">
           {[1, 2, 3, 4, 5, 6, 7].map((days) => (
@@ -13448,11 +13453,10 @@ function CookingStep({
         >
           <p className="kicker">Нужно ваше решение</p>
           <h3>
-            {periodDays} дней не делятся на {cookEveryDays} без остатка
+            {withPlural(periodDays, FORMS.day)} не делятся на {cookEveryDays} без остатка
           </h3>
           <p>
-            Последний блок — {remainder} {remainder === 1 ? "день" : "дня"}. Как
-            поступить?
+            Последний блок — {withPlural(remainder, FORMS.day)}. Как поступить?
           </p>
           <button
             role="radio"
@@ -13506,6 +13510,29 @@ function CookingStep({
           </button>
         </div>
       )}
+      {kitchenGaps.length > 0 && <Note tone="warn" role="alert">С этой утварью и текущими целями не получается подобрать: {kitchenGaps.map((slot) => mealMeta[slot].label.toLowerCase()).join(", ")}. Добавьте доступную технику ниже или вернитесь к приёмам пищи и целям.</Note>}
+      <section className="kitchen-equipment glass-card" aria-labelledby="kitchen-equipment-title">
+        <p className="kicker">Ваша кухня</p>
+        <h3 id="kitchen-equipment-title">Что есть под рукой?</h3>
+        <p>Отметьте технику и посуду. Mise подберёт блюда, которые можно приготовить на вашей кухне.</p>
+        {kitchenEquipment === undefined && <p role="status">В старом плане утварь не указана. Отметьте её, чтобы учитывать при подборе.</p>}
+        <div className="kitchen-equipment-grid">
+          {kitchenEquipmentChoices.map(({ id, label }) => {
+            const selected = kitchenEquipment?.includes(id) ?? false;
+            return <button type="button" key={id} role="checkbox" aria-checked={selected}
+              className={`kitchen-equipment-choice${selected ? " is-selected" : ""}`}
+              onClick={() => onEquipment(selected ? (kitchenEquipment ?? []).filter((item) => item !== id) : [...(kitchenEquipment ?? []), id])}>
+              <span className="kitchen-equipment-check" aria-hidden="true">{selected && <Icon name="check" size={16} />}</span>
+              <span><b>{label}</b></span>
+            </button>;
+          })}
+        </div>
+        <div className="kitchen-equipment-actions">
+          <button type="button" className="text-button" onClick={() => onEquipment([...defaultKitchenEquipment])}>Обычная кухня</button>
+          <button type="button" className="text-button" onClick={() => onEquipment([])}>Без техники</button>
+        </div>
+        <p className="kitchen-equipment-note">Нож, доска и миска нужны по умолчанию. {kitchenEquipment?.length === 0 ? "Выбраны только блюда без нагрева." : "Для гарниров Mise тоже учтёт нужную посуду."}</p>
+      </section>
     </>
   );
 }

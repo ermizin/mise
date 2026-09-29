@@ -3476,6 +3476,9 @@ p {
   font-size: var(--text-min);
   line-height: 1.25;
 }
+.builder-chat-composer > div.is-blocking span {
+  color: var(--accent-text);
+}
 .builder-chat-send {
   min-height: 56px;
   padding-inline: 14px;
@@ -5221,6 +5224,14 @@ p {
   }
   .builder-chat-composer > div {
     display: none;
+  }
+  /* A disabled answer button always says why, even on the compact composer. */
+  .builder-chat-composer > div.is-blocking {
+    display: grid;
+    padding: 2px 6px 0;
+  }
+  .builder-shell.has-composer-blocker .builder-content {
+    padding-bottom: calc(190px + env(safe-area-inset-bottom));
   }
   .builder-chat-alternative,
   .builder-chat-send {
