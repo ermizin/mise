@@ -674,6 +674,7 @@ const nutritionReferences: Record<string, CanonicalIngredient["reference"]> = {
   "fish-sauce": labelReference("label:fish-sauce", "Fish sauce", "Соль и сахар зависят от марки; используется средний профиль, этикетка обязательна."),
   dressing: labelReference("label:salad-dressing", "Prepared salad dressing", "Состав зависит от вида и марки; используется средний профиль, этикетка обязательна."),
   "rice-cake": labelReference("label:rice-cake", "Rice cakes", "Масса и добавки зависят от марки; используется средний профиль, этикетка обязательна."),
+  tteok: { ...labelReference("label:korean-rice-cake-tteok", "Korean rice cake (tteok), fresh or vacuum packed", "В USDA SR Legacy записи нет. Средний профиль упаковок: 225–240 ккал, 4 г белка, около 52 г углеводов на 100 г; этикетка обязательна."), checkedAt: "2026-09-29" },
   kimchi: labelReference("label:kimchi", "Kimchi", "Состав и соль зависят от марки; используется средний профиль, этикетка обязательна."),
   bread: labelReference("label:bread", "Bread", "Рецептура и масса ломтика зависят от марки; используется средний профиль, этикетка обязательна."),
   splenda: labelReference("brand:splenda", "Splenda granulated sweetener", "Брендовый профиль; перед готовкой сверить актуальную этикетку."),
@@ -909,6 +910,7 @@ const ingredientSeeds: IngredientSeed[] = [
   ["fish-sauce", "Рыбный соус", "sauce", "processed", n(35, 5, 0, 3), 1, ["fish"]],
   ["dressing", "Готовая салатная заправка", "sauce", "processed", n(300, 1, 28, 12), 1, ["egg", "mustard"]],
   ["rice-cake", "Рисовый хлебец", "grain", "processed", n(387, 8, 2.8, 81.5)],
+  ["tteok", "Рисовые клёцки тток", "grain", "processed", n(230, 4, 0.6, 52)],
   ["kimchi", "Кимчи", "vegetable", "processed", n(15, 1.1, 0.5, 2.4)],
   ["bread", "Хлеб", "grain", "processed", n(265, 9, 3.2, 49), 65, ["gluten"]],
   ["splenda", "Подсластитель Splenda", "sweetener", "processed", n(250, 0, 0, 100)],
@@ -1604,7 +1606,6 @@ const ingredientAliasTargets: Record<string, string> = {
   "radishes thinly sliced": "radish",
   "raisin & nut mix": "trail-mix",
   "red miso paste": "miso-paste",
-  "rice cake water": "rice-cake",
   "soya milk": "soy-milk",
   "sweetened soy milk": "soy-milk",
   sultana: "raisins",
@@ -1638,7 +1639,7 @@ for (const [alias, legacyId] of Object.entries(ingredientAliasTargets)) {
 const ingredientReplacementTargets: Record<string, { legacyIds: string[]; reason: string }> = {};
 
 const noncaloricIngredientReasons: Record<string, string> = Object.fromEntries([
-  "baking soda", "salt", "salt to taste", "water", "hot water", "water to consistency",
+  "baking soda", "salt", "salt to taste", "water", "hot water", "water to consistency", "rice cake water",
 ].map((name) => [name, "Некалорийный технологический компонент: сохранён в source audit, но не используется для вариативного расчёта КБЖУ."]));
 const microIngredientReasons: Record<string, string> = Object.fromEntries([
   "ancho chili powder", "baking powder", "black pepper", "black peppercorns", "cardamom pods", "cardamom pods seeds removed and ground",

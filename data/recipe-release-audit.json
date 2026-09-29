@@ -18,10 +18,10 @@
     "editorial:procedure_review_required": 2,
     "editorial:recipe_scope_mismatch": 8,
     "nutrition:ignored_component_not_calculable": 223,
-    "nutrition:independent_calculation_complete": 131,
+    "nutrition:independent_calculation_complete": 132,
     "nutrition:invalid_yield": 4,
-    "nutrition:nutrition_delta_outside_tolerance": 120,
-    "nutrition:nutrition_delta_within_tolerance": 131,
+    "nutrition:nutrition_delta_outside_tolerance": 119,
+    "nutrition:nutrition_delta_within_tolerance": 132,
     "nutrition:rice_dry_weight_conversion_applied": 28
   },
   "cards": [
@@ -4215,12 +4215,20 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 754.3,
-        "protein": 32.7,
-        "fat": 20.9,
-        "carbs": 107.2
+        "kcal": 547.1,
+        "protein": 27.6,
+        "fat": 18.2,
+        "carbs": 67.6
       },
       "reasons": [
+        {
+          "gate": "nutrition",
+          "code": "ignored_component_not_calculable",
+          "severity": "info",
+          "detail": {
+            "sourceName": "rice cake water"
+          }
+        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -4231,16 +4239,13 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "kcal",
-              "fat",
-              "carbs"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []

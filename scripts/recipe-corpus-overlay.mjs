@@ -272,6 +272,13 @@ async function applyMealPrepOwnerDecisions({ document }) {
       if (!ingredient) throw new Error(`${candidate.id}: compound ingredient is missing.`);
       ingredient.displayNameRu = decision.displayNameRu;
       steps[0] = { ...steps[0], text: `${decision.instructionNoteRu} ${steps[0].text}` };
+    } else if (decision.kind === "ingredient_identity") {
+      // One source word can name two products ("rice cakes" are both puffed
+      // crispbread and Korean tteok). The reviewed canonical id decides.
+      const ingredient = ingredients.find((item) => item.name === decision.sourceIngredient);
+      if (!ingredient) throw new Error(`${candidate.id}: ingredient ${decision.sourceIngredient} is missing.`);
+      ingredient.id = decision.canonicalIngredientId;
+      ingredient.displayNameRu = decision.displayNameRu;
     } else if (decision.kind === "recipe_flavour_restore") {
       ingredients.push(...decision.ingredients.map((ingredient) => ({ ...ingredient })));
       const ingredientIds = ingredients.map((_, index) => `source-ingredient-${index + 1}`);

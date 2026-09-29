@@ -57,8 +57,14 @@
       "sourceAmountGrams": 60,
       "displayNameRu": "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)",
       "alternative": [
-        { "name": "water", "grams": 45 },
-        { "name": "brown sugar", "grams": 15 }
+        {
+          "name": "water",
+          "grams": 45
+        },
+        {
+          "name": "brown sugar",
+          "grams": 15
+        }
       ],
       "instructionNoteRu": "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость."
     },
@@ -69,8 +75,14 @@
       "sourceAmountGrams": 35,
       "displayNameRu": "Мирин (или вода с сахаром 3:1; рисовый уксус — несколько капель по желанию)",
       "alternative": [
-        { "name": "water", "grams": 26 },
-        { "name": "brown sugar", "grams": 9 }
+        {
+          "name": "water",
+          "grams": 26
+        },
+        {
+          "name": "brown sugar",
+          "grams": 9
+        }
       ],
       "instructionNoteRu": "Оставьте в соусе 35 г мирина; если его нет, смешайте 26 г воды и 9 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость."
     },
@@ -85,11 +97,36 @@
       "recipeId": "tmpm-25463",
       "kind": "recipe_flavour_restore",
       "ingredients": [
-        { "name": "garlic powder", "displayNameRu": "Сушёный чеснок", "original": "по вкусу" },
-        { "name": "onion powder", "displayNameRu": "Сушёный лук", "original": "по вкусу" },
-        { "name": "salt", "displayNameRu": "Соль", "original": "по вкусу" },
-        { "name": "black pepper", "displayNameRu": "Чёрный перец", "original": "по вкусу" }
+        {
+          "name": "garlic powder",
+          "displayNameRu": "Сушёный чеснок",
+          "original": "по вкусу"
+        },
+        {
+          "name": "onion powder",
+          "displayNameRu": "Сушёный лук",
+          "original": "по вкусу"
+        },
+        {
+          "name": "salt",
+          "displayNameRu": "Соль",
+          "original": "по вкусу"
+        },
+        {
+          "name": "black pepper",
+          "displayNameRu": "Чёрный перец",
+          "original": "по вкусу"
+        }
       ]
+    },
+    {
+      "recipeId": "tmpm-25044",
+      "kind": "ingredient_identity",
+      "sourceIngredient": "rice cakes",
+      "canonicalIngredientId": "tteok_processed",
+      "displayNameRu": "Рисовые клёцки тток",
+      "reviewedAt": "2026-09-29",
+      "note": "Источник — ттокпокки: нужны плотные корейские рисовые клёцки, а не воздушные рисовые хлебцы. Прежнее сопоставление завышало порцию примерно на 180 ккал и отправляло в магазин за другим продуктом."
     }
   ]
 }

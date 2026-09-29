@@ -115,6 +115,10 @@ test("products are counted as themselves, not as a namesake", () => {
     assert.ok(!ids(id).includes("berries_raw"), `${id}: not blueberries`);
   }
   assert.ok(ids("tmpm-26660").includes("tomato_passata_processed"), "fire-roasted tomatoes are tomatoes");
+  // "Rice cakes" are puffed crispbread in one recipe and Korean tteok in another.
+  assert.ok(ids("tmpm-25044").includes("tteok_processed") && !ids("tmpm-25044").includes("rice_cake_processed"));
+  assert.ok(ids("tmpm-25006-avocado-bean-rice-cakes").includes("rice_cake_processed"));
+  assert.ok(app.recipesById["tmpm-25044"].macros.kcal < 600, "tteokbokki is no longer counted as 120 g of crispbread");
   assert.ok(ids("goodfood-steak-broccoli-protein-pots").includes("green_onion_raw"));
   // Four spring onions are about 60 g, not four onion bulbs.
   const pots = app.recipesById["goodfood-steak-broccoli-protein-pots"];

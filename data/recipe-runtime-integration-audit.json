@@ -19,7 +19,7 @@
     },
     "byReleaseMenuTag": {
       "budget": 202,
-      "protein": 155
+      "protein": 156
     }
   },
   "cards": [
@@ -398,7 +398,7 @@
       "title": "Корейская говядина с рисовыми клецками ттокпокки",
       "recipeFamilyId": "raw-tmpm-25044",
       "shoppingIngredientCount": 9,
-      "procedureIngredientCount": 1,
+      "procedureIngredientCount": 2,
       "media": "source_preview"
     },
     {

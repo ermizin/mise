@@ -21309,7 +21309,7 @@
     },
     "byReleaseMenuTag": {
       "budget": 202,
-      "protein": 155
+      "protein": 156
     },
     "byCuisine": {
       "russian": 13,
@@ -58807,13 +58807,14 @@
       "title": "Корейская говядина с рисовыми клецками ттокпокки",
       "cuisine": "asian",
       "macros": {
-        "kcal": 754.3,
-        "protein": 32.7,
-        "fat": 20.9,
-        "carbs": 107.2
+        "kcal": 547.1,
+        "protein": 27.6,
+        "fat": 18.2,
+        "carbs": 67.6
       },
       "timeMinutes": 25,
       "menuTags": [
+        "protein",
         "budget"
       ],
       "costTier": {
@@ -58822,7 +58823,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 448.7,
+        "grams": 431.4,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -58974,10 +58975,10 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "canonicalIngredientId": "rice_cake_processed",
-          "nameRu": "Рисовый хлебец",
+          "canonicalIngredientId": "tteok_processed",
+          "nameRu": "Рисовые клёцки тток",
           "group": "Крупы и макароны",
-          "quantityGrams": 484,
+          "quantityGrams": 454,
           "sourceMeasurement": {
             "amount": 454,
             "unit": "g"
@@ -58986,32 +58987,19 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-5",
-            "source-ingredient-10"
+            "source-ingredient-5"
           ],
           "sourceIngredientIndexes": [
-            5,
-            10
+            5
           ],
           "sourceAudit": [
             {
               "sourceIngredientIndex": 5,
               "sourceIngredientId": "source-ingredient-5",
-              "nameRu": "Рисовый хлебец",
+              "nameRu": "Рисовые клёцки тток",
               "quantityGrams": 454,
               "sourceMeasurement": {
                 "amount": 454,
-                "unit": "g"
-              },
-              "massStatus": "source_metric"
-            },
-            {
-              "sourceIngredientIndex": 10,
-              "sourceIngredientId": "source-ingredient-10",
-              "nameRu": "Рисовый хлебец",
-              "quantityGrams": 30,
-              "sourceMeasurement": {
-                "amount": 30,
                 "unit": "g"
               },
               "massStatus": "source_metric"
@@ -59162,6 +59150,18 @@
         }
       ],
       "procedureIngredients": [
+        {
+          "sourceIngredientIndex": 10,
+          "sourceIngredientId": "source-ingredient-10",
+          "nameRu": "Вода",
+          "sourceName": "rice cake water",
+          "classification": "pantry",
+          "allergens": [],
+          "reason": "Некалорийный технологический компонент: сохранён в source audit, но не используется для вариативного расчёта КБЖУ.",
+          "quantityPerServing": 7.5,
+          "unit": "g",
+          "amountStatus": "exact_metric"
+        },
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
@@ -59370,7 +59370,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-5",
-            "canonicalIngredientId": "rice_cake_processed",
+            "canonicalIngredientId": "tteok_processed",
             "baseAmount": 113.5,
             "unit": "g",
             "role": "carb",
@@ -59442,25 +59442,10 @@
             "scalingPriority": 6,
             "substitutions": [],
             "optional": false
-          },
-          {
-            "sourceIngredientId": "source-ingredient-10",
-            "canonicalIngredientId": "rice_cake_processed",
-            "baseAmount": 7.5,
-            "unit": "g",
-            "role": "carb",
-            "minAmount": 2.625,
-            "preferredMin": 5.625,
-            "preferredMax": 9.375,
-            "maxAmount": 15.75,
-            "scalable": true,
-            "scalingPriority": 1,
-            "substitutions": [],
-            "optional": false
           }
         ],
-        "minViableCalories": 397,
-        "maxViableCalories": 1517,
+        "minViableCalories": 315,
+        "maxViableCalories": 1042,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -59482,18 +59467,18 @@
           "carbs": 69
         },
         "miseCalculatedNutrition": {
-          "kcal": 754.3,
-          "protein": 32.7,
-          "fat": 20.9,
-          "carbs": 107.2
+          "kcal": 547.1,
+          "protein": 27.6,
+          "fat": 18.2,
+          "carbs": 67.6
         },
         "nutritionDelta": {
-          "kcal": 223.3,
-          "protein": 1.7,
-          "fat": 6.4,
-          "carbs": 38.2
+          "kcal": 16.1,
+          "protein": -3.4,
+          "fat": 3.7,
+          "carbs": -1.4
         },
-        "nutritionDeltaKcal": 223.3,
+        "nutritionDeltaKcal": 16.1,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -59524,8 +59509,7 @@
               "source-ingredient-6",
               "source-ingredient-7",
               "source-ingredient-8",
-              "source-ingredient-9",
-              "source-ingredient-10"
+              "source-ingredient-9"
             ],
             "action": "measure",
             "dependsOn": []
