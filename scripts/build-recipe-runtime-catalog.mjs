@@ -1,6 +1,7 @@
 import { recipeEquipmentFor, equipmentCoverage } from "./recipe-equipment.mjs";
 import { auditRecipeRelease } from "./audit-recipe-release.mjs";
 import { buildSimpleRecipeCatalog } from "./build-simple-recipe-catalog.mjs";
+import { buildExtensionRecipeCatalog } from "./build-extension-recipe-catalog.mjs";
 import { sourceAmount } from "./recipe-corpus-normalize.mjs";
 import {
   canonicalIngredients,
@@ -695,9 +696,12 @@ export async function buildRecipeRuntimeCatalog({ minimum } = {}) {
     ),
   };
   const simpleCatalog = await buildSimpleRecipeCatalog();
+  const extensionCatalog = await buildExtensionRecipeCatalog();
   const catalog = {
     simpleRecipes: simpleCatalog.recipes,
     simpleCoverage: simpleCatalog.coverage,
+    extensionRecipes: extensionCatalog.recipes,
+    extensionCoverage: extensionCatalog.coverage,
     schemaVersion: 3,
     generatedFrom: "audit-ready editorial cards only",
     constraints: {

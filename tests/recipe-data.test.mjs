@@ -223,13 +223,26 @@ test("source photos and localization notes remain attached to legacy imported re
   assert.ok(withPhotos.length > 0);
   assert.ok(withPhotos.length < recipes.filter((item) => item.provenance.kind === "parsed").length, "non-runtime legacy records may still lack assets");
   assert.ok(withPhotos.every((item) => item.provenance.imageAlt && item.provenance.sourceUrl));
+  // Карточки пакета расширения написаны редакцией без фото: у них нет чужого
+  // снимка, который можно было бы выдать за свой, и они показывают заглушку.
+  const extensionCards = productionRecipes.filter((item) => item.id.startsWith("mise-"));
+  assert.ok(extensionCards.length >= 80, "the extension package is part of the production catalog");
   assert.ok(
-    productionRecipes.every(
+    extensionCards.every(
+      (item) =>
+        item.provenance.kind === "generated" &&
+        item.provenance.editoriallyApproved === true &&
+        !item.provenance.imageUrl,
+    ),
+    "an extension card is reviewed and never borrows a photo",
+  );
+  assert.ok(
+    productionRecipes.filter((item) => !item.id.startsWith("mise-")).every(
       (item) =>
         (item.provenance.kind === "parsed" || (item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true)) &&
         /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl),
     ),
-    "every production card uses a verified local source photo",
+    "every other production card uses a verified local source photo",
   );
   for (const id of ["src-taco-mac", "src-teriyaki-tray", "src-halal-chicken"]) {
     const item = recipes.find((candidate) => candidate.id === id);
@@ -1067,13 +1080,26 @@ test("review-required families stay out of automatic menu candidates", () => {
 });
 
 test("release menu candidates exclude hidden keto, paleo and vegan diet cards", () => {
+  // Веганское и палео открыты только карточками пакета расширения: их состав
+  // проверяет сборщик. Прежние карточки с такими метками остаются скрытыми.
   const hiddenDiet = (item) =>
-    item.tags.some((tag) => tag === "keto" || tag === "paleo") ||
-    /(?:vegan|веган|keto|кето|paleo|палео)/iu.test(item.title);
+    !item.id.startsWith("mise-") &&
+    (item.tags.some((tag) => tag === "keto" || tag === "paleo") ||
+      /(?:vegan|веган|keto|кето|paleo|палео)/iu.test(item.title));
   const hiddenProductionCards = productionRecipes.filter(hiddenDiet);
   assert.ok(hiddenProductionCards.length >= 4, "the regression fixture includes hidden diet cards");
 
-  for (const style of ["protein", "budget"])
+  for (const style of ["vegan", "paleo"])
+    for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"]) {
+      const candidates = candidateRecipes(slot, style, [], 1, { limit: "all" });
+      assert.ok(candidates.length > 0, `${style}/${slot} has dishes to offer`);
+      assert.ok(
+        candidates.every((item) => item.id.startsWith("mise-") && item.tags.includes(style)),
+        `${style}/${slot} offers only cards checked against the ${style} rules`,
+      );
+    }
+
+  for (const style of ["simple", "protein", "budget"])
     for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"]) {
       const candidates = candidateRecipes(slot, style, [], 1, { limit: "all" });
       assert.ok(candidates.length > 0, `${style}/${slot} keeps release candidates`);
@@ -1093,11 +1119,15 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   const visibleIds = new Set(productionRecipes.map((item) => item.id));
 
   assert.equal(blockedIds.length, 10);
+  const hasVerifiedPhoto = (item) =>
+    (item.provenance.kind === "parsed" || (item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true)) &&
+    /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl ?? "");
+  const reviewedWithoutPhoto = (item) =>
+    item.id.startsWith("mise-") && item.provenance.kind === "generated" && item.provenance.editoriallyApproved === true;
   const expectedReadyIds = recipes
     .filter(
       (item) =>
-        (item.provenance.kind === "parsed" || (item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true)) &&
-        /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(item.provenance.imageUrl ?? "") &&
+        (hasVerifiedPhoto(item) || reviewedWithoutPhoto(item)) &&
         item.ingredients.length >= 3 &&
         recipeFamilyFor(item)?.reviewStatus === "pilot",
     )
@@ -1108,13 +1138,14 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   assert.ok(productionRecipes.length >= 200);
   assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
   assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
-  assert.equal(productionRecipes.filter((item) => item.provenance.kind === "generated").length, 25);
-  assert.ok(productionRecipes.filter((item) => item.provenance.kind === "generated").every((item) => item.id.startsWith("simple-generated-") && item.provenance.editoriallyApproved === true));
+  assert.equal(productionRecipes.filter((item) => item.provenance.kind === "generated").length, 25 + 80);
+  assert.equal(productionRecipes.filter((item) => item.id.startsWith("mise-")).length, 80);
+  assert.ok(productionRecipes.filter((item) => item.provenance.kind === "generated").every((item) => (item.id.startsWith("simple-generated-") || item.id.startsWith("mise-")) && item.provenance.editoriallyApproved === true));
   assert.ok(productionRecipes.every((item) => item.ingredients.length >= 3));
   assert.ok(productionRecipes.every(isProductionReadyRecipe));
 
   for (const slot of ["breakfast", "snack1", "lunch", "snack2", "dinner"])
-    for (const style of ["protein", "budget", "paleo", "keto"])
+    for (const style of ["simple", "protein", "budget", "vegan", "paleo", "keto"])
       assert.ok(
         candidateRecipes(slot, style, [], 1, { limit: "all" }).every((item) =>
           visibleIds.has(item.id),

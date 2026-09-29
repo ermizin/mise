@@ -13,7 +13,7 @@
     "waffle_iron",
     "pressure_cooker"
   ],
-  "recipeCount": 260,
+  "recipeCount": 340,
   "recipes": [
     {
       "id": "foodru-blogger-chicken-bombs",
@@ -1820,6 +1820,1411 @@
             "oven",
             "pot",
             "stove"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-apple-almonds",
+      "slot": "snack1",
+      "allergens": [
+        "treeNuts"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-banana-almond-muffins",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-banana-almond-pancakes",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-beef-carrot-mushroom-stew",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-beef-meatballs-zucchini",
+      "slot": "lunch",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-boiled-eggs-cucumber",
+      "slot": "snack1",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-chicken-cauliflower-rice",
+      "slot": "lunch",
+      "allergens": [
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-chicken-liver-apple",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 2,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-chicken-mini-cutlets",
+      "slot": "snack1",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-chicken-thigh-sweet-potato",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-coconut-chia-pudding",
+      "slot": "breakfast",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-date-walnut-balls",
+      "slot": "snack1",
+      "allergens": [
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-egg-chicken-muffins",
+      "slot": "breakfast",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-guacamole-vegetables",
+      "slot": "snack1",
+      "allergens": [],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-pollock-vegetables",
+      "slot": "lunch",
+      "allergens": [
+        "fish"
+      ],
+      "storageDays": 2,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-pork-apple-cabbage",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-salmon-vegetables",
+      "slot": "lunch",
+      "allergens": [
+        "fish"
+      ],
+      "storageDays": 2,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-sweet-potato-eggs",
+      "slot": "breakfast",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-sweet-potato-turkey-bake",
+      "slot": "breakfast",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-tuna-avocado-salad",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "treeNuts"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-turkey-carrot-meatballs",
+      "slot": "snack1",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-turkey-cutlets-cauliflower",
+      "slot": "lunch",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-turkey-pumpkin-stew",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-paleo-turkey-spinach-frittata",
+      "slot": "breakfast",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-baked-chicken-nuggets",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-beef-barley-stew",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-chicken-buckwheat-broccoli",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-chicken-cutlets-millet",
+      "slot": "lunch",
+      "allergens": [
+        "egg"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-chicken-liver-buckwheat",
+      "slot": "lunch",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-chicken-pilaf",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-egg-turkey-muffins",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-mini-syrniki-baked",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-oat-protein-balls",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk",
+        "peanut"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-overnight-oats-yogurt",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-pollock-tomato-rice",
+      "slot": "lunch",
+      "allergens": [
+        "fish"
+      ],
+      "storageDays": 2,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-tuna-bean-salad",
+      "slot": "lunch",
+      "allergens": [
+        "fish",
+        "gluten"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-tuna-cucumber-crispbread",
+      "slot": "snack1",
+      "allergens": [
+        "fish",
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-turkey-lentil-stew",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-turkey-meatballs-rice",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-tvorog-berries",
+      "slot": "snack1",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-protein-tvorog-casserole-apple",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-baked-apple-tvorog",
+      "slot": "snack1",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-baked-oatmeal-banana",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-chicken-noodle-soup",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-egg-bread-cucumber",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-millet-pumpkin-porridge",
+      "slot": "breakfast",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-multicooker-chicken-cabbage",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-multicooker-chicken-rice",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "multicooker"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-oat-banana-cookies",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-oven-chicken-potato",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-oven-omelette",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-syrniki-oven",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-tvorog-casserole",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-tvorog-muffins",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-yogurt-banana-oats",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-zucchini-fritters",
+      "slot": "snack1",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-apple-peanut-butter",
+      "slot": "snack1",
+      "allergens": [
+        "peanut"
+      ],
+      "storageDays": 2,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-baked-oatmeal-apple",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "soy",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-banana-pancakes",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "peanut",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-barley-mushroom-beans",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-bean-chili",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-bean-potato-stew",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-buckwheat-mushrooms",
+      "slot": "breakfast",
+      "allergens": [],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-chia-pudding-berries",
+      "slot": "snack1",
+      "allergens": [
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-chickpea-pilaf",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-chickpea-pumpkin-curry",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-chickpea-tahini-salad",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-date-oat-balls",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "peanut"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-hummus-carrot",
+      "slot": "snack1",
+      "allergens": [
+        "sesame"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-lentil-bolognese",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-lentil-carrot-soup",
+      "slot": "lunch",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "blender"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-millet-apricot-porridge",
+      "slot": "breakfast",
+      "allergens": [
+        "soy",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-oat-apricot-cookies",
+      "slot": "snack1",
+      "allergens": [
+        "gluten"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-oat-banana-muffins",
+      "slot": "snack1",
+      "allergens": [
+        "gluten",
+        "soy",
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-overnight-oats-banana",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "peanut",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-red-lentil-dal",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-roasted-chickpeas",
+      "slot": "snack1",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-sweet-potato-black-beans",
+      "slot": "lunch",
+      "allergens": [],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-tofu-buckwheat-broccoli",
+      "slot": "lunch",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-vegan-tofu-scramble",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "soy"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
           ]
         }
       ]

@@ -185,7 +185,9 @@ test("high-protein daily targets keep real menu variety at 1600 and 3100 kcal", 
 
 test("snack slots stay viable across the pilot calorie, protein, and batch grid", async (t) => {
   const { candidateRecipes, allMealSlots, recipeCookingSession, targetFor } = await automaticMenuRuntime();
-  const expectedSnackRecipeIds = new Set(["tmpm-26965", "tmpm-23228"]);
+  // До пакета расширения на этой сетке было две карточки, и на 1200–1400 ккал
+  // длинная партия оставалась с одной. Теперь перекус есть из чего выбрать.
+  const MINIMUM_SNACKS = 3;
   const failures = [];
   let checks = 0;
 
@@ -203,8 +205,12 @@ test("snack slots stay viable across the pilot calorie, protein, and batch grid"
             failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: no candidates`);
           if (optionIds.includes("tmpm-26746"))
             failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: tmpm-26746 must stay lunch-only`);
-          if (optionIds.some((id) => !expectedSnackRecipeIds.has(id)))
-            failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: unexpected ${optionIds.join(",")}`);
+          if (optionIds.length < MINIMUM_SNACKS)
+            failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: only ${optionIds.join(",")}`);
+          const misplaced = options.filter((recipe) =>
+            !["snack1", "snack2"].includes(recipe.slot) || !recipe.tags.includes("protein"));
+          if (misplaced.length > 0)
+            failures.push(`${kcal}kcal ${Math.round(proteinShare * 100)}% protein ${slot} d${days}: not a protein snack ${misplaced.map((recipe) => recipe.id).join(",")}`);
           const target = targetFor(person, slot);
           for (const recipe of options) {
             const portion = recipeCookingSession([person], slot, recipe, days).portions[0];

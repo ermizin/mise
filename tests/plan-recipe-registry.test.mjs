@@ -9,11 +9,14 @@ const checkedIn = JSON.parse(
 const simpleSource = JSON.parse(
   await readFile(new URL("../data/simple-recipes.json", import.meta.url), "utf8"),
 );
+const extensionSource = JSON.parse(
+  await readFile(new URL("../data/extension-recipes.json", import.meta.url), "utf8"),
+);
 
 test("server recipe registry exactly follows the client production predicate", async () => {
   const rebuilt = await buildPlanRecipeRegistry();
   assert.equal(JSON.stringify(checkedIn), JSON.stringify(rebuilt));
-  assert.equal(checkedIn.recipeCount, 260);
+  assert.equal(checkedIn.recipeCount, 340);
   assert.equal(checkedIn.recipes.length, checkedIn.recipeCount);
   const sourceSimpleIds = new Set(simpleSource.recipes.map((recipe) => recipe.id));
   const registrySimpleIds = checkedIn.recipes
@@ -21,6 +24,13 @@ test("server recipe registry exactly follows the client production predicate", a
     .filter((id) => sourceSimpleIds.has(id));
   assert.equal(sourceSimpleIds.size, 50, "simple source contains fifty recipes");
   assert.equal(registrySimpleIds.length, 50, "registry includes every simple recipe");
+  const registryIds = new Set(checkedIn.recipes.map((recipe) => recipe.id));
+  assert.equal(extensionSource.recipes.length, 80, "extension source contains eighty recipes");
+  assert.deepEqual(
+    extensionSource.recipes.map((recipe) => recipe.id).filter((id) => !registryIds.has(id)),
+    [],
+    "registry includes every extension recipe, so a vegan or paleo plan can be saved",
+  );
   assert.equal(
     checkedIn.recipes.some((recipe) => recipe.id === "src-taco-mac"),
     false,

@@ -1,7 +1,7 @@
 import planRecipeRegistryJson from "../data/plan-recipe-registry.json";
 
 const mealSlots = new Set(["breakfast", "lunch", "dinner", "snack1", "snack2"]);
-const menuStyles = new Set(["protein", "budget", "simple"]);
+const menuStyles = new Set(["protein", "budget", "simple", "vegan", "paleo"]);
 
 type RegistryRecipe = {
   id: string;
@@ -59,8 +59,11 @@ function daysInclusive(start: string, end: string) {
 }
 
 function recipeSupportsSlot(recipe: RegistryRecipe, slot: string) {
+  // Cards of the simple and extension packages are written as a main dish, not
+  // as "a lunch" or "a dinner": either meal may take them.
+  const eitherMainMeal = recipe.id.startsWith("simple-") || recipe.id.startsWith("mise-");
   return recipe.slot === slot ||
-    (recipe.id.startsWith("simple-") && ["lunch", "dinner"].includes(recipe.slot) && ["lunch", "dinner"].includes(slot)) ||
+    (eitherMainMeal && ["lunch", "dinner"].includes(recipe.slot) && ["lunch", "dinner"].includes(slot)) ||
     (recipe.slot === "snack1" && slot === "snack2") ||
     (recipe.slot === "snack2" && slot === "snack1");
 }

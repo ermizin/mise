@@ -148,7 +148,7 @@ function restoreTabScroll(
   window.scrollTo({ top: position.windowY, left: 0, behavior: "auto" });
 }
 type LegacyMenuStyle = "protein" | "budget" | "paleo" | "keto";
-type MenuStyle = LegacyMenuStyle | "simple";
+type MenuStyle = LegacyMenuStyle | "simple" | "vegan";
 type RecipeOrigin = "parsed" | "generated";
 type Allergen =
   | "milk"
@@ -271,7 +271,7 @@ type RuntimeRecipeRecord = {
   cuisine: Cuisine;
   macros: Macros;
   timeMinutes: number;
-  menuTags: ("protein" | "budget" | "simple")[];
+  menuTags: ("protein" | "budget" | "simple" | "vegan" | "paleo")[];
   costTier: { value: number };
   servingMass: { grams: number };
   shoppingIngredients: {
@@ -605,16 +605,20 @@ const styleMeta: Record<MenuStyle, { label: string; description: string }> = {
     label: "Бюджетное",
     description: "Простые продукты и разумная стоимость",
   },
+  vegan: {
+    label: "Веганское",
+    description: "Бобовые, крупы, овощи и тофу — без продуктов животного происхождения",
+  },
   paleo: {
     label: "Палео",
-    description: "Мясо, рыба, овощи — без зерновых",
+    description: "Мясо, рыба, яйца, овощи и орехи — без круп, бобовых и молочного",
   },
   keto: {
     label: "Кето",
     description: "Меньше углеводов, больше полезных жиров",
   },
 };
-const releaseMenuStyles: readonly MenuStyle[] = ["simple", "protein", "budget"];
+const releaseMenuStyles: readonly MenuStyle[] = ["simple", "protein", "budget", "vegan", "paleo"];
 const macroLabels: Record<MacroKey, string> = {
   kcal: "К",
   protein: "Б",
@@ -1088,23 +1092,43 @@ function capitalize(value: string) {
   return value ? `${value[0].toUpperCase()}${value.slice(1)}` : value;
 }
 
+const declaredEquipmentLabels: Partial<Record<KitchenEquipment, string>> = {
+  pot: "кастрюля",
+  pan: "сковорода",
+  oven: "духовка",
+  baking_dish: "форма",
+  multicooker: "мультиварка",
+  air_fryer: "аэрогриль",
+  blender: "блендер",
+  microwave: "микроволновка",
+};
 function recipeEffortDescription(
   steps: RecipeEffortEvidenceStep[],
   effort: RecipeEffort,
+  declaredEquipment?: KitchenEquipment[],
 ) {
   const sourceEquipment = new Set(
     steps.flatMap((step) => step.equipment ?? []).map((item) => item.toLowerCase()),
   );
   const text = steps.map((step) => step.text).join(" ").toLowerCase();
   const primary = new Set<string>();
-  for (const equipment of sourceEquipment) {
-    const mapped = equipmentLabels.find(([pattern]) => pattern.test(equipment));
-    if (mapped) primary.add(mapped[1]);
+  if (declaredEquipment) {
+    // Утварь карточки названа явно: слово «обжарьте» в шаге не добавляет
+    // сковороду блюду, которое целиком готовится в одной кастрюле.
+    for (const equipment of declaredEquipment) {
+      const label = declaredEquipmentLabels[equipment];
+      if (label) primary.add(label);
+    }
+  } else {
+    for (const equipment of sourceEquipment) {
+      const mapped = equipmentLabels.find(([pattern]) => pattern.test(equipment));
+      if (mapped) primary.add(mapped[1]);
+    }
+    if (/кастрюл|варить|отварить|кипящ/u.test(text)) primary.add("кастрюля");
+    if (/сковород|обжар|жарить/u.test(text)) primary.add("сковорода");
+    if (/духов|выпек|запек/u.test(text)) primary.add("духовка");
+    if (/блендер|измельчить до однород/u.test(text)) primary.add("блендер");
   }
-  if (/кастрюл|варить|отварить|кипящ/u.test(text)) primary.add("кастрюля");
-  if (/сковород|обжар|жарить/u.test(text)) primary.add("сковорода");
-  if (/духов|выпек|запек/u.test(text)) primary.add("духовка");
-  if (/блендер|измельчить до однород/u.test(text)) primary.add("блендер");
   if (!primary.size) {
     primary.add(
       effort.cookware === 1
@@ -4320,8 +4344,13 @@ for (const style of Object.keys(generatedTitles) as LegacyMenuStyle[])
 const runtimeRecipeCatalog = runtimeRecipeCatalogJson as unknown as {
   recipes: RuntimeRecipeRecord[];
   simpleRecipes?: RuntimeRecipeRecord[];
+  extensionRecipes?: RuntimeRecipeRecord[];
 };
-const allRuntimeRecipeRecords = [...runtimeRecipeCatalog.recipes, ...(runtimeRecipeCatalog.simpleRecipes ?? [])];
+const allRuntimeRecipeRecords = [
+  ...runtimeRecipeCatalog.recipes,
+  ...(runtimeRecipeCatalog.simpleRecipes ?? []),
+  ...(runtimeRecipeCatalog.extensionRecipes ?? []),
+];
 const runtimeAllergenMap: Record<string, Allergen | undefined> = {
   crustaceans: "crustaceans",
   shrimp: "crustaceans",
@@ -4472,10 +4501,11 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
     },
     storage: {
       refrigerator: record.storage.refrigerator,
-      freezer: record.storage.freezable
+      // Пакеты карточек уже пишут запрет полностью; повторять его не нужно.
+      freezer: record.storage.freezable || /^не замораживать/iu.test(record.storage.freezer)
         ? record.storage.freezer
         : `Не замораживать: ${record.storage.freezer}`,
-      thaw: record.storage.freezable
+      thaw: record.storage.freezable || /^разморозка не предусмотрена/iu.test(record.storage.thaw)
         ? record.storage.thaw
         : `Разморозка не предусмотрена: ${record.storage.thaw}`,
       freezerDays: record.storage.freezerDays,
@@ -4504,6 +4534,9 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
     effortDescription: recipeEffortDescription(
       record.recipeFamily.miseInstructions,
       record.effort,
+      record.id.startsWith("mise-")
+        ? normalizeKitchenEquipment(record.recipeFamily.equipment) ?? []
+        : undefined,
     ),
     localization: {
       fit: record.localization.fit,
@@ -4582,10 +4615,15 @@ for (const recipe of recipes) {
   const family = recipeFamilyFor(recipe);
   if (family) recipe.macros = { ...family.miseCalculatedNutrition };
 }
+/* Пакет расширения 2026-09-30: карточки Mise без фотографии, с нейтральной
+   заглушкой. Состав и КБЖУ проверяет сборщик пакета. */
+function isExtensionRecipe(recipe: Pick<Recipe, "id">) {
+  return recipe.id.startsWith("mise-");
+}
 function recipeSupportsSlot(recipe: Recipe, slot: MealSlot) {
   return (
     recipe.slot === slot ||
-    (recipe.tags.includes("simple") && ["lunch", "dinner"].includes(recipe.slot) && ["lunch", "dinner"].includes(slot)) ||
+    ((recipe.tags.includes("simple") || isExtensionRecipe(recipe)) && ["lunch", "dinner"].includes(recipe.slot) && ["lunch", "dinner"].includes(slot)) ||
     (recipe.slot === "snack1" && slot === "snack2") ||
     (recipe.slot === "snack2" && slot === "snack1")
   );
@@ -4597,8 +4635,12 @@ function isProductionReadyRecipe(recipe: Recipe) {
     /^\/recipe-images\/[a-z0-9-]+\.(?:jpg|png|webp|avif)$/u.test(
       recipe.provenance.imageUrl ?? "",
     );
+  const reviewedWithoutPhoto =
+    isExtensionRecipe(recipe) &&
+    recipe.provenance.kind === "generated" &&
+    recipe.provenance.editoriallyApproved === true;
   return (
-    hasVerifiedSourcePhoto &&
+    (hasVerifiedSourcePhoto || reviewedWithoutPhoto) &&
     recipe.ingredients.length >= 3 &&
     family?.reviewStatus === "pilot"
   );
@@ -6020,6 +6062,9 @@ function recipeFamilyReleased(recipe: Recipe) {
 }
 const hiddenDietRecipePattern = /(?:vegan|веган|keto|кето|paleo|палео)/iu;
 function belongsToHiddenDietPlan(recipe: Recipe) {
+  // Веганское и палео открыты карточками пакета расширения, у которых состав
+  // проверен сборщиком. Прежние карточки с такими словами остаются скрытыми.
+  if (isExtensionRecipe(recipe)) return false;
   return (
     recipe.tags.some((tag) => tag === "keto" || tag === "paleo") ||
     hiddenDietRecipePattern.test(recipe.title)
@@ -9351,7 +9396,7 @@ function WeekScreen({
    чтобы переезд на сервер был заменой источника, а не переписыванием экрана. */
 
 type CatalogSort = "missing" | "time" | "protein";
-type CatalogProperty = "simple" | "freezable" | "no-cook" | "protein";
+type CatalogProperty = "simple" | "freezable" | "no-cook" | "protein" | "vegan" | "paleo";
 type CatalogState = {
   q: string;
   slot: MealSlot | null;
@@ -9377,6 +9422,8 @@ const catalogPropertyLabels: Record<CatalogProperty, string> = {
   freezable: "Морозится",
   "no-cook": "Без готовки",
   protein: "Много белка",
+  vegan: "Веганские",
+  paleo: "Палео",
 };
 
 const catalogTimeLabels: Record<"quick" | "medium" | "long", string> = {
@@ -9400,6 +9447,10 @@ function hasProperty(recipe: Recipe, property: CatalogProperty) {
   if (property === "simple") return recipe.tags.includes("simple");
   if (property === "freezable") return recipe.freezable;
   if (property === "no-cook") return recipe.time <= 10;
+  // Только карточки с составом, проверенным по правилам направления: старая
+  // метка «палео» на импортированной карточке такой проверки не проходила.
+  if (property === "vegan" || property === "paleo")
+    return isExtensionRecipe(recipe) && recipe.tags.includes(property);
   return recipe.macros.protein >= 30;
 }
 

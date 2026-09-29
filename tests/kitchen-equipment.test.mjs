@@ -210,10 +210,18 @@ test("RecipeView separates historical rendering from cooking and weight mutation
 test("Cooking step identifies unbuildable meal slots before menu assembly", () => {
   const person = { id: "p1", name: "Я", daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 }, includedSlots: ["breakfast", "lunch", "dinner"] };
   const batches = [{ id: "b1", days: 1 }];
-  const gaps = plain(app.kitchenMenuGaps([person], person.includedSlots, "budget", batches, []));
-  assert.ok(gaps.includes("lunch"));
-  assert.ok(gaps.includes("dinner"));
-  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "budget", batches, kitchenEquipmentIds)), []);
+  // Без единого прибора простой завтрак собрать не из чего: вся его подборка
+  // готовится на плите, в духовке или в мультиварке.
+  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "simple", batches, [])), ["breakfast"]);
+  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "simple", batches, kitchenEquipmentIds)), []);
+  // Обед и ужин на пустой кухне теперь закрывают блюда без готовки, и каждое
+  // из них действительно не требует ни одного прибора.
+  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "budget", batches, [])), []);
+  for (const slot of ["lunch", "dinner"]) {
+    const offered = app.candidateRecipes(slot, "budget", [person], 1, { limit: "all" }, []);
+    assert.ok(offered.length > 0, `${slot} has a dish for a kitchen without appliances`);
+    assert.ok(offered.every((recipe) => app.recipeSupportsEquipment(recipe, [])), `${slot} offers only dishes that need no appliance`);
+  }
 });
 
 test("new recipe flow has no alternate-method chooser or parallel schedule", async () => {
