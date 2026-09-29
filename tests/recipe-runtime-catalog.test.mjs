@@ -273,5 +273,10 @@ test("every release build refreshes the audited wizard catalog and server regist
   const refreshCommand =
     "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json";
   assert.equal(packageJson.scripts.prebuild, refreshCommand);
-  assert.equal(packageJson.scripts["recipes:runtime:refresh"], refreshCommand);
+  // Сборка выпуска не трогает документацию; каталог по меню обновляет только
+  // ручное обновление данных, а его актуальность держит отдельный тест.
+  assert.equal(
+    packageJson.scripts["recipes:runtime:refresh"],
+    `${refreshCommand} && node scripts/build-recipe-menu-catalog.mjs --output docs/recipe-catalog.md`,
+  );
 });

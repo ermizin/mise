@@ -16,7 +16,7 @@
     "recipes:import:tmpm": "node scripts/import-mealprepmanual.mjs --limit 500 --output data/mealprepmanual-candidates.json",
     "recipes:import:goodfood": "node scripts/import-goodfood.mjs --limit 100 --output data/goodfood-candidates.json",
     "recipes:images:download": "node scripts/download-recipe-images.mjs",
-    "recipes:runtime:refresh": "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json",
+    "recipes:runtime:refresh": "node scripts/build-recipe-runtime-catalog.mjs --output data/recipe-runtime-catalog.json --require-minimum 200 && node scripts/validate-recipe-flavour-integrity.mjs && node scripts/build-plan-recipe-registry.mjs --output data/plan-recipe-registry.json && node scripts/build-recipe-menu-catalog.mjs --output docs/recipe-catalog.md",
     "mobile:catalog:refresh": "node --experimental-strip-types scripts/build-mobile-bootstrap.ts",
     "recipes:flavour:check": "node scripts/validate-recipe-flavour-integrity.mjs",
     "recipes:enrich:instructions": "node scripts/enrich-recipe-corpus.mjs",

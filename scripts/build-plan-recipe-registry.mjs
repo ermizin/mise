@@ -22,7 +22,8 @@ async function loadTypeScriptModule(url) {
   return sandbox.module.exports;
 }
 
-async function productionRecipes() {
+/** Runs the client's own catalogue code and returns the value of `expression`. */
+export async function evaluateClientCatalog(expression) {
   const [nutrition, engine, recipeCuisineModule, mealExecution, runtimeRecipeCatalogJson, legacyRecipeImageDownloadSourcesJson, source] = await Promise.all([
     loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url)),
     loadTypeScriptModule(new URL("../domain/recipe-engine.ts", import.meta.url)),
@@ -36,7 +37,7 @@ async function productionRecipes() {
   const end = source.indexOf("export default function Home");
   if (start < 0 || end <= start) throw new Error("Could not locate the client recipe catalogue.");
   const output = ts.transpileModule(
-    `${source.slice(start, end)}\nglobalThis.__planRecipeRegistry = productionRecipes.map(recipe => ({ ...recipe, equipmentOptions: equipmentMethods(recipe) }));`,
+    `${source.slice(start, end)}\nglobalThis.__planRecipeRegistry = ${expression};`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -82,7 +83,9 @@ async function productionRecipes() {
 }
 
 export async function buildPlanRecipeRegistry() {
-  const recipes = await productionRecipes();
+  const recipes = await evaluateClientCatalog(
+    "productionRecipes.map(recipe => ({ ...recipe, equipmentOptions: equipmentMethods(recipe) }))",
+  );
   const entries = recipes
     .map((recipe) => ({
       id: recipe.id,
