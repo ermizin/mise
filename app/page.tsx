@@ -4910,6 +4910,29 @@ function canonicalShoppingIngredient(
     return canonicalIngredients.tomato_sauce_processed;
   return canonicalShoppingIngredients.get(sourceId);
 }
+/* Раздел списка покупок определяет сам продукт, а не рецепт, в котором он
+   встретился первым. Иначе треска оказывалась в «Бакалее», а одна и та же
+   курица — то в «Мясо и птица», то в «Мясо и рыба», двумя разделами сразу. */
+const shoppingGroupByCategory: Readonly<Record<string, string>> = {
+  meat: "Мясо и птица",
+  fish: "Рыба и морепродукты",
+  seafood: "Рыба и морепродукты",
+  vegetable: "Овощи и фрукты",
+  fruit: "Овощи и фрукты",
+  grain: "Крупы и макароны",
+  legume: "Крупы и бобовые",
+  dairy: "Молочное",
+  egg: "Молочное",
+  sauce: "Соусы и специи",
+  fat: "Масла и соусы",
+};
+function shoppingGroupFor(
+  ingredient: Pick<Ingredient, "id" | "canonicalIngredientId" | "name" | "group">,
+) {
+  const canonical = canonicalShoppingIngredient(ingredient);
+  if (!canonical) return ingredient.group;
+  return shoppingGroupByCategory[canonical.category] ?? "Бакалея";
+}
 function normalizeShoppingIngredient(
   ingredient: Pick<
     Ingredient,
@@ -5890,6 +5913,7 @@ function buildShopping(
               id: canonicalIngredientId,
               key,
               name: displayName,
+              group: shoppingGroupFor(ingredient),
               unit,
               quantity,
               checked: false,
