@@ -199,7 +199,7 @@
       "slot": "breakfast",
       "title": "Протеиновые панкейки на противне",
       "recipeFamilyId": "raw-tmpm-26689",
-      "shoppingIngredientCount": 6,
+      "shoppingIngredientCount": 7,
       "procedureIngredientCount": 4,
       "media": "source_preview"
     },
@@ -307,7 +307,7 @@
       "slot": "lunch",
       "title": "Говядина и овощи в глазури кочуджан",
       "recipeFamilyId": "raw-tmpm-26138",
-      "shoppingIngredientCount": 11,
+      "shoppingIngredientCount": 12,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -469,7 +469,7 @@
       "slot": "dinner",
       "title": "Куриные рисовые боулы со шрирачей и арахисом",
       "recipeFamilyId": "raw-tmpm-24949",
-      "shoppingIngredientCount": 15,
+      "shoppingIngredientCount": 16,
       "procedureIngredientCount": 3,
       "media": "source_preview"
     },
@@ -577,7 +577,7 @@
       "slot": "lunch",
       "title": "Сытный чили",
       "recipeFamilyId": "raw-tmpm-23554",
-      "shoppingIngredientCount": 19,
+      "shoppingIngredientCount": 20,
       "procedureIngredientCount": 6,
       "media": "source_preview"
     },
@@ -613,7 +613,7 @@
       "slot": "dinner",
       "title": "Боулы с курицей в медово-чесночном соусе и лапшой",
       "recipeFamilyId": "raw-tmpm-23501",
-      "shoppingIngredientCount": 13,
+      "shoppingIngredientCount": 14,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -757,7 +757,7 @@
       "slot": "lunch",
       "title": "Острая говядина с брюссельской капустой",
       "recipeFamilyId": "raw-tmpm-22442",
-      "shoppingIngredientCount": 12,
+      "shoppingIngredientCount": 13,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -784,7 +784,7 @@
       "slot": "lunch",
       "title": "Лапша с мёдом и мисо",
       "recipeFamilyId": "raw-tmpm-22278",
-      "shoppingIngredientCount": 13,
+      "shoppingIngredientCount": 14,
       "procedureIngredientCount": 2,
       "media": "source_preview"
     },
@@ -847,7 +847,7 @@
       "slot": "lunch",
       "title": "Пансит со свиным фаршем",
       "recipeFamilyId": "raw-tmpm-18874",
-      "shoppingIngredientCount": 12,
+      "shoppingIngredientCount": 13,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -1423,7 +1423,7 @@
       "slot": "lunch",
       "title": "Острая паста с говядиной и чёрной фасолью",
       "recipeFamilyId": "raw-goodfood-black-bean-spicy-beef-pasta",
-      "shoppingIngredientCount": 19,
+      "shoppingIngredientCount": 20,
       "procedureIngredientCount": 1,
       "media": "source_preview"
     },
@@ -1450,7 +1450,7 @@
       "slot": "dinner",
       "title": "Томлёная свинина с апельсином и орегано",
       "recipeFamilyId": "raw-goodfood-orange-oregano-pulled-pork",
-      "shoppingIngredientCount": 9,
+      "shoppingIngredientCount": 10,
       "procedureIngredientCount": 6,
       "media": "source_preview"
     },
@@ -1540,7 +1540,7 @@
       "slot": "lunch",
       "title": "Свинина с кускусом, огурцом и абрикосами",
       "recipeFamilyId": "raw-goodfood-pork-with-cucumber-apricot-couscous",
-      "shoppingIngredientCount": 10,
+      "shoppingIngredientCount": 11,
       "procedureIngredientCount": 4,
       "media": "source_preview"
     },

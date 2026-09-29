@@ -362,12 +362,17 @@ test("new Meal Prep Manual recipes keep reviewed portions, localization and stor
   }
 
   const stroganoff = promoted.find((item) => item.id === "src-light-stroganoff");
-  assert.equal(stroganoff.macros.kcal, 507);
-  assert.equal(stroganoff.macros.protein, 40);
+  // The card shows what the engine calculates; the figures reviewed from the
+  // source stay on the family as evidence.
+  const stroganoffFamily = recipeFamiliesById["src-light-stroganoff"];
+  assert.equal(stroganoffFamily.legacyEditorialNutrition.kcal, 507);
+  assert.equal(stroganoffFamily.legacyEditorialNutrition.protein, 40);
+  assert.deepEqual({ ...stroganoff.macros }, { ...stroganoffFamily.miseCalculatedNutrition });
   assert.match(stroganoff.provenance.adaptation, /пополам/i);
 
   const dip = promoted.find((item) => item.id === "src-red-pepper-chicken-dip");
-  assert.equal(dip.macros.kcal, 218);
+  assert.equal(recipeFamiliesById["src-red-pepper-chicken-dip"].legacyEditorialNutrition.kcal, 218);
+  assert.deepEqual({ ...dip.macros }, { ...recipeFamiliesById["src-red-pepper-chicken-dip"].miseCalculatedNutrition });
   assert.equal(dip.freezable, false);
   assert.match(dip.storage.refrigerator, /3 суток/i);
 });

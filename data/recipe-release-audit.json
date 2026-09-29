@@ -18,10 +18,10 @@
     "editorial:procedure_review_required": 2,
     "editorial:recipe_scope_mismatch": 8,
     "nutrition:ignored_component_not_calculable": 223,
-    "nutrition:independent_calculation_complete": 126,
+    "nutrition:independent_calculation_complete": 131,
     "nutrition:invalid_yield": 4,
-    "nutrition:nutrition_delta_outside_tolerance": 125,
-    "nutrition:nutrition_delta_within_tolerance": 126,
+    "nutrition:nutrition_delta_outside_tolerance": 120,
+    "nutrition:nutrition_delta_within_tolerance": 131,
     "nutrition:rice_dry_weight_conversion_applied": 28
   },
   "cards": [
@@ -143,10 +143,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 528.6,
-        "protein": 43.2,
+        "kcal": 528.3,
+        "protein": 43.3,
         "fat": 17.4,
-        "carbs": 48.1
+        "carbs": 48
       },
       "reasons": [
         {
@@ -481,10 +481,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 740.2,
-        "protein": 43.4,
-        "fat": 37.5,
-        "carbs": 57.4
+        "kcal": 738.6,
+        "protein": 43.6,
+        "fat": 37.6,
+        "carbs": 57
       },
       "reasons": [
         {
@@ -599,10 +599,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 779.9,
-        "protein": 49.4,
+        "kcal": 778.3,
+        "protein": 49.5,
         "fat": 38.2,
-        "carbs": 58.6
+        "carbs": 58.2
       },
       "reasons": [
         {
@@ -1090,10 +1090,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 607,
+        "kcal": 606.7,
         "protein": 43.2,
         "fat": 14.2,
-        "carbs": 76.1
+        "carbs": 76
       },
       "reasons": [
         {
@@ -1479,10 +1479,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 208.5,
-        "protein": 18.9,
+        "kcal": 208.3,
+        "protein": 19,
         "fat": 9.1,
-        "carbs": 12.7
+        "carbs": 12.6
       },
       "reasons": [
         {
@@ -1962,10 +1962,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 275,
-        "protein": 17.9,
-        "fat": 6.8,
-        "carbs": 35.1
+        "kcal": 299,
+        "protein": 20.5,
+        "fat": 6.7,
+        "carbs": 38.7
       },
       "reasons": [
         {
@@ -2118,10 +2118,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 708.2,
-        "protein": 62.6,
+        "kcal": 724.6,
+        "protein": 63.8,
         "fat": 16.2,
-        "carbs": 75.7
+        "carbs": 79.5
       },
       "reasons": [
         {
@@ -2222,10 +2222,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 508.9,
-        "protein": 41.6,
+        "kcal": 507.7,
+        "protein": 41.7,
         "fat": 14.1,
-        "carbs": 53.9
+        "carbs": 53.6
       },
       "reasons": [
         {
@@ -2603,10 +2603,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 197,
-        "protein": 16,
+        "kcal": 196.6,
+        "protein": 16.1,
         "fat": 8.8,
-        "carbs": 12.7
+        "carbs": 12.6
       },
       "reasons": [
         {
@@ -2954,10 +2954,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 437.6,
-        "protein": 43.2,
-        "fat": 6.3,
-        "carbs": 54.9
+        "kcal": 412.6,
+        "protein": 43.1,
+        "fat": 6.2,
+        "carbs": 48.1
       },
       "reasons": [
         {
@@ -3201,10 +3201,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 698.5,
-        "protein": 40.3,
-        "fat": 30.9,
-        "carbs": 63.9
+        "kcal": 675,
+        "protein": 39.7,
+        "fat": 30.8,
+        "carbs": 58.4
       },
       "reasons": [
         {
@@ -3244,8 +3244,7 @@
           "detail": {
             "fields": [
               "kcal",
-              "fat",
-              "carbs"
+              "fat"
             ],
             "policy": "independent_calculation_is_runtime_truth"
           }
@@ -3768,10 +3767,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 640.6,
-        "protein": 43,
+        "kcal": 639.4,
+        "protein": 43.1,
         "fat": 25.7,
-        "carbs": 59.1
+        "carbs": 58.8
       },
       "reasons": [
         {
@@ -4114,10 +4113,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 428.6,
-        "protein": 36.6,
+        "kcal": 427.3,
+        "protein": 36.7,
         "fat": 23.9,
-        "carbs": 15
+        "carbs": 14.7
       },
       "reasons": [
         {
@@ -4216,10 +4215,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 755.1,
-        "protein": 32.6,
+        "kcal": 754.3,
+        "protein": 32.7,
         "fat": 20.9,
-        "carbs": 107.4
+        "carbs": 107.2
       },
       "reasons": [
         {
@@ -4305,10 +4304,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 338.5,
+        "kcal": 338.3,
         "protein": 22.9,
         "fat": 14.5,
-        "carbs": 29
+        "carbs": 28.9
       },
       "reasons": [
         {
@@ -4439,10 +4438,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 280.4,
-        "protein": 2.2,
-        "fat": 1,
-        "carbs": 72
+        "kcal": 210.4,
+        "protein": 2,
+        "fat": 0.9,
+        "carbs": 52.9
       },
       "reasons": [
         {
@@ -4474,15 +4473,13 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "kcal",
-              "carbs"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -4671,10 +4668,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 561.7,
+        "kcal": 561.5,
         "protein": 44.2,
         "fat": 21,
-        "carbs": 48.7
+        "carbs": 48.6
       },
       "reasons": [
         {
@@ -5737,10 +5734,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 557.5,
+        "kcal": 556.7,
         "protein": 42.9,
         "fat": 13.3,
-        "carbs": 66.2
+        "carbs": 66
       },
       "reasons": [
         {
@@ -5975,10 +5972,10 @@
       "editorialVerdict": "review_required",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 1099.8,
-        "protein": 56.7,
-        "fat": 43.9,
-        "carbs": 120.8
+        "kcal": 1099.5,
+        "protein": 56.8,
+        "fat": 44,
+        "carbs": 120.7
       },
       "reasons": [
         {
@@ -6237,10 +6234,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 480.3,
-        "protein": 35.9,
+        "kcal": 600.2,
+        "protein": 35.3,
         "fat": 23.2,
-        "carbs": 35.4
+        "carbs": 65.2
       },
       "reasons": [
         {
@@ -6253,15 +6250,13 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "kcal",
-              "carbs"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -6317,7 +6312,7 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 444.2,
+        "kcal": 444,
         "protein": 37.3,
         "fat": 8.9,
         "carbs": 51
@@ -6604,10 +6599,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 194.6,
-        "protein": 15.7,
+        "kcal": 194.4,
+        "protein": 15.8,
         "fat": 9,
-        "carbs": 12.7
+        "carbs": 12.6
       },
       "reasons": [
         {
@@ -6687,10 +6682,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 494.4,
-        "protein": 43.7,
+        "kcal": 640.1,
+        "protein": 42.9,
         "fat": 18.6,
-        "carbs": 34.5
+        "carbs": 70.8
       },
       "reasons": [
         {
@@ -6719,14 +6714,13 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "carbs"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -7084,10 +7078,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 275.1,
+        "kcal": 275,
         "protein": 41.4,
         "fat": 5.1,
-        "carbs": 11.9
+        "carbs": 11.8
       },
       "reasons": [
         {
@@ -7371,10 +7365,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 397.2,
+        "kcal": 378.3,
         "protein": 23.6,
         "fat": 12.1,
-        "carbs": 52.2
+        "carbs": 47
       },
       "reasons": [
         {
@@ -7406,10 +7400,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 723.3,
+        "kcal": 723,
         "protein": 41.3,
         "fat": 31.1,
-        "carbs": 70.1
+        "carbs": 70
       },
       "reasons": [
         {
@@ -7694,7 +7688,7 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 572.6,
+        "kcal": 572.4,
         "protein": 47.7,
         "fat": 13.8,
         "carbs": 63
@@ -7791,10 +7785,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 758.3,
-        "protein": 47.5,
+        "kcal": 757,
+        "protein": 47.6,
         "fat": 34.2,
-        "carbs": 67
+        "carbs": 66.6
       },
       "reasons": [
         {
@@ -8117,10 +8111,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 699.1,
-        "protein": 41.2,
+        "kcal": 698.7,
+        "protein": 41.3,
         "fat": 37.4,
-        "carbs": 49.4
+        "carbs": 49.3
       },
       "reasons": [
         {
@@ -8155,10 +8149,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 525.7,
+        "kcal": 525,
         "protein": 37,
         "fat": 12.2,
-        "carbs": 65.7
+        "carbs": 65.5
       },
       "reasons": [
         {
@@ -9160,10 +9154,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 529.1,
-        "protein": 34.2,
-        "fat": 12.3,
-        "carbs": 73.2
+        "kcal": 489.9,
+        "protein": 33.3,
+        "fat": 12.2,
+        "carbs": 64
       },
       "reasons": [
         {
@@ -9185,7 +9179,6 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "kcal",
               "protein",
               "carbs"
             ],
@@ -9337,22 +9330,21 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 450,
-        "protein": 14.3,
-        "fat": 18.1,
-        "carbs": 59.5
+        "kcal": 410.8,
+        "protein": 13.4,
+        "fat": 18,
+        "carbs": 50.3
       },
       "reasons": [
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "carbs"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -9854,8 +9846,8 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 162.5,
-        "protein": 7.3,
+        "kcal": 162.3,
+        "protein": 7.4,
         "fat": 2.6,
         "carbs": 32.3
       },
@@ -10819,10 +10811,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 385.2,
-        "protein": 28.7,
+        "kcal": 355.8,
+        "protein": 28,
         "fat": 13.3,
-        "carbs": 38.9
+        "carbs": 32
       },
       "reasons": [
         {
@@ -10831,7 +10823,6 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "protein",
               "fat",
               "carbs"
             ],
@@ -10912,10 +10903,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 488.3,
-        "protein": 34,
-        "fat": 5.6,
-        "carbs": 75.3
+        "kcal": 409.9,
+        "protein": 32.1,
+        "fat": 5.4,
+        "carbs": 57
       },
       "reasons": [
         {
@@ -10924,7 +10915,6 @@
           "severity": "info",
           "detail": {
             "fields": [
-              "kcal",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -12375,10 +12365,10 @@
       "editorialVerdict": "blocked",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 770.5,
-        "protein": 30.4,
-        "fat": 33,
-        "carbs": 96.4
+        "kcal": 692.1,
+        "protein": 28.5,
+        "fat": 32.8,
+        "carbs": 78.1
       },
       "reasons": [
         {
@@ -12418,7 +12408,6 @@
           "detail": {
             "fields": [
               "kcal",
-              "protein",
               "carbs"
             ],
             "policy": "independent_calculation_is_runtime_truth"
@@ -12435,10 +12424,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 488.8,
-        "protein": 18.9,
+        "kcal": 449.6,
+        "protein": 18,
         "fat": 9.1,
-        "carbs": 86.7
+        "carbs": 77.5
       },
       "reasons": [
         {
@@ -12537,10 +12526,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 715.7,
-        "protein": 34.1,
-        "fat": 21.7,
-        "carbs": 100.5
+        "kcal": 676.5,
+        "protein": 33.2,
+        "fat": 21.6,
+        "carbs": 91.3
       },
       "reasons": [
         {
@@ -12553,14 +12542,13 @@
         },
         {
           "gate": "nutrition",
-          "code": "nutrition_delta_outside_tolerance",
-          "severity": "info",
-          "detail": {
-            "fields": [
-              "carbs"
-            ],
-            "policy": "independent_calculation_is_runtime_truth"
-          }
+          "code": "nutrition_delta_within_tolerance",
+          "severity": "info"
+        },
+        {
+          "gate": "nutrition",
+          "code": "independent_calculation_complete",
+          "severity": "info"
         }
       ],
       "resolvedReasons": []
@@ -12722,10 +12710,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 655.8,
-        "protein": 38.5,
+        "kcal": 641.1,
+        "protein": 38.2,
         "fat": 27.2,
-        "carbs": 61.7
+        "carbs": 58.3
       },
       "reasons": [
         {
@@ -13165,10 +13153,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 398.4,
-        "protein": 17.3,
+        "kcal": 378.8,
+        "protein": 16.9,
         "fat": 16.4,
-        "carbs": 52.4
+        "carbs": 47.8
       },
       "reasons": [
         {
@@ -13218,10 +13206,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 355.8,
-        "protein": 13.5,
-        "fat": 11.7,
-        "carbs": 52.7
+        "kcal": 316.6,
+        "protein": 12.5,
+        "fat": 11.6,
+        "carbs": 43.6
       },
       "reasons": [
         {
@@ -13409,10 +13397,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 563,
-        "protein": 32.9,
+        "kcal": 561,
+        "protein": 33.1,
         "fat": 18.9,
-        "carbs": 68
+        "carbs": 67.5
       },
       "reasons": [
         {

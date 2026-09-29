@@ -22963,10 +22963,10 @@
       "title": "Куриные боулы со сливочным соусом из кинзы и лайма",
       "cuisine": "mexican",
       "macros": {
-        "kcal": 528.6,
-        "protein": 43.2,
+        "kcal": 528.3,
+        "protein": 43.3,
         "fat": 17.4,
-        "carbs": 48.1
+        "carbs": 48
       },
       "timeMinutes": 80,
       "menuTags": [
@@ -23304,16 +23304,14 @@
         {
           "sourceIngredientIndex": 16,
           "sourceIngredientId": "source-ingredient-16",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 20,
           "sourceMeasurement": {
             "amount": 20,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.18,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -23327,15 +23325,13 @@
             {
               "sourceIngredientIndex": 16,
               "sourceIngredientId": "source-ingredient-16",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 20,
               "sourceMeasurement": {
                 "amount": 20,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.18
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -23865,7 +23861,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-16",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 4,
             "unit": "g",
             "role": "vegetable",
@@ -23963,18 +23959,18 @@
           "carbs": 46
         },
         "miseCalculatedNutrition": {
-          "kcal": 528.6,
-          "protein": 43.2,
+          "kcal": 528.3,
+          "protein": 43.3,
           "fat": 17.4,
-          "carbs": 48.1
+          "carbs": 48
         },
         "nutritionDelta": {
-          "kcal": 38.6,
-          "protein": 0.2,
+          "kcal": 38.3,
+          "protein": 0.3,
           "fat": 2.4,
-          "carbs": 2.1
+          "carbs": 2
         },
-        "nutritionDeltaKcal": 38.6,
+        "nutritionDeltaKcal": 38.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -26073,10 +26069,10 @@
       "title": "Хрустящая говядина с чили и лапшой",
       "cuisine": "asian",
       "macros": {
-        "kcal": 740.2,
-        "protein": 43.4,
-        "fat": 37.5,
-        "carbs": 57.4
+        "kcal": 738.6,
+        "protein": 43.6,
+        "fat": 37.6,
+        "carbs": 57
       },
       "timeMinutes": 35,
       "menuTags": [
@@ -26169,16 +26165,14 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 100,
           "sourceMeasurement": {
             "amount": 100,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.91,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -26192,15 +26186,13 @@
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 100,
               "sourceMeasurement": {
                 "amount": 100,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.91
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -26805,7 +26797,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 20,
             "unit": "g",
             "role": "vegetable",
@@ -26971,7 +26963,7 @@
           }
         ],
         "minViableCalories": 528,
-        "maxViableCalories": 1234,
+        "maxViableCalories": 1230,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -26993,18 +26985,18 @@
           "carbs": 55
         },
         "miseCalculatedNutrition": {
-          "kcal": 740.2,
-          "protein": 43.4,
-          "fat": 37.5,
-          "carbs": 57.4
+          "kcal": 738.6,
+          "protein": 43.6,
+          "fat": 37.6,
+          "carbs": 57
         },
         "nutritionDelta": {
-          "kcal": 123.2,
-          "protein": -3.6,
-          "fat": 14.5,
-          "carbs": 2.4
+          "kcal": 121.6,
+          "protein": -3.4,
+          "fat": 14.6,
+          "carbs": 2
         },
-        "nutritionDeltaKcal": 123.2,
+        "nutritionDeltaKcal": 121.6,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -28208,10 +28200,10 @@
       "title": "Макароны тако",
       "cuisine": "mexican",
       "macros": {
-        "kcal": 779.9,
-        "protein": 49.4,
+        "kcal": 778.3,
+        "protein": 49.5,
         "fat": 38.2,
-        "carbs": 58.6
+        "carbs": 58.2
       },
       "timeMinutes": 35,
       "menuTags": [
@@ -28389,16 +28381,14 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 100,
           "sourceMeasurement": {
             "amount": 100,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.91,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -28412,15 +28402,13 @@
             {
               "sourceIngredientIndex": 6,
               "sourceIngredientId": "source-ingredient-6",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 100,
               "sourceMeasurement": {
                 "amount": 100,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.91
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -28881,7 +28869,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-6",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 20,
             "unit": "g",
             "role": "vegetable",
@@ -28956,7 +28944,7 @@
           }
         ],
         "minViableCalories": 477,
-        "maxViableCalories": 1394,
+        "maxViableCalories": 1390,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -28978,18 +28966,18 @@
           "carbs": 61
         },
         "miseCalculatedNutrition": {
-          "kcal": 779.9,
-          "protein": 49.4,
+          "kcal": 778.3,
+          "protein": 49.5,
           "fat": 38.2,
-          "carbs": 58.6
+          "carbs": 58.2
         },
         "nutritionDelta": {
-          "kcal": 105.9,
-          "protein": -4.6,
+          "kcal": 104.3,
+          "protein": -4.5,
           "fat": 14.2,
-          "carbs": -2.4
+          "carbs": -2.8
         },
-        "nutritionDeltaKcal": 105.9,
+        "nutritionDeltaKcal": 104.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -35650,10 +35638,10 @@
       "title": "Куриные наггетсы для перекуса",
       "cuisine": "american",
       "macros": {
-        "kcal": 208.5,
-        "protein": 18.9,
+        "kcal": 208.3,
+        "protein": 19,
         "fat": 9.1,
-        "carbs": 12.7
+        "carbs": 12.6
       },
       "timeMinutes": 60,
       "menuTags": [
@@ -35786,16 +35774,14 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 30,
           "sourceMeasurement": {
             "amount": 30,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.27,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -35809,15 +35795,13 @@
             {
               "sourceIngredientIndex": 4,
               "sourceIngredientId": "source-ingredient-4",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 30,
               "sourceMeasurement": {
                 "amount": 30,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.27
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -36106,7 +36090,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-4",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 3,
             "unit": "g",
             "role": "vegetable",
@@ -36136,7 +36120,7 @@
           }
         ],
         "minViableCalories": 102,
-        "maxViableCalories": 340,
+        "maxViableCalories": 339,
         "geometryLockedMax": 10,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -36158,18 +36142,18 @@
           "carbs": 13.8
         },
         "miseCalculatedNutrition": {
-          "kcal": 208.5,
-          "protein": 18.9,
+          "kcal": 208.3,
+          "protein": 19,
           "fat": 9.1,
-          "carbs": 12.7
+          "carbs": 12.6
         },
         "nutritionDelta": {
-          "kcal": 30.3,
-          "protein": -1.5,
+          "kcal": 30.1,
+          "protein": -1.4,
           "fat": 4.3,
-          "carbs": -1.1
+          "carbs": -1.2
         },
-        "nutritionDeltaKcal": 30.3,
+        "nutritionDeltaKcal": 30.1,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -39512,10 +39496,10 @@
       "title": "Протеиновые панкейки на противне",
       "cuisine": "american",
       "macros": {
-        "kcal": 275,
-        "protein": 17.9,
-        "fat": 6.8,
-        "carbs": 35.1
+        "kcal": 299,
+        "protein": 20.5,
+        "fat": 6.7,
+        "carbs": 38.7
       },
       "timeMinutes": 35,
       "menuTags": [
@@ -39575,7 +39559,7 @@
           "canonicalIngredientId": "milk_processed",
           "nameRu": "Молоко 2%",
           "group": "Молочное",
-          "quantityGrams": 286,
+          "quantityGrams": 240,
           "sourceMeasurement": {
             "amount": 240,
             "unit": "g"
@@ -39586,12 +39570,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-2",
-            "source-ingredient-3"
+            "source-ingredient-2"
           ],
           "sourceIngredientIndexes": [
-            2,
-            3
+            2
           ],
           "sourceAudit": [
             {
@@ -39604,11 +39586,36 @@
                 "unit": "g"
               },
               "massStatus": "source_metric"
-            },
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 3,
+          "sourceIngredientId": "source-ingredient-3",
+          "canonicalIngredientId": "milk_powder_processed",
+          "nameRu": "Сухое обезжиренное молоко",
+          "group": "Молочное",
+          "quantityGrams": 46,
+          "sourceMeasurement": {
+            "amount": 46,
+            "unit": "g"
+          },
+          "allergens": [
+            "milk"
+          ],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-3"
+          ],
+          "sourceIngredientIndexes": [
+            3
+          ],
+          "sourceAudit": [
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Молоко 2%",
+              "nameRu": "Сухое обезжиренное молоко",
               "quantityGrams": 46,
               "sourceMeasurement": {
                 "amount": 46,
@@ -39975,14 +39982,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "milk_processed",
-            "baseAmount": 7.44336569579288,
-            "unit": "ml",
+            "canonicalIngredientId": "milk_powder_processed",
+            "baseAmount": 7.666666666666667,
+            "unit": "g",
             "role": "protein",
-            "minAmount": 5.359223300970873,
-            "preferredMin": 6.699029126213592,
-            "preferredMax": 8.559870550161811,
-            "maxAmount": 10.792880258899675,
+            "minAmount": 5.52,
+            "preferredMin": 6.9,
+            "preferredMax": 8.816666666666666,
+            "maxAmount": 11.116666666666667,
             "scalable": true,
             "scalingPriority": 2,
             "substitutions": [],
@@ -40049,8 +40056,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 156,
-        "maxViableCalories": 545,
+        "minViableCalories": 187,
+        "maxViableCalories": 580,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -40072,18 +40079,18 @@
           "carbs": 39.2
         },
         "miseCalculatedNutrition": {
-          "kcal": 275,
-          "protein": 17.9,
-          "fat": 6.8,
-          "carbs": 35.1
+          "kcal": 299,
+          "protein": 20.5,
+          "fat": 6.7,
+          "carbs": 38.7
         },
         "nutritionDelta": {
-          "kcal": -1,
-          "protein": -3.1,
-          "fat": 2.8,
-          "carbs": -4.1
+          "kcal": 23,
+          "protein": -0.5,
+          "fat": 2.7,
+          "carbs": -0.5
         },
-        "nutritionDeltaKcal": -1,
+        "nutritionDeltaKcal": 23,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -41283,10 +41290,10 @@
       "title": "Курица энчилада в медленноварке",
       "cuisine": "mexican",
       "macros": {
-        "kcal": 708.2,
-        "protein": 62.6,
+        "kcal": 724.6,
+        "protein": 63.8,
         "fat": 16.2,
-        "carbs": 75.7
+        "carbs": 79.5
       },
       "timeMinutes": 375,
       "menuTags": [
@@ -41299,7 +41306,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 599.9,
+        "grams": 583.4,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -41345,16 +41352,14 @@
         {
           "sourceIngredientIndex": 2,
           "sourceIngredientId": "source-ingredient-2",
-          "canonicalIngredientId": "roasted_pepper_cooked",
-          "nameRu": "Запечённый перец",
+          "canonicalIngredientId": "tomato_passata_processed",
+          "nameRu": "Протёртые томаты",
           "group": "Овощи и фрукты",
           "quantityGrams": 822,
           "sourceMeasurement": {
             "amount": 822,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 150,
-          "pieceEstimate": 5.48,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -41368,15 +41373,13 @@
             {
               "sourceIngredientIndex": 2,
               "sourceIngredientId": "source-ingredient-2",
-              "nameRu": "Запечённый перец",
+              "nameRu": "Протёртые томаты",
               "quantityGrams": 822,
               "sourceMeasurement": {
                 "amount": 822,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 150,
-              "pieceEstimate": 5.48
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -41917,14 +41920,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-2",
-            "canonicalIngredientId": "roasted_pepper_cooked",
-            "baseAmount": 164.4,
-            "unit": "g",
+            "canonicalIngredientId": "tomato_passata_processed",
+            "baseAmount": 158.07692307692307,
+            "unit": "ml",
             "role": "vegetable",
-            "minAmount": 131.52,
-            "preferredMin": 156.18,
-            "preferredMax": 197.28,
-            "maxAmount": 238.38,
+            "minAmount": 126.46153846153845,
+            "preferredMin": 150.1730769230769,
+            "preferredMax": 189.69230769230768,
+            "maxAmount": 229.21153846153845,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -42067,8 +42070,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 430,
-        "maxViableCalories": 1321,
+        "minViableCalories": 444,
+        "maxViableCalories": 1346,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -42090,18 +42093,18 @@
           "carbs": 57
         },
         "miseCalculatedNutrition": {
-          "kcal": 708.2,
-          "protein": 62.6,
+          "kcal": 724.6,
+          "protein": 63.8,
           "fat": 16.2,
-          "carbs": 75.7
+          "carbs": 79.5
         },
         "nutritionDelta": {
-          "kcal": 109.2,
-          "protein": 3.6,
+          "kcal": 125.6,
+          "protein": 4.8,
           "fat": 1.2,
-          "carbs": 18.7
+          "carbs": 22.5
         },
-        "nutritionDeltaKcal": 109.2,
+        "nutritionDeltaKcal": 125.6,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -43073,10 +43076,10 @@
       "title": "Куриные боулы со шрирачей и лаймом",
       "cuisine": "asian",
       "macros": {
-        "kcal": 508.9,
-        "protein": 41.6,
+        "kcal": 507.7,
+        "protein": 41.7,
         "fat": 14.1,
-        "carbs": 53.9
+        "carbs": 53.6
       },
       "timeMinutes": 215,
       "menuTags": [
@@ -43211,16 +43214,14 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 75,
           "sourceMeasurement": {
             "amount": 75,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.68,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -43234,15 +43235,13 @@
             {
               "sourceIngredientIndex": 4,
               "sourceIngredientId": "source-ingredient-4",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 75,
               "sourceMeasurement": {
                 "amount": 75,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.68
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -43673,7 +43672,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-4",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 15,
             "unit": "g",
             "role": "vegetable",
@@ -43764,7 +43763,7 @@
           }
         ],
         "minViableCalories": 372,
-        "maxViableCalories": 834,
+        "maxViableCalories": 832,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -43786,18 +43785,18 @@
           "carbs": 52
         },
         "miseCalculatedNutrition": {
-          "kcal": 508.9,
-          "protein": 41.6,
+          "kcal": 507.7,
+          "protein": 41.7,
           "fat": 14.1,
-          "carbs": 53.9
+          "carbs": 53.6
         },
         "nutritionDelta": {
-          "kcal": 10.9,
-          "protein": 0.6,
+          "kcal": 9.7,
+          "protein": 0.7,
           "fat": 0.1,
-          "carbs": 1.9
+          "carbs": 1.6
         },
-        "nutritionDeltaKcal": 10.9,
+        "nutritionDeltaKcal": 9.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -48245,10 +48244,10 @@
       "title": "Французские тосты из протеиновых вафель с корицей",
       "cuisine": "american",
       "macros": {
-        "kcal": 437.6,
-        "protein": 43.2,
-        "fat": 6.3,
-        "carbs": 54.9
+        "kcal": 412.6,
+        "protein": 43.1,
+        "fat": 6.2,
+        "carbs": 48.1
       },
       "timeMinutes": 25,
       "menuTags": [
@@ -48433,8 +48432,8 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "canonicalIngredientId": "berries_raw",
-          "nameRu": "Черника",
+          "canonicalIngredientId": "strawberries_raw",
+          "nameRu": "Клубника",
           "group": "Овощи и фрукты",
           "quantityGrams": 100,
           "sourceMeasurement": {
@@ -48454,7 +48453,7 @@
             {
               "sourceIngredientIndex": 9,
               "sourceIngredientId": "source-ingredient-9",
-              "nameRu": "Черника",
+              "nameRu": "Клубника",
               "quantityGrams": 100,
               "sourceMeasurement": {
                 "amount": 100,
@@ -48776,7 +48775,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-9",
-            "canonicalIngredientId": "berries_raw",
+            "canonicalIngredientId": "strawberries_raw",
             "baseAmount": 100,
             "unit": "g",
             "role": "vegetable",
@@ -48820,8 +48819,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 260,
-        "maxViableCalories": 809,
+        "minViableCalories": 240,
+        "maxViableCalories": 769,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -48843,18 +48842,18 @@
           "carbs": 56
         },
         "miseCalculatedNutrition": {
-          "kcal": 437.6,
-          "protein": 43.2,
-          "fat": 6.3,
-          "carbs": 54.9
+          "kcal": 412.6,
+          "protein": 43.1,
+          "fat": 6.2,
+          "carbs": 48.1
         },
         "nutritionDelta": {
-          "kcal": 2.6,
-          "protein": -2.8,
-          "fat": 3.3,
-          "carbs": -1.1
+          "kcal": -22.4,
+          "protein": -2.9,
+          "fat": 3.2,
+          "carbs": -7.9
         },
-        "nutritionDeltaKcal": 2.6,
+        "nutritionDeltaKcal": -22.4,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -51163,10 +51162,10 @@
       "title": "Говядина и овощи в глазури кочуджан",
       "cuisine": "asian",
       "macros": {
-        "kcal": 698.5,
-        "protein": 40.3,
-        "fat": 30.9,
-        "carbs": 63.9
+        "kcal": 675,
+        "protein": 39.7,
+        "fat": 30.8,
+        "carbs": 58.4
       },
       "timeMinutes": 55,
       "menuTags": [
@@ -51179,7 +51178,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 447.1,
+        "grams": 395.8,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -51262,7 +51261,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 455,
+          "quantityGrams": 125,
           "sourceMeasurement": {
             "amount": 125,
             "unit": "g"
@@ -51273,12 +51272,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-3",
-            "source-ingredient-7"
+            "source-ingredient-3"
           ],
           "sourceIngredientIndexes": [
-            3,
-            7
+            3
           ],
           "sourceAudit": [
             {
@@ -51293,19 +51290,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 1.14
-            },
-            {
-              "sourceIngredientIndex": 7,
-              "sourceIngredientId": "source-ingredient-7",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 330,
-              "sourceMeasurement": {
-                "amount": 3,
-                "unit": "piece"
-              },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 3
             }
           ]
         },
@@ -51412,6 +51396,40 @@
                 "unit": "ml"
               },
               "massStatus": "source_metric"
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 7,
+          "sourceIngredientId": "source-ingredient-7",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 45,
+          "sourceMeasurement": {
+            "amount": 3,
+            "unit": "piece"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "estimated_from_standard_conversion",
+          "sourceIngredientIds": [
+            "source-ingredient-7"
+          ],
+          "sourceIngredientIndexes": [
+            7
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 7,
+              "sourceIngredientId": "source-ingredient-7",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 45,
+              "sourceMeasurement": {
+                "amount": 3,
+                "unit": "piece"
+              },
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -51868,14 +51886,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-7",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 0.6,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 9,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.48,
-            "preferredMin": 0.57,
-            "preferredMax": 0.72,
-            "maxAmount": 0.87,
+            "minAmount": 7.2,
+            "preferredMin": 8.549999999999999,
+            "preferredMax": 10.799999999999999,
+            "maxAmount": 13.049999999999999,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -51957,8 +51975,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 483,
-        "maxViableCalories": 1174,
+        "minViableCalories": 464,
+        "maxViableCalories": 1139,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -51980,18 +51998,18 @@
           "carbs": 52
         },
         "miseCalculatedNutrition": {
-          "kcal": 698.5,
-          "protein": 40.3,
-          "fat": 30.9,
-          "carbs": 63.9
+          "kcal": 675,
+          "protein": 39.7,
+          "fat": 30.8,
+          "carbs": 58.4
         },
         "nutritionDelta": {
-          "kcal": 126.5,
-          "protein": -1.7,
-          "fat": 8.9,
-          "carbs": 11.9
+          "kcal": 103,
+          "protein": -2.3,
+          "fat": 8.8,
+          "carbs": 6.4
         },
-        "nutritionDeltaKcal": 126.5,
+        "nutritionDeltaKcal": 103,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -55027,10 +55045,10 @@
       "title": "Стир-фрай из свинины с острым мёдом",
       "cuisine": "asian",
       "macros": {
-        "kcal": 640.6,
-        "protein": 43,
+        "kcal": 639.4,
+        "protein": 43.1,
         "fat": 25.7,
-        "carbs": 59.1
+        "carbs": 58.8
       },
       "timeMinutes": 35,
       "menuTags": [
@@ -55157,16 +55175,14 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 75,
           "sourceMeasurement": {
             "amount": 75,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.68,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -55180,15 +55196,13 @@
             {
               "sourceIngredientIndex": 4,
               "sourceIngredientId": "source-ingredient-4",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 75,
               "sourceMeasurement": {
                 "amount": 75,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.68
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -55599,7 +55613,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-4",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 15,
             "unit": "g",
             "role": "vegetable",
@@ -55704,7 +55718,7 @@
           }
         ],
         "minViableCalories": 443,
-        "maxViableCalories": 1104,
+        "maxViableCalories": 1102,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -55726,18 +55740,18 @@
           "carbs": 55
         },
         "miseCalculatedNutrition": {
-          "kcal": 640.6,
-          "protein": 43,
+          "kcal": 639.4,
+          "protein": 43.1,
           "fat": 25.7,
-          "carbs": 59.1
+          "carbs": 58.8
         },
         "nutritionDelta": {
-          "kcal": 24.6,
-          "protein": 0,
+          "kcal": 23.4,
+          "protein": 0.1,
           "fat": 0.7,
-          "carbs": 4.1
+          "carbs": 3.8
         },
-        "nutritionDeltaKcal": 24.6,
+        "nutritionDeltaKcal": 23.4,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -57351,10 +57365,10 @@
       "title": "Запеканка из батата, ветчины и яиц",
       "cuisine": "american",
       "macros": {
-        "kcal": 428.6,
-        "protein": 36.6,
+        "kcal": 427.3,
+        "protein": 36.7,
         "fat": 23.9,
-        "carbs": 15
+        "carbs": 14.7
       },
       "timeMinutes": 65,
       "menuTags": [
@@ -57487,16 +57501,14 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 80,
           "sourceMeasurement": {
             "amount": 80,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.73,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -57510,15 +57522,13 @@
             {
               "sourceIngredientIndex": 4,
               "sourceIngredientId": "source-ingredient-4",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 80,
               "sourceMeasurement": {
                 "amount": 80,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.73
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -57813,7 +57823,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-4",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 16,
             "unit": "g",
             "role": "vegetable",
@@ -57859,7 +57869,7 @@
           }
         ],
         "minViableCalories": 342,
-        "maxViableCalories": 636,
+        "maxViableCalories": 633,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -57881,18 +57891,18 @@
           "carbs": 16
         },
         "miseCalculatedNutrition": {
-          "kcal": 428.6,
-          "protein": 36.6,
+          "kcal": 427.3,
+          "protein": 36.7,
           "fat": 23.9,
-          "carbs": 15
+          "carbs": 14.7
         },
         "nutritionDelta": {
-          "kcal": 17.6,
-          "protein": 0.6,
+          "kcal": 16.3,
+          "protein": 0.7,
           "fat": 0.9,
-          "carbs": -1
+          "carbs": -1.3
         },
-        "nutritionDeltaKcal": 17.6,
+        "nutritionDeltaKcal": 16.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -58797,10 +58807,10 @@
       "title": "Корейская говядина с рисовыми клецками ттокпокки",
       "cuisine": "asian",
       "macros": {
-        "kcal": 755.1,
-        "protein": 32.6,
+        "kcal": 754.3,
+        "protein": 32.7,
         "fat": 20.9,
-        "carbs": 107.4
+        "carbs": 107.2
       },
       "timeMinutes": 25,
       "menuTags": [
@@ -58858,16 +58868,14 @@
         {
           "sourceIngredientIndex": 2,
           "sourceIngredientId": "source-ingredient-2",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 40,
           "sourceMeasurement": {
             "amount": 40,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.36,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -58881,15 +58889,13 @@
             {
               "sourceIngredientIndex": 2,
               "sourceIngredientId": "source-ingredient-2",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 40,
               "sourceMeasurement": {
                 "amount": 40,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.36
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -59319,7 +59325,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-2",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 10,
             "unit": "g",
             "role": "vegetable",
@@ -59454,7 +59460,7 @@
           }
         ],
         "minViableCalories": 397,
-        "maxViableCalories": 1520,
+        "maxViableCalories": 1517,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -59476,18 +59482,18 @@
           "carbs": 69
         },
         "miseCalculatedNutrition": {
-          "kcal": 755.1,
-          "protein": 32.6,
+          "kcal": 754.3,
+          "protein": 32.7,
           "fat": 20.9,
-          "carbs": 107.4
+          "carbs": 107.2
         },
         "nutritionDelta": {
-          "kcal": 224.1,
-          "protein": 1.6,
+          "kcal": 223.3,
+          "protein": 1.7,
           "fat": 6.4,
-          "carbs": 38.4
+          "carbs": 38.2
         },
-        "nutritionDeltaKcal": 224.1,
+        "nutritionDeltaKcal": 223.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -60291,10 +60297,10 @@
       "title": "Завтрак с хашбрауном и яичным белком",
       "cuisine": "american",
       "macros": {
-        "kcal": 338.5,
+        "kcal": 338.3,
         "protein": 22.9,
         "fat": 14.5,
-        "carbs": 29
+        "carbs": 28.9
       },
       "timeMinutes": 5,
       "menuTags": [
@@ -60461,16 +60467,14 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 2,
           "sourceMeasurement": {
             "amount": 2,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.02,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -60484,15 +60488,13 @@
             {
               "sourceIngredientIndex": 5,
               "sourceIngredientId": "source-ingredient-5",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 2,
               "sourceMeasurement": {
                 "amount": 2,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.02
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -60728,7 +60730,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-5",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 2,
             "unit": "g",
             "role": "vegetable",
@@ -60758,7 +60760,7 @@
           }
         ],
         "minViableCalories": 248,
-        "maxViableCalories": 501,
+        "maxViableCalories": 500,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -60780,18 +60782,18 @@
           "carbs": 23.1
         },
         "miseCalculatedNutrition": {
-          "kcal": 338.5,
+          "kcal": 338.3,
           "protein": 22.9,
           "fat": 14.5,
-          "carbs": 29
+          "carbs": 28.9
         },
         "nutritionDelta": {
-          "kcal": 101.5,
+          "kcal": 101.3,
           "protein": 0.5,
           "fat": 8.4,
-          "carbs": 5.9
+          "carbs": 5.8
         },
-        "nutritionDeltaKcal": 101.5,
+        "nutritionDeltaKcal": 101.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -64207,10 +64209,10 @@
       "title": "Куриные рисовые боулы со шрирачей и арахисом",
       "cuisine": "asian",
       "macros": {
-        "kcal": 561.7,
+        "kcal": 561.5,
         "protein": 44.2,
         "fat": 21,
-        "carbs": 48.7
+        "carbs": 48.6
       },
       "timeMinutes": 50,
       "menuTags": [
@@ -64659,7 +64661,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 165,
+          "quantityGrams": 150,
           "sourceMeasurement": {
             "amount": 150,
             "unit": "g"
@@ -64670,12 +64672,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-17",
-            "source-ingredient-20"
+            "source-ingredient-17"
           ],
           "sourceIngredientIndexes": [
-            17,
-            20
+            17
           ],
           "sourceAudit": [
             {
@@ -64690,19 +64690,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 1.36
-            },
-            {
-              "sourceIngredientIndex": 20,
-              "sourceIngredientId": "source-ingredient-20",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 15,
-              "sourceMeasurement": {
-                "amount": 15,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.14
             }
           ]
         },
@@ -64783,6 +64770,40 @@
               "sourceIngredientIndex": 19,
               "sourceIngredientId": "source-ingredient-19",
               "nameRu": "Оливковое масло",
+              "quantityGrams": 15,
+              "sourceMeasurement": {
+                "amount": 15,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 20,
+          "sourceIngredientId": "source-ingredient-20",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 15,
+          "sourceMeasurement": {
+            "amount": 15,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-20"
+          ],
+          "sourceIngredientIndexes": [
+            20
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 20,
+              "sourceIngredientId": "source-ingredient-20",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 15,
               "sourceMeasurement": {
                 "amount": 15,
@@ -65266,7 +65287,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-20",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 3,
             "unit": "g",
             "role": "vegetable",
@@ -65297,7 +65318,7 @@
           }
         ],
         "minViableCalories": 413,
-        "maxViableCalories": 909,
+        "maxViableCalories": 908,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -65319,18 +65340,18 @@
           "carbs": 54
         },
         "miseCalculatedNutrition": {
-          "kcal": 561.7,
+          "kcal": 561.5,
           "protein": 44.2,
           "fat": 21,
-          "carbs": 48.7
+          "carbs": 48.6
         },
         "nutritionDelta": {
-          "kcal": -22.3,
+          "kcal": -22.5,
           "protein": -0.8,
           "fat": 0,
-          "carbs": -5.3
+          "carbs": -5.4
         },
-        "nutritionDeltaKcal": -22.3,
+        "nutritionDeltaKcal": -22.5,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -75862,10 +75883,10 @@
       "title": "Сытный чили",
       "cuisine": "american",
       "macros": {
-        "kcal": 1099.8,
-        "protein": 56.7,
-        "fat": 43.9,
-        "carbs": 120.8
+        "kcal": 1099.5,
+        "protein": 56.8,
+        "fat": 44,
+        "carbs": 120.7
       },
       "timeMinutes": 55,
       "menuTags": [
@@ -75999,7 +76020,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 170,
+          "quantityGrams": 150,
           "sourceMeasurement": {
             "amount": 150,
             "unit": "g"
@@ -76010,12 +76031,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-4",
-            "source-ingredient-6"
+            "source-ingredient-4"
           ],
           "sourceIngredientIndexes": [
-            4,
-            6
+            4
           ],
           "sourceAudit": [
             {
@@ -76030,19 +76049,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 1.36
-            },
-            {
-              "sourceIngredientIndex": 6,
-              "sourceIngredientId": "source-ingredient-6",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 20,
-              "sourceMeasurement": {
-                "amount": 20,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.18
             }
           ]
         },
@@ -76081,6 +76087,40 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 5,
               "pieceEstimate": 3
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 6,
+          "sourceIngredientId": "source-ingredient-6",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 20,
+          "sourceMeasurement": {
+            "amount": 20,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-6"
+          ],
+          "sourceIngredientIndexes": [
+            6
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 6,
+              "sourceIngredientId": "source-ingredient-6",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 20,
+              "sourceMeasurement": {
+                "amount": 20,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -76878,7 +76918,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-6",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 4,
             "unit": "g",
             "role": "vegetable",
@@ -77126,18 +77166,18 @@
           "carbs": 110
         },
         "miseCalculatedNutrition": {
-          "kcal": 1099.8,
-          "protein": 56.7,
-          "fat": 43.9,
-          "carbs": 120.8
+          "kcal": 1099.5,
+          "protein": 56.8,
+          "fat": 44,
+          "carbs": 120.7
         },
         "nutritionDelta": {
-          "kcal": 48.8,
-          "protein": 0.7,
-          "fat": 0.9,
-          "carbs": 10.8
+          "kcal": 48.5,
+          "protein": 0.8,
+          "fat": 1,
+          "carbs": 10.7
         },
-        "nutritionDeltaKcal": 48.8,
+        "nutritionDeltaKcal": 48.5,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -79622,10 +79662,10 @@
       "title": "Боулы с курицей в медово-чесночном соусе и лапшой",
       "cuisine": "asian",
       "macros": {
-        "kcal": 480.3,
-        "protein": 35.9,
+        "kcal": 600.2,
+        "protein": 35.3,
         "fat": 23.2,
-        "carbs": 35.4
+        "carbs": 65.2
       },
       "timeMinutes": 45,
       "menuTags": [
@@ -79638,7 +79678,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 367.1,
+        "grams": 430.7,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -79680,16 +79720,14 @@
         {
           "sourceIngredientIndex": 2,
           "sourceIngredientId": "source-ingredient-2",
-          "canonicalIngredientId": "sweet_potato_raw",
-          "nameRu": "Батат",
-          "group": "Овощи и фрукты",
+          "canonicalIngredientId": "glass_noodles_raw",
+          "nameRu": "Стеклянная лапша сухая",
+          "group": "Крупы и макароны",
           "quantityGrams": 227,
           "sourceMeasurement": {
             "amount": 227,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 180,
-          "pieceEstimate": 1.26,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -79703,15 +79741,13 @@
             {
               "sourceIngredientIndex": 2,
               "sourceIngredientId": "source-ingredient-2",
-              "nameRu": "Батат",
+              "nameRu": "Стеклянная лапша сухая",
               "quantityGrams": 227,
               "sourceMeasurement": {
                 "amount": 227,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 180,
-              "pieceEstimate": 1.26
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -79721,7 +79757,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 150,
+          "quantityGrams": 125,
           "sourceMeasurement": {
             "amount": 125,
             "unit": "g"
@@ -79732,12 +79768,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-3",
-            "source-ingredient-8"
+            "source-ingredient-3"
           ],
           "sourceIngredientIndexes": [
-            3,
-            8
+            3
           ],
           "sourceAudit": [
             {
@@ -79752,19 +79786,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 1.14
-            },
-            {
-              "sourceIngredientIndex": 8,
-              "sourceIngredientId": "source-ingredient-8",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 25,
-              "sourceMeasurement": {
-                "amount": 25,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.23
             }
           ]
         },
@@ -79909,6 +79930,40 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 5,
               "pieceEstimate": 3
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 8,
+          "sourceIngredientId": "source-ingredient-8",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 25,
+          "sourceMeasurement": {
+            "amount": 25,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-8"
+          ],
+          "sourceIngredientIndexes": [
+            8
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 8,
+              "sourceIngredientId": "source-ingredient-8",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 25,
+              "sourceMeasurement": {
+                "amount": 25,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -80268,16 +80323,16 @@
           },
           {
             "sourceIngredientId": "source-ingredient-2",
-            "canonicalIngredientId": "sweet_potato_raw",
+            "canonicalIngredientId": "glass_noodles_raw",
             "baseAmount": 45.4,
             "unit": "g",
-            "role": "vegetable",
-            "minAmount": 36.32,
-            "preferredMin": 43.129999999999995,
-            "preferredMax": 54.48,
-            "maxAmount": 65.83,
+            "role": "carb",
+            "minAmount": 15.889999999999999,
+            "preferredMin": 34.05,
+            "preferredMax": 56.75,
+            "maxAmount": 95.34,
             "scalable": true,
-            "scalingPriority": 5,
+            "scalingPriority": 1,
             "substitutions": [],
             "optional": false
           },
@@ -80358,7 +80413,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-8",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 5,
             "unit": "g",
             "role": "vegetable",
@@ -80464,8 +80519,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 390,
-        "maxViableCalories": 716,
+        "minViableCalories": 428,
+        "maxViableCalories": 1024,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -80487,18 +80542,18 @@
           "carbs": 66
         },
         "miseCalculatedNutrition": {
-          "kcal": 480.3,
-          "protein": 35.9,
+          "kcal": 600.2,
+          "protein": 35.3,
           "fat": 23.2,
-          "carbs": 35.4
+          "carbs": 65.2
         },
         "nutritionDelta": {
-          "kcal": -116.7,
-          "protein": -0.1,
+          "kcal": 3.2,
+          "protein": -0.7,
           "fat": 2.2,
-          "carbs": -30.6
+          "carbs": -0.8
         },
-        "nutritionDeltaKcal": -116.7,
+        "nutritionDeltaKcal": 3.2,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -81368,7 +81423,7 @@
       "title": "Боулы с курицей-гриль в терияки",
       "cuisine": "asian",
       "macros": {
-        "kcal": 444.2,
+        "kcal": 444,
         "protein": 37.3,
         "fat": 8.9,
         "carbs": 51
@@ -81503,16 +81558,14 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 10,
           "sourceMeasurement": {
             "amount": 10,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.09,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -81526,15 +81579,13 @@
             {
               "sourceIngredientIndex": 4,
               "sourceIngredientId": "source-ingredient-4",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 10,
               "sourceMeasurement": {
                 "amount": 10,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.09
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -81991,7 +82042,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-4",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 2,
             "unit": "g",
             "role": "vegetable",
@@ -82141,7 +82192,7 @@
           }
         ],
         "minViableCalories": 318,
-        "maxViableCalories": 807,
+        "maxViableCalories": 806,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -82163,18 +82214,18 @@
           "carbs": 63
         },
         "miseCalculatedNutrition": {
-          "kcal": 444.2,
+          "kcal": 444,
           "protein": 37.3,
           "fat": 8.9,
           "carbs": 51
         },
         "nutritionDelta": {
-          "kcal": -112.8,
+          "kcal": -113,
           "protein": -0.7,
           "fat": -8.1,
           "carbs": -12
         },
-        "nutritionDeltaKcal": -112.8,
+        "nutritionDeltaKcal": -113,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -84840,10 +84891,10 @@
       "title": "Куриные наггетсы по-нэшвиллски",
       "cuisine": "american",
       "macros": {
-        "kcal": 194.6,
-        "protein": 15.7,
+        "kcal": 194.4,
+        "protein": 15.8,
         "fat": 9,
-        "carbs": 12.7
+        "carbs": 12.6
       },
       "timeMinutes": 90,
       "menuTags": [
@@ -84936,16 +84987,14 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 50,
           "sourceMeasurement": {
             "amount": 50,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.45,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -84959,15 +85008,13 @@
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 50,
               "sourceMeasurement": {
                 "amount": 50,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.45
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -85437,7 +85484,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 2.7777777777777777,
             "unit": "g",
             "role": "vegetable",
@@ -85543,7 +85590,7 @@
           }
         ],
         "minViableCalories": 152,
-        "maxViableCalories": 294,
+        "maxViableCalories": 293,
         "geometryLockedMax": 18,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -85565,18 +85612,18 @@
           "carbs": 11
         },
         "miseCalculatedNutrition": {
-          "kcal": 194.6,
-          "protein": 15.7,
+          "kcal": 194.4,
+          "protein": 15.8,
           "fat": 9,
-          "carbs": 12.7
+          "carbs": 12.6
         },
         "nutritionDelta": {
-          "kcal": 34.6,
-          "protein": -2.3,
+          "kcal": 34.4,
+          "protein": -2.2,
           "fat": 4,
-          "carbs": 1.7
+          "carbs": 1.6
         },
-        "nutritionDeltaKcal": 34.6,
+        "nutritionDeltaKcal": 34.4,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -85688,10 +85735,10 @@
       "title": "Боулы с лапшой в сладком чили",
       "cuisine": "asian",
       "macros": {
-        "kcal": 494.4,
-        "protein": 43.7,
+        "kcal": 640.1,
+        "protein": 42.9,
         "fat": 18.6,
-        "carbs": 34.5
+        "carbs": 70.8
       },
       "timeMinutes": 45,
       "menuTags": [
@@ -85704,7 +85751,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 435.5,
+        "grams": 512.5,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -85821,16 +85868,14 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "canonicalIngredientId": "sweet_potato_raw",
-          "nameRu": "Батат",
-          "group": "Овощи и фрукты",
+          "canonicalIngredientId": "glass_noodles_raw",
+          "nameRu": "Стеклянная лапша сухая",
+          "group": "Крупы и макароны",
           "quantityGrams": 275,
           "sourceMeasurement": {
             "amount": 275,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 180,
-          "pieceEstimate": 1.53,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -85844,15 +85889,13 @@
             {
               "sourceIngredientIndex": 5,
               "sourceIngredientId": "source-ingredient-5",
-              "nameRu": "Батат",
+              "nameRu": "Стеклянная лапша сухая",
               "quantityGrams": 275,
               "sourceMeasurement": {
                 "amount": 275,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 180,
-              "pieceEstimate": 1.53
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -86481,16 +86524,16 @@
           },
           {
             "sourceIngredientId": "source-ingredient-5",
-            "canonicalIngredientId": "sweet_potato_raw",
+            "canonicalIngredientId": "glass_noodles_raw",
             "baseAmount": 55,
             "unit": "g",
-            "role": "vegetable",
-            "minAmount": 44,
-            "preferredMin": 52.25,
-            "preferredMax": 66,
-            "maxAmount": 79.75,
+            "role": "carb",
+            "minAmount": 19.25,
+            "preferredMin": 41.25,
+            "preferredMax": 68.75,
+            "maxAmount": 115.5,
             "scalable": true,
-            "scalingPriority": 5,
+            "scalingPriority": 1,
             "substitutions": [],
             "optional": false
           },
@@ -86691,8 +86734,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 415,
-        "maxViableCalories": 717,
+        "minViableCalories": 447,
+        "maxViableCalories": 1090,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -86714,18 +86757,18 @@
           "carbs": 64
         },
         "miseCalculatedNutrition": {
-          "kcal": 494.4,
-          "protein": 43.7,
+          "kcal": 640.1,
+          "protein": 42.9,
           "fat": 18.6,
-          "carbs": 34.5
+          "carbs": 70.8
         },
         "nutritionDelta": {
-          "kcal": -74.6,
-          "protein": 6.7,
+          "kcal": 71.1,
+          "protein": 5.9,
           "fat": 0.6,
-          "carbs": -29.5
+          "carbs": 6.8
         },
-        "nutritionDeltaKcal": -74.6,
+        "nutritionDeltaKcal": 71.1,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -93334,10 +93377,10 @@
       "title": "Запечённая овсянка с арахисовой пастой и джемом",
       "cuisine": "american",
       "macros": {
-        "kcal": 397.2,
+        "kcal": 378.3,
         "protein": 23.6,
         "fat": 12.1,
-        "carbs": 52.2
+        "carbs": 47
       },
       "timeMinutes": 70,
       "menuTags": [
@@ -93589,8 +93632,8 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "canonicalIngredientId": "berries_raw",
-          "nameRu": "Черника",
+          "canonicalIngredientId": "strawberries_raw",
+          "nameRu": "Клубника",
           "group": "Овощи и фрукты",
           "quantityGrams": 454,
           "sourceMeasurement": {
@@ -93610,7 +93653,7 @@
             {
               "sourceIngredientIndex": 8,
               "sourceIngredientId": "source-ingredient-8",
-              "nameRu": "Черника",
+              "nameRu": "Клубника",
               "quantityGrams": 454,
               "sourceMeasurement": {
                 "amount": 454,
@@ -93907,7 +93950,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-8",
-            "canonicalIngredientId": "berries_raw",
+            "canonicalIngredientId": "strawberries_raw",
             "baseAmount": 75.66666666666667,
             "unit": "g",
             "role": "vegetable",
@@ -93967,8 +94010,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 280,
-        "maxViableCalories": 656,
+        "minViableCalories": 264,
+        "maxViableCalories": 627,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -93990,18 +94033,18 @@
           "carbs": 45
         },
         "miseCalculatedNutrition": {
-          "kcal": 397.2,
+          "kcal": 378.3,
           "protein": 23.6,
           "fat": 12.1,
-          "carbs": 52.2
+          "carbs": 47
         },
         "nutritionDelta": {
-          "kcal": 21.2,
+          "kcal": 2.3,
           "protein": 1.6,
           "fat": 0.1,
-          "carbs": 7.2
+          "carbs": 2
         },
-        "nutritionDeltaKcal": 21.2,
+        "nutritionDeltaKcal": 2.3,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -94109,10 +94152,10 @@
       "title": "Острая говядина с брюссельской капустой",
       "cuisine": "international",
       "macros": {
-        "kcal": 723.3,
+        "kcal": 723,
         "protein": 41.3,
         "fat": 31.1,
-        "carbs": 70.1
+        "carbs": 70
       },
       "timeMinutes": 40,
       "menuTags": [
@@ -94256,7 +94299,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 120,
+          "quantityGrams": 100,
           "sourceMeasurement": {
             "amount": 100,
             "unit": "g"
@@ -94267,12 +94310,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-4",
-            "source-ingredient-8"
+            "source-ingredient-4"
           ],
           "sourceIngredientIndexes": [
-            4,
-            8
+            4
           ],
           "sourceAudit": [
             {
@@ -94287,19 +94328,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 0.91
-            },
-            {
-              "sourceIngredientIndex": 8,
-              "sourceIngredientId": "source-ingredient-8",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 20,
-              "sourceMeasurement": {
-                "amount": 20,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.18
             }
           ]
         },
@@ -94376,6 +94404,40 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 5,
               "pieceEstimate": 3
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 8,
+          "sourceIngredientId": "source-ingredient-8",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 20,
+          "sourceMeasurement": {
+            "amount": 20,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-8"
+          ],
+          "sourceIngredientIndexes": [
+            8
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 8,
+              "sourceIngredientId": "source-ingredient-8",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 20,
+              "sourceMeasurement": {
+                "amount": 20,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -94839,7 +94901,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-8",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 4,
             "unit": "g",
             "role": "vegetable",
@@ -94945,7 +95007,7 @@
           }
         ],
         "minViableCalories": 519,
-        "maxViableCalories": 1229,
+        "maxViableCalories": 1228,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -94967,18 +95029,18 @@
           "carbs": 63
         },
         "miseCalculatedNutrition": {
-          "kcal": 723.3,
+          "kcal": 723,
           "protein": 41.3,
           "fat": 31.1,
-          "carbs": 70.1
+          "carbs": 70
         },
         "nutritionDelta": {
-          "kcal": 103.3,
+          "kcal": 103,
           "protein": -2.7,
           "fat": 10.1,
-          "carbs": 7.1
+          "carbs": 7
         },
-        "nutritionDeltaKcal": 103.3,
+        "nutritionDeltaKcal": 103,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -96928,7 +96990,7 @@
       "title": "Лапша с мёдом и мисо",
       "cuisine": "asian",
       "macros": {
-        "kcal": 572.6,
+        "kcal": 572.4,
         "protein": 47.7,
         "fat": 13.8,
         "carbs": 63
@@ -97166,7 +97228,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 215,
+          "quantityGrams": 200,
           "sourceMeasurement": {
             "amount": 200,
             "unit": "g"
@@ -97177,12 +97239,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-7",
-            "source-ingredient-10"
+            "source-ingredient-7"
           ],
           "sourceIngredientIndexes": [
-            7,
-            10
+            7
           ],
           "sourceAudit": [
             {
@@ -97197,19 +97257,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 1.82
-            },
-            {
-              "sourceIngredientIndex": 10,
-              "sourceIngredientId": "source-ingredient-10",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 15,
-              "sourceMeasurement": {
-                "amount": 15,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.14
             }
           ]
         },
@@ -97286,6 +97333,40 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 196,
               "pieceEstimate": 1.53
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 10,
+          "sourceIngredientId": "source-ingredient-10",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 15,
+          "sourceMeasurement": {
+            "amount": 15,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-10"
+          ],
+          "sourceIngredientIndexes": [
+            10
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 10,
+              "sourceIngredientId": "source-ingredient-10",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 15,
+              "sourceMeasurement": {
+                "amount": 15,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -97712,7 +97793,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-10",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 2.5,
             "unit": "g",
             "role": "vegetable",
@@ -97788,7 +97869,7 @@
           }
         ],
         "minViableCalories": 363,
-        "maxViableCalories": 1024,
+        "maxViableCalories": 1023,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -97810,18 +97891,18 @@
           "carbs": 66
         },
         "miseCalculatedNutrition": {
-          "kcal": 572.6,
+          "kcal": 572.4,
           "protein": 47.7,
           "fat": 13.8,
           "carbs": 63
         },
         "nutritionDelta": {
-          "kcal": 7.6,
+          "kcal": 7.4,
           "protein": 11.7,
           "fat": -3.2,
           "carbs": -3
         },
-        "nutritionDeltaKcal": 7.6,
+        "nutritionDeltaKcal": 7.4,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -97937,10 +98018,10 @@
       "title": "Тайское красное карри с кокосом и курицей",
       "cuisine": "asian",
       "macros": {
-        "kcal": 758.3,
-        "protein": 47.5,
+        "kcal": 757,
+        "protein": 47.6,
         "fat": 34.2,
-        "carbs": 67
+        "carbs": 66.6
       },
       "timeMinutes": 50,
       "menuTags": [
@@ -98037,16 +98118,14 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 100,
           "sourceMeasurement": {
             "amount": 100,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.91,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -98060,15 +98139,13 @@
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 100,
               "sourceMeasurement": {
                 "amount": 100,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.91
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -98827,7 +98904,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 16.666666666666668,
             "unit": "g",
             "role": "vegetable",
@@ -99069,8 +99146,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 473,
-        "maxViableCalories": 1310,
+        "minViableCalories": 472,
+        "maxViableCalories": 1306,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -99092,18 +99169,18 @@
           "carbs": 57
         },
         "miseCalculatedNutrition": {
-          "kcal": 758.3,
-          "protein": 47.5,
+          "kcal": 757,
+          "protein": 47.6,
           "fat": 34.2,
-          "carbs": 67
+          "carbs": 66.6
         },
         "nutritionDelta": {
-          "kcal": 157.3,
-          "protein": 9.5,
+          "kcal": 156,
+          "protein": 9.6,
           "fat": 10.2,
-          "carbs": 10
+          "carbs": 9.6
         },
-        "nutritionDeltaKcal": 157.3,
+        "nutritionDeltaKcal": 156,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -103324,10 +103401,10 @@
       "title": "Пансит со свиным фаршем",
       "cuisine": "asian",
       "macros": {
-        "kcal": 699.1,
-        "protein": 41.2,
+        "kcal": 698.7,
+        "protein": 41.3,
         "fat": 37.4,
-        "carbs": 49.4
+        "carbs": 49.3
       },
       "timeMinutes": 45,
       "menuTags": [
@@ -103419,7 +103496,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 225,
+          "quantityGrams": 200,
           "sourceMeasurement": {
             "amount": 200,
             "unit": "g"
@@ -103430,12 +103507,10 @@
           "checkLabel": false,
           "massStatus": "source_metric",
           "sourceIngredientIds": [
-            "source-ingredient-3",
-            "source-ingredient-9"
+            "source-ingredient-3"
           ],
           "sourceIngredientIndexes": [
-            3,
-            9
+            3
           ],
           "sourceAudit": [
             {
@@ -103450,19 +103525,6 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 1.82
-            },
-            {
-              "sourceIngredientIndex": 9,
-              "sourceIngredientId": "source-ingredient-9",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 25,
-              "sourceMeasurement": {
-                "amount": 25,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.23
             }
           ]
         },
@@ -103610,6 +103672,40 @@
               "quantityGrams": 227,
               "sourceMeasurement": {
                 "amount": 227,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 9,
+          "sourceIngredientId": "source-ingredient-9",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 25,
+          "sourceMeasurement": {
+            "amount": 25,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-9"
+          ],
+          "sourceIngredientIndexes": [
+            9
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 9,
+              "sourceIngredientId": "source-ingredient-9",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 25,
+              "sourceMeasurement": {
+                "amount": 25,
                 "unit": "g"
               },
               "massStatus": "source_metric"
@@ -104035,7 +104131,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-9",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 5,
             "unit": "g",
             "role": "vegetable",
@@ -104125,7 +104221,7 @@
           }
         ],
         "minViableCalories": 476,
-        "maxViableCalories": 1231,
+        "maxViableCalories": 1230,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -104147,18 +104243,18 @@
           "carbs": 45
         },
         "miseCalculatedNutrition": {
-          "kcal": 699.1,
-          "protein": 41.2,
+          "kcal": 698.7,
+          "protein": 41.3,
           "fat": 37.4,
-          "carbs": 49.4
+          "carbs": 49.3
         },
         "nutritionDelta": {
-          "kcal": 142.1,
-          "protein": 12.2,
+          "kcal": 141.7,
+          "protein": 12.3,
           "fat": 8.4,
-          "carbs": 4.4
+          "carbs": 4.3
         },
-        "nutritionDeltaKcal": 142.1,
+        "nutritionDeltaKcal": 141.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -104269,10 +104365,10 @@
       "title": "Корейское куриное рагу дакдоритан",
       "cuisine": "asian",
       "macros": {
-        "kcal": 525.7,
+        "kcal": 525,
         "protein": 37,
         "fat": 12.2,
-        "carbs": 65.7
+        "carbs": 65.5
       },
       "timeMinutes": 60,
       "menuTags": [
@@ -104535,16 +104631,14 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
           "quantityGrams": 50,
           "sourceMeasurement": {
             "amount": 50,
             "unit": "g"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 0.45,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "source_metric",
@@ -104558,15 +104652,13 @@
             {
               "sourceIngredientIndex": 8,
               "sourceIngredientId": "source-ingredient-8",
-              "nameRu": "Репчатый лук",
+              "nameRu": "Зелёный лук",
               "quantityGrams": 50,
               "sourceMeasurement": {
                 "amount": 50,
                 "unit": "g"
               },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.45
+              "massStatus": "source_metric"
             }
           ]
         },
@@ -105013,7 +105105,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-8",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 8.333333333333334,
             "unit": "g",
             "role": "vegetable",
@@ -105119,7 +105211,7 @@
           }
         ],
         "minViableCalories": 361,
-        "maxViableCalories": 910,
+        "maxViableCalories": 909,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -105141,18 +105233,18 @@
           "carbs": 63
         },
         "miseCalculatedNutrition": {
-          "kcal": 525.7,
+          "kcal": 525,
           "protein": 37,
           "fat": 12.2,
-          "carbs": 65.7
+          "carbs": 65.5
         },
         "nutritionDelta": {
-          "kcal": 5.7,
+          "kcal": 5,
           "protein": 4,
           "fat": -2.8,
-          "carbs": 2.7
+          "carbs": 2.5
         },
-        "nutritionDeltaKcal": 5.7,
+        "nutritionDeltaKcal": 5,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -117789,10 +117881,10 @@
       "title": "Салат с кускусом за 10 минут",
       "cuisine": "mediterranean",
       "macros": {
-        "kcal": 450,
-        "protein": 14.3,
-        "fat": 18.1,
-        "carbs": 59.5
+        "kcal": 410.8,
+        "protein": 13.4,
+        "fat": 18,
+        "carbs": 50.3
       },
       "timeMinutes": 10,
       "menuTags": [
@@ -117804,7 +117896,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 474.6,
+        "grams": 389.1,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -117882,16 +117974,14 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 220,
+          "quantityGrams": 30,
           "sourceMeasurement": {
             "amount": 2,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 2,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
@@ -117905,15 +117995,13 @@
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 220,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 30,
               "sourceMeasurement": {
                 "amount": 2,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 2
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -118243,14 +118331,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 1,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 15,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.8,
-            "preferredMin": 0.95,
-            "preferredMax": 1.2,
-            "maxAmount": 1.45,
+            "minAmount": 12,
+            "preferredMin": 14.25,
+            "preferredMax": 18,
+            "maxAmount": 21.75,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -118333,33 +118421,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 260,
-        "maxViableCalories": 845,
+        "minViableCalories": 230,
+        "maxViableCalories": 784,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 450,
-          "protein": 14.3,
-          "fat": 18.1,
-          "carbs": 59.5
+          "kcal": 410.8,
+          "protein": 13.4,
+          "fat": 18,
+          "carbs": 50.3
         },
         "comparisonNutrition": {
-          "kcal": 450,
-          "protein": 14.3,
-          "fat": 18.1,
-          "carbs": 59.5
+          "kcal": 410.8,
+          "protein": 13.4,
+          "fat": 18,
+          "carbs": 50.3
         },
         "legacyEditorialNutrition": {
-          "kcal": 450,
-          "protein": 14.3,
-          "fat": 18.1,
-          "carbs": 59.5
+          "kcal": 410.8,
+          "protein": 13.4,
+          "fat": 18,
+          "carbs": 50.3
         },
         "miseCalculatedNutrition": {
-          "kcal": 450,
-          "protein": 14.3,
-          "fat": 18.1,
-          "carbs": 59.5
+          "kcal": 410.8,
+          "protein": 13.4,
+          "fat": 18,
+          "carbs": 50.3
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -140610,10 +140698,10 @@
       "title": "Простые рыбные котлеты",
       "cuisine": "european",
       "macros": {
-        "kcal": 385.2,
-        "protein": 28.7,
+        "kcal": 355.8,
+        "protein": 28,
         "fat": 13.3,
-        "carbs": 38.9
+        "carbs": 32
       },
       "timeMinutes": 45,
       "menuTags": [
@@ -140626,7 +140714,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 364,
+        "grams": 299.9,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -140670,16 +140758,14 @@
         {
           "sourceIngredientIndex": 2,
           "sourceIngredientId": "source-ingredient-2",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 330,
+          "quantityGrams": 45,
           "sourceMeasurement": {
             "amount": 3,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 3,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
@@ -140693,15 +140779,13 @@
             {
               "sourceIngredientIndex": 2,
               "sourceIngredientId": "source-ingredient-2",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 330,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 45,
               "sourceMeasurement": {
                 "amount": 3,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 3
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -141117,14 +141201,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-2",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 0.75,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 11.25,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.6000000000000001,
-            "preferredMin": 0.7124999999999999,
-            "preferredMax": 0.8999999999999999,
-            "maxAmount": 1.0875,
+            "minAmount": 9,
+            "preferredMin": 10.6875,
+            "preferredMax": 13.5,
+            "maxAmount": 16.3125,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -141237,33 +141321,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 316,
-        "maxViableCalories": 587,
+        "minViableCalories": 288,
+        "maxViableCalories": 543,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 385.2,
-          "protein": 28.7,
+          "kcal": 355.8,
+          "protein": 28,
           "fat": 13.3,
-          "carbs": 38.9
+          "carbs": 32
         },
         "comparisonNutrition": {
-          "kcal": 385.2,
-          "protein": 28.7,
+          "kcal": 355.8,
+          "protein": 28,
           "fat": 13.3,
-          "carbs": 38.9
+          "carbs": 32
         },
         "legacyEditorialNutrition": {
-          "kcal": 385.2,
-          "protein": 28.7,
+          "kcal": 355.8,
+          "protein": 28,
           "fat": 13.3,
-          "carbs": 38.9
+          "carbs": 32
         },
         "miseCalculatedNutrition": {
-          "kcal": 385.2,
-          "protein": 28.7,
+          "kcal": 355.8,
+          "protein": 28,
           "fat": 13.3,
-          "carbs": 38.9
+          "carbs": 32
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -143287,10 +143371,10 @@
       "title": "Протеиновые контейнеры со стейком и брокколи",
       "cuisine": "international",
       "macros": {
-        "kcal": 488.3,
-        "protein": 34,
-        "fat": 5.6,
-        "carbs": 75.3
+        "kcal": 409.9,
+        "protein": 32.1,
+        "fat": 5.4,
+        "carbs": 57
       },
       "timeMinutes": 38,
       "menuTags": [
@@ -143303,7 +143387,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 501.1,
+        "grams": 330.1,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -143383,16 +143467,14 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 440,
+          "quantityGrams": 60,
           "sourceMeasurement": {
             "amount": 4,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 4,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
@@ -143406,15 +143488,13 @@
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 440,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 60,
               "sourceMeasurement": {
                 "amount": 4,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 4
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -143652,14 +143732,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 2,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 30,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 1.6,
-            "preferredMin": 1.9,
-            "preferredMax": 2.4,
-            "maxAmount": 2.9,
+            "minAmount": 24,
+            "preferredMin": 28.5,
+            "preferredMax": 36,
+            "maxAmount": 43.5,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -143696,33 +143776,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 301,
-        "maxViableCalories": 931,
+        "minViableCalories": 238,
+        "maxViableCalories": 808,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 488.3,
-          "protein": 34,
-          "fat": 5.6,
-          "carbs": 75.3
+          "kcal": 409.9,
+          "protein": 32.1,
+          "fat": 5.4,
+          "carbs": 57
         },
         "comparisonNutrition": {
-          "kcal": 488.3,
-          "protein": 34,
-          "fat": 5.6,
-          "carbs": 75.3
+          "kcal": 409.9,
+          "protein": 32.1,
+          "fat": 5.4,
+          "carbs": 57
         },
         "legacyEditorialNutrition": {
-          "kcal": 488.3,
-          "protein": 34,
-          "fat": 5.6,
-          "carbs": 75.3
+          "kcal": 409.9,
+          "protein": 32.1,
+          "fat": 5.4,
+          "carbs": 57
         },
         "miseCalculatedNutrition": {
-          "kcal": 488.3,
-          "protein": 34,
-          "fat": 5.6,
-          "carbs": 75.3
+          "kcal": 409.9,
+          "protein": 32.1,
+          "fat": 5.4,
+          "carbs": 57
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -157888,10 +157968,10 @@
       "title": "Салат из пенне, яблока и капусты с грецкими орехами",
       "cuisine": "european",
       "macros": {
-        "kcal": 488.8,
-        "protein": 18.9,
+        "kcal": 449.6,
+        "protein": 18,
         "fat": 9.1,
-        "carbs": 86.7
+        "carbs": 77.5
       },
       "timeMinutes": 27,
       "menuTags": [
@@ -157903,7 +157983,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 508.1,
+        "grams": 422.6,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -158053,16 +158133,14 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 440,
+          "quantityGrams": 60,
           "sourceMeasurement": {
             "amount": 4,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 4,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
@@ -158076,15 +158154,13 @@
             {
               "sourceIngredientIndex": 5,
               "sourceIngredientId": "source-ingredient-5",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 440,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 60,
               "sourceMeasurement": {
                 "amount": 4,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 4
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -158500,14 +158576,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-5",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 1,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 15,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.8,
-            "preferredMin": 0.95,
-            "preferredMax": 1.2,
-            "maxAmount": 1.45,
+            "minAmount": 12,
+            "preferredMin": 14.25,
+            "preferredMax": 18,
+            "maxAmount": 21.75,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -158605,33 +158681,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 328,
-        "maxViableCalories": 877,
+        "minViableCalories": 297,
+        "maxViableCalories": 816,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 488.8,
-          "protein": 18.9,
+          "kcal": 449.6,
+          "protein": 18,
           "fat": 9.1,
-          "carbs": 86.7
+          "carbs": 77.5
         },
         "comparisonNutrition": {
-          "kcal": 488.8,
-          "protein": 18.9,
+          "kcal": 449.6,
+          "protein": 18,
           "fat": 9.1,
-          "carbs": 86.7
+          "carbs": 77.5
         },
         "legacyEditorialNutrition": {
-          "kcal": 488.8,
-          "protein": 18.9,
+          "kcal": 449.6,
+          "protein": 18,
           "fat": 9.1,
-          "carbs": 86.7
+          "carbs": 77.5
         },
         "miseCalculatedNutrition": {
-          "kcal": 488.8,
-          "protein": 18.9,
+          "kcal": 449.6,
+          "protein": 18,
           "fat": 9.1,
-          "carbs": 86.7
+          "carbs": 77.5
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -160326,10 +160402,10 @@
       "title": "Острая паста с говядиной и чёрной фасолью",
       "cuisine": "international",
       "macros": {
-        "kcal": 715.7,
-        "protein": 34.1,
-        "fat": 21.7,
-        "carbs": 100.5
+        "kcal": 676.5,
+        "protein": 33.2,
+        "fat": 21.6,
+        "carbs": 91.3
       },
       "timeMinutes": 230,
       "menuTags": [
@@ -160341,7 +160417,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 602.5,
+        "grams": 517,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -160432,53 +160508,34 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 587.5,
+          "quantityGrams": 75,
           "sourceMeasurement": {
             "amount": 5,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 5,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
           "sourceIngredientIds": [
-            "source-ingredient-3",
-            "source-ingredient-13"
+            "source-ingredient-3"
           ],
           "sourceIngredientIndexes": [
-            3,
-            13
+            3
           ],
           "sourceAudit": [
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 550,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 75,
               "sourceMeasurement": {
                 "amount": 5,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 5
-            },
-            {
-              "sourceIngredientIndex": 13,
-              "sourceIngredientId": "source-ingredient-13",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 37.5,
-              "sourceMeasurement": {
-                "amount": 37.5,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.34
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -160774,6 +160831,44 @@
                 "unit": "g"
               },
               "massStatus": "source_metric"
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 13,
+          "sourceIngredientId": "source-ingredient-13",
+          "canonicalIngredientId": "onion_raw",
+          "nameRu": "Репчатый лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 37.5,
+          "sourceMeasurement": {
+            "amount": 37.5,
+            "unit": "g"
+          },
+          "averagePieceWeightGrams": 110,
+          "pieceEstimate": 0.34,
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-13"
+          ],
+          "sourceIngredientIndexes": [
+            13
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 13,
+              "sourceIngredientId": "source-ingredient-13",
+              "nameRu": "Репчатый лук",
+              "quantityGrams": 37.5,
+              "sourceMeasurement": {
+                "amount": 37.5,
+                "unit": "g"
+              },
+              "massStatus": "source_metric",
+              "averagePieceWeightGrams": 110,
+              "pieceEstimate": 0.34
             }
           ]
         },
@@ -161267,14 +161362,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 1,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 15,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.8,
-            "preferredMin": 0.95,
-            "preferredMax": 1.2,
-            "maxAmount": 1.45,
+            "minAmount": 12,
+            "preferredMin": 14.25,
+            "preferredMax": 18,
+            "maxAmount": 21.75,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -161568,33 +161663,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 447,
-        "maxViableCalories": 1279,
+        "minViableCalories": 416,
+        "maxViableCalories": 1217,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 715.7,
-          "protein": 34.1,
-          "fat": 21.7,
-          "carbs": 100.5
+          "kcal": 676.5,
+          "protein": 33.2,
+          "fat": 21.6,
+          "carbs": 91.3
         },
         "comparisonNutrition": {
-          "kcal": 715.7,
-          "protein": 34.1,
-          "fat": 21.7,
-          "carbs": 100.5
+          "kcal": 676.5,
+          "protein": 33.2,
+          "fat": 21.6,
+          "carbs": 91.3
         },
         "legacyEditorialNutrition": {
-          "kcal": 715.7,
-          "protein": 34.1,
-          "fat": 21.7,
-          "carbs": 100.5
+          "kcal": 676.5,
+          "protein": 33.2,
+          "fat": 21.6,
+          "carbs": 91.3
         },
         "miseCalculatedNutrition": {
-          "kcal": 715.7,
-          "protein": 34.1,
-          "fat": 21.7,
-          "carbs": 100.5
+          "kcal": 676.5,
+          "protein": 33.2,
+          "fat": 21.6,
+          "carbs": 91.3
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -164207,10 +164302,10 @@
       "title": "Томлёная свинина с апельсином и орегано",
       "cuisine": "american",
       "macros": {
-        "kcal": 655.8,
-        "protein": 38.5,
+        "kcal": 641.1,
+        "protein": 38.2,
         "fat": 27.2,
-        "carbs": 61.7
+        "carbs": 58.3
       },
       "timeMinutes": 1454,
       "menuTags": [
@@ -164223,7 +164318,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 414.4,
+        "grams": 382.4,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -164234,7 +164329,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 550,
+          "quantityGrams": 220,
           "sourceMeasurement": {
             "amount": 2,
             "unit": "piece"
@@ -164245,12 +164340,10 @@
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
           "sourceIngredientIds": [
-            "source-ingredient-1",
-            "source-ingredient-12"
+            "source-ingredient-1"
           ],
           "sourceIngredientIndexes": [
-            1,
-            12
+            1
           ],
           "sourceAudit": [
             {
@@ -164265,19 +164358,6 @@
               "massStatus": "estimated_from_standard_conversion",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 2
-            },
-            {
-              "sourceIngredientIndex": 12,
-              "sourceIngredientId": "source-ingredient-12",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 330,
-              "sourceMeasurement": {
-                "amount": 3,
-                "unit": "piece"
-              },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 3
             }
           ]
         },
@@ -164498,6 +164578,40 @@
               "massStatus": "estimated_from_standard_conversion",
               "averagePieceWeightGrams": 80,
               "pieceEstimate": 1
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 12,
+          "sourceIngredientId": "source-ingredient-12",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 45,
+          "sourceMeasurement": {
+            "amount": 3,
+            "unit": "piece"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "estimated_from_standard_conversion",
+          "sourceIngredientIds": [
+            "source-ingredient-12"
+          ],
+          "sourceIngredientIndexes": [
+            12
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 12,
+              "sourceIngredientId": "source-ingredient-12",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 45,
+              "sourceMeasurement": {
+                "amount": 3,
+                "unit": "piece"
+              },
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -164910,14 +165024,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-12",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 0.375,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 5.625,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.30000000000000004,
-            "preferredMin": 0.35624999999999996,
-            "preferredMax": 0.44999999999999996,
-            "maxAmount": 0.54375,
+            "minAmount": 4.5,
+            "preferredMin": 5.34375,
+            "preferredMax": 6.75,
+            "maxAmount": 8.15625,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -164955,33 +165069,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 426,
-        "maxViableCalories": 1174,
+        "minViableCalories": 410,
+        "maxViableCalories": 1151,
         "geometryLockedMax": 8,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 655.8,
-          "protein": 38.5,
+          "kcal": 641.1,
+          "protein": 38.2,
           "fat": 27.2,
-          "carbs": 61.7
+          "carbs": 58.3
         },
         "comparisonNutrition": {
-          "kcal": 655.8,
-          "protein": 38.5,
+          "kcal": 641.1,
+          "protein": 38.2,
           "fat": 27.2,
-          "carbs": 61.7
+          "carbs": 58.3
         },
         "legacyEditorialNutrition": {
-          "kcal": 655.8,
-          "protein": 38.5,
+          "kcal": 641.1,
+          "protein": 38.2,
           "fat": 27.2,
-          "carbs": 61.7
+          "carbs": 58.3
         },
         "miseCalculatedNutrition": {
-          "kcal": 655.8,
-          "protein": 38.5,
+          "kcal": 641.1,
+          "protein": 38.2,
           "fat": 27.2,
-          "carbs": 61.7
+          "carbs": 58.3
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -169061,10 +169175,10 @@
       "title": "Суп из чёрной фасоли с густой райтой",
       "cuisine": "international",
       "macros": {
-        "kcal": 398.4,
-        "protein": 17.3,
+        "kcal": 378.8,
+        "protein": 16.9,
         "fat": 16.4,
-        "carbs": 52.4
+        "carbs": 47.8
       },
       "timeMinutes": 25,
       "menuTags": [
@@ -169076,7 +169190,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 421.8,
+        "grams": 379,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -169320,16 +169434,14 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 220,
+          "quantityGrams": 30,
           "sourceMeasurement": {
             "amount": 2,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 2,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
@@ -169343,15 +169455,13 @@
             {
               "sourceIngredientIndex": 11,
               "sourceIngredientId": "source-ingredient-11",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 220,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 30,
               "sourceMeasurement": {
                 "amount": 2,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 2
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -169706,14 +169816,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-11",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 0.5,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 7.5,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.4,
-            "preferredMin": 0.475,
-            "preferredMax": 0.6,
-            "maxAmount": 0.725,
+            "minAmount": 6,
+            "preferredMin": 7.125,
+            "preferredMax": 9,
+            "maxAmount": 10.875,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -169750,33 +169860,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 315,
-        "maxViableCalories": 627,
+        "minViableCalories": 301,
+        "maxViableCalories": 596,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 398.4,
-          "protein": 17.3,
+          "kcal": 378.8,
+          "protein": 16.9,
           "fat": 16.4,
-          "carbs": 52.4
+          "carbs": 47.8
         },
         "comparisonNutrition": {
-          "kcal": 398.4,
-          "protein": 17.3,
+          "kcal": 378.8,
+          "protein": 16.9,
           "fat": 16.4,
-          "carbs": 52.4
+          "carbs": 47.8
         },
         "legacyEditorialNutrition": {
-          "kcal": 398.4,
-          "protein": 17.3,
+          "kcal": 378.8,
+          "protein": 16.9,
           "fat": 16.4,
-          "carbs": 52.4
+          "carbs": 47.8
         },
         "miseCalculatedNutrition": {
-          "kcal": 398.4,
-          "protein": 17.3,
+          "kcal": 378.8,
+          "protein": 16.9,
           "fat": 16.4,
-          "carbs": 52.4
+          "carbs": 47.8
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -169893,10 +170003,10 @@
       "title": "Дикий лосось со слоу из редиса и апельсина",
       "cuisine": "european",
       "macros": {
-        "kcal": 355.8,
-        "protein": 13.5,
-        "fat": 11.7,
-        "carbs": 52.7
+        "kcal": 316.6,
+        "protein": 12.5,
+        "fat": 11.6,
+        "carbs": 43.6
       },
       "timeMinutes": 40,
       "menuTags": [
@@ -169908,7 +170018,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 490.3,
+        "grams": 404.8,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -170104,16 +170214,14 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "canonicalIngredientId": "onion_raw",
-          "nameRu": "Репчатый лук",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 440,
+          "quantityGrams": 60,
           "sourceMeasurement": {
             "amount": 4,
             "unit": "piece"
           },
-          "averagePieceWeightGrams": 110,
-          "pieceEstimate": 4,
           "allergens": [],
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
@@ -170127,15 +170235,13 @@
             {
               "sourceIngredientIndex": 12,
               "sourceIngredientId": "source-ingredient-12",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 440,
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 60,
               "sourceMeasurement": {
                 "amount": 4,
                 "unit": "piece"
               },
-              "massStatus": "estimated_from_standard_conversion",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 4
+              "massStatus": "estimated_from_standard_conversion"
             }
           ]
         },
@@ -170534,14 +170640,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-12",
-            "canonicalIngredientId": "onion_raw",
-            "baseAmount": 1,
-            "unit": "piece",
+            "canonicalIngredientId": "green_onion_raw",
+            "baseAmount": 15,
+            "unit": "g",
             "role": "vegetable",
-            "minAmount": 0.8,
-            "preferredMin": 0.95,
-            "preferredMax": 1.2,
-            "maxAmount": 1.45,
+            "minAmount": 12,
+            "preferredMin": 14.25,
+            "preferredMax": 18,
+            "maxAmount": 21.75,
             "scalable": true,
             "scalingPriority": 5,
             "substitutions": [],
@@ -170593,33 +170699,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 290,
-        "maxViableCalories": 542,
+        "minViableCalories": 260,
+        "maxViableCalories": 481,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 355.8,
-          "protein": 13.5,
-          "fat": 11.7,
-          "carbs": 52.7
+          "kcal": 316.6,
+          "protein": 12.5,
+          "fat": 11.6,
+          "carbs": 43.6
         },
         "comparisonNutrition": {
-          "kcal": 355.8,
-          "protein": 13.5,
-          "fat": 11.7,
-          "carbs": 52.7
+          "kcal": 316.6,
+          "protein": 12.5,
+          "fat": 11.6,
+          "carbs": 43.6
         },
         "legacyEditorialNutrition": {
-          "kcal": 355.8,
-          "protein": 13.5,
-          "fat": 11.7,
-          "carbs": 52.7
+          "kcal": 316.6,
+          "protein": 12.5,
+          "fat": 11.6,
+          "carbs": 43.6
         },
         "miseCalculatedNutrition": {
-          "kcal": 355.8,
-          "protein": 13.5,
-          "fat": 11.7,
-          "carbs": 52.7
+          "kcal": 316.6,
+          "protein": 12.5,
+          "fat": 11.6,
+          "carbs": 43.6
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -172431,10 +172537,10 @@
       "title": "Свинина с кускусом, огурцом и абрикосами",
       "cuisine": "mediterranean",
       "macros": {
-        "kcal": 563,
-        "protein": 32.9,
+        "kcal": 561,
+        "protein": 33.1,
         "fat": 18.9,
-        "carbs": 68
+        "carbs": 67.5
       },
       "timeMinutes": 60,
       "menuTags": [
@@ -172590,7 +172696,7 @@
           "canonicalIngredientId": "onion_raw",
           "nameRu": "Репчатый лук",
           "group": "Овощи и фрукты",
-          "quantityGrams": 320,
+          "quantityGrams": 220,
           "sourceMeasurement": {
             "amount": 2,
             "unit": "piece"
@@ -172601,12 +172707,10 @@
           "checkLabel": false,
           "massStatus": "estimated_from_standard_conversion",
           "sourceIngredientIds": [
-            "source-ingredient-8",
-            "source-ingredient-11"
+            "source-ingredient-8"
           ],
           "sourceIngredientIndexes": [
-            8,
-            11
+            8
           ],
           "sourceAudit": [
             {
@@ -172621,19 +172725,6 @@
               "massStatus": "estimated_from_standard_conversion",
               "averagePieceWeightGrams": 110,
               "pieceEstimate": 2
-            },
-            {
-              "sourceIngredientIndex": 11,
-              "sourceIngredientId": "source-ingredient-11",
-              "nameRu": "Репчатый лук",
-              "quantityGrams": 100,
-              "sourceMeasurement": {
-                "amount": 100,
-                "unit": "g"
-              },
-              "massStatus": "source_metric",
-              "averagePieceWeightGrams": 110,
-              "pieceEstimate": 0.91
             }
           ]
         },
@@ -172705,6 +172796,40 @@
               "quantityGrams": 200,
               "sourceMeasurement": {
                 "amount": 200,
+                "unit": "g"
+              },
+              "massStatus": "source_metric"
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 11,
+          "sourceIngredientId": "source-ingredient-11",
+          "canonicalIngredientId": "green_onion_raw",
+          "nameRu": "Зелёный лук",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 100,
+          "sourceMeasurement": {
+            "amount": 100,
+            "unit": "g"
+          },
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-11"
+          ],
+          "sourceIngredientIndexes": [
+            11
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 11,
+              "sourceIngredientId": "source-ingredient-11",
+              "nameRu": "Зелёный лук",
+              "quantityGrams": 100,
+              "sourceMeasurement": {
+                "amount": 100,
                 "unit": "g"
               },
               "massStatus": "source_metric"
@@ -173137,7 +173262,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-11",
-            "canonicalIngredientId": "onion_raw",
+            "canonicalIngredientId": "green_onion_raw",
             "baseAmount": 25,
             "unit": "g",
             "role": "vegetable",
@@ -173228,33 +173353,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 397,
-        "maxViableCalories": 965,
+        "minViableCalories": 395,
+        "maxViableCalories": 961,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 563,
-          "protein": 32.9,
+          "kcal": 561,
+          "protein": 33.1,
           "fat": 18.9,
-          "carbs": 68
+          "carbs": 67.5
         },
         "comparisonNutrition": {
-          "kcal": 563,
-          "protein": 32.9,
+          "kcal": 561,
+          "protein": 33.1,
           "fat": 18.9,
-          "carbs": 68
+          "carbs": 67.5
         },
         "legacyEditorialNutrition": {
-          "kcal": 563,
-          "protein": 32.9,
+          "kcal": 561,
+          "protein": 33.1,
           "fat": 18.9,
-          "carbs": 68
+          "carbs": 67.5
         },
         "miseCalculatedNutrition": {
-          "kcal": 563,
-          "protein": 32.9,
+          "kcal": 561,
+          "protein": 33.1,
           "fat": 18.9,
-          "carbs": 68
+          "carbs": 67.5
         },
         "nutritionDelta": {
           "kcal": 0,

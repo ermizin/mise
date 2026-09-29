@@ -11,7 +11,11 @@ const plain = value => JSON.parse(JSON.stringify(value));
 
 test("only the seven reviewed preparations leave the catalogue and all new candidate paths", () => {
   assert.deepEqual(Object.keys(app.hiddenPreparationRecipes).sort(), [...hidden].sort());
-  assert.equal(app.productionRecipes.length - app.newMenuRecipes.length, hidden.length);
+  assert.equal(
+    app.productionRecipes.length - app.newMenuRecipes.length,
+    hidden.length + Object.keys(app.retiredDuplicateRecipes).length,
+    "nothing leaves new menus except reviewed preparations and retired duplicates",
+  );
   for (const id of hidden) {
     const recipe = app.recipesById[id];
     assert.ok(app.productionRecipes.includes(recipe), `${id}: persistence record retained`);

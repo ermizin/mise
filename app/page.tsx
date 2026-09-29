@@ -3008,7 +3008,7 @@ recipes.push(
       i("honey", "Мёд", 8.4, "г", "Бакалея"),
       i("oyster-sauce", "Устричный соус", 9, "г", "Бакалея"),
       i("garlic", "Чеснок", 4, "г", "Овощи и фрукты"),
-      i("onion", "Зелёный лук", 20, "г", "Овощи и фрукты"),
+      i("green-onion", "Зелёный лук", 20, "г", "Овощи и фрукты"),
     ],
     [
       "Приготовьте лапшу по инструкции и сохраните немного воды от варки.",
@@ -4574,6 +4574,14 @@ function recipeFamilyFor(recipe: Recipe) {
     catalogRecipeFamiliesById[recipe.id]
   );
 }
+/* Карточка показывает те же КБЖУ, по которым движок считает порцию. У ручных
+   карточек в `macros` стояли цифры со страницы источника: они остаются в
+   семействе как `legacyEditorialNutrition`, но не расходятся с расчётом на экране. */
+for (const recipe of recipes) {
+  if (runtimeRecipeFamiliesById[recipe.id]) continue;
+  const family = recipeFamilyFor(recipe);
+  if (family) recipe.macros = { ...family.miseCalculatedNutrition };
+}
 function recipeSupportsSlot(recipe: Recipe, slot: MealSlot) {
   return (
     recipe.slot === slot ||
@@ -4607,8 +4615,28 @@ const hiddenPreparationRecipes: Record<string, { title: string; reason: string }
   "tmpm-25453": { title: "Протеиновые тефтели из говядины", reason: "Мясная заготовка без гарнира, замораживается поштучно." },
   "tmpm-22550": { title: "Куриные фрикадельки", reason: "Мясная заготовка без гарнира, замораживается поштучно." },
 };
+/* Ранние ручные карточки тех же страниц источника, что уже есть в проверенном
+   каталоге. Сверены 2026-09-29: у дублей упрощённый состав, а в трёх не учтено
+   масло для жарки, из-за чего порция занижалась примерно на 100 ккал. Записи
+   остаются в реестре сохранения и в прежних планах; в новые меню идёт только
+   проверенная карточка `replacedBy`. */
+const retiredDuplicateRecipes: Record<string, { title: string; replacedBy: string; reason: string }> = {
+  "src-mediterranean-wrap": { title: "Ролл с пряной курицей, овощами и хумусом", replacedBy: "tmpm-27802", reason: "Дубль проверенной карточки с полным составом источника." },
+  "src-creamy-chicken-pasta": { title: "Сливочная паста с курицей и овощным соусом", replacedBy: "tmpm-27328", reason: "Дубль проверенной карточки с полным составом источника." },
+  "src-lemon-chicken": { title: "Лимонная курица с картофельным пюре и морковью", replacedBy: "tmpm-26872", reason: "Дубль без масла для маринада, жарки и запекания: около 10 г жира на порцию не учитывалось." },
+  "src-curry-fried-rice": { title: "Жареный рис с карри и курицей", replacedBy: "tmpm-26676", reason: "Дубль без масла для жарки: порция занижалась примерно на 100 ккал." },
+  "src-fajita-rice": { title: "Жареный рис с курицей и сладким перцем", replacedBy: "tmpm-25244", reason: "Дубль без масла для жарки: порция занижалась примерно на 100 ккал." },
+  "src-gochujang-beef": { title: "Говядина кочудян с капустой и рисом", replacedBy: "tmpm-26138", reason: "Дубль проверенной карточки с полным составом источника." },
+  "src-sausage-pepper-pasta": { title: "Паста со свиным фаршем, перцем и шпинатом", replacedBy: "tmpm-27306", reason: "Дубль проверенной карточки с полным составом источника." },
+  "src-light-stroganoff": { title: "Говядина по-строгановски с грибами и пастой", replacedBy: "tmpm-26720", reason: "Дубль проверенной карточки с полным составом источника." },
+  "src-beefy-cheese-potatoes": { title: "Картофель с говядиной, овощами и сырным соусом", replacedBy: "tmpm-26528", reason: "Дубль проверенной карточки с полным составом источника." },
+};
 function isAvailableForNewMenus(recipe: Recipe) {
-  return isProductionReadyRecipe(recipe) && !Object.hasOwn(hiddenPreparationRecipes, recipe.id);
+  return (
+    isProductionReadyRecipe(recipe) &&
+    !Object.hasOwn(hiddenPreparationRecipes, recipe.id) &&
+    !Object.hasOwn(retiredDuplicateRecipes, recipe.id)
+  );
 }
 const newMenuRecipes = productionRecipes.filter(isAvailableForNewMenus);
 function clientId() {
@@ -14524,9 +14552,17 @@ function ingredientAmountLabel(ingredient: Ingredient, amount: number) {
       maximumFractionDigits: 1,
     })} шт.)`;
   }
-  return `${roundedIngredientAmount(ingredient, amount).toLocaleString("ru-RU", {
+  /* На кухне масло, муку и йогурт взвешивают, а не отмеряют миллилитрами.
+     Карточка показывает ту же единицу, что и список покупок: граммы для
+     твёрдого и густого, миллилитры только для жидкостей. */
+  const measured = normalizeShoppingIngredient(ingredient, amount);
+  const shown =
+    ingredient.unit === "мл" && measured.unit === "г" && Number.isFinite(measured.quantity)
+      ? { ...ingredient, unit: measured.unit, quantity: measured.quantity }
+      : { ...ingredient, quantity: amount };
+  return `${roundedIngredientAmount(shown, shown.quantity).toLocaleString("ru-RU", {
     maximumFractionDigits: 1,
-  })} ${ingredient.unit}`;
+  })} ${shown.unit}`;
 }
 
 function procedureIngredientAmountLabel(
