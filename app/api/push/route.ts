@@ -27,23 +27,54 @@ function ids(request: Request) {
   return clientId && deviceId ? { clientId, deviceId, subscriptionId: `${clientId}:${deviceId}` } : null;
 }
 
-function validSubscription(value: PushSubscriptionInput | undefined) {
-  if (!value?.endpoint || !value.keys?.p256dh || !value.keys.auth) return false;
+function text(value: unknown, maximum: number): value is string {
+  return typeof value === "string" && value.length > 0 && value.length <= maximum;
+}
+
+function subscriptionKey(value: unknown): value is string {
+  return text(value, 200) && /^[A-Za-z0-9_-]+={0,2}$/.test(value);
+}
+
+/**
+ * The server posts to this address itself, so it has to be a public push
+ * service and never a machine reachable only from inside the host's network.
+ */
+function publicPushHost(hostname: string) {
+  const host = hostname.toLowerCase();
+  if (!host.includes(".") || host.endsWith(".")) return false;
+  if (/^[\d.]+$/.test(host) || host.startsWith("[")) return false;
+  return !/(?:^|\.)(?:localhost|local|localdomain|internal|lan|home|corp|test|invalid)$/.test(host);
+}
+
+function validSubscription(value: unknown): value is Required<PushSubscriptionInput> & { keys: { p256dh: string; auth: string } } {
+  if (!value || typeof value !== "object") return false;
+  const { endpoint, keys } = value as PushSubscriptionInput;
+  if (!text(endpoint, 2_000) || !keys || typeof keys !== "object") return false;
+  if (!subscriptionKey(keys.p256dh) || !subscriptionKey(keys.auth)) return false;
   try {
-    return new URL(value.endpoint).protocol === "https:" && value.endpoint.length <= 2_000;
+    const url = new URL(endpoint);
+    return url.protocol === "https:" && !url.username && !url.password && publicPushHost(url.hostname);
   } catch {
     return false;
   }
 }
 
-function validJob(job: JobInput, now: number): job is Required<JobInput> {
-  return Boolean(
-    job.kind && job.kind.length <= 40 &&
-    job.title && job.title.length <= 100 &&
-    job.body && job.body.length <= 240 &&
-    job.url?.startsWith("/") && !job.url.startsWith("//") && job.url.length <= 300 &&
-    Number.isFinite(job.dueAt) && (job.dueAt ?? 0) >= now - 60 * 60 * 1000 && (job.dueAt ?? 0) <= now + 45 * 24 * 60 * 60 * 1000
+function validJob(job: unknown, now: number): job is Required<JobInput> {
+  if (!job || typeof job !== "object") return false;
+  const { kind, title, body, url, dueAt } = job as JobInput;
+  return (
+    text(kind, 40) &&
+    text(title, 100) &&
+    text(body, 240) &&
+    text(url, 300) && url.startsWith("/") && !url.startsWith("//") &&
+    typeof dueAt === "number" && Number.isFinite(dueAt) &&
+    dueAt >= now - 60 * 60 * 1000 && dueAt <= now + 45 * 24 * 60 * 60 * 1000
   );
+}
+
+function failure(error: unknown) {
+  console.error("push api failed:", error instanceof Error ? error.message : String(error));
+  return Response.json({ error: "Не удалось выполнить запрос. Попробуйте ещё раз." }, { status: 500 });
 }
 
 export async function GET(request: Request) {
@@ -76,14 +107,32 @@ export async function POST(request: Request) {
     jobs?: JobInput[];
   };
   try {
-    body = (await request.json()) as typeof body;
+    const parsed: unknown = await request.json();
+    body = parsed && typeof parsed === "object" && !Array.isArray(parsed) ? (parsed as typeof body) : {};
   } catch {
     return Response.json({ error: "invalid JSON" }, { status: 400 });
   }
-  if (!body.planId || typeof body.planId !== "string" || body.planId.length > 100) {
+  if (!text(body.planId, 100)) {
     return Response.json({ error: "planId is required" }, { status: 400 });
   }
+  try {
+    return await updateReminders(identity, body as typeof body & { planId: string });
+  } catch (error) {
+    return failure(error);
+  }
+}
 
+async function updateReminders(
+  identity: NonNullable<ReturnType<typeof ids>>,
+  body: {
+    action?: "enable" | "disable" | "test";
+    planId: string;
+    installed?: boolean;
+    subscription?: PushSubscriptionInput;
+    preferences?: unknown;
+    jobs?: JobInput[];
+  },
+) {
   const db = getDb();
   const now = Date.now();
   if (body.action === "disable") {
@@ -127,7 +176,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "invalid push configuration" }, { status: 400 });
   }
   const jobs = body.jobs as Required<JobInput>[];
-  const subscription = body.subscription as Required<PushSubscriptionInput> & { keys: { p256dh: string; auth: string } };
+  const subscription = body.subscription;
   const storedPreferences = body.preferences && typeof body.preferences === "object" && !Array.isArray(body.preferences)
     ? { ...(body.preferences as Record<string, unknown>), installed: body.installed === true }
     : { installed: body.installed === true };
@@ -161,7 +210,7 @@ export async function POST(request: Request) {
     await db.insert(pushJobs).values(jobs.map((job) => ({
       id: crypto.randomUUID(),
       subscriptionId: identity.subscriptionId,
-      planId: body.planId as string,
+      planId: body.planId,
       kind: job.kind,
       title: job.title,
       body: job.body,

@@ -128,6 +128,9 @@ export function publicVapidKey() {
 }
 
 const JOB_LEASE_MS = 60_000;
+// "Готовим сегодня" is useless the next morning. A reminder that could not be
+// delivered within this window is closed instead of arriving out of context.
+const MAX_REMINDER_DELAY_MS = 6 * 60 * 60 * 1000;
 const RETIRED_REMINDER_KINDS = new Set(["shopping", "next-plan"]);
 
 export async function processDueNotifications(now = Date.now(), options: { jobId?: string } = {}) {
@@ -160,6 +163,15 @@ export async function processDueNotifications(now = Date.now(), options: { jobId
         sentAt: now,
         leaseUntil: null,
         lastError: "retired reminder kind",
+      }).where(eq(pushJobs.id, claimed.id));
+      continue;
+    }
+
+    if (now - claimed.dueAt > MAX_REMINDER_DELAY_MS) {
+      await db.update(pushJobs).set({
+        sentAt: now,
+        leaseUntil: null,
+        lastError: "expired before delivery",
       }).where(eq(pushJobs.id, claimed.id));
       continue;
     }

@@ -6,12 +6,24 @@ import {
 } from "../../../lib/plan-validation";
 import { normalizeAutomaticNutritionTargets } from "../../../domain/nutrition";
 
+const maximumPlanBytes = 1_500_000;
+
+/**
+ * The reason stays in the server log. A database message names tables,
+ * columns and bound values, none of which belongs in a public response.
+ */
 function messageFor(error: unknown) {
-  const message = error instanceof Error ? error.message : "Неизвестная ошибка";
+  const message = error instanceof Error ? error.message : String(error);
+  console.error("plans api failed:", message);
   if (message.includes("no such table") || message.includes("meal_plans")) {
     return "Хранилище планов ещё не подготовлено.";
   }
-  return message;
+  return "Не удалось выполнить запрос. Попробуйте ещё раз.";
+}
+
+function declaredLength(request: Request) {
+  const value = Number(request.headers.get("content-length"));
+  return Number.isFinite(value) ? value : 0;
 }
 
 function clientIdFor(request: Request) {
@@ -33,10 +45,16 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const clientId = clientIdFor(request);
   if (!clientId) return Response.json({ error: "client id is required" }, { status: 400 });
+  // `{"plan":…}` wraps the stored payload, so a declared size above the
+  // limit cannot hold an acceptable plan and is not worth parsing.
+  if (declaredLength(request) > maximumPlanBytes + 64) {
+    return Response.json({ error: "plan is too large" }, { status: 413 });
+  }
   try {
     let body: { plan?: unknown };
     try {
-      body = (await request.json()) as { plan?: unknown };
+      const parsed: unknown = await request.json();
+      body = parsed && typeof parsed === "object" ? (parsed as { plan?: unknown }) : {};
     } catch {
       return Response.json({ error: "invalid JSON" }, { status: 400 });
     }
@@ -46,7 +64,9 @@ export async function POST(request: Request) {
     const plan = normalizedPlan as { id: string };
 
     const payload = JSON.stringify(plan);
-    if (payload.length > 1_500_000) {
+    // Stored as UTF-8: Russian text takes two bytes per character, so the
+    // string length alone would admit a row twice the intended size.
+    if (new TextEncoder().encode(payload).length > maximumPlanBytes) {
       return Response.json({ error: "plan is too large" }, { status: 413 });
     }
 
