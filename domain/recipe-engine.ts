@@ -3090,6 +3090,8 @@ type SolverIngredientView = {
   scale: number;
   priority: number;
   step: number;
+  /** 10 for a 0.1-step grid, 1 for whole steps: the factor `round` would derive. */
+  roundFactor: number;
   gridMin: number;
   gridMax: number;
   baseAmount: number;
@@ -3118,6 +3120,7 @@ function solverView(family: Pick<RecipeFamily, "ingredients">): SolverIngredient
       scale: 1 / Math.max(1, ingredient.baseAmount),
       priority: ingredient.scalingPriority,
       step,
+      roundFactor: step < 1 ? 10 : 1,
       gridMin,
       gridMax,
       baseAmount: ingredient.baseAmount,
@@ -3133,10 +3136,10 @@ function solverView(family: Pick<RecipeFamily, "ingredients">): SolverIngredient
 
 function normalizedForView(view: SolverIngredientView, value: number) {
   if (!view.scalable) return view.baseAmount;
-  return round(
-    Math.max(view.gridMin, Math.min(view.gridMax, Math.round(value / view.step) * view.step)),
-    view.step < 1 ? 1 : 0,
-  );
+  // Same arithmetic as `round(clamped, step < 1 ? 1 : 0)`, without deriving
+  // the power of ten again for each of the search's candidate amounts.
+  const clamped = Math.max(view.gridMin, Math.min(view.gridMax, Math.round(value / view.step) * view.step));
+  return Math.round(clamped * view.roundFactor) / view.roundFactor;
 }
 
 function totalsForView(views: SolverIngredientView[], amounts: number[]) {
@@ -3173,10 +3176,22 @@ type SolveTargets = {
 };
 
 function scoreFor(totals: Nutrition, deviation: number, targets: SolveTargets) {
-  const kcal = round(totals.kcal);
-  const protein = round(totals.protein);
-  const fat = round(totals.fat);
-  const carbs = round(totals.carbs);
+  return scoreForTotals(totals.kcal, totals.protein, totals.fat, totals.carbs, deviation, targets);
+}
+
+/** `scoreFor` on plain numbers: the search evaluates it for every candidate move. */
+function scoreForTotals(
+  totalKcal: number,
+  totalProtein: number,
+  totalFat: number,
+  totalCarbs: number,
+  deviation: number,
+  targets: SolveTargets,
+) {
+  const kcal = Math.round(totalKcal * 10) / 10;
+  const protein = Math.round(totalProtein * 10) / 10;
+  const fat = Math.round(totalFat * 10) / 10;
+  const carbs = Math.round(totalCarbs * 10) / 10;
   // Scoring still steers to the full proportional protein target even when the
   // caller declared a lower viability floor: the search should give the most
   // protein the dish can carry, the floor only decides whether it is offered.
@@ -3217,61 +3232,98 @@ function hillClimb(
   let deviation = deviationForView(views, amounts);
   let score = scoreFor(totals, deviation, targets);
 
-  type Move = { indexes: number[]; values: number[]; score: number };
-  const moveScore = (indexes: number[], values: number[]) => {
-    let kcal = totals.kcal, protein = totals.protein, fat = totals.fat, carbs = totals.carbs;
-    let nextDeviation = deviation;
-    for (let slot = 0; slot < indexes.length; slot += 1) {
-      const view = views[indexes[slot]];
-      const delta = values[slot] - amounts[indexes[slot]];
-      kcal += view.perUnit.kcal * delta;
-      protein += view.perUnit.protein * delta;
-      fat += view.perUnit.fat * delta;
-      carbs += view.perUnit.carbs * delta;
-      nextDeviation += deviationTerm(view, values[slot]) - deviationTerm(view, amounts[indexes[slot]]);
-    }
-    return scoreFor({ kcal, protein, fat, carbs }, nextDeviation, targets);
-  };
+  // Steepest descent over single steps and calorie-neutral pair swaps. Every
+  // candidate is scored from the running totals in a fixed order (left
+  // ingredient, then right), so a pair reuses its left half instead of
+  // recomputing it for each partner. The order of evaluation, and therefore
+  // which of two equal moves wins, is part of the solver's contract.
+  const count = views.length;
+  const steppedAmount = new Float64Array(count * 2);
+  const steppedMoves = new Uint8Array(count * 2);
+  const steppedKcal = new Float64Array(count * 2);
+  const steppedProtein = new Float64Array(count * 2);
+  const steppedFat = new Float64Array(count * 2);
+  const steppedCarbs = new Float64Array(count * 2);
+  const steppedDeviation = new Float64Array(count * 2);
+  const currentTerm = new Float64Array(count);
 
   for (let iteration = 0; iteration < 2000; iteration += 1) {
-    let best: Move | null = null;
-    for (let index = 0; index < views.length; index += 1) {
+    let bestScore = score;
+    let bestLeft = -1;
+    let bestLeftAmount = 0;
+    let bestRight = -1;
+    let bestRightAmount = 0;
+    for (let index = 0; index < count; index += 1) {
       const view = views[index];
+      currentTerm[index] = deviationTerm(view, amounts[index]);
       if (!view.scalable) continue;
-      for (const direction of [-1, 1]) {
-        const next = normalizedForView(view, amounts[index] + direction * view.step);
-        if (next === amounts[index]) continue;
-        const nextScore = moveScore([index], [next]);
-        if (nextScore + 0.0001 < (best?.score ?? score)) best = { indexes: [index], values: [next], score: nextScore };
+      for (let side = 0; side < 2; side += 1) {
+        const slot = index * 2 + side;
+        const next = normalizedForView(view, amounts[index] + (side === 0 ? -1 : 1) * view.step);
+        const moves = next !== amounts[index];
+        steppedMoves[slot] = moves ? 1 : 0;
+        if (!moves) continue;
+        const delta = next - amounts[index];
+        steppedAmount[slot] = next;
+        steppedKcal[slot] = totals.kcal + view.perUnit.kcal * delta;
+        steppedProtein[slot] = totals.protein + view.perUnit.protein * delta;
+        steppedFat[slot] = totals.fat + view.perUnit.fat * delta;
+        steppedCarbs[slot] = totals.carbs + view.perUnit.carbs * delta;
+        steppedDeviation[slot] = deviation + (deviationTerm(view, next) - currentTerm[index]);
+        const nextScore = scoreForTotals(
+          steppedKcal[slot], steppedProtein[slot], steppedFat[slot], steppedCarbs[slot], steppedDeviation[slot], targets,
+        );
+        if (nextScore + 0.0001 < bestScore) {
+          bestScore = nextScore;
+          bestLeft = index;
+          bestLeftAmount = next;
+          bestRight = -1;
+        }
       }
     }
-    for (let leftIndex = 0; leftIndex < views.length; leftIndex += 1) {
+    for (let leftIndex = 0; leftIndex < count; leftIndex += 1) {
       const left = views[leftIndex];
       if (!left.scalable) continue;
-      for (let rightIndex = leftIndex + 1; rightIndex < views.length; rightIndex += 1) {
+      const leftCalories = left.perUnit.kcal;
+      if (leftCalories <= 0) continue;
+      for (let rightIndex = leftIndex + 1; rightIndex < count; rightIndex += 1) {
         const right = views[rightIndex];
         if (!right.scalable) continue;
-        const leftCalories = left.perUnit.kcal;
         const rightCalories = right.perUnit.kcal;
-        if (leftCalories <= 0 || rightCalories <= 0) continue;
-        for (const direction of [-1, 1]) {
-          const leftAmount = normalizedForView(left, amounts[leftIndex] + direction * left.step);
+        if (rightCalories <= 0) continue;
+        for (let side = 0; side < 2; side += 1) {
+          const slot = leftIndex * 2 + side;
+          if (!steppedMoves[slot]) continue;
+          const leftAmount = steppedAmount[slot];
           const leftDelta = leftAmount - amounts[leftIndex];
-          if (!leftDelta) continue;
           const desiredRightDelta = -(leftDelta * leftCalories) / rightCalories;
           const rightAmount = normalizedForView(
             right,
             amounts[rightIndex] + Math.round(desiredRightDelta / right.step) * right.step,
           );
           if (rightAmount === amounts[rightIndex]) continue;
-          const nextScore = moveScore([leftIndex, rightIndex], [leftAmount, rightAmount]);
-          if (nextScore + 0.0001 < (best?.score ?? score))
-            best = { indexes: [leftIndex, rightIndex], values: [leftAmount, rightAmount], score: nextScore };
+          const rightDelta = rightAmount - amounts[rightIndex];
+          const nextScore = scoreForTotals(
+            steppedKcal[slot] + right.perUnit.kcal * rightDelta,
+            steppedProtein[slot] + right.perUnit.protein * rightDelta,
+            steppedFat[slot] + right.perUnit.fat * rightDelta,
+            steppedCarbs[slot] + right.perUnit.carbs * rightDelta,
+            steppedDeviation[slot] + (deviationTerm(right, rightAmount) - currentTerm[rightIndex]),
+            targets,
+          );
+          if (nextScore + 0.0001 < bestScore) {
+            bestScore = nextScore;
+            bestLeft = leftIndex;
+            bestLeftAmount = leftAmount;
+            bestRight = rightIndex;
+            bestRightAmount = rightAmount;
+          }
         }
       }
     }
-    if (!best) break;
-    for (let slot = 0; slot < best.indexes.length; slot += 1) amounts[best.indexes[slot]] = best.values[slot];
+    if (bestLeft < 0) break;
+    amounts[bestLeft] = bestLeftAmount;
+    if (bestRight >= 0) amounts[bestRight] = bestRightAmount;
     // Recomputed from scratch once per accepted move so the incremental
     // candidate arithmetic cannot accumulate drift across 2000 iterations.
     totals = totalsForView(views, amounts);
@@ -3370,13 +3422,24 @@ export function solveRecipeFamily(
     : Math.min(1, Math.max(0, input.cookingFatShare));
   const exclusions = [...new Set(input.hardExclusions ?? [])].sort().join(",");
   const proteinGoalMode = input.proteinGoalMode === "soft" ? "soft" : "strict";
+  // The share only changes a dish that has pan/form fat. Without one, a 3-day
+  // and a 7-day batch of the same portion are the same solve, not two.
+  const keyedFatShare = family.ingredients.some((ingredient) => ingredient.role === "fat_cooking")
+    ? cookingFatShare
+    : 1;
   // The solve is deterministic in these inputs, so memoizing it is safe and
   // removes the repeated full search the catalog filter used to run per render.
-  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.proteinFloor ?? ""}|${proteinGoalMode}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${cookingFatShare}|${exclusions}`;
+  const cacheKey = `${familyFingerprint(family)}|${targetCalories}|${input.targetProtein ?? ""}|${input.proteinFloor ?? ""}|${proteinGoalMode}|${input.targetCarbs ?? ""}|${input.targetFat ?? ""}|${keyedFatShare}|${exclusions}`;
   const cached = solveCache.get(cacheKey);
   if (cached) return cloneVariant(cached);
   const solved = solveRecipeFamilyUncached(family, { ...input, proteinGoalMode }, targetCalories, cookingFatShare);
-  if (solveCache.size >= SOLVE_CACHE_LIMIT) solveCache.clear();
+  // Drop the oldest solves one at a time. Emptying the whole cache at the
+  // limit made a large household re-run every search it had just finished.
+  while (solveCache.size >= SOLVE_CACHE_LIMIT) {
+    const oldest = solveCache.keys().next();
+    if (oldest.done) break;
+    solveCache.delete(oldest.value);
+  }
   solveCache.set(cacheKey, solved);
   return cloneVariant(solved);
 }
