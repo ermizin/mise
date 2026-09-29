@@ -73,3 +73,10 @@ test("a disabled answer button says why, on a phone as well", () => {
     "the taller composer does not cover the end of the step",
   );
 });
+
+test("the note about dishes to re-pick counts them in Russian", async () => {
+  const source = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  // «9 блюда не подходят» появлялось при смене направления меню на готовом плане.
+  assert.doesNotMatch(source, /\$\{staleCount\} блюда/u);
+  assert.match(source, /withPlural\(staleCount, FORMS\.dish\)/u);
+});
