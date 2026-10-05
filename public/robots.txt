@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /pilot-analytics
+
+Sitemap: https://mise.ermizinm.ru/sitemap.xml

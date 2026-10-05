@@ -4351,6 +4351,21 @@ p {
   width: 100%;
   margin-top: 8px;
 }
+.calendar-export-link {
+  width: 100%;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.calendar-export-note {
+  margin: 7px 4px 2px;
+  color: var(--muted);
+  text-align: center;
+}
 .notification-entry > span {
   background: linear-gradient(145deg, #ff9a60, #ef5d2d);
   font-size: var(--text-h3);

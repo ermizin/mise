@@ -13,6 +13,7 @@ export const analyticsEventNames = [
   "reminders_enabled",
   "saved_plan_reopened",
   "next_plan_created",
+  "calendar_exported",
 ] as const;
 
 export type AnalyticsEventName = (typeof analyticsEventNames)[number];
@@ -25,6 +26,53 @@ export const analyticsErrorCodes = [
 export type AnalyticsErrorCode = (typeof analyticsErrorCodes)[number];
 export const analyticsRecipeSections = ["cooking", "products", "dish"] as const;
 export type AnalyticsRecipeSection = (typeof analyticsRecipeSections)[number];
+/* Откуда человек пришёл впервые. Только закрытый список каналов: ни адреса
+   страницы, ни полного referrer сервер не принимает. */
+export const analyticsSources = [
+  "pikabu",
+  "vc",
+  "habr",
+  "telegram",
+  "vk",
+  "yandex_direct",
+  "yandex",
+  "google",
+  "calendar",
+  "share",
+  "other",
+  "direct",
+] as const;
+export type AnalyticsSource = (typeof analyticsSources)[number];
+
+const referrerSources: [RegExp, AnalyticsSource][] = [
+  [/(^|\.)pikabu\.ru$/, "pikabu"],
+  [/(^|\.)vc\.ru$/, "vc"],
+  [/(^|\.)habr\.com$/, "habr"],
+  [/(^|\.)(t\.me|telegram\.org|telegram\.me)$/, "telegram"],
+  [/(^|\.)(vk\.com|vk\.ru|vk\.me)$/, "vk"],
+  [/(^|\.)(yandex\.[a-z.]+|ya\.ru)$/, "yandex"],
+  [/(^|\.)google\.[a-z.]+$/, "google"],
+];
+
+export function acquisitionSource(
+  search: string,
+  referrer: string,
+  ownHost: string,
+): AnalyticsSource {
+  const tagged = new URLSearchParams(search).get("utm_source")?.trim().toLowerCase();
+  if (tagged)
+    return analyticsSources.includes(tagged as AnalyticsSource)
+      ? (tagged as AnalyticsSource)
+      : "other";
+  let host = "";
+  try {
+    host = referrer ? new URL(referrer).hostname.toLowerCase() : "";
+  } catch {
+    host = "";
+  }
+  if (!host || host === ownHost.toLowerCase()) return "direct";
+  return referrerSources.find(([pattern]) => pattern.test(host))?.[1] ?? "other";
+}
 
 export type AnalyticsEventInput = {
   eventId: string;
@@ -35,6 +83,7 @@ export type AnalyticsEventInput = {
   pilotEligible?: boolean;
   from?: AnalyticsRecipeSection;
   to?: AnalyticsRecipeSection;
+  source?: AnalyticsSource;
   occurredAt?: number;
 };
 
@@ -55,6 +104,7 @@ const inputKeys = new Set([
   "pilotEligible",
   "from",
   "to",
+  "source",
   "occurredAt",
 ]);
 
@@ -107,6 +157,12 @@ export function parseAnalyticsEvent(
       return { error: `${key} is not an allowed recipe section` };
   }
   if (
+    raw.source !== undefined &&
+    (typeof raw.source !== "string" ||
+      !analyticsSources.includes(raw.source as AnalyticsSource))
+  )
+    return { error: "source is not allowed" };
+  if (
     raw.occurredAt !== undefined &&
     (!Number.isInteger(raw.occurredAt) ||
       (raw.occurredAt as number) < now - 7 * 86_400_000 ||
@@ -148,6 +204,8 @@ export function parseAnalyticsEvent(
     (raw.from !== undefined || raw.to !== undefined)
   )
     return { error: "recipe sections are only allowed for recipe_tab_switched" };
+  if (eventName !== "first_open" && raw.source !== undefined)
+    return { error: "source is only allowed for first_open" };
 
   return {
     event: {
@@ -165,6 +223,7 @@ export function parseAnalyticsEvent(
         : {}),
       ...(raw.from ? { from: raw.from as AnalyticsRecipeSection } : {}),
       ...(raw.to ? { to: raw.to as AnalyticsRecipeSection } : {}),
+      ...(raw.source ? { source: raw.source as AnalyticsSource } : {}),
       ...(raw.occurredAt !== undefined
         ? { occurredAt: raw.occurredAt as number }
         : {}),

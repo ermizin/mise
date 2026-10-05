@@ -88,6 +88,7 @@ export async function POST(request: Request) {
       pilotEligible: parsed.event.pilotEligible ?? null,
       from: parsed.event.from ?? null,
       to: parsed.event.to ?? null,
+      source: parsed.event.source ?? null,
       occurredAt: parsed.event.occurredAt ?? now,
       recordedAt: now,
     })

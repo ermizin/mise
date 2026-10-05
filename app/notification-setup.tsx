@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { planCalendarPath } from "../lib/plan-calendar";
 import { Icon } from "./ui/icon";
 import { Note } from "./ui/note";
 
@@ -124,6 +125,21 @@ function buildJobs(plan: NotificationPlan, preferences: StoredPreferences) {
     dueAt: atLocalTime(addDays(date, -1), preferences.thawTime),
   });
   return jobs.filter((job) => job.dueAt > Date.now() + 30_000);
+}
+
+/* Напоминания через обычный календарь телефона: без установки на домашний экран
+   и без системных разрешений. Отдельная вкладка — потому что установленное на
+   iPhone приложение не открывает .ics внутри себя, а Safari открывает. */
+export function CalendarExportLink({ plan }: { plan: NotificationPlan }) {
+  return <a
+    className="secondary-button calendar-export-link"
+    href={planCalendarPath(plan)}
+    target="_blank"
+    rel="noreferrer"
+    onClick={() => window.dispatchEvent(new Event("mise:calendar-exported"))}
+  >
+    <Icon name="calendar" size={16} /> Добавить в календарь
+  </a>;
 }
 
 export function NotificationSetupPanel({ plan, clientId, deviceId, showInstallWarning = false, onInstall, onDone, onCancel }: { plan: NotificationPlan; clientId: string; deviceId: string; showInstallWarning?: boolean; onInstall?: () => void; onDone: () => void; onCancel: () => void }) {
@@ -267,6 +283,8 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, showInstallWa
       {status === "error" && <Note tone="warn" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</Note>}
       <button className="primary-button" disabled={status === "saving" || jobs.length === 0} onClick={enable}>{status === "saving" ? "Включаем…" : enabled ? "Обновить расписание" : "Включить напоминания"}</button>
       {testControl}
+      <CalendarExportLink plan={plan} />
+      <p className="t-min calendar-export-note">Без установки и разрешений: готовки, разморозка и день следующего плана появятся в календаре телефона.</p>
       {enabled && <button className="secondary-button" disabled={status === "saving"} onClick={disable}>Выключить для этого плана</button>}
       <button className="text-button" onClick={onCancel}>{enabled ? "Закрыть" : "Продолжить без них"}</button>
     </>}

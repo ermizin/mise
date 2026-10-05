@@ -23,9 +23,11 @@ import { ProteinReview } from "./ui/protein-review";
 import { startMenuAssemblyTask } from "@/lib/menu-assembly-task";
 import { ComposePlanGlow, LiquidNavIndicator } from "./ui/library-effects";
 import {
+  CalendarExportLink,
   NotificationSetupPanel,
   type NotificationPlan,
 } from "./notification-setup";
+import { acquisitionSource, type AnalyticsSource } from "@/lib/analytics";
 import { Icon, type IconName } from "./ui/icon";
 import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
@@ -504,7 +506,8 @@ type ClientAnalyticsEvent =
   | "cooking_confirmed"
   | "reminders_enabled"
   | "saved_plan_reopened"
-  | "next_plan_created";
+  | "next_plan_created"
+  | "calendar_exported";
 type ClientAnalyticsFields = {
   flowId?: string;
   durationMs?: number;
@@ -516,6 +519,7 @@ type ClientAnalyticsFields = {
   pilotEligible?: boolean;
   from?: RecipeSection;
   to?: RecipeSection;
+  source?: AnalyticsSource;
 };
 
 const onboardingStorageKey = "mise-onboarding-v3";
@@ -6572,10 +6576,38 @@ export default function Home() {
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
   useEffect(() => {
-    void trackAnalytics("first_open", {}, "first-open");
+    void trackAnalytics(
+      "first_open",
+      {
+        source: acquisitionSource(
+          location.search,
+          document.referrer,
+          location.hostname,
+        ),
+      },
+      "first-open",
+    );
+    /* Метка канала нужна один раз. Без неё ссылка, которой человек поделится
+       дальше, не припишет новых людей тому же посту. */
+    const landing = new URL(location.href);
+    const tracking = [...landing.searchParams.keys()].filter((key) =>
+      key.startsWith("utm_"),
+    );
+    if (tracking.length) {
+      for (const key of tracking) landing.searchParams.delete(key);
+      history.replaceState(
+        history.state,
+        "",
+        `${landing.pathname}${landing.search}${landing.hash}`,
+      );
+    }
     const onRemindersEnabled = () => {
       void trackAnalytics("reminders_enabled");
     };
+    const onCalendarExported = () => {
+      void trackAnalytics("calendar_exported");
+    };
+    window.addEventListener("mise:calendar-exported", onCalendarExported);
     const onReminderEnableError = () => {
       void trackAnalytics("blocking_error", {
         errorCode: "reminder_enable",
@@ -6587,6 +6619,7 @@ export default function Home() {
       onReminderEnableError,
     );
     return () => {
+      window.removeEventListener("mise:calendar-exported", onCalendarExported);
       window.removeEventListener(
         "mise:reminders-enabled",
         onRemindersEnabled,
@@ -14546,6 +14579,7 @@ function SuccessSheet({
           >
             Открыть план <Icon name="chevron" size={16} />
           </button>
+          <CalendarExportLink plan={notificationPlanFor(plan)} />
           <button
             className="secondary-button"
             onClick={() => setPhase("notifications")}
