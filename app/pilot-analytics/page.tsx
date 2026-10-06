@@ -90,6 +90,7 @@ export default async function PilotAnalyticsPage() {
               <th>Товар отмечен</th>
               <th>Инструкции открыты</th>
               <th>Готовка подтверждена</th>
+              <th>Приложение установлено</th>
               <th>План открыт снова</th>
               <th>Следующий план</th>
             </tr>
@@ -116,6 +117,7 @@ export default async function PilotAnalyticsPage() {
                 <td>{yes(item.shoppingConfirmed)}</td>
                 <td>{yes(item.cookingInstructionsOpened)}</td>
                 <td>{yes(item.cookingConfirmed)}</td>
+                <td>{yes(item.appInstalled)}</td>
                 <td>{yes(item.savedPlanReopened)}</td>
                 <td>{yes(item.nextPlanCreated)}</td>
               </tr>

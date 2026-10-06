@@ -16,6 +16,7 @@ export const analyticsEventNames = [
   "calendar_exported",
   "onboarding_step_viewed",
   "wizard_step_viewed",
+  "app_installed",
 ] as const;
 
 export type AnalyticsEventName = (typeof analyticsEventNames)[number];
@@ -53,6 +54,7 @@ export const analyticsSources = [
   "google",
   "calendar",
   "share",
+  "home_screen",
   "other",
   "direct",
 ] as const;
@@ -68,11 +70,16 @@ const referrerSources: [RegExp, AnalyticsSource][] = [
   [/(^|\.)google\.[a-z.]+$/, "google"],
 ];
 
+/* Приложение на домашнем экране iPhone хранит данные отдельно от Safari,
+   поэтому первый запуск с иконки выглядит как новое устройство без referrer.
+   Это не новый человек из прямого захода, а установка, и канал говорит об этом. */
 export function acquisitionSource(
   search: string,
   referrer: string,
   ownHost: string,
+  standalone = false,
 ): AnalyticsSource {
+  if (standalone) return "home_screen";
   const tagged = new URLSearchParams(search).get("utm_source")?.trim().toLowerCase();
   if (tagged)
     return analyticsSources.includes(tagged as AnalyticsSource)
@@ -287,6 +294,7 @@ export type PilotParticipant = {
   cookingConfirmed: boolean;
   completedPurchaseAndCooking: boolean;
   remindersEnabled: boolean;
+  appInstalled: boolean;
   savedPlanReopened: boolean;
   nextPlanCreated: boolean;
 };
@@ -345,6 +353,7 @@ export function buildPilotSummary(
         cookingConfirmed,
         completedPurchaseAndCooking: shoppingConfirmed && cookingConfirmed,
         remindersEnabled: has("reminders_enabled"),
+        appInstalled: has("app_installed"),
         savedPlanReopened: has("saved_plan_reopened"),
         nextPlanCreated: has("next_plan_created"),
       };
@@ -390,6 +399,7 @@ function emptyParticipant(index: number): PilotParticipant {
     cookingConfirmed: false,
     completedPurchaseAndCooking: false,
     remindersEnabled: false,
+    appInstalled: false,
     savedPlanReopened: false,
     nextPlanCreated: false,
   };
@@ -409,6 +419,7 @@ export function pilotSummaryCsv(summary: PilotSummary): string {
     "cooking_confirmed",
     "purchase_and_cooking",
     "reminders_enabled",
+    "app_installed",
     "saved_plan_reopened",
     "next_plan_created",
   ];
@@ -427,6 +438,7 @@ export function pilotSummaryCsv(summary: PilotSummary): string {
     item.cookingConfirmed,
     item.completedPurchaseAndCooking,
     item.remindersEnabled,
+    item.appInstalled,
     item.savedPlanReopened,
     item.nextPlanCreated,
   ]);

@@ -164,6 +164,53 @@ test("pilot report separates screen opens from confirmed purchase and cooking", 
   assert.match(pilotSummaryCsv(summary), /purchase_confirmed/);
 });
 
+test("app installation is counted once per device without extra fields", async () => {
+  const base = { eventId: ids.first, eventName: "app_installed", occurredAt: now };
+  assert.equal("error" in parseAnalyticsEvent(base, now), false);
+  assert.equal(
+    parseAnalyticsEvent({ ...base, step: 0 }, now).error,
+    "step is only allowed for step events",
+  );
+  assert.equal(
+    parseAnalyticsEvent({ ...base, source: "home_screen" }, now).error,
+    "source is only allowed for first_open",
+  );
+
+  const row = (actorId, eventName, index) => ({
+    eventId: `${String(index).padStart(8, "0")}-0000-4000-8000-000000000000`,
+    actorId,
+    actorKind: "device",
+    eventName,
+    occurredAt: now + index,
+    recordedAt: now + index,
+  });
+  const summary = buildPilotSummary(
+    [row("a", "first_open", 1), row("a", "app_installed", 2), row("b", "first_open", 3)],
+    now,
+  );
+  assert.equal(summary.participants[0].appInstalled, true);
+  assert.equal(summary.participants[1].appInstalled, false);
+  assert.equal(summary.participants[4].appInstalled, false);
+  const [header, first] = pilotSummaryCsv(summary).split("\n");
+  const column = header.split(",").indexOf("app_installed");
+  assert.ok(column > 0);
+  assert.equal(first.split(",")[column], "true");
+
+  const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
+  assert.match(page, /trackAnalytics\("app_installed", \{\}, "app-installed"\)/,
+    "one dedupe key: Chrome's appinstalled and the first home-screen launch on the same device count once",
+  );
+  assert.match(page, /window\.addEventListener\("appinstalled", installed\)/);
+  assert.match(page, /if \(next\.installed\) \{[\s\S]*?recordInstall\(\);/,
+    "iPhone has no appinstalled event, so a standalone launch counts",
+  );
+  assert.match(page, /location\.hostname,\s*readInstallEnvironment\(\)\.installed,/,
+    "the first open of an installed app is labelled home_screen, not direct",
+  );
+  const report = await readFile(new URL("../app/pilot-analytics/page.tsx", import.meta.url), "utf8");
+  assert.match(report, /yes\(item\.appInstalled\)/);
+});
+
 test("only a 3-7 day client classification contributes to the time threshold", () => {
   const row = {
     eventId: ids.first,

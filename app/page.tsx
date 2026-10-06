@@ -515,7 +515,8 @@ type ClientAnalyticsEvent =
   | "next_plan_created"
   | "calendar_exported"
   | "onboarding_step_viewed"
-  | "wizard_step_viewed";
+  | "wizard_step_viewed"
+  | "app_installed";
 type ClientAnalyticsFields = {
   flowId?: string;
   durationMs?: number;
@@ -6580,6 +6581,12 @@ export default function Home() {
     if (isPrimaryTab(tab)) restoreTabScroll(tab, tabScrollPositions.current);
   }, [tab]);
   useEffect(() => {
+    /* Установка считается один раз на устройство. Chrome и Edge сообщают о
+       ней событием appinstalled ещё во вкладке браузера; iPhone такого события
+       не даёт, поэтому установкой считается и запуск с домашнего экрана. */
+    const recordInstall = () => {
+      void trackAnalytics("app_installed", {}, "app-installed");
+    };
     const refresh = () => {
       const next = readInstallEnvironment();
       setInstallEnvironment(next);
@@ -6591,6 +6598,7 @@ export default function Home() {
         localStorage.removeItem(onboardingInstallSkippedKey);
         setInstallSkipped(false);
         setInstallPrompt(null);
+        recordInstall();
       }
     };
     const capture = (event: Event) => {
@@ -6598,13 +6606,17 @@ export default function Home() {
       setInstallPrompt(event as InstallPromptEvent);
       refresh();
     };
+    const installed = () => {
+      recordInstall();
+      refresh();
+    };
     refresh();
     window.addEventListener("beforeinstallprompt", capture);
-    window.addEventListener("appinstalled", refresh);
+    window.addEventListener("appinstalled", installed);
     window.addEventListener("visibilitychange", refresh);
     return () => {
       window.removeEventListener("beforeinstallprompt", capture);
-      window.removeEventListener("appinstalled", refresh);
+      window.removeEventListener("appinstalled", installed);
       window.removeEventListener("visibilitychange", refresh);
     };
   }, []);
@@ -6642,6 +6654,7 @@ export default function Home() {
           location.search,
           document.referrer,
           location.hostname,
+          readInstallEnvironment().installed,
         ),
       },
       "first-open",

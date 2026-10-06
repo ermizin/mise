@@ -44,6 +44,9 @@ test("first visit records only a channel from a closed list", () => {
   assert.equal(acquisitionSource("", `https://${host}/?tab=recipes`, host), "direct");
   assert.equal(acquisitionSource("", "", host), "direct");
   assert.equal(acquisitionSource("", "not a url", host), "direct");
+  // Запуск с иконки — установка уже пришедшего человека, даже если адрес несёт метку.
+  assert.equal(acquisitionSource("", "", host, true), "home_screen");
+  assert.equal(acquisitionSource("?utm_source=pikabu", "https://pikabu.ru/", host, true), "home_screen");
 });
 
 test("the server accepts a channel only on first_open and only from the list", () => {
@@ -51,6 +54,7 @@ test("the server accepts a channel only on first_open and only from the list", (
   const base = { eventId, occurredAt: now };
   const accepted = parseAnalyticsEvent({ ...base, eventName: "first_open", source: "habr" }, now);
   assert.equal(accepted.event.source, "habr");
+  assert.equal(parseAnalyticsEvent({ ...base, eventName: "first_open", source: "home_screen" }, now).event.source, "home_screen");
   assert.equal("source" in parseAnalyticsEvent({ ...base, eventName: "first_open" }, now).event, false);
   assert.equal(
     parseAnalyticsEvent({ ...base, eventName: "first_open", source: "https://pikabu.ru/story/1" }, now).error,
@@ -169,7 +173,7 @@ test("the plan offers the calendar after saving and in reminder settings", async
   assert.match(setup, /target="_blank"/);
   assert.match(setup, /mise:calendar-exported/);
   assert.match(page, /trackAnalytics\("calendar_exported"\)/);
-  assert.match(page, /source: acquisitionSource\(\s*location\.search,\s*document\.referrer,\s*location\.hostname,\s*\)/);
+  assert.match(page, /source: acquisitionSource\(\s*location\.search,\s*document\.referrer,\s*location\.hostname,\s*readInstallEnvironment\(\)\.installed,\s*\)/);
   assert.match(route, /"Content-Type": "text\/calendar; charset=utf-8"/);
   assert.match(css, /\.calendar-export-link \{/);
   assert.match(product, /Добавить в календарь/);
