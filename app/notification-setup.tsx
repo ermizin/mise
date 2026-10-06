@@ -130,10 +130,10 @@ function buildJobs(plan: NotificationPlan, preferences: StoredPreferences) {
 /* Напоминания через обычный календарь телефона: без установки на домашний экран
    и без системных разрешений. Отдельная вкладка — потому что установленное на
    iPhone приложение не открывает .ics внутри себя, а Safari открывает. */
-export function CalendarExportLink({ plan }: { plan: NotificationPlan }) {
+export function CalendarExportLink({ plan, device, primary = false }: { plan: NotificationPlan; device: string; primary?: boolean }) {
   return <a
-    className="secondary-button calendar-export-link"
-    href={planCalendarPath(plan)}
+    className={`${primary ? "primary-button" : "secondary-button"} calendar-export-link`}
+    href={planCalendarPath(plan, device)}
     target="_blank"
     rel="noreferrer"
     onClick={() => window.dispatchEvent(new Event("mise:calendar-exported"))}
@@ -283,7 +283,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, showInstallWa
       {status === "error" && <Note tone="warn" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</Note>}
       <button className="primary-button" disabled={status === "saving" || jobs.length === 0} onClick={enable}>{status === "saving" ? "Включаем…" : enabled ? "Обновить расписание" : "Включить напоминания"}</button>
       {testControl}
-      <CalendarExportLink plan={plan} />
+      <CalendarExportLink plan={plan} device={clientId} />
       <p className="t-min calendar-export-note">Без установки и разрешений: готовки, разморозка и день следующего плана появятся в календаре телефона.</p>
       {enabled && <button className="secondary-button" disabled={status === "saving"} onClick={disable}>Выключить для этого плана</button>}
       <button className="text-button" onClick={onCancel}>{enabled ? "Закрыть" : "Продолжить без них"}</button>

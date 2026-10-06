@@ -79,17 +79,22 @@ test("the stored channel reaches its own column", async () => {
   assert.match(analyticsDoc, /`source`/);
 });
 
-test("the calendar link carries only plan dates", () => {
-  const path = calendar.planCalendarPath({
+const device = "6f1d2c3b-4a59-4e7f-8a1b-2c3d4e5f6a7b";
+
+test("the calendar link carries plan dates and the device key, nothing about the plan", () => {
+  const plan = {
     end: "2026-10-12",
     batches: [{ start: "2026-10-06" }, { start: "2026-10-09" }, { start: "2026-10-09" }],
     frozenUseDates: ["2026-10-11", "2026-10-11"],
-  });
-  const url = new URL(path, "https://mise.ermizinm.ru");
+  };
+  const url = new URL(calendar.planCalendarPath(plan, device), "https://mise.ermizinm.ru");
   assert.equal(url.pathname, "/api/calendar");
-  assert.deepEqual([...url.searchParams.keys()].sort(), ["cook", "end", "frozen"]);
+  assert.deepEqual([...url.searchParams.keys()].sort(), ["cook", "device", "end", "frozen"]);
   assert.equal(url.searchParams.get("cook"), "2026-10-06,2026-10-09");
   assert.equal(url.searchParams.get("frozen"), "2026-10-11");
+  assert.equal(url.searchParams.get("device"), device);
+  const withoutKey = new URL(calendar.planCalendarPath(plan, "not-a-uuid"), "https://mise.ermizinm.ru");
+  assert.deepEqual([...withoutKey.searchParams.keys()].sort(), ["cook", "end", "frozen"]);
 });
 
 test("the calendar rejects dates outside one plan", () => {
@@ -106,6 +111,8 @@ test("the calendar rejects dates outside one plan", () => {
     frozen: ["2026-10-11"],
     end: "2026-10-12",
   });
+  assert.equal(parse("end=2026-10-12&cook=2026-10-06&device=../../etc").error, "device must be a UUID");
+  assert.equal(parse(`end=2026-10-12&cook=2026-10-06&device=${device.toUpperCase()}`).input.device, device);
 });
 
 test("the calendar file reminds about cooking, thawing and the next plan", () => {
@@ -128,6 +135,17 @@ test("the calendar file reminds about cooking, thawing and the next plan", () =>
   assert.match(unfolded, /UID:mise-next-plan-2026-10-12@mise\.ermizinm\.ru/);
   assert.match(unfolded, /DTSTAMP:20261005T120000Z/);
   assert.match(unfolded, /уже сохранены — новый план займёт пару минут/);
+  assert.doesNotMatch(unfolded, /#plan=/, "without a key the links stay plain");
+});
+
+test("calendar links open the same plan in any browser", () => {
+  const ics = calendar.buildPlanCalendar(
+    { cook: ["2026-10-06"], frozen: [], end: "2026-10-12", device },
+    { origin: "https://mise.ermizinm.ru", now },
+  );
+  const unfolded = ics.replaceAll("\r\n ", "");
+  assert.match(unfolded, new RegExp(`URL:https://mise\\.ermizinm\\.ru/#plan=${device}\r\n`));
+  assert.match(unfolded, new RegExp(`URL:https://mise\\.ermizinm\\.ru/\\?utm_source=calendar#plan=${device}\r\n`));
 });
 
 test("the plan offers the calendar after saving and in reminder settings", async () => {
@@ -139,8 +157,15 @@ test("the plan offers the calendar after saving and in reminder settings", async
     read("PRODUCT.md"),
   ]);
   const successSheet = page.slice(page.indexOf("function SuccessSheet("));
-  assert.match(successSheet.slice(0, 2_000), /<CalendarExportLink plan=\{notificationPlanFor\(plan\)\} \/>/);
-  assert.match(setup, /<CalendarExportLink plan=\{plan\} \/>/);
+  assert.match(
+    successSheet.slice(0, 2_500),
+    /<CalendarExportLink\s+plan=\{notificationPlanFor\(plan\)\}\s+device=\{clientId\(\)\}\s+primary\s+\/>/,
+  );
+  assert.ok(
+    successSheet.indexOf("<CalendarExportLink") < successSheet.indexOf("Открыть план"),
+    "the calendar comes before opening the plan",
+  );
+  assert.match(setup, /<CalendarExportLink plan=\{plan\} device=\{clientId\} \/>/);
   assert.match(setup, /target="_blank"/);
   assert.match(setup, /mise:calendar-exported/);
   assert.match(page, /trackAnalytics\("calendar_exported"\)/);
@@ -156,4 +181,76 @@ test("search engines can find the public entry page", async () => {
   assert.match(robots, /Disallow: \/pilot-analytics/);
   assert.match(robots, /Sitemap: https:\/\/mise\.ermizinm\.ru\/sitemap\.xml/);
   assert.match(sitemap, /<loc>https:\/\/mise\.ermizinm\.ru\/<\/loc>/);
+});
+
+test("a calendar link adopts its device only where there is no plan of one's own", async () => {
+  const page = await read("app/page.tsx");
+  const constant = (name) => page.match(new RegExp(`const ${name} =[\\s\\S]*?;\\n`))[0];
+  const fn = (name) => {
+    const start = page.indexOf(`function ${name}(`);
+    const end = page.indexOf("\n}\n", start);
+    return page.slice(start, end + 3);
+  };
+  const source = [
+    "onboardingStorageKey",
+    "onboardingProgressKey",
+    "analyticsStoragePrefix",
+    "localPlanStoragePrefix",
+    "pendingPlanStoragePrefix",
+    "clientIdStorageKey",
+    "calendarDevicePattern",
+  ].map(constant).join("")
+    + "let calendarDeviceChecked = false;\n"
+    + ["adoptCalendarDevice", "localPlanKey", "pendingPlanKey", "analyticsKey"].map(fn).join("\n")
+    + "\nmodule.exports = { adoptCalendarDevice };";
+  const output = ts.transpileModule(source, {
+    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
+  }).outputText;
+  const run = (hash, stored) => {
+    const store = new Map(Object.entries(stored));
+    const location = { hash, pathname: "/", search: "?utm_source=calendar" };
+    const replaced = [];
+    const exports = {};
+    const sandboxModule = { exports };
+    vm.runInNewContext(output, {
+      module: sandboxModule,
+      exports,
+      location,
+      history: { state: null, replaceState: (_state, _title, url) => replaced.push(url) },
+      localStorage: {
+        getItem: (key) => (store.has(key) ? store.get(key) : null),
+        setItem: (key, value) => store.set(key, String(value)),
+        removeItem: (key) => store.delete(key),
+      },
+      clientId: () => { throw new Error("must not create an id while adopting"); },
+    });
+    sandboxModule.exports.adoptCalendarDevice();
+    sandboxModule.exports.adoptCalendarDevice();
+    return { store: Object.fromEntries(store), replaced };
+  };
+  const other = "0a1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d";
+
+  const fresh = run(`#plan=${device}`, {});
+  assert.equal(fresh.store["mise-client-id"], device);
+  assert.equal(fresh.store["mise-onboarding-v3"], "complete");
+  assert.equal(fresh.store["mise-analytics-v1:sent:first-open"], "1");
+  assert.deepEqual(fresh.replaced, ["/?utm_source=calendar"], "the key leaves the address bar once");
+
+  const emptyBrowser = run(`#plan=${device}`, { "mise-client-id": other, "mise-onboarding-progress-v4": "batches" });
+  assert.equal(emptyBrowser.store["mise-client-id"], device);
+  assert.equal(emptyBrowser.store["mise-onboarding-progress-v4"], undefined);
+
+  const ownPlan = run(`#plan=${device}`, { "mise-client-id": other, [`mise-local-plan-v1:${other}`]: "{}" });
+  assert.equal(ownPlan.store["mise-client-id"], other, "a plan made in this browser is kept");
+  assert.equal(ownPlan.store["mise-onboarding-v3"], undefined);
+
+  const pending = run(`#plan=${device}`, { "mise-client-id": other, [`mise-pending-plan-v1:${other}`]: "{}" });
+  assert.equal(pending.store["mise-client-id"], other);
+
+  const noKey = run("#plan=not-a-uuid", {});
+  assert.equal(noKey.store["mise-client-id"], undefined);
+  assert.deepEqual(noKey.replaced, []);
+
+  assert.match(page, /function clientId\(\) \{\s*adoptCalendarDevice\(\);/);
+  assert.match(page, /adoptCalendarDevice\(\);\s*if \(dedupeKey && analyticsWasSent\(dedupeKey\)\) return true;/);
 });

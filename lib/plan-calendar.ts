@@ -4,7 +4,13 @@
    большинство людей его не включает. Обычный календарь телефона есть у всех:
    файл .ics добавляет готовки, вечера разморозки и событие «собрать следующий
    план» со ссылкой обратно в Mise. В адресе только даты и время — без блюд,
-   людей, целей и исключений. */
+   людей, целей и исключений — и ключ устройства, на котором собран план.
+
+   Ключ нужен потому, что календарь открывает ссылку в системном браузере, а
+   план часто собран во встроенном браузере Пикабу, vc или Telegram: там своё
+   хранилище, и без ключа человек увидел бы пустое приложение вместо своего
+   плана. В событиях ключ стоит во фрагменте адреса (#plan=…), поэтому при
+   открытии ссылки он не уходит на сервер и в чужие referrer. */
 
 export type PlanCalendarInput = {
   /** Дни готовок — начало каждой партии. */
@@ -13,6 +19,8 @@ export type PlanCalendarInput = {
   frozen: string[];
   /** Последний день плана. */
   end: string;
+  /** Ключ устройства с планом — чтобы ссылка открыла тот же план. */
+  device?: string;
 };
 
 export type PlanCalendarSource = {
@@ -27,6 +35,8 @@ const NEXT_PLAN_TIME = "19:00";
 const MAX_DATES = 14;
 const MAX_PLAN_SPAN_DAYS = 15;
 const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+const devicePattern =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function validDate(value: string) {
   if (!datePattern.test(value)) return false;
@@ -51,12 +61,13 @@ function dateList(value: string | null) {
   return [...new Set(value.split(",").filter(Boolean))].sort();
 }
 
-export function planCalendarPath(plan: PlanCalendarSource) {
+export function planCalendarPath(plan: PlanCalendarSource, device?: string) {
   const params = new URLSearchParams();
   params.set("end", plan.end);
   params.set("cook", [...new Set(plan.batches.map((batch) => batch.start))].join(","));
   const frozen = [...new Set(plan.frozenUseDates)];
   if (frozen.length) params.set("frozen", frozen.join(","));
+  if (device && devicePattern.test(device)) params.set("device", device);
   return `/api/calendar?${params.toString()}`;
 }
 
@@ -76,7 +87,12 @@ export function parsePlanCalendarQuery(
     if (offset < 0 || offset > MAX_PLAN_SPAN_DAYS)
       return { error: "dates must belong to the plan period" };
   }
-  return { input: { cook, frozen, end } };
+  const device = params.get("device");
+  if (device !== null && !devicePattern.test(device))
+    return { error: "device must be a UUID" };
+  return {
+    input: { cook, frozen, end, ...(device ? { device: device.toLowerCase() } : {}) },
+  };
 }
 
 function escapeText(value: string) {
@@ -132,8 +148,9 @@ export function buildPlanCalendar(
   input: PlanCalendarInput,
   options: { origin: string; now: number },
 ) {
-  const appUrl = `${options.origin}/`;
-  const nextPlanUrl = `${options.origin}/?utm_source=calendar`;
+  const resume = input.device ? `#plan=${input.device}` : "";
+  const appUrl = `${options.origin}/${resume}`;
+  const nextPlanUrl = `${options.origin}/?utm_source=calendar${resume}`;
   const events: CalendarEvent[] = input.cook.map((date, index) => ({
     uid: `mise-cook-${date}-${input.end}`,
     date,

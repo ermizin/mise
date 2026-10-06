@@ -4692,8 +4692,42 @@ function isAvailableForNewMenus(recipe: Recipe) {
   );
 }
 const newMenuRecipes = productionRecipes.filter(isAvailableForNewMenus);
+const clientIdStorageKey = "mise-client-id";
+const calendarDevicePattern =
+  /^#plan=([0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/i;
+let calendarDeviceChecked = false;
+/* Ссылка из календаря несёт ключ устройства, на котором собран план. Календарь
+   открывает её в системном браузере, а план мог остаться во встроенном
+   браузере Пикабу, vc или Telegram. Если здесь своего плана нет, браузер
+   становится тем же устройством: человек видит свой план, а следующий план
+   засчитывается как повторный. Свой план в этом браузере не перезаписывается. */
+function adoptCalendarDevice() {
+  if (calendarDeviceChecked || typeof location === "undefined") return;
+  calendarDeviceChecked = true;
+  const linked = location.hash.match(calendarDevicePattern)?.[1]?.toLowerCase();
+  if (!linked) return;
+  history.replaceState(
+    history.state,
+    "",
+    `${location.pathname}${location.search}`,
+  );
+  const current = localStorage.getItem(clientIdStorageKey);
+  if (current === linked) return;
+  if (
+    current &&
+    (localStorage.getItem(localPlanKey(current)) ||
+      localStorage.getItem(pendingPlanKey(current)))
+  )
+    return;
+  localStorage.setItem(clientIdStorageKey, linked);
+  localStorage.setItem(onboardingStorageKey, "complete");
+  localStorage.removeItem(onboardingProgressKey);
+  /* Первое открытие этого человека уже записано на исходном устройстве. */
+  localStorage.setItem(analyticsKey("sent", "first-open"), "1");
+}
 function clientId() {
-  const key = "mise-client-id";
+  adoptCalendarDevice();
+  const key = clientIdStorageKey;
   const saved = localStorage.getItem(key);
   if (saved) return saved;
   const created = crypto.randomUUID();
@@ -4737,6 +4771,9 @@ async function trackAnalytics(
   dedupeKey?: string,
 ) {
   try {
+    /* До проверки отправленного: ссылка из календаря может сделать этот
+       браузер исходным устройством, у которого first_open уже записан. */
+    adoptCalendarDevice();
     if (dedupeKey && analyticsWasSent(dedupeKey)) return true;
     const idKey = dedupeKey ? analyticsKey("id", dedupeKey) : null;
     const storedId = idKey ? localStorage.getItem(idKey) : null;
@@ -14610,13 +14647,25 @@ function SuccessSheet({
             рецептов: {new Set(selectionRecipeIds(plan)).size} ·
             продуктов: {plan.shopping.length}
           </p>
+          {/* Календарь — единственное напоминание, которое работает без
+              установки: он приводит человека обратно к готовкам и к
+              следующему плану, поэтому идёт первым. */}
+          <p>
+            Последний день плана — {formatDate(plan.end)}. Добавьте план в
+            календарь телефона: Mise напомнит о готовках, а в последний день —
+            собрать следующий.
+          </p>
+          <CalendarExportLink
+            plan={notificationPlanFor(plan)}
+            device={clientId()}
+            primary
+          />
           <button
-            className="primary-button"
+            className="secondary-button"
             onClick={() => onOpen("week")}
           >
             Открыть план <Icon name="chevron" size={16} />
           </button>
-          <CalendarExportLink plan={notificationPlanFor(plan)} />
           <button
             className="secondary-button"
             onClick={() => setPhase("notifications")}
