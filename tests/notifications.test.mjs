@@ -4,13 +4,16 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("places conditional Home Screen installation before onboarding reminders", async () => {
+test("offers Home Screen installation before reminders only when onboarding is reopened", async () => {
   const [page, manifestText, layout, serviceWorker] = await Promise.all([read("app/page.tsx"), read("public/manifest.webmanifest"), read("app/layout.tsx"), read("public/sw.js")]);
   const manifest = JSON.parse(manifestText);
   assert.match(page, /\| "install"/);
   assert.match(page, /onboardingFlowWithInstall = \[[\s\S]*?"welcome"[\s\S]*?"batches"[\s\S]*?"install"[\s\S]*?"reminders"/);
   assert.match(page, /onboardingFlowWithoutInstall = \[[\s\S]*?"welcome"[\s\S]*?"batches"[\s\S]*?"reminders"/);
-  assert.match(page, /showInstallStep =\s*installEnvironment\.ready[\s\S]*?installEnvironment\.mobile[\s\S]*?!installEnvironment\.installed/);
+  assert.match(page, /showInstallStep =\s*offerInstall &&\s*installEnvironment\.ready[\s\S]*?installEnvironment\.mobile[\s\S]*?!installEnvironment\.installed/);
+  // Первый запуск не просит установку: её предлагают профиль и настройка напоминаний.
+  assert.match(page, /offerInstall=\{onboardingReturnTab !== null\}/);
+  assert.match(page, /setOnboardingStep\(resumable === "install" \? "reminders" : resumable\)/);
   assert.match(page, /matchMedia\("\(display-mode: standalone\)"\)/);
   assert.match(page, /navigator as Navigator & \{ standalone\?: boolean \}/);
   assert.match(page, /beforeinstallprompt/);

@@ -6705,7 +6705,6 @@ export default function Home() {
     }
     if (!localStorage.getItem(onboardingStorageKey)) {
       const progress = localStorage.getItem(onboardingProgressKey);
-      const environment = readInstallEnvironment();
       const resumable =
         progress === "welcome" ||
         progress === "batches" ||
@@ -6713,12 +6712,9 @@ export default function Home() {
         progress === "reminders"
           ? progress
           : "welcome";
-      setOnboardingStep(
-        resumable === "install" &&
-          (environment.installed || !environment.mobile)
-          ? "reminders"
-          : resumable,
-      );
+      /* Первый запуск не просит установку: в сохранённом прогрессе экран
+         установки мог остаться от прежней версии. */
+      setOnboardingStep(resumable === "install" ? "reminders" : resumable);
     }
     if ("serviceWorker" in navigator)
       navigator.serviceWorker.register("/sw.js").catch(() => undefined);
@@ -7064,6 +7060,7 @@ export default function Home() {
     return (
       <OnboardingScreen
         step={onboardingStep}
+        offerInstall={onboardingReturnTab !== null}
         plan={activePlan}
         hasPlan={Boolean(activePlan)}
         installEnvironment={installEnvironment}
@@ -7576,6 +7573,7 @@ function OnboardingScreen({
   onInstallEnvironmentRefresh,
   onFinish,
   onCloseGuide,
+  offerInstall,
 }: {
   step: Exclude<OnboardingStep, "done">;
   plan: ActivePlan | null;
@@ -7589,9 +7587,15 @@ function OnboardingScreen({
   onInstallEnvironmentRefresh: () => void;
   onFinish: (reminders?: ReminderDefaults) => void;
   onCloseGuide: () => void;
+  offerInstall: boolean;
 }) {
   const [motionDirection, setMotionDirection] = useState<-1 | 1>(1);
+  /* Установка предлагается только при повторном просмотре — из профиля или
+     настройки напоминаний. В первый раз люди приходят по ссылке из приложений
+     Пикабу, vc и Telegram, где её нельзя выполнить, а на iPhone установленная
+     копия начинает с пустого плана. */
   const showInstallStep =
+    offerInstall &&
     installEnvironment.ready &&
     installEnvironment.mobile &&
     !installEnvironment.installed;
