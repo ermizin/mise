@@ -99,6 +99,12 @@ async function encryptPayload(payload: string, userPublicKey: Uint8Array, authSe
   return joinBytes(salt, recordSize, new Uint8Array([applicationServerPublicKey.length]), applicationServerPublicKey, ciphertext);
 }
 
+// A push service whose address does not answer leaves the TCP connect hanging
+// for minutes: «Включить напоминания» spun for 133 s on production and the
+// per-minute dispatcher stalled behind it. Give up quickly; the job keeps its
+// remaining attempts and is retried on the next minute.
+const PUSH_SEND_TIMEOUT_MS = 10_000;
+
 async function sendWebPush(subscription: SubscriptionRow, payload: object) {
   const configuration = pushEnv();
   if (!configuration.VAPID_PUBLIC_KEY || !configuration.VAPID_PRIVATE_KEY) throw new Error("Web Push is not configured");
@@ -120,6 +126,7 @@ async function sendWebPush(subscription: SubscriptionRow, payload: object) {
       Urgency: "normal",
     },
     body,
+    signal: AbortSignal.timeout(PUSH_SEND_TIMEOUT_MS),
   });
 }
 

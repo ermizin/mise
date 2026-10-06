@@ -92,6 +92,10 @@ test("stores device subscriptions and scheduled jobs, then sends visible Web Pus
   assert.match(setup, /action: "test"/);
   assert.match(sender, /Content-Encoding: aes128gcm/);
   assert.match(sender, /Authorization: `vapid/);
+  assert.match(sender, /signal: AbortSignal\.timeout\(PUSH_SEND_TIMEOUT_MS\)/,
+    "an unreachable push service cannot hang reminder setup or the per-minute dispatcher",
+  );
+  assert.match(sender, /PUSH_SEND_TIMEOUT_MS = 10_000/);
   assert.match(serviceWorker, /registration\.showNotification/);
   assert.match(serviceWorker, /notificationclick/);
   assert.match(serviceWorker, /mise:clear-plan-cache/);
