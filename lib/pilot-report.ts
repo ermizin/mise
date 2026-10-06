@@ -1,4 +1,4 @@
-import { asc } from "drizzle-orm";
+import { asc, notInArray } from "drizzle-orm";
 import { getDb } from "../db";
 import { analyticsEvents } from "../db/schema";
 import { buildPilotSummary, type AnalyticsEventRow } from "./analytics";
@@ -7,6 +7,14 @@ export async function loadPilotSummary() {
   const rows = await getDb()
     .select()
     .from(analyticsEvents)
+    /* Экранные события сводке не нужны и не должны вытеснять из лимита
+       покупки, готовку и следующий план. */
+    .where(
+      notInArray(analyticsEvents.eventName, [
+        "onboarding_step_viewed",
+        "wizard_step_viewed",
+      ]),
+    )
     .orderBy(asc(analyticsEvents.recordedAt))
     .limit(10_000);
   return buildPilotSummary(

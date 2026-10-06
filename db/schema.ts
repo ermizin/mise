@@ -67,6 +67,7 @@ export const analyticsEvents = sqliteTable("analytics_events", {
   from: text("from_section"),
   to: text("to_section"),
   source: text("source"),
+  step: integer("step"),
   occurredAt: integer("occurred_at").notNull(),
   recordedAt: integer("recorded_at").notNull(),
 }, (table) => [

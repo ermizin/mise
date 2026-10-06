@@ -27,7 +27,11 @@ import {
   NotificationSetupPanel,
   type NotificationPlan,
 } from "./notification-setup";
-import { acquisitionSource, type AnalyticsSource } from "@/lib/analytics";
+import {
+  acquisitionSource,
+  analyticsOnboardingSteps,
+  type AnalyticsSource,
+} from "@/lib/analytics";
 import { Icon, type IconName } from "./ui/icon";
 import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
@@ -507,7 +511,9 @@ type ClientAnalyticsEvent =
   | "reminders_enabled"
   | "saved_plan_reopened"
   | "next_plan_created"
-  | "calendar_exported";
+  | "calendar_exported"
+  | "onboarding_step_viewed"
+  | "wizard_step_viewed";
 type ClientAnalyticsFields = {
   flowId?: string;
   durationMs?: number;
@@ -520,6 +526,7 @@ type ClientAnalyticsFields = {
   from?: RecipeSection;
   to?: RecipeSection;
   source?: AnalyticsSource;
+  step?: number;
 };
 
 const onboardingStorageKey = "mise-onboarding-v3";
@@ -6490,6 +6497,19 @@ export default function Home() {
   const [onboardingReturnTab, setOnboardingReturnTab] = useState<Tab | null>(
     null,
   );
+  useEffect(() => {
+    /* Только первый проход: повтор онбординга из профиля и напоминаний не
+       говорит о том, где новый человек остановился. */
+    const screen = analyticsOnboardingSteps.indexOf(
+      onboardingStep as (typeof analyticsOnboardingSteps)[number],
+    );
+    if (screen < 0 || localStorage.getItem(onboardingStorageKey)) return;
+    void trackAnalytics(
+      "onboarding_step_viewed",
+      { step: screen },
+      `onboarding-step:${onboardingStep}`,
+    );
+  }, [onboardingStep]);
   const [installEnvironment, setInstallEnvironment] =
     useState<InstallEnvironment>(initialInstallEnvironment);
   const [installPrompt, setInstallPrompt] =
@@ -11047,6 +11067,19 @@ function PlanBuilder({
       /* a broken draft must never block the wizard */
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps -- runs once on mount
+  useEffect(() => {
+    /* Один раз на экран в каждом новом плане: возврат назад, восстановление
+       черновика и правка из сохранённого плана повторно не считаются. После
+       восстановления черновика stepRef уже указывает на его экран. */
+    const plannedFlow = flowIdRef.current;
+    if (!plannedFlow || successPlan) return;
+    const screen = stepRef.current;
+    void trackAnalytics(
+      "wizard_step_viewed",
+      { flowId: plannedFlow, step: screen },
+      `plan-step:${plannedFlow}:${screen}`,
+    );
+  }, [step, successPlan]);
   useEffect(() => {
     for (let historyStep = initialStep; historyStep <= stepRef.current; historyStep += 1) {
       history.pushState(

@@ -14,6 +14,8 @@ export const analyticsEventNames = [
   "saved_plan_reopened",
   "next_plan_created",
   "calendar_exported",
+  "onboarding_step_viewed",
+  "wizard_step_viewed",
 ] as const;
 
 export type AnalyticsEventName = (typeof analyticsEventNames)[number];
@@ -26,6 +28,18 @@ export const analyticsErrorCodes = [
 export type AnalyticsErrorCode = (typeof analyticsErrorCodes)[number];
 export const analyticsRecipeSections = ["cooking", "products", "dish"] as const;
 export type AnalyticsRecipeSection = (typeof analyticsRecipeSections)[number];
+/* Экраны первого онбординга. В событии передаётся номер экрана в этом
+   постоянном списке, а не позиция в показанной последовательности: экран
+   установки бывает только в мобильном браузере. */
+export const analyticsOnboardingSteps = [
+  "welcome",
+  "batches",
+  "install",
+  "reminders",
+] as const;
+export type AnalyticsOnboardingStep = (typeof analyticsOnboardingSteps)[number];
+/* Семь экранов мастера плана: от «Период» (0) до «Проверка» (6). */
+export const analyticsWizardStepCount = 7;
 /* Откуда человек пришёл впервые. Только закрытый список каналов: ни адреса
    страницы, ни полного referrer сервер не принимает. */
 export const analyticsSources = [
@@ -84,6 +98,7 @@ export type AnalyticsEventInput = {
   from?: AnalyticsRecipeSection;
   to?: AnalyticsRecipeSection;
   source?: AnalyticsSource;
+  step?: number;
   occurredAt?: number;
 };
 
@@ -105,6 +120,7 @@ const inputKeys = new Set([
   "from",
   "to",
   "source",
+  "step",
   "occurredAt",
 ]);
 
@@ -163,6 +179,11 @@ export function parseAnalyticsEvent(
   )
     return { error: "source is not allowed" };
   if (
+    raw.step !== undefined &&
+    (!Number.isInteger(raw.step) || (raw.step as number) < 0)
+  )
+    return { error: "step must be a non-negative integer" };
+  if (
     raw.occurredAt !== undefined &&
     (!Number.isInteger(raw.occurredAt) ||
       (raw.occurredAt as number) < now - 7 * 86_400_000 ||
@@ -206,6 +227,27 @@ export function parseAnalyticsEvent(
     return { error: "recipe sections are only allowed for recipe_tab_switched" };
   if (eventName !== "first_open" && raw.source !== undefined)
     return { error: "source is only allowed for first_open" };
+  if (
+    eventName === "onboarding_step_viewed" &&
+    (raw.step === undefined ||
+      (raw.step as number) >= analyticsOnboardingSteps.length)
+  )
+    return { error: "step must name an onboarding screen" };
+  if (eventName === "wizard_step_viewed") {
+    if (raw.flowId === undefined)
+      return { error: "flowId is required for wizard_step_viewed" };
+    if (
+      raw.step === undefined ||
+      (raw.step as number) >= analyticsWizardStepCount
+    )
+      return { error: "step must be a wizard screen from 0 to 6" };
+  }
+  if (
+    eventName !== "onboarding_step_viewed" &&
+    eventName !== "wizard_step_viewed" &&
+    raw.step !== undefined
+  )
+    return { error: "step is only allowed for step events" };
 
   return {
     event: {
@@ -224,6 +266,7 @@ export function parseAnalyticsEvent(
       ...(raw.from ? { from: raw.from as AnalyticsRecipeSection } : {}),
       ...(raw.to ? { to: raw.to as AnalyticsRecipeSection } : {}),
       ...(raw.source ? { source: raw.source as AnalyticsSource } : {}),
+      ...(raw.step !== undefined ? { step: raw.step as number } : {}),
       ...(raw.occurredAt !== undefined
         ? { occurredAt: raw.occurredAt as number }
         : {}),
