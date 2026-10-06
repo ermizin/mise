@@ -95,6 +95,13 @@ export function acquisitionSource(
   return referrerSources.find(([pattern]) => pattern.test(host))?.[1] ?? "other";
 }
 
+/* Директ дописывает yclid к переходу по объявлению. Заход с меткой Директа без
+   него — обычно проверка ссылки роботом Яндекса, а не человек из рекламы.
+   Сервер получает только сам факт, без идентификатора клика. */
+export function adClick(search: string): boolean {
+  return new URLSearchParams(search).has("yclid");
+}
+
 export type AnalyticsEventInput = {
   eventId: string;
   eventName: AnalyticsEventName;
@@ -105,6 +112,7 @@ export type AnalyticsEventInput = {
   from?: AnalyticsRecipeSection;
   to?: AnalyticsRecipeSection;
   source?: AnalyticsSource;
+  adClick?: boolean;
   step?: number;
   occurredAt?: number;
 };
@@ -127,6 +135,7 @@ const inputKeys = new Set([
   "from",
   "to",
   "source",
+  "adClick",
   "step",
   "occurredAt",
 ]);
@@ -185,6 +194,8 @@ export function parseAnalyticsEvent(
       !analyticsSources.includes(raw.source as AnalyticsSource))
   )
     return { error: "source is not allowed" };
+  if (raw.adClick !== undefined && typeof raw.adClick !== "boolean")
+    return { error: "adClick must be boolean" };
   if (
     raw.step !== undefined &&
     (!Number.isInteger(raw.step) || (raw.step as number) < 0)
@@ -234,6 +245,8 @@ export function parseAnalyticsEvent(
     return { error: "recipe sections are only allowed for recipe_tab_switched" };
   if (eventName !== "first_open" && raw.source !== undefined)
     return { error: "source is only allowed for first_open" };
+  if (eventName !== "first_open" && raw.adClick !== undefined)
+    return { error: "adClick is only allowed for first_open" };
   if (
     eventName === "onboarding_step_viewed" &&
     (raw.step === undefined ||
@@ -273,6 +286,7 @@ export function parseAnalyticsEvent(
       ...(raw.from ? { from: raw.from as AnalyticsRecipeSection } : {}),
       ...(raw.to ? { to: raw.to as AnalyticsRecipeSection } : {}),
       ...(raw.source ? { source: raw.source as AnalyticsSource } : {}),
+      ...(raw.adClick !== undefined ? { adClick: raw.adClick as boolean } : {}),
       ...(raw.step !== undefined ? { step: raw.step as number } : {}),
       ...(raw.occurredAt !== undefined
         ? { occurredAt: raw.occurredAt as number }

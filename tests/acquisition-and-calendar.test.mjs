@@ -83,6 +83,45 @@ test("the stored channel reaches its own column", async () => {
   assert.match(analyticsDoc, /`source`/);
 });
 
+test("a Direct visit counts as an ad click only when Direct added yclid", () => {
+  const { adClick, parseAnalyticsEvent } = analytics;
+  assert.equal(adClick("?utm_source=yandex_direct&utm_medium=cpc&yclid=8174519233"), true);
+  assert.equal(adClick("?utm_source=yandex_direct&utm_medium=cpc&utm_content=17000123"), false);
+  assert.equal(adClick(""), false);
+
+  const base = { eventId, occurredAt: now };
+  const accepted = parseAnalyticsEvent({ ...base, eventName: "first_open", source: "yandex_direct", adClick: true }, now);
+  assert.equal(accepted.event.adClick, true);
+  assert.equal(parseAnalyticsEvent({ ...base, eventName: "first_open", adClick: false }, now).event.adClick, false);
+  assert.equal("adClick" in parseAnalyticsEvent({ ...base, eventName: "first_open" }, now).event, false);
+  assert.equal(
+    parseAnalyticsEvent({ ...base, eventName: "first_open", adClick: "8174519233" }, now).error,
+    "adClick must be boolean",
+  );
+  assert.equal(
+    parseAnalyticsEvent({ ...base, eventName: "shopping_opened", adClick: true }, now).error,
+    "adClick is only allowed for first_open",
+  );
+});
+
+test("the ad click flag reaches its own column and the click id leaves the address", async () => {
+  const [schema, route, migration, journal, analyticsDoc, page] = await Promise.all([
+    read("db/schema.ts"),
+    read("app/api/analytics/route.ts"),
+    read("drizzle/0008_ad_click.sql"),
+    read("drizzle/meta/_journal.json"),
+    read("ANALYTICS.md"),
+    read("app/page.tsx"),
+  ]);
+  assert.match(schema, /adClick: integer\("ad_click", \{ mode: "boolean" \}\)/);
+  assert.match(route, /adClick: parsed\.event\.adClick \?\? null/);
+  assert.match(migration, /ALTER TABLE `analytics_events` ADD `ad_click` integer;/);
+  assert.ok(JSON.parse(journal).entries.some((entry) => entry.tag === "0008_ad_click"));
+  assert.match(analyticsDoc, /`adClick`/);
+  assert.match(page, /adClick: adClick\(location\.search\)/);
+  assert.match(page, /key\.startsWith\("utm_"\) \|\| key === "yclid"/);
+});
+
 const device = "6f1d2c3b-4a59-4e7f-8a1b-2c3d4e5f6a7b";
 
 test("the calendar link carries plan dates and the device key, nothing about the plan", () => {

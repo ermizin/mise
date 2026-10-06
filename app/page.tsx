@@ -31,6 +31,7 @@ import {
 } from "./notification-setup";
 import {
   acquisitionSource,
+  adClick,
   analyticsOnboardingSteps,
   type AnalyticsSource,
 } from "@/lib/analytics";
@@ -529,6 +530,7 @@ type ClientAnalyticsFields = {
   from?: RecipeSection;
   to?: RecipeSection;
   source?: AnalyticsSource;
+  adClick?: boolean;
   step?: number;
 };
 
@@ -6656,14 +6658,15 @@ export default function Home() {
           location.hostname,
           readInstallEnvironment().installed,
         ),
+        adClick: adClick(location.search),
       },
       "first-open",
     );
-    /* Метка канала нужна один раз. Без неё ссылка, которой человек поделится
-       дальше, не припишет новых людей тому же посту. */
+    /* Метка канала и клика нужна один раз. Без неё ссылка, которой человек
+       поделится дальше, не припишет новых людей тому же посту или объявлению. */
     const landing = new URL(location.href);
-    const tracking = [...landing.searchParams.keys()].filter((key) =>
-      key.startsWith("utm_"),
+    const tracking = [...landing.searchParams.keys()].filter(
+      (key) => key.startsWith("utm_") || key === "yclid",
     );
     if (tracking.length) {
       for (const key of tracking) landing.searchParams.delete(key);
