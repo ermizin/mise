@@ -130,13 +130,20 @@ function buildJobs(plan: NotificationPlan, preferences: StoredPreferences) {
 /* Напоминания через обычный календарь телефона: без установки на домашний экран
    и без системных разрешений. Отдельная вкладка — потому что установленное на
    iPhone приложение не открывает .ics внутри себя, а Safari открывает. */
+export function calendarAddedKey(planId: string) {
+  return `mise-calendar-added-v1:${planId}`;
+}
+
 export function CalendarExportLink({ plan, device, primary = false }: { plan: NotificationPlan; device: string; primary?: boolean }) {
   return <a
     className={`${primary ? "primary-button" : "secondary-button"} calendar-export-link`}
     href={planCalendarPath(plan, device)}
     target="_blank"
     rel="noreferrer"
-    onClick={() => window.dispatchEvent(new Event("mise:calendar-exported"))}
+    onClick={() => {
+      try { localStorage.setItem(calendarAddedKey(plan.id), "1"); } catch { /* the link still works without storage */ }
+      window.dispatchEvent(new Event("mise:calendar-exported"));
+    }}
   >
     <Icon name="calendar" size={16} /> Добавить в календарь
   </a>;

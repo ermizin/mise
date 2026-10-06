@@ -254,3 +254,16 @@ test("a calendar link adopts its device only where there is no plan of one's own
   assert.match(page, /function clientId\(\) \{\s*adoptCalendarDevice\(\);/);
   assert.match(page, /adoptCalendarDevice\(\);\s*if \(dedupeKey && analyticsWasSent\(dedupeKey\)\) return true;/);
 });
+
+test("the week offers the calendar until it was added for this plan", async () => {
+  const [page, setup] = await Promise.all([read("app/page.tsx"), read("app/notification-setup.tsx")]);
+  assert.match(setup, /export function calendarAddedKey\(planId: string\) \{\s*return `mise-calendar-added-v1:\$\{planId\}`;/);
+  assert.match(setup, /localStorage\.setItem\(calendarAddedKey\(plan\.id\), "1"\)[\s\S]{0,140}mise:calendar-exported/);
+  const week = page.slice(page.indexOf("function WeekScreen("), page.indexOf("function WeekScreen(") + 40_000);
+  assert.match(week, /localStorage\.getItem\(calendarAddedKey\(plan\.id\)\) === "1"/);
+  assert.match(week, /addEventListener\("mise:calendar-exported", onExported\)/);
+  assert.match(
+    week,
+    /\{!planEnded && !planEndingSoon && !calendarAdded && \([\s\S]{0,700}<CalendarExportLink\s+plan=\{notificationPlanFor\(plan\)\}\s+device=\{clientId\(\)\}\s+primary\s+\/>/,
+  );
+});

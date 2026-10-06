@@ -6,6 +6,7 @@ import {
   useId,
   useLayoutEffect,
   useMemo,
+  useReducer,
   useRef,
   useState,
   type CSSProperties,
@@ -24,6 +25,7 @@ import { startMenuAssemblyTask } from "@/lib/menu-assembly-task";
 import { ComposePlanGlow, LiquidNavIndicator } from "./ui/library-effects";
 import {
   CalendarExportLink,
+  calendarAddedKey,
   NotificationSetupPanel,
   type NotificationPlan,
 } from "./notification-setup";
@@ -8794,6 +8796,22 @@ function WeekScreen({
     epoch: number;
   } | null>(null);
   const [motionEpoch, setMotionEpoch] = useState(0);
+  /* Отметка хранится по id плана: новый план снова предложит календарь.
+     Событие только перерисовывает экран — ссылка уже записала отметку. */
+  const [, refreshCalendarAdded] = useReducer((count: number) => count + 1, 0);
+  let calendarAdded = true;
+  try {
+    calendarAdded =
+      !plan || localStorage.getItem(calendarAddedKey(plan.id)) === "1";
+  } catch {
+    /* without storage the card would never go away */
+  }
+  useEffect(() => {
+    const onExported = () => refreshCalendarAdded();
+    window.addEventListener("mise:calendar-exported", onExported);
+    return () =>
+      window.removeEventListener("mise:calendar-exported", onExported);
+  }, []);
   useEffect(() => {
     if (!executionMotion) return;
     const timer = window.setTimeout(() => {
@@ -9464,6 +9482,25 @@ function WeekScreen({
         </button>
       )}
       </div>
+      {/* Кто закрыл «План готов!», не добавив календарь, получает ещё один
+          шанс: без календаря через неделю о следующем плане никто не напомнит. */}
+      {!planEnded && !planEndingSoon && !calendarAdded && (
+        <section className="plan-ending-card glass-card week-calendar-card">
+          <div>
+            <p className="kicker">Напоминания без установки</p>
+            <h2>Добавить план в календарь?</h2>
+            <p>
+              Календарь телефона напомнит о готовках, а {formatDate(plan.end)} —
+              собрать следующий план.
+            </p>
+          </div>
+          <CalendarExportLink
+            plan={notificationPlanFor(plan)}
+            device={clientId()}
+            primary
+          />
+        </section>
+      )}
       {planEndingSoon && (
         <section className="plan-ending-card glass-card" role="status">
           <div>
