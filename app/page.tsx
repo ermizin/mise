@@ -14701,7 +14701,7 @@ function SuccessSheet({
             className="secondary-button"
             onClick={() => onOpen("week")}
           >
-            Открыть план <Icon name="chevron" size={16} />
+            Открыть план
           </button>
           <button
             className="secondary-button"
