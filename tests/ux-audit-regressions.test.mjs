@@ -16,9 +16,10 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
   assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
   assert.match(page, /completedChatTurns\.slice\(-1\)/);
   assert.match(page, /Показать предыдущие ответы/);
-  assert.match(page, /Нужно ваше решение[\s\S]*?Выберите, что делать с остатком дней/);
+  // Остаток периода по умолчанию готовится отдельно и не блокирует шаг «Готовка».
+  assert.match(page, /const tailDecision = remainderDecision \?\? "separate";/);
+  assert.doesNotMatch(page, /Выберите, что делать с остатком дней/);
   assert.match(page, /id="builder-composer-status" role="status" aria-live="polite"/);
-  assert.match(css, /\.remainder-sheet\.needs-decision/);
   assert.match(page, /function formatMacro\(value: number\)/);
   assert.match(pluralSource, /function genitiveAfterNumber/);
   assert.match(page, /genitiveAfterNumber\([\s\S]{0,100}\["порции", "порций"\]/);

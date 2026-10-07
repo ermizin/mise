@@ -11233,11 +11233,16 @@ function PlanBuilder({
   const rawDays = daysInclusive(start, end);
   const validPeriod = rawDays >= 1 && rawDays <= 14;
   const remainder = validPeriod ? rawDays % cookEveryDays : 0;
+  /* Неделя по умолчанию не делится на партии по 3 дня, а 7 — простое число:
+     обязательный выбор встречал каждого, кто не менял настройки, и кнопка
+     стояла неактивной. По умолчанию остаток готовится отдельной мини-партией —
+     даты человека не меняются; добавить или убрать дни можно тем же выбором. */
+  const tailDecision = remainderDecision ?? "separate";
   const resolvedDays = !remainder
     ? rawDays
-    : remainderDecision === "extend"
+    : tailDecision === "extend"
       ? rawDays + cookEveryDays - remainder
-      : remainderDecision === "shorten"
+      : tailDecision === "shorten"
         ? rawDays - remainder
         : rawDays;
   const resolvedPeriodValid = resolvedDays >= 1 && resolvedDays <= 14;
@@ -11652,7 +11657,7 @@ function PlanBuilder({
       );
     if (index === 4)
       return (
-        resolvedPeriodValid && kitchenGaps.length === 0 && (remainder === 0 || remainderDecision !== null)
+        resolvedPeriodValid && kitchenGaps.length === 0
       );
     if (index === 5) {
       if (pendingMethods.length) return false;
@@ -12024,19 +12029,12 @@ function PlanBuilder({
     step === 5 &&
     menuMode === "auto" &&
     !chatTransition;
-  const needsRemainderDecision =
-    step === 4 && remainder > 0 && remainderDecision === null;
   /* Неактивная кнопка без причины — тупик: на телефоне статус скрыт ради
      компактности, поэтому причина блокировки показывается отдельно. */
   const composerBlocker =
     chatTransition || mode === "settings" || step > 5 || stepIsValid()
       ? null
-      : needsRemainderDecision
-        ? {
-            title: "Нужно ваше решение",
-            detail: "Выберите, что делать с остатком дней",
-          }
-        : step === 0
+      : step === 0
           ? { title: "Проверьте даты", detail: "План можно составить на срок от 1 до 14 дней" }
           : step === 1
             ? { title: "Выберите приём пищи", detail: "Нужна хотя бы одна позиция меню" }
@@ -12338,7 +12336,7 @@ function PlanBuilder({
                 periodDays={rawDays}
                 cookEveryDays={cookEveryDays}
                 remainder={remainder}
-                decision={remainderDecision}
+                decision={tailDecision}
                 start={start}
                 resolvedDays={resolvedDays}
                 canExtend={rawDays + cookEveryDays - remainder <= 14}
@@ -13692,11 +13690,11 @@ function CookingStep({
       </section>
       {remainder > 0 && (
         <div
-          className={`remainder-sheet glass-card${decision === null ? " needs-decision" : ""}`}
+          className="remainder-sheet glass-card"
           role="radiogroup"
           aria-label="Как поступить с остатком"
         >
-          <p className="kicker">Нужно ваше решение</p>
+          <p className="kicker">Остаток периода</p>
           <h3>
             {withPlural(periodDays, FORMS.day)} не делятся на {cookEveryDays} без остатка
           </h3>

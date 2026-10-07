@@ -3839,10 +3839,6 @@ p {
 .remainder-sheet {
   margin-top: var(--space-3);
 }
-.remainder-sheet.needs-decision {
-  outline: 2px solid rgba(242, 87, 26, 0.36);
-  outline-offset: 2px;
-}
 .remainder-sheet h3 {
   margin: 6px 0;
   font-size: var(--text-h2);

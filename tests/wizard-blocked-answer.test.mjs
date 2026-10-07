@@ -12,7 +12,7 @@ const cookingStep = page.slice(
   page.indexOf("/* Шаг «Выбор меню»"),
 );
 
-test("the cooking step shows its own question and the required decision before the kitchen list", () => {
+test("the cooking step shows its own question and the leftover choice before the kitchen list", () => {
   assert.ok(cookingStep.length > 0, "the cooking step is present");
   const intro = cookingStep.indexOf('title="На сколько дней готовим за раз?"');
   const rhythm = cookingStep.indexOf('className="day-scale"');
@@ -43,9 +43,10 @@ test("a disabled answer button says why, on a phone as well", () => {
     page.indexOf("if (previewRecipe) return <RecipeView"),
   );
   assert.ok(composer.length > 0, "the wizard derives a blocker");
+  // Остаток периода по умолчанию готовится отдельно и шаг «Готовка» не блокирует.
+  assert.doesNotMatch(composer, /Выберите, что делать с остатком дней/);
   assert.match(composer, /stepIsValid\(\)\s*\?\s*null/, "a valid step has no blocker");
   for (const reason of [
-    "Выберите, что делать с остатком дней",
     "План можно составить на срок от 1 до 14 дней",
     "Нужна хотя бы одна позиция меню",
     "Каждому нужны имя, норма",
