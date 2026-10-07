@@ -8866,6 +8866,23 @@ function WeekPersonPicker({ people, value, onChange }: {
   );
 }
 
+/* Отметка хранится по id плана: новый план снова предложит календарь.
+   Событие только перерисовывает экран — ссылка уже записала отметку. */
+function useCalendarAdded(planId?: string) {
+  const [, refreshCalendarAdded] = useReducer((count: number) => count + 1, 0);
+  useEffect(() => {
+    const onExported = () => refreshCalendarAdded();
+    window.addEventListener("mise:calendar-exported", onExported);
+    return () =>
+      window.removeEventListener("mise:calendar-exported", onExported);
+  }, []);
+  try {
+    return !planId || localStorage.getItem(calendarAddedKey(planId)) === "1";
+  } catch {
+    /* without storage the card would never go away */
+    return true;
+  }
+}
 function WeekScreen({
   plan,
   loading,
@@ -8908,22 +8925,7 @@ function WeekScreen({
     epoch: number;
   } | null>(null);
   const [motionEpoch, setMotionEpoch] = useState(0);
-  /* Отметка хранится по id плана: новый план снова предложит календарь.
-     Событие только перерисовывает экран — ссылка уже записала отметку. */
-  const [, refreshCalendarAdded] = useReducer((count: number) => count + 1, 0);
-  let calendarAdded = true;
-  try {
-    calendarAdded =
-      !plan || localStorage.getItem(calendarAddedKey(plan.id)) === "1";
-  } catch {
-    /* without storage the card would never go away */
-  }
-  useEffect(() => {
-    const onExported = () => refreshCalendarAdded();
-    window.addEventListener("mise:calendar-exported", onExported);
-    return () =>
-      window.removeEventListener("mise:calendar-exported", onExported);
-  }, []);
+  const calendarAdded = useCalendarAdded(plan?.id);
   useEffect(() => {
     if (!executionMotion) return;
     const timer = window.setTimeout(() => {
@@ -15453,6 +15455,7 @@ function RecipeView({
   onEditKitchen?: () => void;
 }) {
   const { recipe, batch, slot, plan } = context;
+  const calendarAdded = useCalendarAdded(plan?.id);
   const cookingMethod = plan ? planCookingMethod(recipe, plan) : cookingMethodFor(recipe);
   const displayMethod = plan ? planDisplayMethod(recipe, plan) : cookingMethod;
   const cookingTime = displayMethod?.timeMinutes ?? recipe.time;
@@ -15782,6 +15785,23 @@ function RecipeView({
                 .join("; ")}. Разделите инвентарь и поверхности.
             </p>
           </div>
+        </section>
+      )}
+      {/* 7 октября 2026 года 16 из 17 человек из рекламы, сохранив план,
+          нажали «Открыть план» вместо календаря и ушли в рецепты. Без календаря
+          о готовке и следующем плане им никто не напомнит, поэтому предложение
+          повторяется там, где они проводят время, — пока календарь не добавлен. */}
+      {plan && batch && !calendarAdded && (
+        <section className="recipe-calendar-card glass-card">
+          <div>
+            <p className="kicker">Когда готовить</p>
+            <p>
+              Готовка {batch.index + 1} — {formatDate(batch.start)}. Добавьте
+              план в календарь: телефон напомнит о готовке, а{" "}
+              {formatDate(plan.end)} — собрать следующий.
+            </p>
+          </div>
+          <CalendarExportLink plan={notificationPlanFor(plan)} device={clientId()} />
         </section>
       )}
       <div className="detail-tabs glass-1" role="tablist" aria-label="Раздел рецепта">

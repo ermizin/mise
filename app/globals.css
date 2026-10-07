@@ -5463,6 +5463,12 @@ p {
 .plan-ending-card div > p:last-child { margin-top: 6px; color: var(--ink-body); font-size: var(--text-s); }
 .plan-ending-card .primary-button { width: 100%; }
 
+/* Календарь в рецепте: туда уходят сразу после «План готов!». */
+.recipe-calendar-card { position: relative; z-index: 2; margin-bottom: 12px; padding: var(--pad-nested); display: grid; gap: 12px; }
+.recipe-calendar-card p { margin: 0; }
+.recipe-calendar-card div > p:last-child { margin-top: 4px; color: var(--ink-body); font-size: var(--text-s); }
+.recipe-calendar-card .calendar-export-link { width: 100%; }
+
 .week-move-reason { grid-column: 3 / -1; margin: -4px 0 0; color: var(--accent-text-strong); font-size: var(--text-min); line-height: 1.35; }
 .unassigned-slots-sheet { display: grid; gap: 12px; text-align: left; }
 .unassigned-slots-sheet h2,

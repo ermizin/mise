@@ -302,11 +302,25 @@ test("the week offers the calendar until it was added for this plan", async () =
   const [page, setup] = await Promise.all([read("app/page.tsx"), read("app/notification-setup.tsx")]);
   assert.match(setup, /export function calendarAddedKey\(planId: string\) \{\s*return `mise-calendar-added-v1:\$\{planId\}`;/);
   assert.match(setup, /localStorage\.setItem\(calendarAddedKey\(plan\.id\), "1"\)[\s\S]{0,140}mise:calendar-exported/);
+  const hook = page.slice(page.indexOf("function useCalendarAdded("), page.indexOf("function WeekScreen("));
+  assert.match(hook, /localStorage\.getItem\(calendarAddedKey\(planId\)\) === "1"/);
+  assert.match(hook, /addEventListener\("mise:calendar-exported", onExported\)/);
   const week = page.slice(page.indexOf("function WeekScreen("), page.indexOf("function WeekScreen(") + 40_000);
-  assert.match(week, /localStorage\.getItem\(calendarAddedKey\(plan\.id\)\) === "1"/);
-  assert.match(week, /addEventListener\("mise:calendar-exported", onExported\)/);
+  assert.match(week, /const calendarAdded = useCalendarAdded\(plan\?\.id\);/);
   assert.match(
     week,
     /\{!planEnded && !planEndingSoon && !calendarAdded && \([\s\S]{0,700}<CalendarExportLink\s+plan=\{notificationPlanFor\(plan\)\}\s+device=\{clientId\(\)\}\s+primary\s+\/>/,
   );
+});
+
+test("a recipe from the saved plan offers the calendar until it was added", async () => {
+  const page = await read("app/page.tsx");
+  const recipe = page.slice(page.indexOf("function RecipeView("), page.indexOf("function RecipeView(") + 20_000);
+  assert.match(recipe, /const calendarAdded = useCalendarAdded\(plan\?\.id\);/);
+  // Только у рецепта из сохранённого плана: у предпросмотра в мастере нет партии.
+  assert.match(
+    recipe,
+    /\{plan && batch && !calendarAdded && \([\s\S]{0,600}<CalendarExportLink plan=\{notificationPlanFor\(plan\)\} device=\{clientId\(\)\} \/>/,
+  );
+  assert.ok(recipe.indexOf("recipe-calendar-card") < recipe.indexOf('className="detail-tabs'), "the offer is above the recipe tabs");
 });
