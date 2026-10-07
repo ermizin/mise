@@ -134,7 +134,7 @@
     {
       "id": "tmpm-27306",
       "slot": "lunch",
-      "title": "Паста с колбасками и перцем в одной кастрюле",
+      "title": "Паста со свиным фаршем и перцем в одной кастрюле",
       "recipeFamilyId": "raw-tmpm-27306",
       "shoppingIngredientCount": 11,
       "procedureIngredientCount": 9,
@@ -710,7 +710,7 @@
     {
       "id": "tmpm-22968",
       "slot": "lunch",
-      "title": "Сытная паста с ветчиной",
+      "title": "Сытная паста с говяжьим фаршем",
       "recipeFamilyId": "raw-tmpm-22968",
       "shoppingIngredientCount": 14,
       "procedureIngredientCount": 3,

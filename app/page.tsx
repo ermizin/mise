@@ -6203,11 +6203,95 @@ function combinationBonus(recipe: Recipe, selectedRecipes: Recipe[]) {
   const newProducts = recipe.ingredients.length - shared;
   return shared * 18 - newProducts * 2;
 }
+/* Бонус за общие продукты сам по себе тянул за одной пастой следующие: фарш,
+   макароны, томаты и бульон совпадают, и меню по умолчанию собирало пять паст
+   из шести обедов и ужинов. Поэтому обеды и ужины штрафуются за ту же основу
+   и тот же главный белок, что уже есть среди обедов и ужинов плана, и за то же
+   блюдо в другом основном приёме. Это только порядок кандидатов: ни одно
+   блюдо не исключается. Основа и белок берутся из canonical ID, не из названия. */
+const menuBaseFamilies: [string, RegExp][] = [
+  ["pasta", /^(pasta|glass_noodles|noodles|spaghetti|lasagn)/],
+  ["rice", /^(rice_raw|brown-rice)$/],
+  ["potato", /^(potato_raw|sweet_potato_raw)$/],
+  ["buckwheat", /^buckwheat/],
+  ["bulgur", /^(bulgur|couscous|giant_couscous)/],
+  ["quinoa", /^quinoa/],
+  ["millet", /^millet/],
+  ["barley", /^pearl_barley/],
+  ["wrap", /^(tortilla|corn_tortilla|flatbread)/],
+];
+const menuProteinFamilies: [string, RegExp][] = [
+  ["beef", /^beef/],
+  ["pork", /^(pork|ham_|bacon|sausage_processed)/],
+  ["chicken", /^(chicken|popcorn_chicken)/],
+  ["turkey", /^turkey/],
+  ["fish", /^(cod|pollock|salmon|tuna|fish_)/],
+  ["prawns", /^prawns/],
+  ["legumes", /^(black_beans|white_beans|red_beans|pinto_beans|broad_beans|beans$|chickpeas|lentils|red_lentils)/],
+  ["tofu", /^(tofu|vegetarian_mince)/],
+  ["lamb", /^lamb/],
+];
+const menuVarietyCache = new Map<string, { base?: string; protein?: string }>();
+function menuVarietyOf(recipe: Recipe) {
+  const cached = menuVarietyCache.get(recipe.id);
+  if (cached) return cached;
+  const ids = recipe.ingredients.map((ingredient) => ({
+    id: canonicalShoppingIngredient(ingredient)?.id ?? canonicalIdForIngredient(ingredient),
+    grams: ingredient.unit === "шт." ? 0 : ingredient.quantity,
+  }));
+  const base = menuBaseFamilies.find(([, pattern]) =>
+    ids.some(({ id }) => pattern.test(id)),
+  )?.[0];
+  let protein: string | undefined;
+  let proteinGrams = -1;
+  for (const [family, pattern] of menuProteinFamilies) {
+    const grams = ids
+      .filter(({ id }) => pattern.test(id))
+      .reduce((sum, item) => sum + item.grams, 0);
+    if (ids.some(({ id }) => pattern.test(id)) && grams > proteinGrams) {
+      protein = family;
+      proteinGrams = grams;
+    }
+  }
+  const variety = { base, protein };
+  menuVarietyCache.set(recipe.id, variety);
+  return variety;
+}
+function isMainMealSlot(slot: MealSlot) {
+  return slot === "lunch" || slot === "dinner";
+}
+function mainMenuRecipes(
+  assignments: Record<string, RecipeAssignment[]>,
+  exceptKey?: string,
+) {
+  return Object.entries(assignments).flatMap(([key, items]) =>
+    key !== exceptKey && /:(lunch|dinner)$/.test(key)
+      ? items.flatMap((assignment) =>
+          recipesById[assignment.recipeId] ? [recipesById[assignment.recipeId]] : [],
+        )
+      : [],
+  );
+}
+function menuVarietyPenalty(recipe: Recipe, slot: MealSlot, mainRecipes: Recipe[]) {
+  if (!isMainMealSlot(slot)) return 0;
+  const { base, protein } = menuVarietyOf(recipe);
+  return mainRecipes.reduce((penalty, main) => {
+    if (main.id === recipe.id) return penalty + 240;
+    const other = menuVarietyOf(main);
+    return (
+      penalty +
+      (base && other.base === base ? 150 : 0) +
+      (protein && other.protein === protein ? 100 : 0)
+    );
+  }, 0);
+}
 function chooseMenuCandidate(
   options: Recipe[],
   used: Set<string>,
   avoid: Set<string>,
   selectedRecipes: Recipe[],
+  slot: MealSlot,
+  mainRecipes: Recipe[],
 ) {
   return [...options]
     .map((recipe, index) => ({
@@ -6215,6 +6299,7 @@ function chooseMenuCandidate(
       score:
         -index * 8 +
         combinationBonus(recipe, selectedRecipes) -
+        menuVarietyPenalty(recipe, slot, mainRecipes) -
         (used.has(recipe.id) ? 240 : 0) -
         (avoid.has(recipe.id) ? 1_000 : 0),
     }))
@@ -6232,6 +6317,7 @@ function automaticAssignmentsFor(
   avoid: Set<string>,
   selectedRecipes: Recipe[],
   kitchenEquipment?: KitchenEquipment[],
+  mainRecipes: Recipe[] = [],
 ) {
   const eaters = relevantPeople(people, slot);
   if (!eaters.length) return [];
@@ -6243,6 +6329,8 @@ function automaticAssignmentsFor(
     used,
     avoid,
     selectedRecipes,
+    slot,
+    mainRecipes,
   );
   if (shared)
     return [{ recipeId: shared.id, personIds: eaters.map((person) => person.id) }];
@@ -6291,6 +6379,7 @@ function automaticAssignmentsFor(
               : [],
           ),
         ]) -
+        menuVarietyPenalty(left.recipe, slot, mainRecipes) -
         (used.has(left.recipe.id) ? 240 : 0) -
         (avoid.has(left.recipe.id) ? 1_000 : 0);
       const rightScore =
@@ -6304,6 +6393,7 @@ function automaticAssignmentsFor(
               : [],
           ),
         ]) -
+        menuVarietyPenalty(right.recipe, slot, mainRecipes) -
         (used.has(right.recipe.id) ? 240 : 0) -
         (avoid.has(right.recipe.id) ? 1_000 : 0);
       return rightScore - leftScore || left.recipe.id.localeCompare(right.recipe.id);
@@ -11771,6 +11861,7 @@ function PlanBuilder({
         avoid,
         selectedRecipes,
         kitchenEquipment,
+        mainMenuRecipes(updatedAssignments, key),
       );
       if (!assignmentCoverageComplete(people, slot, assignments)) {
         yield;
@@ -11907,6 +11998,7 @@ function PlanBuilder({
       new Set(),
       selectedRecipes,
       kitchenEquipment,
+      mainMenuRecipes(validSelectionAssignments, key),
     );
     if (!assignmentCoverageComplete(people, position.slot, assignments))
       return false;

@@ -102,6 +102,7 @@ test("production menu generator returns the same fill and reset result when yiel
       recipesById,
       selectionKey: (batch, slot) => `${batch.id}::${slot}`,
       assignmentCoverageComplete: (_people, _slot, assignments) => assignments.some((item) => item.personIds.includes("one")),
+      mainMenuRecipes: () => [],
       automaticAssignmentsFor: (slot, _style, _people, _days, used, avoid) => {
         const options = slot === "breakfast" ? ["oats", "eggs"] : ["rice", "beans"];
         const recipeId = options.find((id) => !used.has(id) && !avoid.has(id))
