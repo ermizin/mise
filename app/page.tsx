@@ -35,6 +35,10 @@ import {
   analyticsOnboardingSteps,
   type AnalyticsSource,
 } from "@/lib/analytics";
+import {
+  reachYandexMetrikaGoal,
+  startYandexMetrika,
+} from "@/lib/yandex-metrika";
 import { Icon, type IconName } from "./ui/icon";
 import { Note } from "./ui/note";
 import { ActionBar } from "./ui/action-bar";
@@ -4780,6 +4784,7 @@ async function trackAnalytics(
        браузер исходным устройством, у которого first_open уже записан. */
     adoptCalendarDevice();
     if (dedupeKey && analyticsWasSent(dedupeKey)) return true;
+    reachYandexMetrikaGoal(eventName);
     const idKey = dedupeKey ? analyticsKey("id", dedupeKey) : null;
     const storedId = idKey ? localStorage.getItem(idKey) : null;
     const eventId = storedId ?? crypto.randomUUID();
@@ -6649,6 +6654,7 @@ export default function Home() {
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
   useEffect(() => {
+    startYandexMetrika();
     void trackAnalytics(
       "first_open",
       {
