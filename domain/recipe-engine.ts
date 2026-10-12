@@ -129,6 +129,10 @@ export type CanonicalIngredient = {
   category: string;
   state: "raw" | "cooked" | "processed";
   nutritionPer100g: Nutrition;
+  /** Dietary fiber, g per 100 g, already included in `nutritionPer100g.carbs`. */
+  fiberPer100g: number;
+  /** FDC record (`fdc:<id>` or the nutrition record id) or `label` average. */
+  fiberReference: { record: string; note: string };
   allergens: string[];
   unit: {
     sensibleUnit: RecipeUnit;
@@ -1043,11 +1047,256 @@ const densityByLegacyId: Record<string, number> = {
   "mustard-seeds": 0.7,
 };
 
+/* Клетчатка (пищевые волокна), г на 100 г в том же состоянии продукта, что и
+   его canonical-профиль КБЖУ: сухая крупа, сырые овощи, варёные бобовые.
+   USDA FoodData Central, нутриент 291 «Fiber, total dietary», проверено
+   2026-10-12. `[g]` — та же запись FDC, что и у КБЖУ продукта;
+   `[g, "fdc:<id>", …]` — ближайшая запись FDC для профиля без своей записи
+   или без клетчатки в ней; `[g, "label", …]` — средняя этикетка, у марок
+   отличается. Углеводы USDA считаются «by difference» и уже включают
+   клетчатку: она показывается как «в т.ч.», а не вычитается из углеводов. */
+export const FIBER_CHECKED_AT = "2026-10-12";
+type FiberSource = readonly [gramsPer100g: number, record?: string, note?: string];
+const fiberPer100gByLegacyId: Readonly<Record<string, FiberSource>> = {
+  "tvorog-5": [0, "fdc:172179", "Brand label (Простоквашино) has no fiber; USDA creamed cottage cheese = 0."],
+  "bbq-sauce": [0.9],
+  beef: [0],
+  "beef-mince": [0],
+  berries: [2.4],
+  "black-beans": [8.7],
+  broccoli: [2.6],
+  broth: [0],
+  bouillon: [0],
+  buckwheat: [10.3],
+  cabbage: [2.5],
+  carrot: [2.8],
+  cauliflower: [2],
+  cheese: [0],
+  chicken: [0],
+  "chicken-thigh": [0],
+  corn: [2.8],
+  cottage: [0],
+  cream: [0, "fdc:171255", "Dairy cream 10%; half-and-half profile, fiber 0."],
+  "cream-cheese": [0],
+  cucumber: [0.5],
+  egg: [0],
+  feta: [0],
+  gochujang: [2.5, "label", "No SR/Foundation record. Rice + red-pepper paste; EU/KR labels typically 2–4 g fiber/100 g."],
+  greens: [3.3],
+  ginger: [2],
+  honey: [0.2],
+  "hot-sauce": [2.2],
+  hummus: [5.5],
+  jalapeno: [2.8],
+  lettuce: [2.1],
+  lime: [2.8],
+  mayonnaise: [0],
+  milk: [0],
+  mushrooms: [1],
+  oats: [10.6],
+  onion: [1.7],
+  "green-onion": [2.6],
+  strawberries: [2],
+  "milk-powder": [0],
+  "glass-noodles": [0.5],
+  parmesan: [0],
+  pasta: [3.2],
+  peas: [5.5],
+  pepper: [2.1],
+  pickles: [1],
+  "pork-mince": [0, "fdc:168372", "Pork, ground, 84% lean / 16% fat, raw + Pork, ground, 96% lean / 4% fat, raw (interpolated)"],
+  potato: [2.1],
+  pumpkin: [2, "fdc:169295", "Squash, winter, butternut, raw: Russian table pumpkin is closer to butternut than to USDA pumpkin (0.5 g); КБЖУ stay on the pumpkin record."],
+  "red-beans": [7.4],
+  rice: [1.3],
+  "roasted-pepper": [1.2],
+  salmon: [0],
+  salsa: [1.9],
+  soy: [0.8],
+  spinach: [2.2],
+  "sweet-potato": [3],
+  tomato: [1.2],
+  "tomato-passata": [1.9],
+  "tomato-paste": [4.1],
+  tortilla: [3.3],
+  "turkey-mince": [0],
+  yogurt: [0],
+  zucchini: [1],
+  "olive-oil": [0],
+  butter: [0],
+  "brown-sugar": [0],
+  "white-sugar": [0],
+  "maple-syrup": [0],
+  mirin: [0, "label", "Sweet rice seasoning (sugars/alcohol); no fiber."],
+  poppadum: [18.6, "fdc:168106", "USDA 'Papad' (urad/lentil dough, dry) matches seed kcal/fat; rice- or potato-based ready-to-eat poppadums are far lower."],
+  garlic: [2.1],
+  "egg-white": [0],
+  celery: [1.6],
+  "wheat-flour": [2.7],
+  "peanut-butter": [5],
+  "canola-oil": [0],
+  "sesame-oil": [0],
+  "coconut-oil": [0],
+  "heavy-cream": [0],
+  "sour-cream": [0],
+  ricotta: [0],
+  mozzarella: [0],
+  banana: [2.6],
+  quinoa: [7],
+  tofu: [2.3],
+  "turkey-breast": [0],
+  pollock: [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero). FDC 173725 does not report 291."],
+  millet: [8.5],
+  "pearl-barley": [15.6],
+  chia: [34.4],
+  flaxseed: [27.3],
+  dates: [8],
+  "dried-apricots": [7.3],
+  "pumpkin-seeds": [6],
+  "sunflower-seeds": [8.6],
+  "almond-flour": [9.9],
+  "chicken-liver": [0],
+  "pinto-beans": [9],
+  "oat-flour": [6.5],
+  ketchup: [0.3],
+  "beef-mince-90": [0],
+  "beef-mince-85": [0],
+  "turkey-mince-93": [0],
+  "chicken-mince": [0],
+  kale: [4.1],
+  "black-beans-dry": [15.5],
+  "ricotta-part-skim": [0],
+  raisins: [4.5],
+  "ham-steak": [0],
+  "red-cabbage": [2.1],
+  "active-dry-yeast": [26.9],
+  olives: [1.6],
+  "green-chiles": [1.7],
+  "tomato-sauce": [1.4],
+  "teriyaki-sauce": [0.1],
+  "corn-tortilla": [5.2],
+  "vegetable-oil": [0],
+  "sesame-seeds": [11.8],
+  cocoa: [37],
+  chickpeas: [7.6],
+  tahini: [9.3],
+  mustard: [4],
+  "oyster-sauce": [0.3],
+  worcestershire: [0],
+  vinegar: [0],
+  lemon: [0.3],
+  "lime-juice": [0.4],
+  starch: [0.9],
+  "vegetable-broth": [0],
+  "sunflower-oil": [0],
+  capers: [3.2],
+  lentils: [10.7],
+  "lentils-cooked": [7.9],
+  "red-lentils": [10.8],
+  "whole-milk": [0],
+  apple: [2.4],
+  applesauce: [1.1],
+  avocado: [6.7],
+  provolone: [0],
+  "brussels-sprouts": [3.8],
+  eggplant: [3, "fdc:169228", "Eggplant, raw"],
+  arugula: [1.6, "fdc:169387", "Arugula, raw"],
+  asparagus: [2.1, "fdc:168389", "Asparagus, raw"],
+  "baby-corn": [2, "label", "No SR/Foundation record; EU/UK baby-corn labels ~1.7–2.2 g. Sweet corn raw (169998) = 2.0 g but 86 kcal."],
+  "beetroot-cooked": [2, "fdc:169146", "Beets, cooked, boiled, drained"],
+  "pasta-cooked": [1.8, "fdc:169737", "White enriched pasta, cooked. Whole-wheat cooked (172024) = 4.5 g."],
+  couscous: [5, "fdc:169699", "Couscous, dry"],
+  bulgur: [12.5, "fdc:170688", "Bulgur, dry"],
+  "giant-couscous": [5, "fdc:169699", "Pearl/Israeli couscous uses regular couscous dry profile; labels ~3–5 g."],
+  cornmeal: [3.9, "fdc:168867", "Degermed cornmeal matches seed macros; whole-grain cornmeal is ~7 g."],
+  breadcrumbs: [4.5, "fdc:174928", "Bread, crumbs, dry, grated, plain"],
+  "puff-pastry": [1.5, "fdc:172790", "Puff pastry, frozen, ready-to-bake"],
+  halloumi: [0, "label", "Cheese; no fiber."],
+  mascarpone: [0, "label", "Cheese; no fiber."],
+  "creme-fraiche": [0, "label", "Cultured cream; no fiber."],
+  "coconut-milk": [2.2, "fdc:170172", "Seed macros equal USDA raw coconut milk (2.2 g). USDA canned (170173) has no 291; canned brand labels list 0–1.5 g."],
+  "creamed-coconut": [16.3, "fdc:170170", "Creamed coconut = ground whole coconut flesh; desiccated unsweetened coconut 16.3 g. USDA 'creamed' record 168585 has no 291."],
+  "white-beans": [6.3, "fdc:175203", "Beans, white, mature seeds, cooked, boiled, without salt"],
+  "broad-beans": [5.4, "fdc:173753", "Broadbeans (fava beans), mature seeds, cooked, boiled, without salt"],
+  "green-beans": [2.7, "fdc:169961", "Beans, snap, green, raw"],
+  "hash-browns": [2.4, "label", "Frozen pre-fried hash browns (EU labels ~2–2.5 g). USDA frozen plain unprepared 170043 = 1.4 g, with butter sauce prepared 170046 = 3.8 g."],
+  pomegranate: [4, "fdc:169134", "Pomegranates, raw"],
+  apricot: [2, "fdc:171697", "Apricots, raw"],
+  mango: [1.6, "fdc:169910", "Mangos, raw"],
+  cherries: [2.1, "fdc:171719", "Cherries, sweet, raw"],
+  "pine-nuts": [3.7, "fdc:170591", "Nuts, pine nuts, dried"],
+  walnuts: [6.7, "fdc:170187", "Nuts, walnuts, english"],
+  almonds: [12.5, "fdc:170567", "Nuts, almonds"],
+  peanuts: [8.5, "fdc:172430", "Peanuts, all types, raw"],
+  "dried-cranberries": [5.3, "fdc:171723", "Cranberries, dried, sweetened (Includes foods for USDA's Food Distribution Program)"],
+  "dark-chocolate": [10.9, "fdc:170273", "Seed equals USDA 70–85% cacao; 45–59% cacao (170271) = 7.0 g."],
+  "pork-fillet": [0, "fdc:168312", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "pork-shoulder": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  sausage: [0, "fdc:172934", "USDA pork sausage = 0; UK-style sausages with rusk (seed has gluten) carry ~0.5–1 g."],
+  "chicken-sausage": [0, "label", "Meat sausage; rusk/filler variants ~0.5 g."],
+  bacon: [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  cod: [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "prawns-cooked": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "tuna-canned": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "salmon-cooked": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "beef-stewing": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  lamb: [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "orange-juice": [0.2, "fdc:169098", "Orange juice, raw (Includes foods for USDA's Food Distribution Program)"],
+  ghee: [0, "label", "Pure milk fat; no fiber."],
+  "red-wine": [0, "fdc:173190", "Alcoholic beverage, wine, table, red"],
+  "protein-powder": [0, "label", "Whey/milk protein; some brands add inulin/gums (1–5 g). USDA 'protein powder whey based' 173180 lists 3.1 g."],
+  "casein-powder": [0, "label", "Micellar casein; some brands add gums/inulin (1–3 g)."],
+  "corn-chex": [3.2, "label", "Not in SR Legacy search; US label recall ~1 g fiber per 31 g serving. Comparable corn RTE cereals 1.9–2.7 g."],
+  maseca: [6.4, "fdc:169694", "Masa harina; Foundation 2710835 = 7.04 g."],
+  granola: [5.3, "fdc:167542", "Seed macros equal USDA 'granola bars, hard, plain' (5.3 g); homemade granola 171646 = 8.9 g; loose commercial granola labels 5–8 g."],
+  "mixed-vegetables": [4, "fdc:170471", "US frozen mix (carrot/corn/peas/beans); EU mixes similar 3–4 g."],
+  "fish-pie-mix": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "buffalo-sauce": [0.5, "label", "Hot sauce + butter; brand labels 0–1 g."],
+  "chili-garlic-oil": [4, "label", "Crispy chili oil (chili flakes, fried garlic/soy in oil); EU labels ~3–6 g."],
+  pesto: [1.7, "fdc:171580", "Seed macros close to USDA shelf-stable pesto."],
+  "fish-sauce": [0, "fdc:174531", "Sauce, fish, ready-to-serve"],
+  dressing: [0.4, "fdc:171043", "Honey-mustard regular dressing (egg+mustard); dressings range 0–2.4 g."],
+  "rice-cake": [4.2, "fdc:170250", "Seed equals USDA brown-rice cakes plain; white puffed rice cakes are lower (~1–3 g)."],
+  tteok: [0.5, "label", "Plain rice-flour cakes; Foundation white rice flour 790214 = 0.5 g; KR food DB ~0.4–1 g."],
+  kimchi: [1.6, "fdc:170392", "Cabbage, kimchi"],
+  bread: [2.7, "fdc:174924", "Generic white bread; Russian rye/wholegrain breads ('Бородинский') 5–8 g."],
+  splenda: [0, "fdc:170257", "Sweeteners, tabletop, sucralose, SPLENDA packets"],
+  "beef-meatballs": [2.3, "fdc:171638", "USDA frozen Italian-style meatballs."],
+  "popcorn-chicken": [1.6, "fdc:172111", "USDA breaded chicken nuggets (dark+white); white-meat nuggets 172112 = 0.7 g."],
+  "seed-mix": [9, "label", "Mix of sunflower (8.6), pumpkin (6.0), sesame (11.8), linseed (27.3); with linseed share the mix rises to 10–13 g."],
+  "mushrooms-dried": [11.5, "fdc:168436", "Seed equals USDA dried shiitake."],
+  "tikka-sauce": [1.3, "label", "Jarred cooking sauce (tomato, onion, cream); EU labels 1–2 g."],
+  "curry-paste": [4, "label", "Thai red curry paste (shrimp allergen); labels 3–6 g; Indian pastes similar."],
+  "taco-seasoning": [13.3, "fdc:172243", "USDA taco seasoning mix dry (13.3 g); seed has more fat/protein, brands 6–13 g."],
+  anchovies: [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  "pork-mince-80": [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+  cashews: [3.3, "fdc:170162", "Nuts, cashew nuts, raw"],
+  "bulgur-quinoa-mix": [9.8, "label", "50/50 average of bulgur dry 170688 (12.5) and quinoa 168874 (7.0)."],
+  "egg-yolk": [0, "fdc:172184", "Egg, yolk, raw, fresh"],
+  "vegetarian-mince": [4.6, "fdc:169067", "USDA meatless meatballs (soy); soy/pea mince labels 3–6 g, mycoprotein ~5–6 g."],
+  "whipped-cream": [0, "label", "Dairy cream; no fiber."],
+  "mango-chutney": [1, "label", "EU labels (sweet mango chutney) ~0.8–1.5 g."],
+  "soy-milk": [0.6, "fdc:172446", "Unfortified original soymilk; Alpro-type labels 0.5 g."],
+  orange: [2.4, "fdc:169097", "Oranges, raw, all commercial varieties"],
+  peaches: [1.5, "fdc:169928", "Peaches, yellow, raw"],
+  radish: [1.6, "fdc:169276", "Radishes, raw"],
+  "miso-paste": [5.4, "fdc:172442", "Seed equals USDA miso."],
+  "sun-dried-tomatoes": [12.3, "fdc:168567", "Dry (not oil-packed; oil-packed drained 169384 = 5.8 g)."],
+  "trail-mix": [5, "fdc:167969", "USDA trail mix with chocolate chips (5.0 g); USDA 'regular' 167561 has no 291. Raisin+nut mixes ~5–6 g."],
+  "pomegranate-molasses": [0, "label", "Reduced juice syrup; labels 0–0.6 g."],
+  "protein-pancake-mix": [4, "label", "Labels vary 2–9 g (oat/whey vs wheat-based). USDA plain pancake mix 172772 = 2.9 g."],
+  "cream-cheese-frosting": [0, "fdc:169619", "Frostings, cream cheese-flavor, ready-to-eat"],
+  "mustard-seeds": [12.2, "fdc:170929", "Spices, mustard seed, ground"],
+  charcuterie: [0, "label", "Animal product: no dietary fiber by composition (USDA assumes zero)."],
+};
+
 export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.fromEntries(
   ingredientSeeds.map(([legacyId, name, category, state, nutrition, gramsPerUnit = 1, allergens = []]) => {
     const id = `${legacyId.replaceAll("-", "_")}_${state}`;
     const referenceProfile = nutritionReferences[legacyId];
     if (!referenceProfile) throw new Error(`Нет nutrition reference для canonical ingredient ${legacyId}.`);
+    const fiber = fiberPer100gByLegacyId[legacyId];
+    if (!fiber || !Number.isFinite(fiber[0]) || fiber[0] < 0) throw new Error(`Нет клетчатки для canonical ingredient ${legacyId}.`);
     const sensibleUnit = sensibleUnitOverrides[legacyId]
       ?? (gramsPerUnit > 1 ? "piece" : densityByLegacyId[legacyId] ? "ml" : "g");
     return [id, {
@@ -1057,6 +1306,8 @@ export const canonicalIngredients: Record<string, CanonicalIngredient> = Object.
       category,
       state,
       nutritionPer100g: nutrition,
+      fiberPer100g: fiber[0],
+      fiberReference: fiber[1] ? { record: fiber[1], note: fiber[2] ?? "" } : { record: referenceProfile.recordId, note: "" },
       allergens,
       unit: {
         sensibleUnit,
@@ -2382,6 +2633,28 @@ function nutritionForAmount(ingredient: RecipeFamilyIngredient, amount: number):
     fat: canonical.nutritionPer100g.fat * factor,
     carbs: canonical.nutritionPer100g.carbs * factor,
   };
+}
+
+/** Dietary fiber of a family at the given amounts (base serving by default), g.
+ * Kept outside `Nutrition` on purpose: the solver, generated catalogs and
+ * saved plans keep their four-macro shape; fiber is an estimate shown next to
+ * carbohydrates and a ranking signal for the menu, not a solver target. */
+export function fiberForFamily(family: Pick<RecipeFamily, "ingredients">, amounts?: Record<string, number>): number {
+  let fiber = 0;
+  for (const ingredient of family.ingredients) {
+    const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+    if (!canonical) continue;
+    const amount = amounts?.[ingredient.sourceIngredientId] ?? ingredient.baseAmount;
+    const grams = amount * (
+      ingredient.unit === "piece"
+        ? canonical.unit.gramsPerUnit
+        : ingredient.unit === "ml"
+          ? canonical.densityGPerMl ?? 1
+          : 1
+    );
+    fiber += canonical.fiberPer100g * grams / 100;
+  }
+  return round(fiber);
 }
 
 export function nutritionForFamily(family: Pick<RecipeFamily, "ingredients">, amounts?: Record<string, number>): Nutrition {

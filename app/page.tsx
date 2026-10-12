@@ -61,6 +61,7 @@ import {
   aggregateCookingAmounts,
   physicalBatchAmountsViable,
   canonicalIngredients,
+  fiberForFamily,
   nutritionForFamily,
   deriveRecipeFamilyFromCatalog,
   recipeEffortDifficulty,
@@ -90,6 +91,8 @@ import {
 import {
   ACTIVITY_FACTORS,
   NUTRITION_CONFIG,
+  dailyFiberReference,
+  fiberReferenceForSlots,
   calculateMealPlanTargets,
   calculateNutritionTarget,
   capMacrosAtCalories,
@@ -6076,6 +6079,54 @@ function buildShopping(
 function shoppingAmountLabel(item: ShoppingItem) {
   return `${item.quantity.toLocaleString("ru-RU")} ${item.unit}`;
 }
+/* Клетчатка и овощи (решение владельца от 2026-10-12). На Пикабу меню
+   «Простых» назвали моно-диетой — «творог, картофель, курица и рыба. Где
+   овощи? Где клетчатка?»: в нём было около 14 г клетчатки в день при
+   ориентире 20–25 г. Каталог богаче, но порядок кандидатов не знал о
+   клетчатке. Теперь клетчатка на 1000 ккал базовой порции и граммы свежих
+   овощей — бонус порядка: 3 очка за грамм клетчатки до 20 г/1000 ккал и
+   0,2 очка за грамм овощей до 150 г, вместе до 90 очков. Клетчатку дают и
+   бобовые с крупами, поэтому овощи учитываются отдельно — иначе «где овощи?»
+   осталось бы без ответа. Сетка из 36 сценариев (три направления ×
+   1500/1800/2200 ккал × 3 или 5 приёмов × 5/7 дней): медиана клетчатки
+   19,6 → 24,5 г в день, ни один сценарий не теряет больше 0,2 г; овощей в
+   медиане +110 г; среднее попадание в КБЖУ не меняется (худший сценарий
+   −3,1). В высокобелковом направлении белок местами ниже на 9–12%, но
+   остаётся выше цели человека. Отдельные правки веса овощей в «Простых» и
+   бонуса общих продуктов проверялись и прироста не дали. Ни одно блюдо не
+   исключается. */
+const starchyVegetableIds = new Set(["potato_raw", "sweet_potato_raw", "corn_cooked", "baby_corn_raw", "hash_browns_processed"]);
+const recipeFiberCache = new Map<string, { grams: number; perThousandKcal: number; vegetableGrams: number }>();
+function recipeFiber(recipe: Recipe) {
+  const cached = recipeFiberCache.get(recipe.id);
+  if (cached) return cached;
+  const family = recipeFamilyFor(recipe);
+  const grams = family ? fiberForFamily(family) : 0;
+  const kcal = family ? nutritionForFamily(family).kcal : recipe.macros.kcal;
+  // Свежие овощи базовой порции в граммах: картофель, батат и кукуруза — гарнир.
+  const vegetableGrams = family
+    ? family.ingredients.reduce((sum, ingredient) => {
+        const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+        if (!canonical || canonical.category !== "vegetable" || starchyVegetableIds.has(canonical.id)) return sum;
+        const unitGrams = ingredient.unit === "piece" ? canonical.unit.gramsPerUnit : ingredient.unit === "ml" ? canonical.densityGPerMl ?? 1 : 1;
+        return sum + ingredient.baseAmount * unitGrams;
+      }, 0)
+    : 0;
+  const fiber = { grams, perThousandKcal: kcal > 0 ? (grams / kcal) * 1000 : 0, vegetableGrams };
+  recipeFiberCache.set(recipe.id, fiber);
+  return fiber;
+}
+const fiberRichMinimumGrams = 3;
+const fiberRichPerThousandKcal = 20;
+const fiberRankWeight = 3;
+const fiberRankCapPerThousandKcal = 20;
+const vegetableRankWeight = 0.2;
+const vegetableRankCapGrams = 150;
+function fiberRankBonus(recipe: Recipe) {
+  const fiber = recipeFiber(recipe);
+  return fiberRankWeight * Math.min(fiberRankCapPerThousandKcal, fiber.perThousandKcal) +
+    vegetableRankWeight * Math.min(vegetableRankCapGrams, fiber.vegetableGrams);
+}
 function styleScore(recipe: Recipe, style: MenuStyle) {
   if (style === "simple") return 100 - recipe.effort.activeMinutes - recipe.ingredients.length;
   if (style === "protein")
@@ -6183,9 +6234,11 @@ function candidateRecipes(
       (a, b) =>
         b.fit * 4 +
         styleScore(b.recipe, style) +
+        fiberRankBonus(b.recipe) +
         (b.recipe.provenance.kind === "parsed" ? 12 : 0) -
         (a.fit * 4 +
           styleScore(a.recipe, style) +
+          fiberRankBonus(a.recipe) +
           (a.recipe.provenance.kind === "parsed" ? 12 : 0)),
     )
     .map(({ recipe }) => recipe);
@@ -6466,6 +6519,52 @@ function dailyProteinAssessment(plan: Pick<ActivePlan, "people" | "selections" |
     return snapshot ? [snapshot.actual] : portion ? [portion.actual] : [];
   }));
   return { actual, target: person.daily.protein, shortfall: Math.max(0, round(person.daily.protein - actual.protein)), partial: slots.length < allMealSlots.length };
+}
+/* Клетчатка по плану: среднее в день по партиям из тех же порций, что и
+   КБЖУ, — состав каждой порции берётся из общей готовки. Ориентир на день
+   пересчитывается на долю выбранных приёмов пищи (25/10/30/10/25). */
+function planFiberAssessment(plan: Pick<ActivePlan, "people" | "selections" | "selectionAssignments" | "tuning" | "mealSlots" | "batches">, person: Person) {
+  const slots = plan.mealSlots.filter(slot => person.includedSlots.includes(slot));
+  let total = 0;
+  let days = 0;
+  for (const batch of plan.batches) {
+    let day = 0;
+    for (const slot of slots) {
+      const recipe = recipeForPerson(plan, batch, slot, person);
+      const family = recipe ? recipeFamilyFor(recipe) : undefined;
+      if (!recipe || !family) continue;
+      const { eaters, session } = recipeCookingSessionForAssignment(plan, batch, slot, recipe);
+      const portion = session.portions[eaters.findIndex(eater => eater.id === person.id)];
+      if (portion && "solvedAmounts" in portion && portion.solvedAmounts) day += fiberForFamily(family, portion.solvedAmounts);
+    }
+    total += day * batch.days;
+    days += batch.days;
+  }
+  const actual = Math.round(total / Math.max(1, days));
+  const reference = dailyFiberReference(person.daily.kcal);
+  const forSlots = fiberReferenceForSlots(reference, slots);
+  return {
+    actual,
+    target: forSlots.floor,
+    shortfall: Math.max(0, forSlots.floor - actual),
+    partial: forSlots.share < 0.999,
+    reference,
+  };
+}
+/* Одна строка в карточке белка на «Проверке»: отдельный блок удлинял бы
+   решающий шаг. Ориентир для выбранных приёмов пищи — доля дневного. */
+function reviewFiberNote(plan: Pick<ActivePlan, "people" | "selections" | "selectionAssignments" | "tuning" | "mealSlots" | "batches">) {
+  const assessments = plan.people.map(person => ({ person, ...planFiberAssessment(plan, person) }));
+  const values = assessments.length === 1
+    ? `≈ ${assessments[0].actual} г в день`
+    : assessments.map(({ person, actual }) => `${person.name} ≈ ${actual} г`).join(", ");
+  const targets = [...new Set(assessments.map(({ target }) => target))].sort((a, b) => a - b);
+  const range = targets.length > 1 ? `${targets[0]}–${targets[targets.length - 1]}` : `${targets[0]}`;
+  return `Клетчатка: ${values}. Ориентир МР 2.3.1.0253-21 — 20–25 г в день или 10 г на 1000 ккал; для выбранных блюд — от ${range} г.`;
+}
+function fiberAssessmentText(assessment: ReturnType<typeof planFiberAssessment>) {
+  const { actual, target, shortfall, partial } = assessment;
+  return `Клетчатка ≈ ${actual} г в день${partial ? " из выбранных блюд" : ""}; ориентир ${partial ? "для них " : ""}— от ${target} г.${shortfall > 0 ? " Больше дадут блюда с овощами, бобовыми и цельными крупами." : ""}`;
 }
 function proteinAssessmentText(assessment: ReturnType<typeof dailyProteinAssessment>) {
   const { actual, target, shortfall, partial } = assessment;
@@ -9538,6 +9637,7 @@ function WeekScreen({
           )}
         </p>
         <p className="week-balance">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
+        <p className="week-balance">{fiberAssessmentText(planFiberAssessment(activePlan, person))}</p>
         </details>
       {tomorrowDate && (
         <section className="week-tomorrow-card glass-card">
@@ -9645,7 +9745,7 @@ function WeekScreen({
    чтобы переезд на сервер был заменой источника, а не переписыванием экрана. */
 
 type CatalogSort = "missing" | "time" | "protein";
-type CatalogProperty = "simple" | "freezable" | "no-cook" | "protein" | "vegan" | "paleo";
+type CatalogProperty = "simple" | "freezable" | "no-cook" | "protein" | "fiber" | "vegan" | "paleo";
 type CatalogState = {
   q: string;
   slot: MealSlot | null;
@@ -9671,6 +9771,7 @@ const catalogPropertyLabels: Record<CatalogProperty, string> = {
   freezable: "Морозится",
   "no-cook": "Без готовки",
   protein: "Много белка",
+  fiber: "Много клетчатки",
   vegan: "Веганские",
   paleo: "Палео",
 };
@@ -9700,6 +9801,13 @@ function hasProperty(recipe: Recipe, property: CatalogProperty) {
   // метка «палео» на импортированной карточке такой проверки не проходила.
   if (property === "vegan" || property === "paleo")
     return isExtensionRecipe(recipe) && recipe.tags.includes(property);
+  // Как «Много белка»: по базовой порции. Не меньше 20 г клетчатки на
+  // 1000 ккал — вдвое плотнее ориентира МР 10 г/1000 ккал — и не меньше 3 г,
+  // чтобы перекус тоже мог получить метку.
+  if (property === "fiber") {
+    const fiber = recipeFiber(recipe);
+    return fiber.grams >= fiberRichMinimumGrams && fiber.perThousandKcal >= fiberRichPerThousandKcal;
+  }
   return recipe.macros.protein >= 30;
 }
 
@@ -14635,6 +14743,7 @@ function ReviewStep({
             return { ...assessment, id: person.id, name: person.name, actual: assessment.actual.protein };
           }),
         }))}
+        fiberNote={reviewFiberNote(plan)}
         onEdit={() => onEdit(5)}
       />
       <section className="review-list glass-card">
@@ -15624,6 +15733,11 @@ function RecipeView({
         recipe.macros.carbs * (draft.carbs - 1) * 4,
     ),
   };
+  // Клетчатка уже входит в углеводы USDA и к КБЖУ не прибавляется.
+  const previewFamily = recipeFamilyFor(recipe);
+  const displayFiber = preview && "solvedAmounts" in preview && preview.solvedAmounts && previewFamily
+    ? fiberForFamily(previewFamily, preview.solvedAmounts)
+    : recipeFiber(recipe).grams;
   const freezeDays =
     batch && recipe.freezable
       ? Math.max(0, batch.days - recipe.storageDays)
@@ -15858,6 +15972,10 @@ function RecipeView({
               </small>
             </span>
           ))}
+          <p className="detail-fiber">
+            {person && eaters.length > 1 ? `Порция: ${person.name} · ` : ""}
+            {displayFiber < 1 ? "Клетчатка — меньше 1 г" : `Клетчатка ≈ ${formatMacro(displayFiber)} г`}
+          </p>
         </div>
       )}
       {section === "dish" && recipe.allergens.length > 0 && (

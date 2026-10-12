@@ -121,6 +121,23 @@ export const MEAL_SLOT_SHARES: Record<MealSlot, number> = Object.fromEntries(
   NUTRITION_CONFIG.mealSlots.map(({ id, share }) => [id, share]),
 ) as Record<MealSlot, number>;
 
+/* Клетчатка (пищевые волокна): МР 2.3.1.0253-21 «Нормы физиологических
+   потребностей…» (2021), §4.2.1.3 — взрослым «20–25 г/сутки или 10 г/1000
+   ккал». Нижняя граница ориентира — меньшее из 20 г и 10 г на 1000 ккал
+   дневной цели: при 1500 ккал это 15 г. Mise показывает это как ориентир
+   для оценки меню, а не как медицинское назначение. */
+export const ADULT_DAILY_FIBER_REFERENCE = { min: 20, max: 25 } as const;
+export type FiberReference = { min: number; max: number; floor: number };
+export function dailyFiberReference(dailyKcal?: number): FiberReference {
+  const perKcal = dailyKcal && Number.isFinite(dailyKcal) && dailyKcal > 0 ? Math.round(dailyKcal / 100) : ADULT_DAILY_FIBER_REFERENCE.min;
+  return { ...ADULT_DAILY_FIBER_REFERENCE, floor: Math.min(ADULT_DAILY_FIBER_REFERENCE.min, perKcal) };
+}
+/** Доля дневного ориентира, которую закрывают выбранные позиции меню. */
+export function fiberReferenceForSlots(reference: FiberReference, slots: readonly MealSlot[]) {
+  const share = slots.reduce((sum, slot) => sum + (MEAL_SLOT_SHARES[slot] ?? 0), 0);
+  return { share, floor: Math.round(reference.floor * share) };
+}
+
 export const ACTIVITY_FACTORS: Record<ActivityKey, number> =
   NUTRITION_CONFIG.activityFactors;
 

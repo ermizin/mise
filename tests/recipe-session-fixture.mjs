@@ -63,6 +63,7 @@ export async function recipeCatalog() {
     materializeInstructions: engine.materializeInstructions,
     canonicalIngredients: engine.canonicalIngredients,
     nutritionForFamily: engine.nutritionForFamily,
+    fiberForFamily: engine.fiberForFamily,
     PILOT_RAW_SOURCE_SLUGS: engine.PILOT_RAW_SOURCE_SLUGS,
     recipeToFamily: engine.recipeToFamily,
     deriveRecipeFamilyFromCatalog: engine.deriveRecipeFamilyFromCatalog,

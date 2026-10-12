@@ -13,8 +13,10 @@ export type ProteinReviewBatch = {
   people: ProteinPerson[];
 };
 
-export function ProteinReview({ batches, onEdit }: {
+export function ProteinReview({ batches, fiberNote, onEdit }: {
   batches: ProteinReviewBatch[];
+  /** Одна строка о клетчатке из тех же блюд — без отдельного блока. */
+  fiberNote?: string;
   onEdit: () => void;
 }) {
   const hasPartial = batches.some(batch => batch.people.some(person => person.partial));
@@ -59,6 +61,7 @@ export function ProteinReview({ batches, onEdit }: {
         ))}
       </div>
       {hasPartial && <p className="protein-review-note">Учтены только выбранные блюда, а не весь дневной рацион.</p>}
+      {fiberNote && <p className="protein-review-fiber">{fiberNote}</p>}
       <button type="button" className="text-button protein-review-edit" onClick={onEdit}>Изменить блюда <span aria-hidden="true">→</span></button>
     </section>
   );

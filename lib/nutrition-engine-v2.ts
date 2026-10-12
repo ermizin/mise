@@ -8,6 +8,8 @@ export {
   calculateMealPlanTargets,
   calculateNutritionTarget,
   capMacrosAtCalories,
+  dailyFiberReference,
+  fiberReferenceForSlots,
   fitMacrosToCalories,
   macroCalories,
   macrosForCalories,
