@@ -7,6 +7,14 @@ export type Sex = "male" | "female";
 export type ActivityKey = "low" | "light" | "medium" | "high" | "athlete";
 export type NutritionGoal = "maintenance" | "loss" | "gain";
 export type NutritionTargetMode = "auto" | "manual";
+/** Отсутствие поля — взрослый: так читаются все прежние планы. */
+export type PersonKind = "adult" | "child";
+export type ChildActivity = "calm" | "usual" | "active";
+export type ChildNutritionInput = {
+  sex: Sex;
+  age: number;
+  activity: ChildActivity;
+};
 
 export function normalizeNutritionTargetMode(
   value: unknown,
@@ -495,15 +503,104 @@ function automaticTargetDiffers(daily: unknown, target: Macros) {
   });
 }
 
+/* Дети (решение владельца от 2026-10-12: семейный режим).
+   Взрослая формула Миффлина — Сан Жеора для детей не применяется: потребность
+   берётся из таблиц ВОЗ/ФАО/УООН 2004 (Human energy requirements, табл. 4.5 и
+   4.6) по полу и полному году возраста при умеренной активности. С 6 лет
+   спокойный ребёнок получает −15%, очень подвижный +15% (§4.4.2); младше
+   6 лет таблица даёт только среднюю активность. Рост и вес не спрашиваются:
+   таблице они не нужны, а данные тела ребёнка Mise не хранит. Ни дефицита,
+   ни профицита, ни «белка на мышцы»: БЖУ 15/30/55% энергии в пределах МР
+   2.3.1.0253-21, табл. 22 (белок 12–15%, жир 25–35%, углеводы 55–60%). */
+export const CHILD_AGE_RANGE = [3, 17] as const;
+// Индекс 0 — возраст 1–2 года; ребёнок N лет — строка «N … N+1».
+const WHO_FAO_2004_MODERATE_KCAL: Record<Sex, readonly number[]> = {
+  male: [950, 1125, 1250, 1350, 1475, 1575, 1700, 1825, 1975, 2150, 2350, 2550, 2775, 3000, 3175, 3325, 3400],
+  female: [850, 1050, 1150, 1250, 1325, 1425, 1550, 1700, 1850, 2000, 2150, 2275, 2375, 2450, 2500, 2500, 2500],
+};
+const childActivityFactors: Record<ChildActivity, number> = { calm: 0.85, usual: 1, active: 1.15 };
+export const CHILD_ACTIVITY_FROM_AGE = 6;
+export const CHILD_MACRO_SHARES = { protein: 0.15, fat: 0.3 } as const;
+const childSexes = new Set<Sex>(["male", "female"]);
+const childActivities = new Set<ChildActivity>(["calm", "usual", "active"]);
+
+export function isChildAge(age: unknown): age is number {
+  return typeof age === "number" && Number.isInteger(age) && age >= CHILD_AGE_RANGE[0] && age <= CHILD_AGE_RANGE[1];
+}
+
+export function childEstimateOf(value: unknown): ChildNutritionInput | null {
+  if (!nutritionRecord(value)) return null;
+  const { sex, age, activity } = value;
+  if (typeof sex !== "string" || !childSexes.has(sex as Sex) || !isChildAge(age)) return null;
+  return {
+    sex: sex as Sex,
+    age,
+    activity: typeof activity === "string" && childActivities.has(activity as ChildActivity) ? activity as ChildActivity : "usual",
+  };
+}
+
+export function childMacrosForCalories(kcal: number): Macros {
+  const protein = Math.round((kcal * CHILD_MACRO_SHARES.protein) / 4);
+  const fat = Math.round((kcal * CHILD_MACRO_SHARES.fat) / 9);
+  const carbs = Math.floor(Math.max(0, kcal - protein * 4 - fat * 9) / 4);
+  return { kcal, protein, fat, carbs };
+}
+
+export function calculateChildNutritionTarget(input: ChildNutritionInput): { target: Macros; source: "who-fao-2004" } | { issues: NutritionIssue[] } {
+  if (!isChildAge(input.age) || !childSexes.has(input.sex))
+    return { issues: [{ code: "invalid_age", severity: "error", message: `Возраст ребёнка: ${CHILD_AGE_RANGE[0]}–${CHILD_AGE_RANGE[1]} лет.` }] };
+  const moderate = WHO_FAO_2004_MODERATE_KCAL[input.sex][input.age - 1];
+  const factor = input.age >= CHILD_ACTIVITY_FROM_AGE ? childActivityFactors[input.activity] ?? 1 : 1;
+  const kcal = Math.round((moderate * factor) / 10) * 10;
+  return { target: childMacrosForCalories(kcal), source: "who-fao-2004" };
+}
+
+/** Ручная норма ребёнка (например, от врача): до 10 лет 800–3000 ккал, с 11 лет — как у взрослых. */
+export function childManualCalorieRange(age: number): readonly [number, number] {
+  return age <= 10 ? [800, 3000] : [NUTRITION_CONFIG.minimumTargetCalories, NUTRITION_CONFIG.maximumTargetCalories];
+}
+
+/** Допустимый калораж человека с учётом возраста ребёнка; ребёнок без возраста недопустим. */
+export function personCalorieRange(person: { kind?: unknown; childEstimate?: unknown }): readonly [number, number] | null {
+  if (person.kind !== "child") return [NUTRITION_CONFIG.minimumTargetCalories, NUTRITION_CONFIG.maximumTargetCalories];
+  const child = childEstimateOf(person.childEstimate);
+  return child ? childManualCalorieRange(child.age) : null;
+}
+
+/* Клетчатка для детей — МР 2.3.1.0253-21, табл. 21: 3–6 лет 12 г, 7–10 —
+   16 г, 11–14 — 20 г, 15–17 — 22 г в сутки. */
+export function childDailyFiberReference(age: number): FiberReference {
+  const grams = age <= 6 ? 12 : age <= 10 ? 16 : age <= 14 ? 20 : 22;
+  return { min: grams, max: grams, floor: grams };
+}
+
+export function personFiberReference(person: { kind?: unknown; childEstimate?: unknown; daily: { kcal: number } }): FiberReference {
+  const child = person.kind === "child" ? childEstimateOf(person.childEstimate) : null;
+  return child ? childDailyFiberReference(child.age) : dailyFiberReference(person.daily.kcal);
+}
+
 export function normalizeAutomaticNutritionTargets(value: unknown): unknown {
   if (!nutritionRecord(value) || !Array.isArray(value.people)) return value;
   let changed = false;
   const people = value.people.map((person) => {
-    if (
-      !nutritionRecord(person) ||
-      person.nutritionTargetMode !== "auto"
-    )
-      return person;
+    if (!nutritionRecord(person)) return person;
+    // Ребёнок никогда не считается по взрослой оценке, даже если она осталась
+    // в черновике: взрослый `estimate` у ребёнка не сохраняется.
+    if (person.kind === "child") {
+      const { estimate, ...withoutAdultEstimate } = person;
+      let next: NutritionRecord = withoutAdultEstimate;
+      if (estimate !== undefined) changed = true;
+      const child = childEstimateOf(person.childEstimate);
+      if (person.nutritionTargetMode === "auto" && child) {
+        const calculation = calculateChildNutritionTarget(child);
+        if ("target" in calculation && automaticTargetDiffers(person.daily, calculation.target)) {
+          changed = true;
+          next = { ...next, daily: calculation.target };
+        }
+      }
+      return estimate !== undefined || next !== withoutAdultEstimate ? next : person;
+    }
+    if (person.nutritionTargetMode !== "auto") return person;
     const estimate = automaticEstimate(person.estimate);
     if (!estimate) return person;
     const calculation = calculateNutritionTarget(estimate);

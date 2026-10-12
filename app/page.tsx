@@ -91,8 +91,14 @@ import {
 import {
   ACTIVITY_FACTORS,
   NUTRITION_CONFIG,
-  dailyFiberReference,
+  CHILD_ACTIVITY_FROM_AGE,
+  CHILD_AGE_RANGE,
+  calculateChildNutritionTarget,
+  childEstimateOf,
+  childMacrosForCalories,
   fiberReferenceForSlots,
+  personCalorieRange,
+  personFiberReference,
   calculateMealPlanTargets,
   calculateNutritionTarget,
   capMacrosAtCalories,
@@ -109,6 +115,8 @@ import {
   type Macros,
   type MealSlot,
   type NutritionCalculation,
+  type ChildActivity,
+  type ChildNutritionInput,
   type NutritionGoal,
   type NutritionTargetMode,
   type NutritionWizardInput,
@@ -177,7 +185,8 @@ type Allergen =
   | "treeNuts"
   | "sesame"
   | "mustard"
-  | "molluscs";
+  | "molluscs"
+  | "alcohol";
 
 type Ingredient = {
   id: string;
@@ -366,6 +375,10 @@ type Person = {
   nutritionTargetMode?: NutritionTargetMode;
   dislikes?: string[];
   hardExclusions?: Allergen[];
+  /** Нет поля — взрослый. Ребёнок считается по возрасту, без взрослой оценки. */
+  kind?: "adult" | "child";
+  /** Черновик ребёнка может быть неполным, пока родитель вводит возраст и пол. */
+  childEstimate?: Partial<ChildNutritionInput>;
 };
 type Batch = {
   id: string;
@@ -708,6 +721,13 @@ const activityMeta: Record<ActivityKey, { label: string; factor: number }> = {
     factor: ACTIVITY_FACTORS.athlete,
   },
 };
+/* Подвижность ребёнка — поведением, а не «секцией»: таблица ВОЗ/ФАО даёт
+   −15% малоподвижным и +15% очень подвижным детям только с 6 лет. */
+const childActivityMeta: Record<ChildActivity, string> = {
+  calm: "Спокойный: школа, транспорт, экран",
+  usual: "Обычный",
+  active: "Очень подвижный: спорт или активные игры почти каждый день",
+};
 const goalMeta: Record<NutritionGoal, { label: string }> = {
   loss: { label: "Снижение веса" },
   maintenance: { label: "Поддержание веса" },
@@ -725,6 +745,7 @@ const allergenMeta: Record<Allergen, { label: string; short: string }> = {
   sesame: { label: "Кунжут", short: "Кунжут" },
   mustard: { label: "Горчица", short: "Горчица" },
   molluscs: { label: "Моллюски", short: "Моллюски" },
+  alcohol: { label: "Алкоголь в блюде (вино, мирин)", short: "Алкоголь" },
 };
 const dislikeOptions = [
   { id: "fish", label: "Рыба", ingredientIds: ["salmon", "cod", "tuna"] },
@@ -757,6 +778,19 @@ const dislikeOptions = [
     id: "turkey",
     label: "Индейка",
     ingredientIds: ["turkey", "turkey-mince", "turkey-slices"],
+  },
+  // Семейный режим (2026-10-12): у ребёнка 3–11 лет «Острое» отмечено по
+  // умолчанию, «Спортивный протеин» — у любого ребёнка. Это мягкие
+  // исключения: общий автоподбор их обходит, вручную блюдо можно выбрать.
+  {
+    id: "spicy",
+    label: "Острое",
+    ingredientIds: ["jalapeno", "hot-sauce", "gochujang", "green-chiles", "buffalo-sauce", "chili-garlic-oil", "kimchi", "curry-paste"],
+  },
+  {
+    id: "sportProtein",
+    label: "Спортивный протеин",
+    ingredientIds: ["protein-powder", "casein-powder", "protein-pancake-mix"],
   },
 ] as const;
 const ingredientAllergens: Record<string, Allergen[]> = {
@@ -4581,6 +4615,18 @@ function runtimeRecipe(record: RuntimeRecipeRecord): Recipe {
 }
 const runtimeRecipes = allRuntimeRecipeRecords.map(runtimeRecipe);
 recipes.push(...runtimeRecipes);
+/* Алкоголь в блюде (семейный режим, 2026-10-12). Вино и мирин при готовке
+   не выветриваются полностью: по таблице удерживания USDA (Release 6) даже
+   после 2,5 часа тушения остаётся около 5%. Метка выводится из canonical-
+   состава и работает как жёсткое «мне нельзя»: ребёнку она отмечена по
+   умолчанию, взрослый может выбрать её сам. Винный уксус и ваниль — не алкоголь. */
+const alcoholIngredientIds = new Set(["red_wine_processed", "mirin_processed", "red-wine", "mirin"]);
+for (const recipe of recipes)
+  if (
+    !recipe.allergens.includes("alcohol") &&
+    recipe.ingredients.some((ingredient) => alcoholIngredientIds.has(ingredient.canonicalIngredientId ?? ingredient.id))
+  )
+    recipe.allergens = [...recipe.allergens, "alcohol"];
 const runtimeRecipeFamiliesById = Object.fromEntries(
   allRuntimeRecipeRecords.map((record) => [record.id, record.recipeFamily]),
 ) as Record<string, RecipeFamily>;
@@ -5261,6 +5307,65 @@ function solveRecipeFamilyMeal(
     )[0] ?? direct
   );
 }
+/* Детская порция — меньшая доля того же общего блюда (семейный режим,
+   2026-10-12). Взрослые блюда рассчитаны от минимальной разумной порции, и
+   у ребёнка с 1000–1300 ккал прямой расчёт часто не проходит — тогда весь
+   общий стол терял блюдо. Если прямой расчёт для ребёнка не проходит,
+   Mise решает ту же Recipe Family на опорную калорийность R (от максимума
+   из цели и минимума рецепта, шагом 5%, не выше 1,5 раза и maxViable) и
+   уменьшает в k раз всё, кроме масла для посуды: его доля физическая и
+   остаётся долей сковороды. k не больше 2,5 — меньше трети нормальной
+   порции в контейнер не кладём. Детская порция считается одной физической
+   порцией (sourceServingRepeat = 1): целые яйца и лепёшки округляются для
+   всей партии, доля в готовом блюде может быть дробной. Коридор 0,9–1,05
+   цели проверяется по итоговой доле, как у всех. Минимальный белок Recipe
+   Family для уменьшенной детской порции не гарантируется. */
+const childMaximumScaleDown = 2.5;
+function childScaledSolve(
+  family: RecipeFamily,
+  input: Parameters<typeof solveRecipeFamily>[1],
+) {
+  const target = input.targetCalories;
+  if (!(target > 0)) return null;
+  const panIds = new Set(
+    family.ingredients.filter((ingredient) => ingredient.role === "fat_cooking").map((ingredient) => ingredient.sourceIngredientId),
+  );
+  const start = Math.max(target, family.minViableCalories);
+  const ceiling = Math.min(family.maxViableCalories, start * 1.5, target * childMaximumScaleDown);
+  for (let reference = start; reference <= ceiling; reference = Math.ceil(reference * 1.05)) {
+    const lift = reference / target;
+    const solved = solveRecipeFamily(family, {
+      ...input,
+      targetCalories: Math.round(reference),
+      targetProtein: input.targetProtein === undefined ? undefined : input.targetProtein * lift,
+      targetFat: input.targetFat === undefined ? undefined : input.targetFat * lift,
+      targetCarbs: input.targetCarbs === undefined ? undefined : input.targetCarbs * lift,
+    });
+    if (!solved.viable) continue;
+    const panKcal = panIds.size
+      ? nutritionForFamily({ ingredients: family.ingredients.filter((ingredient) => panIds.has(ingredient.sourceIngredientId)) }, solved.amounts).kcal
+      : 0;
+    if (target <= panKcal) continue;
+    const scale = (solved.nutrition.kcal - panKcal) / (target - panKcal);
+    if (!(scale >= 1) || scale > childMaximumScaleDown) continue;
+    const amounts = Object.fromEntries(
+      Object.entries(solved.amounts).map(([id, amount]) => [id, panIds.has(id) ? amount : round(amount / scale, 3)]),
+    );
+    const nutrition = nutritionForFamily(family, amounts);
+    if (nutrition.kcal < target * 0.9 || nutrition.kcal > target * 1.05) continue;
+    return {
+      ...solved,
+      targetCalories: target,
+      targetProtein: input.targetProtein,
+      targetFat: input.targetFat,
+      targetCarbs: input.targetCarbs,
+      amounts,
+      nutrition,
+      explanation: [`Детская порция — ${Math.round(100 / scale)}% порции на ${Math.round(reference)} ккал того же блюда.`, ...solved.explanation],
+    };
+  }
+  return null;
+}
 function portionFor(
   person: Person,
   slot: MealSlot,
@@ -5282,7 +5387,7 @@ function portionFor(
       target.kcal / 8,
       target.protein * ratios.protein,
     );
-    const solved = solveRecipeFamilyMeal(family, {
+    const solveInput: Parameters<typeof solveRecipeFamily>[1] = {
       targetCalories: target.kcal,
       targetProtein: mealProteinTarget,
       // The slot's proportional protein share stays the search target, but a
@@ -5294,7 +5399,11 @@ function portionFor(
       targetCarbs: target.carbs * ratios.carbs,
       hardExclusions: person.hardExclusions,
       cookingFatShare: 1 / Math.max(1, cooking?.portionCount ?? 1),
-    });
+    };
+    const direct = solveRecipeFamilyMeal(family, solveInput);
+    const solved = direct.viable || person.kind !== "child"
+      ? direct
+      : childScaledSolve(family, solveInput) ?? direct;
     if (solved.viable) {
       const gramsFor = (ingredient: RecipeFamily["ingredients"][number], amount: number) => {
         const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
@@ -5955,6 +6064,31 @@ function validateHardExclusions(
     }
   return conflicts;
 }
+/* Подсказки для детской порции в карточке рецепта (семейный режим).
+   Острый перец «по вкусу» не делает блюдо острым по составу, поэтому блюдо не
+   прячется: детскую порцию откладывают до перца. Для детей до 5 лет — как
+   резать то, чем можно подавиться (AAP, NHS). */
+const chokingHazardIngredientIds = new Set([
+  "walnuts_raw", "almonds_raw", "peanuts_raw", "cashews_raw", "pine_nuts_raw", "trail_mix_processed",
+  "pumpkin_seeds_raw", "sunflower_seeds_raw", "seed_mix_raw", "sausage_processed", "chicken_sausage_processed",
+]);
+function childServingNotes(recipe: Recipe, eaters: Person[]) {
+  const children = eaters.filter((eater) => eater.kind === "child");
+  if (!children.length) return [];
+  const notes: string[] = [];
+  const toTasteChili = (recipe.procedureIngredients ?? []).some((ingredient) =>
+    /остр|чили|кайен/iu.test(ingredient.name),
+  );
+  if (toTasteChili)
+    notes.push(`Острый перец здесь по вкусу: порцию «${children.map((eater) => eater.name).join("», «")}» отложите до того, как его добавить.`);
+  const young = children.filter((eater) => (childEstimateOf(eater.childEstimate)?.age ?? 99) <= 4);
+  const hazards = recipe.ingredients.some((ingredient) =>
+    chokingHazardIngredientIds.has(canonicalShoppingIngredient(ingredient)?.id ?? canonicalIdForIngredient(ingredient)),
+  );
+  if (young.length && hazards)
+    notes.push(`«${young.map((eater) => eater.name).join("», «")}» — до 5 лет: орехи и семечки давайте молотыми или рублеными, колбаски режьте вдоль тонкими полосками.`);
+  return notes;
+}
 function crossContactWarnings(
   plan: Pick<
     ActivePlan,
@@ -5974,9 +6108,11 @@ function crossContactWarnings(
       ),
     );
   }
+  // Алкоголь не переходит на соседнее блюдо через доску или сковороду:
+  // предупреждение о перекрёстном контакте для него не нужно.
   return plan.people.flatMap((person) =>
     (person.hardExclusions ?? [])
-      .filter((allergen) => prepared.has(allergen))
+      .filter((allergen) => allergen !== "alcohol" && prepared.has(allergen))
       .map((allergen) => ({ person, allergen })),
   );
 }
@@ -6541,7 +6677,8 @@ function planFiberAssessment(plan: Pick<ActivePlan, "people" | "selections" | "s
     days += batch.days;
   }
   const actual = Math.round(total / Math.max(1, days));
-  const reference = dailyFiberReference(person.daily.kcal);
+  // Взрослым — МР «20–25 г или 10 г/1000 ккал», детям — норма МР по возрасту.
+  const reference = personFiberReference(person);
   const forSlots = fiberReferenceForSlots(reference, slots);
   return {
     actual,
@@ -6560,7 +6697,10 @@ function reviewFiberNote(plan: Pick<ActivePlan, "people" | "selections" | "selec
     : assessments.map(({ person, actual }) => `${person.name} ≈ ${actual} г`).join(", ");
   const targets = [...new Set(assessments.map(({ target }) => target))].sort((a, b) => a - b);
   const range = targets.length > 1 ? `${targets[0]}–${targets[targets.length - 1]}` : `${targets[0]}`;
-  return `Клетчатка: ${values}. Ориентир МР 2.3.1.0253-21 — 20–25 г в день или 10 г на 1000 ккал; для выбранных блюд — от ${range} г.`;
+  const reference = plan.people.some((person) => person.kind === "child")
+    ? "Ориентир МР 2.3.1.0253-21: взрослым 20–25 г в день или 10 г на 1000 ккал, детям — по возрасту, от 12 до 22 г"
+    : "Ориентир МР 2.3.1.0253-21 — 20–25 г в день или 10 г на 1000 ккал";
+  return `Клетчатка: ${values}. ${reference}; для выбранных блюд — от ${range} г.`;
 }
 function fiberAssessmentText(assessment: ReturnType<typeof planFiberAssessment>) {
   const { actual, target, shortfall, partial } = assessment;
@@ -6595,6 +6735,22 @@ function macrosEqual(left: Macros, right: Macros) {
   return (Object.keys(left) as MacroKey[]).every((key) => left[key] === right[key]);
 }
 function normalizePerson(person: Person): Person {
+  // Ребёнок считается только по возрасту; взрослая оценка у него не хранится,
+  // иначе пересчёт при загрузке вернул бы взрослую норму (те самые 2460 ккал).
+  if (person.kind === "child") {
+    const { estimate: _adultEstimate, ...child } = person;
+    void _adultEstimate;
+    const childInput = childEstimateOf(person.childEstimate);
+    const calculation = childInput ? calculateChildNutritionTarget(childInput) : null;
+    const nutritionTargetMode = person.nutritionTargetMode === "manual" ? "manual" : "auto";
+    return {
+      ...child,
+      daily: nutritionTargetMode === "auto" && calculation && "target" in calculation ? calculation.target : person.daily,
+      nutritionTargetMode,
+      dislikes: Array.isArray(person.dislikes) ? person.dislikes : [],
+      hardExclusions: Array.isArray(person.hardExclusions) ? person.hardExclusions : [],
+    };
+  }
   const daily = nutritionRepairLegacyDailyMacros(
     person.daily,
     person.macroPreset ?? "balanced",
@@ -6717,6 +6873,56 @@ function groupedShopping(items: ShoppingItem[]) {
   }, {});
 }
 
+/* Автоматическая норма существует только для допустимых параметров тела.
+   Раньше недопустимый возраст (например, 9 лет) оставлял на экране прежнюю
+   норму взрослого по умолчанию — 2460 ккал — и мастер пропускал дальше. */
+function automaticEstimateIssue(person: Person): string | null {
+  // Возраст ребёнка нужен и для ручной нормы: от него зависит допустимый диапазон.
+  if (person.kind === "child")
+    return childEstimateOf(person.childEstimate)
+      ? null
+      : `Укажите возраст ребёнка (${CHILD_AGE_RANGE[0]}–${CHILD_AGE_RANGE[1]} лет) и пол.`;
+  if (person.nutritionTargetMode === "manual" || !person.estimate) return null;
+  const draft = estimateOf(person);
+  const calculation = calculateNutritionTarget(draft);
+  if ("target" in calculation) return null;
+  if (Number.isFinite(draft.age) && draft.age > 0 && draft.age < 18)
+    return "Для ребёнка выберите вверху карточки «Ребёнок 3–17 лет»: взрослая формула детям не подходит.";
+  return calculation.issues.find((issue) => issue.severity === "error")?.message
+    ?? "Параметры вне допустимого диапазона.";
+}
+function personCaloriesValid(person: Person) {
+  const range = personCalorieRange(person);
+  return Boolean(range) && Number.isFinite(person.daily.kcal) &&
+    person.daily.kcal >= range![0] && person.daily.kcal <= range![1];
+}
+function estimateOf(person: Person): NutritionWizardInput {
+  const saved = person.estimate as
+    | (Partial<NutritionWizardInput> & { goal?: string })
+    | undefined;
+  const savedGoal: string | undefined = saved?.goal;
+  return {
+    sex: saved?.sex ?? defaultNutritionEstimate.sex,
+    age: saved?.age ?? defaultNutritionEstimate.age,
+    height: saved?.height ?? defaultNutritionEstimate.height,
+    weight: saved?.weight ?? defaultNutritionEstimate.weight,
+    activity: saved?.activity ?? defaultNutritionEstimate.activity,
+    musclePriority:
+      saved?.musclePriority ?? defaultNutritionEstimate.musclePriority,
+    goal:
+      savedGoal === "lose"
+        ? "loss"
+        : savedGoal === "keep"
+          ? "maintenance"
+          : savedGoal === "gain"
+            ? "gain"
+            : ((savedGoal as NutritionGoal | undefined) ??
+              defaultNutritionEstimate.goal),
+    monthlyWeightChangeKg:
+      saved?.monthlyWeightChangeKg ??
+      defaultNutritionEstimate.monthlyWeightChangeKg,
+  };
+}
 export default function Home() {
   const [tab, setTab] = useState<Tab>("week");
   const [tabMotion, setTabMotion] = useState<{
@@ -8823,10 +9029,13 @@ function DailyBalance({
   goal,
   planned,
   context = "После блюд из Mise",
+  child = false,
 }: {
   goal: Macros;
   planned: Macros;
   context?: string;
+  /** Ребёнку — без «плиток шоколада»: остаток дня — еда вне плана. */
+  child?: boolean;
 }) {
   const plannedKcal = Math.min(
     Math.max(0, round(planned.kcal)),
@@ -8845,7 +9054,9 @@ function DailyBalance({
     >
       {context}.{" "}
       {remainingKcal > 0
-        ? `Ещё можно съесть: ${remainingKcal.toLocaleString("ru-RU")} ккал — примерно ${chocolate.toLocaleString("ru-RU")} плитки шоколада, просто понятный ориентир.`
+        ? child
+          ? "Остальное — еда в саду, школе и перекусы вне плана."
+          : `Ещё можно съесть: ${remainingKcal.toLocaleString("ru-RU")} ккал — примерно ${chocolate.toLocaleString("ru-RU")} плитки шоколада, просто понятный ориентир.`
         : "Дневной бюджет распределён между выбранными позициями."}
     </Note>
   );
@@ -9094,6 +9305,7 @@ function WeekScreen({
       />
     );
   const activePlan = plan;
+  const unratedPeople = activePlan.people.filter((item) => automaticEstimateIssue(item));
   const dates = Array.from({ length: plan.periodDays }, (_, index) =>
     addDays(plan.start, index),
   );
@@ -9301,6 +9513,18 @@ function WeekScreen({
           Некоторые блюда старого плана больше не проходят проверку каталога и
           были убраны. Откройте «Изменить меню партии», чтобы выбрать безопасную
           замену.
+        </Note>
+      ) : unratedPeople.length ? (
+        /* Старые планы: до 2026-10-12 недопустимый возраст (например, ребёнка)
+           оставлял взрослую норму по умолчанию. Тихо её не меняем — просим
+           проверить человека, а для ребёнка — переключить на детский расчёт. */
+        <Note tone="warn" role="status">
+          Норма для {unratedPeople.map((item) => item.name || "человека").join(", ")} не
+          рассчитана по указанным параметрам. Если это ребёнок, в профиле нажмите
+          «Изменить» у этого человека и выберите «Ребёнок 3–17 лет».{" "}
+          <button type="button" className="text-button" onClick={onOpenProfile}>
+            Открыть профиль
+          </button>
         </Note>
       ) : null}
       {planEnded ? (
@@ -9636,7 +9860,9 @@ function WeekScreen({
             </>
           )}
         </p>
-        <p className="week-balance">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
+        {person.kind !== "child" && (
+          <p className="week-balance">{proteinAssessmentText(dailyProteinAssessment(activePlan, batchFor(selectedDate), person))}</p>
+        )}
         <p className="week-balance">{fiberAssessmentText(planFiberAssessment(activePlan, person))}</p>
         </details>
       {tomorrowDate && (
@@ -10892,9 +11118,11 @@ function ProfileScreen({
               : person.includedSlots.length < 5
                 ? "позиции"
                 : "позиций";
-          const goalLabel = person.estimate
-            ? profileGoalLabels[person.estimate.goal]
-            : "Своя цель";
+          const goalLabel = person.kind === "child"
+            ? person.nutritionTargetMode === "manual" ? "Норма врача" : "По возрасту"
+            : person.estimate
+              ? profileGoalLabels[person.estimate.goal]
+              : "Своя цель";
           const slotsLabel = person.includedSlots
             .map((slot) => mealMeta[slot].label.toLowerCase())
             .join(", ");
@@ -11780,6 +12008,15 @@ function PlanBuilder({
       current.map((person) => {
         if (person.id !== id) return person;
         const safeValue = Math.max(0, value);
+        if (key === "kcal" && person.kind === "child") {
+          // Ребёнку — детское соотношение БЖУ, без взрослых профилей.
+          return {
+            ...person,
+            daily: childMacrosForCalories(round(safeValue)),
+            macroPreset: "custom",
+            nutritionTargetMode: "manual",
+          };
+        }
         if (key === "kcal") {
           const preset = person.macroPreset ?? "balanced";
           return {
@@ -11854,9 +12091,7 @@ function PlanBuilder({
           (person) =>
             person.name.trim() &&
             !automaticEstimateIssue(person) &&
-            person.daily.kcal >= NUTRITION_CONFIG.minimumTargetCalories &&
-            person.daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories &&
-            Number.isFinite(person.daily.kcal) &&
+            personCaloriesValid(person) &&
             person.includedSlots.some((slot) => mealSlots.includes(slot)),
         )
       );
@@ -12241,8 +12476,10 @@ function PlanBuilder({
   const invalidEstimatePerson = step === 3
     ? people.find((person) => automaticEstimateIssue(person))
     : undefined;
+  // В настройках плана шаг тот же, что и в мастере: неактивная «Сохранить
+  // ответ» тоже называет причину, а не «Ваш ответ готов».
   const composerBlocker =
-    chatTransition || mode === "settings" || step > 5 || stepIsValid()
+    chatTransition || step > 5 || stepIsValid()
       ? null
       : step === 0
           ? { title: "Проверьте даты", detail: "План можно составить на срок от 1 до 14 дней" }
@@ -12254,11 +12491,11 @@ function PlanBuilder({
                 ? invalidEstimatePerson
                   ? {
                       title: "Проверьте параметры",
-                      detail: `${invalidEstimatePerson.name.trim() || "Человек"}: ${automaticEstimateIssue(invalidEstimatePerson)} Норма считается только по допустимым параметрам`,
+                      detail: `${invalidEstimatePerson.name.trim() || "Человек"}: ${automaticEstimateIssue(invalidEstimatePerson)}`,
                     }
                   : {
                     title: "Проверьте людей и цели",
-                    detail: `Каждому нужны имя, норма ${NUTRITION_CONFIG.minimumTargetCalories}–${NUTRITION_CONFIG.maximumTargetCalories} ккал и хотя бы одно блюдо`,
+                    detail: `Каждому нужны имя, норма в допустимом диапазоне (взрослым ${NUTRITION_CONFIG.minimumTargetCalories}–${NUTRITION_CONFIG.maximumTargetCalories} ккал) и хотя бы одно блюдо`,
                   }
                 : step === 4
                   ? kitchenGaps.length
@@ -13058,43 +13295,6 @@ function changedParametersWord(count: number) {
   return "параметров";
 }
 
-/* Автоматическая норма существует только для допустимых параметров тела.
-   Раньше недопустимый возраст (например, 9 лет) оставлял на экране прежнюю
-   норму взрослого по умолчанию — 2460 ккал — и мастер пропускал дальше. */
-function automaticEstimateIssue(person: Person): string | null {
-  if (person.nutritionTargetMode === "manual" || !person.estimate) return null;
-  const calculation = calculateNutritionTarget(estimateOf(person));
-  if ("target" in calculation) return null;
-  return calculation.issues.find((issue) => issue.severity === "error")?.message
-    ?? "Параметры вне допустимого диапазона.";
-}
-function estimateOf(person: Person): NutritionWizardInput {
-  const saved = person.estimate as
-    | (Partial<NutritionWizardInput> & { goal?: string })
-    | undefined;
-  const savedGoal: string | undefined = saved?.goal;
-  return {
-    sex: saved?.sex ?? defaultNutritionEstimate.sex,
-    age: saved?.age ?? defaultNutritionEstimate.age,
-    height: saved?.height ?? defaultNutritionEstimate.height,
-    weight: saved?.weight ?? defaultNutritionEstimate.weight,
-    activity: saved?.activity ?? defaultNutritionEstimate.activity,
-    musclePriority:
-      saved?.musclePriority ?? defaultNutritionEstimate.musclePriority,
-    goal:
-      savedGoal === "lose"
-        ? "loss"
-        : savedGoal === "keep"
-          ? "maintenance"
-          : savedGoal === "gain"
-            ? "gain"
-            : ((savedGoal as NutritionGoal | undefined) ??
-              defaultNutritionEstimate.goal),
-    monthlyWeightChangeKg:
-      saved?.monthlyWeightChangeKg ??
-      defaultNutritionEstimate.monthlyWeightChangeKg,
-  };
-}
 
 function PeopleStep({
   kitchenEquipment,
@@ -13150,17 +13350,25 @@ function PeopleStep({
   if (!person) return null;
 
   const manual = person.nutritionTargetMode !== "auto";
+  const child = person.kind === "child";
+  const childDraft: Partial<ChildNutritionInput> = person.childEstimate ?? {};
+  const childInput = child ? childEstimateOf(person.childEstimate) : null;
+  const childCalculation = childInput ? calculateChildNutritionTarget(childInput) : null;
   const draft = estimateOf(person);
   const calculation = calculateNutritionTarget(draft);
-  const computed = "target" in calculation ? calculation.target : null;
+  const computed = child
+    ? childCalculation && "target" in childCalculation ? childCalculation.target : null
+    : "target" in calculation ? calculation.target : null;
+  const normUnknown = !manual && !computed;
+  const calorieRange = personCalorieRange(person) ?? [800, 3000];
   const coverage = recipeCoverageFor(person, menuStyle, batchDays, kitchenEquipment);
   const fromMacros = macroCalories(person.daily);
   const gap = Math.abs(fromMacros - person.daily.kcal);
   const converges = gap / Math.max(person.daily.kcal, 1) <= 0.03;
   const dailyCaloriesValid =
     Number.isFinite(person.daily.kcal) &&
-    person.daily.kcal >= NUTRITION_CONFIG.minimumTargetCalories &&
-    person.daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories;
+    person.daily.kcal >= calorieRange[0] &&
+    person.daily.kcal <= calorieRange[1];
   const calorieErrorId = `macro-${person.id}-calorie-range`;
 
   function selectPerson(id: string) {
@@ -13266,13 +13474,17 @@ function PeopleStep({
   }
   function resumeAutoCalculation() {
     if (!computed) return;
-    onUpdate(person.id, {
-      estimate: draft,
-      daily: computed,
-      macroPreset: "custom",
-      nutritionTargetMode: "auto",
-    });
-    const explanation = `Пересчитал по параметрам тела. Было ${person.daily.kcal.toLocaleString("ru-RU")}.`;
+    onUpdate(person.id, child
+      ? { daily: computed, macroPreset: "custom", nutritionTargetMode: "auto" }
+      : {
+          estimate: draft,
+          daily: computed,
+          macroPreset: "custom",
+          nutritionTargetMode: "auto",
+        });
+    const explanation = child
+      ? `Пересчитал по возрасту. Было ${person.daily.kcal.toLocaleString("ru-RU")}.`
+      : `Пересчитал по параметрам тела. Было ${person.daily.kcal.toLocaleString("ru-RU")}.`;
     setNormExplanation(explanation);
     setUpdatedVisible(true);
     if (updatedTimerRef.current !== null)
@@ -13285,6 +13497,56 @@ function PeopleStep({
     changeWindowRef.current = null;
     if (changeWindowTimerRef.current !== null)
       window.clearTimeout(changeWindowTimerRef.current);
+  }
+  /* Семейный режим (2026-10-12): взрослый или ребёнок выбирается первым
+     полем карточки. Ребёнку сразу отмечаются «Алкоголь в блюде» и
+     «Спортивный протеин»; «Острое» — когда указан возраст до 12 лет. */
+  function switchKind(next: "adult" | "child") {
+    if (child === (next === "child")) return;
+    if (next === "child") {
+      onUpdate(person.id, {
+        kind: "child",
+        estimate: undefined,
+        childEstimate: { activity: "usual" },
+        nutritionTargetMode: "auto",
+        macroPreset: "custom",
+        name: !person.name.trim() || /^Человек \d+$/.test(person.name.trim()) ? "Ребёнок" : person.name,
+        hardExclusions: [...new Set<Allergen>([...(person.hardExclusions ?? []), "alcohol"])],
+        dislikes: [...new Set([...(person.dislikes ?? []), "sportProtein"])],
+      });
+    } else {
+      const estimate: NutritionWizardInput = { ...defaultNutritionEstimate, goal: "maintenance" };
+      const adultCalculation = calculateNutritionTarget(estimate);
+      onUpdate(person.id, {
+        kind: undefined,
+        childEstimate: undefined,
+        estimate,
+        daily: "target" in adultCalculation ? adultCalculation.target : person.daily,
+        nutritionTargetMode: "auto",
+        macroPreset: "custom",
+      });
+    }
+    setNormExplanation(null);
+    setUpdatedVisible(false);
+  }
+  function patchChild(patch: Partial<ChildNutritionInput>) {
+    const next = { ...childDraft, ...patch };
+    const input = childEstimateOf(next);
+    const update: Partial<Person> = { childEstimate: next };
+    if (
+      patch.age !== undefined &&
+      !childEstimateOf({ ...childDraft, sex: next.sex ?? "female" }) &&
+      childEstimateOf({ ...next, sex: next.sex ?? "female" }) &&
+      (next.age ?? 99) <= 11 &&
+      !(person.dislikes ?? []).includes("spicy")
+    )
+      update.dislikes = [...(person.dislikes ?? []), "spicy"];
+    const nextCalculation = input ? calculateChildNutritionTarget(input) : null;
+    if (!manual && nextCalculation && "target" in nextCalculation) {
+      update.daily = nextCalculation.target;
+      update.macroPreset = "custom";
+    }
+    onUpdate(person.id, update);
   }
   function enterManualMode() {
     onUpdate(person.id, { nutritionTargetMode: "manual" });
@@ -13322,17 +13584,19 @@ function PeopleStep({
                   className={`eater-tile glass-card${active ? " is-active" : ""}${addedTileId === item.id ? " is-added" : ""}`}
                   role="tab"
                   aria-selected={active}
-                  aria-label={`${item.name || "Человек"}, ${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
+                  aria-label={`${item.name || "Человек"}${item.kind === "child" ? ", ребёнок" : ""}, ${automaticEstimateIssue(item) ? "норма не рассчитана" : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}`}
                   onClick={() => selectPerson(item.id)}
                 >
-                  <span className={`eater-tile-avatar tone-${index % 4}`} aria-hidden="true">
+                  <span className={`eater-tile-avatar tone-${index % 4}${item.kind === "child" ? " is-child" : ""}`} aria-hidden="true">
                     {(item.name || "Человек").trim().slice(0, 1).toUpperCase()}
                   </span>
                   <span className="eater-tile-name">{item.name || "Человек"}</span>
                   <span className="eater-tile-meta">
                     {active
                       ? "Настраиваю"
-                      : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
+                      : automaticEstimateIssue(item)
+                        ? "—"
+                        : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
                   </span>
                 </button>
               );
@@ -13359,9 +13623,26 @@ function PeopleStep({
       </p>
 
       <section className="glass-card person-card">
+        <div className="field">
+          <span className="field-label">Кто это</span>
+          <div
+            className="seg seg-2 person-kind"
+            role="radiogroup"
+            aria-label="Взрослый или ребёнок"
+            style={{ "--segment-index": child ? 1 : 0 } as CSSProperties}
+          >
+            <span className="seg-indicator" aria-hidden />
+            <button role="radio" aria-checked={!child} onClick={() => switchKind("adult")}>
+              Взрослый
+            </button>
+            <button role="radio" aria-checked={child} onClick={() => switchKind("child")}>
+              Ребёнок 3–17 лет
+            </button>
+          </div>
+        </div>
         <label className="field">
           <span className="field-label">
-            Имя <em>видно только вам</em>
+            Имя <em>{child ? "для подписи контейнеров" : "видно только вам"}</em>
           </span>
           <span className="field-box">
             <input
@@ -13373,6 +13654,76 @@ function PeopleStep({
           </span>
         </label>
 
+        {child ? (
+          <>
+            <div className="field-row field-row-2">
+              <label className="field">
+                <span className="field-label">Возраст</span>
+                <span className="field-box">
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    enterKeyHint="next"
+                    min={CHILD_AGE_RANGE[0]}
+                    max={CHILD_AGE_RANGE[1]}
+                    value={childDraft.age ?? ""}
+                    aria-label={`Возраст, ${person.name || "ребёнок"}`}
+                    onChange={(event) =>
+                      patchChild({ age: event.target.value === "" ? undefined : Math.round(Number(event.target.value)) })
+                    }
+                  />
+                  <em>лет</em>
+                </span>
+              </label>
+              <div className="field">
+                <span className="field-label">Пол</span>
+                <div
+                  className={`seg seg-2${childDraft.sex ? "" : " is-unset"}`}
+                  role="radiogroup"
+                  aria-label="Пол ребёнка"
+                  style={{ "--segment-index": childDraft.sex === "female" ? 1 : 0 } as CSSProperties}
+                >
+                  <span className="seg-indicator" aria-hidden />
+                  {(["male", "female"] as Sex[]).map((value) => (
+                    <button
+                      key={value}
+                      role="radio"
+                      aria-checked={childDraft.sex === value}
+                      onClick={() => patchChild({ sex: value })}
+                    >
+                      {value === "male" ? "Мальчик" : "Девочка"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+            {childDraft.age !== undefined && childDraft.age > 0 && childDraft.age < CHILD_AGE_RANGE[0] && (
+              <small className="field-hint">
+                Для детей до 3 лет Mise пока не считает порции: питание малыша лучше обсудить с педиатром.
+              </small>
+            )}
+            {childDraft.age !== undefined && childDraft.age >= CHILD_ACTIVITY_FROM_AGE && childDraft.age <= CHILD_AGE_RANGE[1] ? (
+              <label className="field">
+                <span className="field-label">Подвижность</span>
+                <span className="field-box">
+                  <select
+                    value={childDraft.activity ?? "usual"}
+                    onChange={(event) => patchChild({ activity: event.target.value as ChildActivity })}
+                  >
+                    {(Object.keys(childActivityMeta) as ChildActivity[]).map((key) => (
+                      <option key={key} value={key}>
+                        {childActivityMeta[key]}
+                      </option>
+                    ))}
+                  </select>
+                </span>
+              </label>
+            ) : (
+              <small className="field-hint">До 6 лет учитывается средняя подвижность для возраста.</small>
+            )}
+          </>
+        ) : (
+          <>
         <div className="field-row">
           {bodyFields.map((field) => (
             <label className="field" key={field.key}>
@@ -13503,22 +13854,28 @@ function PeopleStep({
           </span>
           <span>Тренируюсь, важно сохранить мышцы</span>
         </button>
+          </>
+        )}
       </section>
 
       <section className="glass-card norm-card">
         <div className="norm-head">
           <div>
             <p className="kicker">
-              Норма {person.name || "человека"} ·{" "}
-              {manual ? "ввели вы" : "считаю на лету"}
+              {child ? "Потребность" : "Норма"} {person.name || "человека"} ·{" "}
+              {manual ? "ввели вы" : child ? "по возрасту" : "считаю на лету"}
             </p>
             <p
               className="norm-figure"
-              aria-label={`${person.daily.kcal.toLocaleString("ru-RU")} килокалорий в день`}
+              aria-label={normUnknown ? "Норма не рассчитана" : `${person.daily.kcal.toLocaleString("ru-RU")} килокалорий в день`}
             >
-              <b aria-hidden="true">
-                <AnimatedNumber value={person.daily.kcal} step={5} duration={420} />
-              </b>{" "}
+              {normUnknown ? (
+                <b aria-hidden="true">—</b>
+              ) : (
+                <b aria-hidden="true">
+                  <AnimatedNumber value={person.daily.kcal} step={5} duration={420} />
+                </b>
+              )}{" "}
               <span aria-hidden="true">ккал/день</span>
             </p>
           </div>
@@ -13543,14 +13900,16 @@ function PeopleStep({
           <p className={`norm-reason${manual ? " is-manual" : ""}`}>
             <span aria-hidden="true">↻</span>
             {manual
-              ? "Считаю по вашему числу, формулу не применяю."
+              ? child
+                ? "Считаю по вашему числу, возрастную норму не применяю."
+                : "Считаю по вашему числу, формулу не применяю."
               : normExplanation}
           </p>
         )}
 
         {manual && (
           <label className="field" htmlFor={`macro-${person.id}-kcal`}>
-            <span className="field-label">Калории в день</span>
+            <span className="field-label">{child ? "Калории в день — норма от врача или диетолога" : "Калории в день"}</span>
             <span className="field-box">
               <MacroNumberInput
                 id={`macro-${person.id}-kcal`}
@@ -13565,13 +13924,13 @@ function PeopleStep({
               <em>ккал</em>
             </span>
             <small className="field-hint" id={calorieErrorId}>
-              Допустимый дневной диапазон — {NUTRITION_CONFIG.minimumTargetCalories}–
-              {NUTRITION_CONFIG.maximumTargetCalories} ккал.
+              Допустимый дневной диапазон{child ? " для этого возраста" : ""} — {calorieRange[0]}–
+              {calorieRange[1]} ккал.
             </small>
           </label>
         )}
 
-        <div className="norm-macros">
+        {!normUnknown && <div className="norm-macros">
           {macroFieldMeta.map(({ key, label, color, perGram }) => {
             const share = Math.min(
               100,
@@ -13619,9 +13978,9 @@ function PeopleStep({
               </div>
             );
           })}
-        </div>
+        </div>}
 
-        {manual && <div className="field">
+        {manual && !child && <div className="field">
           <span className="field-label">Как распределить БЖУ</span>
           <div
             className="chip-row wrap-chips"
@@ -13657,7 +14016,11 @@ function PeopleStep({
         </div>}
 
         <div className="norm-manual-row">
-          <span>{manual ? "Вернуться к ориентиру Mise" : "Хочу ввести норму самостоятельно"}</span>
+          <span>
+            {manual
+              ? child ? "Вернуться к возрастной норме" : "Вернуться к ориентиру Mise"
+              : child ? "Врач назначил свою норму" : "Хочу ввести норму самостоятельно"}
+          </span>
           <button
             type="button"
             disabled={manual && !computed}
@@ -13667,7 +14030,7 @@ function PeopleStep({
           </button>
         </div>
 
-        <p
+        {!normUnknown && <p
           className={`norm-check ${converges ? "is-ok" : "is-off"}`}
           aria-label={
             converges
@@ -13694,11 +14057,11 @@ function PeopleStep({
               </span>
             </>
           )}
-        </p>
+        </p>}
 
-        {!dailyCaloriesValid && (
+        {!dailyCaloriesValid && !normUnknown && (
           <Note tone="warn" role="alert">
-            Итог по БЖУ должен быть от {NUTRITION_CONFIG.minimumTargetCalories} до {NUTRITION_CONFIG.maximumTargetCalories} ккал. Измените калории или любой из макросов — остальные значения пересчитаются автоматически.
+            Итог по БЖУ должен быть от {calorieRange[0]} до {calorieRange[1]} ккал. Измените калории или любой из макросов — остальные значения пересчитаются автоматически.
           </Note>
         )}
 
@@ -13710,11 +14073,19 @@ function PeopleStep({
           </Note>
         )}
 
-        {calculation.issues.map((issue) => (
-          <Note tone="warn" key={issue.code}>
-            {issue.message}
-          </Note>
-        ))}
+        {child ? (
+          <p className="field-hint norm-child-note">
+            Средняя потребность детей этого возраста. У конкретного ребёнка она бывает на 15–20% больше или меньше — ориентируйтесь на аппетит: порцию можно не доесть или добавить. Если врач назначил особое питание, введите его цифры вручную.
+          </p>
+        ) : (
+          calculation.issues.map((issue) => (
+            <Note tone="warn" key={issue.code}>
+              {issue.code === "invalid_age" && draft.age > 0 && draft.age < 18
+                ? "Для ребёнка выберите вверху «Ребёнок 3–17 лет»: взрослая формула детям не подходит."
+                : issue.message}
+            </Note>
+          ))
+        )}
       </section>
 
       <section className="glass-card person-card">
@@ -13736,6 +14107,11 @@ function PeopleStep({
               );
             })}
           </div>
+          {child && (
+            <small className="field-hint">
+              Ест в саду или школе — снимите эти приёмы. Выходные Mise отдельно не планирует.
+            </small>
+          )}
         </div>
 
         <div className="field">
@@ -13797,21 +14173,42 @@ function PeopleStep({
           <small className="field-hint">
             При аллергии сверяйте состав и возможные следы на упаковке.
           </small>
+          {child && (
+            <small className="field-hint">
+              Ребёнку заранее отмечены «Алкоголь», «Спортивный протеин» и до 12 лет «Острое». С ребёнком в плане общие блюда подбираются без отмеченного — снимите, если ему можно.
+            </small>
+          )}
         </div>
       </section>
 
-      <DailyBalance
-        goal={person.daily}
-        planned={plannedTargetsFor(person)}
-        context="В выбранных позициях"
-      />
+      {!normUnknown && (
+        <DailyBalance
+          goal={person.daily}
+          planned={plannedTargetsFor(person)}
+          context="В выбранных позициях"
+          child={child}
+        />
+      )}
 
-      <p className="onboarding-fineprint">
-        Расчёт по формуле Миффлина — Сан-Жеора. Это ориентир, а не медицинская рекомендация.
-      </p>
+      {child ? (
+        <>
+          <p className="onboarding-fineprint">
+            Ориентир по возрастным нормам ВОЗ/ФАО (2004), а не медицинская рекомендация. Детям Mise не урезает калории.
+          </p>
+          {childDraft.age !== undefined && childDraft.age <= 4 && (
+            <p className="onboarding-fineprint">
+              До 5 лет: орехи и семечки — только молотыми или рублеными, колбаски — вдоль тонкими полосками, виноград и черри — на четвертинки, сырую морковь и яблоко — тереть.
+            </p>
+          )}
+        </>
+      ) : (
+        <p className="onboarding-fineprint">
+          Расчёт по формуле Миффлина — Сан-Жеора. Это ориентир, а не медицинская рекомендация.
+        </p>
+      )}
 
       <div className="chip-row menu-actions">
-        {people[0] && person.id !== people[0].id && (
+        {people[0] && person.id !== people[0].id && !child && people[0].kind !== "child" && (
           <button
             className="chip"
             onClick={() =>
@@ -14734,11 +15131,13 @@ function ReviewStep({
           </p>
         </div>
       </section>
+      {/* Белок — цель взрослых; детям Mise не ставит «недобор белка». */}
+      {plan.people.some(person => person.kind !== "child") ? (
       <ProteinReview
         batches={plan.batches.map(batch => ({
           id: batch.id,
           period: `${formatDate(batch.start)} — ${formatDate(batch.end)}`,
-          people: plan.people.map(person => {
+          people: plan.people.filter(person => person.kind !== "child").map(person => {
             const assessment = dailyProteinAssessment(plan, batch, person);
             return { ...assessment, id: person.id, name: person.name, actual: assessment.actual.protein };
           }),
@@ -14746,6 +15145,16 @@ function ReviewStep({
         fiberNote={reviewFiberNote(plan)}
         onEdit={() => onEdit(5)}
       />
+      ) : (
+        <p className="protein-review-fiber glass-card review-fiber-only">{reviewFiberNote(plan)}</p>
+      )}
+      {plan.people.some(person => person.kind === "child") && (plan.menuStyle === "vegan" || plan.menuStyle === "paleo") && (
+        <Note tone="warn" label="Ребёнок в плане">
+          {plan.menuStyle === "vegan"
+            ? "На веганском меню ребёнку нужен источник витамина B12; кальций, железо и йод лучше обсудить с педиатром."
+            : "В палео-меню нет молочного и круп: кальций и энергию для ребёнка лучше обсудить с педиатром."}
+        </Note>
+      )}
       <section className="review-list glass-card">
         <button onClick={() => onEdit(0)}>
           <Icon name="clock" />
@@ -15744,6 +16153,7 @@ function RecipeView({
       : 0;
   const contactWarnings =
     plan && batch ? crossContactWarnings(plan, batch) : [];
+  const childNotes = childServingNotes(recipe, eaters);
   const originLabel =
     recipe.provenance.kind === "parsed"
       ? "Из источника"
@@ -15908,6 +16318,9 @@ function RecipeView({
         <h1>{recipe.title}</h1>
         {recipe.id.startsWith("simple-") && <small>{recipe.provenance.kind === "generated" ? "Изображение создано для Mise; размер порции на фото условный." : "Фото исходного рецепта. Гарнир и подача могут отличаться; рассчитанный состав указан ниже."}</small>}
       </section>
+      {childNotes.map((note) => (
+        <p key={note} className="recipe-child-note">{note}</p>
+      ))}
       {contactWarnings.length > 0 && (
         <section className="allergy-warning glass-card" role="alert">
           <span>!</span>

@@ -4060,6 +4060,13 @@ p {
 .protein-review-status.is-reached { color: var(--mint-text); }
 .protein-review-note { margin: 18px 0 0; }
 .protein-review-fiber { margin: 14px 0 0; color: var(--muted); font-size: var(--text-min); line-height: 1.5; }
+.review-fiber-only { margin-top: 13px; padding: 14px 16px; }
+.recipe-child-note {
+  margin: 12px 16px 0;
+  color: var(--muted);
+  font-size: var(--text-min);
+  line-height: 1.5;
+}
 .protein-review .protein-review-edit {
   width: 100%;
   min-height: 44px;
@@ -6660,6 +6667,21 @@ p {
   background: transparent;
   color: var(--ink);
   font-weight: var(--weight-semibold);
+}
+/* Пол ребёнка не выбран заранее: подсветка появляется после выбора. */
+.seg.is-unset .seg-indicator {
+  opacity: 0;
+}
+.person-kind button {
+  line-height: 1.2;
+}
+/* Ребёнок в плитке едока — тонкое кольцо вокруг инициала. */
+.eater-tile-avatar.is-child {
+  outline: 2px solid rgba(255, 255, 255, 0.85);
+  outline-offset: -5px;
+}
+.norm-child-note {
+  margin: 12px 0 0;
 }
 /* Цель — решение, а не переключатель вида, поэтому акцент. */
 .seg-accent button[aria-checked="true"] {

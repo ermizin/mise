@@ -20,9 +20,18 @@ const productionRecipesById = new Map(
   planRecipeRegistry.recipes.map((recipe) => [recipe.id, recipe]),
 );
 
-const minimumDailyCalories = 1_200;
-const maximumDailyCalories = 5_000;
 const macroCalorieTolerance = 5;
+const adultCalorieRange = [1_200, 5_000] as const;
+
+/* Повторяет `personCalorieRange` из domain/nutrition.ts (модуль сервера не
+   импортирует TypeScript-домен): взрослым 1200–5000 ккал; ребёнку 3–10 лет
+   800–3000, 11–17 лет — как взрослым. Совпадение закреплено тестом. */
+function personCalorieRange(person: RecordValue): readonly [number, number] | null {
+  if (person.kind !== "child") return adultCalorieRange;
+  const child = person.childEstimate;
+  if (!record(child) || (child.sex !== "male" && child.sex !== "female") || !integer(child.age, 3, 17)) return null;
+  return (child.age as number) <= 10 ? [800, 3_000] : adultCalorieRange;
+}
 
 type RecordValue = Record<string, unknown>;
 
@@ -75,8 +84,13 @@ function validForBatch(recipe: RegistryRecipe, slot: string, days: number, equip
   return compatible && recipeSupportsSlot(recipe, slot) && (recipe.storageDays >= days || recipe.freezable);
 }
 
-function validDailyNutrition(value: unknown) {
-  if (!record(value)) return false;
+/* Взрослым — 1200–5000 ккал. Ребёнку (семейный режим, 2026-10-12) диапазон
+   задаёт возраст из `childEstimate`: до 10 лет 800–3000, с 11 лет — как у
+   взрослых. Ребёнок без допустимого возраста 3–17 не сохраняется: иначе
+   любой взрослый обошёл бы нижнюю границу пометкой «ребёнок». */
+function validDailyNutrition(value: unknown, range: readonly [number, number] | null) {
+  if (!record(value) || !range) return false;
+  const [minimumDailyCalories, maximumDailyCalories] = range;
   const { kcal, protein, fat, carbs } = value;
   if (
     !Number.isFinite(kcal) ||
@@ -127,7 +141,8 @@ export function validatePlanForPersistence(value: unknown): PlanValidationResult
       : record(person) && Array.isArray(person.hardExclusions) && person.hardExclusions.every((allergen) => string(allergen, 100))
         ? person.hardExclusions as string[]
         : null;
-    if (!record(person) || !string(person.id, 100) || people.has(person.id) || !string(person.name, 100) || !validDailyNutrition(person.daily) || !Array.isArray(person.includedSlots) || new Set(person.includedSlots).size !== person.includedSlots.length || !person.includedSlots.every((slot) => typeof slot === "string" && planMealSlots.includes(slot)) || hardExclusions === null) {
+    const kindValid = record(person) && (person.kind === undefined || person.kind === "adult" || person.kind === "child");
+    if (!record(person) || !kindValid || !string(person.id, 100) || people.has(person.id) || !string(person.name, 100) || !validDailyNutrition(person.daily, personCalorieRange(person)) || !Array.isArray(person.includedSlots) || new Set(person.includedSlots).size !== person.includedSlots.length || !person.includedSlots.every((slot) => typeof slot === "string" && planMealSlots.includes(slot)) || hardExclusions === null) {
       return { valid: false, error: "plan has an invalid person", status: 400 };
     }
     people.set(person.id, { id: person.id, includedSlots: person.includedSlots as string[], hardExclusions });

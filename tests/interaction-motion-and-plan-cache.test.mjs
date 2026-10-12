@@ -177,7 +177,8 @@ test("goal calculator follows motion_wizard_1 card 9d", async () => {
   );
   assert.match(peopleStep, /className="seg seg-2"/);
   assert.match(peopleStep, /className="seg seg-accent seg-3"/);
-  assert.equal((peopleStep.match(/className="seg-indicator"/g) ?? []).length, 2);
+  // Взрослый/ребёнок, пол взрослого, пол ребёнка и цель взрослого (семейный режим).
+  assert.equal((peopleStep.match(/className="seg-indicator"/g) ?? []).length, 4);
   assert.match(peopleStep, /AnimatedNumber value=\{person\.daily\.kcal\} step=\{5\} duration=\{420\}/);
   assert.match(peopleStep, /AnimatedNumber value=\{fromMacros\} step=\{5\} duration=\{420\}/);
   assert.match(css, /\.seg-indicator \{[\s\S]*?transform 290ms cubic-bezier\(0\.34, 1\.28, 0\.5, 1\)/);

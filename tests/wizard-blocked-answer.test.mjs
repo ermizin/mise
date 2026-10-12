@@ -90,13 +90,18 @@ test("an impossible body estimate blocks the people step instead of keeping the 
     page.indexOf("function estimateOf("),
   );
   assert.ok(helper.length > 0, "the people step derives an estimate issue");
-  assert.match(helper, /nutritionTargetMode === "manual" \|\| !person\.estimate\) return null/, "manual norms are the person's own");
+  assert.match(helper, /nutritionTargetMode === "manual" \|\| !person\.estimate\) return null/, "manual adult norms are the person's own");
   assert.match(helper, /if \("target" in calculation\) return null;/, "warnings of a valid calculation do not block");
+  // Взрослая формула детям не подходит: родитель видит путь к детскому расчёту,
+  // а не приглашение ввести «18 лет».
+  assert.match(helper, /Для ребёнка выберите вверху карточки «Ребёнок 3–17 лет»/);
+  assert.doesNotMatch(helper, /18–100/);
+  assert.match(helper, /Укажите возраст ребёнка/, "a child needs an age even for a manual norm");
   const validity = page.slice(page.indexOf("function stepIsValid("), page.indexOf("if (index === 4)", page.indexOf("function stepIsValid(")));
   assert.match(validity, /!automaticEstimateIssue\(person\)/, "«Далее» waits for valid parameters");
+  assert.match(validity, /personCaloriesValid\(person\)/, "the calorie range depends on the person");
   const composer = page.slice(page.indexOf("const invalidEstimatePerson ="), page.indexOf("const composerStatus ="));
   assert.match(composer, /title: "Проверьте параметры"/);
-  assert.match(composer, /Норма считается только по допустимым параметрам/);
 });
 
 test("people added after the first one do not start on a calorie deficit", () => {

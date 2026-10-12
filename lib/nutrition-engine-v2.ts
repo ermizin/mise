@@ -2,6 +2,13 @@
 // lives in domain/nutrition.ts so formulas and policy exist in one place only.
 export {
   ACTIVITY_FACTORS,
+  CHILD_ACTIVITY_FROM_AGE,
+  CHILD_AGE_RANGE,
+  calculateChildNutritionTarget,
+  childEstimateOf,
+  childMacrosForCalories,
+  personCalorieRange,
+  personFiberReference,
   MEAL_SLOT_SHARES,
   NUTRITION_CONFIG,
   calculateMacroTargets,
@@ -23,6 +30,9 @@ export {
 
 export type {
   ActivityKey,
+  ChildActivity,
+  ChildNutritionInput,
+  PersonKind,
   MacroKey,
   MacroPreset,
   MacroPresetOption,

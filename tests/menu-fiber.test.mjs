@@ -134,6 +134,7 @@ test("fiber is shown as an estimate on the dish, on review and in the week asses
   assert.match(page, /\$\{person && eaters\.length > 1 \? `Порция: \$\{person\.name\} · ` : ""\}|Порция: \$\{person\.name\} · /);
   assert.match(page, /fiberNote=\{reviewFiberNote\(plan\)\}/);
   assert.match(page, /Ориентир МР 2\.3\.1\.0253-21 — 20–25 г в день или 10 г на 1000 ккал/);
+  assert.match(page, /детям — по возрасту, от 12 до 22 г/);
   assert.match(page, /<p className="week-balance">\{fiberAssessmentText\(planFiberAssessment\(activePlan, person\)\)\}<\/p>/);
   // Объекты из vm-контекста сравниваются по значению.
   // МР: «20–25 г/сутки или 10 г/1000 ккал» — нижняя граница не выше 10 г на 1000 ккал цели.

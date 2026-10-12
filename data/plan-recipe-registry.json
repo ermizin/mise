@@ -361,6 +361,7 @@
       "id": "goodfood-beef-red-wine-potato-pie",
       "slot": "dinner",
       "allergens": [
+        "alcohol",
         "egg",
         "gluten",
         "milk",
@@ -1346,6 +1347,7 @@
       "id": "goodfood-slow-cooker-beef-bourguignon",
       "slot": "dinner",
       "allergens": [
+        "alcohol",
         "gluten",
         "soy"
       ],
@@ -1764,6 +1766,7 @@
       "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
       "slot": "dinner",
       "allergens": [
+        "alcohol",
         "gluten",
         "milk",
         "soy"
@@ -6357,6 +6360,7 @@
       "id": "tmpm-26441",
       "slot": "dinner",
       "allergens": [
+        "alcohol",
         "gluten",
         "peanut",
         "sesame",
@@ -6799,6 +6803,7 @@
       "id": "tmpm-28247",
       "slot": "dinner",
       "allergens": [
+        "alcohol",
         "gluten",
         "soy"
       ],
