@@ -6474,7 +6474,11 @@ function proteinAssessmentText(assessment: ReturnType<typeof dailyProteinAssessm
     : `По плану ${actual.protein} из ${target} г белка в день.${shortfall > 0 ? ` Ниже цели на ${shortfall} г.` : " Цель достигнута."}`;
 }
 function newPerson(index = 0): Person {
-  const estimate = { ...defaultNutritionEstimate };
+  // Второй и следующие люди — не обязательно на дефиците: по умолчанию
+  // поддержание веса, первый человек сохраняет прежний сценарий.
+  const estimate: NutritionWizardInput = index === 0
+    ? { ...defaultNutritionEstimate }
+    : { ...defaultNutritionEstimate, goal: "maintenance" };
   const calculation = calculateNutritionTarget(estimate);
   return {
     id: `person-${Date.now()}-${index}`,
@@ -11741,6 +11745,7 @@ function PlanBuilder({
         people.every(
           (person) =>
             person.name.trim() &&
+            !automaticEstimateIssue(person) &&
             person.daily.kcal >= NUTRITION_CONFIG.minimumTargetCalories &&
             person.daily.kcal <= NUTRITION_CONFIG.maximumTargetCalories &&
             Number.isFinite(person.daily.kcal) &&
@@ -12125,6 +12130,9 @@ function PlanBuilder({
     !chatTransition;
   /* Неактивная кнопка без причины — тупик: на телефоне статус скрыт ради
      компактности, поэтому причина блокировки показывается отдельно. */
+  const invalidEstimatePerson = step === 3
+    ? people.find((person) => automaticEstimateIssue(person))
+    : undefined;
   const composerBlocker =
     chatTransition || mode === "settings" || step > 5 || stepIsValid()
       ? null
@@ -12135,7 +12143,12 @@ function PlanBuilder({
             : step === 2
               ? { title: "Выберите направление", detail: "Это направление меню сейчас недоступно" }
               : step === 3
-                ? {
+                ? invalidEstimatePerson
+                  ? {
+                      title: "Проверьте параметры",
+                      detail: `${invalidEstimatePerson.name.trim() || "Человек"}: ${automaticEstimateIssue(invalidEstimatePerson)} Норма считается только по допустимым параметрам`,
+                    }
+                  : {
                     title: "Проверьте людей и цели",
                     detail: `Каждому нужны имя, норма ${NUTRITION_CONFIG.minimumTargetCalories}–${NUTRITION_CONFIG.maximumTargetCalories} ккал и хотя бы одно блюдо`,
                   }
@@ -12937,6 +12950,16 @@ function changedParametersWord(count: number) {
   return "параметров";
 }
 
+/* Автоматическая норма существует только для допустимых параметров тела.
+   Раньше недопустимый возраст (например, 9 лет) оставлял на экране прежнюю
+   норму взрослого по умолчанию — 2460 ккал — и мастер пропускал дальше. */
+function automaticEstimateIssue(person: Person): string | null {
+  if (person.nutritionTargetMode === "manual" || !person.estimate) return null;
+  const calculation = calculateNutritionTarget(estimateOf(person));
+  if ("target" in calculation) return null;
+  return calculation.issues.find((issue) => issue.severity === "error")?.message
+    ?? "Параметры вне допустимого диапазона.";
+}
 function estimateOf(person: Person): NutritionWizardInput {
   const saved = person.estimate as
     | (Partial<NutritionWizardInput> & { goal?: string })

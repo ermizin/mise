@@ -81,3 +81,25 @@ test("the note about dishes to re-pick counts them in Russian", async () => {
   assert.doesNotMatch(source, /\$\{staleCount\} блюда/u);
   assert.match(source, /withPlural\(staleCount, FORMS\.dish\)/u);
 });
+
+test("an impossible body estimate blocks the people step instead of keeping the default norm", () => {
+  // На Пикабу мама ввела возраст ребёнка 9 лет: расчёт отклонил возраст, а на
+  // экране осталась норма взрослого по умолчанию — 2460 ккал.
+  const helper = page.slice(
+    page.indexOf("function automaticEstimateIssue("),
+    page.indexOf("function estimateOf("),
+  );
+  assert.ok(helper.length > 0, "the people step derives an estimate issue");
+  assert.match(helper, /nutritionTargetMode === "manual" \|\| !person\.estimate\) return null/, "manual norms are the person's own");
+  assert.match(helper, /if \("target" in calculation\) return null;/, "warnings of a valid calculation do not block");
+  const validity = page.slice(page.indexOf("function stepIsValid("), page.indexOf("if (index === 4)", page.indexOf("function stepIsValid(")));
+  assert.match(validity, /!automaticEstimateIssue\(person\)/, "«Далее» waits for valid parameters");
+  const composer = page.slice(page.indexOf("const invalidEstimatePerson ="), page.indexOf("const composerStatus ="));
+  assert.match(composer, /title: "Проверьте параметры"/);
+  assert.match(composer, /Норма считается только по допустимым параметрам/);
+});
+
+test("people added after the first one do not start on a calorie deficit", () => {
+  const factory = page.slice(page.indexOf("function newPerson("), page.indexOf("function macrosEqual("));
+  assert.match(factory, /index === 0\s*\? \{ \.\.\.defaultNutritionEstimate \}\s*: \{ \.\.\.defaultNutritionEstimate, goal: "maintenance" \}/);
+});
