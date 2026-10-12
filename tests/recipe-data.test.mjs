@@ -227,7 +227,7 @@ test("source photos and localization notes remain attached to legacy imported re
   // Карточки пакета расширения написаны редакцией без фото: у них нет чужого
   // снимка, который можно было бы выдать за свой, и они показывают заглушку.
   const extensionCards = productionRecipes.filter((item) => item.id.startsWith("mise-"));
-  assert.ok(extensionCards.length >= 80, "the extension package is part of the production catalog");
+  assert.ok(extensionCards.length >= 89, "the extension package is part of the production catalog");
   assert.ok(
     extensionCards.every(
       (item) =>
@@ -1139,8 +1139,8 @@ test("production catalog contains only explicitly reviewed complete recipes", ()
   assert.ok(productionRecipes.length >= 200);
   assert.equal(JSON.stringify([...visibleIds].sort()), JSON.stringify(expectedReadyIds));
   assert.ok(blockedIds.every((id) => !visibleIds.has(id)));
-  assert.equal(productionRecipes.filter((item) => item.provenance.kind === "generated").length, 25 + 80);
-  assert.equal(productionRecipes.filter((item) => item.id.startsWith("mise-")).length, 80);
+  assert.equal(productionRecipes.filter((item) => item.provenance.kind === "generated").length, 25 + 89);
+  assert.equal(productionRecipes.filter((item) => item.id.startsWith("mise-")).length, 89);
   assert.ok(productionRecipes.filter((item) => item.provenance.kind === "generated").every((item) => (item.id.startsWith("simple-generated-") || item.id.startsWith("mise-")) && item.provenance.editoriallyApproved === true));
   assert.ok(productionRecipes.every((item) => item.ingredients.length >= 3));
   assert.ok(productionRecipes.every(isProductionReadyRecipe));

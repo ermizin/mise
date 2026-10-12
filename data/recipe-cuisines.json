@@ -2993,6 +2993,60 @@
       "title": "Салат с тунцом, авокадо и кешью",
       "origin": "generated",
       "cuisine": "mediterranean"
+    },
+    {
+      "id": "mise-simple-carrot-tvorog-oat-bake",
+      "title": "Морковно-творожная запеканка с овсянкой и курагой",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "mise-simple-buckwheat-tvorog-bake",
+      "title": "Гречневая запеканка с творогом и яблоком",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "mise-simple-millet-tvorog-pumpkin-bake",
+      "title": "Пшённая запеканка с творогом и тыквой",
+      "origin": "generated",
+      "cuisine": "russian"
+    },
+    {
+      "id": "mise-simple-baked-oats-yogurt-blueberry",
+      "title": "Запечённая овсянка с йогуртом и черникой",
+      "origin": "generated",
+      "cuisine": "european"
+    },
+    {
+      "id": "mise-simple-overnight-oats-apple-carrot",
+      "title": "Ночная овсянка с йогуртом, яблоком и морковью",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "mise-simple-broccoli-pea-omelette",
+      "title": "Омлет с брокколи и зелёным горошком в духовке",
+      "origin": "generated",
+      "cuisine": "european"
+    },
+    {
+      "id": "mise-simple-lobio",
+      "title": "Лобио из красной фасоли с грецкими орехами",
+      "origin": "generated",
+      "cuisine": "georgian"
+    },
+    {
+      "id": "mise-simple-yogurt-chia-blueberry",
+      "title": "Чиа-пудинг на греческом йогурте с черникой",
+      "origin": "generated",
+      "cuisine": "international"
+    },
+    {
+      "id": "mise-simple-tvorog-carrot-spread-cucumber",
+      "title": "Творожная паста с морковью и огуречными палочками",
+      "origin": "generated",
+      "cuisine": "russian"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "createdAt": "2026-09-30",
-  "scope": "Расширение каталога по решению владельца от 2026-09-29: закрыть измеренные пробелы (перекусы, блюда для партий на 4–7 дней, завтраки с хранением, кухня без плиты) и открыть веганское и палео-направления.",
+  "scope": "Расширение каталога по решению владельца от 2026-09-29: закрыть измеренные пробелы (перекусы, блюда для партий на 4–7 дней, завтраки с хранением, кухня без плиты) и открыть веганское и палео-направления. Дополнение по решению владельца от 2026-10-12 (карточки со статусом authored_and_calculated_2026-10-12): девять простых карточек с клетчаткой и овощами после комментариев на Пикабу о моно-диете — шесть завтраков, лобио и два перекуса.",
   "nutritionBasis": "КБЖУ рассчитаны из canonical-профилей продуктов (USDA FoodData Central); значения сторонних страниц не используются.",
   "authorship": "Карточки составлены для Mise. Страницы ниже просмотрены как обзор распространённых блюд и способов хранения; тексты, количества и КБЖУ из них не заимствованы.",
   "consultedSources": [
@@ -8642,6 +8642,935 @@
         "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
       },
       "separate": "Авокадо, яблоко и заправку добавляйте перед едой."
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-carrot-tvorog-oat-bake",
+      "menus": [
+        "simple",
+        "protein",
+        "budget"
+      ],
+      "slot": "breakfast",
+      "cuisine": "russian",
+      "title": "Морковно-творожная запеканка с овсянкой и курагой",
+      "ingredients": [
+        {
+          "name": "Творог 5% (Простоквашино)",
+          "grams": 170,
+          "canonicalIngredientId": "tvorog_5_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.7
+          ]
+        },
+        {
+          "name": "Куриное яйцо",
+          "grams": 50,
+          "canonicalIngredientId": "egg_raw",
+          "role": "protein",
+          "range": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "Овсяные хлопья",
+          "grams": 35,
+          "canonicalIngredientId": "oats_raw",
+          "role": "carb",
+          "range": [
+            0.3,
+            2.2
+          ]
+        },
+        {
+          "name": "Морковь",
+          "grams": 200,
+          "canonicalIngredientId": "carrot_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Курага",
+          "grams": 25,
+          "canonicalIngredientId": "dried_apricots_processed",
+          "role": "carb",
+          "range": [
+            0.5,
+            1.5
+          ]
+        },
+        {
+          "name": "Сметана",
+          "grams": 10,
+          "canonicalIngredientId": "sour_cream_processed",
+          "role": "sauce",
+          "range": [
+            0.5,
+            1.5
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "ваниль",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        },
+        {
+          "name": "соль",
+          "amount": 0.3,
+          "unit": "g",
+          "note": "по вкусу, в пределах указанного"
+        }
+      ],
+      "steps": [
+        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Морковь натрите на мелкой тёрке, курагу промойте и мелко нарежьте.",
+        "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте морковь, курагу и хлопья.",
+        "Оставьте массу на 10 минут, чтобы хлопья набухли, переложите в форму слоем 3–4 см, разровняйте и смажьте сверху сметаной.",
+        "Запекайте 40–45 минут до золотистой корочки; внутри должно быть не менее 71 °C.",
+        "Остудите в форме 15 минут и разрежьте на порции."
+      ],
+      "activeMinutes": 15,
+      "totalMinutes": 75,
+      "cookware": 1,
+      "knifeActions": 1,
+      "equipment": [
+        "oven",
+        "baking_dish"
+      ],
+      "flavourTip": "Сладость дают морковь и курага, поэтому сахар не нужен. Морковь трите мелко — крупная стружка не успеет пропечься.",
+      "substitution": "Курагу можно заменить изюмом в том же весе; клетчатки станет немного меньше.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": true,
+        "freezerDays": 60,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "До 60 суток при −18 °C. Замораживать порциями в плотно закрытых контейнерах, оставив 1–2 см до крышки.",
+        "thaw": "Разморозить в холодильнике за ночь и прогреть до 74 °C в центре порции."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-buckwheat-tvorog-bake",
+      "menus": [
+        "simple",
+        "protein",
+        "budget"
+      ],
+      "slot": "breakfast",
+      "cuisine": "russian",
+      "title": "Гречневая запеканка с творогом и яблоком",
+      "ingredients": [
+        {
+          "name": "Гречка",
+          "grams": 40,
+          "canonicalIngredientId": "buckwheat_raw",
+          "role": "carb",
+          "range": [
+            0.3,
+            2.2
+          ]
+        },
+        {
+          "name": "Творог 5% (Простоквашино)",
+          "grams": 180,
+          "canonicalIngredientId": "tvorog_5_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.7
+          ]
+        },
+        {
+          "name": "Куриное яйцо",
+          "grams": 50,
+          "canonicalIngredientId": "egg_raw",
+          "role": "protein",
+          "range": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "Яблоко",
+          "grams": 180,
+          "canonicalIngredientId": "apple_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Сметана",
+          "grams": 10,
+          "canonicalIngredientId": "sour_cream_processed",
+          "role": "sauce",
+          "range": [
+            0.7,
+            1.25
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "вода",
+          "amount": 80,
+          "unit": "ml",
+          "note": "для варки; количество следует за крупой",
+          "ratioToCanonicalIngredientId": "buckwheat_raw",
+          "ratio": 2
+        },
+        {
+          "name": "корица",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        },
+        {
+          "name": "соль",
+          "amount": 0.3,
+          "unit": "g",
+          "note": "по вкусу, в пределах указанного"
+        }
+      ],
+      "steps": [
+        "Промытую гречку залейте отмеренной водой и варите под крышкой 15 минут, пока вода не впитается; остудите.",
+        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Яблоко натрите на крупной тёрке вместе с кожурой.",
+        "Разомните творог с яйцом, корицей и щепоткой соли, вмешайте гречку и яблоко.",
+        "Разровняйте массу в форме слоем 3–4 см, смажьте сверху сметаной и запекайте 35–40 минут до румяного верха; внутри должно быть не менее 71 °C.",
+        "Остудите в форме 15 минут и разрежьте на порции."
+      ],
+      "activeMinutes": 12,
+      "totalMinutes": 75,
+      "cookware": 2,
+      "knifeActions": 0,
+      "equipment": [
+        "stove",
+        "pot",
+        "oven",
+        "baking_dish"
+      ],
+      "flavourTip": "Это крупеник — старая русская запеканка. Гречку можно сварить накануне: холодная крупа держит форму лучше.",
+      "substitution": "Яблоко можно заменить тёртой морковью в том же весе.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": true,
+        "freezerDays": 60,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "До 60 суток при −18 °C. Замораживать порциями в плотно закрытых контейнерах, оставив 1–2 см до крышки.",
+        "thaw": "Разморозить в холодильнике за ночь и прогреть до 74 °C в центре порции."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-millet-tvorog-pumpkin-bake",
+      "menus": [
+        "simple",
+        "protein",
+        "budget"
+      ],
+      "slot": "breakfast",
+      "cuisine": "russian",
+      "title": "Пшённая запеканка с творогом и тыквой",
+      "ingredients": [
+        {
+          "name": "Пшено",
+          "grams": 35,
+          "canonicalIngredientId": "millet_raw",
+          "role": "carb",
+          "range": [
+            0.3,
+            2.2
+          ]
+        },
+        {
+          "name": "Творог 5% (Простоквашино)",
+          "grams": 160,
+          "canonicalIngredientId": "tvorog_5_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.7
+          ]
+        },
+        {
+          "name": "Куриное яйцо",
+          "grams": 50,
+          "canonicalIngredientId": "egg_raw",
+          "role": "protein",
+          "range": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "Тыква",
+          "grams": 250,
+          "canonicalIngredientId": "pumpkin_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Изюм",
+          "grams": 15,
+          "canonicalIngredientId": "raisins_processed",
+          "role": "carb",
+          "range": [
+            0.5,
+            1.5
+          ]
+        },
+        {
+          "name": "Сметана",
+          "grams": 10,
+          "canonicalIngredientId": "sour_cream_processed",
+          "role": "sauce",
+          "range": [
+            0.5,
+            1.5
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "вода",
+          "amount": 70,
+          "unit": "ml",
+          "note": "для варки; количество следует за крупой",
+          "ratioToCanonicalIngredientId": "millet_raw",
+          "ratio": 2
+        },
+        {
+          "name": "ваниль",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        },
+        {
+          "name": "соль",
+          "amount": 0.3,
+          "unit": "g",
+          "note": "по вкусу, в пределах указанного"
+        }
+      ],
+      "steps": [
+        "Пшено промойте горячей водой, залейте отмеренной водой и варите под крышкой 15 минут до мягкости; остудите.",
+        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Тыкву натрите на мелкой тёрке, изюм промойте.",
+        "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте пшено, тыкву и изюм.",
+        "Разровняйте массу в форме, смажьте сверху сметаной и запекайте 40 минут до золотистого верха; внутри должно быть не менее 71 °C.",
+        "Остудите в форме 15 минут и разрежьте на порции."
+      ],
+      "activeMinutes": 15,
+      "totalMinutes": 80,
+      "cookware": 2,
+      "knifeActions": 1,
+      "equipment": [
+        "stove",
+        "pot",
+        "oven",
+        "baking_dish"
+      ],
+      "flavourTip": "Горячая вода смывает с пшена горечь. Тыкву берите с ярко-оранжевой мякотью — она слаще.",
+      "substitution": "Тыкву можно заменить тёртой морковью, изюм — мелко нарезанной курагой в том же весе.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": true,
+        "freezerDays": 60,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "До 60 суток при −18 °C. Замораживать порциями в плотно закрытых контейнерах, оставив 1–2 см до крышки.",
+        "thaw": "Разморозить в холодильнике за ночь и прогреть до 74 °C в центре порции."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-baked-oats-yogurt-blueberry",
+      "menus": [
+        "simple",
+        "protein"
+      ],
+      "slot": "breakfast",
+      "cuisine": "european",
+      "title": "Запечённая овсянка с йогуртом и черникой",
+      "ingredients": [
+        {
+          "name": "Овсяные хлопья",
+          "grams": 40,
+          "canonicalIngredientId": "oats_raw",
+          "role": "carb",
+          "range": [
+            0.3,
+            2.2
+          ]
+        },
+        {
+          "name": "Греческий йогурт 2%",
+          "grams": 200,
+          "canonicalIngredientId": "yogurt_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.7
+          ]
+        },
+        {
+          "name": "Куриное яйцо",
+          "grams": 50,
+          "canonicalIngredientId": "egg_raw",
+          "role": "protein",
+          "range": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "Черника",
+          "grams": 130,
+          "canonicalIngredientId": "berries_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Семена льна",
+          "grams": 11,
+          "canonicalIngredientId": "flaxseed_raw",
+          "role": "fat",
+          "range": [
+            0.5,
+            1.5
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "корица",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        },
+        {
+          "name": "разрыхлитель",
+          "amount": 2,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        }
+      ],
+      "steps": [
+        "Разогрейте духовку до 180 °C и застелите форму пергаментом.",
+        "Взбейте вилкой яйцо с йогуртом, добавьте хлопья, семена льна, корицу и разрыхлитель.",
+        "Вмешайте половину черники, переложите в форму и разложите сверху остальные ягоды. Замороженную чернику не размораживайте.",
+        "Запекайте 35–40 минут до упругой середины и золотистых краёв; внутри должно быть не менее 71 °C.",
+        "Остудите 10 минут в форме и разрежьте на порции по числу контейнеров."
+      ],
+      "activeMinutes": 8,
+      "totalMinutes": 50,
+      "cookware": 1,
+      "knifeActions": 0,
+      "equipment": [
+        "oven",
+        "baking_dish"
+      ],
+      "flavourTip": "Семена льна впитывают влагу йогурта и связывают овсянку вместо муки, поэтому остывшая запеканка режется ровными кусками.",
+      "substitution": "Чернику можно заменить замороженной вишней без косточек или тёртым яблоком.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": true,
+        "freezerDays": 60,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "До 60 суток при −18 °C. Замораживать порциями в плотно закрытых контейнерах, оставив 1–2 см до крышки.",
+        "thaw": "Разморозить в холодильнике за ночь и прогреть до 74 °C в центре порции."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-overnight-oats-apple-carrot",
+      "menus": [
+        "simple",
+        "protein",
+        "budget"
+      ],
+      "slot": "breakfast",
+      "cuisine": "international",
+      "title": "Ночная овсянка с йогуртом, яблоком и морковью",
+      "ingredients": [
+        {
+          "name": "Овсяные хлопья",
+          "grams": 40,
+          "canonicalIngredientId": "oats_raw",
+          "role": "carb",
+          "range": [
+            0.3,
+            2.2
+          ]
+        },
+        {
+          "name": "Греческий йогурт 2%",
+          "grams": 250,
+          "canonicalIngredientId": "yogurt_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.7
+          ]
+        },
+        {
+          "name": "Яблоко",
+          "grams": 80,
+          "canonicalIngredientId": "apple_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Морковь",
+          "grams": 60,
+          "canonicalIngredientId": "carrot_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Семена льна",
+          "grams": 15,
+          "canonicalIngredientId": "flaxseed_raw",
+          "role": "fat",
+          "range": [
+            0.5,
+            1.5
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "корица",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        }
+      ],
+      "steps": [
+        "Яблоко вместе с кожурой и морковь натрите на мелкой тёрке.",
+        "Смешайте йогурт с хлопьями, семенами льна и корицей, вмешайте морковь и яблоко.",
+        "Разложите по банкам или контейнерам с крышкой и уберите в холодильник минимум на 6 часов, чтобы хлопья набухли."
+      ],
+      "activeMinutes": 10,
+      "totalMinutes": 10,
+      "cookware": 1,
+      "knifeActions": 0,
+      "equipment": [],
+      "flavourTip": "За ночь хлопья и лён впитывают йогурт, а морковь с яблоком дают сладость: получается вкус морковного пирога без сахара.",
+      "substitution": "Яблоко можно заменить грушей, морковь — тёртой тыквой в том же весе.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": false,
+        "freezerDays": null,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "Не замораживать: йогурт с хлопьями расслаивается после разморозки.",
+        "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-broccoli-pea-omelette",
+      "menus": [
+        "simple",
+        "protein",
+        "budget"
+      ],
+      "slot": "breakfast",
+      "cuisine": "european",
+      "title": "Омлет с брокколи и зелёным горошком в духовке",
+      "ingredients": [
+        {
+          "name": "Куриное яйцо",
+          "grams": 150,
+          "canonicalIngredientId": "egg_raw",
+          "role": "protein",
+          "range": [
+            0.67,
+            1
+          ]
+        },
+        {
+          "name": "Молоко 2%",
+          "grams": 80,
+          "canonicalIngredientId": "milk_processed",
+          "role": "sauce",
+          "range": [
+            0.7,
+            1.5
+          ]
+        },
+        {
+          "name": "Брокколи",
+          "grams": 200,
+          "canonicalIngredientId": "broccoli_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Зелёный горошек",
+          "grams": 120,
+          "canonicalIngredientId": "peas_cooked",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Хлеб",
+          "grams": 35,
+          "canonicalIngredientId": "bread_processed",
+          "role": "carb",
+          "range": [
+            0.5,
+            2.5
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "соль",
+          "amount": 1,
+          "unit": "g",
+          "note": "по вкусу, в пределах указанного"
+        }
+      ],
+      "steps": [
+        "Разогрейте духовку до 190 °C и застелите форму пергаментом. Брокколи разберите на мелкие соцветия.",
+        "Замороженные овощи разморозьте и обсушите полотенцем, иначе омлет получится водянистым. Разложите брокколи и горошек в форме.",
+        "Размешайте яйца с молоком и солью вилкой и залейте овощи.",
+        "Запекайте 25–30 минут, пока середина не схватится; внутри должно быть не менее 71 °C.",
+        "Остудите 5 минут и разрежьте на порции. Хлеб храните отдельно."
+      ],
+      "activeMinutes": 8,
+      "totalMinutes": 45,
+      "cookware": 1,
+      "knifeActions": 1,
+      "equipment": [
+        "oven",
+        "baking_dish"
+      ],
+      "flavourTip": "Мелкие соцветия брокколи пропекаются вместе с омлетом, и бланшировать их заранее не нужно.",
+      "substitution": "Брокколи можно заменить цветной капустой, горошек — стручковой фасолью.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": false,
+        "freezerDays": null,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "Не замораживать: омлет после разморозки выделяет воду.",
+        "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
+      },
+      "separate": "Хлеб храните отдельно."
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-lobio",
+      "menus": [
+        "simple",
+        "budget"
+      ],
+      "slot": "lunch",
+      "cuisine": "georgian",
+      "title": "Лобио из красной фасоли с грецкими орехами",
+      "ingredients": [
+        {
+          "name": "Красная фасоль готовая",
+          "grams": 250,
+          "canonicalIngredientId": "red_beans_cooked",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.7
+          ]
+        },
+        {
+          "name": "Репчатый лук",
+          "grams": 80,
+          "canonicalIngredientId": "onion_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Грецкие орехи",
+          "grams": 20,
+          "canonicalIngredientId": "walnuts_raw",
+          "role": "fat",
+          "range": [
+            0.75,
+            1.25
+          ]
+        },
+        {
+          "name": "Томатная паста",
+          "grams": 20,
+          "canonicalIngredientId": "tomato_paste_processed",
+          "role": "sauce",
+          "range": [
+            0.7,
+            1.25
+          ]
+        },
+        {
+          "name": "Кинза",
+          "grams": 15,
+          "canonicalIngredientId": "greens_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        },
+        {
+          "name": "Чеснок",
+          "grams": 5,
+          "canonicalIngredientId": "garlic_raw",
+          "role": "flavour_fixed",
+          "range": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "Растительное масло",
+          "grams": 8,
+          "canonicalIngredientId": "vegetable_oil_processed",
+          "role": "fat_cooking",
+          "range": [
+            1,
+            1
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "соль",
+          "amount": 1.5,
+          "unit": "g",
+          "note": "по вкусу, в пределах указанного"
+        },
+        {
+          "name": "хмели-сунели",
+          "amount": 1,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        },
+        {
+          "name": "молотый кориандр",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        }
+      ],
+      "steps": [
+        "Лук нарежьте мелким кубиком и обжарьте на отмеренном масле 6–7 минут до мягкости.",
+        "Добавьте томатную пасту, хмели-сунели и кориандр и прогрейте 1 минуту, помешивая.",
+        "Откиньте фасоль на сито, сохранив немного жидкости. Переложите фасоль в сковороду, влейте пару ложек жидкости и тушите 10 минут, разминая часть фасоли ложкой.",
+        "Орехи мелко порубите ножом, чеснок раздавите, кинзу нарежьте. Вмешайте всё в фасоль, посолите и снимите с огня.",
+        "Остудите и разложите по контейнерам."
+      ],
+      "activeMinutes": 18,
+      "totalMinutes": 30,
+      "cookware": 1,
+      "knifeActions": 3,
+      "equipment": [
+        "stove",
+        "pan"
+      ],
+      "flavourTip": "Размятая часть фасоли связывает остальное в густое рагу; лобио одинаково хорошо тёплым и комнатной температуры.",
+      "substitution": "Грецкие орехи можно заменить семечками подсолнечника, кинзу — петрушкой.",
+      "storage": {
+        "refrigeratorDays": 4,
+        "freezable": true,
+        "freezerDays": 60,
+        "refrigerator": "До 4 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "До 60 суток при −18 °C. Замораживать порциями в плотно закрытых контейнерах, оставив 1–2 см до крышки.",
+        "thaw": "Разморозить в холодильнике за ночь и прогреть до 74 °C в центре порции."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-yogurt-chia-blueberry",
+      "menus": [
+        "simple",
+        "protein"
+      ],
+      "slot": "snack1",
+      "cuisine": "international",
+      "title": "Чиа-пудинг на греческом йогурте с черникой",
+      "ingredients": [
+        {
+          "name": "Греческий йогурт 2%",
+          "grams": 150,
+          "canonicalIngredientId": "yogurt_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.8
+          ]
+        },
+        {
+          "name": "Семена чиа",
+          "grams": 12,
+          "canonicalIngredientId": "chia_raw",
+          "role": "fat",
+          "range": [
+            0.5,
+            1.8
+          ]
+        },
+        {
+          "name": "Черника",
+          "grams": 80,
+          "canonicalIngredientId": "berries_raw",
+          "role": "vegetable",
+          "range": [
+            0.5,
+            1.8
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "ваниль",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "специя, КБЖУ не меняет"
+        }
+      ],
+      "steps": [
+        "Смешайте йогурт с семенами чиа и ванилью и разложите по банкам с крышкой.",
+        "Через 10 минут перемешайте ещё раз, чтобы семена не слиплись комками.",
+        "Выложите сверху чернику и уберите в холодильник минимум на 4 часа."
+      ],
+      "activeMinutes": 6,
+      "totalMinutes": 6,
+      "cookware": 1,
+      "knifeActions": 0,
+      "equipment": [],
+      "flavourTip": "На густом йогурте чиа набухает плотнее, чем на молоке, и пудинг держит форму ложки.",
+      "substitution": "Чернику можно заменить клубникой или малиной, свежей или замороженной.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": false,
+        "freezerDays": null,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "Не замораживать: йогурт расслаивается после разморозки.",
+        "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
+      }
+    },
+    {
+      "editorialStatus": "authored_and_calculated_2026-10-12",
+      "id": "mise-simple-tvorog-carrot-spread-cucumber",
+      "menus": [
+        "simple",
+        "protein",
+        "budget"
+      ],
+      "slot": "snack1",
+      "cuisine": "russian",
+      "title": "Творожная паста с морковью и огуречными палочками",
+      "ingredients": [
+        {
+          "name": "Творог 5% (Простоквашино)",
+          "grams": 100,
+          "canonicalIngredientId": "tvorog_5_processed",
+          "role": "protein",
+          "range": [
+            0.5,
+            1.8
+          ]
+        },
+        {
+          "name": "Морковь",
+          "grams": 120,
+          "canonicalIngredientId": "carrot_raw",
+          "role": "vegetable",
+          "range": [
+            0.5,
+            1.8
+          ]
+        },
+        {
+          "name": "Огурец",
+          "grams": 100,
+          "canonicalIngredientId": "cucumber_raw",
+          "role": "vegetable",
+          "range": [
+            0.5,
+            1.8
+          ]
+        },
+        {
+          "name": "Зелень",
+          "grams": 10,
+          "canonicalIngredientId": "greens_raw",
+          "role": "vegetable",
+          "range": [
+            0.7,
+            1.3
+          ]
+        }
+      ],
+      "pantryIngredients": [
+        {
+          "name": "соль",
+          "amount": 0.5,
+          "unit": "g",
+          "note": "по вкусу, в пределах указанного"
+        },
+        {
+          "name": "чеснок",
+          "amount": 1,
+          "unit": "g",
+          "note": "по желанию, КБЖУ почти не меняет"
+        }
+      ],
+      "steps": [
+        "Морковь натрите на мелкой тёрке, зелень мелко нарежьте.",
+        "Разомните творог вилкой с морковью, зеленью, солью и, по желанию, раздавленным чесноком до однородной пасты.",
+        "Огурец нарежьте брусочками. Пасту разложите в баночки, огурец — рядом в отделение контейнера с крышкой."
+      ],
+      "activeMinutes": 10,
+      "totalMinutes": 10,
+      "cookware": 1,
+      "knifeActions": 2,
+      "equipment": [],
+      "flavourTip": "Мелкая тёрка здесь важна: тонкая морковная стружка отдаёт сок, и паста становится нежной и сладковатой без сметаны.",
+      "substitution": "Огурец можно заменить сладким перцем или стеблем сельдерея в том же весе.",
+      "storage": {
+        "refrigeratorDays": 3,
+        "freezable": false,
+        "freezerDays": null,
+        "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
+        "freezer": "Не замораживать: творог и свежие овощи после разморозки отдают воду.",
+        "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
+      },
+      "separate": "Пасту и огурец храните в разных отделениях."
     }
   ]
 }

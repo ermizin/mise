@@ -210,10 +210,14 @@ test("RecipeView separates historical rendering from cooking and weight mutation
 test("Cooking step identifies unbuildable meal slots before menu assembly", () => {
   const person = { id: "p1", name: "Я", daily: { kcal: 2200, protein: 150, fat: 70, carbs: 242 }, includedSlots: ["breakfast", "lunch", "dinner"] };
   const batches = [{ id: "b1", days: 1 }];
-  // Без единого прибора простой завтрак собрать не из чего: вся его подборка
-  // готовится на плите, в духовке или в мультиварке.
-  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "simple", batches, [])), ["breakfast"]);
+  // До 2026-10-12 простой завтрак без единого прибора собрать было не из чего:
+  // вся подборка готовилась на плите, в духовке или в мультиварке. Ночная
+  // овсянка с йогуртом, яблоком и морковью не требует ни одного прибора.
+  assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "simple", batches, [])), []);
   assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "simple", batches, kitchenEquipmentIds)), []);
+  const breakfasts = app.candidateRecipes("breakfast", "simple", [person], 1, { limit: "all" }, []);
+  assert.ok(breakfasts.some((recipe) => recipe.id === "mise-simple-overnight-oats-apple-carrot"));
+  assert.ok(breakfasts.every((recipe) => app.recipeSupportsEquipment(recipe, [])), "a simple breakfast for a kitchen without appliances needs none");
   // Обед и ужин на пустой кухне теперь закрывают блюда без готовки, и каждое
   // из них действительно не требует ни одного прибора.
   assert.deepEqual(plain(app.kitchenMenuGaps([person], person.includedSlots, "budget", batches, [])), []);

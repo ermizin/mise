@@ -18,6 +18,7 @@ const engine = await loadTypeScriptModule(new URL("../domain/recipe-engine.ts", 
 const { validatePlanForPersistence } = await loadTypeScriptModule(
   new URL("../lib/plan-validation.ts", import.meta.url),
 );
+const nutrition = await loadTypeScriptModule(new URL("../domain/nutrition.ts", import.meta.url));
 const app = await recipeCatalog();
 const plain = (value) => JSON.parse(JSON.stringify(value));
 const cardById = new Map(source.recipes.map((card) => [card.id, card]));
@@ -32,12 +33,13 @@ test("the checked-in catalog is exactly what the extension source builds", async
   const built = await buildExtensionRecipeCatalog();
   assert.deepEqual(plain(runtimeCatalog.extensionRecipes), plain(built.recipes));
   assert.deepEqual(plain(runtimeCatalog.extensionCoverage), plain(built.coverage));
+  // 80 карточек от 2026-09-30 и 9 простых карточек с клетчаткой от 2026-10-12.
   assert.deepEqual(plain(built.coverage), {
-    total: 80,
-    byMenu: { simple: 16, protein: 36, budget: 45, vegan: 24, paleo: 24 },
-    bySlot: { breakfast: 20, lunch: 35, dinner: 0, snack1: 25 },
-    freezable: 59,
-    withoutPhoto: 80,
+    total: 89,
+    byMenu: { simple: 25, protein: 44, budget: 52, vegan: 24, paleo: 24 },
+    bySlot: { breakfast: 26, lunch: 36, dinner: 0, snack1: 27 },
+    freezable: 64,
+    withoutPhoto: 89,
   });
 });
 
@@ -214,6 +216,53 @@ test("vegan and paleo menus can be assembled for every meal and batch length", (
             if (!Number.isFinite(portion.actual.kcal)) failures.push(`${recipe.id}: no calculated portion`);
           }
         }
+  assert.deepEqual(failures, []);
+});
+
+/* Дополнение от 2026-10-12 по комментариям на Пикабу («Где овощи? Где
+   клетчатка?»). Неделя «Простых» завтракала творожной запеканкой и сырниками
+   с 1 г клетчатки: из простых завтраков на партию в 3 дня проходило всего
+   шесть, а овсяные проигрывали по совпадению с БЖУ из-за недобора белка.
+   Новый простой завтрак обязан выдерживать и белок, и клетчатку, и партию. */
+test("the fiber cards of 2026-10-12 hold protein, fiber and a three-day batch", () => {
+  const pack = source.recipes.filter((card) => card.editorialStatus === "authored_and_calculated_2026-10-12");
+  assert.deepEqual(
+    Object.fromEntries(["breakfast", "lunch", "snack1"].map((slot) => [slot, pack.filter((card) => card.slot === slot).length])),
+    { breakfast: 6, lunch: 1, snack1: 2 },
+  );
+  const failures = [];
+  const canonicalSet = (record) => new Set(record.recipeFamily.ingredients.map((item) => item.canonicalIngredientId));
+  const others = [...runtimeCatalog.recipes, ...(runtimeCatalog.simpleRecipes ?? []), ...runtimeCatalog.extensionRecipes];
+  for (const card of pack) {
+    const record = runtimeCatalog.extensionRecipes.find((recipe) => recipe.id === card.id);
+    const { kcal, protein } = record.macros;
+    const fiberPerThousand = (engine.fiberForFamily(record.recipeFamily) / kcal) * 1000;
+    if (!card.menus.includes("simple")) failures.push(`${card.id}: not a simple card`);
+    if (card.storage.refrigeratorDays < 3 && !card.storage.freezable) failures.push(`${card.id}: does not survive a three-day batch`);
+    // Не дубль: не больше 80% продуктов карточки встречаются в одной другой.
+    const own = canonicalSet(record);
+    for (const other of others) {
+      if (other.id === card.id) continue;
+      const shared = [...canonicalSet(other)].filter((id) => own.has(id)).length;
+      if (shared / own.size >= 0.8) failures.push(`${card.id}: ${Math.round((shared / own.size) * 100)}% of its products repeat ${other.id}`);
+    }
+    if (card.slot !== "breakfast") {
+      if (fiberPerThousand < 20) failures.push(`${card.id}: ${fiberPerThousand.toFixed(1)} g fiber per 1000 kcal`);
+      continue;
+    }
+    if ((protein * 4) / kcal < 0.28) failures.push(`${card.id}: ${Math.round((protein * 400) / kcal)}% of energy from protein`);
+    if (fiberPerThousand < 15) failures.push(`${card.id}: ${fiberPerThousand.toFixed(1)} g fiber per 1000 kcal`);
+    for (const daily of [1500, 1800, 2200]) {
+      const person = {
+        id: "p1", name: "Я",
+        daily: nutrition.recalculateDailyMacros(daily, { kcal: 0, protein: 0, fat: 0, carbs: 0 }, "balanced"),
+        includedSlots: ["breakfast", "lunch", "dinner"],
+      };
+      const session = app.recipeCookingSession([person], "breakfast", app.recipesById[card.id], 3);
+      const fit = app.fitScoreForSession(session);
+      if (!session.viable || fit < 95) failures.push(`${card.id} at ${daily} kcal: ${session.viable ? `fit ${fit}` : "not viable"}`);
+    }
+  }
   assert.deepEqual(failures, []);
 });
 
