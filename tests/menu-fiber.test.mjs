@@ -54,6 +54,7 @@ function assemble({ style, kcal, days, cookEveryDays, slots }) {
   let vegetables = 0;
   let fit = 0;
   let positions = 0;
+  const picks = [];
   for (const batch of buildBatches("2026-10-07", days, cookEveryDays))
     for (const slot of slots) {
       const key = selectionKey(batch, slot);
@@ -63,6 +64,7 @@ function assemble({ style, kcal, days, cookEveryDays, slots }) {
       assignments[key] = picked;
       picked.forEach((item) => used.get(slot).add(item.recipeId));
       const recipe = recipesById[picked[0].recipeId];
+      picks.push({ slot, recipe });
       const session = recipeCookingSession([person], slot, recipe, batch.days);
       const family = recipeFamilyFor(recipe);
       const amounts = session.portions[0].solvedAmounts;
@@ -76,14 +78,19 @@ function assemble({ style, kcal, days, cookEveryDays, slots }) {
         vegetables += (amounts[ingredient.sourceIngredientId] ?? 0) * unitGrams * batch.days;
       }
     }
-  return { fiber: fiber / days, vegetables: vegetables / days, fit: fit / positions };
+  return { fiber: fiber / days, vegetables: vegetables / days, fit: fit / positions, picks };
 }
 
 test("the Pikabu «Простые» week is no longer a mono-diet without fiber", () => {
   // 1 человек, 1800 ккал, завтрак-обед-ужин, 5 дней: было ≈ 14 г клетчатки
   // и ≈ 230 г овощей в день, в комментариях — «Где овощи? Где клетчатка?».
+  // Порядок кандидатов поднял неделю до ≈ 20 г, но завтраки остались
+  // творожной запеканкой и сырниками с 1 г клетчатки; простые завтраки
+  // пакета 2026-10-12 дают ≈ 25 г в день.
   const result = assemble({ style: "simple", kcal: 1800, days: 5, cookEveryDays: 3, slots: ["breakfast", "lunch", "dinner"] });
-  assert.ok(result.fiber >= 19, `fiber ${result.fiber.toFixed(1)} g/day`);
+  assert.ok(result.fiber >= 22, `fiber ${result.fiber.toFixed(1)} g/day`);
+  for (const { recipe } of result.picks.filter((pick) => pick.slot === "breakfast"))
+    assert.ok(runtime.recipeFiber(recipe).grams >= 5, `${recipe.id}: a breakfast with ${runtime.recipeFiber(recipe).grams} g of fiber`);
   assert.ok(result.vegetables >= 280, `vegetables ${Math.round(result.vegetables)} g/day`);
   assert.ok(result.fit >= 90, `menu fit ${result.fit.toFixed(1)}`);
 });

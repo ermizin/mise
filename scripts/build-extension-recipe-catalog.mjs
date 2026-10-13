@@ -4,12 +4,14 @@ import { canonicalIngredients, nutritionForFamily, nutritionReachForIngredients,
 /*
  * Catalog extension of 2026-09-30: Mise-authored cards that close measured
  * gaps (snacks, dishes for 4–7 day batches, breakfasts that keep) and open the
- * vegan and paleo directions. Input: data/extension-recipes.json. Every card
- * is calculated from canonical product profiles; nothing is taken on trust
- * from a source page.
+ * vegan and paleo directions. The owner's addition of 2026-10-12 appends
+ * simple cards with fiber and vegetables (breakfasts, lobio, two snacks).
+ * Input: data/extension-recipes.json. Every card is calculated from canonical
+ * product profiles; nothing is taken on trust from a source page.
  */
 
-const reviewedAt = "2026-09-30";
+/** The review date is the one the card's editorial status names. */
+const reviewedAtFor = (card) => /(\d{4}-\d{2}-\d{2})$/u.exec(card.editorialStatus ?? "")?.[1] ?? "2026-09-30";
 const menus = ["simple", "protein", "budget", "vegan", "paleo"];
 const slots = ["breakfast", "lunch", "dinner", "snack1"];
 const roles = ["protein", "carb", "vegetable", "fat", "fat_cooking", "flavour_fixed", "sauce"];
@@ -111,6 +113,7 @@ export function projectExtensionRecipe(card) {
     }
   }
 
+  const reviewedAt = reviewedAtFor(card);
   const macros = nutritionForFamily({ ingredients });
   // The working range is what the solver can reach on its measuring grid, not
   // the bounds multiplied out: 12.5 g of oats is weighed as 15 g.

@@ -13,7 +13,7 @@
     "waffle_iron",
     "pressure_cooker"
   ],
-  "recipeCount": 340,
+  "recipeCount": 349,
   "recipes": [
     {
       "id": "foodru-blogger-chicken-bombs",
@@ -2580,6 +2580,87 @@
       ]
     },
     {
+      "id": "mise-simple-baked-oats-yogurt-blueberry",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-broccoli-pea-egg-bake",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-buckwheat-tvorog-bake",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-carrot-tvorog-oat-bake",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "oven",
+            "baking_dish"
+          ]
+        }
+      ]
+    },
+    {
       "id": "mise-simple-chicken-noodle-soup",
       "slot": "lunch",
       "allergens": [
@@ -2618,6 +2699,24 @@
       ]
     },
     {
+      "id": "mise-simple-lobio",
+      "slot": "lunch",
+      "allergens": [
+        "treeNuts"
+      ],
+      "storageDays": 4,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pan"
+          ]
+        }
+      ]
+    },
+    {
       "id": "mise-simple-millet-pumpkin-porridge",
       "slot": "breakfast",
       "allergens": [
@@ -2631,6 +2730,27 @@
           "requiredEquipment": [
             "stove",
             "pot"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-millet-tvorog-pumpkin-bake",
+      "slot": "breakfast",
+      "allergens": [
+        "egg",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": true,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": [
+            "stove",
+            "pot",
+            "oven",
+            "baking_dish"
           ]
         }
       ]
@@ -2721,6 +2841,23 @@
       ]
     },
     {
+      "id": "mise-simple-overnight-oats-apple-carrot",
+      "slot": "breakfast",
+      "allergens": [
+        "gluten",
+        "milk",
+        "treeNuts"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
       "id": "mise-simple-syrniki-oven",
       "slot": "breakfast",
       "allergens": [
@@ -2737,6 +2874,21 @@
             "oven",
             "baking_dish"
           ]
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-tvorog-carrot-spread-cucumber",
+      "slot": "snack1",
+      "allergens": [
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
         }
       ]
     },
@@ -2785,6 +2937,21 @@
       "slot": "snack1",
       "allergens": [
         "gluten",
+        "milk"
+      ],
+      "storageDays": 3,
+      "freezable": false,
+      "equipmentOptions": [
+        {
+          "id": "original",
+          "requiredEquipment": []
+        }
+      ]
+    },
+    {
+      "id": "mise-simple-yogurt-chia-blueberry",
+      "slot": "snack1",
+      "allergens": [
         "milk"
       ],
       "storageDays": 3,
