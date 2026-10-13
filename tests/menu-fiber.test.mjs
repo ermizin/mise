@@ -19,7 +19,7 @@ async function menuRuntime() {
   const start = page.indexOf("const mealMeta");
   const end = page.indexOf("export default function Home");
   const output = ts.transpileModule(
-    `${page.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, recipeFiber, starchyVegetableIds, morningBaseOf };`,
+    `${page.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, recipeFiber, starchyVegetableIds, morningBaseOf, isFreshVegetableCanonical };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -44,7 +44,7 @@ const runtime = await menuRuntime();
 /* Та же последовательность, что у автосборки мастера. Клетчатка и овощи
    считаются из фактических порций общей готовки первого человека. */
 function assemble({ style, kcal, days, cookEveryDays, slots }) {
-  const { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, starchyVegetableIds } = runtime;
+  const { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor } = runtime;
   const person = newPerson(0);
   person.daily = nutrition.recalculateDailyMacros(kcal, person.daily, "balanced");
   person.includedSlots = [...slots];
@@ -73,7 +73,7 @@ function assemble({ style, kcal, days, cookEveryDays, slots }) {
       fiber += engine.fiberForFamily(family, amounts) * batch.days;
       for (const ingredient of family.ingredients) {
         const canonical = engine.canonicalIngredients[ingredient.canonicalIngredientId];
-        if (canonical.category !== "vegetable" || starchyVegetableIds.has(canonical.id)) continue;
+        if (!runtime.isFreshVegetableCanonical(canonical)) continue;
         const unitGrams = ingredient.unit === "piece" ? canonical.unit.gramsPerUnit : ingredient.unit === "ml" ? canonical.densityGPerMl ?? 1 : 1;
         vegetables += (amounts[ingredient.sourceIngredientId] ?? 0) * unitGrams * batch.days;
       }
@@ -119,6 +119,11 @@ test("ranking rewards fiber density and fresh vegetables only within a bounded b
   assert.match(ranking, /const vegetableRankCapGrams = 150;/);
   for (const id of ["potato_raw", "sweet_potato_raw", "corn_cooked"])
     assert.ok(runtime.starchyVegetableIds.has(id), `${id} is a side, not a vegetable`);
+  // «Где овощи?» не закрывают соусы и добавки.
+  for (const id of ["tomato_passata_processed", "pickles_processed", "olives_processed", "sun_dried_tomatoes_processed"])
+    assert.equal(runtime.isFreshVegetableCanonical(engine.canonicalIngredients[id]), false, `${id} is not a fresh vegetable`);
+  for (const id of ["broccoli_raw", "beetroot_cooked_cooked", "mixed_vegetables_processed"])
+    assert.equal(runtime.isFreshVegetableCanonical(engine.canonicalIngredients[id]), true, `${id} counts as a vegetable`);
   const sort = page.slice(page.indexOf("function candidateRecipes("), page.indexOf("function combinationBonus("));
   assert.equal((sort.match(/fiberRankBonus\(/g) ?? []).length, 2, "both sides of the comparison get the bonus");
   // Простота «Простых» и бонус общих продуктов не меняются: на сетке

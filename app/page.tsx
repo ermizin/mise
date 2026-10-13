@@ -6258,6 +6258,15 @@ function shoppingAmountLabel(item: ShoppingItem) {
    бонуса общих продуктов проверялись и прироста не дали. Ни одно блюдо не
    исключается. */
 const starchyVegetableIds = new Set(["potato_raw", "sweet_potato_raw", "corn_cooked", "baby_corn_raw", "hash_browns_processed"]);
+/* Свежие овощи для бонуса — сырые, плюс запечённый перец, готовая свёкла и
+   замороженная овощная смесь. Пассата, маринованные огурцы, маслины,
+   каперсы, кимчи, консервированный чили, сушёные грибы и вяленые томаты —
+   соусы и добавки, «где овощи?» они не закрывают. */
+const cookedFreshVegetableIds = new Set(["roasted_pepper_cooked", "beetroot_cooked_cooked", "mixed_vegetables_processed"]);
+function isFreshVegetableCanonical(canonical: { id: string; category: string; state: string }) {
+  return canonical.category === "vegetable" && !starchyVegetableIds.has(canonical.id) &&
+    (canonical.state === "raw" || cookedFreshVegetableIds.has(canonical.id));
+}
 const recipeFiberCache = new Map<string, { grams: number; perThousandKcal: number; vegetableGrams: number }>();
 function recipeFiber(recipe: Recipe) {
   const cached = recipeFiberCache.get(recipe.id);
@@ -6269,7 +6278,7 @@ function recipeFiber(recipe: Recipe) {
   const vegetableGrams = family
     ? family.ingredients.reduce((sum, ingredient) => {
         const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
-        if (!canonical || canonical.category !== "vegetable" || starchyVegetableIds.has(canonical.id)) return sum;
+        if (!canonical || !isFreshVegetableCanonical(canonical)) return sum;
         const unitGrams = ingredient.unit === "piece" ? canonical.unit.gramsPerUnit : ingredient.unit === "ml" ? canonical.densityGPerMl ?? 1 : 1;
         return sum + ingredient.baseAmount * unitGrams;
       }, 0)
@@ -6803,8 +6812,9 @@ function reviewFiberNote(plan: Pick<ActivePlan, "people" | "selections" | "selec
   const assessments = plan.people.map(person => ({ person, ...planFiberAssessment(plan, person) }));
   // У каждого свой ориентир: взрослым и детям он разный, а доля дня зависит
   // от приёмов пищи человека.
+  const anyPartial = assessments.some(({ partial }) => partial);
   const values = assessments.length === 1
-    ? `≈ ${assessments[0].actual} г в день (ориентир для выбранных блюд — от ${assessments[0].target} г)`
+    ? `≈ ${assessments[0].actual} г в день (ориентир${assessments[0].partial ? " для выбранных блюд" : ""} — от ${assessments[0].target} г)`
     : assessments.map(({ person, actual, target }) => `${person.name} ≈ ${actual} г (от ${target} г)`).join(", ");
   const hasChildren = plan.people.some((person) => person.kind === "child");
   const hasAdults = plan.people.some((person) => person.kind !== "child");
@@ -6812,7 +6822,7 @@ function reviewFiberNote(plan: Pick<ActivePlan, "people" | "selections" | "selec
     hasAdults ? "взрослым 20–25 г в день или 10 г на 1000 ккал" : "",
     hasChildren ? "детям — по возрасту, от 12 до 22 г" : "",
   ].filter(Boolean).join(", ");
-  return `Клетчатка: ${values}. Ориентир МР 2.3.1.0253-21: ${reference}; для выбранных блюд он пересчитан по доле дня.`;
+  return `Клетчатка: ${values}. Ориентир МР 2.3.1.0253-21: ${reference}${anyPartial ? "; для выбранных блюд он пересчитан по доле дня" : ""}.`;
 }
 function fiberAssessmentText(assessment: ReturnType<typeof planFiberAssessment>) {
   const { actual, target, shortfall, partial } = assessment;
