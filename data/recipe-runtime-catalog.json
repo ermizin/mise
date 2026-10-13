@@ -221731,10 +221731,10 @@
       "title": "Сэндвич с варёной курицей и низкокалорийный соус без сахараом",
       "cuisine": "international",
       "macros": {
-        "kcal": 558.5,
-        "protein": 47.3,
-        "fat": 17.8,
-        "carbs": 49.7
+        "kcal": 546.8,
+        "protein": 50.3,
+        "fat": 18.1,
+        "carbs": 44
       },
       "timeMinutes": 20,
       "menuTags": [
@@ -221755,7 +221755,7 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "bread_processed",
+          "canonicalIngredientId": "wholegrain_bread_processed",
           "nameRu": "Цельнозерновой хлеб",
           "group": "Крупы и макароны",
           "quantityGrams": 90,
@@ -222089,7 +222089,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "bread_processed",
+            "canonicalIngredientId": "wholegrain_bread_processed",
             "baseAmount": 90,
             "unit": "g",
             "role": "carb",
@@ -222163,8 +222163,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 277,
-        "maxViableCalories": 1093,
+        "minViableCalories": 273,
+        "maxViableCalories": 1066,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -222186,18 +222186,18 @@
           "carbs": 49.7
         },
         "miseCalculatedNutrition": {
-          "kcal": 558.5,
-          "protein": 47.3,
-          "fat": 17.8,
-          "carbs": 49.7
+          "kcal": 546.8,
+          "protein": 50.3,
+          "fat": 18.1,
+          "carbs": 44
         },
         "nutritionDelta": {
-          "kcal": 0,
-          "protein": 0,
-          "fat": 0,
-          "carbs": 0
+          "kcal": -11.7,
+          "protein": 3,
+          "fat": 0.3,
+          "carbs": -5.7
         },
-        "nutritionDeltaKcal": 0,
+        "nutritionDeltaKcal": -11.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -222318,10 +222318,10 @@
       "title": "Сэндвич с копчёной курицей и яйцом",
       "cuisine": "international",
       "macros": {
-        "kcal": 561.6,
-        "protein": 45.8,
-        "fat": 19.1,
-        "carbs": 48.7
+        "kcal": 549.9,
+        "protein": 48.9,
+        "fat": 19.4,
+        "carbs": 43
       },
       "timeMinutes": 20,
       "menuTags": [
@@ -222342,7 +222342,7 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "bread_processed",
+          "canonicalIngredientId": "wholegrain_bread_processed",
           "nameRu": "Цельнозерновой хлеб",
           "group": "Крупы и макароны",
           "quantityGrams": 90,
@@ -222680,7 +222680,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "bread_processed",
+            "canonicalIngredientId": "wholegrain_bread_processed",
             "baseAmount": 90,
             "unit": "g",
             "role": "carb",
@@ -222754,8 +222754,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 318,
-        "maxViableCalories": 1071,
+        "minViableCalories": 314,
+        "maxViableCalories": 1044,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -222777,18 +222777,18 @@
           "carbs": 48.7
         },
         "miseCalculatedNutrition": {
-          "kcal": 561.6,
-          "protein": 45.8,
-          "fat": 19.1,
-          "carbs": 48.7
+          "kcal": 549.9,
+          "protein": 48.9,
+          "fat": 19.4,
+          "carbs": 43
         },
         "nutritionDelta": {
-          "kcal": 0,
-          "protein": 0,
-          "fat": 0,
-          "carbs": 0
+          "kcal": -11.7,
+          "protein": 3.1,
+          "fat": 0.3,
+          "carbs": -5.7
         },
-        "nutritionDeltaKcal": 0,
+        "nutritionDeltaKcal": -11.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -222909,10 +222909,10 @@
       "title": "Сэндвич с ветчиной из индейки",
       "cuisine": "international",
       "macros": {
-        "kcal": 542.5,
-        "protein": 39.2,
-        "fat": 19.5,
-        "carbs": 51.1
+        "kcal": 530.8,
+        "protein": 42.3,
+        "fat": 19.7,
+        "carbs": 45.4
       },
       "timeMinutes": 20,
       "menuTags": [
@@ -222933,7 +222933,7 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "bread_processed",
+          "canonicalIngredientId": "wholegrain_bread_processed",
           "nameRu": "Цельнозерновой хлеб",
           "group": "Крупы и макароны",
           "quantityGrams": 90,
@@ -223304,7 +223304,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "bread_processed",
+            "canonicalIngredientId": "wholegrain_bread_processed",
             "baseAmount": 90,
             "unit": "g",
             "role": "carb",
@@ -223393,8 +223393,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 268,
-        "maxViableCalories": 1063,
+        "minViableCalories": 264,
+        "maxViableCalories": 1036,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -223416,18 +223416,18 @@
           "carbs": 51.1
         },
         "miseCalculatedNutrition": {
-          "kcal": 542.5,
-          "protein": 39.2,
-          "fat": 19.5,
-          "carbs": 51.1
+          "kcal": 530.8,
+          "protein": 42.3,
+          "fat": 19.7,
+          "carbs": 45.4
         },
         "nutritionDelta": {
-          "kcal": 0,
-          "protein": 0,
-          "fat": 0,
-          "carbs": 0
+          "kcal": -11.7,
+          "protein": 3.1,
+          "fat": 0.2,
+          "carbs": -5.7
         },
-        "nutritionDeltaKcal": 0,
+        "nutritionDeltaKcal": -11.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -223552,10 +223552,10 @@
       "title": "Простой сэндвич с балыком",
       "cuisine": "russian",
       "macros": {
-        "kcal": 505.5,
-        "protein": 40,
-        "fat": 14.9,
-        "carbs": 50.7
+        "kcal": 493.8,
+        "protein": 43.1,
+        "fat": 15.2,
+        "carbs": 45
       },
       "timeMinutes": 20,
       "menuTags": [
@@ -223576,7 +223576,7 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "bread_processed",
+          "canonicalIngredientId": "wholegrain_bread_processed",
           "nameRu": "Цельнозерновой хлеб",
           "group": "Крупы и макароны",
           "quantityGrams": 90,
@@ -223918,7 +223918,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "bread_processed",
+            "canonicalIngredientId": "wholegrain_bread_processed",
             "baseAmount": 90,
             "unit": "g",
             "role": "carb",
@@ -223992,8 +223992,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 282,
-        "maxViableCalories": 974,
+        "minViableCalories": 278,
+        "maxViableCalories": 947,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -224015,18 +224015,18 @@
           "carbs": 50.7
         },
         "miseCalculatedNutrition": {
-          "kcal": 505.5,
-          "protein": 40,
-          "fat": 14.9,
-          "carbs": 50.7
+          "kcal": 493.8,
+          "protein": 43.1,
+          "fat": 15.2,
+          "carbs": 45
         },
         "nutritionDelta": {
-          "kcal": 0,
-          "protein": 0,
-          "fat": 0,
-          "carbs": 0
+          "kcal": -11.7,
+          "protein": 3.1,
+          "fat": 0.3,
+          "carbs": -5.7
         },
-        "nutritionDeltaKcal": 0,
+        "nutritionDeltaKcal": -11.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -224150,10 +224150,10 @@
       "title": "Открытый сэндвич «Цезарь» с курицей",
       "cuisine": "american",
       "macros": {
-        "kcal": 552.1,
-        "protein": 53.3,
-        "fat": 14.6,
-        "carbs": 48.9
+        "kcal": 540.4,
+        "protein": 56.4,
+        "fat": 14.9,
+        "carbs": 43.2
       },
       "timeMinutes": 20,
       "menuTags": [
@@ -224174,7 +224174,7 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "bread_processed",
+          "canonicalIngredientId": "wholegrain_bread_processed",
           "nameRu": "Цельнозерновой хлеб",
           "group": "Крупы и макароны",
           "quantityGrams": 90,
@@ -224674,7 +224674,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "bread_processed",
+            "canonicalIngredientId": "wholegrain_bread_processed",
             "baseAmount": 90,
             "unit": "g",
             "role": "carb",
@@ -224809,8 +224809,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 341,
-        "maxViableCalories": 1036,
+        "minViableCalories": 337,
+        "maxViableCalories": 1009,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -224832,18 +224832,18 @@
           "carbs": 50
         },
         "miseCalculatedNutrition": {
-          "kcal": 552.1,
-          "protein": 53.3,
-          "fat": 14.6,
-          "carbs": 48.9
+          "kcal": 540.4,
+          "protein": 56.4,
+          "fat": 14.9,
+          "carbs": 43.2
         },
         "nutritionDelta": {
-          "kcal": -27.2,
-          "protein": -1.9,
-          "fat": -1.5,
-          "carbs": -1.1
+          "kcal": -38.9,
+          "protein": 1.2,
+          "fat": -1.2,
+          "carbs": -6.8
         },
-        "nutritionDeltaKcal": -27.2,
+        "nutritionDeltaKcal": -38.9,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",

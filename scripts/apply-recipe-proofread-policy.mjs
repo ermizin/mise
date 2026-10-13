@@ -556,6 +556,36 @@ function applyGoodFoodChefCorrections(candidate) {
   return next;
 }
 
+/* Карточка называет конкретный продукт («Цельнозерновой хлеб»), а в составе он
+   сопоставлен с общим профилем («Хлеб»). Правило политики задаёт продукт явно
+   для перечисленных карточек. Оно идёт после поварских правок: они пересобирают
+   состав сэндвичей целиком и вернули бы прежнее сопоставление. */
+function applyIngredientIdentityRules(candidate, policy) {
+  let next = candidate;
+  for (const rule of policy.ingredientIdentityRules) {
+    if (!rule.recipeIds.includes(next.id)) continue;
+    const sourceName = rule.sourceName.toLowerCase();
+    const remap = (list) => {
+      let matches = 0;
+      const mapped = list.map((item) => {
+        if (normalizedSourceName(item) !== sourceName || item.id !== rule.fromCanonicalIngredientId) return item;
+        matches += 1;
+        return { ...item, id: rule.canonicalIngredientId };
+      });
+      if (matches !== 1) {
+        throw new Error(`${next.id}: expected one «${rule.sourceName}» mapped to ${rule.fromCanonicalIngredientId}, found ${matches}.`);
+      }
+      return mapped;
+    };
+    next = {
+      ...next,
+      ingredients: remap(next.ingredients ?? []),
+      ...(Array.isArray(next.sourceIngredients) ? { sourceIngredients: remap(next.sourceIngredients) } : {}),
+    };
+  }
+  return next;
+}
+
 function applyCandidatePolicy(candidate, policy, quarantines) {
   let next = clone(candidate);
   next.ingredients = (next.ingredients ?? []).map((item) => ingredientWithDisplayRule(item, policy, next.id));
@@ -583,6 +613,7 @@ function applyCandidatePolicy(candidate, policy, quarantines) {
   next = normalizeStorage(next, policy);
   next = normalizeRiceSteps(next, policy);
   next = applyChefCorrections(next);
+  next = applyIngredientIdentityRules(next, policy);
   const quarantine = quarantines.get(next.id);
   if (quarantine) {
     next.miseProofreadQuarantine = {
@@ -606,6 +637,7 @@ function allPolicyRecipeIds(policy) {
     ...policy.coldNoReheatRecipeIds,
     ...policy.riceStepDeduplicateRecipeIds,
     ...policy.dropAppendedRiceStepRecipeIds,
+    ...policy.ingredientIdentityRules.flatMap((rule) => rule.recipeIds),
     ...policy.quarantine.map((item) => item.id),
   ];
 }
@@ -619,9 +651,20 @@ export async function applyRecipeProofreadPolicy({ documents }) {
     policy.schemaVersion !== 1 ||
     policy.approvedBy !== "owner" ||
     !Array.isArray(policy.quarantine) ||
-    !Array.isArray(policy.ingredientDisplayRules)
+    !Array.isArray(policy.ingredientDisplayRules) ||
+    !Array.isArray(policy.ingredientIdentityRules)
   ) {
     throw new Error("Recipe proofread policy is missing or invalid.");
+  }
+  for (const rule of policy.ingredientIdentityRules) {
+    if (
+      !Array.isArray(rule.recipeIds) ||
+      !rule.recipeIds.length ||
+      new Set(rule.recipeIds).size !== rule.recipeIds.length ||
+      ![rule.sourceName, rule.fromCanonicalIngredientId, rule.canonicalIngredientId, rule.reviewedAt, rule.note].every((value) => typeof value === "string" && value.trim())
+    ) {
+      throw new Error("Recipe proofread ingredient identity rule is incomplete.");
+    }
   }
   const ids = new Set(documents.flatMap((document) => document.candidates.map((candidate) => candidate.id)));
   if (ids.size !== policy.reviewedCandidateCount) {

@@ -103,6 +103,14 @@ test("an offered dish counts the fat it is cooked in", () => {
     assert.ok(app.newMenuRecipes.some((recipe) => recipe.id === id), `${id}: the reviewed exception still refers to an offered dish`);
 });
 
+const wholegrainBreadSandwiches = [
+  "new-sandwich-boiled-chicken",
+  "new-sandwich-smoked-chicken",
+  "new-sandwich-turkey-ham",
+  "new-sandwich-balyk",
+  "new-sandwich-caesar",
+];
+
 test("products are counted as themselves, not as a namesake", () => {
   const ids = (recipeId) => app.recipesById[recipeId].ingredients.map((item) => item.canonicalIngredientId);
   for (const id of ["tmpm-23501", "tmpm-23194"]) {
@@ -130,6 +138,34 @@ test("products are counted as themselves, not as a namesake", () => {
   assert.deepEqual({ ...profile("glass_noodles_raw") }, { kcal: 351, protein: 0.16, fat: 0.06, carbs: 86.1 });
   assert.deepEqual({ ...profile("milk_powder_processed") }, { kcal: 362, protein: 36.2, fat: 0.77, carbs: 52 });
   assert.deepEqual({ ...profile("strawberries_raw") }, { kcal: 32, protein: 0.67, fat: 0.3, carbs: 7.68 });
+  // Five sandwiches name wholegrain bread; ciabatta and the other breads stay white.
+  const offeredWithWholegrainBread = app.newMenuRecipes
+    .filter((recipe) => ids(recipe.id).includes("wholegrain_bread_processed"))
+    .map((recipe) => recipe.id);
+  assert.deepEqual([...offeredWithWholegrainBread].sort(), [...wholegrainBreadSandwiches].sort());
+  for (const id of wholegrainBreadSandwiches) assert.ok(!ids(id).includes("bread_processed"), `${id}: not white bread`);
+  for (const id of ["new-sandwich-paprika", "foodru-oblomov-sandwich"]) assert.ok(ids(id).includes("bread_processed"), `${id}: ciabatta is white bread`);
+  assert.deepEqual({ ...profile("wholegrain_bread_processed") }, { kcal: 252, protein: 12.4, fat: 3.5, carbs: 42.7 });
+  assert.equal(engine.canonicalIngredients.wholegrain_bread_processed.reference.recordId, "172688");
+  assert.deepEqual([...engine.canonicalIngredients.wholegrain_bread_processed.allergens], ["gluten"]);
+});
+
+test("sandwiches on wholegrain bread carry its macros and fiber", () => {
+  // 90 г хлеба по FDC 172688 вместо белого 174924: −11,7 ккал, +3 г белка,
+  // −5,7 г углеводов и +3 г клетчатки на базовую порцию.
+  const expected = {
+    "new-sandwich-boiled-chicken": [{ kcal: 546.8, protein: 50.3, fat: 18.1, carbs: 44 }, 6.4],
+    "new-sandwich-smoked-chicken": [{ kcal: 549.9, protein: 48.9, fat: 19.4, carbs: 43 }, 6.2],
+    "new-sandwich-turkey-ham": [{ kcal: 530.8, protein: 42.3, fat: 19.7, carbs: 45.4 }, 6.5],
+    "new-sandwich-balyk": [{ kcal: 493.8, protein: 43.1, fat: 15.2, carbs: 45 }, 6.4],
+    "new-sandwich-caesar": [{ kcal: 540.4, protein: 56.4, fat: 14.9, carbs: 43.2 }, 6.6],
+  };
+  assert.deepEqual(Object.keys(expected), wholegrainBreadSandwiches);
+  for (const [id, [macros, fiber]] of Object.entries(expected)) {
+    const recipe = app.recipesById[id];
+    assert.deepEqual({ ...recipe.macros }, macros, id);
+    assert.equal(engine.fiberForFamily(app.recipeFamilyFor(recipe)), fiber, id);
+  }
 });
 
 test("the recipe card weighs what the shopping list weighs", async () => {

@@ -50,6 +50,27 @@ test("every proofread quarantine stays auditable and outside runtime", () => {
   }
 });
 
+test("ingredient identity rules reach every listed card and leave no old mapping", () => {
+  const canonicalIds = (recipe) => [
+    ...recipe.shoppingIngredients.map((ingredient) => ingredient.canonicalIngredientId),
+    ...recipe.recipeFamily.ingredients.map((ingredient) => ingredient.canonicalIngredientId),
+  ];
+  assert.ok(policy.ingredientIdentityRules.length > 0);
+  for (const rule of policy.ingredientIdentityRules) {
+    for (const id of rule.recipeIds) {
+      const recipe = runtimeById.get(id);
+      assert.ok(recipe, `${id}: the rule names a runtime card`);
+      assert.ok(
+        recipe.shoppingIngredients.some((ingredient) =>
+          ingredient.canonicalIngredientId === rule.canonicalIngredientId && ingredient.nameRu === rule.sourceName),
+        `${id}: «${rule.sourceName}» is ${rule.canonicalIngredientId}`,
+      );
+      assert.ok(canonicalIds(recipe).includes(rule.canonicalIngredientId), `${id}: the Recipe Family uses ${rule.canonicalIngredientId}`);
+      assert.equal(canonicalIds(recipe).includes(rule.fromCanonicalIngredientId), false, `${id}: ${rule.fromCanonicalIngredientId} is gone`);
+    }
+  }
+});
+
 test("storage corrections do not contradict the intended serving mode", () => {
   const hot = new Set(policy.hotReheatRecipeIds);
   const cold = new Set(policy.coldNoReheatRecipeIds);
