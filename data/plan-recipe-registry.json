@@ -2597,7 +2597,7 @@
       ]
     },
     {
-      "id": "mise-simple-broccoli-pea-omelette",
+      "id": "mise-simple-broccoli-pea-egg-bake",
       "slot": "breakfast",
       "allergens": [
         "egg",
@@ -2842,7 +2842,8 @@
       "slot": "breakfast",
       "allergens": [
         "gluten",
-        "milk"
+        "milk",
+        "treeNuts"
       ],
       "storageDays": 3,
       "freezable": false,

@@ -55786,7 +55786,7 @@
     },
     {
       "id": "mise-simple-carrot-tvorog-oat-bake",
-      "title": "Морковно-творожная запеканка с овсянкой и курагой",
+      "title": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
       "slot": "breakfast",
       "cuisine": "russian",
       "macros": {
@@ -55923,7 +55923,7 @@
       "steps": [
         "Разогрейте духовку до 180 °C и застелите форму пергаментом. Морковь натрите на мелкой тёрке, курагу промойте и мелко нарежьте.",
         "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте морковь, курагу и хлопья.",
-        "Оставьте массу на 10 минут, чтобы хлопья набухли, переложите в форму слоем 3–4 см, разровняйте и смажьте сверху сметаной.",
+        "Оставьте массу на 10 минут, чтобы хлопья набухли, переложите в форму слоем 3–4 см — большую партию в две формы, — разровняйте и смажьте сверху сметаной.",
         "Запекайте 40–45 минут до золотистой корочки; внутри должно быть не менее 71 °C.",
         "Остудите в форме 15 минут и разрежьте на порции."
       ],
@@ -55938,7 +55938,7 @@
       "packing": {
         "portion": "После готовки взвесьте фактический выход и разложите рассчитанные порции в отдельные подписанные контейнеры.",
         "separate": "",
-        "label": "Морковно-творожная запеканка с овсянкой и курагой · имя · дата готовки · приём пищи"
+        "label": "Морковно-творожная запеканка с овсяными хлопьями и курагой · имя · дата готовки · приём пищи"
       },
       "localization": {
         "fit": "familiar",
@@ -55960,7 +55960,7 @@
         "kind": "generated",
         "sourceTitle": "Mise",
         "sourceUrl": "",
-        "sourceQuery": "Морковно-творожная запеканка с овсянкой и курагой",
+        "sourceQuery": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
         "adaptation": "",
         "preview": {
           "kind": "graphic_fallback",
@@ -55974,7 +55974,7 @@
       },
       "recipeFamily": {
         "id": "mise-simple-carrot-tvorog-oat-bake",
-        "title": "Морковно-творожная запеканка с овсянкой и курагой",
+        "title": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
         "mealSlots": [
           "breakfast"
         ],
@@ -55982,7 +55982,7 @@
           "kind": "generated",
           "sourceTitle": "Mise",
           "sourceUrl": "",
-          "sourceQuery": "Морковно-творожная запеканка с овсянкой и курагой",
+          "sourceQuery": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
           "adaptation": "",
           "preview": {
             "kind": "graphic_fallback",
@@ -56034,7 +56034,7 @@
             "baseAmount": 35,
             "unit": "g",
             "role": "carb",
-            "minAmount": 10.5,
+            "minAmount": 17.5,
             "preferredMin": 28,
             "preferredMax": 43.75,
             "maxAmount": 77,
@@ -56089,7 +56089,7 @@
             "optional": false
           }
         ],
-        "minViableCalories": 333,
+        "minViableCalories": 353,
         "maxViableCalories": 1019,
         "minimumProtein": 20,
         "sourceNutrition": null,
@@ -56170,7 +56170,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Оставьте массу на 10 минут, чтобы хлопья набухли, переложите в форму слоем 3–4 см, разровняйте и смажьте сверху сметаной.",
+            "text": "Оставьте массу на 10 минут, чтобы хлопья набухли, переложите в форму слоем 3–4 см — большую партию в две формы, — разровняйте и смажьте сверху сметаной.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -56249,20 +56249,20 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 333,
+        "min": 353,
         "max": 1019
       }
     },
     {
       "id": "mise-simple-buckwheat-tvorog-bake",
-      "title": "Гречневая запеканка с творогом и яблоком",
+      "title": "Творожная запеканка с гречкой и яблоком",
       "slot": "breakfast",
       "cuisine": "russian",
       "macros": {
-        "kcal": 533.9,
-        "protein": 38.7,
-        "fat": 17.1,
-        "carbs": 61
+        "kcal": 535.6,
+        "protein": 39.2,
+        "fat": 17.2,
+        "carbs": 60.7
       },
       "equipmentOptions": [
         {
@@ -56286,7 +56286,7 @@
         "value": 1
       },
       "servingMass": {
-        "grams": 460,
+        "grams": 435,
         "basis": "input_mass_not_cooked_yield"
       },
       "shoppingIngredients": [
@@ -56297,7 +56297,7 @@
           ],
           "canonicalIngredientId": "buckwheat_raw",
           "nameRu": "Гречка",
-          "quantityGrams": 40,
+          "quantityGrams": 45,
           "group": "Крупы и макароны",
           "allergens": [],
           "checkLabel": false
@@ -56337,7 +56337,7 @@
           ],
           "canonicalIngredientId": "apple_raw",
           "nameRu": "Яблоко",
-          "quantityGrams": 180,
+          "quantityGrams": 150,
           "group": "Овощи и фрукты",
           "allergens": [],
           "checkLabel": false
@@ -56365,7 +56365,7 @@
           "nameRu": "вода",
           "reason": "для варки; количество следует за крупой",
           "classification": "pantry",
-          "quantityPerServing": 80,
+          "quantityPerServing": 90,
           "unit": "ml",
           "allergens": []
         },
@@ -56390,9 +56390,9 @@
       ],
       "steps": [
         "Промытую гречку залейте отмеренной водой и варите под крышкой 15 минут, пока вода не впитается; остудите.",
-        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Яблоко натрите на крупной тёрке вместе с кожурой.",
+        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Яблоко вместе с кожурой нарежьте мелким кубиком.",
         "Разомните творог с яйцом, корицей и щепоткой соли, вмешайте гречку и яблоко.",
-        "Разровняйте массу в форме слоем 3–4 см, смажьте сверху сметаной и запекайте 35–40 минут до румяного верха; внутри должно быть не менее 71 °C.",
+        "Разровняйте массу в форме слоем 3–4 см — большую партию в две формы, — смажьте сверху сметаной и запекайте 35–40 минут до румяного верха; внутри должно быть не менее 71 °C.",
         "Остудите в форме 15 минут и разрежьте на порции."
       ],
       "storage": {
@@ -56406,19 +56406,19 @@
       "packing": {
         "portion": "После готовки взвесьте фактический выход и разложите рассчитанные порции в отдельные подписанные контейнеры.",
         "separate": "",
-        "label": "Гречневая запеканка с творогом и яблоком · имя · дата готовки · приём пищи"
+        "label": "Творожная запеканка с гречкой и яблоком · имя · дата готовки · приём пищи"
       },
       "localization": {
         "fit": "familiar",
         "availability": "common",
-        "reviewNote": "Это крупеник — старая русская запеканка. Гречку можно сварить накануне: холодная крупа держит форму лучше."
+        "reviewNote": "Гречку удобно сварить накануне: холодная крупа держит форму лучше. Яблоко режьте мелким кубиком, а не трите — тогда запеканка не намокнет от сока."
       },
-      "flavourTip": "Это крупеник — старая русская запеканка. Гречку можно сварить накануне: холодная крупа держит форму лучше.",
-      "substitution": "Яблоко можно заменить тёртой морковью в том же весе.",
+      "flavourTip": "Гречку удобно сварить накануне: холодная крупа держит форму лучше. Яблоко режьте мелким кубиком, а не трите — тогда запеканка не намокнет от сока.",
+      "substitution": "Яблоко можно заменить грушей того же веса, нарезанной так же.",
       "effort": {
         "level": "medium",
         "difficulty": 2,
-        "knifeActions": 0,
+        "knifeActions": 1,
         "cookware": 2,
         "activeActions": 5,
         "activeMinutes": 12,
@@ -56428,7 +56428,7 @@
         "kind": "generated",
         "sourceTitle": "Mise",
         "sourceUrl": "",
-        "sourceQuery": "Гречневая запеканка с творогом и яблоком",
+        "sourceQuery": "Творожная запеканка с гречкой и яблоком",
         "adaptation": "",
         "preview": {
           "kind": "graphic_fallback",
@@ -56442,7 +56442,7 @@
       },
       "recipeFamily": {
         "id": "mise-simple-buckwheat-tvorog-bake",
-        "title": "Гречневая запеканка с творогом и яблоком",
+        "title": "Творожная запеканка с гречкой и яблоком",
         "mealSlots": [
           "breakfast"
         ],
@@ -56450,7 +56450,7 @@
           "kind": "generated",
           "sourceTitle": "Mise",
           "sourceUrl": "",
-          "sourceQuery": "Гречневая запеканка с творогом и яблоком",
+          "sourceQuery": "Творожная запеканка с гречкой и яблоком",
           "adaptation": "",
           "preview": {
             "kind": "graphic_fallback",
@@ -56469,13 +56469,13 @@
           {
             "sourceIngredientId": "extension-ingredient-1",
             "canonicalIngredientId": "buckwheat_raw",
-            "baseAmount": 40,
+            "baseAmount": 45,
             "unit": "g",
             "role": "carb",
-            "minAmount": 12,
-            "preferredMin": 32,
-            "preferredMax": 50,
-            "maxAmount": 88,
+            "minAmount": 22.5,
+            "preferredMin": 36,
+            "preferredMax": 56.25,
+            "maxAmount": 90,
             "scalable": true,
             "scalingPriority": 1,
             "substitutions": [],
@@ -56514,13 +56514,13 @@
           {
             "sourceIngredientId": "extension-ingredient-4",
             "canonicalIngredientId": "apple_raw",
-            "baseAmount": 180,
+            "baseAmount": 150,
             "unit": "g",
             "role": "vegetable",
-            "minAmount": 126,
-            "preferredMin": 144,
-            "preferredMax": 225,
-            "maxAmount": 234,
+            "minAmount": 105,
+            "preferredMin": 120,
+            "preferredMax": 172.5,
+            "maxAmount": 172.5,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -56542,22 +56542,22 @@
             "optional": false
           }
         ],
-        "minViableCalories": 314,
-        "maxViableCalories": 959,
+        "minViableCalories": 338,
+        "maxViableCalories": 943,
         "minimumProtein": 19,
         "sourceNutrition": null,
         "comparisonNutrition": null,
         "legacyEditorialNutrition": {
-          "kcal": 533.9,
-          "protein": 38.7,
-          "fat": 17.1,
-          "carbs": 61
+          "kcal": 535.6,
+          "protein": 39.2,
+          "fat": 17.2,
+          "carbs": 60.7
         },
         "miseCalculatedNutrition": {
-          "kcal": 533.9,
-          "protein": 38.7,
-          "fat": 17.1,
-          "carbs": 61
+          "kcal": 535.6,
+          "protein": 39.2,
+          "fat": 17.2,
+          "carbs": 60.7
         },
         "nutritionDelta": null,
         "nutritionDeltaKcal": null,
@@ -56606,7 +56606,7 @@
           },
           {
             "id": "extension-step-2",
-            "text": "Разогрейте духовку до 180 °C и застелите форму пергаментом. Яблоко натрите на крупной тёрке вместе с кожурой.",
+            "text": "Разогрейте духовку до 180 °C и застелите форму пергаментом. Яблоко вместе с кожурой нарежьте мелким кубиком.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -56634,7 +56634,7 @@
           },
           {
             "id": "extension-step-4",
-            "text": "Разровняйте массу в форме слоем 3–4 см, смажьте сверху сметаной и запекайте 35–40 минут до румяного верха; внутри должно быть не менее 71 °C.",
+            "text": "Разровняйте массу в форме слоем 3–4 см — большую партию в две формы, — смажьте сверху сметаной и запекайте 35–40 минут до румяного верха; внутри должно быть не менее 71 °C.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -56676,7 +56676,7 @@
         "complexity": {
           "level": "medium",
           "difficulty": 2,
-          "knifeActions": 0,
+          "knifeActions": 1,
           "cookware": 2,
           "activeActions": 5,
           "activeMinutes": 12,
@@ -56698,20 +56698,20 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 314,
-        "max": 959
+        "min": 338,
+        "max": 943
       }
     },
     {
       "id": "mise-simple-millet-tvorog-pumpkin-bake",
-      "title": "Пшённая запеканка с творогом и тыквой",
+      "title": "Тыквенно-творожная запеканка с пшеном",
       "slot": "breakfast",
       "cuisine": "russian",
       "macros": {
-        "kcal": 520.7,
-        "protein": 37.4,
-        "fat": 16.5,
-        "carbs": 59.2
+        "kcal": 531.8,
+        "protein": 37.6,
+        "fat": 16.6,
+        "carbs": 60.9
       },
       "equipmentOptions": [
         {
@@ -56735,7 +56735,7 @@
         "value": 1
       },
       "servingMass": {
-        "grams": 520,
+        "grams": 495,
         "basis": "input_mass_not_cooked_yield"
       },
       "shoppingIngredients": [
@@ -56746,7 +56746,7 @@
           ],
           "canonicalIngredientId": "millet_raw",
           "nameRu": "Пшено",
-          "quantityGrams": 35,
+          "quantityGrams": 40,
           "group": "Крупы и макароны",
           "allergens": [],
           "checkLabel": false
@@ -56786,7 +56786,7 @@
           ],
           "canonicalIngredientId": "pumpkin_raw",
           "nameRu": "Тыква",
-          "quantityGrams": 250,
+          "quantityGrams": 220,
           "group": "Овощи и фрукты",
           "allergens": [],
           "checkLabel": false
@@ -56826,7 +56826,7 @@
           "nameRu": "вода",
           "reason": "для варки; количество следует за крупой",
           "classification": "pantry",
-          "quantityPerServing": 70,
+          "quantityPerServing": 80,
           "unit": "ml",
           "allergens": []
         },
@@ -56850,10 +56850,10 @@
         }
       ],
       "steps": [
-        "Пшено промойте горячей водой, залейте отмеренной водой и варите под крышкой 15 минут до мягкости; остудите.",
-        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Тыкву натрите на мелкой тёрке, изюм промойте.",
-        "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте пшено, тыкву и изюм.",
-        "Разровняйте массу в форме, смажьте сверху сметаной и запекайте 40 минут до золотистого верха; внутри должно быть не менее 71 °C.",
+        "Тыкву очистите и нарежьте кубиком около 1 см. Пшено промойте горячей водой, сложите с тыквой в кастрюлю, залейте отмеренной водой и варите под крышкой 15–20 минут, пока вода не впитается, а тыква не станет мягкой; остудите.",
+        "Разогрейте духовку до 180 °C и застелите форму пергаментом. Изюм промойте.",
+        "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте пшено с тыквой и изюм.",
+        "Разровняйте массу в форме слоем 3–4 см — большую партию в две формы, — смажьте сверху сметаной и запекайте 40 минут до золотистого верха; внутри должно быть не менее 71 °C.",
         "Остудите в форме 15 минут и разрежьте на порции."
       ],
       "storage": {
@@ -56867,15 +56867,15 @@
       "packing": {
         "portion": "После готовки взвесьте фактический выход и разложите рассчитанные порции в отдельные подписанные контейнеры.",
         "separate": "",
-        "label": "Пшённая запеканка с творогом и тыквой · имя · дата готовки · приём пищи"
+        "label": "Тыквенно-творожная запеканка с пшеном · имя · дата готовки · приём пищи"
       },
       "localization": {
         "fit": "familiar",
         "availability": "common",
-        "reviewNote": "Горячая вода смывает с пшена горечь. Тыкву берите с ярко-оранжевой мякотью — она слаще."
+        "reviewNote": "Горячая вода смывает с пшена горечь, а тыква, сваренная вместе с крупой, не даёт запеканке лишней воды. Тыкву берите с ярко-оранжевой мякотью — она слаще."
       },
-      "flavourTip": "Горячая вода смывает с пшена горечь. Тыкву берите с ярко-оранжевой мякотью — она слаще.",
-      "substitution": "Тыкву можно заменить тёртой морковью, изюм — мелко нарезанной курагой в том же весе.",
+      "flavourTip": "Горячая вода смывает с пшена горечь, а тыква, сваренная вместе с крупой, не даёт запеканке лишней воды. Тыкву берите с ярко-оранжевой мякотью — она слаще.",
+      "substitution": "Тыкву можно заменить морковью, нарезанной так же, изюм — мелко нарезанной курагой в том же весе.",
       "effort": {
         "level": "medium",
         "difficulty": 2,
@@ -56889,7 +56889,7 @@
         "kind": "generated",
         "sourceTitle": "Mise",
         "sourceUrl": "",
-        "sourceQuery": "Пшённая запеканка с творогом и тыквой",
+        "sourceQuery": "Тыквенно-творожная запеканка с пшеном",
         "adaptation": "",
         "preview": {
           "kind": "graphic_fallback",
@@ -56903,7 +56903,7 @@
       },
       "recipeFamily": {
         "id": "mise-simple-millet-tvorog-pumpkin-bake",
-        "title": "Пшённая запеканка с творогом и тыквой",
+        "title": "Тыквенно-творожная запеканка с пшеном",
         "mealSlots": [
           "breakfast"
         ],
@@ -56911,7 +56911,7 @@
           "kind": "generated",
           "sourceTitle": "Mise",
           "sourceUrl": "",
-          "sourceQuery": "Пшённая запеканка с творогом и тыквой",
+          "sourceQuery": "Тыквенно-творожная запеканка с пшеном",
           "adaptation": "",
           "preview": {
             "kind": "graphic_fallback",
@@ -56930,13 +56930,13 @@
           {
             "sourceIngredientId": "extension-ingredient-1",
             "canonicalIngredientId": "millet_raw",
-            "baseAmount": 35,
+            "baseAmount": 40,
             "unit": "g",
             "role": "carb",
-            "minAmount": 10.5,
-            "preferredMin": 28,
-            "preferredMax": 43.75,
-            "maxAmount": 77,
+            "minAmount": 28,
+            "preferredMin": 32,
+            "preferredMax": 50,
+            "maxAmount": 80,
             "scalable": true,
             "scalingPriority": 1,
             "substitutions": [],
@@ -56975,13 +56975,13 @@
           {
             "sourceIngredientId": "extension-ingredient-4",
             "canonicalIngredientId": "pumpkin_raw",
-            "baseAmount": 250,
+            "baseAmount": 220,
             "unit": "g",
             "role": "vegetable",
-            "minAmount": 175,
-            "preferredMin": 200,
-            "preferredMax": 312.5,
-            "maxAmount": 325,
+            "minAmount": 154,
+            "preferredMin": 176,
+            "preferredMax": 275,
+            "maxAmount": 286,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -57018,22 +57018,22 @@
             "optional": false
           }
         ],
-        "minViableCalories": 308,
-        "maxViableCalories": 938,
+        "minViableCalories": 359,
+        "maxViableCalories": 948,
         "minimumProtein": 18,
         "sourceNutrition": null,
         "comparisonNutrition": null,
         "legacyEditorialNutrition": {
-          "kcal": 520.7,
-          "protein": 37.4,
-          "fat": 16.5,
-          "carbs": 59.2
+          "kcal": 531.8,
+          "protein": 37.6,
+          "fat": 16.6,
+          "carbs": 60.9
         },
         "miseCalculatedNutrition": {
-          "kcal": 520.7,
-          "protein": 37.4,
-          "fat": 16.5,
-          "carbs": 59.2
+          "kcal": 531.8,
+          "protein": 37.6,
+          "fat": 16.6,
+          "carbs": 60.9
         },
         "nutritionDelta": null,
         "nutritionDeltaKcal": null,
@@ -57069,7 +57069,7 @@
           },
           {
             "id": "extension-step-1",
-            "text": "Пшено промойте горячей водой, залейте отмеренной водой и варите под крышкой 15 минут до мягкости; остудите.",
+            "text": "Тыкву очистите и нарежьте кубиком около 1 см. Пшено промойте горячей водой, сложите с тыквой в кастрюлю, залейте отмеренной водой и варите под крышкой 15–20 минут, пока вода не впитается, а тыква не станет мягкой; остудите.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -57084,7 +57084,7 @@
           },
           {
             "id": "extension-step-2",
-            "text": "Разогрейте духовку до 180 °C и застелите форму пергаментом. Тыкву натрите на мелкой тёрке, изюм промойте.",
+            "text": "Разогрейте духовку до 180 °C и застелите форму пергаментом. Изюм промойте.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -57099,7 +57099,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте пшено, тыкву и изюм.",
+            "text": "Разомните творог с яйцом, ванилью и щепоткой соли, вмешайте пшено с тыквой и изюм.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -57114,7 +57114,7 @@
           },
           {
             "id": "extension-step-4",
-            "text": "Разровняйте массу в форме, смажьте сверху сметаной и запекайте 40 минут до золотистого верха; внутри должно быть не менее 71 °C.",
+            "text": "Разровняйте массу в форме слоем 3–4 см — большую партию в две формы, — смажьте сверху сметаной и запекайте 40 минут до золотистого верха; внутри должно быть не менее 71 °C.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -57180,8 +57180,8 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 308,
-        "max": 938
+        "min": 359,
+        "max": 948
       }
     },
     {
@@ -57190,10 +57190,10 @@
       "slot": "breakfast",
       "cuisine": "european",
       "macros": {
-        "kcal": 505.9,
-        "protein": 35.9,
-        "fat": 16.4,
-        "carbs": 56.8
+        "kcal": 500.6,
+        "protein": 35.7,
+        "fat": 16,
+        "carbs": 56.5
       },
       "equipmentOptions": [
         {
@@ -57214,7 +57214,7 @@
         "value": 1
       },
       "servingMass": {
-        "grams": 431,
+        "grams": 430,
         "basis": "input_mass_not_cooked_yield"
       },
       "shoppingIngredients": [
@@ -57278,8 +57278,8 @@
             "extension-ingredient-5"
           ],
           "canonicalIngredientId": "flaxseed_raw",
-          "nameRu": "Семена льна",
-          "quantityGrams": 11,
+          "nameRu": "Семена льна целые",
+          "quantityGrams": 10,
           "group": "Бакалея",
           "allergens": [],
           "checkLabel": false
@@ -57298,7 +57298,7 @@
         {
           "sourceIngredientId": "extension-pantry-2",
           "nameRu": "разрыхлитель",
-          "reason": "специя, КБЖУ не меняет",
+          "reason": "КБЖУ не меняет",
           "classification": "pantry",
           "quantityPerServing": 2,
           "unit": "g",
@@ -57308,7 +57308,7 @@
       "steps": [
         "Разогрейте духовку до 180 °C и застелите форму пергаментом.",
         "Взбейте вилкой яйцо с йогуртом, добавьте хлопья, семена льна, корицу и разрыхлитель.",
-        "Вмешайте половину черники, переложите в форму и разложите сверху остальные ягоды. Замороженную чернику не размораживайте.",
+        "Вмешайте половину черники, переложите в форму слоем 3–4 см — большую партию в две формы — и разложите сверху остальные ягоды. Замороженную чернику не размораживайте.",
         "Запекайте 35–40 минут до упругой середины и золотистых краёв; внутри должно быть не менее 71 °C.",
         "Остудите 10 минут в форме и разрежьте на порции по числу контейнеров."
       ],
@@ -57328,9 +57328,9 @@
       "localization": {
         "fit": "familiar",
         "availability": "common",
-        "reviewNote": "Семена льна впитывают влагу йогурта и связывают овсянку вместо муки, поэтому остывшая запеканка режется ровными кусками."
+        "reviewNote": "Яйцо и густой йогурт при запекании схватываются и связывают хлопья, поэтому остывшая запеканка режется ровными кусками."
       },
-      "flavourTip": "Семена льна впитывают влагу йогурта и связывают овсянку вместо муки, поэтому остывшая запеканка режется ровными кусками.",
+      "flavourTip": "Яйцо и густой йогурт при запекании схватываются и связывают хлопья, поэтому остывшая запеканка режется ровными кусками.",
       "substitution": "Чернику можно заменить замороженной вишней без косточек или тёртым яблоком.",
       "effort": {
         "level": "low",
@@ -57389,7 +57389,7 @@
             "baseAmount": 40,
             "unit": "g",
             "role": "carb",
-            "minAmount": 12,
+            "minAmount": 28,
             "preferredMin": 32,
             "preferredMax": 50,
             "maxAmount": 88,
@@ -57446,35 +57446,35 @@
           {
             "sourceIngredientId": "extension-ingredient-5",
             "canonicalIngredientId": "flaxseed_raw",
-            "baseAmount": 11,
+            "baseAmount": 10,
             "unit": "g",
             "role": "fat",
-            "minAmount": 5.5,
-            "preferredMin": 8.8,
-            "preferredMax": 13.75,
-            "maxAmount": 16.5,
+            "minAmount": 5,
+            "preferredMin": 8,
+            "preferredMax": 12.5,
+            "maxAmount": 15,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
             "optional": false
           }
         ],
-        "minViableCalories": 311,
+        "minViableCalories": 343,
         "maxViableCalories": 916,
         "minimumProtein": 17,
         "sourceNutrition": null,
         "comparisonNutrition": null,
         "legacyEditorialNutrition": {
-          "kcal": 505.9,
-          "protein": 35.9,
-          "fat": 16.4,
-          "carbs": 56.8
+          "kcal": 500.6,
+          "protein": 35.7,
+          "fat": 16,
+          "carbs": 56.5
         },
         "miseCalculatedNutrition": {
-          "kcal": 505.9,
-          "protein": 35.9,
-          "fat": 16.4,
-          "carbs": 56.8
+          "kcal": 500.6,
+          "protein": 35.7,
+          "fat": 16,
+          "carbs": 56.5
         },
         "nutritionDelta": null,
         "nutritionDeltaKcal": null,
@@ -57537,7 +57537,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Вмешайте половину черники, переложите в форму и разложите сверху остальные ягоды. Замороженную чернику не размораживайте.",
+            "text": "Вмешайте половину черники, переложите в форму слоем 3–4 см — большую партию в две формы — и разложите сверху остальные ягоды. Замороженную чернику не размораживайте.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -57613,7 +57613,7 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 311,
+        "min": 343,
         "max": 916
       }
     },
@@ -57623,10 +57623,10 @@
       "slot": "breakfast",
       "cuisine": "international",
       "macros": {
-        "kcal": 484.4,
-        "protein": 35.1,
-        "fat": 14.2,
-        "carbs": 57.5
+        "kcal": 510.8,
+        "protein": 36.3,
+        "fat": 16.8,
+        "carbs": 57.4
       },
       "equipmentOptions": [
         {
@@ -57635,7 +57635,7 @@
           "requiredEquipment": []
         }
       ],
-      "timeMinutes": 10,
+      "timeMinutes": 12,
       "menuTags": [
         "simple",
         "protein",
@@ -57645,7 +57645,7 @@
         "value": 1
       },
       "servingMass": {
-        "grams": 445,
+        "grams": 457,
         "basis": "input_mass_not_cooked_yield"
       },
       "shoppingIngredients": [
@@ -57670,7 +57670,7 @@
           ],
           "canonicalIngredientId": "yogurt_processed",
           "nameRu": "Греческий йогурт 2%",
-          "quantityGrams": 250,
+          "quantityGrams": 260,
           "group": "Молочное",
           "allergens": [
             "milk"
@@ -57707,10 +57707,24 @@
             "extension-ingredient-5"
           ],
           "canonicalIngredientId": "flaxseed_raw",
-          "nameRu": "Семена льна",
-          "quantityGrams": 15,
+          "nameRu": "Семена льна целые",
+          "quantityGrams": 10,
           "group": "Бакалея",
           "allergens": [],
+          "checkLabel": false
+        },
+        {
+          "sourceIngredientId": "extension-ingredient-6",
+          "sourceIngredientIds": [
+            "extension-ingredient-6"
+          ],
+          "canonicalIngredientId": "walnuts_raw",
+          "nameRu": "Грецкие орехи",
+          "quantityGrams": 7,
+          "group": "Бакалея",
+          "allergens": [
+            "nuts"
+          ],
           "checkLabel": false
         }
       ],
@@ -57726,8 +57740,8 @@
         }
       ],
       "steps": [
-        "Яблоко вместе с кожурой и морковь натрите на мелкой тёрке.",
-        "Смешайте йогурт с хлопьями, семенами льна и корицей, вмешайте морковь и яблоко.",
+        "Морковь и яблоко с кожурой натрите на мелкой тёрке, орехи мелко порубите ножом.",
+        "Смешайте йогурт с хлопьями, семенами льна и корицей, вмешайте морковь, яблоко и орехи.",
         "Разложите по банкам или контейнерам с крышкой и уберите в холодильник минимум на 6 часов, чтобы хлопья набухли."
       ],
       "storage": {
@@ -57746,17 +57760,17 @@
       "localization": {
         "fit": "familiar",
         "availability": "common",
-        "reviewNote": "За ночь хлопья и лён впитывают йогурт, а морковь с яблоком дают сладость: получается вкус морковного пирога без сахара."
+        "reviewNote": "За ночь хлопья набухают в йогурте и становятся мягкими, а тёртые морковь и яблоко дают сладость без сахара."
       },
-      "flavourTip": "За ночь хлопья и лён впитывают йогурт, а морковь с яблоком дают сладость: получается вкус морковного пирога без сахара.",
-      "substitution": "Яблоко можно заменить грушей, морковь — тёртой тыквой в том же весе.",
+      "flavourTip": "За ночь хлопья набухают в йогурте и становятся мягкими, а тёртые морковь и яблоко дают сладость без сахара.",
+      "substitution": "Яблоко можно заменить грушей, морковь — тёртой тыквой в том же весе. Маленьким детям сырой лён не кладите: замените его ложкой хлопьев.",
       "effort": {
         "level": "low",
         "difficulty": 1,
-        "knifeActions": 0,
+        "knifeActions": 1,
         "cookware": 1,
         "activeActions": 3,
-        "activeMinutes": 10,
+        "activeMinutes": 12,
         "parallelProcesses": 1
       },
       "provenance": {
@@ -57807,7 +57821,7 @@
             "baseAmount": 40,
             "unit": "g",
             "role": "carb",
-            "minAmount": 12,
+            "minAmount": 28,
             "preferredMin": 32,
             "preferredMax": 50,
             "maxAmount": 88,
@@ -57819,13 +57833,13 @@
           {
             "sourceIngredientId": "extension-ingredient-2",
             "canonicalIngredientId": "yogurt_processed",
-            "baseAmount": 250,
+            "baseAmount": 260,
             "unit": "g",
             "role": "protein",
-            "minAmount": 125,
-            "preferredMin": 200,
-            "preferredMax": 312.5,
-            "maxAmount": 425,
+            "minAmount": 130,
+            "preferredMin": 208,
+            "preferredMax": 325,
+            "maxAmount": 442,
             "scalable": true,
             "scalingPriority": 2,
             "substitutions": [],
@@ -57864,35 +57878,50 @@
           {
             "sourceIngredientId": "extension-ingredient-5",
             "canonicalIngredientId": "flaxseed_raw",
-            "baseAmount": 15,
+            "baseAmount": 10,
             "unit": "g",
             "role": "fat",
-            "minAmount": 7.5,
-            "preferredMin": 12,
-            "preferredMax": 18.75,
-            "maxAmount": 22.5,
+            "minAmount": 5,
+            "preferredMin": 8,
+            "preferredMax": 12.5,
+            "maxAmount": 15,
+            "scalable": true,
+            "scalingPriority": 3,
+            "substitutions": [],
+            "optional": false
+          },
+          {
+            "sourceIngredientId": "extension-ingredient-6",
+            "canonicalIngredientId": "walnuts_raw",
+            "baseAmount": 7,
+            "unit": "g",
+            "role": "fat",
+            "minAmount": 3.5,
+            "preferredMin": 5.6,
+            "preferredMax": 8.75,
+            "maxAmount": 10.5,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
             "optional": false
           }
         ],
-        "minViableCalories": 250,
-        "maxViableCalories": 926,
-        "minimumProtein": 17,
+        "minViableCalories": 318,
+        "maxViableCalories": 981,
+        "minimumProtein": 18,
         "sourceNutrition": null,
         "comparisonNutrition": null,
         "legacyEditorialNutrition": {
-          "kcal": 484.4,
-          "protein": 35.1,
-          "fat": 14.2,
-          "carbs": 57.5
+          "kcal": 510.8,
+          "protein": 36.3,
+          "fat": 16.8,
+          "carbs": 57.4
         },
         "miseCalculatedNutrition": {
-          "kcal": 484.4,
-          "protein": 35.1,
-          "fat": 14.2,
-          "carbs": 57.5
+          "kcal": 510.8,
+          "protein": 36.3,
+          "fat": 16.8,
+          "carbs": 57.4
         },
         "nutritionDelta": null,
         "nutritionDeltaKcal": null,
@@ -57900,7 +57929,7 @@
           "ingredientMapping": {
             "source": "recipe_catalog",
             "reviewedAt": "2026-10-12",
-            "sourceIngredientCount": 5,
+            "sourceIngredientCount": 6,
             "note": "Mise-authored card; every product is a canonical profile with a stated mass and reviewed bounds."
           },
           "nutrition": {
@@ -57920,20 +57949,22 @@
               "extension-ingredient-2",
               "extension-ingredient-3",
               "extension-ingredient-4",
-              "extension-ingredient-5"
+              "extension-ingredient-5",
+              "extension-ingredient-6"
             ],
             "action": "measure",
             "dependsOn": []
           },
           {
             "id": "extension-step-1",
-            "text": "Яблоко вместе с кожурой и морковь натрите на мелкой тёрке.",
+            "text": "Морковь и яблоко с кожурой натрите на мелкой тёрке, орехи мелко порубите ножом.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
               "extension-ingredient-3",
               "extension-ingredient-4",
-              "extension-ingredient-5"
+              "extension-ingredient-5",
+              "extension-ingredient-6"
             ],
             "dependsOn": [
               "extension-measure"
@@ -57941,13 +57972,14 @@
           },
           {
             "id": "extension-step-2",
-            "text": "Смешайте йогурт с хлопьями, семенами льна и корицей, вмешайте морковь и яблоко.",
+            "text": "Смешайте йогурт с хлопьями, семенами льна и корицей, вмешайте морковь, яблоко и орехи.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
               "extension-ingredient-3",
               "extension-ingredient-4",
-              "extension-ingredient-5"
+              "extension-ingredient-5",
+              "extension-ingredient-6"
             ],
             "dependsOn": [
               "extension-step-1"
@@ -57961,7 +57993,8 @@
               "extension-ingredient-2",
               "extension-ingredient-3",
               "extension-ingredient-4",
-              "extension-ingredient-5"
+              "extension-ingredient-5",
+              "extension-ingredient-6"
             ],
             "dependsOn": [
               "extension-step-2"
@@ -57983,14 +58016,14 @@
         "complexity": {
           "level": "low",
           "difficulty": 1,
-          "knifeActions": 0,
+          "knifeActions": 1,
           "cookware": 1,
           "activeActions": 3,
-          "activeMinutes": 10,
+          "activeMinutes": 12,
           "parallelProcesses": 1
         },
-        "activeTime": 10,
-        "totalTime": 10,
+        "activeTime": 12,
+        "totalTime": 12,
         "equipment": [],
         "localization": {
           "fit": "familiar",
@@ -58000,20 +58033,20 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 250,
-        "max": 926
+        "min": 318,
+        "max": 981
       }
     },
     {
-      "id": "mise-simple-broccoli-pea-omelette",
-      "title": "Омлет с брокколи и зелёным горошком в духовке",
+      "id": "mise-simple-broccoli-pea-egg-bake",
+      "title": "Запеканка из брокколи и зелёного горошка с яйцом",
       "slot": "breakfast",
       "cuisine": "european",
       "macros": {
-        "kcal": 516.1,
-        "protein": 36.7,
-        "fat": 18,
-        "carbs": 54.1
+        "kcal": 512.5,
+        "protein": 36.2,
+        "fat": 18.2,
+        "carbs": 52.4
       },
       "equipmentOptions": [
         {
@@ -58025,7 +58058,7 @@
           ]
         }
       ],
-      "timeMinutes": 45,
+      "timeMinutes": 50,
       "menuTags": [
         "simple",
         "protein",
@@ -58035,7 +58068,7 @@
         "value": 1
       },
       "servingMass": {
-        "grams": 585,
+        "grams": 565,
         "basis": "input_mass_not_cooked_yield"
       },
       "shoppingIngredients": [
@@ -58060,7 +58093,7 @@
           ],
           "canonicalIngredientId": "milk_processed",
           "nameRu": "Молоко 2%",
-          "quantityGrams": 80,
+          "quantityGrams": 100,
           "group": "Молочное",
           "allergens": [
             "milk"
@@ -58074,7 +58107,7 @@
           ],
           "canonicalIngredientId": "broccoli_raw",
           "nameRu": "Брокколи",
-          "quantityGrams": 200,
+          "quantityGrams": 160,
           "group": "Овощи и фрукты",
           "allergens": [],
           "checkLabel": false
@@ -58118,31 +58151,31 @@
         }
       ],
       "steps": [
-        "Разогрейте духовку до 190 °C и застелите форму пергаментом. Брокколи разберите на мелкие соцветия.",
-        "Замороженные овощи разморозьте и обсушите полотенцем, иначе омлет получится водянистым. Разложите брокколи и горошек в форме.",
-        "Размешайте яйца с молоком и солью вилкой и залейте овощи.",
-        "Запекайте 25–30 минут, пока середина не схватится; внутри должно быть не менее 71 °C.",
-        "Остудите 5 минут и разрежьте на порции. Хлеб храните отдельно."
+        "Разогрейте духовку до 190 °C и застелите форму пергаментом. Свежую брокколи разберите на мелкие соцветия; замороженные брокколи и горошек разморозьте, консервированный горошек откиньте на сито. Обсушите овощи полотенцем, иначе запеканка получится водянистой.",
+        "Размешайте вилкой яйца с молоком и солью, вмешайте брокколи и горошек, чтобы все соцветия покрылись яичной смесью.",
+        "Переложите в форму слоем 3–4 см и прижмите овощи ложкой; большую партию разложите в две формы.",
+        "Запекайте 30–35 минут, пока яичная смесь в середине не схватится; внутри должно быть не менее 71 °C.",
+        "Остудите 5 минут и разрежьте на порции. Хлеб храните отдельно и ешьте вместе с запеканкой."
       ],
       "storage": {
         "refrigeratorDays": 3,
         "freezable": false,
         "freezerDays": null,
         "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
-        "freezer": "Не замораживать: омлет после разморозки выделяет воду.",
+        "freezer": "Не замораживать: яичная запеканка после разморозки выделяет воду.",
         "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
       },
       "packing": {
         "portion": "После готовки взвесьте фактический выход и разложите рассчитанные порции в отдельные подписанные контейнеры.",
         "separate": "Хлеб храните отдельно.",
-        "label": "Омлет с брокколи и зелёным горошком в духовке · имя · дата готовки · приём пищи"
+        "label": "Запеканка из брокколи и зелёного горошка с яйцом · имя · дата готовки · приём пищи"
       },
       "localization": {
         "fit": "familiar",
         "availability": "common",
-        "reviewNote": "Мелкие соцветия брокколи пропекаются вместе с омлетом, и бланшировать их заранее не нужно."
+        "reviewNote": "Овощей здесь больше, чем яиц: яично-молочная заливка связывает брокколи и горошек, как в овощной запеканке. Мелкие соцветия успевают в ней пропечься, бланшировать их не нужно."
       },
-      "flavourTip": "Мелкие соцветия брокколи пропекаются вместе с омлетом, и бланшировать их заранее не нужно.",
+      "flavourTip": "Овощей здесь больше, чем яиц: яично-молочная заливка связывает брокколи и горошек, как в овощной запеканке. Мелкие соцветия успевают в ней пропечься, бланшировать их не нужно.",
       "substitution": "Брокколи можно заменить цветной капустой, горошек — стручковой фасолью.",
       "effort": {
         "level": "low",
@@ -58150,14 +58183,14 @@
         "knifeActions": 1,
         "cookware": 1,
         "activeActions": 5,
-        "activeMinutes": 8,
+        "activeMinutes": 10,
         "parallelProcesses": 1
       },
       "provenance": {
         "kind": "generated",
         "sourceTitle": "Mise",
         "sourceUrl": "",
-        "sourceQuery": "Омлет с брокколи и зелёным горошком в духовке",
+        "sourceQuery": "Запеканка из брокколи и зелёного горошка с яйцом",
         "adaptation": "",
         "preview": {
           "kind": "graphic_fallback",
@@ -58170,8 +58203,8 @@
         "emoji": "🥣"
       },
       "recipeFamily": {
-        "id": "mise-simple-broccoli-pea-omelette",
-        "title": "Омлет с брокколи и зелёным горошком в духовке",
+        "id": "mise-simple-broccoli-pea-egg-bake",
+        "title": "Запеканка из брокколи и зелёного горошка с яйцом",
         "mealSlots": [
           "breakfast"
         ],
@@ -58179,7 +58212,7 @@
           "kind": "generated",
           "sourceTitle": "Mise",
           "sourceUrl": "",
-          "sourceQuery": "Омлет с брокколи и зелёным горошком в духовке",
+          "sourceQuery": "Запеканка из брокколи и зелёного горошка с яйцом",
           "adaptation": "",
           "preview": {
             "kind": "graphic_fallback",
@@ -58213,13 +58246,13 @@
           {
             "sourceIngredientId": "extension-ingredient-2",
             "canonicalIngredientId": "milk_processed",
-            "baseAmount": 80,
+            "baseAmount": 100,
             "unit": "g",
             "role": "sauce",
-            "minAmount": 56,
-            "preferredMin": 64,
-            "preferredMax": 100,
-            "maxAmount": 120,
+            "minAmount": 70,
+            "preferredMin": 80,
+            "preferredMax": 125,
+            "maxAmount": 150,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -58228,13 +58261,13 @@
           {
             "sourceIngredientId": "extension-ingredient-3",
             "canonicalIngredientId": "broccoli_raw",
-            "baseAmount": 200,
+            "baseAmount": 160,
             "unit": "g",
             "role": "vegetable",
-            "minAmount": 140,
-            "preferredMin": 160,
-            "preferredMax": 250,
-            "maxAmount": 260,
+            "minAmount": 112,
+            "preferredMin": 128,
+            "preferredMax": 192,
+            "maxAmount": 192,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -58271,22 +58304,22 @@
             "optional": false
           }
         ],
-        "minViableCalories": 340,
-        "maxViableCalories": 804,
+        "minViableCalories": 336,
+        "maxViableCalories": 795,
         "minimumProtein": 18,
         "sourceNutrition": null,
         "comparisonNutrition": null,
         "legacyEditorialNutrition": {
-          "kcal": 516.1,
-          "protein": 36.7,
-          "fat": 18,
-          "carbs": 54.1
+          "kcal": 512.5,
+          "protein": 36.2,
+          "fat": 18.2,
+          "carbs": 52.4
         },
         "miseCalculatedNutrition": {
-          "kcal": 516.1,
-          "protein": 36.7,
-          "fat": 18,
-          "carbs": 54.1
+          "kcal": 512.5,
+          "protein": 36.2,
+          "fat": 18.2,
+          "carbs": 52.4
         },
         "nutritionDelta": null,
         "nutritionDeltaKcal": null,
@@ -58321,7 +58354,7 @@
           },
           {
             "id": "extension-step-1",
-            "text": "Разогрейте духовку до 190 °C и застелите форму пергаментом. Брокколи разберите на мелкие соцветия.",
+            "text": "Разогрейте духовку до 190 °C и застелите форму пергаментом. Свежую брокколи разберите на мелкие соцветия; замороженные брокколи и горошек разморозьте, консервированный горошек откиньте на сито. Обсушите овощи полотенцем, иначе запеканка получится водянистой.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58335,7 +58368,7 @@
           },
           {
             "id": "extension-step-2",
-            "text": "Замороженные овощи разморозьте и обсушите полотенцем, иначе омлет получится водянистым. Разложите брокколи и горошек в форме.",
+            "text": "Размешайте вилкой яйца с молоком и солью, вмешайте брокколи и горошек, чтобы все соцветия покрылись яичной смесью.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58349,7 +58382,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Размешайте яйца с молоком и солью вилкой и залейте овощи.",
+            "text": "Переложите в форму слоем 3–4 см и прижмите овощи ложкой; большую партию разложите в две формы.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58363,7 +58396,7 @@
           },
           {
             "id": "extension-step-4",
-            "text": "Запекайте 25–30 минут, пока середина не схватится; внутри должно быть не менее 71 °C.",
+            "text": "Запекайте 30–35 минут, пока яичная смесь в середине не схватится; внутри должно быть не менее 71 °C.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58377,7 +58410,7 @@
           },
           {
             "id": "extension-step-5",
-            "text": "Остудите 5 минут и разрежьте на порции. Хлеб храните отдельно.",
+            "text": "Остудите 5 минут и разрежьте на порции. Хлеб храните отдельно и ешьте вместе с запеканкой.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58395,7 +58428,7 @@
           "freezable": false,
           "freezerDays": null,
           "refrigerator": "До 3 суток при ≤4 °C. Убрать в холодильник в неглубоких контейнерах в течение 2 часов после приготовления.",
-          "freezer": "Не замораживать: омлет после разморозки выделяет воду.",
+          "freezer": "Не замораживать: яичная запеканка после разморозки выделяет воду.",
           "thaw": "Разморозка не предусмотрена; готовить меньшей партией."
         },
         "freezing": {
@@ -58408,11 +58441,11 @@
           "knifeActions": 1,
           "cookware": 1,
           "activeActions": 5,
-          "activeMinutes": 8,
+          "activeMinutes": 10,
           "parallelProcesses": 1
         },
-        "activeTime": 8,
-        "totalTime": 45,
+        "activeTime": 10,
+        "totalTime": 50,
         "equipment": [
           "oven",
           "baking_dish"
@@ -58425,8 +58458,8 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 340,
-        "max": 804
+        "min": 336,
+        "max": 795
       }
     },
     {
@@ -58435,10 +58468,10 @@
       "slot": "lunch",
       "cuisine": "georgian",
       "macros": {
-        "kcal": 580.3,
-        "protein": 27.3,
+        "kcal": 577.3,
+        "protein": 27.2,
         "fat": 22.6,
-        "carbs": 73.6
+        "carbs": 72.9
       },
       "equipmentOptions": [
         {
@@ -58459,7 +58492,7 @@
         "value": 1
       },
       "servingMass": {
-        "grams": 398,
+        "grams": 396,
         "basis": "input_mass_not_cooked_yield"
       },
       "shoppingIngredients": [
@@ -58469,7 +58502,7 @@
             "extension-ingredient-1"
           ],
           "canonicalIngredientId": "red_beans_cooked",
-          "nameRu": "Красная фасоль готовая",
+          "nameRu": "Красная фасоль консервированная",
           "quantityGrams": 250,
           "group": "Крупы и бобовые",
           "allergens": [],
@@ -58532,7 +58565,7 @@
           ],
           "canonicalIngredientId": "garlic_raw",
           "nameRu": "Чеснок",
-          "quantityGrams": 5,
+          "quantityGrams": 3,
           "group": "Овощи и фрукты",
           "allergens": [],
           "checkLabel": false
@@ -58580,10 +58613,10 @@
         }
       ],
       "steps": [
-        "Лук нарежьте мелким кубиком и обжарьте на отмеренном масле 6–7 минут до мягкости.",
-        "Добавьте томатную пасту, хмели-сунели и кориандр и прогрейте 1 минуту, помешивая.",
-        "Откиньте фасоль на сито, сохранив немного жидкости. Переложите фасоль в сковороду, влейте пару ложек жидкости и тушите 10 минут, разминая часть фасоли ложкой.",
-        "Орехи мелко порубите ножом, чеснок раздавите, кинзу нарежьте. Вмешайте всё в фасоль, посолите и снимите с огня.",
+        "Лук нарежьте мелким кубиком и обжарьте на отмеренном масле 6–7 минут до мягкости. Возьмите глубокую сковороду или сотейник: фасоли будет много.",
+        "Чеснок раздавите. Добавьте к луку томатную пасту, чеснок, хмели-сунели и кориандр, прогрейте 1 минуту, помешивая.",
+        "Откиньте фасоль на сито, сохранив немного жидкости из банки. Переложите фасоль к луку, влейте немного жидкости, чтобы фасоль не пригорала, и тушите 10 минут, разминая часть фасоли ложкой.",
+        "Орехи мелко порубите ножом, кинзу нарежьте. Вмешайте их в фасоль, посолите и снимите с огня.",
         "Остудите и разложите по контейнерам."
       ],
       "storage": {
@@ -58605,7 +58638,7 @@
         "reviewNote": "Размятая часть фасоли связывает остальное в густое рагу; лобио одинаково хорошо тёплым и комнатной температуры."
       },
       "flavourTip": "Размятая часть фасоли связывает остальное в густое рагу; лобио одинаково хорошо тёплым и комнатной температуры.",
-      "substitution": "Грецкие орехи можно заменить семечками подсолнечника, кинзу — петрушкой.",
+      "substitution": "Вместо консервов подойдёт сваренная фасоль того же веса: сухую замочите на ночь и прокипятите не меньше 10 минут, затем доварите до мягкости. Грецкие орехи можно заменить семечками подсолнечника, кинзу — петрушкой.",
       "effort": {
         "level": "medium",
         "difficulty": 2,
@@ -58736,13 +58769,13 @@
           {
             "sourceIngredientId": "extension-ingredient-6",
             "canonicalIngredientId": "garlic_raw",
-            "baseAmount": 5,
+            "baseAmount": 3,
             "unit": "g",
             "role": "flavour_fixed",
-            "minAmount": 5,
-            "preferredMin": 5,
-            "preferredMax": 5,
-            "maxAmount": 5,
+            "minAmount": 3,
+            "preferredMin": 3,
+            "preferredMax": 3,
+            "maxAmount": 3,
             "scalable": false,
             "scalingPriority": 3,
             "substitutions": [],
@@ -58764,22 +58797,22 @@
             "optional": false
           }
         ],
-        "minViableCalories": 374,
-        "maxViableCalories": 944,
+        "minViableCalories": 371,
+        "maxViableCalories": 941,
         "minimumProtein": 13,
         "sourceNutrition": null,
         "comparisonNutrition": null,
         "legacyEditorialNutrition": {
-          "kcal": 580.3,
-          "protein": 27.3,
+          "kcal": 577.3,
+          "protein": 27.2,
           "fat": 22.6,
-          "carbs": 73.6
+          "carbs": 72.9
         },
         "miseCalculatedNutrition": {
-          "kcal": 580.3,
-          "protein": 27.3,
+          "kcal": 577.3,
+          "protein": 27.2,
           "fat": 22.6,
-          "carbs": 73.6
+          "carbs": 72.9
         },
         "nutritionDelta": null,
         "nutritionDeltaKcal": null,
@@ -58816,7 +58849,7 @@
           },
           {
             "id": "extension-step-1",
-            "text": "Лук нарежьте мелким кубиком и обжарьте на отмеренном масле 6–7 минут до мягкости.",
+            "text": "Лук нарежьте мелким кубиком и обжарьте на отмеренном масле 6–7 минут до мягкости. Возьмите глубокую сковороду или сотейник: фасоли будет много.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58832,7 +58865,7 @@
           },
           {
             "id": "extension-step-2",
-            "text": "Добавьте томатную пасту, хмели-сунели и кориандр и прогрейте 1 минуту, помешивая.",
+            "text": "Чеснок раздавите. Добавьте к луку томатную пасту, чеснок, хмели-сунели и кориандр, прогрейте 1 минуту, помешивая.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58848,7 +58881,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Откиньте фасоль на сито, сохранив немного жидкости. Переложите фасоль в сковороду, влейте пару ложек жидкости и тушите 10 минут, разминая часть фасоли ложкой.",
+            "text": "Откиньте фасоль на сито, сохранив немного жидкости из банки. Переложите фасоль к луку, влейте немного жидкости, чтобы фасоль не пригорала, и тушите 10 минут, разминая часть фасоли ложкой.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58864,7 +58897,7 @@
           },
           {
             "id": "extension-step-4",
-            "text": "Орехи мелко порубите ножом, чеснок раздавите, кинзу нарежьте. Вмешайте всё в фасоль, посолите и снимите с огня.",
+            "text": "Орехи мелко порубите ножом, кинзу нарежьте. Вмешайте их в фасоль, посолите и снимите с огня.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -58930,8 +58963,8 @@
         "reviewStatus": "pilot"
       },
       "viableCalories": {
-        "min": 374,
-        "max": 944
+        "min": 371,
+        "max": 941
       }
     },
     {
@@ -58997,7 +59030,7 @@
             "extension-ingredient-3"
           ],
           "canonicalIngredientId": "berries_raw",
-          "nameRu": "Черника",
+          "nameRu": "Черника свежая",
           "quantityGrams": 80,
           "group": "Овощи и фрукты",
           "allergens": [],
@@ -59016,9 +59049,9 @@
         }
       ],
       "steps": [
-        "Смешайте йогурт с семенами чиа и ванилью и разложите по банкам с крышкой.",
+        "Смешайте йогурт с семенами чиа и ванилью, разложите по банкам с крышкой.",
         "Через 10 минут перемешайте ещё раз, чтобы семена не слиплись комками.",
-        "Выложите сверху чернику и уберите в холодильник минимум на 4 часа."
+        "Выложите сверху свежую чернику и уберите в холодильник минимум на 4 часа. Маленьким детям ягоды разомните или разрежьте пополам."
       ],
       "storage": {
         "refrigeratorDays": 3,
@@ -59039,7 +59072,7 @@
         "reviewNote": "На густом йогурте чиа набухает плотнее, чем на молоке, и пудинг держит форму ложки."
       },
       "flavourTip": "На густом йогурте чиа набухает плотнее, чем на молоке, и пудинг держит форму ложки.",
-      "substitution": "Чернику можно заменить клубникой или малиной, свежей или замороженной.",
+      "substitution": "Чернику можно заменить свежей клубникой или малиной. Замороженные ягоды сюда без нагрева не кладите: сначала доведите их до кипения и остудите.",
       "effort": {
         "level": "low",
         "difficulty": 1,
@@ -59186,7 +59219,7 @@
           },
           {
             "id": "extension-step-1",
-            "text": "Смешайте йогурт с семенами чиа и ванилью и разложите по банкам с крышкой.",
+            "text": "Смешайте йогурт с семенами чиа и ванилью, разложите по банкам с крышкой.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -59210,7 +59243,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Выложите сверху чернику и уберите в холодильник минимум на 4 часа.",
+            "text": "Выложите сверху свежую чернику и уберите в холодильник минимум на 4 часа. Маленьким детям ягоды разомните или разрежьте пополам.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -59349,21 +59382,12 @@
           "quantityPerServing": 0.5,
           "unit": "g",
           "allergens": []
-        },
-        {
-          "sourceIngredientId": "extension-pantry-2",
-          "nameRu": "чеснок",
-          "reason": "по желанию, КБЖУ почти не меняет",
-          "classification": "pantry",
-          "quantityPerServing": 1,
-          "unit": "g",
-          "allergens": []
         }
       ],
       "steps": [
         "Морковь натрите на мелкой тёрке, зелень мелко нарежьте.",
-        "Разомните творог вилкой с морковью, зеленью, солью и, по желанию, раздавленным чесноком до однородной пасты.",
-        "Огурец нарежьте брусочками. Пасту разложите в баночки, огурец — рядом в отделение контейнера с крышкой."
+        "Разомните творог вилкой с морковью, зеленью и солью до однородной пасты и разложите по баночкам с крышкой.",
+        "Огурец храните целым рядом с пастой и нарежьте брусочками перед едой."
       ],
       "storage": {
         "refrigeratorDays": 3,
@@ -59375,7 +59399,7 @@
       },
       "packing": {
         "portion": "После готовки взвесьте фактический выход и разложите рассчитанные порции в отдельные подписанные контейнеры.",
-        "separate": "Пасту и огурец храните в разных отделениях.",
+        "separate": "Огурец храните целым, отдельно от пасты.",
         "label": "Творожная паста с морковью и огуречными палочками · имя · дата готовки · приём пищи"
       },
       "localization": {
@@ -59460,8 +59484,8 @@
             "role": "vegetable",
             "minAmount": 60,
             "preferredMin": 96,
-            "preferredMax": 150,
-            "maxAmount": 216,
+            "preferredMax": 144,
+            "maxAmount": 144,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -59499,7 +59523,7 @@
           }
         ],
         "minViableCalories": 94,
-        "maxViableCalories": 367,
+        "maxViableCalories": 334,
         "minimumProtein": 8,
         "sourceNutrition": null,
         "comparisonNutrition": null,
@@ -59560,7 +59584,7 @@
           },
           {
             "id": "extension-step-2",
-            "text": "Разомните творог вилкой с морковью, зеленью, солью и, по желанию, раздавленным чесноком до однородной пасты.",
+            "text": "Разомните творог вилкой с морковью, зеленью и солью до однородной пасты и разложите по баночкам с крышкой.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -59573,7 +59597,7 @@
           },
           {
             "id": "extension-step-3",
-            "text": "Огурец нарежьте брусочками. Пасту разложите в баночки, огурец — рядом в отделение контейнера с крышкой.",
+            "text": "Огурец храните целым рядом с пастой и нарежьте брусочками перед едой.",
             "ingredientIds": [
               "extension-ingredient-1",
               "extension-ingredient-2",
@@ -59618,7 +59642,7 @@
       },
       "viableCalories": {
         "min": 94,
-        "max": 367
+        "max": 334
       }
     }
   ],

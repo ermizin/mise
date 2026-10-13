@@ -246,6 +246,15 @@ test("the fiber cards of 2026-10-12 hold protein, fiber and a three-day batch", 
       const shared = [...canonicalSet(other)].filter((id) => own.has(id)).length;
       if (shared / own.size >= 0.8) failures.push(`${card.id}: ${Math.round((shared / own.size) * 100)}% of its products repeat ${other.id}`);
     }
+    // Льняного семени не больше 15 г на порцию даже на верхней границе: в
+    // ночной овсянке оно сырое, а BfR советует не больше 15 г за приём.
+    const flax = record.recipeFamily.ingredients.find((item) => item.canonicalIngredientId === "flaxseed_raw");
+    if (flax && flax.maxAmount > 15) failures.push(`${card.id}: up to ${flax.maxAmount} g of flaxseed a portion`);
+    // Замороженные ягоды переносят норовирус и гепатит A: блюдо, которое не
+    // греют, не предлагает их без кипячения.
+    const heated = card.equipment.some((item) => ["stove", "oven", "multicooker", "air_fryer", "microwave"].includes(item));
+    const text = [...card.steps, card.substitution, card.flavourTip].join(" ");
+    if (!heated && /заморож/iu.test(text) && !/кипени/iu.test(text)) failures.push(`${card.id}: offers frozen fruit for a dish that is never heated`);
     if (card.slot !== "breakfast") {
       if (fiberPerThousand < 20) failures.push(`${card.id}: ${fiberPerThousand.toFixed(1)} g fiber per 1000 kcal`);
       continue;

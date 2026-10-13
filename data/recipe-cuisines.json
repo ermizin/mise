@@ -2996,19 +2996,19 @@
     },
     {
       "id": "mise-simple-carrot-tvorog-oat-bake",
-      "title": "Морковно-творожная запеканка с овсянкой и курагой",
+      "title": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
       "origin": "generated",
       "cuisine": "russian"
     },
     {
       "id": "mise-simple-buckwheat-tvorog-bake",
-      "title": "Гречневая запеканка с творогом и яблоком",
+      "title": "Творожная запеканка с гречкой и яблоком",
       "origin": "generated",
       "cuisine": "russian"
     },
     {
       "id": "mise-simple-millet-tvorog-pumpkin-bake",
-      "title": "Пшённая запеканка с творогом и тыквой",
+      "title": "Тыквенно-творожная запеканка с пшеном",
       "origin": "generated",
       "cuisine": "russian"
     },
@@ -3025,8 +3025,8 @@
       "cuisine": "international"
     },
     {
-      "id": "mise-simple-broccoli-pea-omelette",
-      "title": "Омлет с брокколи и зелёным горошком в духовке",
+      "id": "mise-simple-broccoli-pea-egg-bake",
+      "title": "Запеканка из брокколи и зелёного горошка с яйцом",
       "origin": "generated",
       "cuisine": "european"
     },

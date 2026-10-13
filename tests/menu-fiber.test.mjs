@@ -86,7 +86,7 @@ test("the Pikabu «Простые» week is no longer a mono-diet without fiber"
   // и ≈ 230 г овощей в день, в комментариях — «Где овощи? Где клетчатка?».
   // Порядок кандидатов поднял неделю до ≈ 20 г, но завтраки остались
   // творожной запеканкой и сырниками с 1 г клетчатки; простые завтраки
-  // пакета 2026-10-12 дают ≈ 26 г в день.
+  // пакета 2026-10-12 дают ≈ 25 г в день.
   const result = assemble({ style: "simple", kcal: 1800, days: 5, cookEveryDays: 3, slots: ["breakfast", "lunch", "dinner"] });
   assert.ok(result.fiber >= 22, `fiber ${result.fiber.toFixed(1)} g/day`);
   for (const { recipe } of result.picks.filter((pick) => pick.slot === "breakfast"))
