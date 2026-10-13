@@ -25,7 +25,7 @@ async function runtime() {
   const start = page.indexOf("const mealMeta");
   const end = page.indexOf("export default function Home");
   const output = ts.transpileModule(
-    `${page.slice(start, end)}\nglobalThis.__runtime = { candidateRecipes, recipeCookingSession, newPerson, normalizePerson, automaticEstimateIssue, recipes, recipesById, defaultKitchenEquipment, crossContactWarnings };`,
+    `${page.slice(start, end)}\nglobalThis.__runtime = { candidateRecipes, recipeCookingSession, newPerson, normalizePerson, automaticEstimateIssue, recipes, recipesById, defaultKitchenEquipment, crossContactWarnings, recipeIsSpicy, childServingNotes };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -219,8 +219,23 @@ test("the child editor speaks to a parent, not to a dieter", () => {
   assert.match(people, /Ребёнок 3–17 лет/);
   assert.match(people, /Ориентир по возрастным нормам ВОЗ\/ФАО \(2004\), а не медицинская рекомендация\. Детям Mise не урезает калории\./);
   assert.match(people, /child \? \([\s\S]*?Мальчик[\s\S]*?Девочка/);
-  assert.match(people, /hardExclusions: \[\.\.\.new Set<Allergen>\(\[\.\.\.\(person\.hardExclusions \?\? \[\]\), "alcohol"\]\)\]/);
-  assert.match(people, /dislikes: \[\.\.\.new Set\(\[\.\.\.\(person\.dislikes \?\? \[\]\), "sportProtein"\]\)\]/);
+  assert.match(people, /const addedHard = \(\["alcohol"\] as Allergen\[\]\)/);
+  assert.match(people, /const addedDislikes = \["sportProtein"\]/);
+  // Ошибочное переключение возвращает взрослого как было: параметры, норму,
+  // имя и без детских исключений, добавленных переключением.
+  assert.match(people, /kindUndoRef\.current\.set\(person\.id, \{\s*adult: \{\s*estimate: person\.estimate,\s*daily: person\.daily,/);
+  assert.match(people, /hardExclusions: \(person\.hardExclusions \?\? \[\]\)\.filter\(\(item\) => !undo\?\.addedHard\.includes\(item\)\)/);
+  // Ребёнку не переходит взрослая норма, а ручная норма начинается от возрастной.
+  assert.match(people, /daily: childMacrosForCalories\(0\),/);
+  assert.match(people, /disabled=\{!computed && \(manual \|\| child\)\}/);
+  assert.match(people, /child && computed\s*\? \{ nutritionTargetMode: "manual", daily: computed \}/);
+  // Два ребёнка не получают одно имя на контейнерах.
+  assert.match(people, /for \(let index = 2; takenNames\.has\(childName\); index \+= 1\) childName = `Ребёнок \$\{index\}`;/);
+  // «Острое» по умолчанию — один раз; снятая родителем отметка не возвращается.
+  assert.match(people, /if \(ageValid && !spicy\.applied\)/);
+  assert.match(people, /spicyDefaultRef\.current\.set\(person\.id, \{ applied: true, added: false \}\)/);
+  assert.match(people, /Норма введена вручную — например, по назначению врача или диетолога\./);
+  assert.match(people, /announceAutoCalculation\(nextCalculation\.target, explanation\)/);
   assert.match(people, /До 5 лет: орехи и семечки — только молотыми или рублеными/);
   assert.match(people, /Для детей до 3 лет Mise пока не считает порции/);
   assert.match(people, /!child && people\[0\]\.kind !== "child"/, "adult goals are never copied onto a child");
@@ -229,4 +244,46 @@ test("the child editor speaks to a parent, not to a dieter", () => {
   const dislikes = page.slice(page.indexOf("const dislikeOptions = ["), page.indexOf("] as const;", page.indexOf("const dislikeOptions = [")));
   assert.match(dislikes, /id: "spicy",[\s\S]*?"hot-sauce"/);
   assert.match(dislikes, /id: "sportProtein",[\s\S]*?"casein-powder"/);
+});
+
+test("«Острое» covers spicy blends, measured chili and spicy titles, but not a pinch to taste", () => {
+  const spicy = (id) => R.recipeIsSpicy(R.recipesById[id]);
+  const options = R.candidateRecipes("lunch", "budget", [adult(0, 1500)], 3, { limit: "all" }, [...R.defaultKitchenEquipment]);
+  const tacoPasta = options.find((recipe) => /Острая паста/u.test(recipe.title));
+  if (tacoPasta) assert.equal(spicy(tacoPasta.id), true, "taco seasoning and the title make it spicy");
+  const pinch = R.recipes.find((recipe) => (recipe.procedureIngredients ?? []).some((item) => item.classification === "to_taste" && /остр/iu.test(item.name) && (item.quantityPerServing ?? 0) < 1) && !/остр|чили|халап|чипотле/iu.test(recipe.title) && !recipe.ingredients.some((item) => /jalapeno|hot_sauce|taco|curry_paste|gochujang|chili|kimchi|buffalo/.test(item.canonicalIngredientId ?? item.id)));
+  assert.ok(pinch, "a recipe with only a pinch of chili exists");
+  assert.equal(spicy(pinch.id), false);
+  const kid = child(1, 6, "female");
+  kid.dislikes = ["spicy", "sportProtein"];
+  kid.hardExclusions = ["alcohol"];
+  const family = [adult(0, 1800), kid];
+  for (const style of ["simple", "protein", "budget"])
+    for (const slot of ["breakfast", "lunch", "dinner"]) {
+      const shared = R.candidateRecipes(slot, style, family, 3, { limit: "all" }, [...R.defaultKitchenEquipment]);
+      assert.ok(shared.length >= 3, `${style} ${slot}: ${shared.length} shared dishes with child defaults`);
+      assert.ok(shared.every((recipe) => !R.recipeIsSpicy(recipe) && !recipe.allergens.includes("alcohol")), `${style} ${slot} keeps the child defaults`);
+    }
+});
+
+test("recipe notes for a child are actionable and never decline a name", () => {
+  const pinch = R.recipes.find((recipe) => !R.recipeIsSpicy(recipe) && (recipe.procedureIngredients ?? []).some((item) => /остр/iu.test(item.name)));
+  const mom = adult(0, 1800);
+  const masha = child(1, 4, "female");
+  masha.dislikes = ["spicy"];
+  const teen = child(2, 15, "male");
+  const [adultNote] = R.childServingNotes(pinch, [mom, masha]);
+  assert.match(adultNote, /положите меньше или не кладите вовсе — взрослые добавят его в свои порции/);
+  assert.match(R.childServingNotes(pinch, [masha])[0], /для этой готовки его можно не класть/);
+  assert.equal(R.childServingNotes(pinch, [mom, teen]).length, 0, "a teenager who eats spicy food gets no chili note");
+  const nuts = R.recipes.find((recipe) => recipe.ingredients.some((item) => /walnuts|almonds|peanuts|cashews/.test(item.canonicalIngredientId ?? item.id)));
+  const nutNotes = R.childServingNotes(nuts, [mom, masha, child(3, 3, "male")]);
+  assert.ok(nutNotes.some((note) => /^Для детей до 5 лет \(Маша|^Для детей до 5 лет \(/u.test(note)), nutNotes.join(" | "));
+  assert.equal(R.childServingNotes(nuts, [mom, child(2, 9, "female")]).filter((note) => /до 5 лет/.test(note)).length, 0);
+});
+
+test("the week names people without declining them", () => {
+  assert.match(page, /Не рассчитана норма: \{unratedPeople\.map\(\(item\) => item\.name \|\| "без имени"\)\.join\(", "\)\}\./);
+  assert.match(page, /в профиле нажмите «Изменить» и выберите «Ребёнок 3–17 лет»\./);
+  assert.match(page, /<button type="button" className="text-button" onClick=\{onOpenProfile\}>/);
 });
