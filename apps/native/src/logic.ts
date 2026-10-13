@@ -1,5 +1,5 @@
-import { calculateNutritionTarget, macrosForCalories } from '@mise/domain/nutrition';
-import type { Batch, Draft, Ingredient, MealSlot, Person, Plan, Recipe } from './types';
+import { CHILD_AGE_RANGE, calculateChildNutritionTarget, calculateNutritionTarget, childEstimateOf, childMacrosForCalories, isChildAge, macrosForCalories, personCalorieRange } from '@mise/domain/nutrition';
+import type { Batch, ChildActivity, ChildNutritionInput, Draft, Ingredient, MealSlot, Person, Plan, Recipe } from './types';
 import type { MobileKitchenEquipment } from '@mise/domain/mobile';
 
 export const SLOT_LABELS: Record<MealSlot, string> = { breakfast: 'Завтрак', snack1: 'Перекус 1', lunch: 'Обед', snack2: 'Перекус 2', dinner: 'Ужин' };
@@ -17,13 +17,18 @@ export const ALLERGEN_OPTIONS = [
   { id: 'fish', label: 'Рыба' }, { id: 'crustaceans', label: 'Ракообразные' }, { id: 'soy', label: 'Соя' },
   { id: 'peanut', label: 'Арахис' }, { id: 'treeNuts', label: 'Орехи' }, { id: 'sesame', label: 'Кунжут' },
   { id: 'mustard', label: 'Горчица' }, { id: 'molluscs', label: 'Моллюски' },
+  { id: 'alcohol', label: 'Алкоголь в блюде (вино, мирин)' },
 ] as const;
 export const DISLIKE_OPTIONS = [
   { id: 'fish', label: 'Рыба' }, { id: 'cottage', label: 'Творог' }, { id: 'egg', label: 'Яйца' },
   { id: 'tofu', label: 'Тофу' }, { id: 'broccoli', label: 'Брокколи' }, { id: 'buckwheat', label: 'Гречка' },
   { id: 'legumes', label: 'Бобовые' }, { id: 'avocado', label: 'Авокадо' }, { id: 'coconut', label: 'Кокос' },
-  { id: 'turkey', label: 'Индейка' },
+  { id: 'turkey', label: 'Индейка' }, { id: 'spicy', label: 'Острое' }, { id: 'sportProtein', label: 'Спортивный протеин' },
 ] as const;
+export const CHILD_ACTIVITY_OPTIONS: { id: ChildActivity; label: string }[] = [
+  { id: 'calm', label: 'Спокойный: школа, транспорт, экран' }, { id: 'usual', label: 'Обычный' },
+  { id: 'active', label: 'Очень подвижный: спорт или активные игры почти каждый день' },
+];
 export function localDate(date = new Date()): string { return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`; }
 export function plusDays(iso: string, days: number): string { const [year, month, day] = iso.split('-').map(Number); return localDate(new Date(year, month - 1, day + days, 12)); }
 export function initialDraft(personId: string): Draft {
@@ -40,14 +45,71 @@ export function validateDraft(draft: Draft): string | null {
   for (const person of draft.people) {
     if (!person.name.trim()) return 'Укажите имя каждого человека.';
     if (!person.includedSlots.length) return `Выберите приёмы пищи для ${person.name}.`;
-    if (person.nutritionTargetMode === 'auto' && person.estimate) {
-      const calculated = calculateNutritionTarget(person.estimate);
-      if (!('target' in calculated)) return `Проверьте параметры расчёта для ${person.name}.`;
-    }
-    const { kcal, protein, fat, carbs } = person.daily;
-    if (kcal < 1200 || kcal > 5000 || Math.abs(protein * 4 + fat * 9 + carbs * 4 - kcal) > 5) return `Проверьте КБЖУ для ${person.name}.`;
+    const issue = personNormIssue(person);
+    if (issue) return issue;
   }
   return null;
+}
+/** Why a person's daily norm cannot be planned yet, as in the PWA: a child needs an age 3–17 and a sex
+ * even for a manual norm (the age sets the allowed range), and the adult formula never sizes a child. */
+export function personNormIssue(person: Person): string | null {
+  if (person.kind === 'child') {
+    if (!childEstimateOf(person.childEstimate)) return `Укажите возраст ребёнка (${CHILD_AGE_RANGE[0]}–${CHILD_AGE_RANGE[1]} лет) и пол.`;
+  } else if (person.nutritionTargetMode === 'auto' && person.estimate) {
+    const calculated = calculateNutritionTarget(person.estimate);
+    if (!('target' in calculated)) return person.estimate.age > 0 && person.estimate.age < 18
+      ? 'Для ребёнка выберите «Ребёнок 3–17 лет»: взрослая формула детям не подходит.'
+      : `Проверьте параметры расчёта для ${person.name}.`;
+  }
+  // A child without a valid age has already returned; adults always have a range.
+  const [minimum, maximum] = personCalorieRange(person) ?? [1200, 5000];
+  const { kcal, protein, fat, carbs } = person.daily;
+  if (kcal < minimum || kcal > maximum || Math.abs(protein * 4 + fat * 9 + carbs * 4 - kcal) > 5) return `Проверьте КБЖУ для ${person.name}: допустимо ${minimum}–${maximum} ккал в день.`;
+  return null;
+}
+/* Family mode, as in the PWA: «Взрослый / Ребёнок 3–17 лет» is the first field of
+   the card. A child gets «Алкоголь в блюде» and «Спортивный протеин» at once and
+   never inherits the adult norm: there is no norm until the age is known. While
+   the card is open, switching back restores the adult without those marks. */
+export type KindUndo = { adult: Pick<Person, 'estimate' | 'daily' | 'nutritionTargetMode' | 'name'>; addedHard: string[]; addedDislikes: string[] };
+export function switchToChild(person: Person, people: Person[]): { patch: Partial<Person>; undo: KindUndo } {
+  const taken = new Set(people.filter(item => item.id !== person.id).map(item => item.name.trim()));
+  let childName = 'Ребёнок';
+  for (let index = 2; taken.has(childName); index += 1) childName = `Ребёнок ${index}`;
+  const addedHard = ['alcohol'].filter(code => !person.hardExclusions.includes(code));
+  const addedDislikes = ['sportProtein'].filter(code => !person.dislikes.includes(code));
+  return {
+    patch: { kind: 'child', estimate: undefined, childEstimate: { activity: 'usual' }, daily: childMacrosForCalories(0), nutritionTargetMode: 'auto',
+      name: person.name.trim() ? person.name : childName, hardExclusions: [...person.hardExclusions, ...addedHard], dislikes: [...person.dislikes, ...addedDislikes] },
+    undo: { adult: { estimate: person.estimate, daily: person.daily, nutritionTargetMode: person.nutritionTargetMode, name: person.name }, addedHard, addedDislikes },
+  };
+}
+export function switchToAdult(person: Person, undo: KindUndo | undefined, spicyAddedByMise: boolean): Partial<Person> {
+  const addedDislikes = [...(undo?.addedDislikes ?? []), ...(spicyAddedByMise ? ['spicy'] : [])];
+  return { kind: undefined, childEstimate: undefined, estimate: undo?.adult.estimate, daily: undo?.adult.daily ?? macrosForCalories(2000, 'balanced'),
+    nutritionTargetMode: undo?.adult.nutritionTargetMode ?? 'manual', name: undo && /^Ребёнок( \d+)?$/u.test(person.name.trim()) ? undo.adult.name : person.name,
+    hardExclusions: person.hardExclusions.filter(code => !undo?.addedHard.includes(code)), dislikes: person.dislikes.filter(code => !addedDislikes.includes(code)) };
+}
+/* «Острое» under 12 is marked once, when the age first becomes valid, and is
+   removed if the age is corrected to 12+ and Mise, not the parent, set it. A mark
+   the parent removed never comes back. */
+export type SpicyDefault = { applied: boolean; added: boolean };
+export function updateChildEstimate(person: Person, change: Partial<ChildNutritionInput>, spicy: SpicyDefault): { patch: Partial<Person>; spicy: SpicyDefault } {
+  const next = { ...(person.childEstimate ?? {}), ...change };
+  const patch: Partial<Person> = { childEstimate: next };
+  let state = spicy;
+  if (isChildAge(next.age) && !spicy.applied) {
+    const add = next.age <= 11 && !person.dislikes.includes('spicy');
+    if (add) patch.dislikes = [...person.dislikes, 'spicy'];
+    state = { applied: true, added: add };
+  } else if (isChildAge(next.age) && spicy.added && next.age >= 12 && person.dislikes.includes('spicy')) {
+    patch.dislikes = person.dislikes.filter(code => code !== 'spicy');
+    state = { applied: true, added: false };
+  }
+  const input = childEstimateOf(next);
+  const calculated = input ? calculateChildNutritionTarget(input) : null;
+  if (person.nutritionTargetMode !== 'manual' && calculated && 'target' in calculated) patch.daily = calculated.target;
+  return { patch, spicy: state };
 }
 export function buildBatches(start: string, periodDays: number, cookEveryDays: number): Batch[] {
   const batches: Batch[] = [];

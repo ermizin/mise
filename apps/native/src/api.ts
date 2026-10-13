@@ -31,7 +31,8 @@ export function normalizeBootstrap(value: unknown): Bootstrap {
   const body = value as MobileBootstrap;
   if (body.schemaVersion !== MOBILE_BOOTSTRAP_SCHEMA_VERSION || body.catalogSchemaVersion !== MOBILE_CATALOG_SCHEMA_VERSION || !Array.isArray(body.recipes)) throw new Error('Версия каталога не поддерживается.');
   const bundledIds = new Set(bundledCatalog.recipes.map(item => item.id));
-  if (!body.capabilities?.offlinePlanGeneration || body.recipes.some(item => !item.solver || !bundledIds.has(item.id))) {
+  // The card's allergen list and «Острое» flag guard children's exclusions offline; a card without them is not planned.
+  if (!body.capabilities?.offlinePlanGeneration || body.recipes.some(item => !item.solver || !bundledIds.has(item.id) || !Array.isArray(item.allergens) || typeof item.spicy !== 'boolean')) {
     throw new Error('Каталог требует обновления приложения для работы без сети.');
   }
   const slots: MealSlot[] = ['breakfast', 'snack1', 'lunch', 'snack2', 'dinner'];
@@ -39,7 +40,7 @@ export function normalizeBootstrap(value: unknown): Bootstrap {
     if (!item.id || !item.title || !item.slot || !slots.includes(item.slot)) return [];
     const ingredients = (item.ingredients ?? []).map(raw => parseIngredient({ id: raw.id, name: raw.name, amount: raw.baseAmount, unit: raw.unit })).filter((part): part is NonNullable<typeof part> => part !== null);
     return [{ id: item.id, title: item.title, mealSlots: [item.slot], ingredients,
-      allergens: [...new Set((item.ingredients ?? []).flatMap(raw => raw.allergens ?? []))],
+      allergens: [...new Set([...item.allergens, ...(item.ingredients ?? []).flatMap(raw => raw.allergens ?? [])])], spicy: item.spicy,
       storageDays: item.storage?.refrigeratorDays, canFreeze: item.storage?.freezable,
       instructions: item.instructions?.map(step => step.text) ?? item.steps, imageUrl: item.photo?.path ? `${baseUrl}${item.photo.path}` : undefined, photoOrigin: item.photo?.origin,
       kcal: item.macros?.kcal, menuTags: item.menuTags ?? [], costTier: item.costTier?.value,

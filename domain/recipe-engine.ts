@@ -2666,6 +2666,38 @@ export function nutritionForFamily(family: Pick<RecipeFamily, "ingredients">, am
   return { kcal: round(result.kcal), protein: round(result.protein), fat: round(result.fat), carbs: round(result.carbs) };
 }
 
+/* Свежие овощи для ранжирования меню (2026-10-12): сырые, плюс запечённый
+   перец, готовая свёкла и замороженная овощная смесь. Картофель, батат и
+   кукуруза — гарнир; пассата, маринованные огурцы, маслины, каперсы, кимчи,
+   сушёные грибы и вяленые томаты — соусы и добавки. Повторяет правило PWA
+   (`isFreshVegetableCanonical` в app/page.tsx); совпадение закреплено тестом. */
+const starchyVegetableCanonicalIds = new Set(["potato_raw", "sweet_potato_raw", "corn_cooked", "baby_corn_raw", "hash_browns_processed"]);
+const cookedFreshVegetableCanonicalIds = new Set(["roasted_pepper_cooked", "beetroot_cooked_cooked", "mixed_vegetables_processed"]);
+export function isFreshVegetableCanonical(canonical: Pick<CanonicalIngredient, "id" | "category" | "state">) {
+  return canonical.category === "vegetable" && !starchyVegetableCanonicalIds.has(canonical.id) &&
+    (canonical.state === "raw" || cookedFreshVegetableCanonicalIds.has(canonical.id));
+}
+
+/** Fiber of the base serving, its density per 1000 kcal and the grams of fresh
+ * vegetables in it: the menu ranking signal, not a solver target. */
+export function familyFiberProfile(family: Pick<RecipeFamily, "ingredients">) {
+  const grams = fiberForFamily(family);
+  const kcal = nutritionForFamily(family).kcal;
+  let vegetableGrams = 0;
+  for (const ingredient of family.ingredients) {
+    const canonical = canonicalIngredients[ingredient.canonicalIngredientId];
+    if (!canonical || !isFreshVegetableCanonical(canonical)) continue;
+    vegetableGrams += ingredient.baseAmount * (
+      ingredient.unit === "piece"
+        ? canonical.unit.gramsPerUnit
+        : ingredient.unit === "ml"
+          ? canonical.densityGPerMl ?? 1
+          : 1
+    );
+  }
+  return { grams, perThousandKcal: kcal > 0 ? (grams / kcal) * 1000 : 0, vegetableGrams };
+}
+
 function parameterizedInstructions(recipe: LegacyRecipeForEngine): RecipeInstruction[] {
   const names = recipe.ingredients.map((item) => [item.id, item.name.toLowerCase()] as const);
   const measurementStep: RecipeInstruction = {
@@ -3810,6 +3842,70 @@ function solveRecipeFamilyUncached(
       ? [`Получено ${best.nutrition.kcal} ккал и ${best.nutrition.protein} г белка.`, ...changed.slice(0, 4).map((ingredient) => `${ingredient.role}: ${ingredient.sourceIngredientId} ${ingredient.baseAmount} → ${best.amounts[ingredient.sourceIngredientId]} ${ingredient.unit}.`)]
       : [`В пределах ингредиентных ограничений получено ${best.nutrition.kcal} ккал и ${best.nutrition.protein} г белка; блюдо не деформируется ради цели.`],
   };
+}
+
+/* Детская порция — меньшая доля того же общего блюда (семейный режим,
+   2026-10-12). Взрослые блюда рассчитаны от минимальной разумной порции, и у
+   ребёнка с 1000–1300 ккал прямой расчёт часто не проходит. Тогда та же
+   Recipe Family решается на опорную калорийность R (от максимума из цели и
+   минимума рецепта, шагом 5%, не выше 1,5 раза, maxViable и 2,5 цели), и
+   всё, кроме масла для посуды, делится на k = (R − жир посуды)/(цель − жир
+   посуды), k ≤ 2,5: меньше трети нормальной порции в контейнер не кладут.
+   Коридор 0,9–1,05 цели проверяется по итоговой доле. Минимальный белок
+   Recipe Family для уменьшенной детской порции не гарантируется; при
+   строгом белке (нативный генератор) доля ребёнка всё равно не опускается
+   ниже белкового порога его приёма пищи. С мягким белком и нулевым порогом
+   (PWA) результат совпадает с `childScaledSolve` в app/page.tsx — это
+   закреплено тестом. */
+export const CHILD_SHARE_MAX_SCALE_DOWN = 2.5;
+export function solveChildShare(
+  family: RecipeFamilySolverInput,
+  input: SolveRecipeFamilyInput,
+): SolvedRecipeVariant | null {
+  const target = input.targetCalories;
+  if (!(target > 0)) return null;
+  const panIds = new Set(
+    family.ingredients.filter((ingredient) => ingredient.role === "fat_cooking").map((ingredient) => ingredient.sourceIngredientId),
+  );
+  const strictProtein = input.proteinGoalMode !== "soft";
+  const mealProteinFloor = input.proteinFloor ?? input.targetProtein ?? 0;
+  const start = Math.max(target, family.minViableCalories);
+  const ceiling = Math.min(family.maxViableCalories, start * 1.5, target * CHILD_SHARE_MAX_SCALE_DOWN);
+  for (let reference = start; reference <= ceiling; reference = Math.ceil(reference * 1.05)) {
+    const lift = reference / target;
+    const solved = solveRecipeFamily(family, {
+      ...input,
+      targetCalories: Math.round(reference),
+      targetProtein: input.targetProtein === undefined ? undefined : input.targetProtein * lift,
+      proteinFloor: input.proteinFloor === undefined ? undefined : input.proteinFloor * lift,
+      targetFat: input.targetFat === undefined ? undefined : input.targetFat * lift,
+      targetCarbs: input.targetCarbs === undefined ? undefined : input.targetCarbs * lift,
+    });
+    if (!solved.viable) continue;
+    const panKcal = panIds.size
+      ? nutritionForFamily({ ingredients: family.ingredients.filter((ingredient) => panIds.has(ingredient.sourceIngredientId)) }, solved.amounts).kcal
+      : 0;
+    if (target <= panKcal) continue;
+    const scale = (solved.nutrition.kcal - panKcal) / (target - panKcal);
+    if (!(scale >= 1) || scale > CHILD_SHARE_MAX_SCALE_DOWN) continue;
+    const amounts = Object.fromEntries(
+      Object.entries(solved.amounts).map(([id, amount]) => [id, panIds.has(id) ? amount : round(amount / scale, 3)]),
+    );
+    const nutrition = nutritionForFamily(family, amounts);
+    if (nutrition.kcal < target * 0.9 || nutrition.kcal > target * 1.05) continue;
+    if (strictProtein && nutrition.protein + 0.2 < mealProteinFloor) continue;
+    return {
+      ...solved,
+      targetCalories: target,
+      targetProtein: input.targetProtein,
+      targetFat: input.targetFat,
+      targetCarbs: input.targetCarbs,
+      amounts,
+      nutrition,
+      explanation: [`Детская порция — ${Math.round(100 / scale)}% порции на ${Math.round(reference)} ккал того же блюда.`, ...solved.explanation],
+    };
+  }
+  return null;
 }
 
 export function requiredGeometryBatches(

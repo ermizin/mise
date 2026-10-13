@@ -2,15 +2,16 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { generateMobilePlan } from '@mise/domain/plan-generator';
 import { normalizeBootstrap } from '../src/api';
-import { buildBatches, initialDraft, mergeServerPlan, plusDays, validateDraft } from '../src/logic';
+import { generateMobilePlan as generate, recipeMatchesDislikes } from '@mise/domain/plan-generator';
+import { ALLERGEN_OPTIONS, buildBatches, DISLIKE_OPTIONS, initialDraft, mergeServerPlan, plusDays, switchToAdult, switchToChild, updateChildEstimate, validateDraft } from '../src/logic';
 import { commitFetchedPlan, commitSyncedPlan, createExclusiveWriteQueue, type PlanSyncTransaction, updateQueuedPlan } from '../src/repository-sync';
-import type { Plan } from '../src/types';
+import type { Person, Plan } from '../src/types';
 import bundled from '../assets/mobile-bootstrap.json';
 
 
 test('bundled catalog is compatible with offline planner and exposes detailed recipes', () => {
   const bootstrap = normalizeBootstrap(bundled);
-  assert.equal(bootstrap.raw.schemaVersion, 2);
+  assert.equal(bootstrap.raw.schemaVersion, 3);
   assert.ok(bootstrap.recipes.length >= 200);
   assert.ok(bootstrap.recipes.every(recipe => recipe.ingredients.length > 0 && recipe.instructions?.length && recipe.storage));
   assert.ok(bootstrap.raw.recipes.every(recipe => recipe.solver));
@@ -175,4 +176,72 @@ test('concurrent offline plan actions merge against the latest saved snapshot', 
   assert.equal(storedPlan.cookedWeights?.['batch-0:lunch:recipe']?.total, 1250);
   assert.equal(queuedPlans.length, 5);
   assert.equal(queuedPlans.at(-1)?.shopping.every(item => item.checked), true);
+});
+
+function childDraft(age?: number) {
+  const draft = initialDraft('mom');
+  const { patch } = switchToChild({ ...draft.people[0], id: 'kid', name: '' }, draft.people);
+  const kid: Person = { ...draft.people[0], id: 'kid', name: '', ...patch };
+  const withAge = age === undefined ? kid : { ...kid, ...updateChildEstimate(kid, { age, sex: 'female' }, { applied: false, added: false }).patch };
+  return { ...draft, people: [draft.people[0], withAge] };
+}
+
+test('a child is planned by age, needs an age and never gets the adult formula', () => {
+  assert.match(validateDraft(childDraft()) ?? '', /возраст ребёнка \(3–17 лет\) и пол/);
+  const nine = childDraft(9);
+  assert.equal(validateDraft(nine), null);
+  assert.equal(nine.people[1].daily.kcal, 1850);
+  assert.equal(nine.people[1].estimate, undefined);
+  const doctor = { ...nine, people: [nine.people[0], { ...nine.people[1], nutritionTargetMode: 'manual' as const, daily: { kcal: 3100, protein: 116, fat: 103, carbs: 427 } }] };
+  assert.match(validateDraft(doctor) ?? '', /800–3000 ккал/);
+  const adultAged9 = initialDraft('p');
+  adultAged9.people[0] = { ...adultAged9.people[0], nutritionTargetMode: 'auto', estimate: { sex: 'female', age: 9, height: 135, weight: 30, activity: 'medium', musclePriority: false, goal: 'maintenance', monthlyWeightChangeKg: 1 } };
+  assert.match(validateDraft(adultAged9) ?? '', /Ребёнок 3–17 лет/);
+});
+
+test('switching to a child adds the child defaults and switching back restores the adult', () => {
+  const draft = initialDraft('mom');
+  const adult: Person = { ...draft.people[0], id: 'p2', name: '', hardExclusions: ['milk'], dislikes: ['fish'] };
+  const { patch, undo } = switchToChild(adult, [draft.people[0], adult, { ...adult, id: 'p3', name: 'Ребёнок' }]);
+  assert.equal(patch.name, 'Ребёнок 2', 'two children never share a container label');
+  assert.deepEqual(patch.hardExclusions, ['milk', 'alcohol']);
+  assert.deepEqual(patch.dislikes, ['fish', 'sportProtein']);
+  assert.equal(patch.daily?.kcal, 0, 'no adult norm carries over');
+  const child: Person = { ...adult, ...patch };
+  const spicy = updateChildEstimate(child, { age: 7, sex: 'male' }, { applied: false, added: false });
+  assert.deepEqual(spicy.patch.dislikes, ['fish', 'sportProtein', 'spicy']);
+  const back = switchToAdult({ ...child, ...spicy.patch }, undo, spicy.spicy.added);
+  assert.equal(back.name, '');
+  assert.deepEqual(back.hardExclusions, ['milk']);
+  assert.deepEqual(back.dislikes, ['fish']);
+  assert.deepEqual(back.daily, adult.daily);
+  assert.equal(back.kind, undefined);
+  assert.equal(back.childEstimate, undefined);
+});
+
+test('«Острое» is marked once under 12 and a parent\'s choice stays', () => {
+  const kid = { ...initialDraft('kid').people[0], kind: 'child' as const, childEstimate: { activity: 'usual' as const }, dislikes: [] as string[] };
+  const young = updateChildEstimate(kid, { age: 8, sex: 'female' }, { applied: false, added: false });
+  assert.deepEqual(young.patch.dislikes, ['spicy']);
+  const corrected = updateChildEstimate({ ...kid, ...young.patch }, { age: 14 }, young.spicy);
+  assert.deepEqual(corrected.patch.dislikes, [], 'Mise removes its own mark when the child is 12+');
+  const removedByParent = updateChildEstimate({ ...kid, childEstimate: { age: 8, sex: 'female', activity: 'usual' } }, { age: 9 }, { applied: true, added: false });
+  assert.equal(removedByParent.patch.dislikes, undefined, 'a mark the parent removed is not restored');
+  assert.equal(updateChildEstimate(kid, { age: 15, sex: 'male' }, { applied: false, added: false }).patch.dislikes, undefined);
+});
+
+test('every exclusion offered in the app matches recipes of the bundled catalog', () => {
+  const bootstrap = normalizeBootstrap(bundled);
+  // Tofu dishes are only in the extension pack, which the native catalog does not ship yet.
+  for (const option of DISLIKE_OPTIONS.filter(item => item.id !== 'tofu')) assert.ok(bootstrap.raw.recipes.some(recipe => recipeMatchesDislikes(recipe, [option.id])), option.id);
+  for (const option of ALLERGEN_OPTIONS) assert.ok(bootstrap.recipes.some(recipe => recipe.allergens.includes(option.id)), option.id);
+});
+
+test('a family with a three-year-old is planned offline from the bundled catalog', () => {
+  const bootstrap = normalizeBootstrap(bundled);
+  const draft = childDraft(3);
+  draft.periodDays = 3; draft.cookEveryDays = 3;
+  const plan = generate(bootstrap.raw, { ...draft, id: 'family-offline', createdAt: '2026-10-13T00:00:00.000Z' });
+  assert.ok(Object.values(plan.selectionAssignments).every(groups => groups.length === 1 && groups[0].personIds.length === 2));
+  assert.ok(plan.cooking.every(session => session.portions[1].actual.kcal < session.portions[0].actual.kcal));
 });
