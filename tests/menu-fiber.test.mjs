@@ -43,7 +43,7 @@ const runtime = await menuRuntime();
 
 /* Та же последовательность, что у автосборки мастера. Клетчатка и овощи
    считаются из фактических порций общей готовки первого человека. */
-function assemble({ style, kcal, days, cookEveryDays, slots }) {
+function assemble({ style, kcal, days, cookEveryDays, slots, avoidPerSlot }) {
   const { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor } = runtime;
   const person = newPerson(0);
   person.daily = nutrition.recalculateDailyMacros(kcal, person.daily, "balanced");
@@ -59,7 +59,7 @@ function assemble({ style, kcal, days, cookEveryDays, slots }) {
     for (const slot of slots) {
       const key = selectionKey(batch, slot);
       const selected = Object.values(assignments).flatMap((items) => items.map((item) => recipesById[item.recipeId]));
-      const picked = automaticAssignmentsFor(slot, style, [person], batch.days, used.get(slot), new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key), sameBatchMainRecipeIds(assignments, key));
+      const picked = automaticAssignmentsFor(slot, style, [person], batch.days, used.get(slot), avoidPerSlot?.get(slot) ?? new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key), sameBatchMainRecipeIds(assignments, key));
       assert.ok(picked.length, `${key} gets a dish`);
       assignments[key] = picked;
       picked.forEach((item) => used.get(slot).add(item.recipeId));
@@ -191,4 +191,23 @@ test("variety and fiber only choose between dishes that already fit", () => {
   assert.match(page, /const fade = fit === undefined \? 1 : Math\.min\(1, Math\.max\(0, \(fit - 80\) \/ 10\)\);/);
   assert.match(page, /if \(sameBatchMainIds\.size\) avoid = new Set\(\[\.\.\.avoid, \.\.\.sameBatchMainIds\]\);/);
   assert.match(page, /sameBatchMainRecipeIds\(updatedAssignments, key\),/);
+});
+
+test("«Собрать заново» does not put one dish on lunch and dinner of a batch", () => {
+  // Повтор блюда партии уходил в отказ (−1000), но отставание по fit
+  // считалось от блюда из отказа и штрафовало все альтернативы сильнее.
+  for (const scenario of [
+    { style: "vegan", kcal: 2200, days: 7, cookEveryDays: 2, slots: ["breakfast", "lunch", "dinner"] },
+    { style: "paleo", kcal: 1500, days: 7, cookEveryDays: 2, slots: ["lunch", "dinner"] },
+  ]) {
+    const first = assemble(scenario);
+    const avoidPerSlot = new Map(scenario.slots.map((slot) => [slot, new Set(first.picks.filter((pick) => pick.slot === slot).map((pick) => pick.recipe.id))]));
+    const second = assemble({ ...scenario, avoidPerSlot });
+    for (const batch of new Set(second.picks.map((pick) => pick.batch))) {
+      const [lunch, dinner] = ["lunch", "dinner"].map((slot) => second.picks.find((pick) => pick.batch === batch && pick.slot === slot)?.recipe.id);
+      assert.notEqual(lunch, dinner, `${scenario.style}: batch ${batch + 1} repeats ${lunch} after reassembly`);
+    }
+  }
+  const chooser = page.slice(page.indexOf("function chooseMenuCandidate("), page.indexOf("function automaticAssignmentsFor("));
+  assert.match(chooser, /const choosable = options\.filter\(\(recipe\) => !avoid\.has\(recipe\.id\)\);/);
 });

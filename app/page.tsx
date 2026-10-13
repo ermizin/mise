@@ -6516,7 +6516,10 @@ function menuVarietyPenalty(recipe: Recipe, slot: MealSlot, mainRecipes: Recipe[
     return (
       penalty +
       (base && other.base === base ? 150 : 0) +
-      (protein && other.protein === protein ? 100 : 0)
+      // 160, а не 100: выбор теперь видит отставание по fit (20 очков за пункт),
+      // и при 100 обед и ужин партии с одним белком на сетке сценариев
+      // встречались в 8 партиях вместо 2; при 160 — ни в одной.
+      (protein && other.protein === protein ? 160 : 0)
     );
   }, 0);
 }
@@ -6588,7 +6591,11 @@ function chooseMenuCandidate(
   mainRecipes: Recipe[],
   fits?: Map<string, number>,
 ) {
-  const bestFit = fits?.size ? Math.max(...options.map((recipe) => fits.get(recipe.id) ?? 0)) : 0;
+  // Отставание считается от лучшего блюда, которое можно выбрать: иначе
+  // попадание блюда из отказа («Собрать заново», то же блюдо в партии)
+  // штрафовало все альтернативы сильнее, чем сам отказ.
+  const choosable = options.filter((recipe) => !avoid.has(recipe.id));
+  const bestFit = fits?.size ? Math.max(0, ...(choosable.length ? choosable : options).map((recipe) => fits.get(recipe.id) ?? 0)) : 0;
   return [...options]
     .map((recipe, index) => ({
       recipe,
@@ -6628,8 +6635,12 @@ function automaticAssignmentsFor(
     limit: "all",
     fitsOut: sharedFits,
   }, kitchenEquipment);
+  // Блюдо с обеда этой партии на ужин не ставится, пока есть другие варианты.
+  const sharedChoices = sameBatchMainIds.size
+    ? sharedOptions.filter((recipe) => !sameBatchMainIds.has(recipe.id))
+    : sharedOptions;
   const shared = chooseMenuCandidate(
-    sharedOptions,
+    sharedChoices.length ? sharedChoices : sharedOptions,
     used,
     avoid,
     selectedRecipes,
@@ -13785,7 +13796,7 @@ function PeopleStep({
                   className={`eater-tile glass-card${active ? " is-active" : ""}${addedTileId === item.id ? " is-added" : ""}`}
                   role="tab"
                   aria-selected={active}
-                  aria-label={`${item.name || "Человек"}${item.kind === "child" ? ", ребёнок" : ""}, ${automaticEstimateIssue(item) ? "норма не рассчитана" : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}`}
+                  aria-label={`${item.name || "Человек"}${item.kind === "child" && !/^Ребёнок/u.test(item.name.trim()) ? ", ребёнок" : ""}, ${automaticEstimateIssue(item) ? "норма не рассчитана" : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}`}
                   onClick={() => selectPerson(item.id)}
                 >
                   <span className={`eater-tile-avatar tone-${index % 4}${item.kind === "child" ? " is-child" : ""}`} aria-hidden="true">
