@@ -19,7 +19,7 @@ async function menuRuntime() {
   const start = page.indexOf("const mealMeta");
   const end = page.indexOf("export default function Home");
   const output = ts.transpileModule(
-    `${page.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, recipeFiber, starchyVegetableIds };`,
+    `${page.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, recipeFiber, starchyVegetableIds, morningBaseOf };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -44,7 +44,7 @@ const runtime = await menuRuntime();
 /* Та же последовательность, что у автосборки мастера. Клетчатка и овощи
    считаются из фактических порций общей готовки первого человека. */
 function assemble({ style, kcal, days, cookEveryDays, slots }) {
-  const { automaticAssignmentsFor, mainMenuRecipes, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, starchyVegetableIds } = runtime;
+  const { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession, recipeFamilyFor, starchyVegetableIds } = runtime;
   const person = newPerson(0);
   person.daily = nutrition.recalculateDailyMacros(kcal, person.daily, "balanced");
   person.includedSlots = [...slots];
@@ -59,13 +59,13 @@ function assemble({ style, kcal, days, cookEveryDays, slots }) {
     for (const slot of slots) {
       const key = selectionKey(batch, slot);
       const selected = Object.values(assignments).flatMap((items) => items.map((item) => recipesById[item.recipeId]));
-      const picked = automaticAssignmentsFor(slot, style, [person], batch.days, used.get(slot), new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key));
+      const picked = automaticAssignmentsFor(slot, style, [person], batch.days, used.get(slot), new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key), sameBatchMainRecipeIds(assignments, key));
       assert.ok(picked.length, `${key} gets a dish`);
       assignments[key] = picked;
       picked.forEach((item) => used.get(slot).add(item.recipeId));
       const recipe = recipesById[picked[0].recipeId];
-      picks.push({ slot, recipe });
       const session = recipeCookingSession([person], slot, recipe, batch.days);
+      picks.push({ batch: batch.index, slot, recipe, fit: fitScoreForSession(session) });
       const family = recipeFamilyFor(recipe);
       const amounts = session.portions[0].solvedAmounts;
       fit += fitScoreForSession(session);
@@ -86,12 +86,15 @@ test("the Pikabu «Простые» week is no longer a mono-diet without fiber"
   // и ≈ 230 г овощей в день, в комментариях — «Где овощи? Где клетчатка?».
   // Порядок кандидатов поднял неделю до ≈ 20 г, но завтраки остались
   // творожной запеканкой и сырниками с 1 г клетчатки; простые завтраки
-  // пакета 2026-10-12 дают ≈ 25 г в день.
+  // пакета 2026-10-12 и разнообразие завтраков дают ≈ 29 г и ≈ 400 г овощей.
   const result = assemble({ style: "simple", kcal: 1800, days: 5, cookEveryDays: 3, slots: ["breakfast", "lunch", "dinner"] });
-  assert.ok(result.fiber >= 22, `fiber ${result.fiber.toFixed(1)} g/day`);
+  assert.ok(result.fiber >= 25, `fiber ${result.fiber.toFixed(1)} g/day`);
+  // Не два творожных завтрака подряд, когда есть другая подходящая основа.
+  const breakfastBases = result.picks.filter((pick) => pick.slot === "breakfast").map((pick) => runtime.morningBaseOf(pick.recipe));
+  assert.ok(new Set(breakfastBases).size > 1, `breakfast bases: ${breakfastBases.join(", ")}`);
   for (const { recipe } of result.picks.filter((pick) => pick.slot === "breakfast"))
     assert.ok(runtime.recipeFiber(recipe).grams >= 5, `${recipe.id}: a breakfast with ${runtime.recipeFiber(recipe).grams} g of fiber`);
-  assert.ok(result.vegetables >= 280, `vegetables ${Math.round(result.vegetables)} g/day`);
+  assert.ok(result.vegetables >= 350, `vegetables ${Math.round(result.vegetables)} g/day`);
   assert.ok(result.fit >= 90, `menu fit ${result.fit.toFixed(1)}`);
 });
 
@@ -150,4 +153,37 @@ test("fiber is shown as an estimate on the dish, on review and in the week asses
   assert.equal(nutrition.dailyFiberReference(1500).floor, 15);
   assert.equal(nutrition.dailyFiberReference(3000).floor, 20);
   assert.equal(JSON.stringify(nutrition.fiberReferenceForSlots(nutrition.dailyFiberReference(1800), ["breakfast", "lunch", "dinner"])), JSON.stringify({ share: 0.8, floor: 14 }));
+});
+
+test("automatic menus never put one dish on lunch and dinner of a batch, and never pick far below the best fit", () => {
+  // Контракт: «не ставит одно блюдо на обед и ужин». Салат с тунцом ставился
+  // на оба приёма; поиск разнообразия брал блюда с fit 43–69.
+  let curd = 0;
+  let breakfasts = 0;
+  for (const style of ["simple", "protein", "budget"])
+    for (const kcal of [1500, 2200])
+      for (const slots of [["breakfast", "lunch", "dinner"], ["breakfast", "snack1", "lunch", "snack2", "dinner"]]) {
+        const result = assemble({ style, kcal, days: 5, cookEveryDays: 3, slots });
+        const label = `${style} ${kcal} ${slots.length} slots`;
+        for (const batch of new Set(result.picks.map((pick) => pick.batch))) {
+          const [lunch, dinner] = ["lunch", "dinner"].map((slot) => result.picks.find((pick) => pick.batch === batch && pick.slot === slot)?.recipe.id);
+          assert.notEqual(lunch, dinner, `${label}: batch ${batch + 1} repeats ${lunch}`);
+        }
+        const worst = Math.min(...result.picks.map((pick) => pick.fit));
+        assert.ok(worst >= 85, `${label}: a pick at fit ${worst}`);
+        for (const pick of result.picks.filter((item) => item.slot === "breakfast")) {
+          breakfasts += 1;
+          if (runtime.morningBaseOf(pick.recipe) === "curd") curd += 1;
+        }
+      }
+  assert.ok(curd <= breakfasts / 2, `${curd} of ${breakfasts} breakfasts are cottage-cheese dishes`);
+});
+
+test("variety and fiber only choose between dishes that already fit", () => {
+  const chooser = page.slice(page.indexOf("const fitGapAllowance"), page.indexOf("function automaticAssignmentsFor("));
+  assert.match(chooser, /const fitGapAllowance = 5;\nconst fitGapPenaltyPerPoint = 20;/);
+  assert.match(chooser, /morningVarietyPenalty\(recipe, slot, selectedRecipes\)/);
+  assert.match(page, /const fade = fit === undefined \? 1 : Math\.min\(1, Math\.max\(0, \(fit - 80\) \/ 10\)\);/);
+  assert.match(page, /if \(sameBatchMainIds\.size\) avoid = new Set\(\[\.\.\.avoid, \.\.\.sameBatchMainIds\]\);/);
+  assert.match(page, /sameBatchMainRecipeIds\(updatedAssignments, key\),/);
 });

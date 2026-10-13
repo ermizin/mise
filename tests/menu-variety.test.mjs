@@ -18,7 +18,7 @@ async function menuRuntime() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   const output = ts.transpileModule(
-    `${source.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, menuVarietyOf, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById };`,
+    `${source.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, menuVarietyOf, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -43,7 +43,7 @@ const runtime = await menuRuntime();
 /* Та же последовательность, что у автосборки мастера: позиции по партиям,
    общие продукты считаются по всему плану, разнообразие — по обедам и ужинам. */
 function assemble(days, cookEveryDays) {
-  const { automaticAssignmentsFor, mainMenuRecipes, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById } = runtime;
+  const { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById } = runtime;
   const people = [newPerson(0)];
   const slots = ["breakfast", "lunch", "dinner"];
   const used = new Map(slots.map((slot) => [slot, new Set()]));
@@ -53,7 +53,7 @@ function assemble(days, cookEveryDays) {
     for (const slot of slots) {
       const key = selectionKey(batch, slot);
       const selected = Object.values(assignments).flatMap((items) => items.map((item) => recipesById[item.recipeId]));
-      const picked = automaticAssignmentsFor(slot, "protein", people, batch.days, used.get(slot), new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key));
+      const picked = automaticAssignmentsFor(slot, "protein", people, batch.days, used.get(slot), new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key), sameBatchMainRecipeIds(assignments, key));
       assert.ok(picked.length, `${key} gets a dish`);
       assignments[key] = picked;
       picked.forEach((item) => used.get(slot).add(item.recipeId));

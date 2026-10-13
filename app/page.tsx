@@ -6284,10 +6284,17 @@ const fiberRankWeight = 3;
 const fiberRankCapPerThousandKcal = 20;
 const vegetableRankWeight = 0.2;
 const vegetableRankCapGrams = 150;
-function fiberRankBonus(recipe: Recipe) {
+/* Бонус клетчатки — выбор между блюдами, которые и так подходят по КБЖУ:
+   при попадании 90+ он полный, к 80 плавно гаснет. Иначе богатое клетчаткой
+   блюдо с белком вдвое ниже цели (лобио при попадании 69) обгоняло
+   подходящие. Без людей (каталог) попадания нет и бонус не ослабляется. */
+function fiberRankBonus(recipe: Recipe, fit?: number) {
   const fiber = recipeFiber(recipe);
-  return fiberRankWeight * Math.min(fiberRankCapPerThousandKcal, fiber.perThousandKcal) +
-    vegetableRankWeight * Math.min(vegetableRankCapGrams, fiber.vegetableGrams);
+  const fade = fit === undefined ? 1 : Math.min(1, Math.max(0, (fit - 80) / 10));
+  return fade * (
+    fiberRankWeight * Math.min(fiberRankCapPerThousandKcal, fiber.perThousandKcal) +
+    vegetableRankWeight * Math.min(vegetableRankCapGrams, fiber.vegetableGrams)
+  );
 }
 function styleScore(recipe: Recipe, style: MenuStyle) {
   if (style === "simple") return 100 - recipe.effort.activeMinutes - recipe.ingredients.length;
@@ -6316,6 +6323,8 @@ type CatalogFilters = {
   limit?: number | "all";
   includeDisliked?: boolean;
   firstViable?: boolean;
+  /** Собирает fitScore кандидатов: выбор блюда сравнивает их не только по месту в списке. */
+  fitsOut?: Map<string, number>;
 };
 function timeBand(recipe: Recipe, kitchenEquipment?: KitchenEquipment[], methodId?: string): NonNullable<CatalogFilters["time"]> {
   const time = kitchenEquipment === undefined && methodId === undefined ? recipe.time : cookingMethodFor(recipe, kitchenEquipment, methodId)?.timeMinutes ?? recipe.time;
@@ -6388,7 +6397,9 @@ function candidateRecipes(
         ? recipeCookingSession(eaters, slot, recipe, batchDays)
         : null;
       if (session && !session.viable) continue;
-      candidates.push({ recipe, fit: session ? fitScoreForSession(session) : 0 });
+      const fit = session ? fitScoreForSession(session) : 0;
+      if (session) filters.fitsOut?.set(recipe.id, fit);
+      candidates.push({ recipe, fit });
       if (filters.firstViable) break;
   }
   const sorted = candidates
@@ -6396,11 +6407,11 @@ function candidateRecipes(
       (a, b) =>
         b.fit * 4 +
         styleScore(b.recipe, style) +
-        fiberRankBonus(b.recipe) +
+        fiberRankBonus(b.recipe, eaters.length ? b.fit : undefined) +
         (b.recipe.provenance.kind === "parsed" ? 12 : 0) -
         (a.fit * 4 +
           styleScore(a.recipe, style) +
-          fiberRankBonus(a.recipe) +
+          fiberRankBonus(a.recipe, eaters.length ? a.fit : undefined) +
           (a.recipe.provenance.kind === "parsed" ? 12 : 0)),
     )
     .map(({ recipe }) => recipe);
@@ -6500,6 +6511,65 @@ function menuVarietyPenalty(recipe: Recipe, slot: MealSlot, mainRecipes: Recipe[
     );
   }, 0);
 }
+/* Завтраки и перекусы тоже разнообразны (2026-10-12). После карточек с
+   клетчаткой автосборка ставила творожные запеканки на 52 из 90 завтраков
+   в сетке сценариев, а на Пикабу жаловались именно на «творог, картофель…».
+   Основа утренней еды — творог, йогурт, яйцо или овсянка по наибольшей
+   массе; повтор основы среди уже выбранных завтраков и перекусов плана
+   понижает блюдо в очереди. Это только порядок, ни одно блюдо не исключается. */
+const morningBaseFamilies: [string, RegExp][] = [
+  ["curd", /^(tvorog_5|cottage|ricotta)/],
+  ["yogurt", /^yogurt/],
+  ["egg", /^(egg_raw|egg_white|egg_yolk)/],
+  ["oats", /^(oats_raw|oat_flour)/],
+];
+const morningBaseCache = new Map<string, string | undefined>();
+function morningBaseOf(recipe: Recipe) {
+  if (morningBaseCache.has(recipe.id)) return morningBaseCache.get(recipe.id);
+  let base: string | undefined;
+  let grams = 0;
+  for (const [family, pattern] of morningBaseFamilies) {
+    const total = recipe.ingredients
+      .filter((ingredient) => pattern.test(canonicalShoppingIngredient(ingredient)?.id ?? canonicalIdForIngredient(ingredient)))
+      .reduce((sum, ingredient) => {
+        const canonical = canonicalShoppingIngredient(ingredient);
+        return sum + (ingredient.unit === "шт." ? ingredient.quantity * (canonical?.unit.gramsPerUnit ?? 50) : ingredient.quantity);
+      }, 0);
+    if (total > grams) {
+      base = family;
+      grams = total;
+    }
+  }
+  morningBaseCache.set(recipe.id, base);
+  return base;
+}
+const morningVarietyPenaltyPerRepeat = 120;
+function morningVarietyPenalty(recipe: Recipe, slot: MealSlot, selectedRecipes: Recipe[]) {
+  if (isMainMealSlot(slot)) return 0;
+  const base = morningBaseOf(recipe);
+  if (!base) return 0;
+  return selectedRecipes.filter((other) =>
+    other.id !== recipe.id && !isMainMealSlot(other.slot) && morningBaseOf(other) === base,
+  ).length * morningVarietyPenaltyPerRepeat;
+}
+/** Блюда, уже стоящие на обед или ужин этой же партии: по контракту
+    автосборка не ставит одно блюдо и на обед, и на ужин. */
+function sameBatchMainRecipeIds(assignments: Record<string, RecipeAssignment[]>, key: string) {
+  const match = /^(.*):(lunch|dinner)$/.exec(key);
+  if (!match) return new Set<string>();
+  const other = `${match[1]}:${match[2] === "lunch" ? "dinner" : "lunch"}`;
+  return new Set((assignments[other] ?? []).map((assignment) => assignment.recipeId));
+}
+/* Штрафы за повтор и разнообразие выбирают между блюдами, которые и так
+   подходят по КБЖУ. Раньше выбор видел только место в списке (8 очков за
+   позицию), и уход от повтора мог стоить 20–40 пунктов попадания: на сетке
+   из 36 сценариев худший выбор был с fit 69. Теперь каждое отставание от
+   лучшего кандидата больше чем на 5 пунктов fit стоит 20 очков: ради
+   другого блюда (повтор −240) Mise уступит до 17 пунктов, ради другой
+   основы завтрака (−120) — до 11. На той же сетке худший выбор — fit 88,
+   творожных завтраков 31 из 90 вместо 52, белок не ниже цели. */
+const fitGapAllowance = 5;
+const fitGapPenaltyPerPoint = 20;
 function chooseMenuCandidate(
   options: Recipe[],
   used: Set<string>,
@@ -6507,14 +6577,18 @@ function chooseMenuCandidate(
   selectedRecipes: Recipe[],
   slot: MealSlot,
   mainRecipes: Recipe[],
+  fits?: Map<string, number>,
 ) {
+  const bestFit = fits?.size ? Math.max(...options.map((recipe) => fits.get(recipe.id) ?? 0)) : 0;
   return [...options]
     .map((recipe, index) => ({
       recipe,
       score:
-        -index * 8 +
+        -index * 8 -
+        (fits?.has(recipe.id) ? Math.max(0, bestFit - fits.get(recipe.id)! - fitGapAllowance) * fitGapPenaltyPerPoint : 0) +
         combinationBonus(recipe, selectedRecipes) -
         menuVarietyPenalty(recipe, slot, mainRecipes) -
+        morningVarietyPenalty(recipe, slot, selectedRecipes) -
         (used.has(recipe.id) ? 240 : 0) -
         (avoid.has(recipe.id) ? 1_000 : 0),
     }))
@@ -6533,11 +6607,17 @@ function automaticAssignmentsFor(
   selectedRecipes: Recipe[],
   kitchenEquipment?: KitchenEquipment[],
   mainRecipes: Recipe[] = [],
+  sameBatchMainIds: Set<string> = new Set(),
 ) {
   const eaters = relevantPeople(people, slot);
   if (!eaters.length) return [];
+  // Блюдо с обеда этой партии на ужин (и наоборот) уходит в отказ, как
+  // прошлый выбор при «Собрать заново»: остаётся только если других нет.
+  if (sameBatchMainIds.size) avoid = new Set([...avoid, ...sameBatchMainIds]);
+  const sharedFits = new Map<string, number>();
   const sharedOptions = candidateRecipes(slot, style, people, batchDays, {
     limit: "all",
+    fitsOut: sharedFits,
   }, kitchenEquipment);
   const shared = chooseMenuCandidate(
     sharedOptions,
@@ -6546,6 +6626,7 @@ function automaticAssignmentsFor(
     selectedRecipes,
     slot,
     mainRecipes,
+    sharedFits,
   );
   if (shared)
     return [{ recipeId: shared.id, personIds: eaters.map((person) => person.id) }];
@@ -6595,6 +6676,7 @@ function automaticAssignmentsFor(
           ),
         ]) -
         menuVarietyPenalty(left.recipe, slot, mainRecipes) -
+        morningVarietyPenalty(left.recipe, slot, selectedRecipes) -
         (used.has(left.recipe.id) ? 240 : 0) -
         (avoid.has(left.recipe.id) ? 1_000 : 0);
       const rightScore =
@@ -6609,6 +6691,7 @@ function automaticAssignmentsFor(
           ),
         ]) -
         menuVarietyPenalty(right.recipe, slot, mainRecipes) -
+        morningVarietyPenalty(right.recipe, slot, selectedRecipes) -
         (used.has(right.recipe.id) ? 240 : 0) -
         (avoid.has(right.recipe.id) ? 1_000 : 0);
       return rightScore - leftScore || left.recipe.id.localeCompare(right.recipe.id);
@@ -12249,6 +12332,7 @@ function PlanBuilder({
         selectedRecipes,
         kitchenEquipment,
         mainMenuRecipes(updatedAssignments, key),
+        sameBatchMainRecipeIds(updatedAssignments, key),
       );
       if (!assignmentCoverageComplete(people, slot, assignments)) {
         yield;
