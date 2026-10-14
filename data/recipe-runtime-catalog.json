@@ -194627,10 +194627,10 @@
       "title": "Кальцоне с моцареллой, перцем и баклажаном",
       "cuisine": "italian",
       "macros": {
-        "kcal": 556.9,
-        "protein": 19.7,
-        "fat": 13.8,
-        "carbs": 88.4
+        "kcal": 532.9,
+        "protein": 22.6,
+        "fat": 15.3,
+        "carbs": 84.1
       },
       "timeMinutes": 50,
       "menuTags": [
@@ -194650,8 +194650,8 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "wheat_flour_raw",
-          "nameRu": "Пшеничная мука",
+          "canonicalIngredientId": "wholegrain_flour_raw",
+          "nameRu": "Цельнозерновая мука",
           "group": "Крупы и макароны",
           "quantityGrams": 400,
           "sourceMeasurement": {
@@ -194673,7 +194673,7 @@
             {
               "sourceIngredientIndex": 1,
               "sourceIngredientId": "source-ingredient-1",
-              "nameRu": "Пшеничная мука",
+              "nameRu": "Цельнозерновая мука",
               "quantityGrams": 400,
               "sourceMeasurement": {
                 "amount": 400,
@@ -195183,7 +195183,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "wheat_flour_raw",
+            "canonicalIngredientId": "wholegrain_flour_raw",
             "baseAmount": 200,
             "unit": "ml",
             "role": "carb",
@@ -195349,33 +195349,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 292,
-        "maxViableCalories": 1124,
+        "minViableCalories": 284,
+        "maxViableCalories": 1068,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 556.9,
-          "protein": 19.7,
-          "fat": 13.8,
-          "carbs": 88.4
+          "kcal": 532.9,
+          "protein": 22.6,
+          "fat": 15.3,
+          "carbs": 84.1
         },
         "comparisonNutrition": {
-          "kcal": 556.9,
-          "protein": 19.7,
-          "fat": 13.8,
-          "carbs": 88.4
+          "kcal": 532.9,
+          "protein": 22.6,
+          "fat": 15.3,
+          "carbs": 84.1
         },
         "legacyEditorialNutrition": {
-          "kcal": 556.9,
-          "protein": 19.7,
-          "fat": 13.8,
-          "carbs": 88.4
+          "kcal": 532.9,
+          "protein": 22.6,
+          "fat": 15.3,
+          "carbs": 84.1
         },
         "miseCalculatedNutrition": {
-          "kcal": 556.9,
-          "protein": 19.7,
-          "fat": 13.8,
-          "carbs": 88.4
+          "kcal": 532.9,
+          "protein": 22.6,
+          "fat": 15.3,
+          "carbs": 84.1
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -196340,10 +196340,10 @@
       "title": "Салат из пенне, яблока и капусты с грецкими орехами",
       "cuisine": "european",
       "macros": {
-        "kcal": 449.6,
-        "protein": 18,
-        "fat": 9.1,
-        "carbs": 77.5
+        "kcal": 440.1,
+        "protein": 18.4,
+        "fat": 9.8,
+        "carbs": 76.9
       },
       "timeMinutes": 27,
       "menuTags": [
@@ -196363,8 +196363,8 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "pasta_raw",
-          "nameRu": "Макароны сухие",
+          "canonicalIngredientId": "wholegrain_pasta_raw",
+          "nameRu": "Цельнозерновые макароны сухие",
           "group": "Крупы и макароны",
           "quantityGrams": 200,
           "sourceMeasurement": {
@@ -196386,7 +196386,7 @@
             {
               "sourceIngredientIndex": 1,
               "sourceIngredientId": "source-ingredient-1",
-              "nameRu": "Макароны сухие",
+              "nameRu": "Цельнозерновые макароны сухие",
               "quantityGrams": 200,
               "sourceMeasurement": {
                 "amount": 200,
@@ -196888,7 +196888,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "pasta_raw",
+            "canonicalIngredientId": "wholegrain_pasta_raw",
             "baseAmount": 50,
             "unit": "g",
             "role": "carb",
@@ -197053,8 +197053,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 297,
-        "maxViableCalories": 816,
+        "minViableCalories": 294,
+        "maxViableCalories": 794,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -197076,18 +197076,18 @@
           "carbs": 77.5
         },
         "miseCalculatedNutrition": {
-          "kcal": 449.6,
-          "protein": 18,
-          "fat": 9.1,
-          "carbs": 77.5
+          "kcal": 440.1,
+          "protein": 18.4,
+          "fat": 9.8,
+          "carbs": 76.9
         },
         "nutritionDelta": {
-          "kcal": 0,
-          "protein": 0,
-          "fat": 0,
-          "carbs": 0
+          "kcal": -9.5,
+          "protein": 0.4,
+          "fat": 0.7,
+          "carbs": -0.6
         },
-        "nutritionDeltaKcal": 0,
+        "nutritionDeltaKcal": -9.5,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -201815,10 +201815,10 @@
       "title": "Цельнозерновые роллы с мятным хумусом из горошка и свёклой",
       "cuisine": "mediterranean",
       "macros": {
-        "kcal": 441.4,
-        "protein": 18.3,
-        "fat": 13.6,
-        "carbs": 64.2
+        "kcal": 431.2,
+        "protein": 19.6,
+        "fat": 14.3,
+        "carbs": 62.3
       },
       "timeMinutes": 16,
       "menuTags": [
@@ -201838,8 +201838,8 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "wheat_flour_raw",
-          "nameRu": "Пшеничная мука",
+          "canonicalIngredientId": "wholegrain_flour_raw",
+          "nameRu": "Цельнозерновая мука",
           "group": "Крупы и макароны",
           "quantityGrams": 85,
           "sourceMeasurement": {
@@ -201861,7 +201861,7 @@
             {
               "sourceIngredientIndex": 1,
               "sourceIngredientId": "source-ingredient-1",
-              "nameRu": "Пшеничная мука",
+              "nameRu": "Цельнозерновая мука",
               "quantityGrams": 85,
               "sourceMeasurement": {
                 "amount": 85,
@@ -202366,7 +202366,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "wheat_flour_raw",
+            "canonicalIngredientId": "wholegrain_flour_raw",
             "baseAmount": 85,
             "unit": "ml",
             "role": "carb",
@@ -202532,8 +202532,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 280,
-        "maxViableCalories": 776,
+        "minViableCalories": 277,
+        "maxViableCalories": 753,
         "geometryLockedMax": 2,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -202555,18 +202555,18 @@
           "carbs": 57
         },
         "miseCalculatedNutrition": {
-          "kcal": 441.4,
-          "protein": 18.3,
-          "fat": 13.6,
-          "carbs": 64.2
+          "kcal": 431.2,
+          "protein": 19.6,
+          "fat": 14.3,
+          "carbs": 62.3
         },
         "nutritionDelta": {
-          "kcal": -22.6,
-          "protein": -1.7,
-          "fat": -1.4,
-          "carbs": 7.2
+          "kcal": -32.8,
+          "protein": -0.4,
+          "fat": -0.7,
+          "carbs": 5.3
         },
-        "nutritionDeltaKcal": -22.6,
+        "nutritionDeltaKcal": -32.8,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -204604,10 +204604,10 @@
       "title": "Паста со свёклой и лососем в скандинавском стиле",
       "cuisine": "european",
       "macros": {
-        "kcal": 566.5,
-        "protein": 26,
-        "fat": 23,
-        "carbs": 70.4
+        "kcal": 557,
+        "protein": 26.5,
+        "fat": 23.7,
+        "carbs": 69.8
       },
       "timeMinutes": 25,
       "menuTags": [
@@ -204627,8 +204627,8 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "canonicalIngredientId": "pasta_raw",
-          "nameRu": "Макароны сухие",
+          "canonicalIngredientId": "wholegrain_pasta_raw",
+          "nameRu": "Цельнозерновые макароны сухие",
           "group": "Крупы и макароны",
           "quantityGrams": 50,
           "sourceMeasurement": {
@@ -204650,7 +204650,7 @@
             {
               "sourceIngredientIndex": 1,
               "sourceIngredientId": "source-ingredient-1",
-              "nameRu": "Макароны сухие",
+              "nameRu": "Цельнозерновые макароны сухие",
               "quantityGrams": 50,
               "sourceMeasurement": {
                 "amount": 50,
@@ -205045,7 +205045,7 @@
         "ingredients": [
           {
             "sourceIngredientId": "source-ingredient-1",
-            "canonicalIngredientId": "pasta_raw",
+            "canonicalIngredientId": "wholegrain_pasta_raw",
             "baseAmount": 50,
             "unit": "g",
             "role": "carb",
@@ -205164,33 +205164,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 382,
-        "maxViableCalories": 1023,
+        "minViableCalories": 379,
+        "maxViableCalories": 1001,
         "geometryLockedMax": 1,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 566.5,
-          "protein": 26,
-          "fat": 23,
-          "carbs": 70.4
+          "kcal": 557,
+          "protein": 26.5,
+          "fat": 23.7,
+          "carbs": 69.8
         },
         "comparisonNutrition": {
-          "kcal": 566.5,
-          "protein": 26,
-          "fat": 23,
-          "carbs": 70.4
+          "kcal": 557,
+          "protein": 26.5,
+          "fat": 23.7,
+          "carbs": 69.8
         },
         "legacyEditorialNutrition": {
-          "kcal": 566.5,
-          "protein": 26,
-          "fat": 23,
-          "carbs": 70.4
+          "kcal": 557,
+          "protein": 26.5,
+          "fat": 23.7,
+          "carbs": 69.8
         },
         "miseCalculatedNutrition": {
-          "kcal": 566.5,
-          "protein": 26,
-          "fat": 23,
-          "carbs": 70.4
+          "kcal": 557,
+          "protein": 26.5,
+          "fat": 23.7,
+          "carbs": 69.8
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -210909,10 +210909,10 @@
       "title": "Свинина с кускусом, огурцом и абрикосами",
       "cuisine": "mediterranean",
       "macros": {
-        "kcal": 561,
-        "protein": 33.1,
-        "fat": 18.9,
-        "carbs": 67.5
+        "kcal": 549,
+        "protein": 33.6,
+        "fat": 20.1,
+        "carbs": 65.5
       },
       "timeMinutes": 60,
       "menuTags": [
@@ -211141,8 +211141,8 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "canonicalIngredientId": "giant_couscous_raw",
-          "nameRu": "Жемчужный кускус сухой",
+          "canonicalIngredientId": "wholegrain_giant_couscous_raw",
+          "nameRu": "Цельнозерновой жемчужный кускус сухой",
           "group": "Крупы и макароны",
           "quantityGrams": 200,
           "sourceMeasurement": {
@@ -211164,7 +211164,7 @@
             {
               "sourceIngredientIndex": 10,
               "sourceIngredientId": "source-ingredient-10",
-              "nameRu": "Жемчужный кускус сухой",
+              "nameRu": "Цельнозерновой жемчужный кускус сухой",
               "quantityGrams": 200,
               "sourceMeasurement": {
                 "amount": 200,
@@ -211619,7 +211619,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-10",
-            "canonicalIngredientId": "giant_couscous_raw",
+            "canonicalIngredientId": "wholegrain_giant_couscous_raw",
             "baseAmount": 50,
             "unit": "g",
             "role": "carb",
@@ -211725,33 +211725,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 395,
-        "maxViableCalories": 961,
+        "minViableCalories": 390,
+        "maxViableCalories": 933,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 561,
-          "protein": 33.1,
-          "fat": 18.9,
-          "carbs": 67.5
+          "kcal": 549,
+          "protein": 33.6,
+          "fat": 20.1,
+          "carbs": 65.5
         },
         "comparisonNutrition": {
-          "kcal": 561,
-          "protein": 33.1,
-          "fat": 18.9,
-          "carbs": 67.5
+          "kcal": 549,
+          "protein": 33.6,
+          "fat": 20.1,
+          "carbs": 65.5
         },
         "legacyEditorialNutrition": {
-          "kcal": 561,
-          "protein": 33.1,
-          "fat": 18.9,
-          "carbs": 67.5
+          "kcal": 549,
+          "protein": 33.6,
+          "fat": 20.1,
+          "carbs": 65.5
         },
         "miseCalculatedNutrition": {
-          "kcal": 561,
-          "protein": 33.1,
-          "fat": 18.9,
-          "carbs": 67.5
+          "kcal": 549,
+          "protein": 33.6,
+          "fat": 20.1,
+          "carbs": 65.5
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -212902,10 +212902,10 @@
       "title": "Ньокки из батата с томатным соусом",
       "cuisine": "italian",
       "macros": {
-        "kcal": 553.4,
-        "protein": 17.5,
-        "fat": 7.6,
-        "carbs": 105.2
+        "kcal": 541.4,
+        "protein": 18.9,
+        "fat": 8.3,
+        "carbs": 103
       },
       "timeMinutes": 110,
       "menuTags": [
@@ -213001,8 +213001,8 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "wheat_flour_raw",
-          "nameRu": "Пшеничная мука",
+          "canonicalIngredientId": "wholegrain_flour_raw",
+          "nameRu": "Цельнозерновая мука",
           "group": "Крупы и макароны",
           "quantityGrams": 200,
           "sourceMeasurement": {
@@ -213024,7 +213024,7 @@
             {
               "sourceIngredientIndex": 3,
               "sourceIngredientId": "source-ingredient-3",
-              "nameRu": "Пшеничная мука",
+              "nameRu": "Цельнозерновая мука",
               "quantityGrams": 200,
               "sourceMeasurement": {
                 "amount": 200,
@@ -213349,7 +213349,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "wheat_flour_raw",
+            "canonicalIngredientId": "wholegrain_flour_raw",
             "baseAmount": 100,
             "unit": "ml",
             "role": "carb",
@@ -213424,33 +213424,33 @@
             "optional": false
           }
         ],
-        "minViableCalories": 367,
-        "maxViableCalories": 992,
+        "minViableCalories": 363,
+        "maxViableCalories": 964,
         "geometryLockedMax": 4,
         "minimumProtein": 0,
         "sourceNutrition": {
-          "kcal": 553.4,
-          "protein": 17.5,
-          "fat": 7.6,
-          "carbs": 105.2
+          "kcal": 541.4,
+          "protein": 18.9,
+          "fat": 8.3,
+          "carbs": 103
         },
         "comparisonNutrition": {
-          "kcal": 553.4,
-          "protein": 17.5,
-          "fat": 7.6,
-          "carbs": 105.2
+          "kcal": 541.4,
+          "protein": 18.9,
+          "fat": 8.3,
+          "carbs": 103
         },
         "legacyEditorialNutrition": {
-          "kcal": 553.4,
-          "protein": 17.5,
-          "fat": 7.6,
-          "carbs": 105.2
+          "kcal": 541.4,
+          "protein": 18.9,
+          "fat": 8.3,
+          "carbs": 103
         },
         "miseCalculatedNutrition": {
-          "kcal": 553.4,
-          "protein": 17.5,
-          "fat": 7.6,
-          "carbs": 105.2
+          "kcal": 541.4,
+          "protein": 18.9,
+          "fat": 8.3,
+          "carbs": 103
         },
         "nutritionDelta": {
           "kcal": 0,
@@ -230642,10 +230642,10 @@
       "title": "Перечная говядина с подливой",
       "cuisine": "russian",
       "macros": {
-        "kcal": 405.7,
-        "protein": 43.3,
-        "fat": 18.2,
-        "carbs": 18.6
+        "kcal": 403.3,
+        "protein": 43.6,
+        "fat": 18.4,
+        "carbs": 18.2
       },
       "timeMinutes": 70,
       "menuTags": [
@@ -230738,7 +230738,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "wheat_flour_raw",
+          "canonicalIngredientId": "wholegrain_flour_raw",
           "nameRu": "Цельнозерновая мука",
           "group": "Крупы и макароны",
           "quantityGrams": 60,
@@ -231121,7 +231121,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "wheat_flour_raw",
+            "canonicalIngredientId": "wholegrain_flour_raw",
             "baseAmount": 20,
             "unit": "ml",
             "role": "carb",
@@ -231166,8 +231166,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 303,
-        "maxViableCalories": 651,
+        "minViableCalories": 302,
+        "maxViableCalories": 646,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -231189,18 +231189,18 @@
           "carbs": 19.4
         },
         "miseCalculatedNutrition": {
-          "kcal": 405.7,
-          "protein": 43.3,
-          "fat": 18.2,
-          "carbs": 18.6
+          "kcal": 403.3,
+          "protein": 43.6,
+          "fat": 18.4,
+          "carbs": 18.2
         },
         "nutritionDelta": {
-          "kcal": -3.3,
-          "protein": -0.1,
-          "fat": 0,
-          "carbs": -0.8
+          "kcal": -5.7,
+          "protein": 0.2,
+          "fat": 0.2,
+          "carbs": -1.2
         },
-        "nutritionDeltaKcal": -3.3,
+        "nutritionDeltaKcal": -5.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -231357,10 +231357,10 @@
       "title": "Перечная курица с подливой",
       "cuisine": "russian",
       "macros": {
-        "kcal": 371.7,
-        "protein": 47.5,
-        "fat": 10.9,
-        "carbs": 18.6
+        "kcal": 369.3,
+        "protein": 47.8,
+        "fat": 11,
+        "carbs": 18.2
       },
       "timeMinutes": 60,
       "menuTags": [
@@ -231457,7 +231457,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "canonicalIngredientId": "wheat_flour_raw",
+          "canonicalIngredientId": "wholegrain_flour_raw",
           "nameRu": "Цельнозерновая мука",
           "group": "Крупы и макароны",
           "quantityGrams": 60,
@@ -231840,7 +231840,7 @@
           },
           {
             "sourceIngredientId": "source-ingredient-3",
-            "canonicalIngredientId": "wheat_flour_raw",
+            "canonicalIngredientId": "wholegrain_flour_raw",
             "baseAmount": 20,
             "unit": "ml",
             "role": "carb",
@@ -231885,8 +231885,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 277,
-        "maxViableCalories": 596,
+        "minViableCalories": 276,
+        "maxViableCalories": 591,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -231908,18 +231908,18 @@
           "carbs": 19.4
         },
         "miseCalculatedNutrition": {
-          "kcal": 371.7,
-          "protein": 47.5,
-          "fat": 10.9,
-          "carbs": 18.6
+          "kcal": 369.3,
+          "protein": 47.8,
+          "fat": 11,
+          "carbs": 18.2
         },
         "nutritionDelta": {
-          "kcal": -3.3,
-          "protein": -0.1,
-          "fat": 0,
-          "carbs": -0.8
+          "kcal": -5.7,
+          "protein": 0.2,
+          "fat": 0.1,
+          "carbs": -1.2
         },
-        "nutritionDeltaKcal": -3.3,
+        "nutritionDeltaKcal": -5.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",

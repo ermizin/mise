@@ -6445,11 +6445,11 @@ function combinationBonus(recipe: Recipe, selectedRecipes: Recipe[]) {
    блюдо в другом основном приёме. Это только порядок кандидатов: ни одно
    блюдо не исключается. Основа и белок берутся из canonical ID, не из названия. */
 const menuBaseFamilies: [string, RegExp][] = [
-  ["pasta", /^(pasta|glass_noodles|noodles|spaghetti|lasagn)/],
+  ["pasta", /^(pasta|wholegrain_pasta|glass_noodles|noodles|spaghetti|lasagn)/],
   ["rice", /^(rice_raw|brown-rice)$/],
   ["potato", /^(potato_raw|sweet_potato_raw)$/],
   ["buckwheat", /^buckwheat/],
-  ["bulgur", /^(bulgur|couscous|giant_couscous)/],
+  ["bulgur", /^(bulgur|couscous|giant_couscous|wholegrain_giant_couscous)/],
   ["quinoa", /^quinoa/],
   ["millet", /^millet/],
   ["barley", /^pearl_barley/],

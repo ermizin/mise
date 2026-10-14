@@ -87,4 +87,8 @@ test("variety is read from canonical products, not from the title", () => {
   assert.equal(recipesById["tmpm-22968"].title, "Сытная паста с говяжьим фаршем");
   assert.equal(menuVarietyOf(recipesById["tmpm-27306"]).protein, "pork");
   assert.equal(recipesById["tmpm-27306"].title, "Паста со свиным фаршем и перцем в одной кастрюле");
+  // Цельнозерновые макароны и кускус — та же основа, что и белые.
+  for (const id of ["goodfood-apple-penne-slaw-walnuts", "goodfood-scandi-beetroot-salmon-pasta"])
+    assert.equal(menuVarietyOf(recipesById[id]).base, "pasta", id);
+  assert.equal(menuVarietyOf(recipesById["goodfood-pork-with-cucumber-apricot-couscous"]).base, "bulgur");
 });
