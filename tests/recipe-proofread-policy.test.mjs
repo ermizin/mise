@@ -150,11 +150,21 @@ test("rice ingredient and candidate-level provenance always describe the same co
 
 test("proofread glossary and rounded oven temperatures reach every user-visible runtime field", () => {
   const forbiddenTerms = /кочудян|хэшбраун|вустерский соус|\bBBQ\b|zero-соус|\bal dente\b|\bMaseca\b|\bSplenda\b|\bCorn Chex\b/iu;
+  // «zero-соусом» became «низкокалорийный соус без сахараом»: the case ending
+  // of the replaced word must not stick to the end of the replacement phrase.
+  const strandedCaseEndings = /сахараом|сахараа|без сахара[а-яё]/iu;
   const awkwardTemperatures = /\b(?:163|177|191|204|217|218|232)\s*°\s*C\b/iu;
   for (const recipe of catalog.recipes) {
     const text = userVisibleText(recipe);
     assert.doesNotMatch(text, forbiddenTerms, `${recipe.id}: glossary normalization reaches runtime`);
+    assert.doesNotMatch(text, strandedCaseEndings, `${recipe.id}: glossary replacement keeps the Russian case`);
     assert.doesNotMatch(text, awkwardTemperatures, `${recipe.id}: oven temperature is rounded for execution`);
+  }
+  const boiledChicken = runtimeById.get("new-sandwich-boiled-chicken");
+  assert.equal(boiledChicken.title, "Сэндвич с варёной курицей и низкокалорийным соусом без сахара");
+  assert.ok(boiledChicken.packing.label.startsWith(`${boiledChicken.title} · `));
+  for (const id of ["new-sandwich-boiled-chicken", "new-sandwich-smoked-chicken", "new-sandwich-turkey-ham", "new-sandwich-balyk"]) {
+    assert.match(runtimeById.get(id).steps.at(-1), /15 г низкокалорийного соуса без сахара/u, `${id}: the sauce step is declined`);
   }
 });
 

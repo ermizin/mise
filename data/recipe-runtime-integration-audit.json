@@ -1664,7 +1664,7 @@
     {
       "id": "new-sandwich-boiled-chicken",
       "slot": "breakfast",
-      "title": "Сэндвич с варёной курицей и низкокалорийный соус без сахараом",
+      "title": "Сэндвич с варёной курицей и низкокалорийным соусом без сахара",
       "recipeFamilyId": "raw-new-sandwich-boiled-chicken",
       "shoppingIngredientCount": 5,
       "procedureIngredientCount": 1,

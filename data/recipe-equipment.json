@@ -3864,8 +3864,8 @@
     },
     {
       "recipeId": "new-sandwich-boiled-chicken",
-      "title": "Сэндвич с варёной курицей и низкокалорийный соус без сахараом",
-      "sourceStepsSha256": "ff9922e8514de7bf9abee458c68b1f59110472c21327b75ecd3aa3a2efdd1d87",
+      "title": "Сэндвич с варёной курицей и низкокалорийным соусом без сахара",
+      "sourceStepsSha256": "37bc95f07643ee4262fb71577a58854fd507eed778263a492a0331f8abda72bc",
       "methods": [
         {
           "id": "original",
@@ -3877,7 +3877,7 @@
     {
       "recipeId": "new-sandwich-smoked-chicken",
       "title": "Сэндвич с копчёной курицей и яйцом",
-      "sourceStepsSha256": "2f39b3bb3fc083b901c604861b9bdff5747d273cc66efe8f7d0558ebc3f94285",
+      "sourceStepsSha256": "7ccd4eded3df3ce6d28ef984e926e1212a2d10cf0d405f0b981f9865615bc71f",
       "methods": [
         {
           "id": "original",
@@ -3889,7 +3889,7 @@
     {
       "recipeId": "new-sandwich-turkey-ham",
       "title": "Сэндвич с ветчиной из индейки",
-      "sourceStepsSha256": "ff9922e8514de7bf9abee458c68b1f59110472c21327b75ecd3aa3a2efdd1d87",
+      "sourceStepsSha256": "37bc95f07643ee4262fb71577a58854fd507eed778263a492a0331f8abda72bc",
       "methods": [
         {
           "id": "original",
@@ -3901,7 +3901,7 @@
     {
       "recipeId": "new-sandwich-balyk",
       "title": "Простой сэндвич с балыком",
-      "sourceStepsSha256": "f1116c2255382c44f879a9f610a98766623a8cf490c03e758257b449de093735",
+      "sourceStepsSha256": "abae3ed602d7d094bb06aff01b074b3c602275f7482d5b7ac8949c8a18d741c2",
       "methods": [
         {
           "id": "original",

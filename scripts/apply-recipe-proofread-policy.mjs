@@ -21,6 +21,10 @@ function replaceEvery(value, from, to) {
     .replaceAll(from[0].toUpperCase() + from.slice(1), to[0].toUpperCase() + to.slice(1));
 }
 
+/* Замены идут по порядку списка. Если слово заменяется фразой, в которой
+   склоняется не последнее слово («zero-соус» → «низкокалорийный соус без
+   сахара»), каждая падежная форма записана в глоссарии раньше основной:
+   иначе окончание приклеивается к концу фразы («…соус без сахараом»). */
 function replaceGlossaryText(value, candidateId, policy) {
   let text = value;
   if (typeof text !== "string") return text;
