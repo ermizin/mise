@@ -10018,10 +10018,19 @@ function WeekScreen({
         0,
       )
     : 0;
-  const nextCookMinutes = nextCookRecipes.reduce(
-    (sum, { recipe }) => sum + (planDisplayMethod(recipe, plan)?.timeMinutes ?? recipe.time),
-    0,
-  );
+  /* Минуты следующей готовки — та же модель, что у экрана пошаговой
+     готовки: сумма активного времени блюд. Общее время рецептов сюда не
+     складываем — в нём ожидание без участия (ночь в холодильнике, томление),
+     и для ночной овсянки карточка обещала «~585 мин». Пока партия
+     заблокирована, экран готовки минут не показывает — карточка тоже.
+     Без хука: выше по WeekScreen есть ранние return. */
+  const nextCookModel = nextCook
+    ? buildBatchCookingModel(activePlan, nextCook)
+    : null;
+  const nextCookActiveMinutes =
+    nextCookModel && nextCookModel.blockers.length === 0
+      ? nextCookModel.activeMinutes
+      : 0;
   const macroRows: {
     key: "protein" | "fat" | "carbs";
     label: string;
@@ -10473,7 +10482,10 @@ function WeekScreen({
                 <small>
                   партия {nextCook.index + 1} ·{" "}
                   {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
-                  {withPlural(nextCookPortions, FORMS.portion)} · ≈&nbsp;{nextCookMinutes}&nbsp;мин
+                  {withPlural(nextCookPortions, FORMS.portion)}
+                  {nextCookActiveMinutes > 0 && (
+                    <> · активно&nbsp;≈&nbsp;{nextCookActiveMinutes}&nbsp;мин</>
+                  )}
                 </small>
               </span>
               <Icon name="chevron" className="entry-chevron" />
@@ -17721,6 +17733,14 @@ function RecipeView({
   const displayMethod = plan ? planDisplayMethod(recipe, plan) : cookingMethod;
   const cookingTime = displayMethod?.timeMinutes ?? recipe.time;
   const cookingActiveMinutes = displayMethod?.activeMinutes ?? recipe.effort.activeMinutes;
+  /* «Начать готовку» открывает всю партию, поэтому под кнопкой — активное
+     время партии из той же модели, что и экран готовки, а не общее время
+     одного блюда (у ночной овсянки это было «485 мин»). */
+  const batchActiveMinutes = useMemo(() => {
+    if (!plan || !batch) return 0;
+    const model = buildBatchCookingModel(plan, batch);
+    return model.blockers.length === 0 ? model.activeMinutes : 0;
+  }, [plan, batch]);
   const sectionOrder: RecipeSection[] = ["cooking", "dish"];
   const [section, setSection] = useState<RecipeSection>("cooking");
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
@@ -18443,7 +18463,10 @@ function RecipeView({
           )}
           {onStartCooking && cookingMethod && (
             <button className="primary-button" onClick={onStartCooking}>
-              Начать готовку <span>· {cookingTime} мин</span>
+              Начать готовку
+              {batchActiveMinutes > 0 && (
+                <span>активно ≈ {batchActiveMinutes} мин на партию</span>
+              )}
             </button>
           )}
         </footer>

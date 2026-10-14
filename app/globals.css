@@ -5298,9 +5298,20 @@ p {
 }
 .recipe-detail-actions button {
   min-height: 52px;
+  white-space: nowrap;
 }
+.recipe-detail-actions .primary-button {
+  flex-direction: column;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.15;
+}
+/* Вторая строка кнопки — ориентир активного времени всей партии. */
 .recipe-detail-actions .primary-button span {
-  opacity: 0.78;
+  margin-left: 0;
+  font-size: var(--text-min);
+  font-weight: var(--weight-medium);
+  opacity: 0.86;
 }
 
 @media (min-width: 680px) {
