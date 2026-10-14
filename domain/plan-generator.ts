@@ -1,11 +1,19 @@
 import type { MobileBootstrap, MobileKitchenEquipment, MobileRecipe, MobileMealSlot, MobileMenuStyle } from "./mobile.ts";
 import { MOBILE_BOOTSTRAP_SCHEMA_VERSION, MOBILE_CATALOG_SCHEMA_VERSION } from "./mobile.ts";
-import { calculateMealPlanTargets, mealProteinFloor, normalizeAutomaticNutritionTargets } from "./nutrition.ts";
-import type { Macros } from "./nutrition.ts";
-import { aggregateCookingAmounts, solveRecipeFamily } from "./recipe-engine.ts";
+import { calculateMealPlanTargets, mealProteinFloor, normalizeAutomaticNutritionTargets, personCalorieRange } from "./nutrition.ts";
+import type { ChildNutritionInput, Macros, NutritionTargetMode, NutritionWizardInput } from "./nutrition.ts";
+import { aggregateCookingAmounts, canonicalIngredients, familyFiberProfile, solveChildShare, solveRecipeFamily } from "./recipe-engine.ts";
 import type { RecipeFamilySolverInput, SolveRecipeFamilyInput } from "./recipe-engine.ts";
 
-export type PlanPerson = { id: string; name: string; daily: Macros; includedSlots: MobileMealSlot[]; dislikes?: string[]; hardExclusions?: string[] };
+export type PlanPerson = {
+  id: string; name: string; daily: Macros; includedSlots: MobileMealSlot[]; dislikes?: string[]; hardExclusions?: string[];
+  /** No field: an adult, as in every plan saved before family mode. */
+  kind?: "adult" | "child";
+  /** A child is sized by sex, age and activity only; height, weight and an adult estimate are never kept. */
+  childEstimate?: Partial<ChildNutritionInput>;
+  nutritionTargetMode?: NutritionTargetMode;
+  estimate?: NutritionWizardInput;
+};
 export type PlanDraft = {
   id: string;
   createdAt: string;
@@ -31,11 +39,32 @@ export class PlanGenerationError extends Error {
   code: "invalid_draft" | "unsupported_catalog" | "no_candidate";
   constructor(code: PlanGenerationError["code"], message: string) { super(message); this.code = code; this.name = "PlanGenerationError"; }
 }
-const dislikeGroups: Record<string, string[]> = {
+/* «Не люблю» uses the PWA's products (`dislikeOptions` in app/page.tsx) and its
+   alias lookup to canonical IDs. These legacy IDs used to be compared with
+   canonical ones ("salmon" with "salmon_raw"), so no option chosen in the app
+   ever matched. «Острое» also catches spicy blends, measured chili and spicy
+   titles (`MobileRecipe.spicy`). An unknown code is compared as a canonical ID. */
+const dislikeLegacyIds: Readonly<Record<string, readonly string[]>> = {
   fish: ["salmon", "cod", "tuna"], cottage: ["cottage"], egg: ["egg"], tofu: ["tofu"], broccoli: ["broccoli"], buckwheat: ["buckwheat"],
   legumes: ["lentils", "white-beans", "red-beans", "black-beans", "green-beans", "beans", "peas", "chickpeas"], avocado: ["avocado"],
   coconut: ["coconut-milk", "coconut-oil", "coconut-flakes"], turkey: ["turkey", "turkey-mince", "turkey-slices"],
+  spicy: ["jalapeno", "hot-sauce", "gochujang", "green-chiles", "buffalo-sauce", "chili-garlic-oil", "kimchi", "curry-paste", "taco-seasoning"],
+  sportProtein: ["protein-powder", "casein-powder", "protein-pancake-mix"],
 };
+const canonicalIdByAlias = new Map(Object.values(canonicalIngredients).flatMap((ingredient) => [[ingredient.id, ingredient.id] as const, ...ingredient.aliases.map((alias) => [alias, ingredient.id] as const)]));
+const dislikeGroups: Readonly<Record<string, ReadonlySet<string>>> = Object.fromEntries(
+  Object.entries(dislikeLegacyIds).map(([code, ids]) => [code, new Set(ids.map((id) => canonicalIdByAlias.get(id) ?? id))]),
+);
+export function recipeMatchesDislikes(recipe: Pick<MobileRecipe, "ingredients" | "spicy">, dislikes: readonly string[]) {
+  return dislikes.some((code) =>
+    (code === "spicy" && recipe.spicy) ||
+    recipe.ingredients.some((ingredient) => dislikeGroups[code]?.has(ingredient.canonicalIngredientId) ?? ingredient.canonicalIngredientId === code));
+}
+/** The card's list is what the server checks (procedure ingredients and alcohol included); it already
+ * covers every ingredient code, the union only guards hand-built catalogs. */
+function recipeAllergens(recipe: MobileRecipe): string[] {
+  return [...recipe.allergens, ...recipe.ingredients.flatMap((ingredient) => ingredient.allergens)];
+}
 const engineAllergenCodes: Readonly<Record<string, string[]>> = {
   crustaceans: ["crustaceans", "shrimp"],
   peanut: ["peanut", "peanuts"],
@@ -64,16 +93,51 @@ function solveMeal(family: RecipeFamilySolverInput, input: SolveRecipeFamilyInpu
   }
   return options.sort((a, b) => b.nutrition.kcal - a.nutrition.kcal)[0] ?? direct;
 }
+/* A child's norm takes 15% of energy from protein and a family dish carries
+   more; the PWA's fit counts only a protein shortfall. Counting the child's
+   excess as a miss steered the shared choice to leaner, poorer dishes (family
+   scenarios of scripts/mobile-menu-matrix.mjs: fiber median 20.3 → 18.9 g for
+   adults, 18.0 → 16.5 g for children), so for a child only a shortfall counts. */
+function portionFit(person: PlanPerson, target: Macros, actual: Macros) {
+  const proteinMiss = person.kind === "child" ? Math.max(0, target.protein - actual.protein) : Math.abs(actual.protein - target.protein);
+  return Math.max(0, Math.round(100 - proteinMiss / Math.max(1, target.protein) * 45 - Math.abs(actual.fat - target.fat) / Math.max(1, target.fat) * 25 - Math.abs(actual.carbs - target.carbs) / Math.max(1, target.carbs) * 20));
+}
 function session(recipe: EngineRecipe, people: PlanPerson[], slot: MobileMealSlot, days: number) {
   const portions = people.map((person) => {
     const target = calculateMealPlanTargets(person.daily, person.includedSlots).slots[slot];
     const protein = Math.min(target.kcal / 8, target.protein);
-    const variant = solveMeal(recipe.solver, { targetCalories: target.kcal, targetProtein: protein, proteinFloor: mealProteinFloor(target.kcal, protein), targetFat: target.fat, targetCarbs: target.carbs, hardExclusions: engineHardExclusions(person.hardExclusions), cookingFatShare: 1 / (people.length * days) });
+    const input: SolveRecipeFamilyInput = { targetCalories: target.kcal, targetProtein: protein, proteinFloor: mealProteinFloor(target.kcal, protein), targetFat: target.fat, targetCarbs: target.carbs, hardExclusions: engineHardExclusions(person.hardExclusions), cookingFatShare: 1 / (people.length * days) };
+    const direct = solveMeal(recipe.solver, input);
+    // A child whose own portion is below the recipe's minimum takes a smaller share of the same dish.
+    const variant = direct.viable || person.kind !== "child" ? direct : solveChildShare(recipe.solver, input) ?? direct;
     return { personId: person.id, target, actual: variant.nutrition, amounts: variant.amounts, viable: variant.viable };
   });
   const viable = portions.length > 0 && portions.every((portion) => portion.viable);
-  const fit = viable ? Math.round(portions.reduce((sum, { target, actual }) => sum + Math.max(0, Math.round(100 - Math.abs(actual.protein - target.protein) / Math.max(1, target.protein) * 45 - Math.abs(actual.fat - target.fat) / Math.max(1, target.fat) * 25 - Math.abs(actual.carbs - target.carbs) / Math.max(1, target.carbs) * 20)), 0) / portions.length) : 0;
+  const fit = viable ? Math.round(portions.reduce((sum, portion, index) => sum + portionFit(people[index], portion.target, portion.actual), 0) / portions.length) : 0;
   return { viable, portions, fit, amounts: viable ? aggregateCookingAmounts(recipe.solver.ingredients, portions.map((p) => p.amounts), days) : {} };
+}
+/* Fiber and fresh vegetables (2026-10-13). As in the PWA this only orders
+   candidates: points per gram of fiber per 1000 kcal of the base serving and
+   per gram of fresh vegetables, in full from a macro fit of 90 and fading to
+   nothing at 80. The weights come from the native generator's own matrix,
+   not from the PWA: here fit also penalises surplus protein, one score picks
+   the dish without a top-five chooser, and the catalog has no extension pack.
+   scripts/mobile-menu-matrix.mjs, 29 plans for one or two adults that the
+   native catalog can complete plus 8 families with children: with the PWA
+   weights (3 and 0.2) the fiber median rose 16.2 → 20.2 g a day; with 5 and
+   0.4 it is 21.0 g, fresh vegetables 223 → 298 g, fit −0.9 on average and
+   at most −3 in one plan, adult protein never below target, adults' fit in
+   families unchanged. Weights of 6 and more add at most 0.5 g and cost fit. */
+const fiberRankWeight = 5;
+const fiberRankCapPerThousandKcal = 20;
+const vegetableRankWeight = 0.4;
+const vegetableRankCapGrams = 150;
+const fiberProfiles = new WeakMap<RecipeFamilySolverInput, ReturnType<typeof familyFiberProfile>>();
+function fiberRankBonus(recipe: EngineRecipe, fit: number) {
+  let profile = fiberProfiles.get(recipe.solver);
+  if (!profile) fiberProfiles.set(recipe.solver, profile = familyFiberProfile(recipe.solver));
+  const fade = Math.min(1, Math.max(0, (fit - 80) / 10));
+  return fade * (fiberRankWeight * Math.min(fiberRankCapPerThousandKcal, profile.perThousandKcal) + vegetableRankWeight * Math.min(vegetableRankCapGrams, profile.vegetableGrams));
 }
 
 /**
@@ -92,7 +156,9 @@ export function generateMobilePlan(bootstrap: MobileBootstrap, original: PlanDra
   if (!draft.id || draft.id.length > 100 || !validDate(draft.start) || !bounded(draft.periodDays, 14) || !bounded(draft.cookEveryDays, 14) || !bounded(draft.people.length, 4) || !bounded(draft.mealSlots.length, 5) || new Set(draft.mealSlots).size !== draft.mealSlots.length || !bootstrap.limits.menuStyles.includes(draft.menuStyle) || draft.mealSlots.some((slot) => !bootstrap.limits.mealSlots.includes(slot)) || !Array.isArray(draft.kitchenEquipment) || new Set(draft.kitchenEquipment).size !== draft.kitchenEquipment.length || draft.kitchenEquipment.some((item) => !bootstrap.limits.kitchenEquipment.includes(item))) fail();
   if (new Set(draft.people.map((p) => p.id)).size !== draft.people.length) fail();
   for (const p of draft.people) {
-    if (!p.id || p.id.length > 100 || !p.name.trim() || p.name.length > 100 || !p.includedSlots.length || new Set(p.includedSlots).size !== p.includedSlots.length || p.includedSlots.some((s) => !draft.mealSlots.includes(s)) || !Object.values(p.daily).every((n) => Number.isFinite(n) && n >= 0) || p.daily.kcal < 1200 || p.daily.kcal > 5000 || Math.abs(p.daily.kcal - (p.daily.protein * 4 + p.daily.fat * 9 + p.daily.carbs * 4)) > 5) fail();
+    // Adults 1200–5000 kcal; a child's range follows its age (personCalorieRange), and a child without an age 3–17 is invalid.
+    const range = p.kind === undefined || p.kind === "adult" || p.kind === "child" ? personCalorieRange(p) : null;
+    if (!range || !p.id || p.id.length > 100 || !p.name.trim() || p.name.length > 100 || !p.includedSlots.length || new Set(p.includedSlots).size !== p.includedSlots.length || p.includedSlots.some((s) => !draft.mealSlots.includes(s)) || !Object.values(p.daily).every((n) => Number.isFinite(n) && n >= 0) || p.daily.kcal < range[0] || p.daily.kcal > range[1] || Math.abs(p.daily.kcal - (p.daily.protein * 4 + p.daily.fat * 9 + p.daily.carbs * 4)) > 5) fail();
   }
   if (draft.mealSlots.some((slot) => !draft.people.some((p) => p.includedSlots.includes(slot)))) fail();
   const recipes = bootstrap.recipes.filter((r): r is EngineRecipe => "solver" in r && Boolean(r.solver));
@@ -118,8 +184,8 @@ export function generateMobilePlan(bootstrap: MobileBootstrap, original: PlanDra
         const originalMethod = recipe.equipmentOptions.find((method) => method.id === "original");
         const supportsKitchen = Boolean(originalMethod && originalMethod.requiredEquipment.every((item) => draft.kitchenEquipment.includes(item)));
         if (!compatibleSlot || !supportsKitchen || !recipe.menuTags.includes(draft.menuStyle) || /(?:vegan|веган|keto|кето|paleo|палео)/iu.test(recipe.title) || (recipe.storage.refrigeratorDays < batch.days && (!recipe.storage.freezable || recipe.storage.freezerDays < batch.days))) return [];
-        if (people.some((p) => recipe.ingredients.some((i) => i.allergens.some((a) => p.hardExclusions?.includes(a))))) return [];
-        if (!draft.includeDisliked && people.some((p) => recipe.ingredients.some((i) => p.dislikes?.some((d) => (dislikeGroups[d] ?? [d]).includes(i.canonicalIngredientId))))) return [];
+        if (people.some((p) => recipeAllergens(recipe).some((a) => p.hardExclusions?.includes(a)))) return [];
+        if (!draft.includeDisliked && people.some((p) => recipeMatchesDislikes(recipe, p.dislikes ?? []))) return [];
         const solved = session(recipe, people, slot, batch.days);
         if (!solved.viable) return [];
         const style = draft.menuStyle === "protein"
@@ -127,7 +193,7 @@ export function generateMobilePlan(bootstrap: MobileBootstrap, original: PlanDra
           : draft.menuStyle === "budget"
             ? 470 - recipe.costTier.value
             : 0;
-        return [{ recipe, solved, score: solved.fit * 4 + style - (used.has(recipe.id) ? 240 : 0) }];
+        return [{ recipe, solved, score: solved.fit * 4 + style + fiberRankBonus(recipe, solved.fit) - (used.has(recipe.id) ? 240 : 0) }];
       }).sort((a, b) => b.score - a.score || a.recipe.id.localeCompare(b.recipe.id));
     }
     const requestedGroups = draft.pinnedAssignments?.[key]

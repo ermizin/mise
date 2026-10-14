@@ -6,10 +6,11 @@ const catalog = JSON.parse(await readFile(new URL("../data/recipe-runtime-catalo
 const audit = JSON.parse(await readFile(new URL("../data/recipe-release-audit.json", import.meta.url), "utf8"));
 const manifest = JSON.parse(await readFile(new URL("../data/recipe-image-manifest.json", import.meta.url), "utf8"));
 const simpleManifest = JSON.parse(await readFile(new URL("../data/simple-recipe-images.json", import.meta.url), "utf8"));
+const registry = JSON.parse(await readFile(new URL("../data/plan-recipe-registry.json", import.meta.url), "utf8"));
 const bootstrap = buildMobileBootstrap(catalog, audit, simpleManifest);
 
 test("mobile bootstrap has a versioned, bounded release contract", () => {
-  assert.equal(bootstrap.schemaVersion, 2);
+  assert.equal(bootstrap.schemaVersion, 3);
   assert.equal(bootstrap.catalogSchemaVersion, catalog.schemaVersion);
   assert.deepEqual(bootstrap.capabilities, {
     catalog: true,
@@ -74,7 +75,7 @@ test("mobile photo references are local and retain attribution and integrity met
 
 test("mobile projection exposes only the minimal offline solver input", () => {
   const recipe = bootstrap.recipes[0];
-  assert.deepEqual(Object.keys(recipe).sort(), ["costTier", "effort", "equipmentOptions", "id", "ingredients", "instructions", "macros", "menuTags", "packing", "photo", "servingMass", "slot", "solver", "steps", "storage", "timeMinutes", "title"].sort());
+  assert.deepEqual(Object.keys(recipe).sort(), ["allergens", "costTier", "effort", "equipmentOptions", "id", "ingredients", "instructions", "macros", "menuTags", "packing", "photo", "servingMass", "slot", "solver", "spicy", "steps", "storage", "timeMinutes", "title"].sort());
   assert.ok(recipe.equipmentOptions.some((method) => method.id === "original"));
   assert.equal(recipe.recipeFamily, undefined);
   assert.equal(recipe.adapter, undefined);
@@ -87,4 +88,27 @@ test("mobile projection exposes only the minimal offline solver input", () => {
   assert.equal(recipe.solver.provenance, undefined);
   assert.equal(recipe.solver.storage, undefined);
   assert.ok(recipe.ingredients.every((ingredient) => ingredient.baseAmount > 0));
+});
+
+test("a recipe's allergens are the ones the server checks, alcohol and procedure ingredients included", () => {
+  // Сервер проверяет «мне нельзя» по реестру плана. Нативный план с тем же
+  // списком не получит отказ при синхронизации, а ребёнок — блюдо с вином.
+  const registryById = new Map(registry.recipes.map((recipe) => [recipe.id, recipe]));
+  for (const recipe of bootstrap.recipes) assert.deepEqual([...recipe.allergens].sort(), registryById.get(recipe.id).allergens, recipe.id);
+  assert.deepEqual(bootstrap.recipes.filter((recipe) => recipe.allergens.includes("alcohol")).map((recipe) => recipe.id).sort(), [
+    "goodfood-beef-red-wine-potato-pie",
+    "goodfood-slow-cooker-beef-bourguignon",
+    "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+    "tmpm-26441",
+    "tmpm-28247",
+  ]);
+  assert.ok(bootstrap.recipes.every((recipe) => recipe.ingredients.every((ingredient) => ingredient.allergens.every((code) => recipe.allergens.includes(code)))));
+  const spicy = bootstrap.recipes.filter((recipe) => recipe.spicy);
+  assert.ok(spicy.length >= 30 && spicy.length < bootstrap.recipes.length / 2, `${spicy.length} spicy recipes`);
+});
+
+test("the catalog bundled in the iOS app is the current build of the runtime catalog", async () => {
+  // `pnpm mobile:catalog:refresh` regenerates it; a stale bundle would plan offline with old allergens.
+  const bundled = JSON.parse(await readFile(new URL("../apps/native/assets/mobile-bootstrap.json", import.meta.url), "utf8"));
+  assert.deepEqual(bundled, JSON.parse(JSON.stringify(bootstrap)));
 });

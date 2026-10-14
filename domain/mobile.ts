@@ -1,6 +1,11 @@
 import type { RecipeFamilyIngredient, RecipeFamilySolverInput } from "./recipe-engine";
 
-export const MOBILE_BOOTSTRAP_SCHEMA_VERSION = 2 as const;
+/* Schema 3 (family mode, 2026-10-13): every recipe carries the allergen list
+   the server checks against the plan registry, procedure ingredients and
+   «Алкоголь в блюде» included, and the «Острое» flag. A schema 3 client
+   rejects a schema 2 payload: without these fields a child could be given a
+   dish cooked with wine. */
+export const MOBILE_BOOTSTRAP_SCHEMA_VERSION = 3 as const;
 export const MOBILE_CATALOG_SCHEMA_VERSION = 3 as const;
 
 export type MobileMealSlot = "breakfast" | "lunch" | "dinner" | "snack1" | "snack2";
@@ -28,12 +33,17 @@ export type MobileAllergen =
   | "treeNuts"
   | "sesame"
   | "mustard"
-  | "molluscs";
+  | "molluscs"
+  | "alcohol";
 
 export type MobileRecipe = {
   id: string;
   slot: MobileMealSlot;
   title: string;
+  /** Every allergen of the card, procedure ingredients included: the set the server checks. */
+  allergens: MobileAllergen[];
+  /** «Острое» by composition: a spicy product or blend, measured chili, or a spicy title. */
+  spicy: boolean;
   macros: { kcal: number; protein: number; fat: number; carbs: number };
   timeMinutes: number;
   menuTags: MobileMenuStyle[];
@@ -118,6 +128,12 @@ type RuntimeRecipe = {
     allergens: string[];
     checkLabel: boolean;
   }[];
+  procedureIngredients?: {
+    nameRu: string;
+    allergens?: string[];
+    classification?: string;
+    quantityPerServing?: number | null;
+  }[];
   steps: string[];
   instructions?: MobileRecipe["instructions"];
   effort: MobileRecipe["effort"];
@@ -185,6 +201,25 @@ const mobileAllergenMap: Readonly<Record<string, MobileAllergen | undefined>> = 
   sesame: "sesame",
   soy: "soy",
 };
+function mobileAllergens(values: string[]): MobileAllergen[] {
+  return [...new Set(values.flatMap((value) => {
+    const mapped = mobileAllergenMap[value];
+    return mapped ? [mapped] : [];
+  }))];
+}
+/* The PWA's rules (app/page.tsx: `alcoholIngredientIds`, `recipeIsSpicy`);
+   a test compares every recipe. Wine and mirin do not fully cook off, so a
+   dish with them gets «Алкоголь в блюде»; wine vinegar and vanilla are not
+   alcohol. «Острое» is a spicy product or blend, chili measured at 2 g a
+   serving or more (or not "to taste"), or a spicy title; a pinch to taste
+   does not make a dish spicy. */
+const alcoholCanonicalIds = new Set(["red_wine_processed", "mirin_processed"]);
+const spicyCanonicalIds = new Set([
+  "jalapeno_raw", "hot_sauce_processed", "gochujang_processed", "green_chiles_processed", "buffalo_sauce_processed",
+  "chili_garlic_oil_processed", "kimchi_processed", "curry_paste_processed", "taco_seasoning_processed",
+]);
+const chiliName = /остр|чили|кайен|халап/iu;
+const spicyTitle = /остр|халапеньо|чили|чипотле|шрирач/iu;
 
 export function buildMobileBootstrap(
   catalog: RuntimeCatalogForMobile,
@@ -234,22 +269,27 @@ export function buildMobileBootstrap(
         group: source.group,
         baseAmount: ingredient.baseAmount,
         unit: ingredient.unit,
-        allergens: [
-          ...new Set(
-            source.allergens.flatMap((allergen) => {
-              const mapped = mobileAllergenMap[allergen];
-              return mapped ? [mapped] : [];
-            }),
-          ),
-        ],
+        allergens: mobileAllergens(source.allergens),
         checkLabel: source.checkLabel,
       };
     });
+    const procedure = recipe.procedureIngredients ?? [];
+    const allergens = mobileAllergens([
+      ...recipe.shoppingIngredients.flatMap((ingredient) => ingredient.allergens),
+      ...procedure.flatMap((ingredient) => ingredient.allergens ?? []),
+    ]);
+    if (ingredients.some((ingredient) => alcoholCanonicalIds.has(ingredient.canonicalIngredientId))) allergens.push("alcohol");
+    const spicy =
+      ingredients.some((ingredient) => spicyCanonicalIds.has(ingredient.canonicalIngredientId)) ||
+      procedure.some((ingredient) => chiliName.test(ingredient.nameRu) && (ingredient.classification !== "to_taste" || (ingredient.quantityPerServing ?? 0) >= 2)) ||
+      spicyTitle.test(recipe.title);
 
     return [{
       id: recipe.id,
       slot: recipe.slot,
       title: recipe.title,
+      allergens,
+      spicy,
       macros: recipe.macros,
       timeMinutes: recipe.timeMinutes,
       menuTags: recipe.menuTags,
