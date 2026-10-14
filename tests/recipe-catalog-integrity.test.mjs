@@ -110,6 +110,15 @@ const wholegrainBreadSandwiches = [
   "new-sandwich-balyk",
   "new-sandwich-caesar",
 ];
+const wholegrainPastaCards = ["goodfood-apple-penne-slaw-walnuts", "goodfood-scandi-beetroot-salmon-pasta"];
+const wholegrainFlourCards = [
+  "goodfood-mozzarella-pepper-aubergine-calzone",
+  "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+  "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+  "foodru-oblomov-pepper-beef",
+  "foodru-oblomov-pepper-chicken",
+];
+const wholegrainCouscousCards = ["goodfood-pork-with-cucumber-apricot-couscous"];
 
 test("products are counted as themselves, not as a namesake", () => {
   const ids = (recipeId) => app.recipesById[recipeId].ingredients.map((item) => item.canonicalIngredientId);
@@ -148,6 +157,34 @@ test("products are counted as themselves, not as a namesake", () => {
   assert.deepEqual({ ...profile("wholegrain_bread_processed") }, { kcal: 252, protein: 12.4, fat: 3.5, carbs: 42.7 });
   assert.equal(engine.canonicalIngredients.wholegrain_bread_processed.reference.recordId, "172688");
   assert.deepEqual([...engine.canonicalIngredients.wholegrain_bread_processed.allergens], ["gluten"]);
+  // Cards that name wholewheat or wholemeal pasta, flour and giant couscous;
+  // every other pasta, flour and couscous stays white.
+  const offeredWith = (canonicalId) =>
+    [...app.newMenuRecipes.filter((recipe) => ids(recipe.id).includes(canonicalId)).map((recipe) => recipe.id)].sort();
+  assert.deepEqual(offeredWith("wholegrain_pasta_raw"), [...wholegrainPastaCards].sort());
+  assert.deepEqual(offeredWith("wholegrain_flour_raw"), [...wholegrainFlourCards].sort());
+  assert.deepEqual(offeredWith("wholegrain_giant_couscous_raw"), [...wholegrainCouscousCards].sort());
+  for (const id of [...wholegrainPastaCards, ...wholegrainFlourCards, ...wholegrainCouscousCards])
+    for (const white of ["pasta_raw", "wheat_flour_raw", "giant_couscous_raw"]) assert.ok(!ids(id).includes(white), `${id}: not ${white}`);
+  assert.ok(ids("tmpm-22968").includes("pasta_raw"), "ordinary pasta stays white");
+  assert.ok(ids("tmpm-26358").includes("wheat_flour_raw"), "ordinary flour stays white");
+  assert.ok(ids("goodfood-10minute-couscous-salad").includes("couscous_raw"), "ordinary couscous stays white");
+  // One SR Legacy record each; wholemeal giant couscous is counted as the
+  // whole-wheat pasta it is made like, there is no couscous record for it.
+  assert.deepEqual({ ...profile("wholegrain_pasta_raw") }, { kcal: 352, protein: 13.9, fat: 2.93, carbs: 73.4 });
+  assert.deepEqual({ ...profile("wholegrain_flour_raw") }, { kcal: 340, protein: 13.2, fat: 2.5, carbs: 72 });
+  assert.deepEqual({ ...profile("wholegrain_giant_couscous_raw") }, { ...profile("wholegrain_pasta_raw") });
+  for (const [id, recordId] of [["wholegrain_pasta_raw", "169738"], ["wholegrain_flour_raw", "168893"], ["wholegrain_giant_couscous_raw", "169738"]]) {
+    const ingredient = engine.canonicalIngredients[id];
+    assert.equal(ingredient.reference.recordId, recordId, id);
+    assert.equal(ingredient.fiberReference.record, recordId, `${id}: fiber from the same record`);
+    assert.deepEqual([...ingredient.allergens], ["gluten"], id);
+  }
+  // Same measuring units as the white products, so amounts and steps do not move.
+  for (const [wholegrain, white] of [["wholegrain_pasta_raw", "pasta_raw"], ["wholegrain_flour_raw", "wheat_flour_raw"], ["wholegrain_giant_couscous_raw", "giant_couscous_raw"]]) {
+    assert.deepEqual({ ...engine.canonicalIngredients[wholegrain].unit }, { ...engine.canonicalIngredients[white].unit }, wholegrain);
+    assert.equal(engine.canonicalIngredients[wholegrain].densityGPerMl, engine.canonicalIngredients[white].densityGPerMl, wholegrain);
+  }
 });
 
 test("sandwiches on wholegrain bread carry its macros and fiber", () => {
@@ -161,6 +198,29 @@ test("sandwiches on wholegrain bread carry its macros and fiber", () => {
     "new-sandwich-caesar": [{ kcal: 540.4, protein: 56.4, fat: 14.9, carbs: 43.2 }, 6.6],
   };
   assert.deepEqual(Object.keys(expected), wholegrainBreadSandwiches);
+  for (const [id, [macros, fiber]] of Object.entries(expected)) {
+    const recipe = app.recipesById[id];
+    assert.deepEqual({ ...recipe.macros }, macros, id);
+    assert.equal(engine.fiberForFamily(app.recipeFamilyFor(recipe)), fiber, id);
+  }
+});
+
+test("wholegrain pasta, flour and giant couscous carry their own macros and fiber", () => {
+  // На базовую порцию: 50 г макарон или кускуса по FDC 169738 вместо 169736
+  // и 169699 (+3,0 и +2,1 г клетчатки), мука по FDC 168893 вместо 169761 —
+  // 100 г в кальцоне (+8 г), 42,5 г в лепёшках (+3,4 г), 50 г в ньокки
+  // (+4 г) и 10 г в подливе (+0,8 г). Количества и шаги не меняются.
+  const expected = {
+    "goodfood-apple-penne-slaw-walnuts": [{ kcal: 440.1, protein: 18.4, fat: 9.8, carbs: 76.9 }, 14.1],
+    "goodfood-scandi-beetroot-salmon-pasta": [{ kcal: 557, protein: 26.5, fat: 23.7, carbs: 69.8 }, 15.6],
+    "goodfood-mozzarella-pepper-aubergine-calzone": [{ kcal: 532.9, protein: 22.6, fat: 15.3, carbs: 84.1 }, 15.6],
+    "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot": [{ kcal: 431.2, protein: 19.6, fat: 14.3, carbs: 62.3 }, 12.7],
+    "goodfood-sweet-potato-gnocchi-with-tomato-sauce": [{ kcal: 541.4, protein: 18.9, fat: 8.3, carbs: 103 }, 14.9],
+    "foodru-oblomov-pepper-beef": [{ kcal: 403.3, protein: 43.6, fat: 18.4, carbs: 18.2 }, 2.9],
+    "foodru-oblomov-pepper-chicken": [{ kcal: 369.3, protein: 47.8, fat: 11, carbs: 18.2 }, 2.9],
+    "goodfood-pork-with-cucumber-apricot-couscous": [{ kcal: 549, protein: 33.6, fat: 20.1, carbs: 65.5 }, 12.5],
+  };
+  assert.deepEqual(Object.keys(expected), [...wholegrainPastaCards, ...wholegrainFlourCards, ...wholegrainCouscousCards]);
   for (const [id, [macros, fiber]] of Object.entries(expected)) {
     const recipe = app.recipesById[id];
     assert.deepEqual({ ...recipe.macros }, macros, id);

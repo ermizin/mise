@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+import { canonicalIngredients, normalizeRawRecipeCandidate } from "../domain/recipe-engine.ts";
 
 const policyUrl = new URL("../data/recipe-proofread-policy.json", import.meta.url);
 const reviewUrl = new URL("../data/recipe-review-resolutions.json", import.meta.url);
@@ -556,9 +557,21 @@ function applyGoodFoodChefCorrections(candidate) {
   return next;
 }
 
+/* Строка без явного id получает продукт из таблицы алиасов движка — так же, как
+   при расчёте карточки. */
+function currentCanonicalId(item) {
+  if (item.id) return item.id;
+  const draft = normalizeRawRecipeCandidate(
+    { id: "ingredient-identity-rule", sourceUrl: "", ingredients: [item] },
+    { publisher: "", accessedAt: "" },
+  );
+  return draft.ingredientMappings[0]?.canonicalIngredientId ?? null;
+}
+
 /* Карточка называет конкретный продукт («Цельнозерновой хлеб»), а в составе он
-   сопоставлен с общим профилем («Хлеб»). Правило политики задаёт продукт явно
-   для перечисленных карточек. Оно идёт после поварских правок: они пересобирают
+   сопоставлен с общим профилем («Хлеб») — явным id корпуса или алиасом, общим с
+   другими карточками. Правило политики задаёт продукт явно только для
+   перечисленных карточек. Оно идёт после поварских правок: они пересобирают
    состав сэндвичей целиком и вернули бы прежнее сопоставление. */
 function applyIngredientIdentityRules(candidate, policy) {
   let next = candidate;
@@ -568,7 +581,7 @@ function applyIngredientIdentityRules(candidate, policy) {
     const remap = (list) => {
       let matches = 0;
       const mapped = list.map((item) => {
-        if (normalizedSourceName(item) !== sourceName || item.id !== rule.fromCanonicalIngredientId) return item;
+        if (normalizedSourceName(item) !== sourceName || currentCanonicalId(item) !== rule.fromCanonicalIngredientId) return item;
         matches += 1;
         return { ...item, id: rule.canonicalIngredientId };
       });
@@ -664,6 +677,9 @@ export async function applyRecipeProofreadPolicy({ documents }) {
       ![rule.sourceName, rule.fromCanonicalIngredientId, rule.canonicalIngredientId, rule.reviewedAt, rule.note].every((value) => typeof value === "string" && value.trim())
     ) {
       throw new Error("Recipe proofread ingredient identity rule is incomplete.");
+    }
+    for (const id of [rule.fromCanonicalIngredientId, rule.canonicalIngredientId]) {
+      if (!canonicalIngredients[id]) throw new Error(`Recipe proofread ingredient identity rule names an unknown product ${id}.`);
     }
   }
   const ids = new Set(documents.flatMap((document) => document.candidates.map((candidate) => candidate.id)));

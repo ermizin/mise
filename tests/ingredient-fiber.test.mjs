@@ -9,7 +9,7 @@ const source = await readFile(new URL("../domain/recipe-engine.ts", import.meta.
 
 test("every canonical ingredient carries a finite, sourced fiber value", () => {
   const all = Object.values(canonicalIngredients);
-  assert.equal(all.length, 231);
+  assert.equal(all.length, 234);
   assert.equal(FIBER_CHECKED_AT, "2026-10-12");
   for (const ingredient of all) {
     assert.ok(Number.isFinite(ingredient.fiberPer100g) && ingredient.fiberPer100g >= 0, `${ingredient.id} has fiber`);
@@ -44,6 +44,12 @@ test("fiber values match the USDA records for the everyday products", () => {
     pumpkin_raw: 2,
     bread_processed: 2.7,
     wholegrain_bread_processed: 6,
+    pasta_raw: 3.2,
+    wholegrain_pasta_raw: 9.2,
+    wheat_flour_raw: 2.7,
+    wholegrain_flour_raw: 10.7,
+    giant_couscous_raw: 5,
+    wholegrain_giant_couscous_raw: 9.2,
     chicken_raw: 0,
     cottage_processed: 0,
     egg_raw: 0,

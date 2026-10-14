@@ -134,6 +134,27 @@
       "canonicalIngredientId": "wholegrain_bread_processed",
       "reviewedAt": "2026-10-13",
       "note": "Карточки называют цельнозерновой хлеб, а считались по белому (FDC 174924, клетчатка 2,7 г на 100 г). Цельнозерновой хлеб — FDC 172688: 252 ккал, Б 12,4, Ж 3,5, У 42,7, клетчатка 6,0 г на 100 г. Чиабатта и остальной белый хлеб остаются на профиле «Хлеб»."
+    },
+    {
+      "recipeIds": [
+        "foodru-oblomov-pepper-beef",
+        "foodru-oblomov-pepper-chicken"
+      ],
+      "sourceName": "Цельнозерновая мука",
+      "fromCanonicalIngredientId": "wheat_flour_raw",
+      "canonicalIngredientId": "wholegrain_flour_raw",
+      "reviewedAt": "2026-10-14",
+      "note": "Подливу загущают цельнозерновой мукой, а считалась белая (FDC 169761, клетчатка 2,7 г на 100 г). Цельнозерновая мука — FDC 168893: 340 ккал, Б 13,2, Ж 2,5, У 72, клетчатка 10,7 г на 100 г. Корпус «Простых и домашних» задаёт муку явным id, алиас его не переопределяет."
+    },
+    {
+      "recipeIds": [
+        "goodfood-apple-penne-slaw-walnuts"
+      ],
+      "sourceName": "wholewheat penne",
+      "fromCanonicalIngredientId": "pasta_raw",
+      "canonicalIngredientId": "wholegrain_pasta_raw",
+      "reviewedAt": "2026-10-14",
+      "note": "Источник называет цельнозерновые пенне, а считались белые макароны (FDC 169736, клетчатка 3,2 г на 100 г). Цельнозерновые макароны — FDC 169738: 352 ккал, Б 13,9, Ж 2,93, У 73,4, клетчатка 9,2 г на 100 г. Алиас «wholewheat penne» не меняется: им же названа паста в goodfood-salmon-pasta-salad-lemon-capers, исключённой владельцем."
     }
   ],
   "glossary": {

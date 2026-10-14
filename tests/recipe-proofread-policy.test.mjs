@@ -50,7 +50,9 @@ test("every proofread quarantine stays auditable and outside runtime", () => {
   }
 });
 
-test("ingredient identity rules reach every listed card and leave no old mapping", () => {
+test("ingredient identity rules reach every listed card and leave no old mapping", async () => {
+  const { entries } = await loadRecipeCorpusEntries();
+  const candidates = new Map(entries.map(({ candidate }) => [candidate.id, candidate]));
   const canonicalIds = (recipe) => [
     ...recipe.shoppingIngredients.map((ingredient) => ingredient.canonicalIngredientId),
     ...recipe.recipeFamily.ingredients.map((ingredient) => ingredient.canonicalIngredientId),
@@ -60,14 +62,26 @@ test("ingredient identity rules reach every listed card and leave no old mapping
     for (const id of rule.recipeIds) {
       const recipe = runtimeById.get(id);
       assert.ok(recipe, `${id}: the rule names a runtime card`);
+      // Good Food rows keep their English source name, so the row is found
+      // by its place in the source list rather than by the Russian name.
+      const candidate = candidates.get(id);
+      const rows = candidate.sourceIngredients ?? candidate.ingredients;
+      const row = rows.findIndex((item) => String(item.name).trim().toLowerCase() === rule.sourceName.toLowerCase()) + 1;
+      assert.ok(row > 0, `${id}: the card still lists «${rule.sourceName}»`);
       assert.ok(
         recipe.shoppingIngredients.some((ingredient) =>
-          ingredient.canonicalIngredientId === rule.canonicalIngredientId && ingredient.nameRu === rule.sourceName),
+          ingredient.canonicalIngredientId === rule.canonicalIngredientId && ingredient.sourceIngredientIndexes.includes(row)),
         `${id}: «${rule.sourceName}» is ${rule.canonicalIngredientId}`,
       );
       assert.ok(canonicalIds(recipe).includes(rule.canonicalIngredientId), `${id}: the Recipe Family uses ${rule.canonicalIngredientId}`);
       assert.equal(canonicalIds(recipe).includes(rule.fromCanonicalIngredientId), false, `${id}: ${rule.fromCanonicalIngredientId} is gone`);
     }
+  }
+  // Quarantined cards that name wholegrain penne keep the profile they had.
+  for (const [id, name] of [["goodfood-power-packed-pasta-boxes", "wholemeal penne"], ["goodfood-salmon-pasta-salad-lemon-capers", "wholewheat penne"]]) {
+    const candidate = candidates.get(id);
+    assert.ok(candidate.miseProofreadQuarantine, `${id} is quarantined`);
+    assert.equal((candidate.sourceIngredients ?? candidate.ingredients).find((item) => item.name === name)?.id, "pasta_raw", `${id}: «${name}» is unchanged`);
   }
 });
 
