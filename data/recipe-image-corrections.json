@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "ownerPublicationRiskAcceptance": {
+    "id": "corrected-source-photos-owner-risk-2026-10-15",
+    "decision": "owner_accepts_public_use_risk",
+    "decisionMaker": "project_owner",
+    "recordedAt": "2026-10-15",
+    "copyrightLicenseVerified": false,
+    "note": "Владелец 2026-10-15 выбрал заменить фото чужих блюд снимками этих же блюд со страниц тех же рецептов и принял риск их публичного использования. Это решение о публикационном риске, а не лицензия, подтверждение прав или разрешение правообладателя. Решение привязано к ID и SHA-256 каждого файла."
+  },
+  "corrections": [
+    {
+      "id": "tmpm-17393",
+      "sourceUrl": "https://mealprepmanual.com/air-fryer-boneless-buffalo-chicken-wings/",
+      "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Maple-Sriracha-Bonless-Wings-WP-scaled.jpg",
+      "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Buffalo-Boneless-Chicken-Wings-WP.jpg",
+      "sha256": "7e59476d60d0e209a3f6225bbd21cea87836eac56eb22f7915cd4f3e232c681b",
+      "problem": "Карточка рецепта на странице источника показывает фото другого рецепта сайта — Maple Sriracha Boneless Wings (alt «Close up image of Maple Sriracha Boneless Wings»): кусочки в глазури с кунжутом. Импорт взял это фото, и оно же стоит у tmpm-17381.",
+      "evidence": "Главное фото страницы и её og:image — Buffalo-Boneless-Chicken-Wings-WP.jpg: панированные кусочки курицы без глазури и кунжута."
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+      "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.10.31-AM-1024x562.png",
+      "sha256": "5431a5032e1935e02eb28dd6726b5b94cb55a4f5b00b8701abb12ee34dff64af",
+      "problem": "Сборная страница из пяти закусок; импорт дал всем пяти карточкам первую картинку рецепта на странице — завтрак с хашбрауном.",
+      "evidence": "Фото под заголовком «4. Apple Slices with Greek Yogurt and Granola», alt «Apple slices with Greek yogurt and granola in a bowl.»: дольки яблока, йогурт и гранола в миске. Фото карточки рецепта Apple-and-Yogurt-WP.jpg на той же странице показывает яблоко с йогуртом без гранолы."
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+      "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.09.50-AM-1024x563.png",
+      "sha256": "2fb83705e4fa3a15ace87e7bdfe8131f624c6aef398c0bd1ee521cff6629ff75",
+      "problem": "Сборная страница из пяти закусок; импорт дал всем пяти карточкам первую картинку рецепта на странице — завтрак с хашбрауном.",
+      "evidence": "Фото под заголовком «2. Smashed Avocado and Bean Rice Cakes»: рисовый хлебец с размятым авокадо и семенами."
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+      "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.11.31-AM-1024x562.png",
+      "sha256": "162674fdd36688ea68d55097ee51c1eb206c56f01f5f0d33e9fb173478106352",
+      "problem": "Сборная страница из пяти закусок; импорт дал всем пяти карточкам первую картинку рецепта на странице — завтрак с хашбрауном.",
+      "evidence": "Фото под заголовком «3. Meat, Egg, & Cheese Quesadilla», alt «meat, egg, and cheese quesadilla»: сложенная кесадилья на тарелке."
+    },
+    {
+      "id": "tmpm-25006-strawberry-lime-sorbet",
+      "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
+      "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+      "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.12.04-AM-1024x558.png",
+      "sha256": "265e2ed2f34c7e9dc3e970d74ea4029f2a56e00ad46805d1d49bb20e39a40118",
+      "problem": "Сборная страница из пяти закусок; импорт дал всем пяти карточкам первую картинку рецепта на странице — завтрак с хашбрауном. Карточка заблокирована release audit и в приложении не показывается; фото исправлено, чтобы манифест не хранил чужое блюдо.",
+      "evidence": "Фото под заголовком «5. Strawberry Limeade Sorbet», alt «strawberry limeade sorbet in a small dish»: клубничный сорбет в рамекине."
+    }
+  ]
+}

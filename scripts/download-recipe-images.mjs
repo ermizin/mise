@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, rename, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { loadRecipeCorpusEntries } from "./recipe-corpus-overlay.mjs";
@@ -8,6 +8,7 @@ const projectRoot = resolve(fileURLToPath(new URL("..", import.meta.url)));
 const defaultOutputDirectory = resolve(projectRoot, "public/recipe-images");
 const defaultManifestPath = resolve(projectRoot, "data/recipe-image-manifest.json");
 const defaultDownloadSourcesPath = resolve(projectRoot, "data/recipe-image-download-sources.json");
+const defaultCorrectionsPath = resolve(projectRoot, "data/recipe-image-corrections.json");
 const contentTypeExtensions = new Map([
   ["image/jpeg", "jpg"],
   ["image/png", "png"],
@@ -110,6 +111,55 @@ async function discoveredLocalEntry(candidate, sourceImageUrl, outputDirectory) 
   return null;
 }
 
+// A photo the import took from another dish on the same page is replaced by
+// that page's photo of this dish. A correction is tied to the imported photo
+// URL, so it never applies silently after the corpus changes, and its recorded
+// SHA-256 ties the owner's publication-risk decision to the exact file.
+export async function loadRecipeImageCorrections(correctionsPath, candidatesById) {
+  let document;
+  try {
+    document = JSON.parse(await readFile(correctionsPath, "utf8"));
+  } catch (error) {
+    if (error?.code === "ENOENT") return new Map();
+    throw error;
+  }
+  const acceptance = document.ownerPublicationRiskAcceptance;
+  if (
+    document.schemaVersion !== 1 ||
+    !Array.isArray(document.corrections) ||
+    acceptance?.decision !== "owner_accepts_public_use_risk" ||
+    acceptance?.copyrightLicenseVerified !== false ||
+    !acceptance?.recordedAt
+  ) {
+    throw new Error("Recipe image corrections need schemaVersion 1 and the owner's recorded publication risk decision.");
+  }
+  const corrections = new Map();
+  for (const correction of document.corrections) {
+    const candidate = candidatesById.get(correction.id);
+    if (!candidate) throw new Error(`${correction.id}: image correction for an unknown source card`);
+    if (corrections.has(correction.id)) throw new Error(`${correction.id}: duplicate image correction`);
+    if (correction.sourceUrl !== candidate.sourceUrl || correction.catalogImageUrl !== candidate.imageUrl) {
+      throw new Error(`${correction.id}: image correction does not match the imported page and photo`);
+    }
+    if (!/^https:\/\//u.test(correction.sourceImageUrl ?? "") || correction.sourceImageUrl === correction.catalogImageUrl) {
+      throw new Error(`${correction.id}: image correction needs a different https photo URL`);
+    }
+    if (!correction.problem || !correction.evidence) throw new Error(`${correction.id}: image correction needs the problem and the evidence`);
+    if (correction.sha256 !== undefined && !/^[0-9a-f]{64}$/u.test(correction.sha256)) {
+      throw new Error(`${correction.id}: image correction checksum must be a SHA-256 hex digest`);
+    }
+    corrections.set(correction.id, correction);
+  }
+  return corrections;
+}
+
+function requireCorrectionChecksum(correction, entry) {
+  if (correction?.sha256 && correction.sha256 !== entry.sha256) {
+    throw new Error(`${entry.id}: corrected photo checksum ${entry.sha256} differs from the one the owner approved`);
+  }
+  return entry;
+}
+
 async function mapConcurrent(items, concurrency, worker) {
   const results = new Array(items.length);
   let cursor = 0;
@@ -127,6 +177,7 @@ export async function downloadRecipeImages({
   outputDirectory = defaultOutputDirectory,
   manifestPath = defaultManifestPath,
   downloadSourcesPath = defaultDownloadSourcesPath,
+  correctionsPath = defaultCorrectionsPath,
   concurrency = 3,
 } = {}) {
   const { entries } = await loadRecipeCorpusEntries({ cwd: projectRoot });
@@ -135,6 +186,10 @@ export async function downloadRecipeImages({
   if (invalid.length) throw new Error(`Every source card needs sourceUrl and imageUrl; missing: ${invalid.map((item) => item.id).join(", ")}`);
   const ids = new Set(candidates.map((candidate) => candidate.id));
   if (ids.size !== candidates.length) throw new Error("Recipe image import requires unique candidate ids.");
+  const corrections = await loadRecipeImageCorrections(
+    correctionsPath,
+    new Map(candidates.map((candidate) => [candidate.id, candidate])),
+  );
 
   let previousEntries = new Map();
   try {
@@ -166,13 +221,17 @@ export async function downloadRecipeImages({
     ) {
       throw new Error(`${id}: downloaded source metadata does not match the candidate provenance`);
     }
-    const sourceImageUrl = downloadedSource?.sourceImageUrl ?? candidate.imageUrl;
+    const correction = corrections.get(id);
+    const sourceImageUrl = correction?.sourceImageUrl ?? downloadedSource?.sourceImageUrl ?? candidate.imageUrl;
+    const previous = previousEntries.get(id);
+    // After the photo URL changes, the card's local file is the old photo.
+    const previousPhotoReplaced = Boolean(previous && previous.sourceImageUrl !== sourceImageUrl);
     const cached =
-      await existingEntry(candidate, sourceImageUrl, previousEntries.get(id), outputDirectory) ??
-      await discoveredLocalEntry(candidate, sourceImageUrl, outputDirectory);
+      await existingEntry(candidate, sourceImageUrl, previous, outputDirectory) ??
+      (previousPhotoReplaced ? null : await discoveredLocalEntry(candidate, sourceImageUrl, outputDirectory));
     if (cached) {
       reused += 1;
-      return cached;
+      return requireCorrectionChecksum(correction, cached);
     }
     const { buffer, contentType } = await fetchImage(candidate, sourceImageUrl);
     const extension = contentTypeExtensions.get(contentType);
@@ -180,10 +239,7 @@ export async function downloadRecipeImages({
     const filename = `${id}.${extension}`;
     const absolutePath = resolve(outputDirectory, filename);
     const temporaryPath = `${absolutePath}.tmp`;
-    await writeFile(temporaryPath, buffer);
-    await rename(temporaryPath, absolutePath);
-    downloaded += 1;
-    return {
+    const entry = requireCorrectionChecksum(correction, {
       id,
       sourceTitle: candidate.sourceTitle,
       sourceUrl: candidate.sourceUrl,
@@ -194,7 +250,15 @@ export async function downloadRecipeImages({
       bytes: buffer.length,
       sha256: sha256(buffer),
       attribution: candidate.sourceTitle,
-    };
+    });
+    await writeFile(temporaryPath, buffer);
+    await rename(temporaryPath, absolutePath);
+    if (previousPhotoReplaced && previous.localPath !== entry.localPath) {
+      const stalePath = resolve(projectRoot, `public${previous.localPath}`);
+      if (stalePath.startsWith(`${outputDirectory}/`)) await rm(stalePath, { force: true });
+    }
+    downloaded += 1;
+    return entry;
   });
 
   const manifest = {

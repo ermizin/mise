@@ -99546,13 +99546,13 @@
         "sourceQuery": "mealprep recipes",
         "preview": {
           "kind": "source_preview",
-          "imageUrl": "/recipe-images/tmpm-25006-avocado-bean-rice-cakes.jpg",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+          "imageUrl": "/recipe-images/tmpm-25006-avocado-bean-rice-cakes.webp",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.09.50-AM-1024x563.png",
           "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
           "usage": "local-source-copy-with-attribution",
           "attribution": "Quick and Easy Snack Ideas — Avocado and White Bean Rice Cakes",
-          "contentType": "image/jpeg",
-          "sha256": "0c93a66e43da52b4450e5c9906f834379ac69936ca4ef90486fd0a48638f8387"
+          "contentType": "image/webp",
+          "sha256": "2fb83705e4fa3a15ace87e7bdfe8131f624c6aef398c0bd1ee521cff6629ff75"
         }
       },
       "visualFallback": {
@@ -99572,7 +99572,7 @@
           "parsedCandidateId": "tmpm-25006-avocado-bean-rice-cakes"
         },
         "image": {
-          "imageUrl": "/recipe-images/tmpm-25006-avocado-bean-rice-cakes.jpg",
+          "imageUrl": "/recipe-images/tmpm-25006-avocado-bean-rice-cakes.webp",
           "source": "Quick and Easy Snack Ideas — Avocado and White Bean Rice Cakes",
           "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
           "usageStatus": "reference_only",
@@ -99580,7 +99580,7 @@
           "confidenceMatch": 1,
           "manuallyApproved": false,
           "photoType": "source",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.09.50-AM-1024x563.png",
           "attribution": "Quick and Easy Snack Ideas — Avocado and White Bean Rice Cakes"
         },
         "ingredients": [
@@ -100039,13 +100039,13 @@
         "sourceQuery": "mealprep recipes",
         "preview": {
           "kind": "source_preview",
-          "imageUrl": "/recipe-images/tmpm-25006-breakfast-quesadilla.jpg",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+          "imageUrl": "/recipe-images/tmpm-25006-breakfast-quesadilla.webp",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.11.31-AM-1024x562.png",
           "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
           "usage": "local-source-copy-with-attribution",
           "attribution": "Quick and Easy Snack Ideas — Egg, Chicken and Cheese Quesadilla",
-          "contentType": "image/jpeg",
-          "sha256": "0c93a66e43da52b4450e5c9906f834379ac69936ca4ef90486fd0a48638f8387"
+          "contentType": "image/webp",
+          "sha256": "162674fdd36688ea68d55097ee51c1eb206c56f01f5f0d33e9fb173478106352"
         }
       },
       "visualFallback": {
@@ -100065,7 +100065,7 @@
           "parsedCandidateId": "tmpm-25006-breakfast-quesadilla"
         },
         "image": {
-          "imageUrl": "/recipe-images/tmpm-25006-breakfast-quesadilla.jpg",
+          "imageUrl": "/recipe-images/tmpm-25006-breakfast-quesadilla.webp",
           "source": "Quick and Easy Snack Ideas — Egg, Chicken and Cheese Quesadilla",
           "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
           "usageStatus": "reference_only",
@@ -100073,7 +100073,7 @@
           "confidenceMatch": 1,
           "manuallyApproved": false,
           "photoType": "source",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.11.31-AM-1024x562.png",
           "attribution": "Quick and Easy Snack Ideas — Egg, Chicken and Cheese Quesadilla"
         },
         "ingredients": [
@@ -100522,13 +100522,13 @@
         "sourceQuery": "mealprep recipes",
         "preview": {
           "kind": "source_preview",
-          "imageUrl": "/recipe-images/tmpm-25006-apple-yogurt-granola.jpg",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+          "imageUrl": "/recipe-images/tmpm-25006-apple-yogurt-granola.webp",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.10.31-AM-1024x562.png",
           "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
           "usage": "local-source-copy-with-attribution",
           "attribution": "Quick and Easy Snack Ideas — Apple Yogurt Granola Bowl",
-          "contentType": "image/jpeg",
-          "sha256": "0c93a66e43da52b4450e5c9906f834379ac69936ca4ef90486fd0a48638f8387"
+          "contentType": "image/webp",
+          "sha256": "5431a5032e1935e02eb28dd6726b5b94cb55a4f5b00b8701abb12ee34dff64af"
         }
       },
       "visualFallback": {
@@ -100548,7 +100548,7 @@
           "parsedCandidateId": "tmpm-25006-apple-yogurt-granola"
         },
         "image": {
-          "imageUrl": "/recipe-images/tmpm-25006-apple-yogurt-granola.jpg",
+          "imageUrl": "/recipe-images/tmpm-25006-apple-yogurt-granola.webp",
           "source": "Quick and Easy Snack Ideas — Apple Yogurt Granola Bowl",
           "sourceUrl": "https://mealprepmanual.com/quick-and-easy-snack-ideas/",
           "usageStatus": "reference_only",
@@ -100556,7 +100556,7 @@
           "confidenceMatch": 1,
           "manuallyApproved": false,
           "photoType": "source",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/01/5-Minute-Hashbrown-Breakfast-bowl-Wp.jpg",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2023/07/Screenshot-2023-07-23-at-12.10.31-AM-1024x562.png",
           "attribution": "Quick and Easy Snack Ideas — Apple Yogurt Granola Bowl"
         },
         "ingredients": [
@@ -144791,12 +144791,12 @@
         "preview": {
           "kind": "source_preview",
           "imageUrl": "/recipe-images/tmpm-17393.jpg",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Maple-Sriracha-Bonless-Wings-WP-scaled.jpg",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Buffalo-Boneless-Chicken-Wings-WP.jpg",
           "catalogImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Maple-Sriracha-Bonless-Wings-WP-scaled.jpg",
           "usage": "local-source-copy-with-attribution",
           "attribution": "Air Fryer Boneless Buffalo Chicken Wings",
           "contentType": "image/jpeg",
-          "sha256": "c1a517f1bf871864ce955b196736761d6ce9cbe2c0b348ad44a38359b30c6fa3"
+          "sha256": "7e59476d60d0e209a3f6225bbd21cea87836eac56eb22f7915cd4f3e232c681b"
         }
       },
       "visualFallback": {
@@ -144824,7 +144824,7 @@
           "confidenceMatch": 1,
           "manuallyApproved": false,
           "photoType": "source",
-          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Maple-Sriracha-Bonless-Wings-WP-scaled.jpg",
+          "sourceImageUrl": "https://mealprepmanual.com/wp-content/uploads/2021/06/Buffalo-Boneless-Chicken-Wings-WP.jpg",
           "attribution": "Air Fryer Boneless Buffalo Chicken Wings"
         },
         "ingredients": [
