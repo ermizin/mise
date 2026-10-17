@@ -7882,6 +7882,7 @@ export default function Home() {
       )}
       {tab === "profile" && (
         <ProfileScreen
+          plan={activePlan}
           people={activePlan?.people ?? [newPerson()]}
           hasPlan={Boolean(activePlan)}
           onConfigure={editPeople}
@@ -8025,6 +8026,48 @@ function deckDishes(plan: ActivePlan | null) {
       chosen.find((recipe) => recipe?.slot === slot) ??
       newMenuRecipes.find((recipe) => recipeSupportsSlot(recipe, slot)),
   }));
+}
+
+/* Огонь из кита C §4.5: в наборе иконок «flame» нарисован колпаком повара,
+   а онбордингу нужен именно огонь готовки. */
+function FireGlyph({ size }: { size: number }) {
+  return (
+    <svg
+      className="icon"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-6 1-9z" />
+    </svg>
+  );
+}
+
+/* Фото для иллюстраций онбординга: настоящие карточки каталога с фото.
+   Без фото RecipeMedia сама покажет заглушку, поэтому список не пустеет. */
+function onboardingPhotoRecipes(count: number) {
+  const withPhoto = newMenuRecipes.filter((recipe) => recipe.provenance.imageUrl);
+  const pool = withPhoto.length ? withPhoto : newMenuRecipes;
+  return Array.from({ length: count }, (_, index) => pool[index % pool.length]);
+}
+
+/* Пилюля «Партия N из M» в шапке покупок и профиля: партия сегодняшнего
+   дня; до начала плана — первая, после его конца — последняя. */
+function currentBatchLabel(plan: ActivePlan | null) {
+  if (!plan || plan.batches.length === 0) return null;
+  const today = isoDate(new Date());
+  const batch =
+    plan.batches.find((item) => today >= item.start && today <= item.end) ??
+    (today < plan.batches[0].start
+      ? plan.batches[0]
+      : plan.batches[plan.batches.length - 1]);
+  return `Партия ${batch.index + 1} из ${plan.batches.length}`;
 }
 
 function RecipeMedia({
@@ -8315,12 +8358,15 @@ function OnboardingWelcome({
       }
     >
       <div className="onboarding-top">
-        <div className="onboarding-brand">
-          <MiseWordmark />
-        </div>
+        <div className="onboarding-brand">Mise</div>
         <button className="pill-button" onClick={onOpenGuide}>
           Как это работает
         </button>
+      </div>
+      <div className="dish-deck" aria-hidden>
+        <DeckCard slot={deck[0].slot} recipe={deck[0].recipe} index={0} />
+        <DeckCard slot={deck[2].slot} recipe={deck[2].recipe} index={1} />
+        <DeckCard slot={deck[1].slot} recipe={deck[1].recipe} index={2} main />
       </div>
       <h1 className="onboarding-title">
         Готовим раз —<br />
@@ -8330,31 +8376,26 @@ function OnboardingWelcome({
         Вы отвечаете на шесть вопросов. Дальше считает Mise: меню, покупки,
         порции и подписи на контейнеры.
       </p>
-      <div className="dish-deck" aria-hidden>
-        <DeckCard slot={deck[0].slot} recipe={deck[0].recipe} index={0} />
-        <DeckCard slot={deck[2].slot} recipe={deck[2].recipe} index={1} />
-        <DeckCard slot={deck[1].slot} recipe={deck[1].recipe} index={2} main />
-      </div>
-      <div className="promise-grid">
-        <div className="promise-tile tone-accent">
+      <ul className="promise-grid" aria-label="Что вы получите">
+        <li className="promise-tile">
           <div className="promise-number">{days}</div>
           <div className="promise-text">{plural(days, promiseForms.days)}</div>
-        </div>
-        <div className="promise-tile tone-mint">
+        </li>
+        <li className="promise-tile">
           <div className="promise-number">{portions}</div>
           <div className="promise-text">
             {plural(portions, promiseForms.portions)}
           </div>
-        </div>
-        <div className="promise-tile tone-amber">
+        </li>
+        <li className="promise-tile">
           <div className="promise-number">1</div>
           <div className="promise-text">список покупок на всех</div>
-        </div>
-        <div className="promise-tile tone-lilac">
+        </li>
+        <li className="promise-tile">
           <div className="promise-number">0</div>
           <div className="promise-text">расчётов в голове</div>
-        </div>
-      </div>
+        </li>
+      </ul>
       <Note tone="mint" icon={<Icon name="snowflake" />}>
         Если порция не доживёт до своего дня — Mise предложит заморозить её
         заранее.
@@ -8379,6 +8420,7 @@ function OnboardingBatches({
   onSkip: () => void;
   steps: number;
 }) {
+  const photos = onboardingPhotoRecipes(4);
   return (
     <OnboardingShell
       motionDirection={motionDirection}
@@ -8401,6 +8443,87 @@ function OnboardingBatches({
           Пропустить
         </button>
       </div>
+      <div
+        className="batch-hero"
+        role="img"
+        aria-label="Одна готовка в среду превращается в контейнеры на три дня: среда, четверг, пятница"
+      >
+        <span className="batch-hero-pan">
+          <RecipeMedia recipe={photos[0]} eager />
+        </span>
+        <span className="batch-hero-fire" aria-hidden>
+          <FireGlyph size={20} />
+        </span>
+        <span className="batch-sticker batch-sticker-cook">
+          СР · готовим 90 мин
+        </span>
+        {["СР", "ЧТ", "ПТ"].map((day, index) => (
+          <span className={`batch-fan batch-fan-${index}`} key={day}>
+            <RecipeMedia recipe={photos[index + 1]} eager />
+            <span className="batch-tag">{day}</span>
+          </span>
+        ))}
+        <span className="batch-sticker batch-sticker-sum">
+          1 готовка = 3 дня
+        </span>
+      </div>
+      <section className="onboarding-card batch-week-card">
+        <div className="card-head">
+          <span>Неделя на {withPlural(2, FORMS.person)}</span>
+          <span>{withPlural(2, FORMS.batch)}</span>
+        </div>
+        <ul
+          className="batch-bars"
+          role="img"
+          aria-label="Пример недели: две готовки, между ними дни, когда едим из готовой партии; последнюю порцию достаём из морозилки"
+        >
+          {batchWeek.map((day, index) => (
+            <li
+              key={day.day}
+              className={`batch-day${day.cook ? " is-cook" : ""}${day.second ? " is-second" : ""}`}
+            >
+              <span className="batch-day-photo">
+                <RecipeMedia
+                  recipe={photos[day.second ? 3 - (index % 2) : 1 + (index % 2)]}
+                />
+                {day.cook && (
+                  <i className="batch-day-badge is-fire">
+                    <FireGlyph size={11} />
+                  </i>
+                )}
+                {day.frost && (
+                  <i className="batch-day-badge is-frost">
+                    <Icon name="snowflake" size={11} />
+                  </i>
+                )}
+              </span>
+              <small>{day.day}</small>
+            </li>
+          ))}
+        </ul>
+        <div className="batch-brackets" aria-hidden>
+          <span className="is-first">
+            партия 1<small>3 дня</small>
+          </span>
+          <span className="is-second">
+            партия 2<small>4 дня</small>
+          </span>
+        </div>
+        <div className="batch-legend">
+          <span>
+            <i className="is-fire">
+              <FireGlyph size={11} />
+            </i>
+            день готовки
+          </span>
+          <span>
+            <i className="is-frost">
+              <Icon name="snowflake" size={11} />
+            </i>
+            из морозилки
+          </span>
+        </div>
+      </section>
       <h1 className="onboarding-title">
         Готовка партиями
         <br />— это два вечера
@@ -8409,64 +8532,29 @@ function OnboardingBatches({
         Mise делит неделю на партии по 3–4 дня: столько порций спокойно живёт в
         холодильнике. Всё, что не доживает, уходит в морозилку.
       </p>
-      <section className="onboarding-card glass-card">
-        <div className="card-head">
-          <span>Неделя на {withPlural(2, FORMS.person)}</span>
-          <span>{withPlural(2, FORMS.batch)}</span>
-        </div>
-        <div
-          className="batch-bars"
-          role="img"
-          aria-label="Пример недели: две готовки, между ними дни, когда едим из готовой партии; последнюю порцию достаём из морозилки"
-        >
-          {batchWeek.map((day) => (
-            <div
-              key={day.day}
-              className={`batch-day${day.cook ? " is-cook" : ""}${day.second ? " is-second" : ""}`}
-            >
-              <span>
-                {day.frost && (
-                  <i className="frost">
-                    <Icon name="snowflake" size={12} />
-                  </i>
-                )}
-              </span>
-              <small>{day.day}</small>
-            </div>
-          ))}
-        </div>
-        <div className="batch-legend">
-          <span>
-            <i />
-            день готовки
-          </span>
-          <span>
-            <i />
-            едим из партии
-          </span>
-          <span>
-            <i />
-            вторая партия
-          </span>
-        </div>
-      </section>
       <div className="onb-rows">
-        <div className="onb-row glass-3">
-          <span className="onb-num">1</span>
+        <div className="onb-row">
+          <span className="onb-num is-amber" aria-hidden>
+            <Icon name="clock" size={18} />
+          </span>
           <div>
             <b>~90 минут на партию</b>
             <small>Из них активных — около 40, остальное варится само.</small>
           </div>
         </div>
-        <div className="onb-row glass-3">
-          <span className="onb-num is-mint">2</span>
+        <div className="onb-row">
+          <span className="onb-num" aria-hidden>
+            <Icon name="person" size={18} />
+          </span>
           <div>
             <b>3–4 блюда на всех</b>
             <small>Порции разные, готовка общая — считает Mise, не вы.</small>
           </div>
         </div>
-        <div className="onb-row glass-3">
-          <span className="onb-num is-lilac">3</span>
+        <div className="onb-row">
+          <span className="onb-num is-mint" aria-hidden>
+            <Icon name="container" size={18} />
+          </span>
           <div>
             <b>Подписал — забыл</b>
             <small>
@@ -8588,18 +8676,25 @@ function OnboardingInstall({
           {environment.ios ? (
             <ol className="install-steps">
               <li>
-                <span aria-hidden><Icon name="share" size={18} /></span>
-                <div><b>Нажмите «Поделиться» в нижней панели Safari</b></div>
+                <span className="install-step-num" aria-hidden>1</span>
+                <div>
+                  <b>
+                    Нажмите «Поделиться» в нижней панели Safari
+                    <i className="install-step-tile" aria-hidden>
+                      <Icon name="share" size={16} />
+                    </i>
+                  </b>
+                </div>
               </li>
               <li>
-                <span aria-hidden><Icon name="plus" size={18} /></span>
+                <span className="install-step-num" aria-hidden>2</span>
                 <div>
                   <b>Выберите «На экран „Домой“»</b>
                   <small>Пункт со значком плюса в списке</small>
                 </div>
               </li>
               <li>
-                <span className="is-mint" aria-hidden><Icon name="check" size={18} /></span>
+                <span className="install-step-num" aria-hidden>3</span>
                 <div>
                   <b>Откройте Mise с домашнего экрана</b>
                   <small>Мы продолжим ровно с этого места</small>
@@ -8608,7 +8703,7 @@ function OnboardingInstall({
             </ol>
           ) : (
             <div className="install-android-fallback">
-              <span aria-hidden><Icon name="plus" size={18} /></span>
+              <span className="install-step-tile" aria-hidden><Icon name="plus" size={16} /></span>
               <div>
                 <b>Откройте меню Chrome и выберите «Установить приложение»</b>
                 <small>
@@ -8682,21 +8777,33 @@ function OnboardingReminders({
     thaw: true,
     expire: false,
   });
-  const rows: { kind: keyof ReminderDefaults; title: string; note: string }[] = [
+  const rows: {
+    kind: keyof ReminderDefaults;
+    title: string;
+    note: string;
+    icon: IconName;
+    tone: "amber" | "mint";
+  }[] = [
     {
       kind: "cooking",
       title: "Сегодня готовим",
       note: "18:00 в дни партий",
+      icon: "flame",
+      tone: "amber",
     },
     {
       kind: "thaw",
       title: "Достать из морозилки",
       note: "Накануне в 21:00, когда есть что доставать",
+      icon: "snowflake",
+      tone: "mint",
     },
     {
       kind: "expire",
       title: "Срок хранения истекает",
       note: "За день, по каждой партии",
+      icon: "clock",
+      tone: "amber",
     },
   ];
   return (
@@ -8751,7 +8858,36 @@ function OnboardingReminders({
           сохранятся, но не придут.
         </Note>
       )}
-      <section className="onboarding-card glass-card">
+      <section className="toggle-list glass-2">
+        {rows.map((row) => (
+          <button
+            key={row.kind}
+            className="toggle-row"
+            role="switch"
+            aria-checked={wanted[row.kind]}
+            onClick={() =>
+              setWanted((current) => ({
+                ...current,
+                [row.kind]: !current[row.kind],
+              }))
+            }
+          >
+            <span className={`toggle-row-icon is-${row.tone}`} aria-hidden>
+              {row.icon === "flame" ? (
+                <FireGlyph size={18} />
+              ) : (
+                <Icon name={row.icon} size={18} />
+              )}
+            </span>
+            <span>
+              <b>{row.title}</b>
+              <small>{row.note}</small>
+            </span>
+            <span className="toggle" aria-hidden />
+          </button>
+        ))}
+      </section>
+      <section className="onboarding-card push-preview-card">
         <div className="push-preview">
           <div className="push-card glass-3">
             <span className="onb-num" aria-hidden>
@@ -8782,28 +8918,6 @@ function OnboardingReminders({
             </div>
           </div>
         </div>
-      </section>
-      <section className="toggle-list glass-2">
-        {rows.map((row) => (
-          <button
-            key={row.kind}
-            className="toggle-row"
-            role="switch"
-            aria-checked={wanted[row.kind]}
-            onClick={() =>
-              setWanted((current) => ({
-                ...current,
-                [row.kind]: !current[row.kind],
-              }))
-            }
-          >
-            <span>
-              <b>{row.title}</b>
-              <small>{row.note}</small>
-            </span>
-            <span className="toggle" aria-hidden />
-          </button>
-        ))}
       </section>
       <p className="onboarding-fineprint">
         Разрешение на уведомления спросит система в установленном приложении —
@@ -9019,6 +9133,9 @@ function InstallInline({
   if (installed) return null;
   return (
     <section className="install-inline glass-card">
+      <span className="setting-tile" aria-hidden>
+        <Icon name="plus" />
+      </span>
       <div className="install-inline-copy">
         <b>Добавить Mise на экран Домой</b>
         <small>
@@ -10952,6 +11069,8 @@ function ShoppingScreen({
     items.some((item) => !item.checked),
   ).length;
   const firstBatchId = plan.batches[0]?.id;
+  const batchLabel = currentBatchLabel(plan);
+  const uncheckedCount = plan.shopping.length - checked;
   const visibleShopping = plan.shopping
     .filter((item) => {
       if (filter === "unchecked") return !item.checked;
@@ -11029,38 +11148,44 @@ function ShoppingScreen({
   return (
     <section className="screen shopping-screen has-stable-tab-header">
       <header className="shopping-header">
-        <div>
-          <MiseWordmark />
-          <p className="kicker">
-            {formatDate(plan.start)} — {formatDate(plan.end)} ·{" "}
-            {withPlural(plan.people.length, FORMS.person)}
-          </p>
-          <h1>Покупки</h1>
+        <div className="tab-pill-row">
+          {batchLabel ? (
+            <span className="tab-pill">
+              <Icon name="container" size={16} />
+              {batchLabel}
+            </span>
+          ) : (
+            <span />
+          )}
+          <button
+            className="tab-pill shopping-share"
+            aria-label="Поделиться списком покупок"
+            onClick={() => void shareList()}
+          >
+            <Icon name="share" size={16} />
+            Поделиться
+          </button>
         </div>
-        <button
-          className="shopping-share glass"
-          aria-label="Поделиться списком покупок"
-          onClick={() => void shareList()}
-        >
-          <Icon name="share" />
-        </button>
+        <h1>Покупки</h1>
+        <p className="tab-meta">
+          {formatDate(plan.start)} — {formatDate(plan.end)} ·{" "}
+          {withPlural(plan.people.length, FORMS.person)} ·{" "}
+          {withPlural(plan.shopping.length, FORMS.item)}
+        </p>
       </header>
       <div className="tab-panel-body shopping-tab-body">
       <section className="shopping-summary glass-card">
         <div className="shopping-summary-stats">
-          <div>
-            <p className="kicker">Куплено</p>
-            <h2>
-              <AnimatedNumber value={checked} />
-              <span> / {plan.shopping.length}</span>
-            </h2>
-          </div>
-          <div>
-            <p className="kicker">Осталось групп</p>
+          <h2>
+            Куплено <AnimatedNumber value={checked} />
+            <span> из {plan.shopping.length}</span>
+          </h2>
+          <p>
+            Осталось групп{" "}
             <b>
               <AnimatedNumber value={remainingGroups} /> из {totalGroups}
             </b>
-          </div>
+          </p>
         </div>
         <div
           className="shopping-progress-track"
@@ -11072,57 +11197,44 @@ function ShoppingScreen({
         >
           <span style={{ width: `${progress}%` }} />
         </div>
-        <div className="shopping-filter-row" role="group" aria-label="Фильтр покупок">
-          <button
-            className={filter === "all" ? "selected" : ""}
-            aria-pressed={filter === "all"}
-            onClick={() => selectShoppingFilter("all")}
-          >
-            Все
-          </button>
-          <button
-            className={filter === "unchecked" ? "selected" : ""}
-            aria-pressed={filter === "unchecked"}
-            onClick={() => selectShoppingFilter("unchecked")}
-          >
-            Не куплено
-          </button>
-          {firstBatchId && (
-            <button
-              className={filter === "batch-1" ? "selected" : ""}
-              aria-pressed={filter === "batch-1"}
-              onClick={() => selectShoppingFilter("batch-1")}
-            >
-              Партия 1
-            </button>
-          )}
-        </div>
         {checked > 0 && (
           <button className="text-button shopping-clear" onClick={clearChecks}>
             Снять отметки
           </button>
         )}
       </section>
+      <div className="shopping-filter-row" role="group" aria-label="Фильтр покупок">
+        <button
+          className={filter === "all" ? "selected" : ""}
+          aria-pressed={filter === "all"}
+          onClick={() => selectShoppingFilter("all")}
+        >
+          Все
+        </button>
+        <button
+          className={filter === "unchecked" ? "selected" : ""}
+          aria-pressed={filter === "unchecked"}
+          onClick={() => selectShoppingFilter("unchecked")}
+        >
+          Не куплено
+          {uncheckedCount > 0 && (
+            <span className="shopping-filter-count">{uncheckedCount}</span>
+          )}
+        </button>
+        {firstBatchId && (
+          <button
+            className={filter === "batch-1" ? "selected" : ""}
+            aria-pressed={filter === "batch-1"}
+            onClick={() => selectShoppingFilter("batch-1")}
+          >
+            Партия 1
+          </button>
+        )}
+      </div>
       {failed && (
         <Note tone="warn" role="alert" className="note-toast">
           Отметка не сохранилась — проверьте связь и нажмите ещё раз.
         </Note>
-      )}
-      {undoItems && (
-        <div className="undo-bar" role="status">
-          <span>{undoLabel}</span>
-          <button className="text-button" onClick={undo}>
-            Вернуть
-          </button>
-        </div>
-      )}
-      {shareState === "copied" && (
-        <div className="undo-bar" role="status">
-          <span>Список скопирован</span>
-          <button className="text-button" onClick={() => setShareState("idle")}>
-            Хорошо
-          </button>
-        </div>
       )}
       {shareState === "error" && (
         <Note tone="warn" role="alert">
@@ -11185,11 +11297,30 @@ function ShoppingScreen({
       )}
       </div>
       </div>
+      {/* Тост живёт вне .tab-panel-body: у неё contain: paint, а тосту нужно
+          прилипнуть к низу экрана над таб-баром. */}
+      {undoItems && (
+        <div className="undo-bar" role="status">
+          <span>{undoLabel}</span>
+          <button className="text-button" onClick={undo}>
+            Вернуть
+          </button>
+        </div>
+      )}
+      {shareState === "copied" && (
+        <div className="undo-bar" role="status">
+          <span>Список скопирован</span>
+          <button className="text-button" onClick={() => setShareState("idle")}>
+            Хорошо
+          </button>
+        </div>
+      )}
     </section>
   );
 }
 
 function ProfileScreen({
+  plan = null,
   people,
   hasPlan,
   onConfigure,
@@ -11203,6 +11334,7 @@ function ProfileScreen({
   installPrompt,
   onInstallPromptUsed,
 }: {
+  plan?: ActivePlan | null;
   people: Person[];
   hasPlan: boolean;
   onConfigure: () => void;
@@ -11231,13 +11363,32 @@ function ProfileScreen({
     gain: "Набор",
   };
   const calorieRingCircumference = 2 * Math.PI * 44;
+  const batchLabel = currentBatchLabel(plan);
   return (
     <section className="screen profile-screen has-stable-tab-header">
       <header className="profile-header">
-        <p className="kicker">
+        <div className="tab-pill-row">
+          {batchLabel ? (
+            <span className="tab-pill">
+              <Icon name="container" size={16} />
+              {batchLabel}
+            </span>
+          ) : (
+            <span />
+          )}
+          <button
+            className="tab-pill profile-add-person"
+            aria-label="Настроить людей и цели"
+            onClick={onAddPerson}
+          >
+            <Icon name="plus" size={16} />
+            Добавить человека
+          </button>
+        </div>
+        <h1>Цели и порции</h1>
+        <p className="tab-meta">
           Профиль · {withPlural(people.length, FORMS.person)}
         </p>
-        <h1>Цели и порции</h1>
       </header>
       <div className="tab-panel-body profile-tab-body">
       <div className="profile-people-list">
@@ -11369,20 +11520,13 @@ function ProfileScreen({
           );
         })}
       </div>
+      <p className="profile-add-hint">
+        Добавите человека — порции и покупки пересчитаются.
+      </p>
       <button
-        className="profile-add-person"
-        aria-label="Настроить людей и цели"
-        onClick={onAddPerson}
+        className={`primary-button profile-plan-action${hasPlan ? " is-pill" : ""}`}
+        onClick={onBuild}
       >
-        <span>
-          <b>Добавить человека</b>
-          <small>Порции и покупки пересчитаются</small>
-        </span>
-        <span className="profile-add-person-icon" aria-hidden>
-          +
-        </span>
-      </button>
-      <button className="primary-button profile-plan-action" onClick={onBuild}>
         <Icon name="plus" /> Составить план
       </button>
       <InstallInline
@@ -11399,7 +11543,7 @@ function ProfileScreen({
             className="tutorial-entry profile-setting-row notification-entry"
             onClick={onNotifications}
           >
-            <span>
+            <span className="setting-tile is-amber">
               <Icon name="bell" />
             </span>
             <div>
@@ -11413,7 +11557,7 @@ function ProfileScreen({
           className="tutorial-entry profile-setting-row"
           onClick={onOpenTutorial}
         >
-          <span>
+          <span className="setting-tile is-mint">
             <Icon name="info" />
           </span>
           <div>
@@ -11426,7 +11570,7 @@ function ProfileScreen({
           className="tutorial-entry profile-setting-row"
           onClick={onOpenPrepGuide}
         >
-          <span>
+          <span className="setting-tile">
             <Icon name="pot" />
           </span>
           <div>
@@ -11435,6 +11579,9 @@ function ProfileScreen({
           </div>
           <Icon name="chevron" className="entry-chevron" />
         </button>
+        <p className="profile-disclaimer">
+          КБЖУ и сроки хранения — ориентиры, а не медицинская гарантия.
+        </p>
       </section>
       {hasPlan && (
         <button
