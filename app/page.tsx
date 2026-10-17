@@ -12036,37 +12036,46 @@ function PlanBuilder({
   );
   const readyMenuTitle = `${withPlural(menuDishCount, FORMS.dish)} · ${withPlural(menuPortionCount, FORMS.portion)} · ${withPlural(batches.length, eveningForms)}`;
   const readyMenuMessage = `Меню на ${withPlural(menuDayCount, FORMS.day)} готово. Докупить ${withPlural(draftPlan.shopping.length, FORMS.item)}. Посмотрите — что не нравится, заменю.`;
+  /* Редизайн C: вопрос шага — заголовок экрана, под ним мета терракотой.
+     История ответов остаётся (PRODUCT.md: «история доступна»). */
   const builderChatTurns = [
     {
-      question: "На какие даты собрать план?",
+      question: "На сколько дней план?",
+      meta: "до 14 дней · начало — день первой готовки",
       answer: `${formatDate(start)} — ${formatDate(end)} · ${withPlural(rawDays, FORMS.day)}`,
     },
     {
-      question: "Какие приёмы пищи готовим заранее?",
+      question: "Что готовим?",
+      meta: "выберите 1–5 позиций · доли дня фиксированы",
       answer: mealSlots.length
         ? mealSlots.map((slot) => mealMeta[slot].label).join(", ")
         : "Пока ничего не выбрано",
     },
     {
-      question: "Какое направление меню вам ближе?",
+      question: "Какое меню?",
+      meta: "одно направление на весь план",
       answer: styleMeta[menuStyle].label,
     },
     {
-      question: "Для кого считаем порции и цели?",
+      question: "Люди и цели",
+      meta: "до 4 человек, у каждого свои цели",
       answer: people
         .map((person) => `${person.name || "Человек"} · ${person.daily.kcal} ккал`)
         .join("; "),
     },
     {
-      question: "Как часто удобно готовить?",
+      question: "Как будете готовить?",
+      meta: "техника, ритм партий и хвост периода",
       answer: `Раз в ${withPlural(cookEveryDays, FORMS.day)} · ${kitchenEquipment === undefined ? "утварь не указана" : kitchenEquipment.map(equipmentLabel).join(", ") || "без техники"}`,
     },
     {
-      question: allSelected ? readyMenuMessage : "Собираю готовое меню…",
+      question: allSelected ? "Меню собрано, проверьте" : "Собираю готовое меню…",
+      meta: allSelected ? readyMenuTitle : "подбираем блюда и считаем порции",
       answer: allSelected ? "Меню подходит" : "Ещё подбираем блюда",
     },
     {
-      question: "Всё верно? Сохранить план и собрать покупки?",
+      question: "Проверьте план",
+      meta: `${formatDate(start)} — ${formatDate(resolvedEnd)} · ${withPlural(people.length, FORMS.person)}`,
       answer: "Всё проверено",
     },
   ];
@@ -12670,6 +12679,9 @@ function PlanBuilder({
         title: "Ваш ответ готов",
         detail: "Можно вернуться к любому ответу выше",
       };
+  /* В мастере вопрос — заголовок экрана; в настройках плана заголовок экрана
+     «Настройки плана», а вопрос — подзаголовок. */
+  const QuestionHeading = mode === "settings" ? "h2" : "h1";
   if (previewRecipe) return <RecipeView context={{ recipe: previewRecipe, plan: draftPlan }} onBack={() => setPreviewRecipe(null)} onEditKitchen={() => { setPreviewRecipe(null); changeStep(4); }} />;
   return (
     <main
@@ -12677,49 +12689,37 @@ function PlanBuilder({
     >
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
+      {/* Хром мастера C: сверху только пилюля «Шаг N из 7» и полоса из семи
+          сегментов; «Назад» живёт в нижней панели. */}
       <header
         className={`builder-chat-header ${mode === "settings" ? "settings-header" : ""}`}
       >
-        <button
-          className="icon-button glass"
-          onClick={
-            step === 5 && menuMode === "manual" && choiceIndex > 0
-              ? () => goToManualChoice(choiceIndex - 1)
-              : backOneStep
-          }
-          disabled={chatTransition?.kind === "step"}
-          aria-label={
-            mode === "settings"
-              ? "Назад в настройки"
-              : step === initialStep
-                ? "Закрыть мастер"
-                : "Назад"
-          }
-        >
-          {mode === "settings" || step > initialStep ? (
-            <Icon name="chevron-left" />
-          ) : (
-            <Icon name="close" />
-          )}
-        </button>
-        <div>
-          <h1>
-            {mode === "settings"
-              ? "Настройки плана"
-              : step === 3
-                ? "Кто ест"
-                : "Мастер плана"}
-          </h1>
-          <p className="kicker">
-            {step === 3 ? "Кто ест" : steps[step]} · {step + 1} из {steps.length}
+        {mode === "settings" ? (
+          <div>
+            <h1>Настройки плана</h1>
+            <p className="kicker">{step === 3 ? "Кто ест" : steps[step]}</p>
+          </div>
+        ) : (
+          <p className="builder-step-pill">
+            Шаг {step + 1} из {steps.length}
           </p>
-        </div>
-        <span className="builder-header-spacer" aria-hidden />
+        )}
       </header>
       {mode === "onboarding" && (
-        <div className="builder-chat-progress" aria-hidden>
-          <span style={{ width: `${((step + 1) / steps.length) * 100}%` }} />
-        </div>
+        <ol
+          className="builder-chat-progress"
+          aria-label={`Прогресс мастера: шаг ${step + 1} из ${steps.length}`}
+        >
+          {steps.map((label, index) => (
+            <li
+              key={label}
+              className={index <= step ? "is-done" : undefined}
+              aria-current={index === step ? "step" : undefined}
+            >
+              <span className="wizard-sr">{label}</span>
+            </li>
+          ))}
+        </ol>
       )}
       <section className="builder-content" ref={builderContentRef}>
         {draftRestored && (
@@ -12766,10 +12766,7 @@ function PlanBuilder({
                 className="builder-chat-turn"
                 key={`${turn.index}-${turn.question}`}
               >
-                <p className="chat-bubble is-mise">
-                  <span aria-hidden>M</span>
-                  {turn.question}
-                </p>
+                <p className="chat-bubble is-mise">{turn.question}</p>
                 <button
                   className="chat-bubble is-user"
                   aria-label={`Изменить ответ: ${turn.answer}`}
@@ -12801,7 +12798,7 @@ function PlanBuilder({
                 ref={chatQuestionRef}
                 tabIndex={-1}
               >
-                <strong>Меню готово</strong>
+                <QuestionHeading>{builderChatTurns[5].question}</QuestionHeading>
                 <b>{readyMenuTitle}</b>
                 <p>{readyMenuMessage}</p>
               </div>
@@ -12811,13 +12808,12 @@ function PlanBuilder({
                 ref={chatQuestionRef}
                 tabIndex={-1}
               >
-                <span aria-hidden>M</span>
-                <div>
-                  <small>{steps[step]}</small>
-                  <p>{chatTransition?.kind === "menu"
-                    ? "Подбираю блюда и рассчитываю порции…"
-                    : builderChatTurns[step]?.question}</p>
-                </div>
+                <QuestionHeading>{chatTransition?.kind === "menu"
+                  ? "Подбираю блюда и рассчитываю порции…"
+                  : builderChatTurns[step]?.question}</QuestionHeading>
+                {chatTransition?.kind !== "menu" && builderChatTurns[step]?.meta && (
+                  <p>{builderChatTurns[step].meta}</p>
+                )}
               </div>
             )}
             {chatTransition && (
@@ -12854,7 +12850,7 @@ function PlanBuilder({
         {!chatTransition && (
           <div
             key={`builder-step-${step}-${step === 5 ? menuMode : "default"}`}
-            className={`builder-step-content builder-chat-response${stepMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
+            className={`builder-step-content builder-chat-response is-step-${step}${stepMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
           >
             {step === 0 && (
               <PeriodStep
@@ -12862,6 +12858,8 @@ function PlanBuilder({
                 end={end}
                 rawDays={rawDays}
                 valid={validPeriod}
+                cookDays={batches.map((batch) => batch.start)}
+                cookEveryDays={cookEveryDays}
                 onStart={(value) => {
                   setStart(value);
                   if (daysInclusive(value, end) < 1) setEnd(value);
@@ -12878,6 +12876,7 @@ function PlanBuilder({
               <MealStep
                 selected={mealSlots}
                 periodDays={rawDays}
+                person={people[0]}
                 onToggle={toggleMealSlot}
               />
             )}
@@ -13022,6 +13021,27 @@ function PlanBuilder({
         className={`builder-chat-composer glass${showManualMenuChoice ? " has-menu-choice" : ""}`}
         aria-label="Ответ в чате"
       >
+        <button
+          type="button"
+          className={`builder-chat-back${showManualMenuChoice ? " is-compact" : ""}`}
+          onClick={
+            step === 5 && menuMode === "manual" && choiceIndex > 0
+              ? () => goToManualChoice(choiceIndex - 1)
+              : backOneStep
+          }
+          disabled={chatTransition?.kind === "step"}
+          aria-label={
+            mode === "settings"
+              ? "Назад в настройки"
+              : step === initialStep
+                ? "Назад: закрыть мастер"
+                : showManualMenuChoice
+                  ? "Назад"
+                  : undefined
+          }
+        >
+          {showManualMenuChoice ? <Icon name="chevron-left" /> : "Назад"}
+        </button>
         {showManualMenuChoice ? (
           <button
             type="button"
@@ -13055,7 +13075,7 @@ function PlanBuilder({
             aria-label={
               step === 3
                 ? `Отправить ответ: ${withPlural(people.length, FORMS.person)}`
-                : "Отправить ответ"
+                : undefined
             }
             aria-describedby={
               showManualMenuChoice ? undefined : "builder-composer-status"
@@ -13068,8 +13088,10 @@ function PlanBuilder({
                 ? `Дальше: ${mealMeta[positions[choiceIndex + 1]?.slot ?? positions[choiceIndex]?.slot ?? "lunch"].label.toLowerCase()}`
                 : "Отправить меню"
               : step === 5
-                ? "Отправить меню"
-                : "Отправить ответ"}
+                ? "Дальше: проверка"
+                : step === 4
+                  ? "Дальше: собрать меню"
+                  : "Отправить ответ"}
             {step === 3 && (
               <span className="builder-chat-send-count">
                 {withPlural(people.length, FORMS.person)}
@@ -13087,7 +13109,7 @@ function PlanBuilder({
               ? "Сохраняем…"
               : initialPlan
                 ? "Сохранить изменения"
-                : "Создать план и покупки"}
+                : "Сохранить план"}
             <Icon name="chevron" size={16} />
           </button>
         )}
@@ -13156,31 +13178,33 @@ function PlanBuilder({
   );
 }
 
+/* Подпись карточки внутри шага (редизайн C): кикер терракотой, вопрос и
+   пояснение. Вопрос экрана — заголовок в хроме мастера. */
 function StepIntro({
-  icon,
   kicker,
   title,
   text,
 }: {
-  icon: React.ReactNode;
   kicker: string;
   title: string;
   text: string;
 }) {
   return (
     <div className="step-intro">
-      <span>{icon}</span>
       <p className="kicker">{kicker}</p>
       <h2>{title}</h2>
       <p>{text}</p>
     </div>
   );
 }
+const weekdayShort = new Intl.DateTimeFormat("ru-RU", { weekday: "short" });
 function PeriodStep({
   start,
   end,
   rawDays,
   valid,
+  cookDays,
+  cookEveryDays,
   onStart,
   onEnd,
   onQuick,
@@ -13189,42 +13213,43 @@ function PeriodStep({
   end: string;
   rawDays: number;
   valid: boolean;
+  cookDays: string[];
+  cookEveryDays: number;
   onStart: (value: string) => void;
   onEnd: (value: string) => void;
   onQuick: (days: number) => void;
 }) {
+  const planDays = valid
+    ? Array.from({ length: rawDays }, (_, index) => addDays(start, index))
+    : [];
+  const tail = valid ? rawDays % cookEveryDays : 0;
+  const rhythm =
+    cookEveryDays === 1 ? "каждый день" : `по ${withPlural(cookEveryDays, FORMS.day)}`;
   return (
     <>
-      <StepIntro
-        icon={<Icon name="clock" />}
-        kicker="Когда едим"
-        title="Выберите период"
-        text="До 14 дней — так проще сохранить свежесть и разнообразие."
-      />
-      <section className="glass-card">
-        <div className="date-fields">
-          <label>
-            Начало
-            <input
-              type="date"
-              value={start}
-              onChange={(event) => onStart(event.target.value)}
-            />
-          </label>
-          <Icon name="chevron" size={16} />
-          <label>
-            Конец
-            <input
-              type="date"
-              value={end}
-              onChange={(event) => onEnd(event.target.value)}
-            />
-          </label>
-        </div>
-        <div className="quick-periods" role="radiogroup" aria-label="Быстрый выбор периода">
-          {[3, 5, 7, 14].map((days) => (
+      <section className="glass-card period-card" aria-labelledby="period-start-title">
+        <h2 id="period-start-title">Начало</h2>
+        <label className="period-date-field">
+          <Icon name="calendar" size={20} />
+          <span className="wizard-sr">Начало</span>
+          <input
+            type="date"
+            value={start}
+            aria-describedby="period-start-hint"
+            onChange={(event) => onStart(event.target.value)}
+          />
+        </label>
+        <p id="period-start-hint" className="period-hint">
+          {formatDayHeading(start)} — день первой готовки
+        </p>
+      </section>
+      <section className="glass-card period-card" aria-labelledby="period-length-title">
+        <h2 id="period-length-title">Длительность</h2>
+        <div className="quick-periods" role="radiogroup" aria-labelledby="period-length-title">
+          {[3, 5, 7, 10, 14].map((days) => (
             <button
               key={days}
+              type="button"
               role="radio"
               aria-checked={rawDays === days}
               className={rawDays === days ? "selected" : ""}
@@ -13234,80 +13259,157 @@ function PeriodStep({
             </button>
           ))}
         </div>
-        {valid ? (
-          <Note
-            tone="mint"
-            icon={<Icon name="check" />}
-            label={`${formatDate(start)} — ${formatDate(end)}`}
-          >
-            {withPlural(rawDays, FORMS.day)} в плане
-          </Note>
-        ) : (
-          <Note tone="warn">Период должен быть от 1 до 14 дней.</Note>
-        )}
+        <div className="period-summary" aria-live="polite">
+          {valid ? (
+            <>
+              <b>
+                {formatDate(start)} — {formatDate(end)} · {withPlural(rawDays, FORMS.day)} в плане
+              </b>
+              <small>
+                {withPlural(cookDays.length, FORMS.batch)} {rhythm}
+                {tail > 0 ? `, хвост ${withPlural(tail, FORMS.day)}` : ""} — настроим на шаге «Готовка»
+              </small>
+            </>
+          ) : (
+            <Note tone="warn">Период должен быть от 1 до 14 дней.</Note>
+          )}
+        </div>
+        <label className="period-end-field">
+          <span>Последний день</span>
+          <input
+            type="date"
+            value={end}
+            onChange={(event) => onEnd(event.target.value)}
+          />
+        </label>
+        <p className="period-hint">До 14 дней — так проще сохранить свежесть и разнообразие.</p>
       </section>
+      {planDays.length > 0 && (
+        <section
+          className="glass-card period-days"
+          aria-label={`Дни плана: ${formatDate(start)} — ${formatDate(end)}`}
+        >
+          <ul>
+            {planDays.map((date) => {
+              const cooking = cookDays.includes(date);
+              return (
+                <li key={date} className={cooking ? "is-cooking" : undefined}>
+                  <small>{weekdayShort.format(parseDate(date)).replace(".", "")}</small>
+                  <b>{parseDate(date).getDate()}</b>
+                  {cooking ? (
+                    <i role="img" aria-label="день готовки" />
+                  ) : (
+                    <i aria-hidden="true" />
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+          <p className="period-days-legend">
+            <i aria-hidden="true" />
+            день готовки
+          </p>
+        </section>
+      )}
     </>
   );
 }
+/* Доли дня из конфигурации расчёта: 25/10/30/10/25. Если выбраны не все
+   позиции, доли не перенормируются — остаток показан как резерв вне плана. */
+const mealSlotShares = Object.fromEntries(
+  NUTRITION_CONFIG.mealSlots.map(({ id, share }) => [id, share]),
+) as Record<MealSlot, number>;
 function MealStep({
   selected,
   periodDays,
+  person,
   onToggle,
 }: {
   selected: MealSlot[];
   periodDays: number;
+  person?: Person;
   onToggle: (slot: MealSlot) => void;
 }) {
-  const positionLabel =
-    selected.length === 1
-      ? "позиция"
-      : selected.length < 5
-        ? "позиции"
-        : "позиций";
+  const positionLabel = plural(selected.length, FORMS.item);
+  const dailyKcal = person?.daily.kcal ?? 0;
+  const plannedShare = selected.reduce(
+    (sum, slot) => sum + (mealSlotShares[slot] ?? 0),
+    0,
+  );
+  const percent = (share: number) => `${Math.round(share * 100)} %`;
+  const kcal = (share: number) => Math.round(dailyKcal * share).toLocaleString("ru-RU");
   return (
     <>
-      <StepIntro
-        icon={<Icon name="pot" />}
-        kicker="Что планируем"
-        title="Выберите блюда из Mise"
-        text="Отметьте только то, что хотите приготовить заранее. Остаток дневной цели мы покажем отдельно."
-      />
       <div className="choice-grid meals-grid" role="group" aria-label="Приёмы пищи">
-        {(Object.keys(mealMeta) as MealSlot[]).map((slot) => {
+        {allMealSlots.map((slot) => {
           const active = selected.includes(slot);
+          const share = mealSlotShares[slot] ?? 0;
           return (
             <button
               key={slot}
+              type="button"
               role="checkbox"
+              data-slot={slot}
               className={`choice-card glass-card ${active ? "selected" : ""}`}
               aria-checked={active}
               onClick={() => onToggle(slot)}
             >
               <span className="meal-choice-icon" aria-hidden>
-                <Icon name={mealMeta[slot].uiIcon} size={30} />
+                <Icon name={mealMeta[slot].uiIcon} size={22} />
               </span>
-              <b>{mealMeta[slot].label}</b>
-              <small>
-                {active ? (
-                  <>
-                    Включён <Icon name="check" size={12} />
-                  </>
-                ) : (
-                  "Добавить"
-                )}
-              </small>
+              <span className="meal-choice-copy">
+                <b>{mealMeta[slot].label}</b>
+                <small>
+                  {percent(share)} дня
+                  {dailyKcal > 0 ? ` · ≈ ${kcal(share)} ккал` : ""}
+                </small>
+              </span>
+              <span className="meal-choice-check" aria-hidden>
+                {active && <Icon name="check" size={16} />}
+              </span>
             </button>
           );
         })}
       </div>
-      <Note
-        tone="mint"
-        icon={<Icon name="scale" />}
-        label={`${selected.length} ${positionLabel} меню на день`}
-      >
-        {withPlural(selected.length * periodDays, FORMS.portion)} на человека за период, если он ест
-        все выбранные блюда
-      </Note>
+      <section className="glass-card meal-shares" aria-labelledby="meal-shares-title">
+        <h2 id="meal-shares-title">Доли дня</h2>
+        <div
+          className="meal-shares-bar"
+          role="img"
+          aria-label={`Доли дня: ${allMealSlots
+            .map((slot) => `${mealMeta[slot].label.toLowerCase()} ${percent(mealSlotShares[slot] ?? 0)}`)
+            .join(", ")}. В плане ${percent(plannedShare)} дня`}
+        >
+          {allMealSlots.map((slot) => (
+            <span
+              key={slot}
+              className={selected.includes(slot) ? "is-selected" : undefined}
+              style={{ flexGrow: Math.round((mealSlotShares[slot] ?? 0) * 100) }}
+            />
+          ))}
+        </div>
+        <p className="meal-shares-total">
+          В плане <em>{percent(plannedShare)}</em> дня
+          {dailyKcal > 0 && (
+            <>
+              {" "}· <em>≈ {kcal(plannedShare)} ккал</em>
+            </>
+          )}
+        </p>
+        <p className="meal-shares-note">
+          {plannedShare < 0.999
+            ? "Остальное — резерв вне плана, доли не перенормируются. "
+            : ""}
+          {dailyKcal > 0 && person
+            ? `${!person.name || person.name === "Я" ? "Ваш ориентир" : `Ориентир (${person.name})`} — ${dailyKcal.toLocaleString("ru-RU")} ккал в день; цели уточним на шаге «Люди и цели».`
+            : "Остаток дневной цели мы покажем отдельно."}
+        </p>
+        <p className="meal-shares-note">
+          {selected.length} {positionLabel} меню на день ·{" "}
+          {withPlural(selected.length * periodDays, FORMS.portion)} на человека за период, если он ест
+          все выбранные блюда
+        </p>
+      </section>
     </>
   );
 }
@@ -13322,12 +13424,6 @@ function StyleStep({
 }) {
   return (
     <>
-      <StepIntro
-        icon={<Icon name="filter" />}
-        kicker="Какое меню"
-        title="Выберите направление"
-        text="Выберите блюда, которые хочется готовить. Порции подстроим под ваши цели."
-      />
       <div
         className="style-list"
         role="radiogroup"
@@ -13336,6 +13432,7 @@ function StyleStep({
         {releaseMenuStyles.map((style) => (
           <button
             key={style}
+            type="button"
             role="radio"
             className={`style-card glass-card ${selected === style ? "selected" : ""}`}
             aria-checked={selected === style}
@@ -13345,6 +13442,7 @@ function StyleStep({
             disabled={Boolean(unavailable[style])}
             onClick={() => onSelect(style)}
           >
+            <i aria-hidden="true" />
             <div>
               <h3>{styleMeta[style].label}</h3>
               <p>{styleMeta[style].description}</p>
@@ -13354,10 +13452,16 @@ function StyleStep({
                 </small>
               )}
             </div>
-            <i>{selected === style ? <Icon name="check" /> : ""}</i>
           </button>
         ))}
       </div>
+      <p className="glass-card style-info">
+        <Icon name="info" size={20} />
+        <span>
+          Направление влияет только на подбор блюд. Порции Mise подстроит под
+          цели каждого человека.
+        </span>
+      </p>
     </>
   );
 }
@@ -14497,19 +14601,19 @@ function CookingStep({
   const blocks = buildBatches(start, resolvedDays, cookEveryDays);
   return (
     <>
-      <StepIntro
-        icon={<Icon name="pot" />}
-        kicker="Ритм готовки"
-        title="На сколько дней готовим за раз?"
-        text="Выберите размер одной партии. Мы учтём хранение и заморозку."
-      />
       {/* Сначала то, о чём спрашивает шаг, и обязательное решение об остатке.
           Кухня уже отмечена по умолчанию и не должна отодвигать их за экран. */}
-      <section className="glass-card">
+      <section className="glass-card cooking-rhythm">
+        <StepIntro
+          kicker="Ритм партий"
+          title="На сколько дней готовим за раз?"
+          text="Выберите размер одной партии. Мы учтём хранение и заморозку."
+        />
         <div className="day-scale" role="radiogroup" aria-label="Дней на партию">
           {[1, 2, 3, 4, 5, 6, 7].map((days) => (
             <button
               key={days}
+              type="button"
               role="radio"
               aria-checked={cookEveryDays === days}
               className={cookEveryDays === days ? "selected" : ""}
@@ -14520,20 +14624,30 @@ function CookingStep({
             </button>
           ))}
         </div>
-        <div className="batch-timeline">
+        <div className="cooking-rhythm-summary" aria-live="polite">
+          <b>
+            {withPlural(blocks.length, ["готовка", "готовки", "готовок"])}:{" "}
+            <em>
+              {blocks
+                .map((batch) => `${weekdayShort.format(parseDate(batch.start)).replace(".", "")} ${parseDate(batch.start).getDate()}`)
+                .join(", ")}
+            </em>
+          </b>
+        </div>
+        <ol className="batch-timeline">
           {blocks.map((batch) => (
-            <div key={batch.id}>
+            <li key={batch.id}>
               <span>{batch.index + 1}</span>
               <p>
                 <b>Готовка {batch.index + 1}</b>
                 <small>
                   {formatDate(batch.start)} — {formatDate(batch.end)} ·{" "}
-                  {batch.days} дн.
+                  {withPlural(batch.days, FORMS.day)}
                 </small>
               </p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </section>
       {remainder > 0 && (
         <div
@@ -14600,10 +14714,19 @@ function CookingStep({
           </button>
         </div>
       )}
+      {kitchenGaps.length === 0 && kitchenEquipment !== undefined && (
+        <section className="glass-card cooking-feasible" role="status">
+          <span aria-hidden="true"><Icon name="check" size={20} /></span>
+          <p>
+            <b>Все приёмы выполнимы с вашей техникой</b>
+            <small>для каждой позиции меню есть блюда под эту кухню</small>
+          </p>
+        </section>
+      )}
       {kitchenGaps.length > 0 && <Note tone="warn" role="alert">С этой утварью и текущими целями не получается подобрать: {kitchenGaps.map((slot) => mealMeta[slot].label.toLowerCase()).join(", ")}. Добавьте доступную технику ниже или вернитесь к приёмам пищи и целям.</Note>}
       <section className="kitchen-equipment glass-card" aria-labelledby="kitchen-equipment-title">
         <p className="kicker">Ваша кухня</p>
-        <h3 id="kitchen-equipment-title">Что есть под рукой?</h3>
+        <h3 id="kitchen-equipment-title">Техника и посуда</h3>
         <p>Отметьте технику и посуду. Mise подберёт блюда, которые можно приготовить на вашей кухне.</p>
         {kitchenEquipment === undefined && <p role="status">В старом плане утварь не указана. Отметьте её, чтобы учитывать при подборе.</p>}
         <div className="kitchen-equipment-grid">
@@ -15322,39 +15445,61 @@ function ReviewStep({
     : plan.shopping.slice(0, 5);
   return (
     <>
-      <StepIntro
-        icon={<Icon name="check" />}
-        kicker="Почти готово"
-        title="Проверьте план"
-        text="После сохранения он появится в неделе, а продукты — в покупках."
-      />
-      <section className="review-hero glass-card">
-        <div>
-          <p className="kicker">
-            {formatDate(plan.start)} — {formatDate(plan.end)}
-          </p>
-          <h2>
-            {withPlural(plan.periodDays, FORMS.day)} · {plan.people.length} чел.
-          </h2>
-        </div>
+      <section className="review-hero glass-card" aria-label="Итог плана">
         <div className="review-stats">
+          <p>
+            <b>{plan.periodDays}</b>
+            <small>{plural(plan.periodDays, FORMS.day)}</small>
+          </p>
           <p>
             <b>{plan.batches.length}</b>
             <small>{plural(plan.batches.length, ["готовка", "готовки", "готовок"])}</small>
           </p>
           <p>
-            <b>{recipeIds.size}</b>
-            <small>{plural(recipeIds.size, FORMS.recipe)}</small>
-          </p>
-          <p>
             <b>{totalPortions}</b>
             <small>{plural(totalPortions, FORMS.portion)}</small>
           </p>
-          <p>
-            <b>{plan.shopping.length}</b>
-            <small>{plural(plan.shopping.length, ["продукт", "продукта", "продуктов"])}</small>
-          </p>
         </div>
+      </section>
+      <section className="review-people glass-card" aria-labelledby="review-people-title">
+        <h2 id="review-people-title">Люди</h2>
+        <ul>
+          {plan.people.map((person) => {
+            const share = plan.mealSlots
+              .filter((slot) => person.includedSlots.includes(slot))
+              .reduce((sum, slot) => sum + (mealSlotShares[slot] ?? 0), 0);
+            const fiber = planFiberAssessment(plan, person);
+            const name = person.name.trim() || "Человек";
+            return (
+              <li key={person.id}>
+                <span className="review-person-initial" aria-hidden="true">
+                  {name.charAt(0).toLocaleUpperCase("ru-RU")}
+                </span>
+                <p>
+                  <b>{name}</b>
+                  <small>
+                    ≈ {Math.round(person.daily.kcal * share).toLocaleString("ru-RU")} ккал по плану
+                    {person.kind !== "child"
+                      ? ` · Б ${Math.round(person.daily.protein * share)} г`
+                      : ""}
+                  </small>
+                  <small>
+                    клетчатка ≈ {fiber.actual} г в день
+                    {(person.hardExclusions?.length ?? 0) > 0
+                      ? ` · нельзя: ${person.hardExclusions
+                          ?.map((allergen) => allergenMeta[allergen].short.toLowerCase())
+                          .join(", ")}`
+                      : ""}
+                  </small>
+                </p>
+              </li>
+            );
+          })}
+        </ul>
+        <p className="review-people-note">
+          Цели — ориентир на день; по плану — доля выбранных приёмов пищи.
+          После сохранения план появится в неделе, а продукты — в покупках.
+        </p>
       </section>
       {/* Белок — цель взрослых; детям Mise не ставит «недобор белка». */}
       {plan.people.some(person => person.kind !== "child") ? (
@@ -15380,48 +15525,12 @@ function ReviewStep({
             : "В палео-меню нет молочного и круп: кальций и энергию для ребёнка лучше обсудить с педиатром."}
         </Note>
       )}
-      <section className="review-list glass-card">
-        <button onClick={() => onEdit(0)}>
-          <Icon name="clock" />
-          <div>
-            <b>Период</b>
-            <small>
-              {formatDate(plan.start)} — {formatDate(plan.end)}
-            </small>
-          </div>
-          <i>Изменить</i>
-        </button>
-        <button onClick={() => onEdit(3)}>
-          <Icon name="person" />
-          <div>
-            <b>Люди и КБЖУ</b>
-            <small>{plan.people.map((person) => person.name).join(", ")}</small>
-          </div>
-          <i>Изменить</i>
-        </button>
-        <button onClick={() => onEdit(4)}>
-          <Icon name="pot" />
-          <div>
-            <b>График готовки</b>
-            <small>
-              Раз в {withPlural(plan.cookEveryDays, FORMS.day)} · {withPlural(plan.batches.length, FORMS.batch)}
-            </small>
-          </div>
-          <i>Изменить</i>
-        </button>
-        <button onClick={() => onEdit(5)}>
-          <Icon name="check" />
-          <div>
-            <b>Выбранное меню</b>
-            <small>{withPlural(Object.keys(plan.selections).length, FORMS.item)}</small>
-          </div>
-          <i>Изменить</i>
-        </button>
-      </section>
-      <section className="shopping-preview glass-card">
+      <section className="shopping-preview glass-card" aria-labelledby="review-shopping-title">
         <div className="group-title">
-          <h3>Покупки</h3>
-          <span>{plan.shopping.length}</span>
+          <h3 id="review-shopping-title">
+            Покупки · <em>{plan.shopping.length}</em>{" "}
+            {plural(plan.shopping.length, ["продукт", "продукта", "продуктов"])}
+          </h3>
         </div>
         {visibleShopping.map((item) => (
           <p key={item.key}>
@@ -15438,9 +15547,51 @@ function ReviewStep({
             aria-expanded={showAllShopping}
             onClick={() => setShowAllShopping((value) => !value)}
           >
-            {showAllShopping ? "Свернуть" : `Показать все — ${plan.shopping.length}`}
+            <span>{showAllShopping ? "Свернуть" : `Показать все — ${plan.shopping.length}`}</span>
+            <Icon name="chevron" size={18} />
           </button>
         )}
+      </section>
+      <section className="review-list glass-card" aria-label="Изменить ответы">
+        <button type="button" onClick={() => onEdit(0)}>
+          <Icon name="calendar" />
+          <div>
+            <b>Период</b>
+            <small>
+              {formatDate(plan.start)} — {formatDate(plan.end)} · {withPlural(plan.periodDays, FORMS.day)}
+            </small>
+          </div>
+          <i>Изменить</i>
+        </button>
+        <button type="button" onClick={() => onEdit(3)}>
+          <Icon name="person" />
+          <div>
+            <b>Люди и КБЖУ</b>
+            <small>{plan.people.map((person) => person.name).join(", ")}</small>
+          </div>
+          <i>Изменить</i>
+        </button>
+        <button type="button" onClick={() => onEdit(4)}>
+          <Icon name="flame" />
+          <div>
+            <b>График готовки</b>
+            <small>
+              Раз в {withPlural(plan.cookEveryDays, FORMS.day)} · {withPlural(plan.batches.length, FORMS.batch)}
+            </small>
+          </div>
+          <i>Изменить</i>
+        </button>
+        <button type="button" onClick={() => onEdit(5)}>
+          <Icon name="check" />
+          <div>
+            <b>Выбранное меню</b>
+            <small>
+              {withPlural(Object.keys(plan.selections).length, FORMS.item)} ·{" "}
+              {withPlural(recipeIds.size, FORMS.recipe)}
+            </small>
+          </div>
+          <i>Изменить</i>
+        </button>
       </section>
     </>
   );
@@ -15546,6 +15697,7 @@ function SuccessSheet({
   onEdit: () => void;
 }) {
   const [phase, setPhase] = useState<"summary" | "notifications">("summary");
+  const firstBatch = plan.batches[0];
   return (
     <Sheet
       titleId={phase === "summary" ? "success-title" : "notifications-title"}
@@ -15554,42 +15706,85 @@ function SuccessSheet({
     >
       {phase === "summary" ? (
         <>
-          <div className="success-burst">
-            <Icon name="check" size={28} />
-          </div>
-          <p className="kicker">Всё получилось</p>
           <h2 id="success-title">План готов!</h2>
-          <p>
-            Дней: {plan.periodDays} · готовок: {plan.batches.length} ·
-            рецептов: {new Set(selectionRecipeIds(plan)).size} ·
-            продуктов: {plan.shopping.length}
+          <p className="success-meta">
+            {formatDate(plan.start)} — {formatDate(plan.end)} ·{" "}
+            {withPlural(plan.batches.length, ["готовка", "готовки", "готовок"])} ·{" "}
+            {withPlural(new Set(selectionRecipeIds(plan)).size, FORMS.recipe)} ·{" "}
+            {withPlural(plan.shopping.length, ["продукт", "продукта", "продуктов"])}
           </p>
           {/* Календарь — единственное напоминание, которое работает без
               установки: он приводит человека обратно к готовкам и к
               следующему плану, поэтому идёт первым. */}
-          <p>
-            Последний день плана — {formatDate(plan.end)}. Добавьте план в
-            календарь телефона: Mise напомнит о готовках, а в последний день —
-            собрать следующий.
-          </p>
           <CalendarExportLink
             plan={notificationPlanFor(plan)}
             device={clientId()}
             primary
           />
+          <p className="success-calendar-hint">
+            Последний день плана — {formatDate(plan.end)}. Добавьте план в
+            календарь телефона: Mise напомнит о готовках, а в последний день —
+            собрать следующий.
+          </p>
           <button
+            type="button"
             className="secondary-button"
             onClick={() => onOpen("week")}
           >
             Открыть план
           </button>
+          <section className="success-next glass-card" aria-labelledby="success-next-title">
+            <h3 id="success-next-title">Что дальше</h3>
+            <button type="button" onClick={() => onOpen("shopping")}>
+              <span className="success-next-icon is-mint" aria-hidden="true">
+                <Icon name="basket" size={20} />
+              </span>
+              <span>
+                <b>Купить {withPlural(plan.shopping.length, ["продукт", "продукта", "продуктов"])}</b>
+                <small>список объединён по продуктам</small>
+              </span>
+              <Icon name="chevron" size={18} />
+            </button>
+            {firstBatch && (
+              <button type="button" onClick={() => onOpen("week")}>
+                <span className="success-next-icon is-amber" aria-hidden="true">
+                  <Icon name="flame" size={20} />
+                </span>
+                <span>
+                  <b>Первая готовка — {formatDate(firstBatch.start, true)}</b>
+                  <small>
+                    {[
+                      ...new Set(
+                        plan.mealSlots.flatMap((slot) =>
+                          assignmentGroupsFor(plan, firstBatch, slot).map(
+                            (assignment) => recipesById[assignment.recipeId]?.title,
+                          ),
+                        ),
+                      ),
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </small>
+                </span>
+                <Icon name="chevron" size={18} />
+              </button>
+            )}
+          </section>
           <button
-            className="secondary-button"
+            type="button"
+            className="success-reminders glass-card"
             onClick={() => setPhase("notifications")}
           >
-            Настроить напоминания
+            <span className="success-next-icon is-amber" aria-hidden="true">
+              <Icon name="bell" size={20} />
+            </span>
+            <span>
+              <b>Настроить напоминания</b>
+              <small>о готовке, разморозке и сроке хранения</small>
+            </span>
+            <Icon name="chevron" size={18} />
           </button>
-          <button className="text-button" onClick={onEdit}>
+          <button type="button" className="text-button" onClick={onEdit}>
             Изменить план
           </button>
         </>
