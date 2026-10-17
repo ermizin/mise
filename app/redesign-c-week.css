@@ -1,1 +1,813 @@
-/* Редизайн C v2.2 · пакет «week». Правила экрана; токены — из globals.css. */
+/* Редизайн C v2.2 · пакет «week»: «Неделя», навигация, состояния, конец плана.
+   Макеты: C-Week, C-WeekEmpty, C-WeekError, C-PlanEnd, C-Kit (навигация).
+   Только токены для кегля, веса и радиуса. Мобильная раскладка (< 1100px) —
+   основная; десктопный сайдбар platform-layout.css не трогаем. */
+
+/* ---------- Бюджет стекла: на «Неделе» карточки непрозрачные ---------- */
+.app-workspace .week-screen .glass-card,
+.app-workspace .week-screen .glass-3,
+.app-workspace .week-person-menu {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ---------- Шапка: пилюля партии + инициал, кикер, hero ---------- */
+.app-workspace .week-screen .week-screen-header {
+  position: relative;
+  z-index: 5;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "pill person"
+    "title title";
+  align-items: center;
+  row-gap: 14px;
+  column-gap: 12px;
+}
+.app-workspace .week-header-title {
+  grid-area: title;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 4px;
+}
+.app-workspace .week-screen-header .week-period-button {
+  margin: 0;
+  padding: 0;
+  min-height: 0;
+  line-height: 1.3;
+  text-align: left;
+}
+.app-workspace .week-screen-header .week-period-button .icon {
+  display: none;
+}
+.app-workspace .week-screen-header h1 {
+  margin: 0;
+  text-wrap: balance;
+}
+.week-batch-pill {
+  grid-area: pill;
+  justify-self: start;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.week-batch-pill .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--terracotta);
+}
+
+/* Выбор едока — круглая пилюля с инициалом (в макете «М») */
+.app-workspace .week-screen-header > .week-person-picker,
+.app-workspace .week-screen-header > .week-person-current {
+  grid-area: person;
+  position: relative;
+  flex: none;
+  margin: 0;
+}
+.app-workspace .week-screen-header .week-person-trigger,
+.app-workspace .week-screen-header > .week-person-current {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  max-width: none;
+  padding: 0;
+  justify-content: center;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+}
+/* Зона касания 44 при видимых 40 */
+.app-workspace .week-screen-header .week-person-trigger::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+.app-workspace .week-screen-header .week-person-trigger[aria-expanded="true"] {
+  border-color: var(--ink);
+}
+.app-workspace .week-screen-header .week-person-trigger > .week-person-avatar,
+.app-workspace .week-screen-header > .week-person-current > .week-person-avatar {
+  width: auto;
+  height: auto;
+  flex: none;
+  color: var(--ink);
+  background: none;
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .week-screen-header .week-person-trigger > .week-person-name,
+.app-workspace .week-screen-header .week-person-trigger > .icon,
+.app-workspace .week-screen-header > .week-person-current > .week-person-name {
+  display: none;
+}
+.app-workspace .week-screen-header .week-person-menu {
+  top: calc(100% + 8px);
+  right: 0;
+  width: 260px;
+  border-color: var(--glass-2-border);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-l), var(--glint);
+}
+.app-workspace .week-screen-header .week-person-menu-label {
+  margin: 9px 11px 12px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .week-screen-header .week-person-option .week-person-avatar {
+  color: var(--accent-text);
+  background: var(--tint-terracotta);
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .week-screen-header .week-person-option[aria-pressed="true"] {
+  background: rgba(42, 29, 20, 0.06);
+}
+.app-workspace .week-screen-header .week-person-check {
+  color: var(--ink);
+}
+
+/* ---------- Общие строки «плитка · текст · шеврон» ---------- */
+.week-next-row,
+.week-row-card {
+  width: 100%;
+  min-height: 52px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  color: var(--ink);
+  background: none;
+  text-align: left;
+  font: inherit;
+}
+.week-next-row + .week-next-row {
+  border-top: 1px solid var(--ink-track);
+}
+.week-next-tile {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-tile);
+}
+.week-next-tile .icon {
+  width: 18px;
+  height: 18px;
+}
+.week-next-tile.is-mint {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.week-next-tile.is-amber {
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.week-next-tile.is-plan {
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+}
+.week-next-tile.is-ink {
+  color: var(--button-fg);
+  background: var(--ink-strong);
+}
+.week-next-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.week-next-text b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.week-next-text small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-regular);
+  line-height: 1.3;
+}
+.week-next-row > .entry-chevron,
+.week-row-card > .entry-chevron {
+  flex: none;
+  color: var(--ink-muted);
+}
+
+/* ---------- Карточка «Что дальше» ---------- */
+.week-next-card {
+  min-width: 0;
+  padding: 4px 16px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+
+/* ---------- Мобильная раскладка «Недели» (< 1100px) ---------- */
+@media (max-width: 1099px) {
+  /* Порядок макета: дни → «Сегодня» → «Что дальше» → «Баланс дня» → остальное */
+  .app-workspace .week-day-panel {
+    gap: 14px;
+  }
+  .app-workspace .week-meals-panel {
+    display: contents;
+  }
+  .app-workspace .week-meals-panel > * {
+    order: 1;
+  }
+  .app-workspace .week-next-card {
+    order: 2;
+  }
+  .app-workspace .week-overview {
+    order: 3;
+  }
+  .app-workspace .week-meals-panel > .week-operation-stack {
+    order: 4;
+    margin-top: 0;
+  }
+  .app-workspace .week-followups {
+    order: 5;
+  }
+  .app-workspace .week-today-button {
+    order: 6;
+  }
+
+  /* Карточка «Сегодня»: заголовок Display 17 + счётчик справа, строки порций */
+  .app-workspace .week-today-card {
+    min-width: 0;
+    padding: 12px 16px 8px;
+    border: 1px solid var(--glass-2-border);
+    border-radius: var(--r-card);
+    background: var(--glass-2-bg);
+    box-shadow: var(--shadow-m), var(--glint);
+  }
+  .app-workspace .week-today-card .week-execution-list {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .app-workspace .week-today-card .week-day-heading {
+    margin: 0;
+    padding-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .app-workspace .week-today-card .week-day-heading > div {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .app-workspace .week-today-card .week-day-heading h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-bold);
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .app-workspace .week-today-card .week-eaten-count {
+    flex: none;
+    margin: 0;
+    color: var(--ink-muted);
+    font-size: var(--text-min);
+    font-weight: var(--weight-regular);
+  }
+  .app-workspace .week-today-card .week-day-heading .text-button {
+    margin-right: -10px;
+    color: var(--ink);
+  }
+  .app-workspace .week-today-card .week-no-portions {
+    margin: 4px 0 8px;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: var(--r-tile);
+    background: rgba(42, 29, 20, 0.05);
+    box-shadow: none;
+  }
+
+  /* Кнопка готовки — чернильная капсула 50 без подложки */
+  .app-workspace .week-cook-primary {
+    min-height: var(--hit-primary);
+    font-size: var(--text-body);
+    font-weight: var(--weight-bold);
+  }
+}
+
+/* ---------- «Баланс дня» ---------- */
+.app-workspace .week-macro-card {
+  padding: 12px 16px;
+  border-radius: var(--r-card);
+}
+.week-balance-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.app-workspace .week-macro-card .week-kcal-linear p.week-balance-total {
+  margin: 0 0 8px;
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+.app-workspace .week-macro-card .week-balance-total b {
+  color: var(--accent-text);
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+.week-balance-total small {
+  flex: none;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-regular);
+}
+.app-workspace .week-macro-card .week-kcal-linear .macro-bar,
+.app-workspace .week-macro-card .week-kcal-linear .macro-bar i {
+  height: 10px;
+  border-radius: var(--r-bar);
+}
+.week-outside-plan {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.4;
+}
+@media (max-width: 1099px) {
+  /* Заголовок карточки на узком экране — сама строка «N из M ккал по плану» */
+  .app-workspace .week-macro-card .week-macro-head {
+    display: none;
+  }
+  .app-workspace .week-macro-card .week-macro-body {
+    margin-top: 0;
+    gap: 10px;
+  }
+  .app-workspace .week-macro-card .week-macro-bars {
+    gap: 10px;
+  }
+  .app-workspace .week-macro-card .week-macro-row + .week-macro-row {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .app-workspace .week-macro-card .week-macro-row p {
+    margin: 0 0 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    white-space: normal;
+  }
+  .app-workspace .week-macro-card .week-macro-label {
+    display: inline;
+    color: var(--ink-muted);
+    font-size: var(--text-min);
+    font-weight: var(--weight-regular);
+  }
+  .app-workspace .week-macro-card .week-macro-unit {
+    display: inline;
+  }
+  .app-workspace .week-macro-card .week-macro-short {
+    display: none;
+  }
+  .app-workspace .week-macro-card .week-macro-row p b {
+    color: var(--ink);
+    font-size: var(--text-link);
+    font-weight: var(--weight-bold);
+    white-space: nowrap;
+  }
+}
+
+/* ---------- Без плана и ошибка загрузки (C-WeekEmpty, C-WeekError) ---------- */
+.app-workspace .app-header.is-week {
+  margin: 0 0 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 16px;
+}
+.app-workspace .app-header.is-week > div {
+  order: 2;
+  padding: 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.app-workspace .app-header.is-week .mise-wordmark {
+  display: none;
+}
+.app-workspace .app-header.is-week h1 {
+  order: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-hero);
+}
+.app-workspace .app-header.is-week .kicker {
+  order: 2;
+  color: var(--accent-text);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.week-header-pill {
+  order: 1;
+  justify-self: end;
+  height: 40px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.week-header-pill .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--terracotta);
+}
+
+.week-empty {
+  display: grid;
+  gap: 16px;
+}
+.week-state-card {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.week-empty-card {
+  align-items: center;
+  text-align: center;
+}
+.week-state-card h2 {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+}
+.week-state-card p {
+  margin: 8px 0 0;
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-regular);
+  line-height: 1.45;
+  text-wrap: balance;
+}
+.week-state-card .primary-button {
+  align-self: stretch;
+  margin-top: 20px;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.week-state-card > small {
+  margin-top: 12px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.week-state-icon {
+  width: 80px;
+  height: 80px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--tint-terracotta);
+}
+.week-state-icon .icon {
+  width: 32px;
+  height: 32px;
+}
+.week-error-card {
+  padding: 20px 16px;
+}
+.week-error-card .week-state-icon {
+  width: 44px;
+  height: 44px;
+  color: var(--terracotta);
+}
+.week-error-card .week-state-icon .icon {
+  width: 22px;
+  height: 22px;
+}
+.week-error-card h2 {
+  margin-top: 12px;
+}
+.week-error-card p {
+  margin-top: 6px;
+  text-wrap: pretty;
+}
+.week-error-card .primary-button {
+  margin-top: 16px;
+}
+.week-row-card {
+  min-height: 52px;
+  padding: 6px 16px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-row);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+
+/* ---------- Навигация: стеклянная капсула + отдельный чернильный круг ---------- */
+@media (max-width: 1099px) {
+  .app-workspace .app-navigation {
+    position: fixed;
+    z-index: 20;
+    left: 50%;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    width: min(
+      604px,
+      calc(100% - 32px - env(safe-area-inset-left) - env(safe-area-inset-right))
+    );
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .app-workspace .app-navigation > * {
+    pointer-events: auto;
+  }
+  .app-workspace .app-navigation .bottom-nav {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    order: 1;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    min-height: 62px;
+    transform: none;
+  }
+  .app-workspace .app-navigation .compose-plan-glow {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    order: 2;
+    flex: none;
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow-accent);
+  }
+  .app-workspace .app-navigation .compose-fab {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    order: 2;
+    flex: none;
+    width: 62px;
+    min-width: 62px;
+    height: 62px;
+    min-height: 62px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-pill);
+    color: var(--button-fg);
+    background: var(--button-grad);
+    box-shadow: var(--shadow-accent), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  }
+  .app-workspace .app-navigation .compose-fab .icon {
+    width: 26px;
+    height: 26px;
+  }
+  .app-workspace .app-navigation .compose-fab small {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+@media (min-width: 1100px) {
+  /* Сайдбар остаётся прежним: круг «Следующий план» только на узком экране */
+  .app-workspace .nav-plan-circle {
+    display: none;
+  }
+}
+
+/* ---------- Лист «Следующий план» (C-PlanEnd) ---------- */
+.modal-backdrop:has(> .next-plan-sheet) {
+  padding: 0;
+  place-items: end stretch;
+  background: rgba(42, 29, 20, 0.38);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.next-plan-sheet {
+  position: relative;
+  width: min(604px, 100%);
+  max-height: calc(100dvh - 40px);
+  margin: 0 auto;
+  padding: 10px 16px calc(26px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--glass-1-border);
+  border-bottom: 0;
+  border-radius: var(--r-chrome) var(--r-chrome) 0 0;
+  color: var(--ink);
+  background: rgba(255, 243, 234, 0.94);
+  -webkit-backdrop-filter: var(--glass-1-blur);
+  backdrop-filter: var(--glass-1-blur);
+  box-shadow: var(--shadow-chrome), var(--glint);
+  outline: none;
+}
+.next-plan-grabber {
+  flex: none;
+  align-self: center;
+  width: 36px;
+  height: 5px;
+  border-radius: var(--r-pill);
+  background: rgba(42, 29, 20, 0.3);
+}
+.next-plan-sheet h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-bold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.next-plan-lead {
+  margin: 0;
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-regular);
+  line-height: 1.45;
+}
+.next-plan-stats {
+  list-style: none;
+  margin: 4px 0;
+  padding: 14px 4px;
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.5fr) minmax(0, 0.8fr);
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-row);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.next-plan-stats li {
+  padding: 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.next-plan-stats li + li {
+  border-left: 1px solid var(--ink-track);
+}
+.next-plan-stats b {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+.next-plan-stats small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.next-plan-sheet .primary-button,
+.next-plan-sheet .secondary-button {
+  flex: none;
+  width: 100%;
+  margin: 0;
+}
+.next-plan-sheet .primary-button {
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.next-plan-sheet .secondary-button {
+  min-height: 46px;
+  padding: 0 16px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.next-plan-sheet .text-button {
+  flex: none;
+  align-self: center;
+  color: var(--ink);
+  font-size: var(--text-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+.next-plan-calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.next-plan-calendar .calendar-export-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--hit-min);
+  border-radius: var(--r-pill);
+}
+.next-plan-calendar .calendar-export-link .icon {
+  color: var(--terracotta);
+}
+.next-plan-calendar small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  text-align: center;
+}
+
+/* ---------- Десктоп ≥ 1100px: прежние две колонки, без пилюли партии ---------- */
+@media (min-width: 1100px) {
+  .app-workspace .week-screen .week-screen-header {
+    grid-template-areas: "title person";
+    align-items: start;
+  }
+  .app-workspace .week-batch-pill {
+    display: none;
+  }
+  .app-workspace > .tab-panel > .week-empty,
+  .app-workspace > .tab-panel > .week-error-card {
+    width: 100%;
+    max-width: 900px;
+    margin-inline: auto;
+  }
+  .app-workspace .week-day-panel {
+    grid-template-rows: min-content min-content 1fr;
+  }
+  .week-meals-panel {
+    grid-row: 1 / span 3;
+  }
+  .app-workspace .week-next-card {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .week-followups {
+    grid-row: 3;
+  }
+  .app-workspace .week-today-card .week-day-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .app-workspace .week-today-card .week-day-heading > div {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .app-workspace .week-today-card .week-eaten-count {
+    color: var(--ink-muted);
+    font-size: var(--text-link);
+  }
+  .app-workspace .week-macro-card .week-balance-total {
+    display: none;
+  }
+  .app-workspace .week-screen-header .week-person-trigger,
+  .app-workspace .week-screen-header > .week-person-current {
+    width: 48px;
+    height: 48px;
+  }
+}

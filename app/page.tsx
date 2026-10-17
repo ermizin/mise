@@ -7102,6 +7102,7 @@ export default function Home() {
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [loadingPlan, setLoadingPlan] = useState(true);
   const [loadError, setLoadError] = useState(false);
+  const [nextPlanOpen, setNextPlanOpen] = useState(false);
   const [planSyncState, setPlanSyncState] = useState<
     "synced" | "pending" | "error"
   >("synced");
@@ -7767,7 +7768,14 @@ export default function Home() {
       />
     );
   const titles = {
-    week: { kicker: "Mise · на этой неделе", title: "План на неделю" },
+    week: {
+      kicker: loadError
+        ? "план не загрузился"
+        : loadingPlan
+          ? "загружаем план"
+          : "плана пока нет",
+      title: "Неделя",
+    },
     recipes: { kicker: "Под ваши цели", title: "Рецепты" },
     shopping: {
       kicker: activePlan
@@ -7800,19 +7808,40 @@ export default function Home() {
         tab !== "profile" &&
         !activePlan &&
         (tab === "week" || tab === "shopping") && (
-        <header className="app-header">
+        <header className={`app-header${tab === "week" ? " is-week" : ""}`}>
           <div>
           <MiseWordmark />
             <p className="kicker">{currentTitle.kicker}</p>
             <h1>{currentTitle.title}</h1>
           </div>
-          <button
-            className="avatar glass"
-            onClick={() => navigate("profile")}
-            aria-label="Открыть профиль"
-          >
-            Я
-          </button>
+          {tab === "week" && !loadingPlan && !loadError ? (
+            <button
+              type="button"
+              className="week-header-pill"
+              onClick={() => {
+                setOnboardingReturnTab("week");
+                setOnboardingStep("batches");
+              }}
+            >
+              Как это работает
+            </button>
+          ) : tab === "week" ? (
+            <button
+              type="button"
+              className="week-header-pill"
+              onClick={() => navigate("profile")}
+            >
+              <Icon name="person" size={16} /> Профиль
+            </button>
+          ) : (
+            <button
+              className="avatar glass"
+              onClick={() => navigate("profile")}
+              aria-label="Открыть профиль"
+            >
+              Я
+            </button>
+          )}
         </header>
       )}
       <div
@@ -7835,6 +7864,9 @@ export default function Home() {
           onOpenRecipe={openRecipe}
           onOpenCooking={(batchId) => setBatchCookingContext({ batchId })}
           onOpenProfile={() => navigate("profile")}
+          onOpenShopping={() => navigate("shopping")}
+          onOpenRecipes={() => navigate("recipes")}
+          onOpenNextPlan={() => setNextPlanOpen(true)}
           onChange={async (next) => {
             const previous = activePlan;
             setActivePlan(next);
@@ -7925,10 +7957,30 @@ export default function Home() {
           />
         </Sheet>
       )}
+      {activePlan && nextPlanOpen && (
+        <NextPlanSheet
+          plan={activePlan}
+          onClose={() => setNextPlanOpen(false)}
+          onRepeat={() => {
+            setNextPlanOpen(false);
+            repeatPlan();
+          }}
+          onBuild={() => {
+            setNextPlanOpen(false);
+            startPlanFlow(false);
+          }}
+          onEditPeople={() => {
+            setNextPlanOpen(false);
+            editPeople();
+          }}
+        />
+      )}
       <BottomNav
         tab={currentTab}
         onNavigate={navigate}
         showCompose={tab === "week" && !activePlan && !loadingPlan}
+        circle={activePlan ? "next-plan" : loadingPlan ? null : "compose"}
+        onNextPlan={() => setNextPlanOpen(true)}
         bump={tabMotion.bump}
       />
     </main>
@@ -9044,11 +9096,17 @@ function BottomNav({
   tab,
   onNavigate,
   showCompose,
+  circle = null,
+  onNextPlan,
   bump,
 }: {
   tab: PrimaryTab;
   onNavigate: (tab: Tab) => void;
   showCompose: boolean;
+  /* Чернильный круг справа от капсулы на узком экране (C-KIT §4.4):
+     с планом открывает лист «Следующий план», без плана ведёт в мастер. */
+  circle?: "next-plan" | "compose" | null;
+  onNextPlan?: () => void;
   bump: Record<PrimaryTab, number>;
 }) {
   const [desktop, setDesktop] = useState(false);
@@ -9094,6 +9152,27 @@ function BottomNav({
             <small>Составить</small>
           </button>
         </ComposePlanGlow>
+      )}
+      {!showCompose && circle === "next-plan" && onNextPlan && (
+        <button
+          type="button"
+          className="compose-fab nav-plan-circle"
+          onClick={onNextPlan}
+          aria-haspopup="dialog"
+          aria-label="Следующий план"
+        >
+          <Icon name="plus" />
+        </button>
+      )}
+      {!showCompose && circle === "compose" && (
+        <button
+          type="button"
+          className="compose-fab nav-plan-circle"
+          onClick={() => onNavigate("builder")}
+          aria-label="Составить план"
+        >
+          <Icon name="plus" />
+        </button>
       )}
       <div
         className="bottom-nav glass"
@@ -9240,6 +9319,36 @@ function AnimatedNumber({
   return <span ref={nodeRef}>{value}</span>;
 }
 
+/* «обед и перекусы» — приёмы пищи, которые в план этого человека не входят. */
+function outsidePlanSlotsPhrase(slots: MealSlot[]) {
+  const names: string[] = [];
+  if (slots.includes("breakfast")) names.push("завтрак");
+  if (slots.includes("lunch")) names.push("обед");
+  if (slots.includes("dinner")) names.push("ужин");
+  const snacks = slots.filter((slot) => slot === "snack1" || slot === "snack2").length;
+  if (snacks) names.push(snacks > 1 ? "перекусы" : "перекус");
+  if (names.length < 2) return names[0] ?? "";
+  return `${names.slice(0, -1).join(", ")} и ${names[names.length - 1]}`;
+}
+
+const productForms = ["продукт", "продукта", "продуктов"] as const;
+const cookingForms = ["готовка", "готовки", "готовок"] as const;
+const weekdayDative = [
+  "воскресенью",
+  "понедельнику",
+  "вторнику",
+  "среде",
+  "четвергу",
+  "пятнице",
+  "субботе",
+];
+
+/* «к среде» — к какой готовке докупить продукты. */
+function shoppingDeadline(batchStart: string, today: string) {
+  if (batchStart === today) return "к сегодняшней готовке";
+  return `к ${weekdayDative[parseDate(batchStart).getDay()]}`;
+}
+
 function WeekPersonPicker({ people, value, onChange }: {
   people: { id: string; name: string }[];
   value: string;
@@ -9341,6 +9450,9 @@ function WeekScreen({
   onOpenRecipe,
   onOpenCooking,
   onOpenProfile,
+  onOpenShopping,
+  onOpenRecipes,
+  onOpenNextPlan,
   onChange,
   onOpenGuide,
 }: {
@@ -9354,6 +9466,9 @@ function WeekScreen({
   onOpenRecipe: (context: RecipeContext) => void;
   onOpenCooking: (batchId: string) => void;
   onOpenProfile: () => void;
+  onOpenShopping: () => void;
+  onOpenRecipes: () => void;
+  onOpenNextPlan: () => void;
   onChange: (plan: ActivePlan) => Promise<boolean>;
   onOpenGuide: () => void;
 }) {
@@ -9392,6 +9507,20 @@ function WeekScreen({
       selected.offsetLeft - (strip.clientWidth - selected.offsetWidth) / 2,
     );
   }, [selectedDate]);
+  const planId = plan?.id;
+  const planEnd = plan?.end;
+  useEffect(() => {
+    if (!planId || today !== planEnd) return;
+    const key = `mise-next-plan-sheet-v1:${planId}`;
+    try {
+      if (localStorage.getItem(key)) return;
+      localStorage.setItem(key, "1");
+    } catch {
+      /* without storage the sheet would open on every visit */
+      return;
+    }
+    onOpenNextPlan();
+  }, [planId, planEnd, today, onOpenNextPlan]);
   function selectWeekDate(nextDate: string) {
     if (nextDate === selectedDate) return;
     setDayMotionDirection(nextDate < selectedDate ? -1 : 1);
@@ -9414,28 +9543,56 @@ function WeekScreen({
     );
   if (loadError)
     return (
-      <section className="empty-state load-error-state glass-card" role="alert">
-        <div className="empty-orbit">
-          <Icon name="repeat" />
-        </div>
-        <p className="kicker">Данные на месте</p>
-        <h2>План пока не загрузился</h2>
-        <p>
-          Похоже, соединение прервалось. Повторите загрузку — мы не будем
-          показывать пустую неделю вместо ошибки.
+      <section
+        className="week-state-card week-error-card load-error-state"
+        role="alert"
+        aria-labelledby="week-error-title"
+        aria-describedby="week-error-text"
+      >
+        <span className="week-state-icon is-warn" aria-hidden="true">
+          <Icon name="warning" />
+        </span>
+        <h2 id="week-error-title">Не удалось загрузить план</h2>
+        <p id="week-error-text">
+          Сервер не ответил. Последний сохранённый план открывается без сети,
+          но на этом устройстве он ещё не скачан. Мы не показываем пустую
+          неделю вместо ошибки.
         </p>
         <button className="primary-button" onClick={() => location.reload()}>
-          Повторить <Icon name="chevron" size={16} />
+          Повторить
         </button>
       </section>
     );
   if (!plan)
     return (
-      <EmptyState
-        onBuild={onBuild}
-        title="Неделя пока свободна"
-        text="Ответьте на несколько вопросов — мы рассчитаем порции, подберём рецепты и соберём покупки."
-      />
+      <div className="week-empty">
+        <section className="week-state-card week-empty-card" aria-labelledby="week-empty-title">
+          <span className="week-state-icon is-plan" aria-hidden="true">
+            <Icon name="container" />
+          </span>
+          <h2 id="week-empty-title">Соберём первый план?</h2>
+          <p>
+            Шесть вопросов — и у вас меню под цели, список покупок и
+            подписанные контейнеры на несколько дней вперёд
+          </p>
+          <button className="primary-button" onClick={onBuild}>
+            Составить план
+          </button>
+          <small>≈ 5 минут</small>
+        </section>
+        <button type="button" className="week-row-card" onClick={onOpenRecipes}>
+          <span className="week-next-tile is-plan" aria-hidden="true">
+            <Icon name="pot" size={18} />
+          </span>
+          <span className="week-next-text">
+            <b>Посмотреть рецепты</b>
+            <small>
+              {withPlural(newMenuRecipes.length, FORMS.recipe)}, без плана тоже можно
+            </small>
+          </span>
+          <Icon name="chevron" className="entry-chevron" />
+        </button>
+      </div>
     );
   const activePlan = plan;
   const unratedPeople = activePlan.people.filter((item) => automaticEstimateIssue(item));
@@ -9564,6 +9721,36 @@ function WeekScreen({
     { key: "fat", label: "Жиры" },
     { key: "carbs", label: "Углеводы" },
   ];
+  const planDayNumber = daysInclusive(plan.start, selectedDate);
+  const planEndsToday = today === plan.end;
+  /* «Баланс дня» (C-KIT §7): съеденное против порций плана на этот день;
+     остаток дневного ориентира — отдельной строкой «вне плана». */
+  const balanceByPlan = plannedMacros.kcal > 0;
+  const balanceTarget = balanceByPlan ? plannedMacros : person.daily;
+  const balanceProgress = Math.min(
+    1,
+    eatenMacros.kcal / Math.max(1, balanceTarget.kcal),
+  );
+  const outsideKcal = Math.max(0, round(person.daily.kcal - plannedMacros.kcal));
+  const outsideSlots = outsidePlanSlotsPhrase(
+    allMealSlots.filter(
+      (slot) =>
+        !(person.includedSlots.includes(slot) && activePlan.mealSlots.includes(slot)),
+    ),
+  );
+  const shoppingTotal = activePlan.shopping.length;
+  const shoppingChecked = activePlan.shopping.filter((item) => item.checked).length;
+  const shoppingBatch = activePlan.batches.find(
+    (item) => item.start >= today && !confirmedBatchIds.includes(item.id),
+  );
+  const shoppingNeeded = activePlan.shopping.filter(
+    (item) =>
+      !item.checked &&
+      (!shoppingBatch ||
+        !item.batchIds?.length ||
+        item.batchIds.includes(shoppingBatch.id)),
+  ).length;
+  const showShoppingRow = shoppingTotal > 0 && !planEnded;
   async function saveExecution(
     nextExecution: MealExecution,
     failureMessage: string,
@@ -9610,16 +9797,20 @@ function WeekScreen({
   return (
     <section className="screen week-screen has-stable-tab-header">
       <header className="week-screen-header">
-        <div>
-          <MiseWordmark />
+        <span className="week-batch-pill">
+          <Icon name="container" size={16} />
+          Партия {batch.index + 1} из {plan.batches.length}
+        </span>
+        <WeekPersonPicker people={plan.people} value={person.id} onChange={setPersonId} />
+        <div className="week-header-title">
           <p className="week-desktop-kicker kicker">План на неделю</p>
           <button
             className="week-period-button"
             onClick={onEditPeriod}
             aria-label={`Изменить период ${formatDate(plan.start)} — ${formatDate(plan.end)}`}
           >
-            {formatDate(plan.start)} — {formatDate(plan.end)} · партия{" "}
-            {batch.index + 1} из {plan.batches.length}
+            День {planDayNumber} из {plan.periodDays} · партия{" "}
+            {batch.index + 1} · {formatDate(plan.start)} — {formatDate(plan.end)}
             <Icon name="chevron" size={14} />
           </button>
           <h1
@@ -9632,13 +9823,6 @@ function WeekScreen({
             </button>
           </h1>
         </div>
-        <button
-          className="week-avatar glass-3"
-          onClick={onOpenProfile}
-          aria-label="Открыть профиль"
-        >
-          {person.name.trim().slice(0, 1).toUpperCase() || "Я"}
-        </button>
       </header>
       <div className="tab-panel-body week-tab-body">
       {plan.catalogMigration?.removedRecipeIds.length ? (
@@ -9692,16 +9876,15 @@ function WeekScreen({
       >
         {dates.map((date) => {
           const dateBatch = batchFor(date);
-          const isFirstOfBatch =
-            dateBatch.start === date && dateBatch.index > 0;
+          const isBatchStart = dateBatch.start === date;
           return (
             <button
               key={date}
               data-selected={date === selectedDate}
               aria-current={date === selectedDate ? "date" : undefined}
-              className={`${date === selectedDate ? "selected" : ""} ${date === today ? "is-today" : ""} ${isFirstOfBatch ? "batch-start" : ""}`}
+              className={`${date === selectedDate ? "selected" : ""} ${date === today ? "is-today" : ""} ${isBatchStart ? "batch-start" : ""}`}
               onClick={() => selectWeekDate(date)}
-              aria-label={`${formatDate(date, true)}${date === today ? ", сегодня" : ""}${dateBatch.start === date ? `, начало готовки ${dateBatch.index + 1}` : ""}`}
+              aria-label={`${formatDate(date, true)}${date === today ? ", сегодня" : ""}${isBatchStart ? `, начало готовки ${dateBatch.index + 1}` : ""}${date === plan.end ? ", последний день плана" : ""}`}
             >
               <small>
                 {new Intl.DateTimeFormat("ru-RU", { weekday: "short" })
@@ -9718,77 +9901,11 @@ function WeekScreen({
         key={selectedDate}
         className={`week-day-panel${dayMotionDirection < 0 ? " motion-enter-left" : " motion-enter-right"}`}
       >
-      <aside className="week-overview" aria-label="Питание за выбранный день">
-      <section className="week-macro-card glass-card" aria-live="polite">
-        <div className="week-macro-head">
-          <div>
-            <h2>{selectedDate === today ? "Сегодня по плану" : "План на день"}</h2>
-            <b
-              className={`week-eaten-count${
-                executionMotion?.kind.startsWith("tick")
-                  ? executionMotion.epoch % 2
-                    ? " has-pop-a"
-                    : " has-pop-b"
-                  : ""
-              }`}
-            >
-              Съедено <AnimatedNumber value={eatenCount} /> из{" "}
-              {mealRows.length.toLocaleString("ru-RU")} {genitiveAfterNumber(
-                mealRows.length,
-                ["порции", "порций"],
-              )}
-            </b>
-          </div>
-          <WeekPersonPicker people={plan.people} value={person.id} onChange={setPersonId} />
-        </div>
-        <div className="week-macro-body">
-          <div className="week-kcal-linear">
-            <p>Съедено <b><AnimatedNumber value={eatenMacros.kcal} /></b> из {person.daily.kcal.toLocaleString("ru-RU")} ккал</p>
-            <span className="macro-bar" role="progressbar" aria-label="Съедено калорий" aria-valuemin={0} aria-valuemax={person.daily.kcal} aria-valuenow={Math.min(eatenMacros.kcal, person.daily.kcal)} aria-valuetext={`${eatenMacros.kcal} из ${person.daily.kcal} ккал`}>
-              <i style={{ width: `${ringProgress * 100}%` }} />
-            </span>
-          </div>
-          <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${person.daily.kcal} килокалорий`}>
-            <svg viewBox="0 0 100 100" aria-hidden>
-              <circle className="week-ring-track" cx="50" cy="50" r="44" />
-              <circle
-                className="week-ring-value"
-                cx="50"
-                cy="50"
-                r="44"
-                strokeDasharray={ringCircumference}
-                strokeDashoffset={ringCircumference * (1 - ringProgress)}
-              />
-            </svg>
-            <div>
-              <b><AnimatedNumber value={eatenMacros.kcal} /></b>
-              <small>из {person.daily.kcal.toLocaleString("ru-RU")} ккал</small>
-            </div>
-          </div>
-          <div className="week-macro-bars">
-            {macroRows.map(({ key, label }) => (
-              <div className={`week-macro-row macro-${key}`} key={key}>
-                <p>
-                  <span className="week-macro-label">{label}</span>
-                  <span className="week-macro-short" aria-hidden="true">{label.slice(0, 1)}</span>
-                  <b>
-                    <AnimatedNumber value={eatenMacros[key]} /> / {person.daily[key]}<span className="week-macro-unit"> г</span>
-                  </b>
-                </p>
-                <span className="macro-bar" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={person.daily[key]} aria-valuenow={Math.min(eatenMacros[key], person.daily[key])} aria-valuetext={`${eatenMacros[key]} из ${person.daily[key]} г`}>
-                  <i
-                    style={{
-                      width: `${Math.min(100, (eatenMacros[key] / Math.max(1, person.daily[key])) * 100)}%`,
-                    }}
-                  />
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-      </aside>
       <div className="week-meals-panel">
+      <section
+        className="week-today-card"
+        aria-label={selectedDate === today ? "Сегодня" : `Порции на ${formatDate(selectedDate, true)}`}
+      >
       <div className="week-day-heading">
         <div>
           <p className="kicker">
@@ -9797,9 +9914,24 @@ function WeekScreen({
               ? " день готовки"
               : ` день ${dayIndex + 1} из ${batch.days}`}
           </p>
-          <h2><span className="week-mobile-heading">Порции на день</span><span className="week-desktop-heading">{formatDayHeading(selectedDate)}</span></h2>
+          <h2><span className="week-mobile-heading">{selectedDate === today ? "Сегодня" : "Порции на день"}</span><span className="week-desktop-heading">{formatDayHeading(selectedDate)}</span></h2>
           <p className="week-desktop-heading week-day-subtitle">Порции на день</p>
         </div>
+        <b
+          className={`week-eaten-count${
+            executionMotion?.kind.startsWith("tick")
+              ? executionMotion.epoch % 2
+                ? " has-pop-a"
+                : " has-pop-b"
+              : ""
+          }`}
+        >
+          Съедено <AnimatedNumber value={eatenCount} /> из{" "}
+          {mealRows.length.toLocaleString("ru-RU")} {genitiveAfterNumber(
+            mealRows.length,
+            ["порции", "порций"],
+          )}
+        </b>
         <button
           className="text-button"
           aria-label={`Изменить меню на ${formatDate(selectedDate, true)}`}
@@ -9902,6 +10034,7 @@ function WeekScreen({
           На этот день порций нет: они не входят в меню {person.name}.
         </p>
       )}
+      </section>
       {executionError && (
         <Note tone="warn" role="alert" label="Изменение не сохранено">
           {executionError}
@@ -9976,6 +10109,127 @@ function WeekScreen({
         </details>
       </div>
       </div>
+      {(showShoppingRow || nextCook || planEndsToday) && (
+        <section className="week-next-card" aria-label="Что дальше">
+          {planEndsToday && (
+            <button type="button" className="week-next-row" onClick={onOpenNextPlan} aria-haspopup="dialog">
+              <span className="week-next-tile is-ink" aria-hidden="true"><Icon name="plus" size={18} /></span>
+              <span className="week-next-text">
+                <b>Сегодня последний день плана</b>
+                <small>собрать следующий</small>
+              </span>
+              <Icon name="chevron" className="entry-chevron" />
+            </button>
+          )}
+          {showShoppingRow && (
+            <button type="button" className="week-next-row" onClick={onOpenShopping}>
+              <span className="week-next-tile is-mint" aria-hidden="true"><Icon name="basket" size={18} /></span>
+              <span className="week-next-text">
+                <b>
+                  {shoppingNeeded > 0
+                    ? `Докупить ${withPlural(shoppingNeeded, productForms)}${shoppingBatch ? ` ${shoppingDeadline(shoppingBatch.start, today)}` : ""}`
+                    : "Все продукты куплены"}
+                </b>
+                <small>куплено {shoppingChecked} из {shoppingTotal}</small>
+              </span>
+              <Icon name="chevron" className="entry-chevron" />
+            </button>
+          )}
+          {nextCook && (
+            <button
+              type="button"
+              className="week-next-row"
+              onClick={() => selectWeekDate(nextCook.start)}
+              aria-label={`Открыть следующую готовку ${nextCook.index + 1}: ${formatDate(nextCook.start, true)}`}
+            >
+              <span className="week-next-tile is-amber" aria-hidden="true"><Icon name="flame" size={18} /></span>
+              <span className="week-next-text">
+                <b>
+                  Следующая готовка —{" "}
+                  {new Intl.DateTimeFormat("ru-RU", { weekday: "long" }).format(parseDate(nextCook.start))}
+                </b>
+                <small>
+                  партия {nextCook.index + 1} ·{" "}
+                  {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
+                  {withPlural(nextCookPortions, FORMS.portion)} · ≈&nbsp;{nextCookMinutes}{" "}
+                  мин
+                </small>
+              </span>
+              <Icon name="chevron" className="entry-chevron" />
+            </button>
+          )}
+        </section>
+      )}
+      <aside className="week-overview" aria-label="Питание за выбранный день">
+      <section className="week-macro-card glass-card" aria-live="polite" aria-label="Баланс дня">
+        <div className="week-macro-head">
+          <div>
+            <h2>{selectedDate === today ? "Сегодня по плану" : "План на день"}</h2>
+          </div>
+        </div>
+        <div className="week-macro-body">
+          <div className="week-kcal-linear">
+            <p className="week-balance-total">
+              <span>
+                <b><AnimatedNumber value={eatenMacros.kcal} /></b> из{" "}
+                {balanceTarget.kcal.toLocaleString("ru-RU")} ккал{" "}
+                {balanceByPlan ? "по плану" : "за день"}
+              </span>
+              <small>
+                {person.name}
+                {selectedDate === today ? " · сегодня" : ""}
+              </small>
+            </p>
+            <span className="macro-bar" role="progressbar" aria-label="Съедено калорий" aria-valuemin={0} aria-valuemax={balanceTarget.kcal} aria-valuenow={Math.min(eatenMacros.kcal, balanceTarget.kcal)} aria-valuetext={`${eatenMacros.kcal} из ${balanceTarget.kcal} ккал${balanceByPlan ? " по плану" : ""}`}>
+              <i style={{ width: `${balanceProgress * 100}%` }} />
+            </span>
+          </div>
+          <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${person.daily.kcal} килокалорий`}>
+            <svg viewBox="0 0 100 100" aria-hidden>
+              <circle className="week-ring-track" cx="50" cy="50" r="44" />
+              <circle
+                className="week-ring-value"
+                cx="50"
+                cy="50"
+                r="44"
+                strokeDasharray={ringCircumference}
+                strokeDashoffset={ringCircumference * (1 - ringProgress)}
+              />
+            </svg>
+            <div>
+              <b><AnimatedNumber value={eatenMacros.kcal} /></b>
+              <small>из {person.daily.kcal.toLocaleString("ru-RU")} ккал</small>
+            </div>
+          </div>
+          <div className="week-macro-bars">
+            {macroRows.map(({ key, label }) => (
+              <div className={`week-macro-row macro-${key}`} key={key}>
+                <p>
+                  <span className="week-macro-label">{label}</span>
+                  <span className="week-macro-short" aria-hidden="true">{label.slice(0, 1)}</span>
+                  <b>
+                    <AnimatedNumber value={eatenMacros[key]} /> / {balanceTarget[key]}<span className="week-macro-unit"> г</span>
+                  </b>
+                </p>
+                <span className="macro-bar" role="progressbar" aria-label={label} aria-valuemin={0} aria-valuemax={balanceTarget[key]} aria-valuenow={Math.min(eatenMacros[key], balanceTarget[key])} aria-valuetext={`${eatenMacros[key]} из ${balanceTarget[key]} г`}>
+                  <i
+                    style={{
+                      width: `${Math.min(100, (eatenMacros[key] / Math.max(1, balanceTarget[key])) * 100)}%`,
+                    }}
+                  />
+                </span>
+              </div>
+            ))}
+          </div>
+          {balanceByPlan && outsideKcal > 0 && (
+            <p className="week-outside-plan">
+              Ещё ≈&nbsp;{outsideKcal.toLocaleString("ru-RU")}&nbsp;ккал вне плана
+              {outsideSlots ? `: ${outsideSlots}` : ""}, ориентир
+            </p>
+          )}
+        </div>
+      </section>
+      </aside>
       <aside className="week-followups">
         <details className="week-nutrition-details">
         <summary>Оценка плана</summary>
@@ -10026,26 +10280,6 @@ function WeekScreen({
           Вечером переложите в холодильник: {thawTitles.join(", ")}.
         </Note>
       )}
-      {nextCook && (
-        <button
-          className="week-next-cook glass-card"
-          onClick={() => selectWeekDate(nextCook.start)}
-          aria-label={`Открыть следующую готовку ${nextCook.index + 1}`}
-        >
-          <div>
-            <p>Следующая готовка</p>
-            <h3>
-              Партия {nextCook.index + 1} — {formatDate(nextCook.start, true)}
-            </h3>
-            <small>
-              {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
-              {withPlural(nextCookPortions, FORMS.portion)} · ~{nextCookMinutes}{" "}
-              мин
-            </small>
-          </div>
-          <Icon name="chevron" className="soft-chevron" />
-        </button>
-      )}
       </aside>
       {selectedDate !== clampDate(today, plan.start, plan.end) && (
         <button
@@ -10084,11 +10318,88 @@ function WeekScreen({
             <h2>Собрать следующий заранее?</h2>
             <p>Текущий план останется доступен, пока вы готовите следующий.</p>
           </div>
-          <button className="primary-button" onClick={onRepeat}>Собрать следующий <Icon name="chevron" size={16} /></button>
+          <button className="primary-button" onClick={onOpenNextPlan}>Собрать следующий <Icon name="chevron" size={16} /></button>
         </section>
       )}
       </div>
     </section>
+  );
+}
+
+/* Лист «Следующий план» (макет C-PlanEnd). Открывается кругом «+» рядом с
+   таб-баром, строкой «Что дальше» в последний день и сам — один раз за план
+   в его последний день. Действия те же, что у завершённого плана. */
+function NextPlanSheet({
+  plan,
+  onClose,
+  onRepeat,
+  onBuild,
+  onEditPeople,
+}: {
+  plan: ActivePlan;
+  onClose: () => void;
+  onRepeat: () => void;
+  onBuild: () => void;
+  onEditPeople: () => void;
+}) {
+  const today = isoDate(new Date());
+  const calendarAdded = useCalendarAdded(plan.id);
+  const eaten = mealExecutionFor(plan).eaten.length;
+  const containers = plan.people.reduce(
+    (sum, item) =>
+      sum +
+      plan.periodDays *
+        item.includedSlots.filter((slot) => plan.mealSlots.includes(slot)).length,
+    0,
+  );
+  const status =
+    today > plan.end
+      ? `Текущий план закончился ${formatDate(plan.end)}.`
+      : today === plan.end
+        ? "Текущий план заканчивается сегодня."
+        : `Текущий план идёт до ${formatDate(plan.end)}.`;
+  return (
+    <Sheet titleId="next-plan-title" onClose={onClose} className="next-plan-sheet">
+      <span className="next-plan-grabber" aria-hidden="true" />
+      <h2 id="next-plan-title">Следующий план</h2>
+      <p className="next-plan-lead">
+        {status} Люди, цели и ограничения из него перейдут в мастер — их можно
+        поменять по ходу.
+      </p>
+      <ul className="next-plan-stats" aria-label="Итоги плана">
+        <li>
+          <b>{plan.batches.length}</b>
+          <small>{plural(plan.batches.length, cookingForms)}</small>
+        </li>
+        <li>
+          <b>
+            {eaten}&nbsp;из&nbsp;{containers}
+          </b>
+          <small>контейнеров съедено</small>
+        </li>
+        <li>
+          <b>{plan.periodDays}</b>
+          <small>{plural(plan.periodDays, FORMS.day)}</small>
+        </li>
+      </ul>
+      <button type="button" className="primary-button" onClick={onRepeat}>
+        Повторить план
+      </button>
+      <button type="button" className="secondary-button" onClick={onBuild}>
+        Составить новый
+      </button>
+      <button type="button" className="text-button" onClick={onEditPeople}>
+        Изменить людей и цели
+      </button>
+      {!calendarAdded && today <= plan.end && (
+        <div className="next-plan-calendar">
+          <CalendarExportLink plan={notificationPlanFor(plan)} device={clientId()} />
+          <small>
+            Событие «Собрать следующий план» — {formatDate(plan.end)} в&nbsp;19:00
+          </small>
+        </div>
+      )}
+    </Sheet>
   );
 }
 
