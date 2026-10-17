@@ -1,1 +1,781 @@
-/* Редизайн C v2.2 · пакет «cook». Правила экрана; токены — из globals.css. */
+/* Редизайн C v2.2 · пакет «cook». Правила экрана; токены — из globals.css.
+   Эталоны: C-Cook.dc.html (готовка), C-Containers.dc.html (раскладка).
+   Стекло на экране одно — accessory таймера (.glass-1); карточки непрозрачные. */
+
+/* ---------- Экран и фон ---------- */
+.cooking-batch-shell {
+  --bg-photo: url("/bg/cook.jpg");
+  --app-bg:
+    radial-gradient(60% 42% at 86% -4%, rgba(216, 238, 226, 0.95), transparent 68%),
+    var(--app-wash),
+    var(--bg-photo) center / cover no-repeat,
+    var(--bg-base);
+  padding: calc(12px + env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    calc(112px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  scroll-padding-bottom: calc(112px + env(safe-area-inset-bottom));
+}
+.cooking-batch-shell .glass-2 {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.cooking-sr,
+.container-label-grid legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Шапка: круг «назад», пилюля «Осталось», H1 и мета ---------- */
+.cooking-batch-shell .cooking-batch-header {
+  position: relative;
+  z-index: 1;
+  top: auto;
+  left: auto;
+  width: auto;
+  min-height: 0;
+  padding: 0;
+  transform: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.cooking-batch-toprow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cooking-batch-shell .cooking-batch-header .cooking-back-button {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+}
+.cooking-back-button::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+}
+.cooking-back-button .back-chevron {
+  width: 18px;
+  height: 18px;
+}
+.cooking-remaining-pill {
+  height: 40px;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.cooking-remaining-pill .icon {
+  color: var(--terracotta);
+}
+.cooking-batch-title {
+  padding: 0 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cooking-batch-title h1,
+.cooking-batch-title p {
+  margin: 0;
+}
+.cooking-batch-title h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: var(--weight-heavy);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-h1);
+  text-wrap: balance;
+}
+.cooking-batch-title p {
+  color: var(--accent-text);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.cooking-batch-title .cooking-batch-kicker {
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cooking-batch-shell .cooking-batch-progress {
+  margin: 0 4px;
+}
+
+/* ---------- Ориентир активного времени: одна строка вместо карточки ---------- */
+.cooking-batch-shell .cooking-batch-content {
+  padding-top: 12px;
+  gap: 16px;
+}
+.cooking-batch-shell .batch-cooking-summary {
+  padding: 0 4px;
+}
+.cooking-batch-shell .batch-cooking-summary-top > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.cooking-batch-shell .batch-cooking-summary-top p {
+  color: var(--ink-body);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.cooking-batch-shell .batch-cooking-summary-top strong {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0;
+}
+.cooking-batch-shell .batch-cooking-summary-top strong small {
+  color: var(--ink-body);
+  font-size: var(--text-min);
+}
+
+/* ---------- Карточка текущего шага ---------- */
+.cooking-batch-shell .cooking-now-card {
+  padding: 10px 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-radius: var(--r-card);
+}
+.cooking-batch-shell .cooking-now-card.is-all {
+  padding: 16px 14px;
+}
+.cooking-now-photo {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-nested);
+  background: #f3d9c6;
+}
+.cooking-now-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.cooking-now-photo .recipe-media-fallback {
+  font-size: var(--text-hero);
+}
+.cooking-now-count,
+.cooking-now-photo .cooking-all-button {
+  position: absolute;
+  bottom: 10px;
+  height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  white-space: nowrap;
+}
+.cooking-now-count {
+  left: 10px;
+  color: var(--accent-text);
+  font-weight: var(--weight-bold);
+}
+.cooking-now-photo .cooking-all-button {
+  right: 10px;
+  color: var(--ink);
+  font-weight: var(--weight-semibold);
+}
+.cooking-all-button::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+.cooking-all-head {
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cooking-all-head .cooking-all-button {
+  position: relative;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-3-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.cooking-now-dish {
+  padding: 0 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+.cooking-now-dish b {
+  min-width: 0;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+.cooking-now-dish small {
+  max-width: 45%;
+  overflow: hidden;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-regular);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Сейчас: крупная цифра шага терракотой слева от текста */
+.cooking-now-card:not(.is-all) .batch-step-list {
+  margin: 0;
+  padding: 0 4px;
+}
+.cooking-now-card:not(.is-all) .batch-step-list li {
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 6px 12px;
+  opacity: 1;
+}
+.batch-step-list .batch-step-number {
+  grid-row: span 2;
+  color: var(--accent-text);
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.cooking-now-card:not(.is-all) .batch-step-list b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+.cooking-now-card:not(.is-all) .batch-step-list li > .batch-step-duration {
+  grid-column: 2;
+  justify-self: start;
+  min-height: 28px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--r-pill);
+  color: var(--amber-text);
+  background: var(--tint-amber);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.cooking-now-card > p {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.4;
+}
+.cooking-now-card > fieldset {
+  margin: 0;
+  padding: 0 4px;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border: 0;
+}
+.cooking-now-card > fieldset legend {
+  margin-bottom: 6px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.cooking-now-card > fieldset button,
+.cooking-batch-shell .cooking-step-tools button {
+  min-height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--glass-3-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-3-bg);
+  box-shadow: var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.cooking-manual-timer {
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.cooking-manual-timer input,
+.cooking-batch-shell .weight-control input {
+  width: 72px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--r-tile);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 0 #fff, inset 0 0 0 1.5px rgba(42, 29, 20, 0.25);
+  font-family: var(--font-ui);
+  font-size: var(--text-input);
+  font-weight: var(--weight-semibold);
+  text-align: right;
+}
+.cooking-batch-shell .cooking-step-tools {
+  margin: 0;
+  padding: 0 4px;
+  border-top: 0;
+}
+.cooking-batch-shell .cooking-step-products {
+  margin: 0;
+  padding: 0 4px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-radius: 0;
+  background: none;
+}
+.cooking-batch-shell .cooking-step-products span {
+  min-height: 32px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--r-pill);
+  color: var(--amber-text);
+  background: var(--tint-amber);
+  box-shadow: 0 1px 3px rgba(120, 50, 10, 0.14);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+
+/* ---------- «Взвесьте готовое»: мятная плитка весов, поле 64×44 ---------- */
+.cooking-weigh-card {
+  padding: 12px 16px;
+  display: grid;
+  gap: 8px;
+  border-radius: var(--r-row);
+}
+.cooking-weigh-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.cooking-weigh-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-chip-sq);
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.cooking-weigh-head b,
+.cooking-weigh-head small {
+  display: block;
+}
+.cooking-weigh-head b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+.cooking-weigh-head small {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-regular);
+  line-height: 1.3;
+}
+.cooking-batch-shell .cooked-weight-field {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.cooking-weigh-card .cooked-weight-field,
+.cooking-weigh-card .component-weight-fields,
+.cooking-weigh-hint,
+.cooking-weigh-after {
+  padding-left: 48px;
+}
+.cooking-batch-shell .component-weight-fields {
+  display: grid;
+  gap: 8px;
+}
+.cooking-batch-shell .component-weight-fields > p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.cooking-batch-shell .weight-control {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cooking-batch-shell .weight-control input {
+  width: 64px;
+}
+.cooking-batch-shell .weight-control small {
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.cooking-weigh-hint,
+.cooking-weigh-after {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.35;
+}
+
+/* ---------- Bottom accessory таймера: капсула 58 ---------- */
+.cooking-batch-shell .cooking-action-bar {
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  width: min(600px, calc(100% - 32px));
+  border-radius: var(--r-pill);
+}
+.cooking-batch-shell .cooking-accessory {
+  min-height: 58px;
+  padding: 5px 5px 5px 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cooking-timer-toggle {
+  width: 48px;
+  height: 48px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--glint);
+}
+.cooking-timer-toggle:disabled {
+  opacity: 0.45;
+}
+.cooking-timer-value {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-heavy);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.cooking-timer-step {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cooking-batch-shell .cooking-accessory .cooking-next-button {
+  width: auto;
+  min-height: 48px;
+  height: 48px;
+  padding: 0 20px;
+  flex: none;
+  justify-content: center;
+  box-shadow: var(--shadow-accent-s);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
+}
+
+/* Раскладка: внизу одна чернильная кнопка без стекла */
+.cooking-batch-shell .cooking-action-bar.is-portioning {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.cooking-batch-shell .cooking-action-bar.is-portioning .primary-button {
+  justify-content: center;
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- Раскладка по контейнерам ---------- */
+.cooking-batch-shell .batch-portioning {
+  gap: 16px;
+}
+.batch-portioning-lead {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--ink-body);
+  font-size: var(--text-min);
+  line-height: 1.4;
+}
+.portion-dish-segment {
+  min-height: 48px;
+  padding: 4px;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  scrollbar-width: none;
+}
+.portion-dish-segment::-webkit-scrollbar {
+  display: none;
+}
+.portion-dish-segment button {
+  flex: 1 1 0;
+  min-width: 9.5em;
+  min-height: 40px;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 0;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: transparent;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.portion-dish-segment button b {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: inherit;
+  text-overflow: ellipsis;
+}
+.portion-dish-segment button small {
+  flex: none;
+  font-size: var(--text-link);
+}
+.portion-dish-segment button[aria-pressed="true"] {
+  color: var(--button-fg);
+  background: var(--button-grad);
+  box-shadow: var(--shadow-accent-s);
+  font-weight: var(--weight-bold);
+}
+.cooking-batch-shell .batch-portion-card {
+  padding: 12px 16px;
+  display: grid;
+  gap: 10px;
+  border-radius: var(--r-row);
+}
+.cooking-batch-shell .batch-portion-card-heading {
+  grid-template-columns: 44px minmax(0, 1fr);
+}
+.cooking-batch-shell .batch-portion-card-heading img,
+.cooking-batch-shell .batch-portion-card-heading .recipe-media-fallback {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--r-tile);
+  background: #f3d9c6;
+  object-fit: cover;
+}
+.cooking-batch-shell .batch-portion-card-heading h2 {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.portion-weighed {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.portion-weighed > .icon {
+  flex: none;
+  color: var(--mint-text);
+}
+.portion-weighed > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.portion-weighed-badge {
+  padding: 1px 8px;
+  border-radius: var(--r-pill);
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+  font-weight: var(--weight-bold);
+}
+.portion-weighed button,
+.portion-weight-done {
+  min-height: var(--hit-min);
+  padding: 0 4px;
+  flex: none;
+  justify-self: start;
+  border: 0;
+  color: var(--ink);
+  background: none;
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.portion-weighed-note {
+  margin: 0;
+  padding-left: 28px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.35;
+}
+.cooking-batch-shell .allocation-prompt {
+  margin: 0;
+}
+.container-label-grid {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  border: 0;
+}
+.container-label-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.container-label-card {
+  position: relative;
+  min-height: 78px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-nested);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+  cursor: pointer;
+}
+.container-label-card input {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 1.5px solid rgba(42, 29, 20, 0.6);
+  border-radius: var(--r-pill);
+  background: #fff;
+  cursor: pointer;
+}
+.container-label-card input:checked {
+  border-color: var(--mint);
+  background: var(--mint);
+}
+.container-label-card input:checked::after {
+  content: "";
+  width: 11px;
+  height: 6px;
+  border-left: 2.5px solid #fff;
+  border-bottom: 2.5px solid #fff;
+  transform: translateY(-2px) rotate(-45deg);
+}
+.container-label-card input:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+.container-label-who {
+  padding-right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.container-label-who b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+}
+.container-label-who span {
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.container-label-when {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.container-label-when i {
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
+  color: var(--accent-text);
+  background: var(--tint-terracotta);
+  font-style: normal;
+  font-weight: var(--weight-bold);
+  white-space: nowrap;
+}
+.portion-missing {
+  margin: 0;
+  padding: 0 4px;
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+
+@media (max-width: 380px) {
+  .cooking-batch-shell {
+    padding-inline: 12px;
+  }
+}

@@ -15750,6 +15750,9 @@ function BatchCookingSessionView({
   const [timerEndsAt, setTimerEndsAt] = useState<number | null>(restored.draft?.timer?.endsAt ?? null);
   const [completedPhase, setCompletedPhase] = useState(false);
   const [manualMinutes, setManualMinutes] = useState("");
+  const [portionDishIndex, setPortionDishIndex] = useState(0);
+  const [editingWeights, setEditingWeights] = useState<string[]>([]);
+  const [packedContainers, setPackedContainers] = useState<string[]>([]);
   useEffect(() => {
     if (!currentStep) return;
     const draft: CookingDraft = { schemaVersion: 1, signature,
@@ -15871,6 +15874,8 @@ function BatchCookingSessionView({
       setTimerRunning(false);
       setTimerEndsAt(null);
       replayCookingMotion(1);
+      setEditingWeights([]);
+      setPortionDishIndex(0);
       setPortioning(true);
       return;
     }
@@ -15898,24 +15903,226 @@ function BatchCookingSessionView({
       setPortionSaveState("error");
     }
   }
+  type CookingDish = BatchCookingModel["dishes"][number];
+  const dishKeyOf = (dish: CookingDish) => cookedWeightsKey(batch, dish.slot, dish.recipe.id);
+  const dishOfStep = (step: BatchCookingStep) =>
+    model.dishes.find((dish) => step.id.startsWith(`${batch.id}:${dish.slot}:${dish.recipe.id}:`));
+  const stepDish = dishOfStep(currentStep);
+  const nextDish = model.steps
+    .slice(stepIndex + 1)
+    .map(dishOfStep)
+    .find((dish) => dish && dish !== stepDish);
+  const stepDishLastStep = model.steps.reduce(
+    (last, step, index) => (stepDish && dishOfStep(step) === stepDish ? index + 1 : last),
+    0,
+  );
+  const remainingMinutes = Math.ceil(
+    remainingSeconds / 60 +
+      model.steps.slice(stepIndex + 1).reduce((sum, step) => sum + step.minutes, 0),
+  );
+  const personName = (personId: string) =>
+    plan.people.find((person) => person.id === personId)?.name ?? "";
+  const activePortionDish =
+    model.dishes[Math.min(portionDishIndex, model.dishes.length - 1)];
+  const isLastPortionDish = portionDishIndex >= model.dishes.length - 1;
+  const missingWeightDishes = model.dishes.filter((dish) => !dishWeightsComplete(dish));
+  function toggleShowAll() {
+    replayCookingMotion(1);
+    setShowAll((value) => !value);
+  }
+  function toggleTimer() {
+    if (timerRunning) {
+      setRemainingSeconds(
+        Math.max(
+          0,
+          Math.ceil(((timerEndsAt ?? Date.now()) - Date.now()) / 1_000),
+        ),
+      );
+      setTimerRunning(false);
+      setTimerEndsAt(null);
+      return;
+    }
+    const seconds =
+      remainingSeconds === 0
+        ? currentStep.minutes * 60
+        : remainingSeconds;
+    setRemainingSeconds(seconds);
+    setTimerEndsAt(Date.now() + seconds * 1_000);
+    setTimerRunning(true);
+  }
+  function showPortionDish(index: number) {
+    if (index === portionDishIndex) return;
+    replayCookingMotion(index < portionDishIndex ? -1 : 1);
+    setPortionDishIndex(index);
+  }
+  function weightFields(dish: CookingDish) {
+    const key = dishKeyOf(dish);
+    const weights = cookedWeights[key] ?? {};
+    const components = portionComponents(dish.recipe, planCookingMethod(dish.recipe, plan)?.id);
+    const markEditing = () =>
+      setEditingWeights((current) => (current.includes(key) ? current : [...current, key]));
+    if (components.length === 0)
+      return (
+        <label className="cooked-weight-field">
+          <span>Фактический вес блюда</span>
+          <span className="weight-control">
+            <input
+              aria-label={`Фактический вес: ${dish.recipe.title}`}
+              type="number"
+              inputMode="numeric"
+              min="1"
+              value={weights.total || ""}
+              onChange={(event) => {
+                markEditing();
+                setCookedWeights((current) => ({
+                  ...current,
+                  [key]: { total: Number(event.target.value) },
+                }));
+              }}
+            />
+            <small>г</small>
+          </span>
+        </label>
+      );
+    return (
+      <div className="component-weight-fields">
+        <p>Фактический вес компонентов</p>
+        {components.map((item) => (
+          <label className="cooked-weight-field" key={item.id}>
+            <span>{item.label}</span>
+            <span className="weight-control">
+              <input
+                aria-label={`Фактический вес: ${item.label}`}
+                type="number"
+                inputMode="numeric"
+                min="1"
+                value={weights[item.id] || ""}
+                onChange={(event) => {
+                  markEditing();
+                  setCookedWeights((current) => ({
+                    ...current,
+                    [key]: {
+                      ...current[key],
+                      [item.id]: Number(event.target.value),
+                    },
+                  }));
+                }}
+              />
+              <small>г</small>
+            </span>
+          </label>
+        ))}
+      </div>
+    );
+  }
+  function dishAllocation(dish: CookingDish) {
+    const key = dishKeyOf(dish);
+    const weights = cookedWeights[key] ?? {};
+    const components = portionComponents(dish.recipe, planCookingMethod(dish.recipe, plan)?.id);
+    const people = allocationPeopleForDish(
+      plan,
+      batch,
+      dish.slot,
+      dish.recipe,
+      dish.personIds,
+    );
+    const mixed =
+      components.length === 0 && weights.total > 0
+        ? allocateMixedDish(weights.total, people)
+        : null;
+    const component =
+      components.length > 0 &&
+      components.every((item) => weights[item.id] > 0)
+        ? allocateComponentDish(
+            components.map((item) => ({
+              componentId: item.id,
+              label: item.label,
+              cookedWeightG: weights[item.id],
+            })),
+            people,
+          )
+        : null;
+    const containers = mixed
+      ? mixed.allocations.flatMap((allocation) =>
+          allocation.perContainerG.map((grams, day) => ({
+            id: `${key}:${allocation.personId}:${day}`,
+            label: allocation.label,
+            day,
+            grams: `${grams} г`,
+          })),
+        )
+      : component
+        ? people.flatMap((person) =>
+            Array.from({ length: batch.days }, (_, day) => ({
+              id: `${key}:${person.personId}:${day}`,
+              label: person.label,
+              day,
+              grams: component.components
+                .map((item) => `${item.label.toLowerCase()} ${item.allocations.find((entry) => entry.personId === person.personId)?.perContainerG[day] ?? 0} г`)
+                .join(" + "),
+            })),
+          )
+        : [];
+    const distribution = mixed
+      ? mixed.allocations
+          .map((allocation) => `${allocation.label} ${containerDistributionLabel(allocation.perContainerG)}`)
+          .join(", ")
+      : component
+        ? people
+            .map((person) => `${person.label}: ${component.components
+              .map((item) => `${item.label.toLowerCase()} ${containerDistributionLabel(item.allocations.find((entry) => entry.personId === person.personId)?.perContainerG ?? [])}`)
+              .join(", ")}`)
+            .join("; ")
+        : "";
+    const weighedLabel = components.length === 0
+      ? `${(weights.total || 0).toLocaleString("ru-RU")} г`
+      : components.map((item) => `${item.label.toLowerCase()} ${(weights[item.id] || 0).toLocaleString("ru-RU")} г`).join(" · ");
+    return {
+      key,
+      containers: [...containers].sort((a, b) => a.day - b.day),
+      distribution,
+      weighedLabel,
+      ready: Boolean(mixed || component),
+    };
+  }
+  const packedCount = (dish: CookingDish) => {
+    const prefix = `${dishKeyOf(dish)}:`;
+    return packedContainers.filter((id) => id.startsWith(prefix)).length;
+  };
+  const portionView = portioning && activePortionDish ? dishAllocation(activePortionDish) : null;
+  const portionEditing = portionView ? editingWeights.includes(portionView.key) : false;
   return (
     <main className="app-shell cooking-batch-shell">
       <div className="app-bg" aria-hidden />
-      <header className="cooking-batch-header glass-1">
-        <button onClick={onClose}>Закрыть</button>
-        <div>
-          <b>Готовка · партия {batch.index + 1}</b>
-          <small>{formatDate(batch.start, true)}</small>
+      <header className="cooking-batch-header">
+        <div className="cooking-batch-toprow">
+          <button
+            type="button"
+            className="cooking-back-button"
+            aria-label="Закрыть готовку"
+            onClick={onClose}
+          >
+            <Icon name="chevron" className="back-chevron" size={18} />
+          </button>
+          {!portioning && remainingMinutes > 0 && (
+            <span className="cooking-remaining-pill">
+              <Icon name="clock" size={16} />
+              Осталось ≈ {remainingMinutes} мин
+            </span>
+          )}
         </div>
-        <button
-          className="cooking-all-button"
-          onClick={() => {
-            replayCookingMotion(1);
-            setShowAll((value) => !value);
-          }}
-        >
-          {showAll ? "Текущий шаг" : "Все шаги"}
-        </button>
+        <div className="cooking-batch-title">
+          {portioning && <p className="cooking-batch-kicker">Финальный шаг</p>}
+          <h1 id={portioning ? "batch-portioning-title" : undefined}>
+            {portioning ? "Разложить по контейнерам" : `Готовка партии ${batch.index + 1}`}
+          </h1>
+          <p>
+            {formatDate(batch.start, true)} ·{" "}
+            {portioning
+              ? `${withPlural(model.totalPortions, FORMS.container)} на ${withPlural(batch.days, FORMS.day)} · ${model.freezePortions > 0 ? `${model.freezePortions} в морозилку` : "без заморозки"}`
+              : `${withPlural(model.dishes.length, FORMS.dish)} · ${withPlural(model.totalPortions, FORMS.container)}`}
+          </p>
+        </div>
         <span className="cooking-batch-progress" aria-hidden>
           <i style={{ width: `${progressPercent}%` }} />
         </span>
@@ -15923,7 +16130,7 @@ function BatchCookingSessionView({
       <div className="cooking-batch-content">
         {!restored.draft && plan.cookingSignatures?.[batch.id] !== signature && model.dishes.some(dish => plan.cookedWeights?.[cookedWeightsKey(batch, dish.slot, dish.recipe.id)]) && <Note tone="warn" role="status">Ранее введённые веса сохранены в плане, но не подтверждены для этого расчёта. Проверьте выход блюд и введите веса заново.</Note>}
         {restored.invalidated && <Note tone="warn" role="status">План готовки изменился. Проверьте новые количества: шаги и черновые веса начаты заново.</Note>}
-        <section className="batch-cooking-summary glass-2" aria-live="polite">
+        <section className="batch-cooking-summary" aria-live="polite">
           <div className="batch-cooking-summary-top">
             <div>
               <p>Активное время · ориентир</p>
@@ -15949,10 +16156,35 @@ function BatchCookingSessionView({
           key={`cooking-step-${stepIndex}-${showAll}-${cookingMotion.epoch}`}
           className={`cooking-now-card glass-2 cooking-motion-panel${
             cookingMotion.direction < 0 ? " motion-enter-left" : " motion-enter-right"
-          }`}
+          }${showAll ? " is-all" : ""}`}
           aria-live="polite"
         >
-          <p className="cooking-card-kicker">{showAll ? "Все шаги партии" : "Сейчас"}</p>
+          {showAll ? (
+            <div className="cooking-all-head">
+              <p className="cooking-card-kicker">Все шаги партии</p>
+              <button type="button" className="cooking-all-button" onClick={toggleShowAll}>
+                Текущий шаг
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="cooking-now-photo">
+                {stepDish && <RecipeMedia recipe={stepDish.recipe} eager />}
+                <span className="cooking-now-count">
+                  <span className="cooking-sr">Сейчас · </span>Шаг {stepIndex + 1} из {model.steps.length}
+                </span>
+                <button type="button" className="cooking-all-button" onClick={toggleShowAll}>
+                  Все шаги
+                </button>
+              </div>
+              {stepDish && (
+                <div className="cooking-now-dish">
+                  <b>{stepDish.recipe.title}</b>
+                  {nextDish && <small>следом {nextDish.recipe.title}</small>}
+                </div>
+              )}
+            </>
+          )}
           <ol className="batch-step-list">
             {visibleSteps.map((step) => {
               const absoluteIndex = model.steps.indexOf(step);
@@ -15962,20 +16194,29 @@ function BatchCookingSessionView({
                 <li
                   className={`${isCurrent ? "is-current" : ""}${isComplete ? " is-complete" : ""}`}
                   key={step.id}
+                  aria-current={!showAll && isCurrent ? "step" : undefined}
                 >
-                  <button
-                    disabled={absoluteIndex > stepIndex}
-                    onClick={() => isComplete && goToStep(absoluteIndex)}
-                    aria-current={isCurrent ? "step" : undefined}
-                    aria-label={isComplete ? `Вернуться к шагу ${absoluteIndex + 1}` : undefined}
-                  >
-                    {isComplete ? <Icon name="check" size={14} /> : absoluteIndex + 1}
-                  </button>
+                  {showAll ? (
+                    <button
+                      disabled={absoluteIndex > stepIndex}
+                      onClick={() => isComplete && goToStep(absoluteIndex)}
+                      aria-current={isCurrent ? "step" : undefined}
+                      aria-label={isComplete ? `Вернуться к шагу ${absoluteIndex + 1}` : undefined}
+                    >
+                      {isComplete ? <Icon name="check" size={14} /> : absoluteIndex + 1}
+                    </button>
+                  ) : (
+                    <span className="batch-step-number" aria-hidden>
+                      {absoluteIndex + 1}
+                    </span>
+                  )}
                   <div>
                     <b>{step.title}</b>
                     <small>{step.detail}</small>
                   </div>
-                  <span>{formatCookingDuration(step.duration)}</span>
+                  {formatCookingDuration(step.duration) && (
+                    <span className="batch-step-duration">{formatCookingDuration(step.duration)}</span>
+                  )}
                 </li>
               );
             })}
@@ -15983,35 +16224,13 @@ function BatchCookingSessionView({
           {currentStep.duration.kind === "range" && <p>Ориентир: {formatCookingDuration(currentStep.duration)}. Таймер предложит проверить готовность на нижней границе; следуйте признакам готовности в рецепте.</p>}
           {currentStep.duration.kind === "multiple" && <fieldset disabled={timerRunning}><legend>В шаге несколько интервалов. Выберите, какой отсчитать</legend>{currentStep.duration.options.map((option, index) => <button type="button" key={index} onClick={() => setRemainingSeconds(defaultTimerSeconds(option))}>Интервал {index + 1}: {formatCookingDuration(option)}{option.kind === "range" ? " · проверить по нижней границе" : ""}</button>)}</fieldset>}
           {currentStep.duration.kind === "unknown" && <p>Время в инструкции не указано. Таймер можно задать вручную.</p>}
-          <label>Свой таймер, минуты <input aria-label="Свой таймер, минуты" type="number" min="0.1" step="0.1" disabled={timerRunning} value={manualMinutes} onChange={event => { setManualMinutes(event.target.value); const seconds = Number(event.target.value) * 60; setRemainingSeconds(Number.isFinite(seconds) && seconds > 0 ? Math.round(seconds) : 0); }} /></label>
+          <label className="cooking-manual-timer">Свой таймер, минуты <input aria-label="Свой таймер, минуты" type="number" min="0.1" step="0.1" disabled={timerRunning} value={manualMinutes} onChange={event => { setManualMinutes(event.target.value); const seconds = Number(event.target.value) * 60; setRemainingSeconds(Number.isFinite(seconds) && seconds > 0 ? Math.round(seconds) : 0); }} /></label>
           <div className="cooking-step-tools">
             <button
-              disabled={!timerRunning && remainingSeconds <= 0}
-              onClick={() => {
-                if (timerRunning) {
-                  setRemainingSeconds(
-                    Math.max(
-                      0,
-                      Math.ceil(((timerEndsAt ?? Date.now()) - Date.now()) / 1_000),
-                    ),
-                  );
-                  setTimerRunning(false);
-                  setTimerEndsAt(null);
-                  return;
-                }
-                const seconds =
-                  remainingSeconds === 0
-                    ? currentStep.minutes * 60
-                    : remainingSeconds;
-                setRemainingSeconds(seconds);
-                setTimerEndsAt(Date.now() + seconds * 1_000);
-                setTimerRunning(true);
-              }}
+              type="button"
+              aria-expanded={showProducts}
+              onClick={() => setShowProducts((value) => !value)}
             >
-              <Icon name="clock" size={16} />
-              {timerRunning ? "Пауза" : "Таймер"} {formatTimer(remainingSeconds)}
-            </button>
-            <button onClick={() => setShowProducts((value) => !value)}>
               <Icon name="basket" size={16} /> Продукты блюда
             </button>
           </div>
@@ -16025,182 +16244,196 @@ function BatchCookingSessionView({
         </section>
         ) : (
           <section
-            key={`cooking-portioning-${cookingMotion.epoch}`}
+            key={`cooking-portioning-${portionDishIndex}-${cookingMotion.epoch}`}
             className={`batch-portioning cooking-motion-panel${
               cookingMotion.direction < 0 ? " motion-enter-left" : " motion-enter-right"
             }`}
             aria-labelledby="batch-portioning-title"
           >
-            <div className="batch-portioning-heading glass-2">
-              <p className="cooking-card-kicker">Финальный шаг</p>
-              <h1 id="batch-portioning-title">Разложите по контейнерам</h1>
-              <p>Взвесьте каждое готовое блюдо один раз. Mise рассчитает граммы и готовые подписи.</p>
-            </div>
-            {model.dishes.map((dish) => {
-              const key = cookedWeightsKey(batch, dish.slot, dish.recipe.id);
-              const weights = cookedWeights[key] ?? {};
-              const components = portionComponents(dish.recipe, planCookingMethod(dish.recipe, plan)?.id);
-              const people = allocationPeopleForDish(
-                plan,
-                batch,
-                dish.slot,
-                dish.recipe,
-                dish.personIds,
-              );
-              const mixed =
-                components.length === 0 && weights.total > 0
-                  ? allocateMixedDish(weights.total, people)
-                  : null;
-              const component =
-                components.length > 0 &&
-                components.every((item) => weights[item.id] > 0)
-                  ? allocateComponentDish(
-                      components.map((item) => ({
-                        componentId: item.id,
-                        label: item.label,
-                        cookedWeightG: weights[item.id],
-                      })),
-                      people,
-                    )
-                  : null;
-              return (
-                <article className="batch-portion-card glass-2" key={key}>
+            <p className="batch-portioning-lead">Взвесьте каждое готовое блюдо один раз. Mise рассчитает граммы и готовые подписи.</p>
+            {model.dishes.length > 1 && (
+              <div className="portion-dish-segment" role="group" aria-label={`Блюда партии ${batch.index + 1}`}>
+                {model.dishes.map((dish, index) => (
+                  <button
+                    type="button"
+                    key={dishKeyOf(dish)}
+                    aria-pressed={index === portionDishIndex}
+                    onClick={() => showPortionDish(index)}
+                  >
+                    <b>{dish.recipe.title}</b>
+                    <small>· {packedCount(dish)} из {batch.days * dish.personIds.length}</small>
+                  </button>
+                ))}
+              </div>
+            )}
+            {activePortionDish && portionView && (
+              <>
+                <article className="batch-portion-card glass-2" aria-label="Взвешивание">
                   <div className="batch-portion-card-heading">
-                    <RecipeMedia recipe={dish.recipe} />
+                    <RecipeMedia recipe={activePortionDish.recipe} />
                     <div>
-                      <small>{mealMeta[dish.slot].label}</small>
-                      <h2>{dish.recipe.title}</h2>
+                      <small>{mealMeta[activePortionDish.slot].label}</small>
+                      <h2>{activePortionDish.recipe.title}</h2>
                     </div>
                   </div>
-                  {components.length === 0 ? (
-                    <label className="cooked-weight-field">
-                      <span>Фактический вес блюда</span>
-                      <span className="weight-control">
-                        <input
-                          aria-label={`Фактический вес: ${dish.recipe.title}`}
-                          type="number"
-                          inputMode="numeric"
-                          min="1"
-                          value={weights.total || ""}
-                          onChange={(event) =>
-                            setCookedWeights((current) => ({
-                              ...current,
-                              [key]: { total: Number(event.target.value) },
-                            }))
-                          }
-                        />
-                        <small>г</small>
-                      </span>
-                    </label>
+                  {portionView.ready && !portionEditing ? (
+                    <>
+                      <div className="portion-weighed">
+                        <Icon name="scale" size={18} />
+                        <span>
+                          <span className="portion-weighed-badge">взвешено {portionView.weighedLabel}</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setEditingWeights((current) => [...current, portionView.key])}
+                        >
+                          Изменить
+                        </button>
+                      </div>
+                      <p className="portion-weighed-note">
+                        Mise поделил на {withPlural(batch.days * activePortionDish.personIds.length, FORMS.portion)}: {portionView.distribution}
+                      </p>
+                    </>
                   ) : (
-                    <div className="component-weight-fields">
-                      <p>Фактический вес компонентов</p>
-                      {components.map((item) => (
-                        <label className="cooked-weight-field" key={item.id}>
-                          <span>{item.label}</span>
-                          <span className="weight-control">
-                            <input
-                              aria-label={`Фактический вес: ${item.label}`}
-                              type="number"
-                              inputMode="numeric"
-                              min="1"
-                              value={weights[item.id] || ""}
-                              onChange={(event) =>
-                                setCookedWeights((current) => ({
-                                  ...current,
-                                  [key]: {
-                                    ...current[key],
-                                    [item.id]: Number(event.target.value),
-                                  },
-                                }))
-                              }
-                            />
-                            <small>г</small>
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  )}
-                  {!mixed && !component && (
-                    <p className="allocation-prompt" role="status">Введите вес, чтобы увидеть раскладку.</p>
-                  )}
-                  {mixed && (
-                    <div className="allocation-results">
-                      {mixed.allocations.map((allocation, index) => (
-                        <article className="portion-card" key={allocation.personId}>
-                          <div className={`person-dot tone-${index}`}>{allocation.label.slice(0, 1)}</div>
-                          <div>
-                            <h3>{allocation.label}</h3>
-                            <p><b>{containerDistributionLabel(allocation.perContainerG)}</b></p>
-                            <small>По контейнерам</small>
-                            <em>Подпись: {allocation.label} / {mealMeta[dish.slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
-                  )}
-                  {component && (
-                    <div className="allocation-results">
-                      {people.map((person, index) => (
-                        <article className="portion-card component-portion-card" key={person.personId}>
-                          <div className={`person-dot tone-${index}`}>{person.label.slice(0, 1)}</div>
-                          <div>
-                            <h3>{person.label}</h3>
-                            {component.components.map((item) => {
-                              const allocation = item.allocations.find((entry) => entry.personId === person.personId);
-                              return <p key={item.componentId}><span>{item.label}</span><b>{containerDistributionLabel(allocation?.perContainerG ?? [])}</b></p>;
-                            })}
-                            <small>Точная раскладка на {batch.days} контейнеров</small>
-                            <em>Подпись: {person.label} / {mealMeta[dish.slot].label.toLowerCase()} / {formatDate(batch.start)}–{formatDate(batch.end)}</em>
-                          </div>
-                        </article>
-                      ))}
-                    </div>
+                    <>
+                      {weightFields(activePortionDish)}
+                      {portionView.ready ? (
+                        <button
+                          type="button"
+                          className="portion-weight-done"
+                          onClick={() => setEditingWeights((current) => current.filter((key) => key !== portionView.key))}
+                        >
+                          Готово
+                        </button>
+                      ) : (
+                        <p className="allocation-prompt" role="status">Введите вес, чтобы увидеть раскладку.</p>
+                      )}
+                    </>
                   )}
                 </article>
-              );
-            })}
+                {portionView.ready && (
+                  <fieldset className="container-label-grid">
+                    <legend>{activePortionDish.recipe.title}: контейнеры по дням</legend>
+                    <div className="container-label-list">
+                      {portionView.containers.map((container) => {
+                        const date = addDays(batch.start, container.day);
+                        const frozen = activePortionDish.recipe.freezable && container.day >= activePortionDish.recipe.storageDays;
+                        const storage = frozen
+                          ? "в морозилку"
+                          : `≈ ${withPlural(activePortionDish.recipe.storageDays, FORMS.day)}`;
+                        const packed = packedContainers.includes(container.id);
+                        return (
+                          <label className={`container-label-card${packed ? " is-packed" : ""}`} key={container.id}>
+                            <input
+                              type="checkbox"
+                              checked={packed}
+                              aria-label={`Разложено: ${container.label}, ${mealMeta[activePortionDish.slot].label.toLowerCase()} ${container.grams}, ${formatDate(date, true)}, ${frozen ? "в морозилку" : `холодильник ${storage}`}`}
+                              onChange={() =>
+                                setPackedContainers((current) =>
+                                  current.includes(container.id)
+                                    ? current.filter((id) => id !== container.id)
+                                    : [...current, container.id],
+                                )
+                              }
+                            />
+                            <span className="container-label-who">
+                              <b>{container.label}</b>
+                              <span>{mealMeta[activePortionDish.slot].label} · {container.grams}</span>
+                            </span>
+                            <span className="container-label-when">
+                              <i>{formatDate(date, true)}</i> · {storage}
+                            </span>
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                )}
+              </>
+            )}
+            {isLastPortionDish && missingWeightDishes.length > 0 && (
+              <p className="portion-missing" role="status">
+                Нет веса: {missingWeightDishes.map((dish) => dish.recipe.title).join(", ")}
+              </p>
+            )}
             {portionSaveState === "error" && (
               <Note tone="warn" role="alert">Не удалось сохранить раскладку. Проверьте связь и попробуйте ещё раз.</Note>
             )}
           </section>
         )}
-        {!portioning && <section className="cooking-after-card">
-          <p>После остывания</p>
-          <h2>
-            {withPlural(model.totalPortions, FORMS.container)}: {model.totalPortions - model.freezePortions} в холодильник
-            {model.freezePortions > 0 ? `, ${model.freezePortions} в морозилку` : ""}
-          </h2>
-          <span>
-            Порции уже рассчитаны — после готовки взвесьте блюда и подпишите контейнеры.
-          </span>
-          <div>
-            {model.personPortions
-              .filter((person) => person.count > 0)
-              .map((person) => (
-                <small key={person.id}>
-                  {person.name} · {withPlural(person.count, FORMS.portion)}
+        {!portioning && stepDish && (
+          <section className="cooking-weigh-card glass-2" aria-label="Взвешивание">
+            <div className="cooking-weigh-head">
+              <span className="cooking-weigh-icon"><Icon name="scale" size={20} /></span>
+              <div>
+                <b>Взвесьте готовое{model.dishes.length > 1 ? `: ${stepDish.recipe.title}` : ""}</b>
+                <small>
+                  после шага {stepDishLastStep} · Mise поделит на {withPlural(batch.days * stepDish.personIds.length, FORMS.portion)}:{" "}
+                  {stepDish.personIds.map((personId) => `${personName(personId)} — ${batch.days}`).join(", ")}
                 </small>
-              ))}
-          </div>
-        </section>}
+              </div>
+            </div>
+            {weightFields(stepDish)}
+            <p className="cooking-weigh-hint">
+              {dishWeightsComplete(stepDish) ? "Вес записан — раскладка посчитается от него" : "Раскладка откроется после ввода веса"}
+            </p>
+            <p className="cooking-weigh-after">
+              После остывания: {withPlural(model.totalPortions, FORMS.container)} — {model.totalPortions - model.freezePortions} в холодильник
+              {model.freezePortions > 0 ? `, ${model.freezePortions} в морозилку` : ""}
+            </p>
+          </section>
+        )}
       </div>
-      <footer className="cooking-action-bar glass-1">
-        <button
-          className="primary-button"
-          disabled={portioning && (!allDishWeightsComplete || portionSaveState === "saving")}
-          onClick={portioning ? savePortioningAndComplete : advance}
-        >
-          {portioning
-            ? portionSaveState === "saving"
-              ? "Сохраняем раскладку…"
-              : "Раскладка готова — завершить"
-            : stepIndex === model.steps.length - 1
-              ? "К раскладке"
-              : "Шаг готов — дальше"}
-          <Icon name={portioning ? "check" : "chevron"} size={17} />
-        </button>
-      </footer>
+      {!portioning ? (
+        <footer className="cooking-action-bar cooking-accessory glass-1" aria-label="Текущий таймер">
+          <button
+            type="button"
+            className="cooking-timer-toggle"
+            aria-label={timerRunning ? "Пауза" : "Запустить таймер"}
+            disabled={!timerRunning && remainingSeconds <= 0}
+            onClick={toggleTimer}
+          >
+            {timerRunning ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
+            )}
+          </button>
+          <span className="cooking-timer-value" role="timer">{formatTimer(remainingSeconds)}</span>
+          <span className="cooking-timer-step">{currentStep.title}</span>
+          <button
+            type="button"
+            className="primary-button cooking-next-button"
+            aria-label={stepIndex === model.steps.length - 1 ? "К раскладке" : "Шаг готов — дальше"}
+            onClick={advance}
+          >
+            {stepIndex === model.steps.length - 1 ? "К раскладке" : "Дальше"}
+          </button>
+        </footer>
+      ) : (
+        <footer className="cooking-action-bar is-portioning">
+          {isLastPortionDish ? (
+            <button
+              type="button"
+              className="primary-button"
+              disabled={!allDishWeightsComplete || portionSaveState === "saving"}
+              onClick={savePortioningAndComplete}
+            >
+              {portionSaveState === "saving"
+                ? "Сохраняем раскладку…"
+                : "Раскладка готова — завершить"}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => showPortionDish(portionDishIndex + 1)}
+            >
+              Дальше: {model.dishes[portionDishIndex + 1]?.recipe.title}
+            </button>
+          )}
+        </footer>
+      )}
     </main>
   );
 }
