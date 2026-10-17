@@ -25,6 +25,88 @@
   font-style: normal;
   font-display: swap;
 }
+/* Wix Madefor — основная гарнитура редизайна C (SIL OFL), latin + cyrillic.
+   Display 700/800 — заголовки и числа, Text 400/600/700 — всё остальное. */
+@font-face {
+  font-family: "Wix Madefor Display";
+  src: url("/fonts/WixMadeforDisplay-700-cyrillic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Wix Madefor Display";
+  src: url("/fonts/WixMadeforDisplay-700-latin.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Wix Madefor Display";
+  src: url("/fonts/WixMadeforDisplay-800-cyrillic.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Wix Madefor Display";
+  src: url("/fonts/WixMadeforDisplay-800-latin.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Wix Madefor Text";
+  src: url("/fonts/WixMadeforText-400-cyrillic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Wix Madefor Text";
+  src: url("/fonts/WixMadeforText-400-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Wix Madefor Text";
+  src: url("/fonts/WixMadeforText-600-cyrillic.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Wix Madefor Text";
+  src: url("/fonts/WixMadeforText-600-latin.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Wix Madefor Text";
+  src: url("/fonts/WixMadeforText-700-cyrillic.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: "Wix Madefor Text";
+  src: url("/fonts/WixMadeforText-700-latin.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 @font-face {
   font-family: "IBM Plex Mono";
   src: url("/fonts/ibm-plex-mono-500.woff2") format("woff2");
@@ -37,19 +119,20 @@
   color-scheme: light;
 
   /* ---------- Семейства ---------- */
-  --font-ui: -apple-system, BlinkMacSystemFont, "Instrument Sans", "Segoe UI", sans-serif;
-  --font-num: "SF Mono", "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --font-ui: "Wix Madefor Text", -apple-system, BlinkMacSystemFont, "Instrument Sans", "Segoe UI", sans-serif;
+  --font-display: "Wix Madefor Display", -apple-system, BlinkMacSystemFont, "Instrument Sans", sans-serif;
+  --font-num: "Wix Madefor Display", -apple-system, BlinkMacSystemFont, "Instrument Sans", sans-serif;
 
   /* ---------- Чернила ----------
      Альфа — не декоративная величина, а контраст. См. README §Контраст.
      .64 — пол для основного текста. .52 разрешён только на 19px+/600. */
-  --ink: #30261f;
+  --ink: #2a1d14;
   --ink-strong: rgba(42, 29, 20, 1);
-  --ink-body: #65594e;
-  --ink-muted: #706256; /* пол для текста < 19px */
-  --ink-quiet: rgba(42, 29, 20, 0.52); /* только 19px+/600 */
+  --ink-body: #4a2e1c;
+  --ink-muted: #5a3a25; /* пол для текста < 19px */
+  --ink-quiet: rgba(42, 29, 20, 0.6); /* только 19px+/600 */
   --ink-line: rgba(42, 29, 20, 0.07);
-  --ink-track: rgba(42, 29, 20, 0.1);
+  --ink-track: rgba(42, 29, 20, 0.12);
 
   /* ---------- Акцент ---------- */
   --accent: #f2571a; /* плоский: иконки, полосы, активный таб */
@@ -57,11 +140,16 @@
   --accent-grad-b: #ee4c13;
   --accent-grad: linear-gradient(150deg, #ff8143, #ee4c13);
   --accent-text: #b3380a; /* AA: оранжевый текст на фоне приложения */
+  --terracotta: #c9400d; /* точки дней, иконки плана */
+  --tint-terracotta: #ffe3d2;
+  --tint-amber: rgba(224, 162, 75, 0.3);
+  --tint-mint-flat: #d8eee2;
+  --button-fg: #fff1e6;
   --accent-text-strong: #b33a0b;
   /* Единая светлая рампа действий — та же, что в основном дизайн-коде. */
-  --button-grad: var(--accent-grad);
-  --accent-select-bg: rgba(255, 242, 235, 0.72);
-  --accent-select-border: rgba(242, 87, 26, 0.32);
+  --button-grad: var(--ink-strong); /* v2.2: главные кнопки чернильные (решение владельца 2026-10-16) */
+  --accent-select-bg: rgba(255, 247, 240, 0.93);
+  --accent-select-border: var(--ink-strong);
 
   /* ---------- Смысловые цвета ----------
      Мята = хранение и заморозка. Оранжевый = действие и предупреждение.
@@ -75,7 +163,7 @@
   --amber: #e0a24b; /* жиры */
   --carbs: #8fbfa9; /* углеводы */
   --amber-text: #8f5a0c; /* янтарь как текст: заливка --amber на стекле не читается */
-  --lilac-text: #4a3aa3;
+  --lilac-text: #8f5a0c; /* v2.2: лилового нет, роль обучения несёт амбер */
 
   /* КБЖУ — один код на всех экранах */
   --macro-kcal: #f2571a;
@@ -86,17 +174,20 @@
   /* ---------- Фон экрана ----------
      Два приглушённых цветовых пятна на тёплой линейной базе.
      Лежит в position:absolute; inset:0 под контентом. */
-  --bg-base: linear-gradient(168deg, #fcf7f0, #f6f0e7);
+  --bg-base: linear-gradient(180deg, #fff1e6 0%, #ffe2ce 32%, #f5b98c 70%, #e9a27a 100%);
   --bg-spot-warm: #ffc79a;
   --bg-spot-mint: #d8eee2;
   --bg-spot-peach: #f7cbb0;
-  --bg-spot-lilac: #c9bcf5; /* онбординг */
-  --bg-spot-green: #a8e0c6; /* онбординг */
-  --page: #f8f3ec; /* плоский фолбэк, html background */
+  --bg-spot-lilac: #ffd2b8; /* онбординг · v2.2 тёплое пятно */
+  --bg-spot-green: #d8eee2; /* онбординг · мята */
+  --page: #fff1e6; /* плоский фолбэк, html background */
+  --bg-photo: url("/bg/week.jpg"); /* предразмытое фото блюда под заливкой */
 
+  --app-wash: linear-gradient(180deg, rgba(255, 240, 228, 0.9) 0%, rgba(255, 226, 206, 0.78) 28%, rgba(255, 150, 90, 0.42) 60%, rgba(230, 100, 45, 0.55) 100%);
   --app-bg:
-    radial-gradient(65% 50% at 93% 1%, rgba(247, 216, 187, 0.5), transparent 65%),
-    radial-gradient(50% 40% at 0% 52%, rgba(217, 234, 222, 0.44), transparent 65%),
+    radial-gradient(60% 42% at 86% -4%, rgba(216, 238, 226, 0.95), transparent 68%),
+    var(--app-wash),
+    var(--bg-photo) center / cover no-repeat,
     var(--bg-base);
 
   /* ---------- Четыре уровня стекла ----------
@@ -104,58 +195,58 @@
      Хром сохраняет глубину; у карточек мягкий блюр 14/10 и saturate 120. */
 
   /* L1 · Хром — шапка, нижняя навигация, панель действий */
-  --glass-1-bg: rgba(255, 255, 255, 0.44);
-  --glass-1-blur: blur(30px) saturate(180%);
-  --glass-1-border: rgba(255, 255, 255, 0.7);
+  --glass-1-bg: linear-gradient(135deg, rgba(255, 241, 230, 0.78), rgba(255, 226, 206, 0.5));
+  --glass-1-blur: blur(26px) saturate(170%);
+  --glass-1-border: rgba(255, 255, 255, 0.8);
 
   /* L2 · Карточка — КБЖУ, блюдо, группа покупок */
-  --glass-2-bg: rgba(255, 253, 249, 0.8);
+  --glass-2-bg: rgba(255, 247, 240, 0.93);
   --glass-2-blur: blur(14px) saturate(120%);
-  --glass-2-border: rgba(133, 99, 65, 0.1);
+  --glass-2-border: rgba(255, 255, 255, 0.8);
 
   /* L3 · Вложенное — плитка в карточке, реплика мастера, строка-подсказка */
-  --glass-3-bg: rgba(255, 254, 252, 0.82);
+  --glass-3-bg: rgba(255, 255, 255, 0.85);
   --glass-3-blur: blur(10px) saturate(120%);
-  --glass-3-border: rgba(133, 99, 65, 0.09);
+  --glass-3-border: rgba(255, 255, 255, 0.9);
 
   /* L4 · Тонированное — один блок на экран */
-  --tint-warn-bg: rgba(255, 242, 235, 0.72);
-  --tint-warn-border: rgba(255, 168, 132, 0.7);
-  --tint-mint-bg: rgba(228, 244, 236, 0.62);
+  --tint-warn-bg: #ffe3d2;
+  --tint-warn-border: rgba(201, 64, 13, 0.3);
+  --tint-mint-bg: #d8eee2;
   --tint-mint-border: rgba(46, 156, 124, 0.32);
-  --tint-lilac-bg: rgba(238, 234, 255, 0.66);
-  --tint-lilac-border: rgba(111, 95, 201, 0.3);
+  --tint-lilac-bg: rgba(224, 162, 75, 0.3);
+  --tint-lilac-border: rgba(143, 90, 12, 0.3);
 
   /* ---------- Кромка и блик ----------
      Мягкий светлый блик и тонкая тёплая граница без тяжёлой рамки. */
-  --glint: inset 0 1px 0 rgba(255, 255, 255, 0.65);
-  --glint-soft: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  --glint: inset 0 1px 0 #fff;
+  --glint-soft: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 
   /* ---------- Тени ----------
      Всегда тёплые, коричневые. Никогда в чёрный. */
-  --surface-control-bg: rgba(255, 255, 255, 0.62);
-  --surface-control-border: rgba(133, 99, 65, 0.12);
-  --surface-recipe-bg: rgba(255, 253, 249, 0.86);
-  --shadow-recipe: 0 3px 12px rgba(91, 64, 35, 0.045);
-  --shadow-s: 0 2px 8px rgba(91, 64, 35, 0.035);
-  --shadow-m: 0 4px 16px rgba(91, 64, 35, 0.045);
-  --shadow-l: 0 10px 32px rgba(91, 64, 35, 0.09);
-  --shadow-chrome: 0 4px 22px rgba(91, 64, 35, 0.1);
-  --shadow-accent: 0 4px 12px rgba(204, 79, 30, 0.15);
-  --shadow-accent-s: 0 3px 9px rgba(204, 79, 30, 0.12);
+  --surface-control-bg: rgba(255, 255, 255, 0.9);
+  --surface-control-border: rgba(42, 29, 20, 0.22);
+  --surface-recipe-bg: rgba(255, 247, 240, 0.93);
+  --shadow-recipe: 0 8px 24px rgba(120, 50, 10, 0.14);
+  --shadow-s: 0 4px 12px rgba(120, 50, 10, 0.14);
+  --shadow-m: 0 8px 24px rgba(120, 50, 10, 0.14);
+  --shadow-l: 0 14px 36px rgba(120, 50, 10, 0.22);
+  --shadow-chrome: 0 14px 36px rgba(120, 50, 10, 0.22);
+  --shadow-accent: 0 8px 20px rgba(42, 29, 20, 0.35);
+  --shadow-accent-s: 0 6px 14px rgba(42, 29, 20, 0.3);
 
   /* ---------- Радиусы ----------
      Концентричность: вложенный радиус = внешний − padding.
      Шкала полировки: карточка 22, строка 18, вложенное 14;
      фото-карточка 20, нижняя навигация 24. */
-  --r-chrome: 30px;
-  --r-card: 22px;
-  --r-row: 18px;
-  --r-recipe: 20px;
-  --r-nav: 24px;
-  --r-nested: 14px;
-  --r-tile: 12px;
-  --r-chip-sq: 9px;
+  --r-chrome: 32px;
+  --r-card: 28px;
+  --r-row: 24px;
+  --r-recipe: 24px;
+  --r-nav: 999px;
+  --r-nested: 18px;
+  --r-tile: 14px;
+  --r-chip-sq: 10px;
   --r-bar: 5px; /* полосы прогресса и КБЖУ: h8 r5 */
   --r-pill: 999px;
 
@@ -175,13 +266,13 @@
   /* ---------- Типографика ----------
      Курсив не используем. Числа — всегда табличные.
      Вес 590 — системный «полужирный в интерфейсе»: подписи, ссылки, метки. */
-  --text-hero: 34px; /* 700 · −.04 · числа-герои */
-  --text-h1: 32px; /* 700 · −.035 · заголовок экрана */
-  --text-h2: 19px; /* 600 · −.025 · название блюда */
-  --text-h3: 15.5px; /* 600 · −.015 · заголовок строки */
-  --text-body: 15px; /* 400 · 1.45 */
-  --text-link: 13px; /* 590 */
-  --text-kicker: 12.5px; /* 590 · ink-quiet */
+  --text-hero: 38px; /* 800 · −.03 · H1 корневых вкладок */
+  --text-h1: 30px; /* 800 · −.03 · заголовок экрана */
+  --text-h2: 22px; /* 700 · название блюда */
+  --text-h3: 17px; /* 700 · заголовок строки, цифры */
+  --text-body: 15px; /* 600 · 1.45 */
+  --text-link: 13px; /* 600 */
+  --text-kicker: 12px; /* 700 · кикер */
   --text-min: 12px; /* 400 · пол системы (в макетах 11.5 → округляем) */
   --text-input: 16px; /* поле ввода и select · COMPONENTS §7: ниже 16 Safari зумит */
 
@@ -194,17 +285,18 @@
 
   --weight-regular: 400;
   --weight-medium: 500;
-  --weight-label: 590; /* → 600 на не-Apple */
+  --weight-label: 600;
+  --weight-heavy: 800; /* Display: hero и H1 */
   --weight-semibold: 600;
   --weight-bold: 700;
 
-  --tracking-hero: -0.04em;
-  --tracking-h1: -0.035em;
-  --tracking-h2: -0.025em;
-  --tracking-h3: -0.015em;
+  --tracking-hero: -0.03em;
+  --tracking-h1: -0.03em;
+  --tracking-h2: -0.01em;
+  --tracking-h3: 0;
 
   /* ---------- Зоны нажатия ---------- */
-  --hit-primary: 52px; /* основное действие внизу экрана */
+  --hit-primary: 50px; /* основное действие внизу экрана */
   --hit-min: 44px; /* минимум для кнопки и строки списка */
   --hit-icon: 38px; /* иконка в шапке, зона расширена до 44 */
   --hit-chip: 36px; /* только в группах, шаг 6px */
@@ -253,6 +345,16 @@
 /* ============================================================
    Поверхности
    ============================================================ */
+
+h1,
+h2,
+h3,
+.text-display {
+  font-family: var(--font-display);
+}
+h1 {
+  font-weight: var(--weight-heavy);
+}
 
 body {
   margin: 0;
@@ -458,8 +560,9 @@ body {
 .btn-primary {
   min-height: var(--hit-primary);
   background: var(--button-grad);
-  color: #fff;
-  box-shadow: var(--shadow-accent), inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  color: var(--button-fg);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-accent);
 }
 .btn-primary:disabled {
   background: rgba(42, 29, 20, 0.12);
@@ -731,23 +834,7 @@ p {
   padding-bottom: calc(152px + env(safe-area-inset-bottom));
   padding-left: max(20px, env(safe-area-inset-left));
   overflow: hidden;
-  background:
-    radial-gradient(
-      circle at 92% 0%,
-      rgba(255, 194, 148, 0.72),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 2% 32%,
-      rgba(151, 225, 203, 0.62),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at 90% 72%,
-      rgba(195, 187, 255, 0.56),
-      transparent 34%
-    ),
-    linear-gradient(154deg, #fbf8f1 0%, #edf7f1 46%, #f6eff8 100%);
+  background: var(--app-bg);
 }
 
 .ambient {
@@ -764,16 +851,19 @@ p {
   right: -100px;
   top: 120px;
   background: #ffb482;
+  display: none;
 }
 .ambient-two {
   left: -120px;
   top: 48%;
   background: #70d8bf;
+  display: none;
 }
 .ambient-three {
   right: -100px;
   bottom: 160px;
   background: #bcb4ff;
+  display: none;
 }
 .screen {
   position: relative;
@@ -829,13 +919,12 @@ p {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  color: #fff;
-  background: linear-gradient(145deg, #ffad78, #ff6b39);
+  color: var(--accent-text);
+  background: var(--tint-terracotta);
+  font-family: var(--font-display);
   font-size: var(--text-h2);
   font-weight: var(--weight-bold);
-  box-shadow:
-    0 12px 28px rgba(225, 85, 40, 0.25),
-    inset 0 1px rgba(255, 255, 255, 0.58);
+  box-shadow: var(--glint);
 }
 
 .bottom-nav {
@@ -848,9 +937,9 @@ p {
     604px,
     calc(100% - 18px - env(safe-area-inset-left) - env(safe-area-inset-right))
   );
-  min-height: 76px;
-  padding: 8px 7px;
-  border-radius: var(--r-chrome);
+  min-height: 62px;
+  padding: 5px;
+  border-radius: var(--r-nav);
   display: grid;
   grid-template-columns: repeat(4, 1fr);
 }
@@ -900,9 +989,10 @@ p {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: #fff;
+  color: var(--button-fg);
   background: var(--button-grad);
-  box-shadow: var(--shadow-accent), inset 0 1px rgba(255, 255, 255, 0.42);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-accent);
   font: var(--weight-semibold) var(--text-h3) / 1 var(--font-ui);
   letter-spacing: var(--tracking-h3);
   transition: transform 0.12s ease, box-shadow 0.16s ease, background 0.16s ease;
@@ -1168,7 +1258,7 @@ p {
 }
 .action-dots span.is-current {
   width: 20px;
-  background: var(--accent);
+  background: var(--terracotta);
 }
 .action-primary {
   width: 100%;
@@ -8097,23 +8187,23 @@ p {
 .bottom-nav {
   isolation: isolate;
   overflow: hidden;
-  padding: 8px 6px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
+  padding: 5px;
+  border: 1px solid var(--glass-1-border);
   border-radius: var(--r-nav);
-  background: rgba(255, 252, 247, 0.84);
-  -webkit-backdrop-filter: blur(22px) saturate(140%);
-  backdrop-filter: blur(22px) saturate(140%);
-  box-shadow: var(--shadow-chrome), var(--glint);
+  background: var(--glass-1-bg);
+  -webkit-backdrop-filter: var(--glass-1-blur);
+  backdrop-filter: var(--glass-1-blur);
+  box-shadow: var(--shadow-chrome), var(--glint), inset 0 -1px 0 rgba(255, 255, 255, 0.35);
 }
 .bottom-nav-indicator {
   position: absolute;
   z-index: 0;
-  top: 8px;
-  bottom: 8px;
-  left: 6px;
-  width: calc((100% - 12px) / 4);
-  border-radius: var(--r-nested);
-  background: rgba(255, 255, 255, 0.92);
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc((100% - 10px) / 4);
+  border-radius: var(--r-pill);
+  background: #fff;
   box-shadow: var(--shadow-s);
   transform: translateX(calc(var(--tab) * 100%));
   transition: transform 280ms var(--motion-segment);
@@ -8130,7 +8220,7 @@ p {
 }
 .bottom-nav button.is-active {
   background: transparent;
-  color: #c7410e;
+  color: var(--accent-text);
 }
 .bottom-nav button.has-nav-effect-a > .icon {
   animation: mise-nav-icon-a 340ms var(--motion-spring) both;

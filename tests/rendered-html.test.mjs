@@ -144,7 +144,7 @@ test("includes the complete plan-builder and private persistence model", async (
   assert.equal(css.match(/font-size: *[0-9]/g), null, "кегль задаётся только токеном");
   assert.equal(
     (css.match(/font-weight: *[0-9]/g) ?? []).length,
-    2,
+    (css.match(/@font-face/g) ?? []).length,
     "числовой вес остаётся только в @font-face",
   );
   assert.equal(

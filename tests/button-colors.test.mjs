@@ -4,11 +4,13 @@ import test from "node:test";
 
 const readCss = () => readFile(new URL("../app/globals.css", import.meta.url), "utf8");
 
-test("interactive actions use the approved design-code gradient", async () => {
+test("interactive actions use the ink button colour", async () => {
   const css = await readCss();
 
+  // v2.2 (2026-10-16): главные кнопки чернильные, оранжевая рампа остаётся токеном для полос и акцентов.
   assert.match(css, /--accent-grad: linear-gradient\(150deg, #ff8143, #ee4c13\);/);
-  assert.match(css, /--button-grad: var\(--accent-grad\);/);
+  assert.match(css, /--button-grad: var\(--ink-strong\);/);
+  assert.match(css, /--button-fg: #fff1e6;/);
   assert.doesNotMatch(css, /--accent-grad-aa/);
 
   for (const selector of [
