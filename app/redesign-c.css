@@ -1,0 +1,181 @@
+/* ============================================================
+   Редизайн C v2.2 «Тонированное стекло» — слой поверх globals.css и
+   platform-layout.css. Источник: дизайн-холст v2.2 и C-KIT.md §4/§8.
+   Мобильная раскладка (< 680px) — основная; десктопный сайдбар из
+   platform-layout.css остаётся, меняются только материалы и типографика.
+   Правила с префиксом .app-workspace перекрывают platform-layout.css.
+   ============================================================ */
+
+/* ---------- Полоса дней: одна капсула, активный день чернильный ---------- */
+.app-workspace .week-screen .date-strip {
+  gap: 2px;
+  margin: 0;
+  padding: 4px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+}
+.app-workspace .week-screen .date-strip button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 52px;
+  margin: 0;
+  padding: 6px 0 8px;
+  border: 0;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.app-workspace .week-screen .date-strip button small {
+  margin-bottom: 3px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .week-screen .date-strip button b {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .week-screen .date-strip button.batch-start {
+  margin-left: 0;
+}
+.app-workspace .week-screen .date-strip button.batch-start small {
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .week-screen .date-strip button.batch-start::before {
+  left: 50%;
+  top: auto;
+  bottom: 4px;
+  width: 4px;
+  height: 4px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--terracotta);
+}
+.app-workspace .week-screen .date-strip button.is-today {
+  border: 0;
+}
+.app-workspace .week-screen .date-strip button.selected {
+  color: var(--button-fg);
+  border: 0;
+  background: var(--ink-strong);
+  box-shadow: var(--shadow-accent-s);
+}
+.app-workspace .week-screen .date-strip button.selected small {
+  color: var(--button-fg);
+  opacity: 0.85;
+}
+.app-workspace .week-screen .date-strip .today-dot {
+  display: none;
+}
+
+/* ---------- Шапка «Недели»: кикер терракотой, hero-заголовок, пилюля человека ---------- */
+.app-workspace .week-screen-header h1 {
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-hero);
+}
+.app-workspace .week-period-button {
+  color: var(--accent-text);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.app-workspace .week-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-2-border);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-family: var(--font-display);
+}
+
+/* ---------- Строки порций: карточка, круглое фото, круглый чекбокс ---------- */
+.app-workspace .week-execution-list {
+  gap: 0;
+  padding: 4px 16px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.app-workspace .week-execution-row {
+  grid-template-columns: 46px minmax(0, 1fr) var(--hit-min);
+  gap: 12px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink-track);
+  background: none;
+  box-shadow: none;
+}
+.app-workspace .week-execution-row:last-child {
+  border-bottom: 0;
+}
+.app-workspace .week-meal-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #fff;
+}
+.app-workspace .week-meal-open {
+  min-height: 56px;
+}
+.app-workspace .week-meal-topline {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.app-workspace .week-meal-open strong {
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+}
+.app-workspace .week-eaten-check::before {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid rgba(42, 29, 20, 0.6);
+  border-radius: 50%;
+  background: #fff;
+}
+.app-workspace .week-eaten-check[aria-checked="true"]::before {
+  border-color: var(--mint);
+  background: var(--mint);
+}
+.app-workspace .week-execution-row.is-eaten .week-meal-open strong {
+  color: var(--ink-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(90, 58, 37, 0.5);
+}
+.app-workspace .week-execution-row.is-eaten .week-meal-open > small {
+  color: var(--mint-text);
+}
+
+/* ---------- Нижняя навигация: стеклянная капсула, белая активная таблетка ---------- */
+.app-workspace .bottom-nav {
+  min-height: 62px;
+  padding: 5px;
+  border-radius: var(--r-pill);
+}
+.app-workspace .bottom-nav-indicator {
+  background: #fff;
+  box-shadow: var(--shadow-s);
+}
+.app-workspace .bottom-nav button small {
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .bottom-nav button.is-active small {
+  font-weight: var(--weight-bold);
+}

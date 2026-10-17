@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./platform-layout.css";
+import "./redesign-c.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mise.ermizinm.ru"),
