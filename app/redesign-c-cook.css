@@ -779,3 +779,14 @@
     padding-inline: 12px;
   }
 }
+
+/* Сетка контента: ни один ребёнок не растягивает колонку шире экрана */
+.cooking-batch-shell .cooking-batch-content {
+  grid-template-columns: minmax(0, 1fr);
+}
+.cooking-batch-shell .cooking-batch-content > * {
+  min-width: 0;
+}
+.cooking-batch-shell .cooking-step-tools > button {
+  white-space: nowrap;
+}
