@@ -15760,7 +15760,6 @@ function MenuReviewStep({
   onReplace,
   onOpenRecipe,
   onReassemble,
-  onChooseManual,
 }: {
   kitchenEquipment?: KitchenEquipment[];
   recipeMethods?: Record<string, string>;
@@ -15779,7 +15778,6 @@ function MenuReviewStep({
   ) => string | null;
   onOpenRecipe: (recipe: Recipe) => void;
   onReassemble: () => void;
-  onChooseManual?: () => void;
 }) {
   const [replacing, setReplacing] = useState<{
     key: string;
@@ -15874,11 +15872,6 @@ function MenuReviewStep({
         <button type="button" className="chip" onClick={onReassemble}>
           Собрать заново
         </button>
-        {onChooseManual && (
-          <button type="button" className="chip" onClick={onChooseManual}>
-            Выбрать вручную
-          </button>
-        )}
       </div>
 
       {batches.map((batch) => {
