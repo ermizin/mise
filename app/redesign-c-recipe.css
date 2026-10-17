@@ -1,1 +1,622 @@
-/* Редизайн C v2.2 · пакет «recipe». Правила экрана; токены — из globals.css. */
+/* Редизайн C v2.2 · пакет «recipe». Правила экрана; токены — из globals.css.
+   Источники: C-Recipe.dc.html (карточка 14A, фото-герой C-KIT §7),
+   C-Catalog.dc.html (каталог), палитра C-KIT §8. */
+
+/* ============================================================
+   Карточка рецепта 14A
+   ============================================================ */
+
+/* Карточки в карточке рецепта непрозрачные: стекло остаётся только у нижней
+   панели действий (бюджет стекла §4 — не больше трёх слоёв на экран). */
+.recipe-detail {
+  --glass-2-blur: none;
+  --bg-photo: url("/bg/recipe.jpg");
+  background: var(--bg-base);
+}
+
+/* Слой 1: размытая копия фото на весь экран + тёплая заливка.
+   Без фото — предразмытый /bg/recipe.jpg. */
+.recipe-backdrop {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--bg-photo) center / cover no-repeat, var(--bg-base);
+}
+.recipe-detail.has-hero-photo .recipe-backdrop {
+  background: var(--bg-base);
+}
+.recipe-backdrop img {
+  position: absolute;
+  top: -70px;
+  left: -70px;
+  width: calc(100% + 140px);
+  max-width: none;
+  height: calc(100% + 140px);
+  object-fit: cover;
+  filter: blur(30px) saturate(1.5);
+}
+.recipe-backdrop::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--app-wash);
+}
+
+/* Слои 2–3: мягкий переход и резкое фото, без резкой нижней кромки. */
+.recipe-detail .recipe-hero-photo {
+  height: 340px;
+  overflow: visible;
+  background: transparent;
+}
+.recipe-detail .recipe-hero-photo > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, rgba(0, 0, 0, 0.45) 74%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 55%, rgba(0, 0, 0, 0.45) 74%, transparent 100%);
+}
+.recipe-detail .recipe-hero-photo > img.recipe-hero-soft {
+  top: -20px;
+  left: -20px;
+  width: calc(100% + 40px);
+  max-width: none;
+  height: calc(100% + 60px);
+  filter: blur(9px) saturate(1.2);
+  -webkit-mask-image: linear-gradient(180deg, transparent 40%, #000 62%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 40%, #000 62%, #000 78%, transparent 100%);
+}
+.recipe-detail .recipe-hero-photo > .recipe-cover-shade {
+  background: linear-gradient(
+    180deg,
+    rgba(20, 10, 5, 0.45) 0%,
+    rgba(20, 10, 5, 0.16) 34%,
+    rgba(20, 10, 5, 0.28) 55%,
+    rgba(40, 20, 10, 0.62) 80%,
+    rgba(40, 20, 10, 0) 100%
+  );
+}
+
+/* Верхний ряд: круг «назад» 40 и пилюля происхождения, непрозрачные. */
+.recipe-detail .detail-header {
+  padding: calc(10px + max(44px, env(safe-area-inset-top))) 16px 0;
+}
+.recipe-detail .detail-header .icon-button,
+.recipe-detail .detail-header > span {
+  position: relative;
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  border: 1px solid var(--glass-2-border);
+  box-shadow: var(--shadow-s), var(--glint);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.recipe-detail .detail-header .icon-button {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+}
+.recipe-detail .detail-header .icon-button::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+.recipe-detail .detail-header > span {
+  min-height: 40px;
+  padding: 6px 14px;
+  border-radius: var(--r-pill);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+
+/* Кикер и H1 кремовые, с тенью в зоне перехода. */
+.recipe-detail .detail-hero {
+  min-height: 0;
+  padding: 88px 20px 16px;
+  gap: 6px;
+  color: var(--button-fg);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.recipe-detail .detail-hero .kicker {
+  color: var(--button-fg);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+}
+.recipe-detail .detail-hero h1 {
+  margin: 0;
+  color: var(--button-fg);
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: var(--weight-heavy);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-h1);
+}
+.recipe-detail .detail-hero small {
+  font-size: var(--text-min);
+  line-height: 1.4;
+}
+
+/* Без фото: плитка-заглушка, тёмный текст, контент сверху. */
+.recipe-detail.is-photoless .detail-hero {
+  padding-top: 20px;
+  color: var(--ink);
+  text-shadow: none;
+}
+.recipe-detail.is-photoless .detail-hero .kicker {
+  color: var(--accent-text);
+}
+.recipe-detail.is-photoless .detail-hero h1 {
+  color: var(--ink);
+}
+.recipe-detail.is-photoless .detail-hero small {
+  color: var(--ink-muted);
+}
+.recipe-hero-tile {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 8px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--r-nested);
+  background: #f3d9c6;
+  color: var(--ink-muted);
+  font-size: var(--glyph-m);
+}
+
+/* Предложение календаря (PRODUCT.md: показывается, пока не добавлен). */
+.recipe-detail > .recipe-calendar-card {
+  margin: 0 16px 12px;
+  padding: 14px 16px;
+}
+
+/* Вкладки «Готовка | Блюдо»: капсула 48, активная таблетка чернильная. */
+.recipe-detail > .detail-tabs {
+  min-height: 48px;
+  margin: 0 16px;
+  padding: 4px;
+  gap: 2px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.recipe-detail > .detail-tabs button {
+  min-height: 38px;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.recipe-detail > .detail-tabs button.selected {
+  color: var(--button-fg);
+  background: var(--ink-strong);
+  box-shadow: var(--shadow-accent-s);
+  font-weight: var(--weight-bold);
+}
+
+.recipe-detail .glass-card {
+  padding: 14px 16px;
+  border-radius: var(--r-card);
+}
+.recipe-detail .recipe-cooking-content {
+  gap: 16px;
+}
+
+/* «Сложность · N шагов по порядку» + точки + плитки. */
+.recipe-detail .recipe-difficulty {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+.recipe-difficulty-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.recipe-difficulty-head .kicker {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+}
+.recipe-detail .recipe-difficulty-head h2 {
+  margin: 2px 0 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.recipe-detail .recipe-difficulty > .recipe-difficulty-head > span {
+  flex: none;
+  margin: 0;
+  display: flex;
+  gap: 5px;
+}
+.recipe-detail .recipe-difficulty i {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid rgba(42, 29, 20, 0.5);
+  background: transparent;
+}
+.recipe-detail .recipe-difficulty i.is-filled {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+.recipe-detail .recipe-difficulty dl {
+  padding: 0;
+  border: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.recipe-detail .recipe-difficulty dl > div {
+  min-width: 0;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 0;
+  border-radius: var(--r-tile);
+  background: var(--glass-3-bg);
+  box-shadow: var(--glint);
+}
+.recipe-detail .recipe-difficulty dt {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.recipe-detail .recipe-difficulty dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+/* Утварь — живой текст, бывает длинным: плитка на всю ширину. */
+.recipe-detail .recipe-difficulty dl > .recipe-difficulty-gear {
+  grid-column: 1 / -1;
+}
+.recipe-detail .recipe-difficulty-gear dd {
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+
+/* «Продукты на всю готовку»: сегмент количеств, строки 15, «Развернуть» 44. */
+.recipe-detail .recipe-products-preview {
+  padding-bottom: 4px;
+}
+.recipe-detail .recipe-products-preview > header {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 8px;
+}
+.recipe-detail .recipe-products-preview > header h2 {
+  margin: 0;
+  color: var(--ink-body);
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0;
+}
+.recipe-detail .recipe-product-scale {
+  margin: 0;
+  padding: 3px;
+  display: flex;
+  gap: 2px;
+  border-radius: var(--r-pill);
+  background: var(--glass-3-bg);
+  box-shadow: var(--glint);
+}
+.recipe-detail .recipe-product-scale button {
+  position: relative;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.recipe-detail .recipe-product-scale button::before {
+  content: "";
+  position: absolute;
+  inset: -7px 0;
+}
+.recipe-detail .recipe-product-scale button.selected {
+  color: var(--button-fg);
+  background: var(--ink-strong);
+  font-weight: var(--weight-bold);
+}
+.recipe-detail .recipe-product-list {
+  margin-top: 0;
+}
+.recipe-detail .recipe-product-list > div {
+  min-height: 36px;
+  padding: 6px 0;
+  border-top: 1px solid var(--ink-track);
+  border-bottom: 0;
+}
+.recipe-detail .recipe-product-list span {
+  color: var(--ink);
+  font-size: var(--text-body);
+}
+.recipe-detail .recipe-product-list b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.recipe-products-toggle {
+  width: 100%;
+  min-height: var(--hit-min);
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-top: 1px solid var(--ink-track);
+  background: none;
+  color: var(--ink);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  text-align: left;
+}
+.recipe-products-toggle .icon {
+  flex: none;
+  transform: rotate(90deg);
+  transition: transform 200ms var(--motion-settled);
+}
+.recipe-products-toggle[aria-expanded="true"] .icon {
+  transform: rotate(-90deg);
+}
+
+/* Нижняя панель действий — единственное стекло карточки. */
+.recipe-detail .recipe-detail-actions {
+  background: var(--glass-1-bg);
+  border-color: var(--glass-1-border);
+  box-shadow: var(--shadow-chrome), var(--glint);
+  -webkit-backdrop-filter: var(--glass-1-blur);
+  backdrop-filter: var(--glass-1-blur);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .recipe-backdrop,
+  .recipe-detail.has-hero-photo .recipe-backdrop {
+    background: #f3d9c6;
+  }
+  .recipe-backdrop img,
+  .recipe-backdrop::after,
+  .recipe-detail .recipe-hero-photo > img.recipe-hero-soft {
+    display: none;
+  }
+}
+
+/* ============================================================
+   Каталог «Рецепты»
+   ============================================================ */
+
+/* На телефоне и планшете wordmark в шапке не показываем (C-Catalog). */
+@media (max-width: 1099px) {
+  .catalog-header > .mise-wordmark {
+    display: none;
+  }
+}
+.catalog-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.catalog-header .catalog-kicker {
+  min-width: 0;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  color: var(--ink);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.catalog-kicker > svg {
+  flex: none;
+  color: var(--terracotta);
+}
+.catalog-kicker > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.catalog-header .catalog-sort-button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  color: var(--ink);
+}
+.catalog-header .catalog-head-row {
+  margin-top: 14px;
+  padding: 0 4px;
+}
+.catalog-header h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-hero);
+  text-wrap: balance;
+}
+.catalog-sort-meta {
+  margin: 4px 0 0;
+  color: var(--accent-text);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.catalog-header .catalog-search {
+  margin-top: 14px;
+  min-height: 48px;
+  padding: 0 18px;
+  gap: 10px;
+  border: 1px solid var(--glass-2-border);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  color: var(--ink);
+}
+.catalog-filter-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.catalog-filter-row .catalog-cuisine-row {
+  margin: 0;
+}
+.catalog-header .catalog-filter-button,
+.catalog-header .cuisine-menu-trigger,
+.catalog-header .catalog-chips .chip {
+  position: relative;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  color: var(--ink);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.catalog-header .catalog-filter-button::before,
+.catalog-header .cuisine-menu-trigger::before,
+.catalog-header .catalog-chips .chip::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+.catalog-header .catalog-filter-button.is-active,
+.catalog-header .cuisine-menu-trigger.is-active,
+.catalog-header .catalog-chips .chip[aria-checked="true"] {
+  border-color: var(--ink-strong);
+  background: var(--ink-strong);
+  box-shadow: var(--shadow-accent-s);
+  color: var(--button-fg);
+  font-weight: var(--weight-bold);
+}
+.catalog-header .catalog-chips {
+  margin-top: 8px;
+  padding-block: 4px;
+}
+
+/* Карточки: фото 150 с бейджем ккал, название 15/600, чип плана или «докупить». */
+.catalog-grid .recipe-card {
+  padding: 6px;
+  border-radius: var(--r-row);
+  background: var(--glass-2-bg);
+}
+.catalog-grid .recipe-card-open {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.catalog-grid .recipe-media {
+  flex: none;
+  height: 150px;
+  border-radius: var(--r-nested);
+}
+.catalog-grid .recipe-kcal {
+  padding: 3px 10px;
+  border: 1px solid var(--glass-2-border);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s);
+  color: var(--accent-text);
+  font-weight: var(--weight-bold);
+}
+.catalog-grid .recipe-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.catalog-grid .recipe-body h2 {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+.catalog-grid .recipe-meta {
+  margin: 3px 0 0;
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.catalog-grid .recipe-chips {
+  margin-top: auto;
+  padding-top: 8px;
+}
+.catalog-grid .recipe-batch-badge,
+.catalog-grid .missing-badge,
+.catalog-grid .recipe-chip {
+  position: static;
+  min-height: 24px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: var(--r-pill);
+  font-size: var(--text-min);
+  font-weight: var(--weight-bold);
+}
+/* Мята — «в плане», терракота — «докупить N». */
+.catalog-grid .recipe-batch-badge,
+.catalog-grid .missing-badge.is-ready {
+  background: var(--tint-mint-flat);
+  color: var(--mint-text);
+}
+.catalog-grid .missing-badge.is-short {
+  background: var(--tint-terracotta);
+  color: var(--accent-text);
+}
+.catalog-grid .recipe-chip {
+  background: var(--glass-3-bg);
+  color: var(--ink-muted);
+  font-weight: var(--weight-semibold);
+}
+
+/* Заглушки фото без лиловых и розовых заливок: тёплые тона палитры v2.2.
+   Классы общие (каталог, неделя, мастер), заливка видна только без фото. */
+.art-0,
+.art-4 {
+  background: #f3d9c6;
+}
+.art-1 {
+  background: var(--tint-mint-flat);
+}
+.art-2 {
+  background: #f6e2c4;
+}
+.art-3 {
+  background: var(--tint-terracotta);
+}

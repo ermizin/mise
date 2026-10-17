@@ -10513,16 +10513,30 @@ function RecipesScreen({
         ref={headerRef}
       >
         <MiseWordmark />
-        <div className="catalog-head-row">
-          <div>
-            <p className="catalog-kicker">
+        <div className="catalog-top-row">
+          <p className="catalog-kicker">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden
+              focusable="false"
+            >
+              <path d="M4 5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" />
+              <path d="M4 21a2 2 0 0 1 2-2h14" />
+            </svg>
+            <span>
               {withPlural(newMenuRecipes.length, FORMS.recipe)}
               {fromYourProducts === null
                 ? ""
                 : ` · ${fromYourProducts} из ваших`}
-            </p>
-            <h1>Рецепты</h1>
-          </div>
+            </span>
+          </p>
           <div className="catalog-head-actions">
             <button
               className="btn btn-icon catalog-sort-button"
@@ -10541,24 +10555,16 @@ function RecipesScreen({
             >
               <Icon name="filter" size={18} />
             </button>
-            <button
-              className={`catalog-filter-button ${active.length ? "is-active" : ""}`}
-              aria-label={
-                active.length
-                  ? `Фильтры, активно ${active.length}`
-                  : "Фильтры"
-              }
-              onClick={() => setFiltersOpen(true)}
-            >
-              Фильтры
-              {active.length > 0 && (
-                <span className="catalog-filter-count">{active.length}</span>
-              )}
-            </button>
+          </div>
+        </div>
+        <div className="catalog-head-row">
+          <div>
+            <h1>Рецепты</h1>
+            <p className="catalog-sort-meta">{catalogSortLabels[state.sort]}</p>
           </div>
         </div>
         <label className="catalog-search">
-          <Icon name="search" size={16} />
+          <Icon name="search" size={20} />
           <input
             type="search"
             value={state.q}
@@ -10569,15 +10575,31 @@ function RecipesScreen({
             }
           />
         </label>
-        {/* Отдельная строка, а не соседство с сортировкой и «Фильтрами»:
-            в ряду действий кнопка кухни отбирала ширину у заголовка, и
-            «Рецепты» ломались на три строки уже на 390 px. */}
-        <div className="catalog-cuisine-row">
-          <CuisineMenu
-            value={state.cuisine}
-            options={catalogCuisines}
-            onChange={(next) => updateCatalog({ ...state, cuisine: next })}
-          />
+        <div className="catalog-filter-row">
+          <button
+            className={`catalog-filter-button ${active.length ? "is-active" : ""}`}
+            aria-label={
+              active.length
+                ? `Фильтры, активно ${active.length}`
+                : "Фильтры"
+            }
+            onClick={() => setFiltersOpen(true)}
+          >
+            Фильтры
+            {active.length > 0 && (
+              <span className="catalog-filter-count">{active.length}</span>
+            )}
+          </button>
+          {/* Кухня — в ряду фильтров под поиском, а не рядом с заголовком:
+              там кнопка отбирала ширину у «Рецептов» уже на 390 px. Ряд не
+              прокручивается, иначе поповер кухни обрезался бы. */}
+          <div className="catalog-cuisine-row">
+            <CuisineMenu
+              value={state.cuisine}
+              options={catalogCuisines}
+              onChange={(next) => updateCatalog({ ...state, cuisine: next })}
+            />
+          </div>
         </div>
         {(active.length > 0 || !state.slot) && (
           <div className="chip-row catalog-chips">
@@ -10631,7 +10653,6 @@ function RecipesScreen({
               : ""
           }`}
         >
-          <span>{catalogSortLabels[state.sort]}</span>
           {active.length > 0 && (
             <button
               className="btn btn-ghost"
@@ -10848,9 +10869,6 @@ function RecipeCard({
       >
         <div className={`recipe-media art-${index % 5}`}>
           <RecipeMedia recipe={recipe} />
-          {batchNumber && (
-            <span className="recipe-batch-badge">в партии {batchNumber}</span>
-          )}
           <span className="recipe-kcal">{formatMacro(recipe.macros.kcal)} ккал</span>
         </div>
         <div className="recipe-body">
@@ -10859,7 +10877,10 @@ function RecipeCard({
             {(plan ? planDisplayMethod(recipe, plan) : undefined)?.timeMinutes ?? recipe.time} мин · {recipe.servingWeight} г · Б {formatMacro(recipe.macros.protein)}
           </p>
           <div className="recipe-chips">
-            {missing !== null && (
+            {batchNumber && (
+              <span className="recipe-batch-badge">в партии {batchNumber}</span>
+            )}
+            {missing !== null && !batchNumber && (
               <span className={`missing-badge ${missing ? "is-short" : "is-ready"}`}>
                 докупить {missing}
               </span>
@@ -16230,6 +16251,13 @@ function RecipeView({
   const [section, setSection] = useState<RecipeSection>("cooking");
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
   const [photoExpanded, setPhotoExpanded] = useState(false);
+  /* Фото-герой (C-KIT §7): та же картинка ещё дважды — размытым фоном экрана и
+     мягким переходом под резким снимком. Если файл не загрузился, карточка
+     переходит в режим без героя: плитка-заглушка и контент сверху. */
+  const heroPhotoUrl = recipe.provenance.imageUrl;
+  const [failedHeroPhoto, setFailedHeroPhoto] = useState<string | null>(null);
+  const heroPhoto =
+    heroPhotoUrl && failedHeroPhoto !== heroPhotoUrl ? heroPhotoUrl : null;
   const photoTouchStart = useRef<number | null>(null);
   const stepsRef = useRef<HTMLElement | null>(null);
   const cookingInstructionsTracked = useRef(false);
@@ -16499,9 +16527,17 @@ function RecipeView({
   const visibleIngredients = ingredientsExpanded
     ? sortedIngredients
     : sortedIngredients.slice(0, 6);
+  /* Обычная утварь уже видна плиткой «Утварь» в карточке сложности; отдельная
+     карточка остаётся только для статусов: скрытая заготовка, недоступный или
+     сохранённый способ, примечание способа. */
+  const showEquipmentStatus =
+    (plan && Object.hasOwn(hiddenPreparationRecipes, recipe.id)) ||
+    !cookingMethod ||
+    Boolean(plan?.recipeMethods?.[recipe.id] && displayMethod) ||
+    Boolean(displayMethod?.note);
   return (
     <main
-      className={`app-shell recipe-detail${photoExpanded ? " photo-expanded" : ""}`}
+      className={`app-shell recipe-detail${heroPhoto ? " has-hero-photo" : " is-photoless"}${photoExpanded ? " photo-expanded" : ""}`}
       onTouchStart={(event) => {
         const touch = event.touches[0];
         photoTouchStart.current =
@@ -16516,10 +16552,32 @@ function RecipeView({
         if (start - end >= 48) setPhotoExpanded(false);
       }}
     >
-      <div className="recipe-hero-photo">
-        <RecipeMedia recipe={recipe} eager />
-        <span className="recipe-cover-shade" aria-hidden />
+      <div className="recipe-backdrop" aria-hidden>
+        {heroPhoto && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={heroPhoto}
+            alt=""
+            referrerPolicy="no-referrer"
+            onError={() => setFailedHeroPhoto(heroPhoto)}
+          />
+        )}
       </div>
+      {heroPhoto && (
+        <div className="recipe-hero-photo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="recipe-hero-soft"
+            src={heroPhoto}
+            alt=""
+            aria-hidden
+            referrerPolicy="no-referrer"
+            onError={() => setFailedHeroPhoto(heroPhoto)}
+          />
+          <RecipeMedia recipe={recipe} eager />
+          <span className="recipe-cover-shade" aria-hidden />
+        </div>
+      )}
       <header className="detail-header">
         <button
           className="icon-button glass"
@@ -16536,9 +16594,16 @@ function RecipeView({
         </span>
       </header>
       <section className="detail-hero">
+        {!heroPhoto && (
+          <span className="recipe-hero-tile" aria-hidden>
+            <RecipeMedia recipe={recipe} eager />
+          </span>
+        )}
         <p className="kicker">
           {mealMeta[slot ?? recipe.slot].label}
-          {batch ? ` · ${cookingPortions} порц.` : " · базовая порция"}
+          {batch
+            ? ` · партия ${batch.index + 1} · ${formatDate(batch.start, true)}`
+            : " · базовая порция"}
         </p>
         <h1>{recipe.title}</h1>
         {recipe.id.startsWith("simple-") && <small>{recipe.provenance.kind === "generated" ? "Изображение создано для Mise; размер порции на фото условный." : "Фото исходного рецепта. Гарнир и подача могут отличаться; рассчитанный состав указан ниже."}</small>}
@@ -16639,7 +16704,7 @@ function RecipeView({
             key={`cooking-${sectionMotion.epoch}`}
             className={`recipe-cooking-content${sectionMotionClass}`}
           >
-            <section className="recipe-equipment glass-card">
+            {showEquipmentStatus && <section className="recipe-equipment glass-card">
               <p className="kicker">Утварь</p>
               {plan && Object.hasOwn(hiddenPreparationRecipes, recipe.id) && <p role="status">Заготовка сохранена в вашем плане. Для новых меню она временно скрыта; при желании замените блюдо в меню.</p>}
               {!cookingMethod && <>
@@ -16653,57 +16718,61 @@ function RecipeView({
               {plan?.recipeMethods?.[recipe.id] && displayMethod && <p>Сохранённый способ: {displayMethod.label}.</p>}
               {displayMethod?.note && <p>{displayMethod.note}</p>}
               {displayMethod && <p>Понадобится: {displayMethod.requiredEquipment.map(equipmentLabel).join(" · ") || "нож, доска и миска"}.</p>}
-            </section>
+            </section>}
             <section className="recipe-difficulty glass-card">
-              <div>
-                <p className="kicker">Сложность</p>
-                <h2>{difficultyLabel}</h2>
-                <span aria-label={`Сложность: ${difficultyLabel}, ${difficulty} из 3`}>
+              <div className="recipe-difficulty-head">
+                <div>
+                  <p className="kicker">Сложность</p>
+                  <h2>
+                    {difficultyLabel} · {displaySteps.length}{" "}
+                    {plural(displaySteps.length, ["шаг", "шага", "шагов"])} по порядку
+                  </h2>
+                </div>
+                <span role="img" aria-label={`Сложность: ${difficultyLabel}, ${difficulty} из 3`}>
                   {[1, 2, 3].map((dot) => (
                     <i className={dot <= difficulty ? "is-filled" : ""} key={dot} />
                   ))}
                 </span>
               </div>
-              <p className="recipe-difficulty-evidence">
-                {displayMethod?.steps ? displayMethod.requiredEquipment.map(equipmentLabel).join(" · ") : recipe.effortDescription}
-              </p>
               <dl>
                 <div><dt>Активно</dt><dd>{cookingActiveMinutes} мин</dd></div>
                 <div><dt>Всего</dt><dd>{cookingTime} мин</dd></div>
+                <div className="recipe-difficulty-gear">
+                  <dt>Утварь</dt>
+                  <dd className="recipe-difficulty-evidence">
+                    {displayMethod?.steps ? displayMethod.requiredEquipment.map(equipmentLabel).join(" · ") : recipe.effortDescription}
+                  </dd>
+                </div>
               </dl>
             </section>
             <section className="recipe-products-preview glass-card">
               <header>
-                <div>
-                  <p className="kicker">Подготовить</p>
-                  <h2>Продукты на готовку</h2>
-                </div>
-                <button
-                  className="text-button"
-                  aria-expanded={ingredientsExpanded}
-                  onClick={() => setIngredientsExpanded((value) => !value)}
-                >
-                  {ingredientsExpanded ? "Свернуть" : "Развернуть"}
-                </button>
+                <h2>
+                  {!batch
+                    ? "Продукты на готовку"
+                    : productScale === "cooking"
+                      ? "Продукты на всю готовку"
+                      : "Продукты на 1 порцию"}
+                </h2>
+                {batch && (
+                  <div className="recipe-product-scale" role="group" aria-label="Количество продуктов">
+                    <button
+                      className={productScale === "cooking" ? "selected" : ""}
+                      aria-pressed={productScale === "cooking"}
+                      onClick={() => setProductScale("cooking")}
+                    >
+                      На {cookingPortions} порц.
+                    </button>
+                    <button
+                      className={productScale === "portion" ? "selected" : ""}
+                      aria-pressed={productScale === "portion"}
+                      onClick={() => setProductScale("portion")}
+                    >
+                      На 1 порцию
+                    </button>
+                  </div>
+                )}
               </header>
-              {ingredientsExpanded && batch && (
-                <div className="recipe-product-scale" role="group" aria-label="Количество продуктов">
-                  <button
-                    className={productScale === "cooking" ? "selected" : ""}
-                    aria-pressed={productScale === "cooking"}
-                    onClick={() => setProductScale("cooking")}
-                  >
-                    На {cookingPortions} порц.
-                  </button>
-                  <button
-                    className={productScale === "portion" ? "selected" : ""}
-                    aria-pressed={productScale === "portion"}
-                    onClick={() => setProductScale("portion")}
-                  >
-                    На 1 порцию
-                  </button>
-                </div>
-              )}
               <div className="recipe-product-list">
                 {visibleIngredients.map((ingredient) => (
                   <div key={ingredient.id}>
@@ -16730,10 +16799,21 @@ function RecipeView({
                     </b>
                   </div>
                 ))}
-                {!ingredientsExpanded && totalProductCount > 6 && (
-                  <small>Ещё {totalProductCount - 6} — нажмите «Развернуть»</small>
-                )}
               </div>
+              <button
+                type="button"
+                className="recipe-products-toggle"
+                aria-expanded={ingredientsExpanded}
+                onClick={() => setIngredientsExpanded((value) => !value)}
+              >
+                <span>
+                  {ingredientsExpanded ? "Свернуть" : "Развернуть"}
+                  {!ingredientsExpanded && totalProductCount > 6
+                    ? ` · все ${totalProductCount} ${plural(totalProductCount, ["продукт", "продукта", "продуктов"])}`
+                    : ""}
+                </span>
+                <Icon name="chevron" size={18} />
+              </button>
             </section>
             <section className="recipe-steps-card glass-card" ref={stepsRef}>
               <p className="kicker">По порядку</p>
