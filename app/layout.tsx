@@ -2,6 +2,11 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./platform-layout.css";
 import "./redesign-c.css";
+import "./redesign-c-week.css";
+import "./redesign-c-cook.css";
+import "./redesign-c-recipe.css";
+import "./redesign-c-wizard.css";
+import "./redesign-c-onboarding.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mise.ermizinm.ru"),

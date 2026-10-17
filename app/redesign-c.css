@@ -179,3 +179,8 @@
 .app-workspace .bottom-nav button.is-active small {
   font-weight: var(--weight-bold);
 }
+
+/* Шкала калорий остаётся оранжевой, когда кнопки стали чернильными */
+.week-kcal-linear .macro-bar i {
+  background: var(--macro-kcal);
+}
