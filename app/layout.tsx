@@ -6,6 +6,7 @@ import "./redesign-c-week.css";
 import "./redesign-c-cook.css";
 import "./redesign-c-recipe.css";
 import "./redesign-c-wizard.css";
+import "./redesign-c-wizard-people.css";
 import "./redesign-c-onboarding.css";
 
 export const metadata: Metadata = {
