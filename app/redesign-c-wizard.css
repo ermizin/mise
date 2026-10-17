@@ -1,1 +1,1405 @@
-/* Редизайн C v2.2 · пакет «wizard». Правила экрана; токены — из globals.css. */
+/* Редизайн C v2.2 · пакет «wizard». Правила экрана; токены — из globals.css.
+   Макеты: C-Step1, C-Step2, C-Step3, C-Step5, C-Step7, C-Saved; общий хром
+   мастера (пилюля «Шаг N из 7», семь сегментов прогресса, нижняя капсула
+   «Назад / Дальше») — для всех семи шагов, включая шаги пакета wizard-b.
+   Мастер живёт вне .app-workspace: десктопный сайдбар его не касается. */
+
+/* ---------- Фон и верхняя кромка ---------- */
+.builder-shell {
+  padding-top: max(16px, calc(env(safe-area-inset-top) + 8px));
+  padding-right: max(16px, env(safe-area-inset-right));
+  padding-left: max(16px, env(safe-area-inset-left));
+  background:
+    radial-gradient(60% 42% at 86% -4%, rgba(216, 238, 226, 0.95), transparent 68%),
+    var(--app-wash),
+    url("/bg/plan.jpg") center / cover no-repeat,
+    var(--bg-base);
+}
+/* Без стекла: бюджет blur — нижняя капсула и лист. Кромка только гасит
+   прокрученный контент под пилюлей шага. */
+.builder-shell::before {
+  height: calc(84px + env(safe-area-inset-top));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 240, 228, 0.94) 0%,
+    rgba(255, 240, 228, 0.82) 72%,
+    rgba(255, 240, 228, 0) 100%
+  );
+}
+
+.wizard-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Шапка: пилюля шага справа ---------- */
+.builder-chat-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 40px;
+  gap: 8px;
+}
+.builder-step-pill {
+  margin: 0;
+  height: 40px;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+.builder-chat-header.settings-header {
+  justify-content: flex-start;
+}
+.builder-chat-header.settings-header > div {
+  flex: 1 1 auto;
+  text-align: left;
+  padding: 0 4px;
+}
+.builder-chat-header.settings-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0;
+}
+.builder-chat-header.settings-header .kicker {
+  color: var(--accent-text);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---------- Прогресс: семь сегментов 4px ---------- */
+.builder-chat-progress {
+  height: auto;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 4px;
+  border-radius: 0;
+  background: none;
+  overflow: visible;
+}
+.builder-chat-progress li {
+  position: relative;
+  flex: 1 1 0;
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: rgba(42, 29, 20, 0.18);
+  transition: background-color 320ms var(--motion-settled);
+}
+.builder-chat-progress li.is-done {
+  background: var(--ink);
+}
+
+/* ---------- Контент: вопрос — заголовок экрана ---------- */
+.builder-content {
+  padding-top: 16px;
+  scroll-padding-top: 16px;
+}
+.builder-chat-history {
+  margin: 0 0 16px;
+  gap: 8px;
+}
+.builder-chat-history-toggle {
+  justify-self: start;
+  min-height: var(--hit-min);
+  padding: 8px 14px;
+  border: 1px solid var(--glass-2-border);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+}
+.builder-chat-turn {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+.builder-chat-history .chat-bubble.is-mise {
+  display: block;
+  width: auto;
+  max-width: none;
+  padding: 0 4px;
+  border: 0;
+  border-radius: 0;
+  color: var(--ink-muted);
+  background: none;
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.builder-chat-history .chat-bubble.is-user {
+  justify-self: start;
+  max-width: 100%;
+  padding: 8px 12px 8px 14px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.builder-chat-history button.chat-bubble.is-user .icon {
+  color: var(--accent-text);
+  opacity: 1;
+}
+.builder-chat-current {
+  gap: 12px;
+}
+.builder-chat-current .is-pending {
+  justify-self: start;
+}
+.builder-chat-question,
+.builder-chat-menu-ready {
+  width: auto;
+  max-width: none;
+  padding: 0 4px;
+  display: grid;
+  gap: 4px;
+  border: 0;
+  border-radius: 0;
+  color: var(--ink);
+  background: none;
+  box-shadow: none;
+}
+.builder-chat-question h1,
+.builder-chat-question h2,
+.builder-chat-menu-ready h1,
+.builder-chat-menu-ready h2 {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: var(--weight-heavy);
+  line-height: 1.05;
+  letter-spacing: var(--tracking-h1);
+  text-wrap: balance;
+}
+.builder-chat-question p,
+.builder-chat-menu-ready b {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+.builder-chat-menu-ready p {
+  margin: 2px 0 0;
+  color: var(--ink-body);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+}
+.builder-chat-typing,
+.builder-menu-assembly {
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+}
+.builder-menu-assembly {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.builder-menu-assembly > strong {
+  font-family: var(--font-display);
+  font-weight: var(--weight-bold);
+}
+.builder-chat-typing span {
+  background: var(--terracotta);
+}
+
+/* Карточки мастера — непрозрачные .glass-2 (кит §4), без blur. */
+.builder-shell .builder-content .glass-card {
+  border: 1px solid var(--glass-2-border);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.builder-chat-response.is-step-0,
+.builder-chat-response.is-step-1,
+.builder-chat-response.is-step-2,
+.builder-chat-response.is-step-4,
+.builder-chat-response.is-step-6 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.builder-chat-response.is-step-0 > *,
+.builder-chat-response.is-step-1 > *,
+.builder-chat-response.is-step-2 > *,
+.builder-chat-response.is-step-4 > *,
+.builder-chat-response.is-step-6 > * {
+  margin: 0;
+}
+
+/* ---------- Нижняя капсула: «Назад» + главная ---------- */
+.builder-chat-composer {
+  bottom: max(26px, calc(env(safe-area-inset-bottom) + 10px));
+  width: min(600px, calc(100% - 32px));
+  min-height: 66px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--glass-1-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-1-bg);
+  -webkit-backdrop-filter: var(--glass-1-blur);
+  backdrop-filter: var(--glass-1-blur);
+  box-shadow: var(--shadow-chrome), var(--glint);
+}
+.builder-chat-back {
+  flex: none;
+  width: 110px;
+  min-height: 54px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.builder-chat-back.is-compact {
+  width: 54px;
+}
+.builder-chat-back:disabled {
+  color: var(--ink-muted);
+  cursor: not-allowed;
+}
+.builder-chat-composer > div {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 4px;
+}
+.builder-chat-send {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 54px;
+  padding-inline: 16px;
+  border: 0;
+  border-radius: var(--r-pill);
+  color: var(--button-fg);
+  background: var(--button-grad);
+  box-shadow: var(--shadow-accent);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.builder-chat-send:disabled {
+  color: var(--ink-muted);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: none;
+}
+.builder-chat-send-count {
+  color: rgba(255, 241, 230, 0.8);
+}
+.builder-chat-send:disabled .builder-chat-send-count {
+  color: var(--ink-muted);
+}
+.builder-chat-alternative {
+  flex: none;
+  min-height: 54px;
+  padding-inline: 14px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+}
+@media (min-width: 601px) {
+  .builder-chat-composer > div + .builder-chat-send {
+    flex: none;
+  }
+}
+@media (max-width: 600px) {
+  .builder-chat-composer,
+  .builder-chat-composer.has-menu-choice {
+    display: flex;
+  }
+  .builder-chat-alternative,
+  .builder-chat-send {
+    width: auto;
+  }
+  /* Причина неактивной кнопки — отдельной плашкой над капсулой. */
+  .builder-chat-composer > div.is-blocking {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(100% + 8px);
+    padding: 10px 14px;
+    border: 1px solid var(--glass-2-border);
+    border-radius: var(--r-row);
+    background: var(--glass-2-bg);
+    box-shadow: var(--shadow-m), var(--glint);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .builder-chat-composer {
+    background: #fbe7d8;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* ---------- Подпись карточки внутри шага ---------- */
+.step-intro {
+  margin: 0 0 12px;
+  display: block;
+}
+.step-intro .kicker {
+  margin: 0;
+  color: var(--accent-text);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.step-intro h2 {
+  margin: 2px 0 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+.step-intro > p:last-child {
+  margin: 2px 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+
+/* ---------- Общие подписи полей карточек ---------- */
+.period-card,
+.meal-shares,
+.cooking-rhythm,
+.remainder-sheet,
+.kitchen-equipment,
+.review-people,
+.shopping-preview,
+.review-list {
+  padding: 14px;
+  border-radius: var(--r-card);
+}
+.period-card h2,
+.meal-shares h2,
+.review-people h2 {
+  margin: 0 0 8px;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+/* ---------- Шаг 1 «Период» ---------- */
+.period-date-field,
+.period-end-field input {
+  min-height: var(--hit-min);
+  border: 1px solid rgba(42, 29, 20, 0.5);
+  border-radius: var(--r-tile);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+}
+.period-date-field {
+  padding: 0 10px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.period-date-field > .icon {
+  flex: none;
+  color: var(--terracotta);
+}
+.period-date-field input,
+.period-end-field input {
+  min-width: 0;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-input);
+  font-weight: var(--weight-semibold);
+}
+.period-date-field input {
+  flex: 1 1 auto;
+  height: 42px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.period-date-field:focus-within,
+.period-end-field input:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+.period-date-field input:focus-visible {
+  outline: none;
+}
+.period-hint {
+  margin: 6px 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.builder-shell .quick-periods {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.builder-shell .quick-periods button {
+  position: relative;
+  flex: 1 1 0;
+  min-width: max-content;
+  min-height: 36px;
+  padding: 3px 10px;
+  border: 1px solid var(--surface-control-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--surface-control-bg);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.15;
+}
+.builder-shell .quick-periods button::before {
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+}
+.builder-shell .quick-periods button.selected {
+  border-color: var(--ink);
+  color: var(--button-fg);
+  background: var(--button-grad);
+  box-shadow: var(--shadow-accent-s);
+}
+.period-summary {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(42, 29, 20, 0.1);
+}
+.period-summary b {
+  display: block;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+.period-summary small {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.period-summary .note {
+  margin: 0;
+}
+.period-end-field {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.period-end-field span {
+  color: var(--ink-muted);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.period-end-field input {
+  width: min(60%, 220px);
+  padding: 0 10px;
+}
+.period-days {
+  padding: 10px;
+  border-radius: var(--r-row);
+}
+.period-days ul {
+  margin: 0;
+  padding: 0 2px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border-radius: var(--r-tile);
+  background: var(--tint-terracotta);
+}
+.period-days li {
+  min-width: 0;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.period-days small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 14px;
+  text-transform: uppercase;
+}
+.period-days li.is-cooking small {
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+}
+.period-days b {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  line-height: 20px;
+}
+.period-days li i,
+.period-days-legend i {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+}
+.period-days li.is-cooking i,
+.period-days-legend i {
+  background: var(--terracotta);
+}
+.period-days-legend {
+  margin: 0;
+  padding: 10px 4px 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+
+/* ---------- Шаг 2 «Приёмы пищи» ---------- */
+.builder-shell .meals-grid {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+.builder-shell .choice-card {
+  min-height: 60px;
+  padding: 12px 16px 12px 12px;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--r-row);
+  color: var(--ink);
+}
+.builder-shell .choice-card .meal-choice-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border: 0;
+  border-radius: 50%;
+}
+.builder-shell .choice-card[data-slot="breakfast"] .meal-choice-icon,
+.builder-shell .choice-card[data-slot="lunch"] .meal-choice-icon {
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.builder-shell .choice-card[data-slot="snack1"] .meal-choice-icon,
+.builder-shell .choice-card[data-slot="snack2"] .meal-choice-icon {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.builder-shell .choice-card[data-slot="dinner"] .meal-choice-icon {
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+}
+.meal-choice-copy {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.builder-shell .choice-card .meal-choice-copy b {
+  margin: 0;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.builder-shell .builder-content .choice-card .meal-choice-copy small {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-regular);
+  line-height: 1.25;
+}
+.meal-choice-check {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid rgba(42, 29, 20, 0.6);
+  border-radius: 50%;
+  color: #fff;
+  background: #fff;
+}
+.choice-card.selected .meal-choice-check {
+  border-color: var(--mint);
+  background: var(--mint);
+}
+.builder-shell .builder-content .choice-card.selected,
+.builder-shell .builder-content .style-card.selected,
+.builder-shell .builder-content .remainder-sheet button.selected {
+  box-shadow: inset 0 0 0 1px var(--ink), var(--shadow-m);
+}
+.meal-shares {
+  border-radius: var(--r-row);
+}
+.meal-shares h2 {
+  margin-bottom: 10px;
+}
+.meal-shares-bar {
+  height: 10px;
+  display: flex;
+  gap: 2px;
+  border-radius: var(--r-bar);
+  overflow: hidden;
+}
+.meal-shares-bar span {
+  flex-basis: 0;
+  background: rgba(42, 29, 20, 0.18);
+}
+.meal-shares-bar span.is-selected {
+  background: var(--terracotta);
+}
+.meal-shares-total {
+  margin: 10px 0 0;
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+.meal-shares-total em {
+  color: var(--accent-text);
+  font-style: normal;
+}
+.meal-shares-note {
+  margin: 2px 0 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* ---------- Шаг 3 «Вид меню» ---------- */
+.builder-shell .style-list {
+  gap: 8px;
+}
+.builder-shell .style-card {
+  min-height: 64px;
+  padding: 12px 14px 12px 16px;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 12px;
+  border-radius: var(--r-row);
+  color: var(--ink);
+}
+.builder-shell .style-card h3 {
+  margin: 0 0 2px;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.builder-shell .style-card p,
+.builder-shell .style-card small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+.builder-shell .style-card i,
+.builder-shell .remainder-sheet button i {
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  border: 1.5px solid rgba(42, 29, 20, 0.6);
+  border-radius: 50%;
+  background: #fff;
+}
+.builder-shell .style-card.selected i,
+.builder-shell .remainder-sheet button.selected i {
+  border: 7px solid var(--ink);
+  background: #fff;
+}
+.builder-shell .remainder-sheet button.selected i .icon {
+  display: none;
+}
+.style-info {
+  min-height: 52px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: var(--r-row);
+  color: var(--ink-body);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.style-info > .icon {
+  flex: none;
+  color: var(--terracotta);
+}
+
+/* ---------- Шаг 5 «Готовка» ---------- */
+.builder-shell .day-scale {
+  min-height: 52px;
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid rgba(42, 29, 20, 0.5);
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--glint);
+}
+.builder-shell .day-scale button {
+  min-height: 46px;
+  padding: 4px 0;
+  border: 0;
+  border-radius: var(--r-pill);
+  color: var(--ink-muted);
+  background: transparent;
+}
+.builder-shell .day-scale b {
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
+}
+.builder-shell .day-scale small {
+  margin-top: 1px;
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1.1;
+}
+.builder-shell .day-scale button.selected {
+  color: var(--button-fg);
+  background: var(--button-grad);
+  box-shadow: var(--shadow-accent-s);
+}
+.builder-shell .day-scale button.selected b {
+  color: var(--button-fg);
+}
+.cooking-rhythm-summary {
+  margin-top: 12px;
+}
+.cooking-rhythm-summary b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.cooking-rhythm-summary em {
+  color: var(--accent-text);
+  font-style: normal;
+}
+.builder-shell .batch-timeline {
+  margin: 8px 0 0;
+  padding: 0;
+  border: 0;
+  list-style: none;
+}
+.batch-timeline li {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.batch-timeline li + li {
+  border-top: 1px solid rgba(42, 29, 20, 0.1);
+}
+.batch-timeline li > span {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--accent-text);
+  background: var(--tint-terracotta);
+  font-size: var(--text-min);
+  font-weight: var(--weight-bold);
+}
+.builder-shell .batch-timeline b {
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.builder-shell .batch-timeline small {
+  margin-top: 1px;
+}
+.builder-shell .remainder-sheet .kicker,
+.builder-shell .kitchen-equipment .kicker {
+  color: var(--accent-text);
+  font-size: var(--text-kicker);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.builder-shell .remainder-sheet h3,
+.builder-shell .kitchen-equipment h3 {
+  margin: 2px 0 2px;
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.builder-shell .remainder-sheet > p:not(.kicker),
+.builder-shell .kitchen-equipment > p {
+  margin: 0 0 8px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.builder-shell .remainder-sheet > button {
+  min-height: 60px;
+  margin-top: 6px;
+  padding: 10px 12px;
+  grid-template-columns: 36px minmax(0, 1fr) 24px;
+  gap: 10px;
+  border: 1px solid rgba(42, 29, 20, 0.12);
+  border-radius: var(--r-nested);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.9);
+}
+.builder-shell .remainder-sheet > button > .icon {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+}
+.builder-shell .remainder-sheet b {
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.builder-shell .remainder-sheet small {
+  margin-top: 1px;
+  color: var(--ink-muted);
+}
+.builder-shell .remainder-sheet > button:disabled {
+  opacity: 0.6;
+}
+.cooking-feasible {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-radius: var(--r-row);
+}
+.cooking-feasible > span {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.cooking-feasible p {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cooking-feasible b {
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+.cooking-feasible small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.builder-shell .kitchen-equipment-grid {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.builder-shell .kitchen-equipment-choice {
+  position: relative;
+  min-height: 36px;
+  padding: 3px 12px 3px 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--surface-control-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--surface-control-bg);
+}
+.builder-shell .kitchen-equipment-choice::before {
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+}
+.builder-shell .kitchen-equipment-choice b {
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.15;
+}
+.builder-shell .kitchen-equipment-check {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border: 1.5px solid rgba(42, 29, 20, 0.6);
+  border-radius: 50%;
+  color: #fff;
+  background: #fff;
+}
+.builder-shell .kitchen-equipment-choice.is-selected {
+  border-color: var(--ink);
+  color: var(--button-fg);
+  background: var(--button-grad);
+  box-shadow: var(--shadow-accent-s);
+}
+.builder-shell .kitchen-equipment-choice.is-selected .kitchen-equipment-check {
+  border-color: #ffd2b8;
+  background: var(--mint);
+}
+.builder-shell .kitchen-equipment-actions {
+  margin-top: 10px;
+}
+.builder-shell .kitchen-equipment-actions .text-button {
+  font-size: var(--text-link);
+}
+.builder-shell .kitchen-equipment-note {
+  margin: 8px 0 0;
+  color: var(--ink-muted);
+  line-height: 1.3;
+}
+
+/* ---------- Шаг 7 «Проверка» ---------- */
+.builder-shell .review-hero {
+  padding: 12px 16px;
+  border-radius: var(--r-row);
+}
+.builder-shell .review-stats {
+  padding: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+.builder-shell .review-stats p {
+  min-width: 0;
+  padding: 0 0 0 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-left: 1px solid rgba(42, 29, 20, 0.12);
+  border-radius: 0;
+  background: none;
+  text-align: left;
+}
+.builder-shell .review-stats p:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+.builder-shell .review-stats b {
+  color: var(--accent-text);
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  line-height: 1.2;
+}
+.builder-shell .review-stats small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.25;
+}
+.review-people {
+  padding: 14px 16px;
+}
+.review-people h2 {
+  margin-bottom: 2px;
+}
+.review-people ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.review-people li {
+  min-height: 56px;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.review-people li + li {
+  border-top: 1px solid rgba(42, 29, 20, 0.1);
+}
+.review-person-initial {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--accent-text);
+  background: var(--tint-terracotta);
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+.review-people li p {
+  min-width: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.review-people li b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.review-people li small,
+.review-people-note {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.review-people-note {
+  margin: 6px 0 0;
+}
+.builder-shell .shopping-preview {
+  padding: 14px 16px 4px;
+}
+.builder-shell .shopping-preview .group-title {
+  margin-bottom: 2px;
+}
+.builder-shell .shopping-preview .group-title h3 {
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+.builder-shell .shopping-preview .group-title em {
+  color: var(--accent-text);
+  font-style: normal;
+}
+.builder-shell .shopping-preview p {
+  min-height: 40px;
+  border-top: 1px solid rgba(42, 29, 20, 0.1);
+}
+.builder-shell .shopping-preview p span {
+  min-width: 0;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.builder-shell .shopping-preview p b {
+  flex: none;
+  color: var(--ink);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+}
+.builder-shell .shopping-preview .shopping-preview-toggle {
+  width: 100%;
+  min-height: var(--hit-min);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid rgba(42, 29, 20, 0.1);
+  border-radius: 0;
+  color: var(--ink);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  text-align: left;
+}
+.builder-shell .shopping-preview .shopping-preview-toggle[aria-expanded="true"] .icon {
+  transform: rotate(-90deg);
+}
+.builder-shell .shopping-preview .shopping-preview-toggle .icon {
+  transform: rotate(90deg);
+  transition: transform 220ms var(--motion-settled);
+}
+.builder-shell .review-list {
+  padding: 4px 16px;
+}
+.builder-shell .review-list button {
+  min-height: 56px;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 12px;
+  border-bottom: 1px solid rgba(42, 29, 20, 0.1);
+  color: var(--ink);
+}
+.builder-shell .review-list button:last-child {
+  border-bottom: 0;
+}
+.builder-shell .review-list button > .icon {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+}
+.builder-shell .review-list b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.builder-shell .review-list small {
+  margin-top: 1px;
+  color: var(--ink-muted);
+}
+.builder-shell .review-list i {
+  color: var(--accent-text);
+  font-size: var(--text-link);
+}
+
+/* ---------- «План готов!»: полноэкранный лист без стекла ---------- */
+.modal-backdrop:has(> .success-sheet) {
+  padding: 0;
+  place-items: stretch;
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.success-sheet {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-height: none;
+  height: 100dvh;
+  padding: max(16px, calc(env(safe-area-inset-top) + 8px))
+    max(16px, calc((100% - 608px) / 2))
+    calc(32px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  background:
+    radial-gradient(60% 42% at 86% -4%, rgba(216, 238, 226, 0.95), transparent 68%),
+    var(--app-wash),
+    url("/bg/plan.jpg") center / cover no-repeat,
+    var(--bg-base);
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.success-sheet > * {
+  flex: none;
+}
+.success-sheet > h2 {
+  margin: 40px 4px 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-hero);
+  text-wrap: balance;
+}
+.success-sheet > p.success-meta {
+  margin: -12px 4px 0;
+  color: var(--accent-text);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.35;
+}
+.success-sheet button,
+.success-sheet .calendar-export-link {
+  width: 100%;
+  margin: 0;
+}
+.success-sheet .calendar-export-link {
+  min-height: var(--hit-primary);
+  border-radius: var(--r-pill);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+  box-shadow: var(--shadow-accent);
+}
+.success-sheet > p.success-calendar-hint {
+  margin: -8px 8px 0;
+  color: var(--ink-body);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+  text-align: center;
+  text-wrap: balance;
+}
+.success-sheet > .secondary-button {
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-body);
+}
+.success-next {
+  padding: 12px 16px 4px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--r-card);
+}
+.success-next h3 {
+  margin: 0 0 2px;
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+}
+.success-sheet .success-next button,
+.success-sheet .success-reminders {
+  min-height: 52px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  color: var(--ink);
+  background: none;
+  text-align: left;
+}
+.success-sheet .success-next button + button {
+  border-top: 1px solid rgba(42, 29, 20, 0.1);
+}
+.success-sheet .success-reminders {
+  padding: 8px 16px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-row);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.success-next button > span:not(.success-next-icon),
+.success-reminders > span:not(.success-next-icon) {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.success-next b,
+.success-reminders b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.success-next small,
+.success-reminders small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+.success-next button > .icon,
+.success-reminders > .icon {
+  flex: none;
+  color: var(--ink-muted);
+}
+.success-next-icon {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-tile);
+}
+.success-next-icon.is-mint {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.success-next-icon.is-amber {
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.success-sheet > .text-button {
+  align-self: center;
+  width: auto;
+  font-size: var(--text-link);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .builder-shell,
+  .success-sheet {
+    background: #f3d9c6;
+  }
+}
+
+/* ---------- Поправки после проверки в браузере ---------- */
+/* Прокрученная история ответов уходит под верхнюю кромку плавно. */
+.builder-content {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 18px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 18px);
+}
+/* Пять чипов длительности в одну строку на 390. */
+.builder-shell .quick-periods {
+  flex-wrap: nowrap;
+}
+.builder-shell .quick-periods button {
+  min-width: 0;
+  padding: 3px 4px;
+  white-space: nowrap;
+}
+@media (max-width: 360px) {
+  .builder-shell .quick-periods {
+    flex-wrap: wrap;
+  }
+  .builder-shell .quick-periods button {
+    min-width: max-content;
+    padding: 3px 10px;
+  }
+}
+/* Итог проверки — три колонки, без старой плавающей раскладки. */
+.builder-shell .review-hero > .review-stats {
+  display: grid;
+  max-width: none;
+}
+/* На шаге «Выбор меню» в капсуле три действия: компактные подписи. */
+.builder-chat-composer.has-menu-choice .builder-chat-alternative,
+.builder-chat-composer.has-menu-choice .builder-chat-send {
+  padding-inline: 10px;
+  font-size: var(--text-link);
+}
+.builder-chat-composer.has-menu-choice .builder-chat-alternative {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.builder-chat-composer.has-menu-choice .builder-chat-send {
+  flex: 1 1 0;
+}
+.builder-chat-composer.has-menu-choice .builder-chat-send .icon {
+  display: none;
+}
