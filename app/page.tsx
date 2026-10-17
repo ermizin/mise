@@ -12967,6 +12967,7 @@ function PlanBuilder({
                   onReplace={replaceSelection}
                   onOpenRecipe={setPreviewRecipe}
                   onReassemble={() => startMenuAssembly("reset")}
+                  onChooseManual={showManualMenuChoice ? chooseManualMenu : undefined}
                 />
                 {!allSelected && (
                   <Note
@@ -13397,6 +13398,19 @@ const bodyFields: {
   { key: "weight", label: "Вес", unit: "кг", min: 35, max: 300 },
 ];
 
+/* В сегменте цели — глаголы (PRODUCT.md 4.3: снижать / держать / набирать):
+   полные названия не помещаются в три колонки на 390 px. */
+/* «Алкоголь в блюде» — отдельный переключатель в листе ограничений,
+   поэтому среди чипов аллергии его нет. */
+const hardAllergenOptions = (Object.keys(allergenMeta) as Allergen[]).filter(
+  (allergen) => allergen !== "alcohol",
+);
+const goalSegmentLabels: Record<NutritionGoal, string> = {
+  loss: "Снижать",
+  maintenance: "Держать",
+  gain: "Набирать",
+};
+
 type NutritionEstimateChangeKey = keyof NutritionWizardInput;
 type NutritionEstimateChange = {
   from: NutritionWizardInput[NutritionEstimateChangeKey];
@@ -13473,6 +13487,7 @@ function PeopleStep({
 }) {
   const [activeId, setActiveId] = useState(people[0]?.id ?? "");
   const [addedTileId, setAddedTileId] = useState<string | null>(null);
+  const [limitsOpen, setLimitsOpen] = useState(false);
   const [normExplanation, setNormExplanation] = useState<string | null>(null);
   const [updatedVisible, setUpdatedVisible] = useState(false);
   const [liveAnnouncement, setLiveAnnouncement] = useState("");
@@ -13531,6 +13546,20 @@ function PeopleStep({
     person.daily.kcal >= calorieRange[0] &&
     person.daily.kcal <= calorieRange[1];
   const calorieErrorId = `macro-${person.id}-calorie-range`;
+  const alcoholExcluded = (person.hardExclusions ?? []).includes("alcohol");
+  const dislikedLabels = dislikeOptions
+    .filter((option) => (person.dislikes ?? []).includes(option.id))
+    .map((option) => option.label.toLocaleLowerCase("ru-RU"));
+  const hardLabels = (person.hardExclusions ?? [])
+    .filter((allergen) => allergen !== "alcohol" && allergenMeta[allergen])
+    .map((allergen) => allergenMeta[allergen].short.toLocaleLowerCase("ru-RU"));
+  const limitsSummary = [
+    dislikedLabels.length ? `не люблю: ${dislikedLabels.join(", ")}` : "",
+    hardLabels.length ? `нельзя: ${hardLabels.join(", ")}` : "",
+    alcoholExcluded ? "без алкоголя" : "",
+  ]
+    .filter(Boolean)
+    .join(" · ") || "Ничего не отмечено";
 
   function selectPerson(id: string) {
     setActiveId(id);
@@ -13778,9 +13807,7 @@ function PeopleStep({
         <div className="eater-tiles-head">
           <h2>Едоки · {people.length}</h2>
           <p>
-            {people.length === 1
-              ? "готовим на одного"
-              : `одна готовка, ${people.length} раскладки`}
+            Настраиваю: {person.name || "Человек"}
           </p>
         </div>
         <div
@@ -13802,14 +13829,19 @@ function PeopleStep({
                   <span className={`eater-tile-avatar tone-${index % 4}${item.kind === "child" ? " is-child" : ""}`} aria-hidden="true">
                     {(item.name || "Человек").trim().slice(0, 1).toUpperCase()}
                   </span>
-                  <span className="eater-tile-name">{item.name || "Человек"}</span>
-                  <span className="eater-tile-meta">
-                    {active
-                      ? "Настраиваю"
-                      : automaticEstimateIssue(item)
-                        ? "—"
-                        : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
+                  <span className="eater-tile-copy">
+                    <span className="eater-tile-name">{item.name || "Человек"}</span>
+                    <span className="eater-tile-meta">
+                      {automaticEstimateIssue(item) || item.daily.kcal <= 0
+                        ? "норма не рассчитана"
+                        : `≈ ${item.daily.kcal.toLocaleString("ru-RU")} ккал`}
+                    </span>
                   </span>
+                  {active && (
+                    <span className="eater-tile-check" aria-hidden="true">
+                      <Icon name="check" size={14} />
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -13821,9 +13853,10 @@ function PeopleStep({
               aria-label="Добавить человека"
               onClick={addPerson}
             >
-              <span className="eater-tile-add-icon" aria-hidden="true">+</span>
-              <span className="eater-tile-name">Человек</span>
-              <span className="eater-tile-meta">своя норма</span>
+              <span className="eater-tile-add-icon" aria-hidden="true">
+                <Icon name="plus" size={18} />
+              </span>
+              <span className="eater-tile-name">Добавить</span>
             </button>
           )}
         </div>
@@ -13936,30 +13969,7 @@ function PeopleStep({
           </>
         ) : (
           <>
-        <div className="field-row">
-          {bodyFields.map((field) => (
-            <label className="field" key={field.key}>
-              <span className="field-label">{field.label}</span>
-              <span className="field-box">
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  enterKeyHint="next"
-                  min={field.min}
-                  max={field.max}
-                  value={draft[field.key] || ""}
-                  aria-label={`${field.label}, ${person.name || "человек"}`}
-                  onChange={(event) =>
-                    patchBody({ [field.key]: Number(event.target.value) })
-                  }
-                />
-                <em>{field.unit}</em>
-              </span>
-            </label>
-          ))}
-        </div>
-
-        <div className="field-row field-row-2">
+        <div className="field-row person-body-grid">
           <div className="field">
             <span className="field-label">Пол</span>
             <div
@@ -13985,24 +13995,46 @@ function PeopleStep({
               ))}
             </div>
           </div>
-          <label className="field">
-            <span className="field-label">Активность</span>
-            <span className="field-box">
-              <select
-                value={draft.activity}
-                onChange={(event) =>
-                  patchBody({ activity: event.target.value as ActivityKey })
-                }
-              >
-                {(Object.keys(activityMeta) as ActivityKey[]).map((key) => (
-                  <option key={key} value={key}>
-                    {activityMeta[key].label}
-                  </option>
-                ))}
-              </select>
-            </span>
-          </label>
+          {bodyFields.map((field) => (
+            <label className="field" key={field.key}>
+              <span className="field-label">{field.label}</span>
+              <span className="field-box">
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  enterKeyHint="next"
+                  min={field.min}
+                  max={field.max}
+                  value={draft[field.key] || ""}
+                  aria-label={`${field.label}, ${person.name || "человек"}`}
+                  onChange={(event) =>
+                    patchBody({ [field.key]: Number(event.target.value) })
+                  }
+                />
+                <em>{field.unit}</em>
+              </span>
+            </label>
+          ))}
         </div>
+
+        <label className="field">
+          <span className="field-label">Активность</span>
+          <span className="field-box field-select">
+            <select
+              value={draft.activity}
+              onChange={(event) =>
+                patchBody({ activity: event.target.value as ActivityKey })
+              }
+            >
+              {(Object.keys(activityMeta) as ActivityKey[]).map((key) => (
+                <option key={key} value={key}>
+                  {activityMeta[key].label}
+                </option>
+              ))}
+            </select>
+            <Icon name="chevron" size={16} className="field-select-chevron" />
+          </span>
+        </label>
 
         <div className="field">
           <span className="field-label">Цель</span>
@@ -14026,7 +14058,7 @@ function PeopleStep({
                 aria-checked={draft.goal === key}
                 onClick={() => patchBody({ goal: key })}
               >
-                {goalMeta[key].label}
+                {goalSegmentLabels[key]}
               </button>
             ))}
           </div>
@@ -14056,40 +14088,73 @@ function PeopleStep({
         )}
 
         <button
-          className="check-row muscle-row"
-          role="checkbox"
+          type="button"
+          className="muscle-row switch-row"
+          role="switch"
           aria-checked={draft.musclePriority}
           onClick={() => patchBody({ musclePriority: !draft.musclePriority })}
         >
-          <span className="check-box">
-            <Icon name="check" size={13} />
-          </span>
           <span>Тренируюсь, важно сохранить мышцы</span>
+          <span className="switch-track" aria-hidden="true" />
         </button>
           </>
         )}
+
+        <div className="field person-eats">
+          <span className="field-label" id={`person-${person.id}-eats`}>Ест из меню</span>
+          <div
+            className="chip-row wrap-chips"
+            role="group"
+            aria-labelledby={`person-${person.id}-eats`}
+          >
+            {availableMealSlots.map((slot) => {
+              const active = person.includedSlots.includes(slot);
+              return (
+                <button
+                  key={slot}
+                  type="button"
+                  className="chip chip-check"
+                  role="checkbox"
+                  aria-checked={active}
+                  onClick={() => onMealSlotToggle(person.id, slot)}
+                >
+                  <span className="chip-check-mark" aria-hidden="true">
+                    <Icon name="check" size={12} />
+                  </span>
+                  {mealMeta[slot].short}
+                </button>
+              );
+            })}
+          </div>
+          {child && (
+            <small className="field-hint">
+              Ест в саду или школе — снимите эти приёмы. Выходные Mise отдельно не планирует.
+            </small>
+          )}
+        </div>
       </section>
 
       <section className="glass-card norm-card">
         <div className="norm-head">
           <div>
-            <p className="kicker">
-              {child
-                ? `Потребность · ${person.name || "ребёнок"} · ${manual ? "ввели вы" : "по возрасту"}`
-                : <>Норма {person.name || "человека"} ·{" "}{manual ? "ввели вы" : "считаю на лету"}</>}
-            </p>
             <p
               className="norm-figure"
-              aria-label={normUnknown ? "Норма не рассчитана" : `${person.daily.kcal.toLocaleString("ru-RU")} килокалорий в день`}
+              aria-label={normUnknown ? "Норма не рассчитана" : `${manual ? "" : "Около "}${person.daily.kcal.toLocaleString("ru-RU")} килокалорий в день`}
             >
+              {!manual && !normUnknown && <span aria-hidden="true">≈</span>}
               {normUnknown ? (
                 <b aria-hidden="true">—</b>
               ) : (
                 <b aria-hidden="true">
                   <AnimatedNumber value={person.daily.kcal} step={5} duration={420} />
                 </b>
-              )}{" "}
-              <span aria-hidden="true">ккал/день</span>
+              )}
+              <span aria-hidden="true">ккал</span>
+            </p>
+            <p className="kicker">
+              {child
+                ? `Потребность на день · ${manual ? "ввели вы" : "по возрасту"}`
+                : <>{manual ? "Норма на день · ввели вы" : "ориентир на день · считаю на лету"}</>}
             </p>
           </div>
           <span
@@ -14179,11 +14244,11 @@ function PeopleStep({
                 <span className="field-label">
                   <i style={{ background: color }} aria-hidden /> {label}
                 </span>
-                <p aria-label={`${label}: ${person.daily[key]} граммов`}>
+                <p aria-label={`${label}: ${person.daily[key]} граммов, ${share} процентов калорий`}>
                   <b aria-hidden="true">
                     <AnimatedNumber value={person.daily[key]} step={1} duration={420} />
                   </b>{" "}
-                  <span aria-hidden="true">г</span>
+                  <span aria-hidden="true">г · {share}&nbsp;%</span>
                 </p>
                 <span className="macro-bar" aria-hidden>
                   <i style={{ background: color, width: `${share}%` }} />
@@ -14309,100 +14374,162 @@ function PeopleStep({
         )}
       </section>
 
-      <section className="glass-card person-card">
-        <div className="field">
-          <span className="field-label">Что из плана ест</span>
-          <div className="chip-row wrap-chips">
-            {availableMealSlots.map((slot) => {
-              const active = person.includedSlots.includes(slot);
-              return (
-                <button
-                  key={slot}
-                  className="chip"
-                  role="checkbox"
-                  aria-checked={active}
-                  onClick={() => onMealSlotToggle(person.id, slot)}
-                >
-                  {mealMeta[slot].short}
-                </button>
-              );
-            })}
+      <button
+        type="button"
+        className="glass-card limits-row"
+        aria-haspopup="dialog"
+        onClick={() => setLimitsOpen(true)}
+      >
+        <span className="limits-row-icon" aria-hidden="true">
+          <Icon name="warning" size={18} />
+        </span>
+        <span className="limits-row-copy">
+          <b>Ограничения: не люблю, аллергия</b>
+          <small>{limitsSummary}</small>
+        </span>
+        <Icon name="chevron" size={18} className="limits-row-chevron" />
+      </button>
+
+      {limitsOpen && (
+        <Sheet
+          titleId="person-limits-title"
+          onClose={() => setLimitsOpen(false)}
+          className="limits-sheet glass"
+        >
+          <div className="limits-sheet-head">
+            <h2 id="person-limits-title">Ограничения</h2>
+            <p>{person.name || "Человек"} · проверяются при сборке меню и заменах</p>
           </div>
-          {child && (
+
+          <fieldset className="limits-card limits-hard">
+            <legend>
+              <Icon name="warning" size={18} />
+              Аллергия / мне нельзя
+            </legend>
+            <p className="limits-card-note">
+              Жёсткий запрет: такие блюда не попадут в меню этого человека ни
+              при сборке, ни при замене.
+            </p>
+            <div className="chip-row wrap-chips">
+              {hardAllergenOptions.map((allergen) => {
+                const active = (person.hardExclusions ?? []).includes(allergen);
+                return (
+                  <button
+                    key={allergen}
+                    type="button"
+                    className={`chip chip-check${active ? " is-hard" : ""}`}
+                    role="checkbox"
+                    aria-checked={active}
+                    onClick={() =>
+                      onUpdate(person.id, {
+                        hardExclusions: active
+                          ? (person.hardExclusions ?? []).filter(
+                              (item) => item !== allergen,
+                            )
+                          : [...(person.hardExclusions ?? []), allergen],
+                      })
+                    }
+                  >
+                    <span className="chip-check-mark" aria-hidden="true">
+                      <Icon name="check" size={12} />
+                    </span>
+                    {allergenMeta[allergen].short}
+                  </button>
+                );
+              })}
+            </div>
             <small className="field-hint">
-              Ест в саду или школе — снимите эти приёмы. Выходные Mise отдельно не планирует.
+              При аллергии сверяйте состав и возможные следы на упаковке.
             </small>
-          )}
-        </div>
+          </fieldset>
 
-        <div className="field">
-          <span className="field-label field-label-nowrap">Не люблю</span>
-          <div className="chip-row wrap-chips">
-            {dislikeOptions.map((option) => {
-              const active = (person.dislikes ?? []).includes(option.id);
-              return (
-                <button
-                  key={option.id}
-                  className="chip"
-                  role="checkbox"
-                  aria-checked={active}
-                  onClick={() => {
-                    if (option.id === "spicy")
-                      spicyDefaultRef.current.set(person.id, { applied: true, added: false });
-                    onUpdate(person.id, {
-                      dislikes: active
-                        ? (person.dislikes ?? []).filter(
-                            (item) => item !== option.id,
-                          )
-                        : [...(person.dislikes ?? []), option.id],
-                    });
-                  }}
-                >
-                  {option.label}
-                </button>
-              );
-            })}
+          <div className="limits-card">
+            <button
+              type="button"
+              className="switch-row"
+              role="switch"
+              aria-checked={alcoholExcluded}
+              onClick={() =>
+                onUpdate(person.id, {
+                  hardExclusions: alcoholExcluded
+                    ? (person.hardExclusions ?? []).filter(
+                        (item) => item !== "alcohol",
+                      )
+                    : [...(person.hardExclusions ?? []), "alcohol"],
+                })
+              }
+            >
+              <span className="switch-row-copy">
+                <b>Алкоголь в блюде</b>
+                <small>Вино, мирин; винный уксус и ваниль не считаются</small>
+              </span>
+              <span className="switch-track" aria-hidden="true" />
+            </button>
           </div>
-        </div>
 
-        <div className="field">
-          <span className="field-label field-label-nowrap">
-            Аллергия / мне нельзя
-          </span>
-          <div className="chip-row wrap-chips">
-            {(Object.keys(allergenMeta) as Allergen[]).map((allergen) => {
-              const active = (person.hardExclusions ?? []).includes(allergen);
-              return (
-                <button
-                  key={allergen}
-                  className={`chip${active ? " is-hard" : ""}`}
-                  role="checkbox"
-                  aria-checked={active}
-                  onClick={() =>
-                    onUpdate(person.id, {
-                      hardExclusions: active
-                        ? (person.hardExclusions ?? []).filter(
-                            (item) => item !== allergen,
-                          )
-                        : [...(person.hardExclusions ?? []), allergen],
-                    })
-                  }
-                >
-                  {allergenMeta[allergen].short}
-                </button>
-              );
-            })}
-          </div>
-          <small className="field-hint">
-            При аллергии сверяйте состав и возможные следы на упаковке.
-          </small>
+          <fieldset className="limits-card">
+            <legend>Не люблю</legend>
+            <p className="limits-card-note">
+              Мягко: такие блюда не предлагаются сами, но их можно выбрать
+              вручную.
+            </p>
+            <div className="chip-row wrap-chips">
+              {dislikeOptions.map((option) => {
+                const active = (person.dislikes ?? []).includes(option.id);
+                return (
+                  <button
+                    key={option.id}
+                    type="button"
+                    className="chip chip-check"
+                    role="checkbox"
+                    aria-checked={active}
+                    onClick={() => {
+                      if (option.id === "spicy")
+                        spicyDefaultRef.current.set(person.id, { applied: true, added: false });
+                      onUpdate(person.id, {
+                        dislikes: active
+                          ? (person.dislikes ?? []).filter(
+                              (item) => item !== option.id,
+                            )
+                          : [...(person.dislikes ?? []), option.id],
+                      });
+                    }}
+                  >
+                    <span className="chip-check-mark" aria-hidden="true">
+                      <Icon name="check" size={12} />
+                    </span>
+                    {option.label}
+                  </button>
+                );
+              })}
+            </div>
+          </fieldset>
+
           {child && (
-            <small className="field-hint">
+            <p className="field-hint limits-child-note">
               Ребёнку заранее отмечены «Алкоголь», «Спортивный протеин» и до 12 лет «Острое». С ребёнком в плане общие блюда подбираются без отмеченного — снимите, если ему можно.
-            </small>
+            </p>
           )}
-        </div>
-      </section>
+
+          <div className="limits-contact-note">
+            <span aria-hidden="true">
+              <Icon name="info" size={18} />
+            </span>
+            <p>
+              При общей готовке Mise предупредит о перекрёстном контакте, но
+              не запретит продукт остальным.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="primary-button limits-done"
+            onClick={() => setLimitsOpen(false)}
+          >
+            Готово
+          </button>
+        </Sheet>
+      )}
 
       {!normUnknown && (
         <DailyBalance
@@ -14637,8 +14764,8 @@ function CookingStep({
    это pinnedByUser из BACKEND.md §2, только источник пока клиентский. */
 
 const eveningForms = ["вечер готовки", "вечера готовки", "вечеров готовки"] as const;
-const sharedForms = ["общий продукт", "общих продукта", "общих продуктов"] as const;
-const buyForms = ["продукт купить", "продукта купить", "продуктов купить"] as const;
+const summaryEveningForms = ["вечер", "вечера", "вечеров"] as const;
+const summaryProductForms = ["продукт", "продукта", "продуктов"] as const;
 const initialManualRecipeCount = 5;
 
 /* Сколько порций партии не доживают до своего дня и уходят в морозилку.
@@ -14781,6 +14908,23 @@ function ManualMenuStep({
     }, kitchenEquipment).length - preferredCount,
   );
   const remaining = Math.max(0, positions.length - selectedCount);
+  const eaters = relevantPeople(people, current.slot);
+  const eaterHardLimits = [
+    ...new Set(
+      eaters.flatMap((person) =>
+        (person.hardExclusions ?? []).filter(
+          (allergen) => allergen !== "alcohol" && allergenMeta[allergen],
+        ),
+      ),
+    ),
+  ].map((allergen) => allergenMeta[allergen].short.toLocaleLowerCase("ru-RU"));
+  const slotMeta = [
+    `${formatDate(current.batch.start, true)} — ${formatDate(current.batch.end, true)}`,
+    eaters.map((person) => person.name || "Человек").join(", "),
+    eaterHardLimits.length ? `нельзя: ${eaterHardLimits.join(", ")}` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
   return (
     <>
       <div
@@ -14820,9 +14964,9 @@ function ManualMenuStep({
           Слот {choiceIndex + 1} · партия {current.batch.index + 1}
         </p>
         <h2>
-          {mealMeta[current.slot].label} на {formatDate(current.batch.start)} —{" "}
-          {formatDate(current.batch.end)}
+          {mealMeta[current.slot].label} · партия {current.batch.index + 1}
         </h2>
+        <p className="manual-slot-meta">{slotMeta}</p>
         <p>
           Выберите общее блюдо. Если оно не подходит всем, Mise разделит только
           этот слот на персональные назначения.
@@ -14848,6 +14992,11 @@ function ManualMenuStep({
             .join(" · ")}
         </Note>
       )}
+      {options.length > 0 && (
+        <h3 className="manual-menu-section">
+          {showAll ? "Все подходящие" : "Лучшие по вашим целям"}
+        </h3>
+      )}
       <div className="manual-menu-options" role="radiogroup" aria-label="Выбор блюда">
         {options.map((recipe, index) => {
           const active =
@@ -14859,6 +15008,14 @@ function ManualMenuStep({
           const effectClass = (selectionEffect?.epoch ?? 0) % 2
             ? " manual-effect-a"
             : " manual-effect-b";
+          const dislikedBy = includeDisliked
+            ? eaters.flatMap((person) => {
+                const matches = dislikeMatches(recipe, person);
+                return matches.length
+                  ? [`${person.name || "Человек"}: не люблю ${matches.join(", ").toLocaleLowerCase("ru-RU")}`]
+                  : [];
+              })
+            : [];
           return (
             <div
               key={recipe.id}
@@ -14878,11 +15035,20 @@ function ManualMenuStep({
                 <span className={`manual-menu-art art-${index % 5}`} aria-hidden>
                   <RecipeMedia recipe={recipe} />
                 </span>
-                <span>
+                <span className="manual-menu-copy">
+                  {active && (
+                    <span className="manual-menu-badge is-current">в меню</span>
+                  )}
                   <b>{recipe.title}</b>
                   <small>
-                    {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment, recipeMethods?.[recipe.id])?.timeMinutes ?? recipe.time} мин · Б {formatMacro(recipe.macros.protein)}
+                    Б {formatMacro(recipe.macros.protein)} · {formatMacro(recipe.macros.kcal)} ккал · {cookingMethodFor(recipe, kitchenEquipment, recipeMethods?.[recipe.id])?.timeMinutes ?? recipe.time} мин
                   </small>
+                  {dislikedBy.map((text) => (
+                    <span className="manual-menu-badge is-disliked" key={text}>
+                      <Icon name="warning" size={13} />
+                      {text}
+                    </span>
+                  ))}
                 </span>
               </button>
               <button
@@ -14902,6 +15068,7 @@ function ManualMenuStep({
                 }}
               >
                 <i>{active || deselecting ? <Icon name="check" size={15} /> : null}</i>
+                <span>Выбрать</span>
               </button>
             </div>
           );
@@ -14927,19 +15094,29 @@ function ManualMenuStep({
         </Note>
       )}
       {!showAll && allOptions.length > initialManualRecipeCount && (
-        <button className="manual-menu-more glass-3" onClick={() => setShowAll(true)}>
-          Смотреть все подходящие — {allOptions.length}
+        <button
+          type="button"
+          className="manual-menu-more glass-3"
+          aria-expanded={false}
+          onClick={() => setShowAll(true)}
+        >
+          <span>Смотреть все подходящие — {allOptions.length}</span>
+          <Icon name="chevron" size={18} className="manual-menu-more-chevron" />
         </button>
       )}
       {hiddenDisliked > 0 && (
         <button
+          type="button"
           className="manual-menu-more glass-3"
           aria-pressed={includeDisliked}
           onClick={() => setIncludeDisliked((value) => !value)}
         >
-          {includeDisliked
-            ? "Скрыть варианты из «не люблю»"
-            : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
+          <span>
+            {includeDisliked
+              ? "Скрыть варианты из «не люблю»"
+              : `Показать варианты из «не люблю» — ${hiddenDisliked}`}
+          </span>
+          <Icon name="chevron" size={18} className="manual-menu-more-chevron" />
         </button>
       )}
       {!options.length && !activeCuisine && (
@@ -14982,6 +15159,7 @@ function MenuReviewStep({
   onReplace,
   onOpenRecipe,
   onReassemble,
+  onChooseManual,
 }: {
   kitchenEquipment?: KitchenEquipment[];
   recipeMethods?: Record<string, string>;
@@ -15000,6 +15178,7 @@ function MenuReviewStep({
   ) => string | null;
   onOpenRecipe: (recipe: Recipe) => void;
   onReassemble: () => void;
+  onChooseManual?: () => void;
 }) {
   const [replacing, setReplacing] = useState<{
     key: string;
@@ -15019,23 +15198,34 @@ function MenuReviewStep({
   }, [lastReplaced]);
 
   const plan = { people, selections, selectionAssignments };
-  const chosen = batches.flatMap((batch) =>
-    mealSlots.flatMap((slot) =>
-      assignmentGroupsFor(plan, batch, slot).flatMap((assignment) =>
-        recipesById[assignment.recipeId]
-          ? [recipesById[assignment.recipeId]]
-          : [],
-      ),
-    ),
-  );
-  const ingredientUse = new Map<string, number>();
-  for (const recipe of new Set(chosen))
-    for (const ingredient of recipe.ingredients)
-      ingredientUse.set(
-        canonicalIdForIngredient(ingredient),
-        (ingredientUse.get(canonicalIdForIngredient(ingredient)) ?? 0) + 1,
-      );
-  const shared = [...ingredientUse.values()].filter((count) => count > 1).length;
+  /* Порция каждого едока в граммах — из той же общей готовки, что и в
+     «Неделе»: «Завтрак · Макс 310 г · Алина 236 г». Считается один раз на
+     меню, а не при каждом открытии листа замены. */
+  const portionGrams = useMemo(() => {
+    const result = new Map<string, string>();
+    const menuPlan = { people, selections, selectionAssignments };
+    for (const batch of batches)
+      for (const slot of mealSlots)
+        for (const assignment of assignmentGroupsFor(menuPlan, batch, slot)) {
+          const recipe = recipesById[assignment.recipeId];
+          if (!recipe) continue;
+          const eaters = people.filter((person) =>
+            assignment.personIds.includes(person.id),
+          );
+          const session = recipeCookingSession(eaters, slot, recipe, batch.days);
+          const parts = eaters.flatMap((person, index) => {
+            const grams = session.portions[index]?.grams;
+            return grams && Number.isFinite(grams) && grams > 0
+              ? [`${person.name || "Человек"}\u00a0${Math.round(grams)}\u00a0г`]
+              : [];
+          });
+          result.set(
+            assignmentPinKey(selectionKey(batch, slot), assignment.personIds),
+            parts.join(" · "),
+          );
+        }
+    return result;
+  }, [batches, mealSlots, people, selections, selectionAssignments]);
   const freeze = freezeSummary(
     batches,
     mealSlots,
@@ -15061,21 +15251,33 @@ function MenuReviewStep({
     : replacementOptions.slice(0, 6);
   return (
     <>
-      <div
+      <section
         className={`menu-summary${lastReplaced ? ` is-updated ${replacementMotion}` : ""}`}
+        aria-label="Итог меню"
       >
         <div className="summary-tile">
-          <b className="tone-accent-num">{batches.length}</b>
-          <span>{plural(batches.length, eveningForms)}</span>
+          <b><span className="tone-accent-num">{batches.length}</span> {plural(batches.length, summaryEveningForms)}</b>
+          <span>готовки</span>
         </div>
         <div className="summary-tile">
-          <b className="tone-mint-num">{shared}</b>
-          <span>{plural(shared, sharedForms)}</span>
+          <b><span className="tone-accent-num">{shopping.length}</span> {plural(shopping.length, summaryProductForms)}</b>
+          <span>в покупках</span>
         </div>
         <div className="summary-tile">
-          <b className="tone-amber-num">{shopping.length}</b>
-          <span>{plural(shopping.length, buyForms)}</span>
+          <b><span className="tone-accent-num">{freeze.portions}</span> {plural(freeze.portions, FORMS.portion)}</b>
+          <span>заморозить</span>
         </div>
+      </section>
+
+      <div className="menu-review-actions">
+        <button type="button" className="chip" onClick={onReassemble}>
+          Собрать заново
+        </button>
+        {onChooseManual && (
+          <button type="button" className="chip" onClick={onChooseManual}>
+            Выбрать вручную
+          </button>
+        )}
       </div>
 
       {batches.map((batch) => {
@@ -15099,13 +15301,24 @@ function MenuReviewStep({
         });
         const open = expanded.includes(batch.id);
         const visible = open ? rows : rows.slice(0, 3);
+        const contactWarnings = crossContactWarnings(
+          { batches, mealSlots, people, selections, selectionAssignments },
+          batch,
+        );
         return (
-          <section className="batch-menu glass-card" key={batch.id}>
+          <section
+            className="batch-menu glass-card"
+            key={batch.id}
+            aria-labelledby={`menu-batch-${batch.id}`}
+          >
             <div className="batch-menu-head">
-              <b>
-                Партия {batch.index + 1} · {formatDate(batch.start)} —{" "}
-                {formatDate(batch.end)}
-              </b>
+              <h2 id={`menu-batch-${batch.id}`}>
+                Партия {batch.index + 1} ·{" "}
+                <span className="batch-menu-date">
+                  {formatDate(batch.start, true)}
+                </span>{" "}
+                · {withPlural(batch.days, FORMS.day)}
+              </h2>
               <span>
                 {withPlural(
                   batch.days *
@@ -15117,6 +15330,21 @@ function MenuReviewStep({
                 )}
               </span>
             </div>
+            {contactWarnings.length > 0 && (
+              <p className="batch-menu-warning" role="note">
+                <Icon name="warning" size={16} />
+                <span>
+                  В этой общей готовке есть:{" "}
+                  {contactWarnings
+                    .map(
+                      ({ person: eater, allergen }) =>
+                        `${allergenMeta[allergen].short.toLowerCase()} — нельзя ${eater.name}`,
+                    )
+                    .join("; ")}
+                  . Разделите инвентарь, поверхности и порядок готовки.
+                </span>
+              </p>
+            )}
             <div className="batch-menu-rows">
               {visible.map(({ slot, key, recipe, personIds, personal }, index) => {
                 const rowKey = assignmentPinKey(key, personIds);
@@ -15139,16 +15367,19 @@ function MenuReviewStep({
                       <span className={`menu-row-art art-${index % 5}`} aria-hidden>
                         <RecipeMedia recipe={recipe} />
                       </span>
-                      <span>
+                      <span className="menu-row-copy">
+                        <b>{recipe.title}</b>
                         <small>
                           {personal
                             ? `Отдельно для ${personNames}`
                             : mealMeta[slot].label}
-                          {isPinned
-                            ? " · заменено вами"
+                          {portionGrams.get(rowKey)
+                            ? ` · ${portionGrams.get(rowKey)}`
                             : ` · ${withPlural(batch.days * personIds.length, FORMS.portion)}`}
                         </small>
-                        <b>{recipe.title}</b>
+                        {isPinned && (
+                          <span className="menu-row-badge">заменено вами</span>
+                        )}
                       </span>
                     </button>
                     <button
@@ -15211,12 +15442,6 @@ function MenuReviewStep({
       <p className="onboarding-fineprint">
         КБЖУ и сроки хранения — ориентиры, а не медицинская гарантия.
       </p>
-
-      <div className="chip-row menu-actions">
-        <button className="chip" onClick={onReassemble}>
-          Собрать заново
-        </button>
-      </div>
 
       {replacing && (
         <Sheet
