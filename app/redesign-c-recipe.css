@@ -620,3 +620,9 @@
 .art-3 {
   background: var(--tint-terracotta);
 }
+
+/* Нижняя панель карточки: главная кнопка в одну строку */
+.recipe-detail-actions .primary-button {
+  white-space: nowrap;
+  font-size: var(--text-link);
+}
