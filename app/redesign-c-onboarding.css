@@ -1,1 +1,1214 @@
-/* Редизайн C v2.2 · пакет «onboarding». Правила экрана; токены — из globals.css. */
+/* Редизайн C v2.2 · пакет «onboarding». Правила экрана; токены — из globals.css.
+   Онбординг 1–3 и установка (C-Onboard, C-Onboard2, C-Onboard3, C-Onboard4),
+   инструктаж, «Покупки» (C-Shopping) и «Профиль» (C-Profile).
+   Стекло только на навигации: карточки здесь непрозрачные, без backdrop-filter. */
+
+/* ============================================================
+   Онбординг · общая рама
+   ============================================================ */
+
+.onboarding-shell,
+.onboarding-shell.is-guide {
+  --bg-photo: url("/bg/plan.jpg");
+  background: var(--app-bg);
+}
+.onboarding-shell .onboarding-motion-bg {
+  opacity: 0.4;
+}
+.onboarding-scroll {
+  padding-top: calc(10px + max(44px, env(safe-area-inset-top)));
+  padding-right: max(var(--space-4), env(safe-area-inset-right));
+  padding-left: max(var(--space-4), env(safe-area-inset-left));
+}
+.onboarding-scroll.under-bar {
+  padding-top: calc(66px + max(44px, env(safe-area-inset-top)));
+}
+
+/* Верхний ряд: пилюли 40 px с зоной нажатия 44 */
+.onboarding-top {
+  min-height: var(--hit-min);
+}
+.onboarding-brand,
+.onboarding-shell .pill-button,
+.onboarding-top .text-link {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+.onboarding-shell .pill-button::before,
+.onboarding-top .text-link::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+.onboarding-brand {
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: var(--weight-heavy);
+}
+
+/* H1 Display 30/800 по центру, лид 15/400 */
+.onboarding-title {
+  margin: 28px 4px 0;
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: var(--weight-heavy);
+  line-height: 1.06;
+  letter-spacing: var(--tracking-h1);
+  text-align: center;
+  text-wrap: balance;
+}
+.onboarding-lead {
+  max-width: 330px;
+  margin: 12px auto 0;
+  color: var(--ink);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: 1.45;
+  text-align: center;
+  text-wrap: balance;
+}
+.onboarding-fineprint {
+  margin: 14px auto 0;
+  max-width: 320px;
+  color: var(--ink-body);
+  text-align: center;
+  text-wrap: balance;
+}
+/* Инструктаж и установка — вложенные экраны: заголовок слева */
+.onboarding-shell.is-guide .onboarding-title,
+.onboarding-shell.is-guide .onboarding-lead,
+.onboarding-shell .install-lead,
+.onboarding-shell:has(.install-steps-card) .onboarding-title,
+.onboarding-shell:has(.install-preview) .onboarding-title {
+  margin-left: 4px;
+  margin-right: 4px;
+  text-align: left;
+}
+
+/* Карточки онбординга непрозрачные */
+.onboarding-shell .glass-card,
+.onboarding-shell .glass-2,
+.onboarding-shell .glass-3,
+.onboarding-shell .onboarding-card {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.onboarding-shell .onboarding-card {
+  margin-top: 20px;
+  padding: 16px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.onboarding-shell .note {
+  margin-top: 12px;
+}
+
+/* Панель действий онбординга — без стекла: точки, чернильная кнопка 50, ссылка */
+.onboarding-shell .action-bar {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+  gap: 4px;
+}
+.onboarding-shell .action-bar-slot {
+  padding-top: 8px;
+  padding-bottom: max(24px, calc(env(safe-area-inset-bottom) + 10px));
+}
+.onboarding-shell .action-dots {
+  gap: 8px;
+  padding: 0 0 12px;
+}
+.onboarding-shell .action-dots span {
+  width: 8px;
+  height: 8px;
+  background: rgba(42, 29, 20, 0.35);
+}
+.onboarding-shell .action-dots span.is-current {
+  width: 22px;
+  background: var(--terracotta);
+}
+.onboarding-shell .action-primary {
+  min-height: var(--hit-primary);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.onboarding-shell .action-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+/* ============================================================
+   Онбординг 1 · колода блюд и карточка чисел (C-Onboard)
+   ============================================================ */
+
+.onboarding-shell .dish-deck {
+  height: 210px;
+  margin-top: 18px;
+}
+.onboarding-shell .deck-card {
+  border: 3px solid #fff;
+  border-radius: var(--r-row);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-l);
+}
+.onboarding-shell .deck-thumb {
+  border-radius: var(--r-tile);
+  background: var(--tint-terracotta);
+}
+.onboarding-shell .deck-slot {
+  color: var(--ink-muted);
+}
+.onboarding-shell .deck-title {
+  font-size: var(--text-link);
+}
+.onboarding-shell .promise-grid {
+  margin: 20px 0 0;
+  padding: 6px 4px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.onboarding-shell .promise-tile {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  text-align: center;
+}
+.onboarding-shell .promise-tile:nth-child(even) {
+  border-left: 1px solid var(--ink-line);
+}
+.onboarding-shell .promise-tile:nth-child(n + 3) {
+  border-top: 1px solid var(--ink-line);
+}
+.onboarding-shell .promise-number {
+  color: var(--accent-text);
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: var(--weight-bold);
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+.onboarding-shell .promise-text {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+/* ============================================================
+   Онбординг 2 · готовка партиями (C-Onboard2)
+   ============================================================ */
+
+.batch-hero {
+  position: relative;
+  width: 100%;
+  max-width: 358px;
+  height: 236px;
+  margin: 14px auto 0;
+}
+.batch-hero img,
+.batch-day-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.batch-hero .recipe-media-fallback,
+.batch-day-photo .recipe-media-fallback {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  background: #f3d9c6;
+  font-size: var(--glyph-s);
+}
+.batch-hero-pan {
+  position: absolute;
+  left: 0;
+  top: 36px;
+  width: 132px;
+  height: 132px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #f3d9c6;
+  box-shadow: 0 0 0 4px #fff, 0 14px 30px rgba(120, 50, 10, 0.3);
+}
+.batch-hero-fire {
+  position: absolute;
+  left: 98px;
+  top: 132px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--amber-text);
+  background: #f6e3c9;
+  box-shadow: 0 0 0 3px #fff, 0 6px 14px rgba(120, 50, 10, 0.25);
+}
+.batch-sticker {
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  border-radius: var(--r-pill);
+  color: var(--button-fg);
+  background: var(--terracotta);
+  font-family: var(--font-display);
+  font-weight: var(--weight-heavy);
+  white-space: nowrap;
+}
+.batch-sticker-cook {
+  left: 6px;
+  top: 8px;
+  height: 28px;
+  padding: 0 12px;
+  font-size: var(--text-link);
+  transform: rotate(-6deg);
+  box-shadow: 0 6px 14px rgba(120, 50, 10, 0.3);
+}
+.batch-sticker-sum {
+  left: 47%;
+  top: 166px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: var(--text-h3);
+  letter-spacing: -0.01em;
+  transform: rotate(-4deg);
+  box-shadow: 0 8px 20px rgba(120, 50, 10, 0.32);
+}
+.batch-fan {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: var(--r-row);
+  background: #f3d9c6;
+  box-shadow: 0 0 0 3px #fff, 0 14px 30px rgba(120, 50, 10, 0.3);
+}
+.batch-fan-0 {
+  left: 42%;
+  top: 44px;
+  z-index: 1;
+  transform: rotate(-10deg);
+}
+.batch-fan-1 {
+  left: calc(42% + 50px);
+  top: 28px;
+  z-index: 2;
+}
+.batch-fan-2 {
+  left: calc(42% + 100px);
+  top: 44px;
+  z-index: 1;
+  transform: rotate(10deg);
+}
+.batch-tag {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  height: 22px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--r-pill);
+  color: var(--button-fg);
+  background: var(--terracotta);
+  font-family: var(--font-display);
+  font-size: var(--text-min);
+  font-weight: var(--weight-heavy);
+  letter-spacing: 0.06em;
+}
+.batch-fan-2 .batch-tag {
+  left: auto;
+  right: 8px;
+}
+
+.batch-week-card .card-head > span:first-child {
+  color: var(--ink-muted);
+}
+.onboarding-shell .batch-bars {
+  height: auto;
+  margin: 14px 0 0;
+  padding: 0 2px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  align-items: start;
+  gap: 2px;
+}
+.onboarding-shell .batch-day {
+  min-width: 0;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.batch-day-photo {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-chip-sq);
+  box-shadow: 0 0 0 2.5px var(--terracotta);
+}
+.batch-day.is-second .batch-day-photo {
+  box-shadow: 0 0 0 2.5px var(--amber);
+}
+.batch-day-photo > img,
+.batch-day-photo > .recipe-media-fallback {
+  overflow: hidden;
+  border-radius: var(--r-chip-sq);
+}
+.batch-day-badge,
+.batch-legend i {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--amber-text);
+  background: #f6e3c9;
+  box-shadow: 0 0 0 2px #fff;
+}
+.batch-day-badge {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+}
+.batch-day-badge.is-frost,
+.batch-legend i.is-frost {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.batch-day-badge .icon,
+.batch-legend i .icon {
+  width: 11px;
+  height: 11px;
+}
+.onboarding-shell .batch-day > small {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  text-transform: uppercase;
+}
+.onboarding-shell .batch-day.is-cook > small {
+  color: var(--ink);
+  font-weight: var(--weight-bold);
+}
+.batch-brackets {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 4fr);
+  gap: 4px;
+}
+.batch-brackets > span {
+  padding-top: 6px;
+  border-top: 2.5px solid var(--terracotta);
+  color: var(--accent-text);
+  font-size: var(--text-min);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  text-align: center;
+}
+.batch-brackets > span.is-second {
+  border-top-color: var(--amber);
+  color: var(--amber-text);
+}
+.batch-brackets small {
+  display: block;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.onboarding-shell .batch-legend {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+.onboarding-shell .batch-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.onboarding-shell .batch-legend i {
+  margin: 0;
+  box-shadow: none;
+}
+
+/* Три строки-плитки под заголовком — одна карточка */
+.onboarding-shell .onb-rows {
+  margin-top: 20px;
+  padding: 4px 16px;
+  gap: 0;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.onboarding-shell .onb-row {
+  min-height: 56px;
+  padding: 10px 0;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 12px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.onboarding-shell .onb-row + .onb-row {
+  border-top: 1px solid var(--ink-track);
+}
+.onboarding-shell .onb-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+  box-shadow: none;
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.onboarding-shell .onb-num.is-amber {
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.onboarding-shell .onb-num.is-mint {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.onboarding-shell .onb-num .icon {
+  width: 18px;
+  height: 18px;
+}
+.onboarding-shell .onb-row b,
+.onboarding-shell .toggle-row b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.onboarding-shell .onb-row small,
+.onboarding-shell .toggle-row small {
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+
+/* ============================================================
+   Онбординг 3 · напоминания (C-Onboard3)
+   ============================================================ */
+
+.onboarding-shell .toggle-list {
+  margin-top: 20px;
+  padding: 4px 16px;
+  border-radius: var(--r-card);
+}
+.onboarding-shell .toggle-row {
+  min-height: 56px;
+  padding: 10px 0;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 12px;
+  border-bottom: 1px solid var(--ink-track);
+}
+.onboarding-shell .toggle-row:last-child {
+  border-bottom: 0;
+}
+.toggle-row-icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.toggle-row-icon.is-mint {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.toggle-row-icon .icon {
+  width: 18px;
+  height: 18px;
+}
+/* Свитч v2.2: выключен — тёмный трек с обводкой, включён — чернильный */
+.onboarding-shell .toggle {
+  background: rgba(42, 29, 20, 0.45);
+  box-shadow: inset 0 0 0 1.5px rgba(42, 29, 20, 0.55);
+}
+.onboarding-shell .toggle::after {
+  top: 3px;
+  left: 3px;
+  width: 23px;
+  height: 23px;
+  box-shadow: 0 1px 3px rgba(42, 29, 20, 0.35);
+}
+.onboarding-shell .toggle-row[aria-checked="true"] .toggle {
+  background: var(--ink-strong);
+  box-shadow: none;
+}
+.onboarding-shell .push-preview-card {
+  padding: 12px;
+}
+.onboarding-shell .push-preview {
+  margin-top: 0;
+  gap: 8px;
+}
+.onboarding-shell .push-card {
+  border: 0;
+  border-radius: var(--r-nested);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(120, 50, 10, 0.12);
+}
+.onboarding-shell .push-card .onb-num {
+  width: 32px;
+  height: 32px;
+}
+.onboarding-shell .push-head b {
+  font-size: var(--text-min);
+  font-weight: var(--weight-bold);
+}
+.onboarding-shell .push-text {
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+
+/* ============================================================
+   Установка на экран (C-Onboard4)
+   ============================================================ */
+
+.onboarding-shell .install-steps-card {
+  padding: 6px 16px;
+}
+.onboarding-shell .install-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: block;
+}
+.onboarding-shell .install-steps li {
+  min-height: 72px;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.onboarding-shell .install-steps li + li {
+  border-top: 1px solid var(--ink-track);
+}
+.install-step-num {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--button-fg);
+  background: var(--ink-strong);
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+.onboarding-shell .install-steps b {
+  display: inline;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.3;
+}
+.onboarding-shell .install-steps small,
+.onboarding-shell .install-android-fallback small {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.install-step-tile,
+.onboarding-shell .install-android-fallback > span.install-step-tile {
+  width: 28px;
+  height: 28px;
+  margin-left: 8px;
+  display: inline-grid;
+  place-items: center;
+  vertical-align: middle;
+  border-radius: var(--r-chip-sq);
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+}
+.onboarding-shell .install-android-fallback > span.install-step-tile {
+  flex: none;
+  margin-left: 0;
+}
+.install-step-tile .icon {
+  width: 16px;
+  height: 16px;
+}
+.onboarding-shell .install-preview {
+  margin-top: 12px;
+  border-radius: var(--r-card);
+}
+.onboarding-shell .install-action-row .btn {
+  min-height: 46px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+
+/* ============================================================
+   Инструктаж · правила и кухня
+   ============================================================ */
+
+.onboarding-shell .rule-card {
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-card);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+.onboarding-shell .rule-num {
+  border-radius: 50%;
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+  font-family: var(--font-display);
+  font-size: var(--text-body);
+}
+.onboarding-shell .rule-card.tone-mint .rule-num {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.onboarding-shell .rule-card.tone-amber .rule-num,
+.onboarding-shell .rule-card.tone-lilac .rule-num {
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.onboarding-shell .rule-card h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+.onboarding-shell .rule-card p {
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  line-height: 1.45;
+}
+.onboarding-shell .kit-grid i {
+  border-radius: var(--r-chip-sq);
+  background: var(--terracotta);
+}
+.onboarding-shell .kit-list {
+  border-radius: var(--r-card);
+}
+
+/* ============================================================
+   Шапка корневых вкладок «Покупки» и «Профиль»
+   ============================================================ */
+
+.tab-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: var(--hit-min);
+}
+.tab-pill {
+  position: relative;
+  box-sizing: border-box;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 14px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+}
+button.tab-pill::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+.tab-pill > .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--terracotta);
+}
+.app-workspace .shopping-header,
+.app-workspace .profile-header {
+  margin: 4px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+.app-workspace .shopping-header h1,
+.app-workspace .profile-header h1 {
+  margin: 12px 4px 0;
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-hero);
+  text-wrap: balance;
+}
+.tab-meta {
+  margin: 0 4px;
+  color: var(--accent-text);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+  line-height: 1.25;
+}
+
+/* Карточки вкладок непрозрачные: стекло остаётся таб-бару и листу */
+.app-workspace .shopping-screen .glass-card,
+.app-workspace .profile-screen .glass-card {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ============================================================
+   Покупки (C-Shopping)
+   ============================================================ */
+
+.app-workspace .shopping-screen .shopping-share {
+  width: auto;
+  flex: none;
+  color: var(--ink);
+}
+.app-workspace .shopping-summary {
+  padding: 12px 16px;
+  border-radius: var(--r-row);
+}
+.app-workspace .shopping-summary-stats {
+  align-items: baseline;
+}
+.app-workspace .shopping-summary h2 {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0;
+}
+.app-workspace .shopping-summary h2 span {
+  color: var(--ink);
+}
+.app-workspace .shopping-summary-stats p {
+  margin: 0;
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  text-align: right;
+}
+.app-workspace .shopping-summary-stats p b {
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .shopping-progress-track {
+  height: 8px;
+  margin-top: 8px;
+}
+.app-workspace .shopping-progress-track > span {
+  background: var(--mint);
+}
+.app-workspace .shopping-clear {
+  min-height: var(--hit-min);
+  margin-top: 4px;
+  padding: 0;
+  font-size: var(--text-link);
+}
+.app-workspace .shopping-filter-row {
+  margin: 16px 0 0;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app-workspace .shopping-filter-row button {
+  position: relative;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--glass-2-border);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .shopping-filter-row button::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+.app-workspace .shopping-filter-row button.selected {
+  border-color: var(--ink-strong);
+  color: var(--button-fg);
+  background: var(--ink-strong);
+  box-shadow: var(--shadow-accent-s);
+  font-weight: var(--weight-bold);
+}
+.shopping-filter-count {
+  margin-left: 5px;
+  color: var(--accent-text);
+}
+.shopping-filter-row button.selected .shopping-filter-count {
+  color: var(--button-fg);
+}
+.app-workspace .shopping-group {
+  margin-top: 8px;
+  padding: 12px 0 4px;
+  border-radius: var(--r-card);
+}
+.app-workspace .shopping-results > .shopping-group:first-child {
+  margin-top: 16px;
+}
+.app-workspace .group-title {
+  margin: 0;
+  padding: 0 16px 4px;
+  align-items: baseline;
+}
+.app-workspace .group-title h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .group-title > span {
+  color: var(--ink-muted);
+  font-family: var(--font-ui);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .grocery-row {
+  min-height: var(--hit-min);
+  padding: 8px 16px;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  border-top: 0;
+  background:
+    linear-gradient(var(--ink-track), var(--ink-track)) 16px 0 / calc(100% - 32px) 1px no-repeat;
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .group-title + .grocery-row {
+  background: none;
+}
+.app-workspace .grocery-row .checkmark {
+  width: 28px;
+  height: 28px;
+  border: 1.5px solid rgba(42, 29, 20, 0.6);
+  border-radius: 50%;
+  background: #fff;
+}
+.app-workspace .grocery-row.checked .checkmark {
+  border-color: var(--mint);
+  background: var(--mint);
+}
+.app-workspace .grocery-row b {
+  color: var(--ink-body);
+  font-family: var(--font-ui);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .grocery-row.checked {
+  color: var(--ink-muted);
+  text-decoration-color: rgba(90, 58, 37, 0.5);
+}
+.app-workspace .grocery-row.checked b {
+  color: var(--ink-muted);
+}
+.app-workspace .shopping-empty {
+  margin-top: 16px;
+}
+
+/* Тост «Отмечено купленным · Вернуть»: непрозрачная карточка над таб-баром */
+.app-workspace .shopping-screen > .undo-bar {
+  position: sticky;
+  z-index: 15;
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 72px);
+  min-height: 48px;
+  margin: 12px 0 0;
+  padding: 0 6px 0 18px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-row);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .shopping-screen > .undo-bar .text-button {
+  position: relative;
+  flex: none;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  color: var(--accent-text);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(120, 50, 10, 0.18);
+  font-size: var(--text-link);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .shopping-screen > .undo-bar .text-button::before {
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+}
+
+/* ============================================================
+   Профиль (C-Profile)
+   ============================================================ */
+
+.app-workspace .profile-add-person {
+  width: auto;
+  min-height: 40px;
+  margin: 0;
+  padding: 0 14px 0 12px;
+  border-style: solid;
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+}
+.app-workspace .profile-add-person > .icon {
+  color: var(--ink);
+}
+.app-workspace .profile-people-list {
+  gap: 8px;
+}
+.app-workspace .profile-person-card {
+  padding: 14px 16px 16px;
+}
+.app-workspace .profile-person-head {
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 12px;
+}
+.app-workspace .profile-person-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--accent-text);
+  background: var(--tint-terracotta);
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+.app-workspace .profile-person-copy h3 {
+  font-family: var(--font-ui);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .profile-person-copy p,
+.app-workspace .profile-plan-summary {
+  color: var(--ink-muted);
+  font-weight: var(--weight-regular);
+}
+.app-workspace .profile-edit {
+  position: relative;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(120, 50, 10, 0.18);
+  font-size: var(--text-link);
+}
+.app-workspace .profile-edit::before {
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+}
+.app-workspace .profile-kcal-linear b {
+  color: var(--accent-text);
+  font-family: var(--font-display);
+}
+.app-workspace .profile-exclusion-chips span {
+  padding: 4px 10px;
+  border: 0;
+  color: var(--accent-text);
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(179, 56, 10, 0.25);
+  font-weight: var(--weight-bold);
+}
+.profile-add-hint {
+  margin: 8px 4px 0;
+  color: var(--ink-body);
+  font-size: var(--text-min);
+}
+.app-workspace .profile-plan-action {
+  margin-top: 12px;
+  font-size: var(--text-body);
+  font-weight: var(--weight-bold);
+}
+/* С планом «Составить план» — второстепенная пилюля, как в макете */
+.app-workspace .profile-plan-action.is-pill {
+  min-height: 46px;
+  border: 1px solid var(--glass-2-border);
+  color: var(--ink);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .profile-plan-action.is-pill > .icon {
+  width: 16px;
+  height: 16px;
+  color: var(--terracotta);
+}
+
+/* Плитки 36 в строках настроек: смысл несёт цвет */
+.setting-tile,
+.app-workspace .tutorial-entry > span.setting-tile {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: var(--r-tile);
+  color: var(--terracotta);
+  background: var(--tint-terracotta);
+}
+.app-workspace .tutorial-entry > span.setting-tile.is-amber {
+  color: var(--amber-text);
+  background: var(--tint-amber);
+}
+.app-workspace .tutorial-entry > span.setting-tile.is-mint {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+.setting-tile .icon {
+  width: 18px;
+  height: 18px;
+}
+.app-workspace .profile-settings-list {
+  margin-top: 16px;
+  padding: 0 16px;
+}
+.app-workspace .profile-setting-row {
+  min-height: 56px;
+  padding: 8px 0;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 14px;
+  border-bottom: 1px solid var(--ink-track);
+}
+.app-workspace .profile-setting-row b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .profile-setting-row small {
+  margin-top: 2px;
+  color: var(--ink-muted);
+}
+.profile-disclaimer {
+  margin: 0;
+  padding: 8px 0 12px;
+  color: var(--ink-body);
+  font-size: var(--text-min);
+  line-height: 1.35;
+  text-wrap: balance;
+}
+.app-workspace .install-inline {
+  margin-top: 12px;
+  padding: 12px 16px;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px 14px;
+}
+.app-workspace .install-inline .secondary-button {
+  grid-column: 2;
+  justify-self: start;
+}
+.app-workspace .install-inline-copy b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.app-workspace .install-inline-copy small,
+.app-workspace .install-inline-copy p {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+}
+.app-workspace .install-inline .secondary-button {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
+  color: var(--ink);
+  background: #fff;
+  font-size: var(--text-link);
+}
+.app-workspace .profile-delete-plan {
+  min-height: 46px;
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  font-size: var(--text-link);
+}
+
+/* Полоса недели: старые столбики 8a не должны влиять на фото-контейнеры */
+.onboarding-shell .batch-day > .batch-day-photo,
+.onboarding-shell .batch-day.is-cook > .batch-day-photo,
+.onboarding-shell .batch-day.is-second > .batch-day-photo,
+.onboarding-shell .batch-day.is-cook.is-second > .batch-day-photo {
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: var(--r-chip-sq);
+  background: #f3d9c6;
+}
+.onboarding-shell .batch-day.is-cook > small,
+.onboarding-shell .batch-day.is-cook.is-second > small {
+  color: var(--ink);
+}
+.onboarding-shell .batch-legend span i {
+  color: var(--amber-text);
+  background: #f6e3c9;
+}
+.onboarding-shell .batch-legend span i.is-frost {
+  color: var(--mint-text);
+  background: var(--tint-mint-flat);
+}
+
+/* Десктоп: таб-бар уходит в сайдбар, тосту не нужно подниматься над ним */
+@media (min-width: 1100px) {
+  .app-workspace .shopping-screen > .undo-bar {
+    bottom: 24px;
+  }
+}
