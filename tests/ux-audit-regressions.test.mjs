@@ -11,7 +11,7 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
     read("lib/plural.ts"),
   ]);
 
-  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.match(css, /--button-grad: var\(--ink-strong\)/);
   assert.match(css, /\.builder-chat-history \.chat-bubble\.is-user \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
   assert.match(page, /completedChatTurns\.slice\(-1\)/);

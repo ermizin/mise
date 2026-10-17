@@ -21,7 +21,7 @@ test("batch cooking buttons use the lighter design gradient", async () => {
 
   assert.match(
     css,
-    /--button-grad: var\(--accent-grad\);/,
+    /--button-grad: var\(--ink-strong\);/,
   );
   assert.match(
     css,

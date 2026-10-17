@@ -146,7 +146,7 @@ test("week days and batch cooking use directional keyed panels", async () => {
 
 test("buttons keep the shared press response and latest owner design color token", async () => {
   const css = await read("app/globals.css");
-  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  assert.match(css, /--button-grad: var\(--ink-strong\)/);
   assert.match(css, /button:active:not\(:disabled\)[\s\S]*?scale\(0\.985\)/);
   assert.match(css, /\.primary-button:not\(:disabled\):active[\s\S]*?scale\(0\.985\)/);
   assert.match(css, /\.compose-fab[\s\S]*?background: var\(--button-grad\)/);

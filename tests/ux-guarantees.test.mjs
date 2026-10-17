@@ -291,7 +291,8 @@ test("the interface stays legible", async () => {
   // Decorative accents stay light while text-bearing actions use an AA ramp.
   assert.match(css, /--accent-grad-a: #ff8143/);
   assert.match(css, /--accent-grad-b: #ee4c13/);
-  assert.match(css, /--button-grad: var\(--accent-grad\)/);
+  // v2.2: главные кнопки чернильные (решение владельца 2026-10-16)
+  assert.match(css, /--button-grad: var\(--ink-strong\)/);
   assert.doesNotMatch(css, /--accent-grad-aa/, "the approved light ramp is not mislabeled as WCAG AA");
   assert.match(css, /\.btn-primary \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);
