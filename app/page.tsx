@@ -13445,7 +13445,6 @@ function PlanBuilder({
                   onReplace={replaceSelection}
                   onOpenRecipe={setPreviewRecipe}
                   onReassemble={() => startMenuAssembly("reset")}
-                  onChooseManual={showManualMenuChoice ? chooseManualMenu : undefined}
                 />
                 {!allSelected && (
                   <Note
