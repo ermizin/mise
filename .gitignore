@@ -48,6 +48,8 @@ yarn-error.log*
 /.claude/launch.json
 /.playwright-mcp/
 /.visual-qa/
+# screenshots, metrics and Lighthouse reports from scripts/visual-check.mjs and scripts/lighthouse-baseline.mjs
+/artifacts/
 
 # local recovery snapshots: keep them on disk or archive them outside Git
 /.wip-snapshots/
