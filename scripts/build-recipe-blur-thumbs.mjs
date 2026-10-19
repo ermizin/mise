@@ -225,7 +225,13 @@ export async function buildRecipeBlurThumbs({ check = false, force = false, log 
     await rm(workDirectory, { recursive: true, force: true });
   }
 
-  for (const name of orphaned) await rm(thumbFileFor(name), { force: true });
+  /* Миниатюра названа по основе имени, поэтому при смене расширения источника
+     (png → webp) запись о прежнем файле «сиротеет», а её миниатюра уже
+     пересобрана из нового файла — такую не удаляем. */
+  for (const name of orphaned) {
+    if (stems.has(basename(name, extname(name)))) continue;
+    await rm(thumbFileFor(name), { force: true });
+  }
 
   const thumbs = Object.fromEntries([...hashes.entries()].sort(([left], [right]) => left.localeCompare(right)));
   const manifest = {
