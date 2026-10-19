@@ -14489,7 +14489,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Приготовьте рис, добавьте сок лайма и соль.",
+          "text": "Приготовьте рис. Добавьте в готовый рис сок лайма и соль.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -33056,7 +33056,7 @@
       "paraphrasedInstructionDraft": [
         {
           "id": "editorial-step-1",
-          "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма.",
+          "text": "Приготовьте рис. Вмешайте в готовый рис кинзу и сок лайма.",
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -40607,7 +40607,7 @@
         },
         {
           "id": "editorial-step-3",
-          "text": "Достаньте и разберите курицу, добавьте кейл, верните курицу и сливочный компонент; отрегулируйте соль после пробы.",
+          "text": "Достаньте и разберите курицу, добавьте кейл и верните курицу в суп; посолите и поперчите после пробы.",
           "ingredientIds": [
             "source-ingredient-2",
             "source-ingredient-12",

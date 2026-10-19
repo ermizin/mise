@@ -604,7 +604,7 @@
     {
       "recipeId": "tmpm-26429",
       "title": "Осенние боулы с курицей и поблано",
-      "sourceStepsSha256": "22302955d11ee77345d5fddb6e8b4db2233fbf8634f2f5e95513047fc7edc687",
+      "sourceStepsSha256": "6fd1be806d9d8c8eac94b63c70ea7c3f5bb76d8e8c2cab6d70d5f9528685a67f",
       "methods": [
         {
           "id": "original",
@@ -1544,7 +1544,7 @@
     {
       "recipeId": "tmpm-23113",
       "title": "Боулы с говядиной и сальса-верде",
-      "sourceStepsSha256": "99aaef0b51c464bda17cb180f83ba172133b0caaedf341867d9a0800e728f5a2",
+      "sourceStepsSha256": "9d8b398015ab4acff2bc120d458d1b0877731d38a8c5233828589ca7f5d29d15",
       "methods": [
         {
           "id": "original",
@@ -1943,7 +1943,7 @@
     {
       "recipeId": "tmpm-19895",
       "title": "Суп с ветчиной и фасолью",
-      "sourceStepsSha256": "a235b8ec61b034812b5fc573e5720961ad165a883f0adf062fe41a120adf3e3b",
+      "sourceStepsSha256": "55ffc87ad43594ad44532dfa027dc906980cb593fdc0ad802f40300098d7222b",
       "methods": [
         {
           "id": "original",

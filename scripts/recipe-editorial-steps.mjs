@@ -4,6 +4,7 @@
    `check-editorial-steps.mjs` и `sync-editorial-steps.mjs`. */
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { basename, resolve } from "node:path";
+import { recipeInstructionTimePattern } from "../domain/recipe-engine.ts";
 import { splitInstructionSentences } from "./recipe-equipment.mjs";
 
 export const EDITORIAL_CARD_PATHS = Object.freeze([
@@ -27,9 +28,9 @@ export const EDITORIAL_SYNC_FIELDS = Object.freeze([
   "proceduralBlockers",
 ]);
 
-// Тот же шаблон, что в tests/recipe-runtime-catalog.test.mjs: такое время в
-// тексте шага обязано дойти до таймлайна готовки.
-export const TIMED_STEP_TEXT = /\d+(?:[.,]\d+)?(?:\s*(?:–|-|до)\s*\d+(?:[.,]\d+)?)?\s*(?:сек|мин|ч(?:ас)?)/iu;
+// Время в тексте шага по правилу таймлайна движка (после единицы нет буквы:
+// «12 частей» — не время). Такое время обязано дойти до таймлайна готовки.
+export const TIMED_STEP_TEXT = recipeInstructionTimePattern;
 
 export const STEP_PROBLEM_LIMITS = Object.freeze({
   maxStepLength: 400,

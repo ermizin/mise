@@ -1,4 +1,5 @@
 import { recipeEquipmentFor, equipmentCoverage } from "./recipe-equipment.mjs";
+import { recipeEffortBlocks } from "./recipe-effort-blocks.mjs";
 import { auditRecipeRelease } from "./audit-recipe-release.mjs";
 import { buildSimpleRecipeCatalog } from "./build-simple-recipe-catalog.mjs";
 import { buildExtensionRecipeCatalog } from "./build-extension-recipe-catalog.mjs";
@@ -328,7 +329,13 @@ function releaseTags(macros, costTier) {
   return tags;
 }
 
-function effortFor(candidate, steps) {
+/* Оценка считается по блокам работы, а не по шагам (scripts/recipe-effort-blocks.mjs):
+   3 минуты на блок и ещё 2 на блок, где режут, трут или измельчают. Посуда —
+   объединение утвари всех шагов. Разбиение шага по предложениям не меняет ни
+   блоки, ни утварь, поэтому не меняет оценку. */
+const knifeWorkPattern = /нареж|измельч|натр|поруб/i;
+
+export function effortFor(candidate, steps) {
   const total = Number(candidate.time?.totalMinutes ?? 0);
   // Even a no-cook snack needs one working vessel or serving container. Keep
   // the effort indicator honest without showing an impossible “0 посуды”.
@@ -336,8 +343,11 @@ function effortFor(candidate, steps) {
     1,
     new Set(steps.flatMap((step) => step.equipment ?? [])).size,
   );
-  const knifeActions = steps.filter((step) => /нареж|измельч|натр|поруб/i.test(step.text ?? "")).length;
-  const activeActions = steps.length + knifeActions;
+  const blocks = recipeEffortBlocks(candidate.id, steps);
+  const knifeActions = blocks.filter((block) =>
+    knifeWorkPattern.test(block.map((step) => step.text ?? "").join(" ")),
+  ).length;
+  const activeActions = blocks.length + knifeActions;
   const activeMinutes = Math.min(total, Math.max(3, activeActions * 3 + knifeActions * 2));
   const instructions = recipeStepsFromInstructions(steps);
   const parallelProcesses = parallelRecipeProcesses(instructions);

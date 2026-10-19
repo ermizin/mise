@@ -106,16 +106,23 @@ function normalizeStorage(candidate, policy) {
   return { ...candidate, storage };
 }
 
-function normalizeRiceSentence(text, overnight) {
-  const instruction = overnight
-    ? `${dryRiceInstruction} Быстро охладите и выдержите в холодильнике ночь.`
-    : dryRiceInstruction;
-  return String(text ?? "")
-    .replace(/Сварите\s+рис\s+до\s+[^.]+\.?/iu, instruction)
-    .replace(/Приготовьте\s+рис\s+по\s+инструкции\s+на\s+упаковке\.?/iu, instruction)
-    .replace(/Приготовьте\s+рис\.?/iu, instruction)
-    .replace(/Промойте\s+рис\s+до\s+прозрачной\s+воды\s+и\s+поставьте\s+вариться\.?/iu, instruction)
-    .replace(/Сварите\s+рис\.?/iu, instruction);
+/* Фразы о варке риса, которые заменяет указание про сухой рис. Заменяется
+   только целое предложение: от начала текста или после «.», «!», «?» до точки
+   или конца текста. Раньше «Приготовьте рис» заменялось и внутри предложения
+   «Приготовьте рис и вмешайте…», и в runtime получалось «…по инструкции на
+   упаковке. и вмешайте…» (tmpm-23113, tmpm-26429). Вариант «…выдержите в
+   холодильнике ночь» для tmpm-26676 и tmpm-25244 удалён: в их шагах нет
+   фразы о варке риса, его шаг добавляет оверлей сухого риса. */
+const riceSentencePatterns = [
+  String.raw`Сварите\s+рис\s+до\s+[^.]+`,
+  String.raw`Приготовьте\s+рис\s+по\s+инструкции\s+на\s+упаковке`,
+  String.raw`Приготовьте\s+рис`,
+  String.raw`Промойте\s+рис\s+до\s+прозрачной\s+воды\s+и\s+поставьте\s+вариться`,
+  String.raw`Сварите\s+рис`,
+].map((source) => new RegExp(String.raw`(?<=^|[.!?]\s+)${source}(?:\.(?=\s|$)|$)`, "iu"));
+
+export function normalizeRiceSentence(text) {
+  return riceSentencePatterns.reduce((result, pattern) => result.replace(pattern, dryRiceInstruction), String(text ?? ""));
 }
 
 function normalizeRiceSteps(candidate, policy) {
@@ -126,14 +133,13 @@ function normalizeRiceSteps(candidate, policy) {
   if (!policy.riceStepDeduplicateRecipeIds.includes(candidate.id)) {
     return { ...candidate, paraphrasedInstructionDraft: steps };
   }
-  const overnight = ["tmpm-26676", "tmpm-25244"].includes(candidate.id);
   const nonMiseRiceStep = steps.find((step) =>
     step.id !== "mise-rice-dry-prep" && /(?:свар|приготов|промой)[а-яё]*\s+рис/iu.test(String(step.text ?? "")),
   );
   if (nonMiseRiceStep) {
     steps = steps
       .filter((step) => step.id !== "mise-rice-dry-prep")
-      .map((step) => step.id === nonMiseRiceStep.id ? { ...step, text: normalizeRiceSentence(step.text, overnight) } : step);
+      .map((step) => step.id === nonMiseRiceStep.id ? { ...step, text: normalizeRiceSentence(step.text) } : step);
   }
   const seen = new Set();
   steps = steps.filter((step) => {
