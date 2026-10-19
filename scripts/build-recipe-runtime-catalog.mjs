@@ -62,6 +62,8 @@ const pantryNameRu = [
   [/sage/i, "Шалфей"],
   [/basil/i, "Базилик"],
   [/parsley/i, "Петрушка"],
+  // Раньше `dill` стояло выше и «dill pickles» становились укропом.
+  [/dill pickle/i, "Маринованные огурцы"],
   [/dill/i, "Укроп"],
   [/mint/i, "Мята"],
   [/thyme/i, "Тимьян"],
@@ -70,7 +72,6 @@ const pantryNameRu = [
   [/nutmeg/i, "Мускатный орех"],
   [/lemon zest|zest(?: of)?\s*(?:1\s*)?lemon/i, "Цедра лимона"],
   [/orange zest/i, "Цедра апельсина"],
-  [/dill pickle/i, "Маринованные огурцы"],
   [/garam masala/i, "Гарам масала"],
   [/ras el hanout/i, "Рас-эль-ханут"],
   [/sumac/i, "Сумах"],
@@ -92,6 +93,7 @@ const pantryNameRu = [
   // «Salt and pepper to taste» — две приправы в одной строке источника.
   [/salt and pepper/i, "Соль и чёрный перец"],
   [/salt/i, "Соль"],
+  [/white pepper/i, "Белый перец"],
   [/pepper/i, "Перец"],
   [/water/i, "Вода"],
   [/cooking spray/i, "Кулинарный спрей"],

@@ -64953,7 +64953,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Перец",
+          "nameRu": "Белый перец",
           "sourceName": "white pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -65996,7 +65996,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Перец",
+          "nameRu": "Белый перец",
           "sourceName": "white pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -108685,7 +108685,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Укроп",
+          "nameRu": "Маринованные огурцы",
           "sourceName": "dill pickles",
           "classification": "to_taste",
           "allergens": [],

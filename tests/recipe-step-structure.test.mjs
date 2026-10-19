@@ -116,6 +116,10 @@ test("named spices keep the measured source amount", () => {
     ["goodfood-pork-with-cucumber-apricot-couscous", 3, "Сумах", 2.5, "ml"],
     ["goodfood-big-batch-bolognese", 7, "Смесь сушёных трав", 2.5, "ml"],
     ["goodfood-sausage-egg-muffins", 4, "Смесь сушёных трав", 0.8333, "ml"],
+    // «dill pickles» — маринованные огурцы, а не укроп; белый перец — не просто «Перец».
+    ["tmpm-24729", 7, "Маринованные огурцы", 10, "g"],
+    ["tmpm-28302", 8, "Белый перец", 0.6, "g"],
+    ["tmpm-28247", 5, "Белый перец", 0.3, "g"],
   ];
   for (const [id, index, nameRu, quantityPerServing, unit] of expectations) {
     const item = line(id, index);
