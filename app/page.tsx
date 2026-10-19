@@ -5833,6 +5833,13 @@ function savedTailDecision(plan: Pick<ActivePlan, "batches" | "cookEveryDays" | 
   if (plan.batches.some((batch) => batch.days > plan.cookEveryDays)) return "join";
   return plan.periodDays % plan.cookEveryDays ? "separate" : null;
 }
+/* Повтор продолжает текущий план (решение владельца от 2026-10-19): пока он
+   идёт, следующий начинается на следующий день после его окончания, а
+   закончившийся повторяется с сегодняшнего дня. Так повтор не накладывается
+   на дни, на которые еда уже приготовлена. */
+function nextPlanStart(plan: Pick<ActivePlan, "end"> | null, today: string) {
+  return plan && today <= plan.end ? addDays(plan.end, 1) : today;
+}
 /* «3 дня + 4 дня», а для длинного плана — «4 партии по 3 дня + 2 дня». */
 function batchLayoutLabel(batches: Pick<Batch, "days">[]) {
   if (batches.length === 1) return `одна партия на ${withPlural(batches[0].days, FORMS.day)}`;
@@ -10540,6 +10547,7 @@ function NextPlanSheet({
   onEditPeople: () => void;
 }) {
   const today = isoDate(new Date());
+  const repeatStart = nextPlanStart(plan, today);
   const calendarAdded = useCalendarAdded(plan.id);
   const eaten = mealExecutionFor(plan).eaten.length;
   const containers = plan.people.reduce(
@@ -10580,7 +10588,7 @@ function NextPlanSheet({
         </li>
       </ul>
       <button type="button" className="primary-button" onClick={onRepeat}>
-        Повторить план
+        Повторить план с {formatDate(repeatStart)}
       </button>
       <button type="button" className="secondary-button" onClick={onBuild}>
         Составить новый
@@ -12097,13 +12105,14 @@ function PlanBuilder({
         )
       : 0;
   const today = isoDate(new Date());
+  const repeatStart = nextPlanStart(initialPlan, today);
   const [step, setStep] = useState(initialStep);
   const [start, setStart] = useState(
-    repeat ? today : (initialPlan?.start ?? today),
+    repeat ? repeatStart : (initialPlan?.start ?? today),
   );
   const [end, setEnd] = useState(
     repeat
-      ? addDays(today, Math.max(0, (initialPlan?.periodDays ?? 7) - 1))
+      ? addDays(repeatStart, Math.max(0, (initialPlan?.periodDays ?? 7) - 1))
       : (initialPlan?.end ?? addDays(today, 6)),
   );
   const [mealSlots, setMealSlots] = useState<MealSlot[]>(
@@ -12243,10 +12252,10 @@ function PlanBuilder({
     clearDraft();
     setDraftRestored(false);
     changeStep(initialStep, "replace");
-    setStart(repeat ? today : (initialPlan?.start ?? today));
+    setStart(repeat ? repeatStart : (initialPlan?.start ?? today));
     setEnd(
       repeat
-        ? addDays(today, Math.max(0, (initialPlan?.periodDays ?? 7) - 1))
+        ? addDays(repeatStart, Math.max(0, (initialPlan?.periodDays ?? 7) - 1))
         : (initialPlan?.end ?? addDays(today, 6)),
     );
     setMealSlots(initialPlan?.mealSlots ?? ["breakfast", "lunch", "dinner"]);
