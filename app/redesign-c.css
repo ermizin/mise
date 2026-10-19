@@ -91,16 +91,6 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.app-workspace .week-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--glass-2-border);
-  color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
-  font-family: var(--font-display);
-}
 
 /* ---------- Строки порций: карточка, круглое фото, круглый чекбокс ---------- */
 .app-workspace .week-execution-list {

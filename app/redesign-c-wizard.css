@@ -121,8 +121,6 @@
 }
 .builder-chat-history-toggle {
   justify-self: start;
-  min-height: var(--hit-min);
-  padding: 8px 14px;
   border: 1px solid var(--glass-2-border);
   color: var(--ink);
   background: var(--glass-2-bg);
@@ -474,15 +472,12 @@
 .builder-shell .quick-periods {
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
 }
 .builder-shell .quick-periods button {
   position: relative;
   flex: 1 1 0;
-  min-width: max-content;
   min-height: 36px;
-  padding: 3px 10px;
   border: 1px solid var(--surface-control-border);
   border-radius: var(--r-pill);
   color: var(--ink);
@@ -1365,20 +1360,12 @@
   mask-image: linear-gradient(180deg, transparent 0, #000 18px);
 }
 /* Пять чипов длительности в одну строку на 390. */
-.builder-shell .quick-periods {
-  flex-wrap: nowrap;
-}
 .builder-shell .quick-periods button {
-  min-width: 0;
   padding: 3px 4px;
   white-space: nowrap;
 }
 @media (max-width: 360px) {
-  .builder-shell .quick-periods {
-    flex-wrap: wrap;
-  }
   .builder-shell .quick-periods button {
-    min-width: max-content;
     padding: 3px 10px;
   }
 }
@@ -1394,7 +1381,6 @@
   font-size: var(--text-link);
 }
 .builder-chat-composer.has-menu-choice .builder-chat-alternative {
-  flex: 0 1 auto;
   min-width: 0;
 }
 .builder-chat-composer.has-menu-choice .builder-chat-send {

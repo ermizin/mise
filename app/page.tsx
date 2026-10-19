@@ -13407,8 +13407,6 @@ function PlanBuilder({
     <main
       className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}${composerBlocker && !showManualMenuChoice ? " has-composer-blocker" : ""}`}
     >
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
       {/* Хром мастера C: сверху только пилюля «Шаг N из 7» и полоса из семи
           сегментов; «Назад» живёт в нижней панели. */}
       <header

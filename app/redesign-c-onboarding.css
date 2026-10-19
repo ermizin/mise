@@ -427,7 +427,6 @@
   text-transform: uppercase;
 }
 .onboarding-shell .batch-day.is-cook > small {
-  color: var(--ink);
   font-weight: var(--weight-bold);
 }
 .batch-brackets {

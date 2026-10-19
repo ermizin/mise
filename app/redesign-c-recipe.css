@@ -24,9 +24,6 @@
   pointer-events: none;
   background: var(--bg-photo) center / cover no-repeat, var(--bg-base);
 }
-.recipe-detail.has-hero-photo .recipe-backdrop {
-  background: var(--bg-base);
-}
 .recipe-backdrop img {
   position: absolute;
   top: -70px;
@@ -590,8 +587,7 @@
   font-weight: var(--weight-bold);
 }
 /* Мята — «в плане», терракота — «докупить N». */
-.catalog-grid .recipe-batch-badge,
-.catalog-grid .missing-badge.is-ready {
+.catalog-grid .recipe-batch-badge {
   background: var(--tint-mint-flat);
   color: var(--mint-text);
 }

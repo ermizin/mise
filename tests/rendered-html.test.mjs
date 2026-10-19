@@ -290,7 +290,12 @@ test("includes the complete plan-builder and private persistence model", async (
   // создаёт backdrop-filter на каждой карточке.
   assert.match(page, /className=\{`builder-chat-header/);
   assert.match(page, /className="people-step-lead"/);
-  assert.match(css, /\.builder-chat-send \{[^}]*white-space: nowrap/s);
+  // Подпись главной кнопки мастера переносится, а не обрезается (пакет qa);
+  // прежний nowrap из globals.css перекрывался и удалён пакетом css.
+  assert.match(
+    await readFile(new URL("../app/redesign-c-wizard.css", import.meta.url), "utf8"),
+    /Пакет «qa»[\s\S]*?\.builder-chat-send \{[^}]*white-space: normal/,
+  );
   assert.match(css, /\.primary-button:disabled \{[^}]*opacity: 1/s);
   assert.match(css, /\.field-box:focus-within \{/);
   assert.match(css, /\.builder-shell \.builder-content \.glass-card \{[^}]*backdrop-filter: none/s);

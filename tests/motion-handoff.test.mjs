@@ -161,7 +161,8 @@ test("reduced motion keeps change visible without spatial movement", async () =>
   assert.match(reduced, /bottom-nav-indicator[\s\S]*?transition: none !important/);
   assert.match(reduced, /bottom-nav button\.has-nav-effect-a[\s\S]*?animation: none !important/);
   assert.match(reduced, /app-boot-progress i[\s\S]*?animation: none !important/);
-  assert.match(reduced, /background-image: none/);
+  // Скелет «Недели» (.week-loading-*) не рендерится с редизайна C, его
+  // переливание и правило background-image: none ушли вместе с ним (пакет css).
   assert.doesNotMatch(reduced, /mise-skeleton-breathe/);
   assert.match(reduced, /manual-slot-panel\.motion-enter-right/);
   assert.match(reduced, /builder-step-content\.motion-enter-right/);
