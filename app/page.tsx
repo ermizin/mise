@@ -6887,17 +6887,50 @@ function proteinAssessmentText(assessment: ReturnType<typeof dailyProteinAssessm
     ? `Выбранные блюда дают ${actual.protein} г белка. ${shortfall > 0 ? `До дневной цели остаётся ${shortfall} г за пределами этого плана.` : "Дневная цель по белку достигнута."}`
     : `По плану ${actual.protein} из ${target} г белка в день.${shortfall > 0 ? ` Ниже цели на ${shortfall} г.` : " Цель достигнута."}`;
 }
+/* Решения владельца от 2026-10-19.
+   Параметры тела не подставляются: раньше новый взрослый получал 30 лет,
+   178 см и 78 кг, и норма считалась по чужим цифрам. Пустое поле хранится
+   нулём; норма появляется, когда заполнены возраст, рост и вес, а до этого
+   `daily` — нейтральная заготовка для проверки направлений меню.
+   Первый человек может остаться без имени: в подписях контейнеров и в
+   сохранённом плане он «Я», как раньше, а аватар показывает иконку человека
+   вместо буквы. */
+const blankBodyEstimate: NutritionWizardInput = {
+  ...defaultNutritionEstimate,
+  age: 0,
+  height: 0,
+  weight: 0,
+};
+const bodyFieldNames = { age: "возраст", height: "рост", weight: "вес" } as const;
+function missingBodyFields(estimate: Pick<NutritionWizardInput, "age" | "height" | "weight">) {
+  return (["age", "height", "weight"] as const).filter(
+    (key) => !(Number.isFinite(estimate[key]) && estimate[key] > 0),
+  );
+}
+function missingBodyMessage(missing: (keyof typeof bodyFieldNames)[]) {
+  return `Заполните ${naturalList(missing.map((key) => bodyFieldNames[key]))}`;
+}
+const unnamedSelfLabel = "Я";
+function personLabel(person: Pick<Person, "name">, index: number) {
+  return person.name.trim() || (index === 0 ? unnamedSelfLabel : `Человек ${index + 1}`);
+}
+/* Буква для аватара; null — показать иконку человека. «Я» — подпись по
+   умолчанию первого человека, а не его имя. */
+function personInitial(name: string) {
+  const trimmed = name.trim();
+  if (!trimmed || trimmed === unnamedSelfLabel) return null;
+  return Array.from(trimmed)[0].toLocaleUpperCase("ru-RU");
+}
 function newPerson(index = 0): Person {
   // Второй и следующие люди — не обязательно на дефиците: по умолчанию
   // поддержание веса, первый человек сохраняет прежний сценарий.
   const estimate: NutritionWizardInput = index === 0
-    ? { ...defaultNutritionEstimate }
-    : { ...defaultNutritionEstimate, goal: "maintenance" };
-  const calculation = calculateNutritionTarget(estimate);
+    ? { ...blankBodyEstimate }
+    : { ...blankBodyEstimate, goal: "maintenance" };
   return {
     id: `person-${Date.now()}-${index}`,
-    name: index === 0 ? "Я" : `Человек ${index + 1}`,
-    daily: "target" in calculation ? calculation.target : { ...defaultMacros },
+    name: index === 0 ? "" : `Человек ${index + 1}`,
+    daily: { ...defaultMacros },
     macroPreset: "custom",
     estimate,
     nutritionTargetMode: "auto",
@@ -7063,6 +7096,8 @@ function automaticEstimateIssue(person: Person): string | null {
   if ("target" in calculation) return null;
   if (Number.isFinite(draft.age) && draft.age > 0 && draft.age < 18)
     return "Для ребёнка выберите вверху карточки «Ребёнок 3–17 лет»: взрослая формула детям не подходит.";
+  const missing = missingBodyFields(draft);
+  if (missing.length) return `${missingBodyMessage(missing)}.`;
   return calculation.issues.find((issue) => issue.severity === "error")?.message
     ?? "Параметры вне допустимого диапазона.";
 }
@@ -9518,8 +9553,11 @@ function WeekPersonPicker({ people, value, onChange }: {
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
   const person = people.find((item) => item.id === value) ?? people[0];
-  const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2)
-    .map((part) => Array.from(part)[0] ?? "").join("").toLocaleUpperCase("ru-RU") || "?";
+  // Без имени (или с подписью «Я» по умолчанию) — иконка человека вместо буквы.
+  const initials = (name: string) => personInitial(name) === null
+    ? <Icon name="person" size={16} />
+    : name.trim().split(/\s+/).slice(0, 2)
+      .map((part) => Array.from(part)[0] ?? "").join("").toLocaleUpperCase("ru-RU");
 
   useEffect(() => {
     if (!open) return;
@@ -11799,10 +11837,10 @@ function ProfileScreen({
             >
               <div className="profile-person-head">
                 <div className={`person-dot tone-${index} profile-person-avatar`}>
-                  {person.name.slice(0, 1).toUpperCase() || "Я"}
+                  {personInitial(person.name) ?? <Icon name="person" size={20} />}
                 </div>
                 <div className="profile-person-copy">
-                  <h3>{person.name}</h3>
+                  <h3>{personLabel(person, index)}</h3>
                   <p>
                     {goalLabel} · {slotsLabel || "позиции не выбраны"}
                   </p>
@@ -11815,6 +11853,13 @@ function ProfileScreen({
                   Изменить
                 </button>
               </div>
+              {/* До первого плана параметров тела ещё нет: заготовку нормы не
+                  показываем как цель (2026-10-19). */}
+              {!hasPlan && unrated ? (
+                <p className="profile-plan-summary">
+                  Норма появится, когда вы заполните возраст, рост и вес в мастере плана.
+                </p>
+              ) : (<>
               <div className="profile-macro-focus">
                 <div className="week-kcal-linear profile-kcal-linear">
                   <p>{person.kind === "child" ? "Потребность" : "Цель"} <b><AnimatedNumber value={person.daily.kcal} /></b> ккал в день</p>
@@ -11878,6 +11923,7 @@ function ProfileScreen({
                       : `выше цели на ≈ ${Math.abs(difference.kcal)} ккал`
                     : "цель примерно закрыта"}
               </p>
+              </>)}
               {(person.hardExclusions?.length ?? 0) > 0 && (
                 <div
                   className="profile-exclusion-chips"
@@ -12521,6 +12567,15 @@ function PlanBuilder({
     builderStartedAt,
     isNextPlan,
   ]);
+  /* Человек без имени в плане — «Я» (первый) или «Человек N»: так подписаны
+     контейнеры, «Проверка» и сохранённый план. */
+  const labeledPeople = useMemo(
+    () =>
+      people.map((person, index) =>
+        person.name.trim() ? person : { ...person, name: personLabel(person, index) },
+      ),
+    [people],
+  );
   const draftPlan = ((): ActivePlan => {
     const base: ActivePlan = {
       id: "draft",
@@ -12533,7 +12588,7 @@ function PlanBuilder({
       recipeMethods,
       menuStyle,
       mealSlots,
-      people,
+      people: labeledPeople,
       batches,
       selections: validSelections,
       selectionAssignments: validSelectionAssignments,
@@ -12597,8 +12652,8 @@ function PlanBuilder({
     {
       question: "Люди и цели",
       meta: "до 4 человек, у каждого свои цели",
-      answer: people
-        .map((person) => `${person.name || "Человек"} · ${person.daily.kcal} ккал`)
+      answer: labeledPeople
+        .map((person) => `${person.name} · ${person.daily.kcal} ккал`)
         .join("; "),
     },
     {
@@ -12776,8 +12831,9 @@ function PlanBuilder({
       return (
         people.length > 0 &&
         people.every(
-          (person) =>
-            person.name.trim() &&
+          (person, index) =>
+            // Первый человек может остаться без имени — он «Я».
+            (index === 0 || person.name.trim()) &&
             !automaticEstimateIssue(person) &&
             personCaloriesValid(person) &&
             person.includedSlots.some((slot) => mealSlots.includes(slot)),
@@ -13188,7 +13244,7 @@ function PlanBuilder({
                 ? invalidEstimatePerson
                   ? {
                       title: "Проверьте параметры",
-                      detail: `${invalidEstimatePerson.name.trim() || "Человек"}: ${automaticEstimateIssue(invalidEstimatePerson)}`,
+                      detail: `${personLabel(invalidEstimatePerson, people.indexOf(invalidEstimatePerson))}: ${automaticEstimateIssue(invalidEstimatePerson)}`,
                     }
                   : {
                     title: "Проверьте людей и цели",
@@ -13498,7 +13554,7 @@ function PlanBuilder({
                 kitchenEquipment={kitchenEquipment}
                   batches={batches}
                   mealSlots={mealSlots}
-                  people={people}
+                  people={labeledPeople}
                   style={menuStyle}
                   selections={validSelections}
                   selectionAssignments={validSelectionAssignments}
@@ -13536,7 +13592,7 @@ function PlanBuilder({
                 positions={positions}
                 choiceIndex={choiceIndex}
                 motionDirection={manualMotionDirection}
-                people={people}
+                people={labeledPeople}
                 style={menuStyle}
                 cuisineFilter={manualCuisineFilter}
                 selections={validSelections}
@@ -13877,7 +13933,8 @@ function MealStep({
   onToggle: (slot: MealSlot) => void;
 }) {
   const positionLabel = plural(selected.length, FORMS.item);
-  const dailyKcal = person?.daily.kcal ?? 0;
+  // Пока параметры тела не заполнены, нормы нет — заготовку не показываем.
+  const dailyKcal = person && !automaticEstimateIssue(person) ? person.daily.kcal : 0;
   const plannedShare = selected.reduce(
     (sum, slot) => sum + (mealSlotShares[slot] ?? 0),
     0,
@@ -14041,10 +14098,11 @@ const bodyFields: {
   unit: string;
   min: number;
   max: number;
+  placeholder: string;
 }[] = [
-  { key: "age", label: "Возраст", unit: "лет", min: 18, max: 100 },
-  { key: "height", label: "Рост", unit: "см", min: 120, max: 230 },
-  { key: "weight", label: "Вес", unit: "кг", min: 35, max: 300 },
+  { key: "age", label: "Возраст", unit: "лет", min: 18, max: 100, placeholder: "например, 34" },
+  { key: "height", label: "Рост", unit: "см", min: 120, max: 230, placeholder: "например, 170" },
+  { key: "weight", label: "Вес", unit: "кг", min: 35, max: 300, placeholder: "например, 70" },
 ];
 
 /* В сегменте цели — глаголы (PRODUCT.md 4.3: снижать / держать / набирать):
@@ -14157,6 +14215,7 @@ function PeopleStep({
   }>());
   const spicyDefaultRef = useRef(new Map<string, { applied: boolean; added: boolean }>());
   const person = people.find((item) => item.id === activeId) ?? people[0];
+  const personIndex = Math.max(0, people.indexOf(person));
 
   useEffect(
     () => () => {
@@ -14185,6 +14244,8 @@ function PeopleStep({
     ? childCalculation && "target" in childCalculation ? childCalculation.target : null
     : "target" in calculation ? calculation.target : null;
   const normUnknown = !manual && !computed;
+  const missingBody = child || manual ? [] : missingBodyFields(draft);
+  const label = personLabel(person, personIndex);
   const calorieRange = personCalorieRange(person) ?? [800, 3000];
   const coverage = recipeCoverageFor(person, menuStyle, batchDays, kitchenEquipment);
   const fromMacros = macroCalories(person.daily);
@@ -14377,7 +14438,7 @@ function PeopleStep({
       const undo = kindUndoRef.current.get(person.id);
       const spicy = spicyDefaultRef.current.get(person.id);
       const addedDislikes = [...(undo?.addedDislikes ?? []), ...(spicy?.added ? ["spicy"] : [])];
-      const estimate: NutritionWizardInput = undo?.adult.estimate ?? { ...defaultNutritionEstimate, goal: "maintenance" };
+      const estimate: NutritionWizardInput = undo?.adult.estimate ?? { ...blankBodyEstimate, goal: "maintenance" };
       const adultCalculation = calculateNutritionTarget(estimate);
       onUpdate(person.id, {
         kind: undefined,
@@ -14456,7 +14517,7 @@ function PeopleStep({
         <div className="eater-tiles-head">
           <h2>Едоки · {people.length}</h2>
           <p>
-            Настраиваю: {person.name || "Человек"}
+            Настраиваю: {label}
           </p>
         </div>
         <div
@@ -14472,14 +14533,14 @@ function PeopleStep({
                   className={`eater-tile glass-card${active ? " is-active" : ""}${addedTileId === item.id ? " is-added" : ""}`}
                   role="tab"
                   aria-selected={active}
-                  aria-label={`${item.name || "Человек"}${item.kind === "child" && !/^Ребёнок/u.test(item.name.trim()) ? ", ребёнок" : ""}, ${automaticEstimateIssue(item) ? "норма не рассчитана" : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}`}
+                  aria-label={`${personLabel(item, index)}${item.kind === "child" && !/^Ребёнок/u.test(item.name.trim()) ? ", ребёнок" : ""}, ${automaticEstimateIssue(item) ? "норма не рассчитана" : `${item.daily.kcal.toLocaleString("ru-RU")} ккал`}`}
                   onClick={() => selectPerson(item.id)}
                 >
                   <span className={`eater-tile-avatar tone-${index % 4}${item.kind === "child" ? " is-child" : ""}`} aria-hidden="true">
-                    {(item.name || "Человек").trim().slice(0, 1).toUpperCase()}
+                    {personInitial(personLabel(item, index)) ?? <Icon name="person" size={16} />}
                   </span>
                   <span className="eater-tile-copy">
-                    <span className="eater-tile-name">{item.name || "Человек"}</span>
+                    <span className="eater-tile-name">{personLabel(item, index)}</span>
                     <span className="eater-tile-meta">
                       {automaticEstimateIssue(item) || item.daily.kcal <= 0
                         ? "норма не рассчитана"
@@ -14540,7 +14601,9 @@ function PeopleStep({
           </span>
           <span className="field-box">
             <input
-              value={person.name}
+              value={personIndex === 0 && person.name.trim() === unnamedSelfLabel ? "" : person.name}
+              placeholder="Имя для подписи контейнеров"
+              autoComplete="off"
               onChange={(event) =>
                 onUpdate(person.id, { name: event.target.value })
               }
@@ -14561,7 +14624,7 @@ function PeopleStep({
                     min={CHILD_AGE_RANGE[0]}
                     max={CHILD_AGE_RANGE[1]}
                     value={childDraft.age ?? ""}
-                    aria-label={`Возраст, ${person.name || "ребёнок"}`}
+                    aria-label={`Возраст, ${person.name.trim() || "ребёнок"}`}
                     onChange={(event) =>
                       patchChild({ age: event.target.value === "" ? undefined : Math.round(Number(event.target.value)) })
                     }
@@ -14654,8 +14717,9 @@ function PeopleStep({
                   enterKeyHint="next"
                   min={field.min}
                   max={field.max}
+                  placeholder={field.placeholder}
                   value={draft[field.key] || ""}
-                  aria-label={`${field.label}, ${person.name || "человек"}`}
+                  aria-label={`${field.label}, ${label}`}
                   onChange={(event) =>
                     patchBody({ [field.key]: Number(event.target.value) })
                   }
@@ -14840,7 +14904,7 @@ function PeopleStep({
             <span className="field-box">
               <MacroNumberInput
                 id={`macro-${person.id}-kcal`}
-                ariaLabel={`Калории для ${person.name || "человека"}`}
+                ariaLabel={`Калории для ${label}`}
                 describedBy={calorieErrorId}
                 invalid={!dailyCaloriesValid}
                 value={person.daily.kcal}
@@ -14874,7 +14938,7 @@ function PeopleStep({
               <span className="field-box">
                 <MacroNumberInput
                   id={`macro-${person.id}-${key}`}
-                  ariaLabel={`${label} для ${person.name || "человека"}`}
+                  ariaLabel={`${label} для ${personLabel(person, personIndex)}`}
                   describedBy={calorieErrorId}
                   invalid={!dailyCaloriesValid}
                   value={person.daily[key]}
@@ -15013,13 +15077,22 @@ function PeopleStep({
             <p className="field-hint norm-child-note">Укажите возраст от 3 до 17 лет и пол — Mise посчитает потребность.</p>
           )
         ) : (
-          calculation.issues.map((issue) => (
-            <Note tone="warn" key={issue.code}>
-              {issue.code === "invalid_age" && draft.age > 0 && draft.age < 18
-                ? "Для ребёнка выберите вверху «Ребёнок 3–17 лет»: взрослая формула детям не подходит."
-                : issue.message}
-            </Note>
-          ))
+          <>
+            {missingBody.length > 0 && (
+              <p className="field-hint norm-body-note" role="status">
+                {missingBodyMessage(missingBody)} — Mise посчитает норму.
+              </p>
+            )}
+            {calculation.issues
+              .filter((issue) => !missingBody.some((key) => issue.code === `invalid_${key}`))
+              .map((issue) => (
+                <Note tone="warn" key={issue.code}>
+                  {issue.code === "invalid_age" && draft.age > 0 && draft.age < 18
+                    ? "Для ребёнка выберите вверху «Ребёнок 3–17 лет»: взрослая формула детям не подходит."
+                    : issue.message}
+                </Note>
+              ))}
+          </>
         )}
       </section>
 
@@ -15047,7 +15120,7 @@ function PeopleStep({
         >
           <div className="limits-sheet-head">
             <h2 id="person-limits-title">Ограничения</h2>
-            <p>{person.name || "Человек"} · проверяются при сборке меню и заменах</p>
+            <p>{label} · проверяются при сборке меню и заменах</p>
           </div>
 
           <fieldset className="limits-card limits-hard">
@@ -16307,7 +16380,7 @@ function ReviewStep({
             return (
               <li key={person.id}>
                 <span className="review-person-initial" aria-hidden="true">
-                  {name.charAt(0).toLocaleUpperCase("ru-RU")}
+                  {personInitial(name) ?? <Icon name="person" size={16} />}
                 </span>
                 <p>
                   <b>{name}</b>
