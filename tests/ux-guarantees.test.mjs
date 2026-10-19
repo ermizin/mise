@@ -367,7 +367,7 @@ test("redesign C copy: one verb for the next plan, no empty chips, no stray «Я
   assert.match(week, /\{balanceCaption && <small>\{balanceCaption\}<\/small>\}/);
   assert.doesNotMatch(week, /\{person\.name\}\s*\{selectedDate === today \? " · сегодня" : ""\}/);
   const picker = slice("function WeekPersonPicker(", "function useCalendarAdded(");
-  assert.match(picker, /isSelfName\(name\) \? <Icon name="person" size=\{18\} \/> : initials\(name\)/);
-  assert.match(picker, /className="week-person-avatar" aria-hidden="true">\{avatar\(person\.name\)\}/);
+  assert.match(picker, /personInitial\(name\) === null\s*\? <Icon name="person" size=\{16\} \/>/);
+  assert.match(picker, /className="week-person-avatar" aria-hidden="true">\{initials\(person\.name\)\}/);
   assert.match(picker, /aria-label=\{`Выбрать едока: \$\{person\.name\}`\}/, "the accessible name keeps the person");
 });
