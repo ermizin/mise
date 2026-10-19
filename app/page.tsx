@@ -7066,6 +7066,8 @@ export default function Home() {
     bump: { week: 0, recipes: 0, shopping: 0, profile: 0 },
   });
   const [activePlan, setActivePlan] = useState<ActivePlan | null>(null);
+  const [weekBackdrop, setWeekBackdrop] =
+    useState<WeekBackdrop>(emptyWeekBackdrop);
   const [recipeContext, setRecipeContext] = useState<RecipeContext | null>(
     null,
   );
@@ -7794,6 +7796,7 @@ export default function Home() {
       }`}
     >
       <div className="app-bg" aria-hidden />
+      {tab === "week" && <WeekPhotoBackdrop backdrop={weekBackdrop} />}
       {planSyncState !== "synced" && (
         <div
           className={`plan-sync-banner is-${planSyncState}`}
@@ -7867,6 +7870,7 @@ export default function Home() {
           onOpenShopping={() => navigate("shopping")}
           onOpenRecipes={() => navigate("recipes")}
           onOpenNextPlan={() => setNextPlanOpen(true)}
+          onBackdropChange={setWeekBackdrop}
           onChange={async (next) => {
             const previous = activePlan;
             setActivePlan(next);
@@ -8068,16 +8072,29 @@ const kitchenChecklist: { title: string; note: string }[] = [
   { title: "Маркер или наклейки", note: "Для подписей на крышках" },
 ];
 
+/* Колода первого экрана: три разных блюда на завтрак, обед и ужин. Сначала
+   блюда своего плана с фото, затем каталог с фото; заглушка — только если
+   фото нет ни у одного подходящего блюда. */
 function deckDishes(plan: ActivePlan | null) {
   const chosen = plan
-    ? [...selectionRecipeIds(plan)].map((id) => recipesById[id])
+    ? [...selectionRecipeIds(plan)]
+        .map((id) => recipesById[id])
+        .filter((recipe): recipe is Recipe => Boolean(recipe))
     : [];
-  return (["breakfast", "lunch", "dinner"] as MealSlot[]).map((slot) => ({
-    slot,
-    recipe:
-      chosen.find((recipe) => recipe?.slot === slot) ??
-      newMenuRecipes.find((recipe) => recipeSupportsSlot(recipe, slot)),
-  }));
+  const ownShowcase = showcaseOrder(chosen);
+  const catalogShowcase = showcaseOrder(newMenuRecipes);
+  const used = new Set<string>();
+  return (["breakfast", "lunch", "dinner"] as MealSlot[]).map((slot) => {
+    const fits = (recipe: Recipe) =>
+      recipeSupportsSlot(recipe, slot) && !used.has(recipe.id);
+    const recipe =
+      ownShowcase.find((item) => fits(item) && hasLocalPhoto(item)) ??
+      catalogShowcase.find((item) => fits(item) && hasLocalPhoto(item)) ??
+      chosen.find(fits) ??
+      newMenuRecipes.find(fits);
+    if (recipe) used.add(recipe.id);
+    return { slot, recipe };
+  });
 }
 
 /* Огонь из кита C §4.5: в наборе иконок «flame» нарисован колпаком повара,
@@ -8101,10 +8118,39 @@ function FireGlyph({ size }: { size: number }) {
   );
 }
 
+/* Витрины (колода и иллюстрации онбординга) показывают блюда с локальным
+   фото. Фото исходного рецепта идут раньше иллюстраций, созданных для Mise:
+   их пометку («Изображение создано для Mise») показывает только карточка
+   рецепта. Порядок детерминирован — порядок каталога, без случайности. */
+function hasLocalPhoto(recipe: Recipe) {
+  return Boolean(recipe.provenance.imageUrl);
+}
+
+function showcasePhotoRank(recipe: Recipe) {
+  if (!hasLocalPhoto(recipe)) return 2;
+  return recipe.provenance.kind === "parsed" ? 0 : 1;
+}
+
+function showcaseOrder(pool: readonly Recipe[]) {
+  return [...pool].sort(
+    (left, right) => showcasePhotoRank(left) - showcasePhotoRank(right),
+  );
+}
+
+/* Предразмытая миниатюра фото: 48 px JPEG из scripts/build-recipe-blur-thumbs.mjs
+   рядом с локальным фото. Растянутая на экран, она уже размыта и заменяет
+   runtime filter: blur(). Есть у каждого фото каталога (tests/recipe-blur-thumbs). */
+function recipeBlurThumbUrl(recipe: Recipe | undefined) {
+  const match = recipe?.provenance.imageUrl?.match(
+    /^\/recipe-images\/([a-z0-9-]+)\.(?:jpg|png|webp|avif)$/u,
+  );
+  return match ? `/recipe-images/blur/${match[1]}.jpg` : null;
+}
+
 /* Фото для иллюстраций онбординга: настоящие карточки каталога с фото.
    Без фото RecipeMedia сама покажет заглушку, поэтому список не пустеет. */
 function onboardingPhotoRecipes(count: number) {
-  const withPhoto = newMenuRecipes.filter((recipe) => recipe.provenance.imageUrl);
+  const withPhoto = showcaseOrder(newMenuRecipes).filter(hasLocalPhoto);
   const pool = withPhoto.length ? withPhoto : newMenuRecipes;
   return Array.from({ length: count }, (_, index) => pool[index % pool.length]);
 }
@@ -9566,6 +9612,66 @@ function useCalendarAdded(planId?: string) {
     return true;
   }
 }
+/* Фон «Недели» из блюда дня (пакет «photos»): предразмытая миниатюра первого
+   блюда с фото у выбранного дня и человека; без фото — общий /bg/week.jpg.
+   Порции дня задаёт партия, поэтому фон меняется на границе партий. Слои
+   строятся для всех партий плана сразу: миниатюры по 1–3 КБ загружаются
+   заранее, и смена дня не ждёт сети. */
+type WeekBackdrop = { urls: string[]; active: string | null };
+const emptyWeekBackdrop: WeekBackdrop = { urls: [], active: null };
+
+function weekPhotoBackdrop(
+  plan: ActivePlan | null,
+  personId: string,
+  date: string,
+): WeekBackdrop {
+  if (!plan || plan.batches.length === 0) return emptyWeekBackdrop;
+  const person =
+    plan.people.find((item) => item.id === personId) ?? plan.people[0];
+  if (!person) return emptyWeekBackdrop;
+  const slots = allMealSlots.filter(
+    (slot) => plan.mealSlots.includes(slot) && person.includedSlots.includes(slot),
+  );
+  const thumbFor = (batch: Batch) => {
+    for (const slot of slots) {
+      const thumb = recipeBlurThumbUrl(recipeForPerson(plan, batch, slot, person));
+      if (thumb) return thumb;
+    }
+    return null;
+  };
+  const batch =
+    plan.batches.find((item) => date >= item.start && date <= item.end) ??
+    plan.batches[0];
+  const urls = [
+    ...new Set(
+      plan.batches
+        .map(thumbFor)
+        .filter((thumb): thumb is string => Boolean(thumb)),
+    ),
+  ];
+  return { urls, active: thumbFor(batch) };
+}
+
+/* Новый слой проявляется поверх прежнего, а прежний гаснет только после
+   этого (redesign-c-week.css, пакет «photos»), поэтому смена фона не мигает. */
+function WeekPhotoBackdrop({ backdrop }: { backdrop: WeekBackdrop }) {
+  if (backdrop.urls.length === 0) return null;
+  return (
+    <div
+      className={`week-photo-backdrop${backdrop.active ? "" : " is-empty"}`}
+      aria-hidden
+    >
+      {backdrop.urls.map((url) => (
+        <span
+          key={url}
+          className={`week-photo-layer${url === backdrop.active ? " is-active" : ""}`}
+          style={{ "--week-thumb": `url("${url}")` } as CSSProperties}
+        />
+      ))}
+    </div>
+  );
+}
+
 function WeekScreen({
   plan,
   loading,
@@ -9580,6 +9686,7 @@ function WeekScreen({
   onOpenShopping,
   onOpenRecipes,
   onOpenNextPlan,
+  onBackdropChange,
   onChange,
   onOpenGuide,
 }: {
@@ -9596,6 +9703,7 @@ function WeekScreen({
   onOpenShopping: () => void;
   onOpenRecipes: () => void;
   onOpenNextPlan: () => void;
+  onBackdropChange?: (backdrop: WeekBackdrop) => void;
   onChange: (plan: ActivePlan) => Promise<boolean>;
   onOpenGuide: () => void;
 }) {
@@ -9605,6 +9713,16 @@ function WeekScreen({
   );
   const [dayMotionDirection, setDayMotionDirection] = useState<-1 | 1>(1);
   const [personId, setPersonId] = useState(plan?.people[0]?.id ?? "");
+  const backdrop = useMemo(
+    () =>
+      loading || loadError
+        ? emptyWeekBackdrop
+        : weekPhotoBackdrop(plan, personId, selectedDate),
+    [loading, loadError, plan, personId, selectedDate],
+  );
+  useEffect(() => {
+    onBackdropChange?.(backdrop);
+  }, [backdrop, onBackdropChange]);
   const confirmedBatchIds = plan?.cookedBatchIds ?? [];
   const [executionError, setExecutionError] = useState("");
   const [savingExecution, setSavingExecution] = useState(false);
@@ -10937,10 +11055,13 @@ function RecipesScreen({
     );
     return [...matched].sort((a, b) => {
       const timeDifference = ((plan ? planDisplayMethod(a, plan) : undefined)?.timeMinutes ?? a.time) - ((plan ? planDisplayMethod(b, plan) : undefined)?.timeMinutes ?? b.time);
-      if (state.sort === "time") return timeDifference;
-      if (state.sort === "protein") return b.macros.protein - a.macros.protein;
+      /* При равном главном ключе карточка с фото стоит выше заглушки; сам
+         порядок сортировки («меньше докупать», время, белок) не меняется. */
+      const photoDifference = Number(hasLocalPhoto(b)) - Number(hasLocalPhoto(a));
+      if (state.sort === "time") return timeDifference || photoDifference;
+      if (state.sort === "protein") return b.macros.protein - a.macros.protein || photoDifference;
       const diff = (missing.get(a.id) ?? 0) - (missing.get(b.id) ?? 0);
-      return diff || timeDifference;
+      return diff || photoDifference || timeDifference;
     });
   }, [plan, state]);
 
@@ -17385,12 +17506,14 @@ function RecipeView({
   const [ingredientsExpanded, setIngredientsExpanded] = useState(false);
   const [photoExpanded, setPhotoExpanded] = useState(false);
   /* Фото-герой (C-KIT §7): та же картинка ещё дважды — размытым фоном экрана и
-     мягким переходом под резким снимком. Если файл не загрузился, карточка
+     мягким переходом под резким снимком. Фон экрана — предразмытая миниатюра
+     48 px, а не runtime blur полного фото. Если файл не загрузился, карточка
      переходит в режим без героя: плитка-заглушка и контент сверху. */
   const heroPhotoUrl = recipe.provenance.imageUrl;
   const [failedHeroPhoto, setFailedHeroPhoto] = useState<string | null>(null);
   const heroPhoto =
     heroPhotoUrl && failedHeroPhoto !== heroPhotoUrl ? heroPhotoUrl : null;
+  const heroThumb = heroPhoto ? recipeBlurThumbUrl(recipe) : null;
   const photoTouchStart = useRef<number | null>(null);
   const stepsRef = useRef<HTMLElement | null>(null);
   const cookingInstructionsTracked = useRef(false);
@@ -17685,17 +17808,15 @@ function RecipeView({
         if (start - end >= 48) setPhotoExpanded(false);
       }}
     >
-      <div className="recipe-backdrop" aria-hidden>
-        {heroPhoto && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={heroPhoto}
-            alt=""
-            referrerPolicy="no-referrer"
-            onError={() => setFailedHeroPhoto(heroPhoto)}
-          />
-        )}
-      </div>
+      <div
+        className="recipe-backdrop"
+        aria-hidden
+        style={
+          heroThumb
+            ? ({ "--recipe-thumb": `url("${heroThumb}")` } as CSSProperties)
+            : undefined
+        }
+      />
       {heroPhoto && (
         <div className="recipe-hero-photo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
