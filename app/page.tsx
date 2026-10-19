@@ -490,7 +490,7 @@ type BuilderDraft = {
   cookEveryDays: number;
   kitchenEquipment?: KitchenEquipment[];
   recipeMethods?: Record<string, string>;
-  remainderDecision: "separate" | "extend" | "shorten" | null;
+  remainderDecision: TailDecision | null;
   menuMode?: MenuBuildMode;
   selections: Record<string, string>;
   selectionAssignments?: Record<string, RecipeAssignment[]>;
@@ -5781,10 +5781,30 @@ function batchCookingSignature(plan: ActivePlan, batch: Batch, model: BatchCooki
     blockers: model.blockers,
   });
 }
+/* Хвост периода (решение владельца от 2026-10-19). Если период не делится на
+   партии, остаток по умолчанию присоединяется к последней полной партии без
+   вопроса: 7 дней по 3 — это два вечера готовки, 3 дня + 4 дня, а не третья
+   мини-готовка на один день. Предел — 4 дня, самый долгий холодильный срок
+   карточек каталога: 8 дней по 3 остаются 3 + 3 + 2, а 9 по 4 — 4 + 4 + 1,
+   иначе партия держалась бы на одной заморозке. Порции дней, до которых блюдо
+   не хранится, Mise по-прежнему отправляет в морозилку, а блюда без заморозки
+   с коротким сроком в такую партию не подбираются. Отдельная мини-партия,
+   добавить или убрать дни — по-прежнему выбор человека в карточке остатка. */
+type TailDecision = "separate" | "join" | "extend" | "shorten";
+const joinedTailMaxDays = 4;
+function tailJoinAllowed(periodDays: number, cookEveryDays: number) {
+  const remainder = periodDays % cookEveryDays;
+  return (
+    remainder > 0 &&
+    periodDays > cookEveryDays &&
+    cookEveryDays + remainder <= joinedTailMaxDays
+  );
+}
 function buildBatches(
   start: string,
   periodDays: number,
   cookEveryDays: number,
+  joinTail = false,
 ): Batch[] {
   const result: Batch[] = [];
   let offset = 0;
@@ -5799,7 +5819,29 @@ function buildBatches(
     });
     offset += days;
   }
+  if (joinTail && tailJoinAllowed(periodDays, cookEveryDays)) {
+    const tail = result.pop()!;
+    const last = result[result.length - 1];
+    result[result.length - 1] = { ...last, end: tail.end, days: last.days + tail.days };
+  }
   return result;
+}
+/* Как устроен хвост сохранённого плана: последняя партия длиннее ритма —
+   хвост присоединён, короче — готовится отдельно. Повтор плана решает заново
+   по правилу выше. */
+function savedTailDecision(plan: Pick<ActivePlan, "batches" | "cookEveryDays" | "periodDays">): TailDecision | null {
+  if (plan.batches.some((batch) => batch.days > plan.cookEveryDays)) return "join";
+  return plan.periodDays % plan.cookEveryDays ? "separate" : null;
+}
+/* «3 дня + 4 дня», а для длинного плана — «4 партии по 3 дня + 2 дня». */
+function batchLayoutLabel(batches: Pick<Batch, "days">[]) {
+  if (batches.length === 1) return `одна партия на ${withPlural(batches[0].days, FORMS.day)}`;
+  if (batches.length <= 3) return batches.map((batch) => withPlural(batch.days, FORMS.day)).join(" + ");
+  const head = batches.slice(0, -1);
+  const last = batches[batches.length - 1];
+  return head.every((batch) => batch.days === head[0].days)
+    ? `${withPlural(head.length, FORMS.batch)} по ${withPlural(head[0].days, FORMS.day)} + ${withPlural(last.days, FORMS.day)}`
+    : batches.map((batch) => withPlural(batch.days, FORMS.day)).join(" + ");
 }
 function notificationPlanFor(plan: ActivePlan): NotificationPlan {
   const frozenUseDates = plan.batches.flatMap((batch) =>
@@ -12040,13 +12082,12 @@ function PlanBuilder({
   const [cookEveryDays, setCookEveryDays] = useState(
     initialPlan?.cookEveryDays ?? 3,
   );
-  const [remainderDecision, setRemainderDecision] = useState<
-    "separate" | "extend" | "shorten" | null
-  >(
-    initialPlan && initialPlan.periodDays % initialPlan.cookEveryDays
-      ? "separate"
-      : null,
-  );
+  /* Правка сохранённого плана сохраняет его партии; новый план и повтор
+     решают хвост по правилу tailJoinAllowed. */
+  const initialRemainderDecision =
+    initialPlan && !repeat ? savedTailDecision(initialPlan) : null;
+  const [remainderDecision, setRemainderDecision] =
+    useState<TailDecision | null>(initialRemainderDecision);
   const [selections, setSelections] = useState<Record<string, string>>(
     initialPlan?.selections ?? {},
   );
@@ -12172,7 +12213,7 @@ function PlanBuilder({
     setKitchenEquipment(initialPlan ? normalizeKitchenEquipment(initialPlan.kitchenEquipment) : [...defaultKitchenEquipment]);
     setRecipeMethods(normalizeRecipeMethods(initialPlan?.recipeMethods));
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
-    setRemainderDecision(null);
+    setRemainderDecision(initialRemainderDecision);
     setSelections(initialPlan?.selections ?? {});
     setSelectionAssignments(initialPlan?.selectionAssignments ?? {});
     setMenuMode("auto");
@@ -12287,9 +12328,26 @@ function PlanBuilder({
   const remainder = validPeriod ? rawDays % cookEveryDays : 0;
   /* Неделя по умолчанию не делится на партии по 3 дня, а 7 — простое число:
      обязательный выбор встречал каждого, кто не менял настройки, и кнопка
-     стояла неактивной. По умолчанию остаток готовится отдельной мини-партией —
-     даты человека не меняются; добавить или убрать дни можно тем же выбором. */
-  const tailDecision = remainderDecision ?? "separate";
+     стояла неактивной (2026-10-07). С 2026-10-19 хвост без вопроса
+     присоединяется к последней партии, если она выходит не длиннее 4 дней и
+     для неё есть блюда на всех; иначе готовится отдельной мини-партией. Даты
+     человека не меняются; другой вариант — «Изменить» в карточке остатка. */
+  const tailJoinable = validPeriod && tailJoinAllowed(rawDays, cookEveryDays);
+  /* Проверка длинной партии стоит столько же, сколько проверка кухни, поэтому
+     на шагах 2–4 (люди меняются с каждым символом) она не пересчитывается:
+     разбиение видно только на шагах «Период» и «Готовка» и дальше. */
+  const tailCheckStep = step === 0 || step >= 4;
+  const joinedTailGaps = useMemo(
+    () =>
+      tailJoinable && remainderDecision === null && tailCheckStep
+        ? kitchenMenuGaps(people, mealSlots, menuStyle, buildBatches(start, rawDays, cookEveryDays, true).slice(-1), kitchenEquipment)
+        : [],
+    [tailJoinable, remainderDecision, tailCheckStep, people, mealSlots, menuStyle, start, rawDays, cookEveryDays, kitchenEquipment],
+  );
+  const autoTail: TailDecision =
+    tailJoinable && joinedTailGaps.length === 0 ? "join" : "separate";
+  const tailDecision =
+    remainderDecision === "join" && !tailJoinable ? autoTail : remainderDecision ?? autoTail;
   const resolvedDays = !remainder
     ? rawDays
     : tailDecision === "extend"
@@ -12299,9 +12357,10 @@ function PlanBuilder({
         : rawDays;
   const resolvedPeriodValid = resolvedDays >= 1 && resolvedDays <= 14;
   const resolvedEnd = addDays(start, Math.max(0, resolvedDays - 1));
+  const tailJoined = Boolean(remainder) && tailDecision === "join";
   const batches = useMemo(
-    () => buildBatches(start, Math.max(1, resolvedDays), cookEveryDays),
-    [start, resolvedDays, cookEveryDays],
+    () => buildBatches(start, Math.max(1, resolvedDays), cookEveryDays, tailJoined),
+    [start, resolvedDays, cookEveryDays, tailJoined],
   );
   const positions = useMemo(
     () =>
@@ -13339,6 +13398,7 @@ function PlanBuilder({
                 valid={validPeriod}
                 cookDays={batches.map((batch) => batch.start)}
                 cookEveryDays={cookEveryDays}
+                tailJoined={tailJoined}
                 onStart={(value) => {
                   setStart(value);
                   if (daysInclusive(value, end) < 1) setEnd(value);
@@ -13417,8 +13477,10 @@ function PlanBuilder({
                 cookEveryDays={cookEveryDays}
                 remainder={remainder}
                 decision={tailDecision}
+                automatic={remainderDecision === null}
+                joinable={tailJoinable}
                 start={start}
-                resolvedDays={resolvedDays}
+                blocks={batches}
                 canExtend={rawDays + cookEveryDays - remainder <= 14}
                 onDays={(value) => {
                   setCookEveryDays(value);
@@ -13684,6 +13746,7 @@ function PeriodStep({
   valid,
   cookDays,
   cookEveryDays,
+  tailJoined,
   onStart,
   onEnd,
   onQuick,
@@ -13694,6 +13757,7 @@ function PeriodStep({
   valid: boolean;
   cookDays: string[];
   cookEveryDays: number;
+  tailJoined: boolean;
   onStart: (value: string) => void;
   onEnd: (value: string) => void;
   onQuick: (days: number) => void;
@@ -13746,7 +13810,10 @@ function PeriodStep({
               </b>
               <small>
                 {withPlural(cookDays.length, FORMS.batch)} {rhythm}
-                {tail > 0 ? `, хвост ${withPlural(tail, FORMS.day)}` : ""} — настроим на шаге «Готовка»
+                {tail > 0
+                  ? `, хвост ${withPlural(tail, FORMS.day)}${tailJoined ? " присоединён к последней" : ""}`
+                  : ""}{" "}
+                — настроим на шаге «Готовка»
               </small>
             </>
           ) : (
@@ -15184,8 +15251,10 @@ function CookingStep({
   cookEveryDays,
   remainder,
   decision,
+  automatic,
+  joinable,
   start,
-  resolvedDays,
+  blocks,
   canExtend,
   onDays,
   onDecision,
@@ -15196,17 +15265,44 @@ function CookingStep({
   periodDays: number;
   cookEveryDays: number;
   remainder: number;
-  decision: "separate" | "extend" | "shorten" | null;
+  decision: TailDecision;
+  automatic: boolean;
+  joinable: boolean;
   start: string;
-  resolvedDays: number;
+  blocks: Batch[];
   canExtend: boolean;
   onDays: (days: number) => void;
-  onDecision: (value: "separate" | "extend" | "shorten") => void;
+  onDecision: (value: TailDecision) => void;
 }) {
-  const blocks = buildBatches(start, resolvedDays, cookEveryDays);
+  /* Остаток периода больше не обязательный вопрос (2026-10-19): карточка
+     называет выбранное разбиение, а прежний выбор открывается по «Изменить». */
+  const [tailOptionsOpen, setTailOptionsOpen] = useState(false);
+  const tailOptionsId = useId();
+  const joinedDays = cookEveryDays + remainder;
+  const tailLayout = `${batchLayoutLabel(blocks)}, ${
+    decision === "join"
+      ? "хвост присоединён"
+      : decision === "extend"
+        ? `добавили ${withPlural(cookEveryDays - remainder, FORMS.day)}`
+        : decision === "shorten"
+          ? `убрали ${withPlural(remainder, FORMS.day)}`
+          : "хвост — отдельная мини-партия"
+  }`;
+  const tailExplanation =
+    decision === "join"
+      ? `На одну готовку меньше. Блюда, которые не хранятся ${withPlural(joinedDays, FORMS.day)}, частично уйдут в морозилку — Mise напомнит разморозить.`
+      : decision === "extend"
+        ? `Новый конец: ${formatDate(addDays(start, periodDays + cookEveryDays - remainder - 1))}.`
+        : decision === "shorten"
+          ? `Новый конец: ${formatDate(addDays(start, periodDays - remainder - 1))}.`
+          : automatic && !joinable && periodDays > cookEveryDays
+            ? `Финальная мини-готовка на ${withPlural(remainder, FORMS.day)}: вместе с последней партией вышло бы ${withPlural(joinedDays, FORMS.day)}, дольше ${joinedTailMaxDays} дней еда без заморозки не хранится.`
+            : automatic && joinable
+              ? "Финальная мини-готовка: в длинную последнюю партию не нашлось блюд на всех."
+              : `Даты не меняются, финальная мини-готовка на ${withPlural(remainder, FORMS.day)}.`;
   return (
     <>
-      {/* Сначала то, о чём спрашивает шаг, и обязательное решение об остатке.
+      {/* Сначала то, о чём спрашивает шаг, и разбиение остатка периода.
           Кухня уже отмечена по умолчанию и не должна отодвигать их за экран. */}
       <section className="glass-card cooking-rhythm">
         <StepIntro
@@ -15255,69 +15351,111 @@ function CookingStep({
         </ol>
       </section>
       {remainder > 0 && (
-        <div
+        <section
           className="remainder-sheet glass-card"
-          role="radiogroup"
-          aria-label="Как поступить с остатком"
+          aria-label="Остаток периода"
         >
           <p className="kicker">Остаток периода</p>
           <h3>
             {withPlural(periodDays, FORMS.day)} не делятся на {cookEveryDays} без остатка
           </h3>
-          <p>
-            Последний блок — {withPlural(remainder, FORMS.day)}. Как поступить?
-          </p>
-          <button
-            role="radio"
-            aria-checked={decision === "separate"}
-            className={decision === "separate" ? "selected" : ""}
-            onClick={() => onDecision("separate")}
+          <div className="remainder-summary">
+            <p aria-live="polite">
+              <b>{capitalize(tailLayout)}</b>
+              <small>{tailExplanation}</small>
+            </p>
+            <button
+              type="button"
+              className="text-button remainder-change"
+              aria-expanded={tailOptionsOpen}
+              aria-controls={tailOptionsId}
+              onClick={() => setTailOptionsOpen((open) => !open)}
+            >
+              {tailOptionsOpen ? "Свернуть" : "Изменить"}
+            </button>
+          </div>
+          <div
+            className="remainder-options"
+            id={tailOptionsId}
+            role="radiogroup"
+            aria-label="Как поступить с остатком"
+            hidden={!tailOptionsOpen}
           >
-            <Icon name="container" />
-            <div>
-              <b>Приготовить остаток отдельно</b>
-              <small>
-                Оставить даты, финальная мини-готовка на {remainder} дн.
-              </small>
-            </div>
-            <i>{decision === "separate" ? <Icon name="check" /> : ""}</i>
-          </button>
-          <button
-            role="radio"
-            aria-checked={decision === "extend"}
-            className={decision === "extend" ? "selected" : ""}
-            disabled={!canExtend}
-            onClick={() => onDecision("extend")}
-          >
-            <Icon name="plus" />
-            <div>
-              <b>Добавить {cookEveryDays - remainder} дн.</b>
-              <small>
-                {canExtend
-                  ? `Новый конец: ${formatDate(addDays(start, periodDays + cookEveryDays - remainder - 1))}`
-                  : "Получится больше 14 дней — выберите другой вариант"}
-              </small>
-            </div>
-            <i>{decision === "extend" ? <Icon name="check" /> : ""}</i>
-          </button>
-          <button
-            role="radio"
-            aria-checked={decision === "shorten"}
-            className={decision === "shorten" ? "selected" : ""}
-            disabled={periodDays - remainder < 1}
-            onClick={() => onDecision("shorten")}
-          >
-            <Icon name="minus" />
-            <div>
-              <b>Убрать {remainder} дн.</b>
-              <small>
-                Новый конец:{" "}
-                {formatDate(addDays(start, periodDays - remainder - 1))}
-              </small>
-            </div>
-            <i>{decision === "shorten" ? <Icon name="check" /> : ""}</i>
-          </button>
-        </div>
+            <p>
+              Последний блок — {withPlural(remainder, FORMS.day)}. Как поступить?
+            </p>
+            <button
+              role="radio"
+              aria-checked={decision === "join"}
+              className={decision === "join" ? "selected" : ""}
+              disabled={!joinable}
+              onClick={() => onDecision("join")}
+            >
+              <Icon name="calendar" />
+              <div>
+                <b>Присоединить к последней партии</b>
+                <small>
+                  {joinable
+                    ? `Последняя партия на ${withPlural(joinedDays, FORMS.day)}, даты не меняются`
+                    : periodDays > cookEveryDays
+                      ? `Вышло бы ${withPlural(joinedDays, FORMS.day)} — дольше ${joinedTailMaxDays} дней без заморозки не хранится`
+                      : "В периоде нет полной партии"}
+                </small>
+              </div>
+              <i>{decision === "join" ? <Icon name="check" /> : ""}</i>
+            </button>
+            <button
+              role="radio"
+              aria-checked={decision === "separate"}
+              className={decision === "separate" ? "selected" : ""}
+              onClick={() => onDecision("separate")}
+            >
+              <Icon name="container" />
+              <div>
+                <b>Приготовить остаток отдельно</b>
+                <small>
+                  Оставить даты, финальная мини-готовка на {remainder} дн.
+                </small>
+              </div>
+              <i>{decision === "separate" ? <Icon name="check" /> : ""}</i>
+            </button>
+            <button
+              role="radio"
+              aria-checked={decision === "extend"}
+              className={decision === "extend" ? "selected" : ""}
+              disabled={!canExtend}
+              onClick={() => onDecision("extend")}
+            >
+              <Icon name="plus" />
+              <div>
+                <b>Добавить {cookEveryDays - remainder} дн.</b>
+                <small>
+                  {canExtend
+                    ? `Новый конец: ${formatDate(addDays(start, periodDays + cookEveryDays - remainder - 1))}`
+                    : "Получится больше 14 дней — выберите другой вариант"}
+                </small>
+              </div>
+              <i>{decision === "extend" ? <Icon name="check" /> : ""}</i>
+            </button>
+            <button
+              role="radio"
+              aria-checked={decision === "shorten"}
+              className={decision === "shorten" ? "selected" : ""}
+              disabled={periodDays - remainder < 1}
+              onClick={() => onDecision("shorten")}
+            >
+              <Icon name="minus" />
+              <div>
+                <b>Убрать {remainder} дн.</b>
+                <small>
+                  Новый конец:{" "}
+                  {formatDate(addDays(start, periodDays - remainder - 1))}
+                </small>
+              </div>
+              <i>{decision === "shorten" ? <Icon name="check" /> : ""}</i>
+            </button>
+          </div>
+        </section>
       )}
       {kitchenGaps.length === 0 && kitchenEquipment !== undefined && (
         <section className="glass-card cooking-feasible" role="status">
