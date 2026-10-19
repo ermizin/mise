@@ -229,6 +229,8 @@ async function applyGroupedReviewResolutions({ document }) {
           {
             ...candidate.paraphrasedInstructionDraft[1],
             text: "Накройте и оставьте в холодильнике на 6–8 часов. Утром перемешайте, разделите на порции, добавьте ломтики оставшегося банана, миндаль и щепотку корицы.",
+            // Карточка говорит «на ночь» без числа; время шага появляется только здесь.
+            duration: "6–8 ч",
           },
         ],
         miseGroupedReview: {

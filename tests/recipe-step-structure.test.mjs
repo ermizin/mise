@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { auditRecipeSteps } from "../scripts/audit-recipe-steps.mjs";
+import { TIMED_STEP_TEXT } from "../scripts/recipe-editorial-steps.mjs";
 import { splitInstructionSentences } from "../scripts/recipe-equipment.mjs";
 
 const catalog = JSON.parse(await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"));
@@ -51,6 +52,22 @@ test("step granularity does not get worse than the 2026-10-19 baseline", () => {
     assert.ok(row.maxLength <= MAX_STEP_LENGTH_CEILING, `${row.id}: step of ${row.maxLength} characters`);
     assert.ok(row.maxSentences <= MAX_SENTENCES_CEILING, `${row.id}: step of ${row.maxSentences} sentences`);
   }
+});
+
+test("a step that names a time carries it as a duration", () => {
+  // Так же проверяет scripts/check-editorial-steps.mjs: после разбиения шага
+  // время должно остаться у того шага, где оно названо. 2026-10-19 время было
+  // только в тексте у 25 карточек — пяти редакционных, «Простых и домашних»
+  // (сборщик), овсянки Good Food (оверлей) и двух сэндвичей (поварская правка).
+  let timed = 0;
+  for (const recipe of catalog.recipes) {
+    for (const step of recipe.recipeFamily.miseInstructions) {
+      if (step.action === "measure" || !TIMED_STEP_TEXT.test(step.text)) continue;
+      timed += 1;
+      assert.ok(step.duration, `${recipe.id}/${step.id}: «${step.text}» has no duration`);
+    }
+  }
+  assert.ok(timed > 200, `${timed} timed steps`);
 });
 
 function ingredientLines(recipe) {

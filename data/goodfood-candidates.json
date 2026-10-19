@@ -9039,6 +9039,7 @@
           "dependsOn": [
             "editorial-step-1"
           ],
+          "duration": "4–5 мин + около 10 мин",
           "equipment": [
             "pot"
           ]
@@ -9719,6 +9720,7 @@
           "dependsOn": [
             "editorial-step-1"
           ],
+          "duration": "7 мин + 2 мин + 30 мин",
           "equipment": [
             "pot"
           ]
@@ -9757,6 +9759,7 @@
           "dependsOn": [
             "editorial-step-2"
           ],
+          "duration": "4–5 мин + около 10 мин",
           "equipment": [
             "pot"
           ]
@@ -11385,6 +11388,7 @@
             "source-ingredient-11"
           ],
           "action": "simmer",
+          "duration": "1 мин + 1 мин",
           "equipment": [
             "pot"
           ],
@@ -12986,6 +12990,7 @@
           ],
           "action": "preheat",
           "temperature": "220°C",
+          "duration": "30–60 мин",
           "equipment": [
             "oven",
             "baking_sheet"

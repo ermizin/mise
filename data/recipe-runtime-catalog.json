@@ -109089,6 +109089,7 @@
               "source-ingredient-12"
             ],
             "action": "combine",
+            "duration": "1–2 мин",
             "equipment": [
               "skillet"
             ],
@@ -170546,7 +170547,8 @@
             "action": "divide",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -178928,6 +178930,7 @@
             "dependsOn": [
               "editorial-step-1"
             ],
+            "duration": "4–5 мин + около 10 мин",
             "equipment": [
               "pot"
             ]
@@ -181547,6 +181550,7 @@
             "dependsOn": [
               "editorial-step-1"
             ],
+            "duration": "7 мин + 2 мин + 30 мин",
             "equipment": [
               "pot"
             ]
@@ -181585,6 +181589,7 @@
             "dependsOn": [
               "editorial-step-2"
             ],
+            "duration": "4–5 мин + около 10 мин",
             "equipment": [
               "pot"
             ]
@@ -184082,6 +184087,7 @@
               "source-ingredient-11"
             ],
             "action": "simmer",
+            "duration": "1 мин + 1 мин",
             "equipment": [
               "pot"
             ],
@@ -188717,6 +188723,7 @@
             ],
             "action": "preheat",
             "temperature": "220°C",
+            "duration": "30–60 мин",
             "equipment": [
               "oven",
               "baking_sheet"
@@ -214621,7 +214628,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "50–60 мин"
           },
           {
             "id": "editorial-step-4",
@@ -215629,7 +215637,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "3–4 мин"
           },
           {
             "id": "editorial-step-3",
@@ -216371,7 +216380,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "4–5 мин"
           },
           {
             "id": "editorial-step-3",
@@ -216390,7 +216400,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "15–18 мин"
           }
         ],
         "storage": {
@@ -217024,7 +217035,8 @@
             "action": "cook",
             "dependsOn": [
               "step-measure"
-            ]
+            ],
+            "duration": "3 мин"
           },
           {
             "id": "editorial-step-2",
@@ -217749,7 +217761,8 @@
             "action": "cook",
             "dependsOn": [
               "step-measure"
-            ]
+            ],
+            "duration": "8–10 мин"
           },
           {
             "id": "editorial-step-2",
@@ -217768,7 +217781,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "15 мин"
           },
           {
             "id": "editorial-step-3",
@@ -217787,7 +217801,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "20–25 мин"
           }
         ],
         "storage": {
@@ -218481,7 +218496,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -219114,7 +219130,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -219752,7 +219769,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -220390,7 +220408,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -221080,7 +221099,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -221774,7 +221794,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -224977,7 +224998,8 @@
               "source-ingredient-10",
               "source-ingredient-11"
             ],
-            "text": "Разогрейте сковороду-гриль. Натрите куриную грудку маслом, посолите и поперчите; жарьте примерно по 7 минут с каждой стороны, до 74 °C в центре. Дайте мясу отдохнуть и нарежьте ломтиками."
+            "text": "Разогрейте сковороду-гриль. Натрите куриную грудку маслом, посолите и поперчите; жарьте примерно по 7 минут с каждой стороны, до 74 °C в центре. Дайте мясу отдохнуть и нарежьте ломтиками.",
+            "duration": "около 7 мин с каждой стороны"
           },
           {
             "id": "editorial-step-2",
@@ -225724,7 +225746,8 @@
               "source-ingredient-9",
               "source-ingredient-10"
             ],
-            "text": "Полейте курицу лимонным соком, посыпьте копчёной паприкой, посолите, поперчите и смажьте маслом. Жарьте на горячем гриле по 3–4 минуты с каждой стороны, до 74 °C в центре."
+            "text": "Полейте курицу лимонным соком, посыпьте копчёной паприкой, посолите, поперчите и смажьте маслом. Жарьте на горячем гриле по 3–4 минуты с каждой стороны, до 74 °C в центре.",
+            "duration": "3–4 мин с каждой стороны"
           },
           {
             "id": "editorial-step-3",
@@ -231358,7 +231381,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "45–50 мин"
           },
           {
             "id": "editorial-step-3",
@@ -231379,7 +231403,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "5–7 мин"
           },
           {
             "id": "editorial-step-4",
@@ -232098,7 +232123,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "5–7 мин"
           },
           {
             "id": "editorial-step-4",
@@ -232734,7 +232760,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "35–40 мин + 5–10 мин"
           }
         ],
         "storage": {
@@ -233628,7 +233655,8 @@
             "action": "cook",
             "dependsOn": [
               "step-measure"
-            ]
+            ],
+            "duration": "10 мин"
           },
           {
             "id": "editorial-step-2",
@@ -233651,7 +233679,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "5 мин"
           },
           {
             "id": "editorial-step-3",
@@ -235868,7 +235897,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -236487,7 +236517,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {

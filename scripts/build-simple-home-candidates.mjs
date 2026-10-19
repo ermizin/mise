@@ -417,6 +417,17 @@ function nutritionFor(config) {
   return Object.fromEntries(Object.entries(total).map(([key, value]) => [key, round(value / config.servings)]));
 }
 
+/* Время из текста шага переносится в `duration`, как у редакционных карточек:
+   «6–8 часов» → «6–8 ч», несколько интервалов — через « + ». Таймлайн
+   готовки считает по нему те же минуты, что и по тексту шага, а проверка
+   `scripts/check-editorial-steps.mjs` видит, что время у шага задано. */
+const stepTimePattern = /(\d+(?:[.,]\d+)?(?:\s*[–-]\s*\d+(?:[.,]\d+)?)?)\s*(сек(?:унд[аы]?)?|мин(?:ут[аы]?)?|час(?:а|ов)?)(?![а-яё])/giu;
+export function durationFromStepText(text) {
+  const parts = [...String(text).matchAll(stepTimePattern)].map(([, amount, unit]) =>
+    `${amount.replace(/\s*[–-]\s*/u, "–")} ${unit.startsWith("сек") ? "сек" : unit.startsWith("мин") ? "мин" : "ч"}`);
+  return parts.length ? parts.join(" + ") : undefined;
+}
+
 const safeStorage = (config) => {
   const refrigeratorDays = config.slot === "breakfast" && config.id.includes("oats") ? 4 : config.id.includes("sandwich") ? 2 : config.id.includes("seabass") ? 2 : 3;
   return {
@@ -446,7 +457,10 @@ export async function buildSimpleHomeCandidates({ cwd = process.cwd() } = {}) {
     if (!source) throw new Error(`${config.id}: source extract is missing`);
     const macros = nutritionFor(config);
     if (macros.protein < 25) throw new Error(`${config.id}: high-protein adaptation has only ${macros.protein} g protein`);
-    const steps = config.steps.map((text, index) => ({ id: `editorial-step-${index + 1}`, text, ingredientIds: config.ingredients.map((_, ingredientIndex) => `source-ingredient-${ingredientIndex + 1}`), action: index === config.steps.length - 1 ? "portion" : "cook", dependsOn: index ? [`editorial-step-${index}`] : [] }));
+    const steps = config.steps.map((text, index) => {
+      const duration = durationFromStepText(text);
+      return { id: `editorial-step-${index + 1}`, text, ingredientIds: config.ingredients.map((_, ingredientIndex) => `source-ingredient-${ingredientIndex + 1}`), action: index === config.steps.length - 1 ? "portion" : "cook", dependsOn: index ? [`editorial-step-${index}`] : [], ...(duration ? { duration } : {}) };
+    });
     return {
       id: config.id,
       title: config.titleRu,
