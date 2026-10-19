@@ -96,20 +96,37 @@ test("the recipe catalog header follows scroll direction without flicker", async
   assert.match(css, /@media \(prefers-reduced-motion: reduce\) \{[\s\S]*?\.catalog-header \{[\s\S]*?transition: none/);
 });
 
-test("the onboarding wizard is a real chat, not the old action bar", async () => {
+test("the onboarding wizard asks one step at a time, not the old action bar", async () => {
   const page = await read("app/page.tsx");
   const start = page.indexOf("function PlanBuilder(");
   const end = page.indexOf("function StepIntro(", start);
   assert.ok(start >= 0 && end > start, "the plan builder source is present");
   const builder = page.slice(start, end);
 
-  assert.match(builder, /completedChatTurns\.slice\(-1\)/, "the current context stays compact");
-  assert.match(builder, /Показать предыдущие ответы/, "earlier answers remain available on demand");
+  assert.match(
+    builder,
+    /const visibleChatTurns = historyExpanded \? completedChatTurns : \[\]/,
+    "past steps fold into one row, so the current question stays compact",
+  );
+  assert.match(builder, /`Предыдущие шаги · \$\{hiddenChatTurnCount\}`/, "earlier answers remain available on demand");
+  assert.match(builder, /completedChatTurns\.length > 0 && \(/, "the row appears from the second step");
   assert.match(builder, /setHistoryExpanded/, "the user controls expanded history");
   assert.match(builder, /className="builder-chat-question"/);
   assert.match(builder, /role="log"\s+aria-live="polite"/);
   assert.match(builder, /className="builder-chat-send"/);
-  assert.match(builder, /Отправить ответ/);
+  // Редизайн C без метафоры чата: «Дальше» на шагах 1–4, ни «ответа», ни «чата».
+  assert.match(builder, /: "Дальше"\}/);
+  for (const chatWord of [
+    "Отправить ответ",
+    "Отправить меню",
+    "Сохранить ответ",
+    "Ответ в чате",
+    "Разговор с Mise",
+    "Ваш ответ готов",
+    "предыдущие ответы",
+    "Изменить ответ",
+  ])
+    assert.ok(!builder.includes(chatWord), `no chat wording left: ${chatWord}`);
   assert.doesNotMatch(builder, /className="builder-actions glass"/);
   assert.doesNotMatch(builder, /Продолжить/);
 });
@@ -126,7 +143,7 @@ test("the hardware back button stays inside the app", async () => {
 test("the week screen answers what to do today", async () => {
   const page = await read("app/page.tsx");
   assert.match(page, /clampDate\(today, plan\.start, plan\.end\)/, "the week opens on today");
-  assert.match(page, /Повторить план/, "a finished plan offers the next cycle");
+  assert.match(page, /Повторить этот план/, "a finished plan offers the next cycle");
   assert.match(page, /today-dot/, "today is marked in the date strip");
   assert.match(page, /Вечером переложите в холодильник/, "frozen portions are announced a day ahead");
   assert.doesNotMatch(page, /name: index === 0 \? "Максим"/, "no personal name is hardcoded");
@@ -258,7 +275,12 @@ test("profile presents the real household goals and keeps its actions connected"
     /tab !== "recipes"\s*&&\s*tab !== "profile"/,
     "profile owns its header instead of showing the generic app header",
   );
-  assert.match(profile, /<h1>Цели и порции<\/h1>/);
+  assert.match(profile, /<h1>Профиль<\/h1>/);
+  assert.match(
+    profile,
+    /цели и порции · \{withPlural\(people\.length, FORMS\.person\)\}/,
+    "the former heading stays as the meta line",
+  );
   assert.match(profile, /people\.map\(\(person, index\)/, "profile renders real people");
   assert.match(profile, /profileGoalLabels\[person\.estimate\.goal\]/, "the person goal is shown");
   assert.match(profile, /person\.includedSlots[\s\S]*?mealMeta\[slot\]/, "the included meal slots are shown");
@@ -301,4 +323,51 @@ test("the interface stays legible", async () => {
   assert.doesNotMatch(layout, /prefers-color-scheme: dark/, "the PWA chrome stays light");
   assert.match(layout, /statusBarStyle: "default"/, "the iOS status bar stays readable");
   assert.doesNotMatch(page, /aria-pressed=\{origin === "parsed"\}/, "radio groups expose radios");
+});
+
+test("redesign C copy: one verb for the next plan, no empty chips, no stray «Я»", async () => {
+  const [page, setup] = await Promise.all([read("app/page.tsx"), read("app/notification-setup.tsx")]);
+  const slice = (from, to) => page.slice(page.indexOf(from), page.indexOf(to, page.indexOf(from)));
+
+  // Следующий план: «Собрать…» везде, событие календаря прежнее.
+  const sheet = slice("function NextPlanSheet(", "function RecipesScreen(");
+  assert.match(sheet, /<h2 id="next-plan-title">Следующий план<\/h2>/);
+  assert.match(sheet, />\s*Повторить этот план\s*</);
+  assert.match(sheet, />\s*Собрать новый план\s*</);
+  assert.match(sheet, />\s*Изменить людей и цели\s*</);
+  assert.match(sheet, /Событие «Собрать следующий план»/);
+  assert.doesNotMatch(sheet, /перейдут в мастер/);
+  const week = slice("function WeekScreen(", "function NextPlanSheet(");
+  assert.match(week, /<small>собрать следующий план<\/small>/, "the «what next» row names the action in full");
+  assert.match(week, /Собрать следующий план <Icon/, "the plan-ending card uses the same verb");
+  assert.match(week, />\s*Собрать новый план\s*</);
+  assert.doesNotMatch(page, /Составить новый/);
+
+  // «План готов!» ведёт на неделю; после напоминаний — просто «Готово».
+  const success = slice("function SuccessSheet(", "function roundedIngredientAmount(");
+  assert.match(success, />\s*Открыть неделю\s*</);
+  assert.doesNotMatch(page, />\s*Открыть план\s*</);
+  assert.doesNotMatch(setup, />Открыть план </);
+
+  // Каталог: «докупить 0» не рисуется, «в партии N» остаётся.
+  const card = slice("function RecipeCard(", "function ShoppingScreen(");
+  assert.match(card, /missing !== null && missing > 0 && !batchNumber && \(/);
+  assert.match(card, /в партии \{batchNumber\}/);
+
+  // Покупки: «8 групп · осталось 3», «все 8 групп впереди», без «Осталось групп».
+  const shopping = slice("function ShoppingScreen(", "function ProfileScreen(");
+  assert.doesNotMatch(shopping, /Осталось групп/);
+  assert.match(shopping, /`\$\{totalGroups > 1 \? "все " : ""\}\$\{withPlural\(totalGroups, shoppingGroupForms\)\} впереди`/);
+  assert.match(shopping, /\{withPlural\(totalGroups, shoppingGroupForms\)\} · осталось/);
+  assert.match(shopping, /· всё куплено/);
+
+  // Неделя: организатор без имени — «сегодня» и значок человека вместо «Я».
+  assert.match(page, /function isSelfName\(name: string\)[\s\S]{0,140}=== "я"/);
+  assert.match(week, /isSelfName\(person\.name\) \? "" : person\.name\.trim\(\)/);
+  assert.match(week, /\{balanceCaption && <small>\{balanceCaption\}<\/small>\}/);
+  assert.doesNotMatch(week, /\{person\.name\}\s*\{selectedDate === today \? " · сегодня" : ""\}/);
+  const picker = slice("function WeekPersonPicker(", "function useCalendarAdded(");
+  assert.match(picker, /isSelfName\(name\) \? <Icon name="person" size=\{18\} \/> : initials\(name\)/);
+  assert.match(picker, /className="week-person-avatar" aria-hidden="true">\{avatar\(person\.name\)\}/);
+  assert.match(picker, /aria-label=\{`Выбрать едока: \$\{person\.name\}`\}/, "the accessible name keeps the person");
 });

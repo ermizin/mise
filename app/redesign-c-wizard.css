@@ -1403,3 +1403,40 @@
 .builder-chat-composer.has-menu-choice .builder-chat-send .icon {
   display: none;
 }
+
+/* ---------- Пакет «copy» (раунд 2): прошлые шаги — строка-аккордеон ----------
+   Без метафоры чата: под полосой прогресса одна пилюля 40 (13/600)
+   «Предыдущие шаги · N», ответы раскрываются по запросу (PRODUCT.md:
+   «история доступна»). Зона касания 44 — через ::before, как .hit кита. */
+.builder-chat-history-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 12px 0 14px;
+  border-radius: var(--r-pill);
+  font-weight: var(--weight-semibold);
+  line-height: 1;
+  white-space: nowrap;
+}
+.builder-chat-history-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+.builder-chat-history-toggle .icon {
+  flex: none;
+  color: var(--ink-muted);
+  transform: rotate(90deg);
+  transition: transform 220ms var(--motion-settled);
+}
+.builder-chat-history-toggle[aria-expanded="true"] .icon {
+  transform: rotate(-90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .builder-chat-history-toggle .icon {
+    transition: none;
+  }
+}

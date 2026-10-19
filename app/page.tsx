@@ -9449,6 +9449,7 @@ function outsidePlanSlotsPhrase(slots: MealSlot[]) {
 }
 
 const productForms = ["продукт", "продукта", "продуктов"] as const;
+const shoppingGroupForms = ["группа", "группы", "групп"] as const;
 const cookingForms = ["готовка", "готовки", "готовок"] as const;
 const weekdayDative = [
   "воскресенью",
@@ -9466,6 +9467,13 @@ function shoppingDeadline(batchStart: string, today: string) {
   return `к ${weekdayDative[parseDate(batchStart).getDay()]}`;
 }
 
+/* «Я» — подпись организатора по умолчанию, а не имя: в пилюле-инициале
+   вместо буквы «Я» показывается значок человека. */
+function isSelfName(name: string) {
+  const trimmed = name.trim();
+  return !trimmed || trimmed.toLocaleLowerCase("ru-RU") === "я";
+}
+
 function WeekPersonPicker({ people, value, onChange }: {
   people: { id: string; name: string }[];
   value: string;
@@ -9478,6 +9486,8 @@ function WeekPersonPicker({ people, value, onChange }: {
   const person = people.find((item) => item.id === value) ?? people[0];
   const initials = (name: string) => name.trim().split(/\s+/).slice(0, 2)
     .map((part) => Array.from(part)[0] ?? "").join("").toLocaleUpperCase("ru-RU") || "?";
+  const avatar = (name: string) =>
+    isSelfName(name) ? <Icon name="person" size={18} /> : initials(name);
 
   useEffect(() => {
     if (!open) return;
@@ -9499,7 +9509,7 @@ function WeekPersonPicker({ people, value, onChange }: {
   if (!person) return null;
   if (people.length === 1) return (
     <span className="week-person-current">
-      <span className="week-person-avatar" aria-hidden="true">{initials(person.name)}</span>
+      <span className="week-person-avatar" aria-hidden="true">{avatar(person.name)}</span>
       <span className="week-person-name">{person.name}</span>
     </span>
   );
@@ -9514,7 +9524,7 @@ function WeekPersonPicker({ people, value, onChange }: {
         onKeyDown={handleKeyDown}
         aria-expanded={open} aria-controls={menuId}
         aria-label={`Выбрать едока: ${person.name}`} onClick={() => setOpen(!open)}>
-        <span className="week-person-avatar" aria-hidden="true">{initials(person.name)}</span>
+        <span className="week-person-avatar" aria-hidden="true">{avatar(person.name)}</span>
         <span className="week-person-name">{person.name}</span>
         <Icon name="chevron" />
       </button>
@@ -9911,6 +9921,14 @@ function WeekScreen({
       wasEaten ? activePlan.nutritionHistory : preserveNutritionSnapshot(activePlan.nutritionHistory ?? {}, row.key, row.recipe.id, portionForRow(row).actual, capturedAt),
     );
   }
+  /* «Я · сегодня» читалось как подпись чужого человека: организатору без
+     имени достаточно «сегодня». */
+  const balanceCaption = [
+    isSelfName(person.name) ? "" : person.name.trim(),
+    selectedDate === today ? "сегодня" : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
   return (
     <section className="screen week-screen has-stable-tab-header">
       <header className="week-screen-header">
@@ -9972,10 +9990,10 @@ function WeekScreen({
           </p>
           <div className="today-actions">
             <button className="primary-button" onClick={onRepeat}>
-              Повторить план <Icon name="chevron" size={16} />
+              Повторить этот план <Icon name="chevron" size={16} />
             </button>
             <button className="secondary-button" onClick={onBuild}>
-              Составить новый
+              Собрать новый план
             </button>
           </div>
         </section>
@@ -10148,7 +10166,8 @@ function WeekScreen({
       </div>
       {mealRows.length === 0 && (
         <p className="week-no-portions glass-3">
-          На этот день порций нет: они не входят в меню {person.name}.
+          На этот день порций нет: они не входят в{" "}
+          {isSelfName(person.name) ? "ваше меню" : `меню ${person.name.trim()}`}.
         </p>
       )}
       </section>
@@ -10233,7 +10252,7 @@ function WeekScreen({
               <span className="week-next-tile is-ink" aria-hidden="true"><Icon name="plus" size={18} /></span>
               <span className="week-next-text">
                 <b>Сегодня последний день плана</b>
-                <small>собрать следующий</small>
+                <small>собрать следующий план</small>
               </span>
               <Icon name="chevron" className="entry-chevron" />
             </button>
@@ -10292,10 +10311,7 @@ function WeekScreen({
                 {balanceTarget.kcal.toLocaleString("ru-RU")} ккал{" "}
                 {balanceByPlan ? "по плану" : "за день"}
               </span>
-              <small>
-                {person.name}
-                {selectedDate === today ? " · сегодня" : ""}
-              </small>
+              {balanceCaption && <small>{balanceCaption}</small>}
             </p>
             <span className="macro-bar" role="progressbar" aria-label="Съедено калорий" aria-valuemin={0} aria-valuemax={balanceTarget.kcal} aria-valuenow={Math.min(eatenMacros.kcal, balanceTarget.kcal)} aria-valuetext={`${eatenMacros.kcal} из ${balanceTarget.kcal} ккал${balanceByPlan ? " по плану" : ""}`}>
               <i style={{ width: `${balanceProgress * 100}%` }} />
@@ -10435,7 +10451,7 @@ function WeekScreen({
             <h2>Собрать следующий заранее?</h2>
             <p>Текущий план останется доступен, пока вы готовите следующий.</p>
           </div>
-          <button className="primary-button" onClick={onOpenNextPlan}>Собрать следующий <Icon name="chevron" size={16} /></button>
+          <button className="primary-button" onClick={onOpenNextPlan}>Собрать следующий план <Icon name="chevron" size={16} /></button>
         </section>
       )}
       </div>
@@ -10480,8 +10496,8 @@ function NextPlanSheet({
       <span className="next-plan-grabber" aria-hidden="true" />
       <h2 id="next-plan-title">Следующий план</h2>
       <p className="next-plan-lead">
-        {status} Люди, цели и ограничения из него перейдут в мастер — их можно
-        поменять по ходу.
+        {status} Люди, цели и ограничения из него перейдут в новый план — их
+        можно поменять по ходу.
       </p>
       <ul className="next-plan-stats" aria-label="Итоги плана">
         <li>
@@ -10500,10 +10516,10 @@ function NextPlanSheet({
         </li>
       </ul>
       <button type="button" className="primary-button" onClick={onRepeat}>
-        Повторить план
+        Повторить этот план
       </button>
       <button type="button" className="secondary-button" onClick={onBuild}>
-        Составить новый
+        Собрать новый план
       </button>
       <button type="button" className="text-button" onClick={onEditPeople}>
         Изменить людей и цели
@@ -11308,8 +11324,9 @@ function RecipeCard({
             {batchNumber && (
               <span className="recipe-batch-badge">в партии {batchNumber}</span>
             )}
-            {missing !== null && !batchNumber && (
-              <span className={`missing-badge ${missing ? "is-short" : "is-ready"}`}>
+            {/* «докупить 0» ничего не сообщает: чип только при N > 0. */}
+            {missing !== null && missing > 0 && !batchNumber && (
+              <span className="missing-badge is-short">
                 докупить {missing}
               </span>
             )}
@@ -11513,10 +11530,18 @@ function ShoppingScreen({
             <span> из {plan.shopping.length}</span>
           </h2>
           <p>
-            Осталось групп{" "}
-            <b>
-              <AnimatedNumber value={remainingGroups} /> из {totalGroups}
-            </b>
+            {checked === 0 ? (
+              `${totalGroups > 1 ? "все " : ""}${withPlural(totalGroups, shoppingGroupForms)} впереди`
+            ) : remainingGroups === 0 ? (
+              `${withPlural(totalGroups, shoppingGroupForms)} · всё куплено`
+            ) : (
+              <>
+                {withPlural(totalGroups, shoppingGroupForms)} · осталось{" "}
+                <b>
+                  <AnimatedNumber value={remainingGroups} />
+                </b>
+              </>
+            )}
           </p>
         </div>
         <div
@@ -11717,9 +11742,9 @@ function ProfileScreen({
             Добавить человека
           </button>
         </div>
-        <h1>Цели и порции</h1>
+        <h1>Профиль</h1>
         <p className="tab-meta">
-          Профиль · {withPlural(people.length, FORMS.person)}
+          цели и порции · {withPlural(people.length, FORMS.person)}
         </p>
       </header>
       <div className="tab-panel-body profile-tab-body">
@@ -12084,6 +12109,7 @@ function PlanBuilder({
   const stepRef = useRef(step);
   const closeRef = useRef(onClose);
   const chatQuestionRef = useRef<HTMLDivElement | null>(null);
+  const historyToggleRef = useRef<HTMLButtonElement | null>(null);
   const menuAssemblyRef = useRef<HTMLDivElement | null>(null);
   const builderContentRef = useRef<HTMLElement | null>(null);
   const chatTimersRef = useRef<number[]>([]);
@@ -12269,10 +12295,14 @@ function PlanBuilder({
       question.focus({ preventScroll: true });
       const contentBox = content.getBoundingClientRect();
       const questionBox = question.getBoundingClientRect();
+      /* Строка «Предыдущие шаги» стоит под полосой прогресса и вместе с
+         вопросом остаётся на виду: прокрутка отсчитывается от неё. */
+      const historyRow = historyToggleRef.current?.getBoundingClientRect();
+      const historyOffset = historyRow ? questionBox.top - historyRow.top : 0;
       content.scrollTo({
         top: Math.max(
           0,
-          content.scrollTop + questionBox.top - contentBox.top - 22,
+          content.scrollTop + questionBox.top - contentBox.top - 22 - historyOffset,
         ),
         left: 0,
         behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
@@ -12561,9 +12591,9 @@ function PlanBuilder({
   const completedChatTurns = builderChatTurns
     .slice(0, step)
     .map((turn, index) => ({ ...turn, index }));
-  const visibleChatTurns = historyExpanded
-    ? completedChatTurns
-    : completedChatTurns.slice(-1);
+  /* Редизайн C без метафоры чата: прошлые шаги свёрнуты в одну строку-
+     аккордеон «Предыдущие шаги · N» и раскрываются по запросу. */
+  const visibleChatTurns = historyExpanded ? completedChatTurns : [];
   const hiddenChatTurnCount = completedChatTurns.length - visibleChatTurns.length;
   function editChatAnswer(index: number) {
     if (chatTransition || index >= step) return;
@@ -13114,8 +13144,8 @@ function PlanBuilder({
   const invalidEstimatePerson = step === 3
     ? people.find((person) => automaticEstimateIssue(person))
     : undefined;
-  // В настройках плана шаг тот же, что и в мастере: неактивная «Сохранить
-  // ответ» тоже называет причину, а не «Ваш ответ готов».
+  // В настройках плана шаг тот же, что и в мастере: неактивная «Сохранить»
+  // тоже называет причину, а не «Шаг заполнен».
   const composerBlocker =
     chatTransition || step > 5 || stepIsValid()
       ? null
@@ -13155,8 +13185,8 @@ function PlanBuilder({
             : "Следующий вопрос появится здесь",
       }
     : composerBlocker ?? {
-        title: "Ваш ответ готов",
-        detail: "Можно вернуться к любому ответу выше",
+        title: "Шаг заполнен",
+        detail: "Любой прошлый шаг можно изменить",
       };
   /* В мастере вопрос — заголовок экрана; в настройках плана заголовок экрана
      «Настройки плана», а вопрос — подзаголовок. */
@@ -13225,18 +13255,20 @@ function PlanBuilder({
           className="builder-chat-history"
           role="log"
           aria-live="polite"
-          aria-label="Разговор с Mise"
+          aria-label="Шаги плана"
         >
-          {mode === "onboarding" && completedChatTurns.length > 1 && (
+          {mode === "onboarding" && completedChatTurns.length > 0 && (
             <button
               type="button"
               className="builder-chat-history-toggle"
+              ref={historyToggleRef}
               aria-expanded={historyExpanded}
               onClick={() => setHistoryExpanded((current) => !current)}
             >
               {historyExpanded
-                ? "Скрыть предыдущие ответы"
-                : `Показать предыдущие ответы · ${hiddenChatTurnCount}`}
+                ? "Скрыть предыдущие шаги"
+                : `Предыдущие шаги · ${hiddenChatTurnCount}`}
+              <Icon name="chevron" size={16} />
             </button>
           )}
           {mode === "onboarding" &&
@@ -13248,7 +13280,7 @@ function PlanBuilder({
                 <p className="chat-bubble is-mise">{turn.question}</p>
                 <button
                   className="chat-bubble is-user"
-                  aria-label={`Изменить ответ: ${turn.answer}`}
+                  aria-label={`Изменить шаг «${steps[turn.index]}»: ${turn.answer}`}
                   onClick={() => editChatAnswer(turn.index)}
                 >
                   <span>{turn.answer}</span>
@@ -13498,7 +13530,7 @@ function PlanBuilder({
       </section>
       <div
         className={`builder-chat-composer glass${showManualMenuChoice ? " has-menu-choice" : ""}`}
-        aria-label="Ответ в чате"
+        aria-label="Действия шага"
       >
         <button
           type="button"
@@ -13545,7 +13577,7 @@ function PlanBuilder({
             }
             onClick={save}
           >
-            {saveState === "saving" ? "Сохраняем…" : "Сохранить ответ"}
+            {saveState === "saving" ? "Сохраняем…" : "Сохранить"}
             <Icon name="chevron" size={16} />
           </button>
         ) : step < 6 ? (
@@ -13553,7 +13585,7 @@ function PlanBuilder({
             className="builder-chat-send"
             aria-label={
               step === 3
-                ? `Отправить ответ: ${withPlural(people.length, FORMS.person)}`
+                ? `Дальше: ${withPlural(people.length, FORMS.person)}`
                 : undefined
             }
             aria-describedby={
@@ -13562,15 +13594,13 @@ function PlanBuilder({
             disabled={Boolean(chatTransition) || !stepIsValid()}
             onClick={next}
           >
-            {step === 5 && menuMode === "manual"
-              ? choiceIndex < positions.length - 1
-                ? `Дальше: ${mealMeta[positions[choiceIndex + 1]?.slot ?? positions[choiceIndex]?.slot ?? "lunch"].label.toLowerCase()}`
-                : "Отправить меню"
+            {step === 5 && menuMode === "manual" && choiceIndex < positions.length - 1
+              ? `Дальше: ${mealMeta[positions[choiceIndex + 1]?.slot ?? positions[choiceIndex]?.slot ?? "lunch"].label.toLowerCase()}`
               : step === 5
                 ? "Дальше: проверка"
                 : step === 4
                   ? "Дальше: собрать меню"
-                  : "Отправить ответ"}
+                  : "Дальше"}
             {step === 3 && (
               <span className="builder-chat-send-count">
                 {withPlural(people.length, FORMS.person)}
@@ -16248,7 +16278,7 @@ function ReviewStep({
           </button>
         )}
       </section>
-      <section className="review-list glass-card" aria-label="Изменить ответы">
+      <section className="review-list glass-card" aria-label="Изменить шаги плана">
         <button type="button" onClick={() => onEdit(0)}>
           <Icon name="calendar" />
           <div>
@@ -16427,7 +16457,7 @@ function SuccessSheet({
             className="secondary-button"
             onClick={() => onOpen("week")}
           >
-            Открыть план
+            Открыть неделю
           </button>
           <section className="success-next glass-card" aria-labelledby="success-next-title">
             <h3 id="success-next-title">Что дальше</h3>

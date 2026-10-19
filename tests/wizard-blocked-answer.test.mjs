@@ -53,7 +53,7 @@ test("a disabled answer button says why, on a phone as well", () => {
     "Добавьте технику или измените цели",
     "Выберите блюдо для каждой позиции",
   ]) assert.ok(composer.includes(reason), `reason is worded: ${reason}`);
-  assert.match(composer, /composerBlocker \?\? \{\s*title: "Ваш ответ готов"/, "«ответ готов» is only said when it is");
+  assert.match(composer, /composerBlocker \?\? \{\s*title: "Шаг заполнен"/, "«шаг заполнен» is only said when it is");
   assert.match(
     page,
     /id="builder-composer-status" role="status" aria-live="polite" className=\{composerBlocker \? "is-blocking" : undefined\}/,

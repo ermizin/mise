@@ -14,8 +14,8 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
   assert.match(css, /--button-grad: var\(--ink-strong\)/);
   assert.match(css, /\.builder-chat-history \.chat-bubble\.is-user \{[\s\S]*?background: var\(--button-grad\)/);
   assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
-  assert.match(page, /completedChatTurns\.slice\(-1\)/);
-  assert.match(page, /Показать предыдущие ответы/);
+  assert.match(page, /const visibleChatTurns = historyExpanded \? completedChatTurns : \[\]/);
+  assert.match(page, /Предыдущие шаги · /);
   // Остаток периода по умолчанию готовится отдельно и не блокирует шаг «Готовка».
   assert.match(page, /const tailDecision = remainderDecision \?\? "separate";/);
   assert.doesNotMatch(page, /Выберите, что делать с остатком дней/);
@@ -28,7 +28,7 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
   assert.match(css, /\.cooking-batch-shell \{[\s\S]*?padding: 0 18px calc\(176px \+ env\(safe-area-inset-bottom\)\)/);
   assert.match(page, /система в установленном приложении/);
   assert.doesNotMatch(page, /className="install-kicker"/);
-  assert.ok(page.indexOf("Открыть план") < page.indexOf("Настроить напоминания"));
+  assert.ok(page.indexOf("Открыть неделю") < page.indexOf("Настроить напоминания"));
 });
 
 test("cooked weights persist and finish the batch through portioning", async () => {

@@ -284,7 +284,7 @@ export function NotificationSetupPanel({ plan, clientId, deviceId, showInstallWa
       <ReminderToggle active={toggles.expire} title="Срок хранения истекает" note="За день до конца каждой партии" onClick={() => toggle("expire")} />
     </div>
     <p className="t-min schedule-note">Будет запланировано: <b>{jobs.length}</b>. Напоминания относятся только к этому плану и этому устройству.</p>
-    {status === "success" ? <><Note tone="mint" role="status" icon={<Icon name="check" size={16} />}>{testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</Note>{testControl}<button className="primary-button" onClick={onDone}>Открыть план <Icon name="chevron" size={16} /></button></> : <>
+    {status === "success" ? <><Note tone="mint" role="status" icon={<Icon name="check" size={16} />}>{testDelivered ? "Включено. Проверочное уведомление уже отправлено." : "Расписание включено. Проверочное уведомление не доставлено — проверьте системные настройки."}</Note>{testControl}<button className="primary-button" onClick={onDone}>Готово <Icon name="chevron" size={16} /></button></> : <>
       {status === "unavailable" && <Note tone="warn" role="alert">На этом устройстве Web Push недоступен. Установите Mise и откройте его с домашнего экрана.</Note>}
       {status === "denied" && <Note tone="warn" role="alert">Разрешение не выдано. План продолжит работать без уведомлений.</Note>}
       {status === "error" && <Note tone="warn" role="alert">Не удалось сохранить напоминания. Проверьте соединение и попробуйте снова.</Note>}

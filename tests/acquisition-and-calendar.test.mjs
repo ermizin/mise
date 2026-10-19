@@ -205,7 +205,7 @@ test("the plan offers the calendar after saving and in reminder settings", async
     /<CalendarExportLink\s+plan=\{notificationPlanFor\(plan\)\}\s+device=\{clientId\(\)\}\s+primary\s+\/>/,
   );
   assert.ok(
-    successSheet.indexOf("<CalendarExportLink") < successSheet.indexOf("Открыть план"),
+    successSheet.indexOf("<CalendarExportLink") < successSheet.indexOf("Открыть неделю"),
     "the calendar comes before opening the plan",
   );
   assert.match(setup, /<CalendarExportLink plan=\{plan\} device=\{clientId\} \/>/);

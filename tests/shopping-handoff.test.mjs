@@ -13,7 +13,9 @@ test("shopping follows the handoff header and controls", () => {
   assert.match(shopping, /withPlural\(plan\.people\.length, FORMS\.person\)/);
   assert.match(shopping, /share|поделиться|⇪/i);
   assert.match(shopping, /Куплено/);
-  assert.match(shopping, /Осталось групп/);
+  // «8 групп · осталось 3» или «все 8 групп впереди» до первой отметки.
+  assert.match(shopping, /shoppingGroupForms\)\} · осталось/);
+  assert.match(shopping, /впереди`/);
   assert.match(shopping, /progress-(?:bar|track)/);
   assert.match(shopping, />\s*Все\s*</);
   assert.match(shopping, /Не куплено/);
