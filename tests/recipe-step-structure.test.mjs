@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { auditRecipeSteps } from "../scripts/audit-recipe-steps.mjs";
+import { TIMED_STEP_TEXT } from "../scripts/recipe-editorial-steps.mjs";
 import { splitInstructionSentences } from "../scripts/recipe-equipment.mjs";
 
 const catalog = JSON.parse(await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"));
@@ -53,6 +54,22 @@ test("step granularity does not get worse than the 2026-10-19 baseline", () => {
   }
 });
 
+test("a step that names a time carries it as a duration", () => {
+  // Так же проверяет scripts/check-editorial-steps.mjs: после разбиения шага
+  // время должно остаться у того шага, где оно названо. 2026-10-19 время было
+  // только в тексте у 25 карточек — пяти редакционных, «Простых и домашних»
+  // (сборщик), овсянки Good Food (оверлей) и двух сэндвичей (поварская правка).
+  let timed = 0;
+  for (const recipe of catalog.recipes) {
+    for (const step of recipe.recipeFamily.miseInstructions) {
+      if (step.action === "measure" || !TIMED_STEP_TEXT.test(step.text)) continue;
+      timed += 1;
+      assert.ok(step.duration, `${recipe.id}/${step.id}: «${step.text}» has no duration`);
+    }
+  }
+  assert.ok(timed > 200, `${timed} timed steps`);
+});
+
 function ingredientLines(recipe) {
   return [...(recipe.shoppingIngredients ?? []), ...(recipe.procedureIngredients ?? [])];
 }
@@ -99,6 +116,10 @@ test("named spices keep the measured source amount", () => {
     ["goodfood-pork-with-cucumber-apricot-couscous", 3, "Сумах", 2.5, "ml"],
     ["goodfood-big-batch-bolognese", 7, "Смесь сушёных трав", 2.5, "ml"],
     ["goodfood-sausage-egg-muffins", 4, "Смесь сушёных трав", 0.8333, "ml"],
+    // «dill pickles» — маринованные огурцы, а не укроп; белый перец — не просто «Перец».
+    ["tmpm-24729", 7, "Маринованные огурцы", 10, "g"],
+    ["tmpm-28302", 8, "Белый перец", 0.6, "g"],
+    ["tmpm-28247", 5, "Белый перец", 0.3, "g"],
   ];
   for (const [id, index, nameRu, quantityPerServing, unit] of expectations) {
     const item = line(id, index);

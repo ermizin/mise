@@ -1261,8 +1261,8 @@
       "slot": "dinner",
       "title": "Лимонное орзо с форелью, пряной брокколи и пеперонатой",
       "recipeFamilyId": "raw-goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
-      "shoppingIngredientCount": 16,
-      "procedureIngredientCount": 4,
+      "shoppingIngredientCount": 17,
+      "procedureIngredientCount": 3,
       "media": "source_preview"
     },
     {
@@ -1315,8 +1315,8 @@
       "slot": "lunch",
       "title": "Лепёшки с запечённой лимонной брокколи и маскарпоне",
       "recipeFamilyId": "raw-goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
-      "shoppingIngredientCount": 15,
-      "procedureIngredientCount": 6,
+      "shoppingIngredientCount": 16,
+      "procedureIngredientCount": 5,
       "media": "source_preview"
     },
     {

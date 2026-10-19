@@ -64953,7 +64953,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Перец",
+          "nameRu": "Белый перец",
           "sourceName": "white pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -65996,7 +65996,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Перец",
+          "nameRu": "Белый перец",
           "sourceName": "white pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -100578,7 +100578,9 @@
           "nameRu": "Приправа «всё и сразу» (кунжут, мак, чеснок, лук)",
           "sourceName": "everything bagel seasoning",
           "classification": "to_taste",
-          "allergens": [],
+          "allergens": [
+            "sesame"
+          ],
           "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ.",
           "quantityPerServing": 4,
           "unit": "g",
@@ -109802,7 +109804,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Укроп",
+          "nameRu": "Маринованные огурцы",
           "sourceName": "dill pickles",
           "classification": "to_taste",
           "allergens": [],
@@ -110206,6 +110208,7 @@
               "source-ingredient-12"
             ],
             "action": "combine",
+            "duration": "1–2 мин",
             "equipment": [
               "skillet"
             ],
@@ -175322,7 +175325,8 @@
             "action": "divide",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -183824,6 +183828,7 @@
             "dependsOn": [
               "editorial-step-1"
             ],
+            "duration": "4–5 мин + около 10 мин",
             "equipment": [
               "pot"
             ]
@@ -184800,10 +184805,10 @@
       "title": "Лимонное орзо с форелью, пряной брокколи и пеперонатой",
       "cuisine": "mediterranean",
       "macros": {
-        "kcal": 435.3,
-        "protein": 13.8,
-        "fat": 20.4,
-        "carbs": 49.9
+        "kcal": 440.3,
+        "protein": 14,
+        "fat": 20.5,
+        "carbs": 51
       },
       "timeMinutes": 92,
       "menuTags": [
@@ -184815,7 +184820,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 251.3,
+        "grams": 268.6,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -185318,6 +185323,44 @@
           ]
         },
         {
+          "sourceIngredientIndex": 17,
+          "sourceIngredientId": "source-ingredient-17",
+          "canonicalIngredientId": "pepper_raw",
+          "nameRu": "Сладкий перец",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 115,
+          "sourceMeasurement": {
+            "amount": 115,
+            "unit": "g"
+          },
+          "averagePieceWeightGrams": 150,
+          "pieceEstimate": 0.77,
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-17"
+          ],
+          "sourceIngredientIndexes": [
+            17
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 17,
+              "sourceIngredientId": "source-ingredient-17",
+              "nameRu": "Сладкий перец",
+              "quantityGrams": 115,
+              "sourceMeasurement": {
+                "amount": 115,
+                "unit": "g"
+              },
+              "massStatus": "source_metric",
+              "averagePieceWeightGrams": 150,
+              "pieceEstimate": 0.77
+            }
+          ]
+        },
+        {
           "sourceIngredientIndex": 18,
           "sourceIngredientId": "source-ingredient-18",
           "canonicalIngredientId": "tomato_raw",
@@ -185523,18 +185566,6 @@
         }
       ],
       "procedureIngredients": [
-        {
-          "sourceIngredientIndex": 17,
-          "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Перец",
-          "sourceName": "pepper",
-          "classification": "to_taste",
-          "allergens": [],
-          "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ.",
-          "quantityPerServing": 19.1667,
-          "unit": "g",
-          "amountStatus": "exact_metric"
-        },
         {
           "sourceIngredientIndex": 26,
           "sourceIngredientId": "source-ingredient-26",
@@ -186145,6 +186176,21 @@
             "optional": false
           },
           {
+            "sourceIngredientId": "source-ingredient-17",
+            "canonicalIngredientId": "pepper_raw",
+            "baseAmount": 19.166666666666668,
+            "unit": "g",
+            "role": "vegetable",
+            "minAmount": 15.333333333333336,
+            "preferredMin": 18.208333333333332,
+            "preferredMax": 23,
+            "maxAmount": 27.791666666666668,
+            "scalable": true,
+            "scalingPriority": 5,
+            "substitutions": [],
+            "optional": false
+          },
+          {
             "sourceIngredientId": "source-ingredient-18",
             "canonicalIngredientId": "tomato_raw",
             "baseAmount": 10,
@@ -186266,8 +186312,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 294,
-        "maxViableCalories": 762,
+        "minViableCalories": 299,
+        "maxViableCalories": 770,
         "geometryLockedMax": 6,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -186289,18 +186335,18 @@
           "carbs": 49.9
         },
         "miseCalculatedNutrition": {
-          "kcal": 435.3,
-          "protein": 13.8,
-          "fat": 20.4,
-          "carbs": 49.9
+          "kcal": 440.3,
+          "protein": 14,
+          "fat": 20.5,
+          "carbs": 51
         },
         "nutritionDelta": {
-          "kcal": 0,
-          "protein": 0,
-          "fat": 0,
-          "carbs": 0
+          "kcal": 5,
+          "protein": 0.2,
+          "fat": 0.1,
+          "carbs": 1.1
         },
-        "nutritionDeltaKcal": 0,
+        "nutritionDeltaKcal": 5,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -186339,6 +186385,7 @@
               "source-ingredient-14",
               "source-ingredient-15",
               "source-ingredient-16",
+              "source-ingredient-17",
               "source-ingredient-18",
               "source-ingredient-19",
               "source-ingredient-20",
@@ -186423,6 +186470,7 @@
             "dependsOn": [
               "editorial-step-1"
             ],
+            "duration": "7 мин + 2 мин + 30 мин",
             "equipment": [
               "pot"
             ]
@@ -186461,6 +186509,7 @@
             "dependsOn": [
               "editorial-step-2"
             ],
+            "duration": "4–5 мин + около 10 мин",
             "equipment": [
               "pot"
             ]
@@ -188983,6 +189032,7 @@
               "source-ingredient-11"
             ],
             "action": "simmer",
+            "duration": "1 мин + 1 мин",
             "equipment": [
               "pot"
             ],
@@ -191978,10 +192028,10 @@
       "title": "Лепёшки с запечённой лимонной брокколи и маскарпоне",
       "cuisine": "mediterranean",
       "macros": {
-        "kcal": 684.1,
-        "protein": 16.7,
+        "kcal": 690.1,
+        "protein": 16.9,
         "fat": 29.6,
-        "carbs": 88.3
+        "carbs": 89.7
       },
       "timeMinutes": 242,
       "menuTags": [
@@ -191993,7 +192043,7 @@
         "basis": "relative_editorial_ingredient_complexity_not_rubles"
       },
       "servingMass": {
-        "grams": 375.2,
+        "grams": 395.9,
         "status": "estimated_not_verified_cooked_yield",
         "method": "canonical_raw_mass_with_category_retention_v1"
       },
@@ -192295,6 +192345,44 @@
               "massStatus": "source_metric",
               "averagePieceWeightGrams": 5,
               "pieceEstimate": 1
+            }
+          ]
+        },
+        {
+          "sourceIngredientIndex": 11,
+          "sourceIngredientId": "source-ingredient-11",
+          "canonicalIngredientId": "pepper_raw",
+          "nameRu": "Сладкий перец",
+          "group": "Овощи и фрукты",
+          "quantityGrams": 115,
+          "sourceMeasurement": {
+            "amount": 115,
+            "unit": "g"
+          },
+          "averagePieceWeightGrams": 150,
+          "pieceEstimate": 0.77,
+          "allergens": [],
+          "checkLabel": false,
+          "massStatus": "source_metric",
+          "sourceIngredientIds": [
+            "source-ingredient-11"
+          ],
+          "sourceIngredientIndexes": [
+            11
+          ],
+          "sourceAudit": [
+            {
+              "sourceIngredientIndex": 11,
+              "sourceIngredientId": "source-ingredient-11",
+              "nameRu": "Сладкий перец",
+              "quantityGrams": 115,
+              "sourceMeasurement": {
+                "amount": 115,
+                "unit": "g"
+              },
+              "massStatus": "source_metric",
+              "averagePieceWeightGrams": 150,
+              "pieceEstimate": 0.77
             }
           ]
         },
@@ -192652,18 +192740,6 @@
           "allergens": [],
           "reason": "Некалорийный технологический компонент: сохранён в source audit, но не используется для вариативного расчёта КБЖУ.",
           "quantityPerServing": 2,
-          "unit": "g",
-          "amountStatus": "exact_metric"
-        },
-        {
-          "sourceIngredientIndex": 11,
-          "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Перец",
-          "sourceName": "pepper",
-          "classification": "to_taste",
-          "allergens": [],
-          "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ.",
-          "quantityPerServing": 23,
           "unit": "g",
           "amountStatus": "exact_metric"
         },
@@ -193129,6 +193205,21 @@
             "optional": false
           },
           {
+            "sourceIngredientId": "source-ingredient-11",
+            "canonicalIngredientId": "pepper_raw",
+            "baseAmount": 23,
+            "unit": "g",
+            "role": "vegetable",
+            "minAmount": 18.400000000000002,
+            "preferredMin": 21.849999999999998,
+            "preferredMax": 27.599999999999998,
+            "maxAmount": 33.35,
+            "scalable": true,
+            "scalingPriority": 5,
+            "substitutions": [],
+            "optional": false
+          },
+          {
             "sourceIngredientId": "source-ingredient-12",
             "canonicalIngredientId": "tomato_raw",
             "baseAmount": 12,
@@ -193342,8 +193433,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 382,
-        "maxViableCalories": 1300,
+        "minViableCalories": 387,
+        "maxViableCalories": 1309,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -193365,18 +193456,18 @@
           "carbs": 88.2
         },
         "miseCalculatedNutrition": {
-          "kcal": 684.1,
-          "protein": 16.7,
+          "kcal": 690.1,
+          "protein": 16.9,
           "fat": 29.6,
-          "carbs": 88.3
+          "carbs": 89.7
         },
         "nutritionDelta": {
-          "kcal": 0.2,
-          "protein": 0,
+          "kcal": 6.2,
+          "protein": 0.2,
           "fat": 0.1,
-          "carbs": 0.1
+          "carbs": 1.5
         },
-        "nutritionDeltaKcal": 0.2,
+        "nutritionDeltaKcal": 6.2,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -193407,6 +193498,7 @@
               "source-ingredient-8",
               "source-ingredient-9",
               "source-ingredient-10",
+              "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13",
               "source-ingredient-14",
@@ -193576,6 +193668,7 @@
             ],
             "action": "preheat",
             "temperature": "220°C",
+            "duration": "30–60 мин",
             "equipment": [
               "oven",
               "baking_sheet"
@@ -220484,7 +220577,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "50–60 мин"
           },
           {
             "id": "editorial-step-4",
@@ -221492,7 +221586,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "3–4 мин"
           },
           {
             "id": "editorial-step-3",
@@ -222234,7 +222329,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "4–5 мин"
           },
           {
             "id": "editorial-step-3",
@@ -222253,7 +222349,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "15–18 мин"
           }
         ],
         "storage": {
@@ -222887,7 +222984,8 @@
             "action": "cook",
             "dependsOn": [
               "step-measure"
-            ]
+            ],
+            "duration": "3 мин"
           },
           {
             "id": "editorial-step-2",
@@ -223612,7 +223710,8 @@
             "action": "cook",
             "dependsOn": [
               "step-measure"
-            ]
+            ],
+            "duration": "8–10 мин"
           },
           {
             "id": "editorial-step-2",
@@ -223631,7 +223730,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "15 мин"
           },
           {
             "id": "editorial-step-3",
@@ -223650,7 +223750,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "20–25 мин"
           }
         ],
         "storage": {
@@ -224344,7 +224445,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -224977,7 +225079,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -225615,7 +225718,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -226253,7 +226357,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -226943,7 +227048,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -227637,7 +227743,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -230840,7 +230947,8 @@
               "source-ingredient-10",
               "source-ingredient-11"
             ],
-            "text": "Разогрейте сковороду-гриль. Натрите куриную грудку маслом, посолите и поперчите; жарьте примерно по 7 минут с каждой стороны, до 74 °C в центре. Дайте мясу отдохнуть и нарежьте ломтиками."
+            "text": "Разогрейте сковороду-гриль. Натрите куриную грудку маслом, посолите и поперчите; жарьте примерно по 7 минут с каждой стороны, до 74 °C в центре. Дайте мясу отдохнуть и нарежьте ломтиками.",
+            "duration": "около 7 мин с каждой стороны"
           },
           {
             "id": "editorial-step-2",
@@ -231587,7 +231695,8 @@
               "source-ingredient-9",
               "source-ingredient-10"
             ],
-            "text": "Полейте курицу лимонным соком, посыпьте копчёной паприкой, посолите, поперчите и смажьте маслом. Жарьте на горячем гриле по 3–4 минуты с каждой стороны, до 74 °C в центре."
+            "text": "Полейте курицу лимонным соком, посыпьте копчёной паприкой, посолите, поперчите и смажьте маслом. Жарьте на горячем гриле по 3–4 минуты с каждой стороны, до 74 °C в центре.",
+            "duration": "3–4 мин с каждой стороны"
           },
           {
             "id": "editorial-step-3",
@@ -237221,7 +237330,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "45–50 мин"
           },
           {
             "id": "editorial-step-3",
@@ -237242,7 +237352,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "5–7 мин"
           },
           {
             "id": "editorial-step-4",
@@ -237961,7 +238072,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "5–7 мин"
           },
           {
             "id": "editorial-step-4",
@@ -238597,7 +238709,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "35–40 мин + 5–10 мин"
           }
         ],
         "storage": {
@@ -239491,7 +239604,8 @@
             "action": "cook",
             "dependsOn": [
               "step-measure"
-            ]
+            ],
+            "duration": "10 мин"
           },
           {
             "id": "editorial-step-2",
@@ -239514,7 +239628,8 @@
             "action": "cook",
             "dependsOn": [
               "editorial-step-1"
-            ]
+            ],
+            "duration": "5 мин"
           },
           {
             "id": "editorial-step-3",
@@ -241731,7 +241846,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {
@@ -242350,7 +242466,8 @@
             "action": "portion",
             "dependsOn": [
               "editorial-step-2"
-            ]
+            ],
+            "duration": "6–8 ч"
           }
         ],
         "storage": {

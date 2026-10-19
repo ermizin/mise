@@ -259,7 +259,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "50–60 мин"
         },
         {
           "id": "editorial-step-4",
@@ -550,7 +551,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "3–4 мин"
         },
         {
           "id": "editorial-step-3",
@@ -806,7 +808,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "4–5 мин"
         },
         {
           "id": "editorial-step-3",
@@ -825,7 +828,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "15–18 мин"
         }
       ],
       "proceduralStatus": "ready",
@@ -1011,7 +1015,8 @@
             "source-ingredient-9"
           ],
           "action": "cook",
-          "dependsOn": []
+          "dependsOn": [],
+          "duration": "3 мин"
         },
         {
           "id": "editorial-step-2",
@@ -1238,7 +1243,8 @@
             "source-ingredient-9"
           ],
           "action": "cook",
-          "dependsOn": []
+          "dependsOn": [],
+          "duration": "8–10 мин"
         },
         {
           "id": "editorial-step-2",
@@ -1257,7 +1263,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "15 мин"
         },
         {
           "id": "editorial-step-3",
@@ -1276,7 +1283,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "20–25 мин"
         }
       ],
       "proceduralStatus": "ready",
@@ -1495,7 +1503,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -1703,7 +1712,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -1911,7 +1921,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -2119,7 +2130,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -2338,7 +2350,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -2557,7 +2570,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -4641,7 +4655,8 @@
             "source-ingredient-17"
           ],
           "action": "cook",
-          "dependsOn": []
+          "dependsOn": [],
+          "duration": "3 ч"
         },
         {
           "id": "editorial-step-2",
@@ -5934,7 +5949,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "45–50 мин"
         },
         {
           "id": "editorial-step-3",
@@ -5955,7 +5971,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "5–7 мин"
         },
         {
           "id": "editorial-step-4",
@@ -6233,7 +6250,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "5–7 мин"
         },
         {
           "id": "editorial-step-4",
@@ -7027,7 +7045,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "35–40 мин + 5–10 мин"
         }
       ],
       "proceduralStatus": "ready",
@@ -7259,7 +7278,8 @@
             "source-ingredient-13"
           ],
           "action": "cook",
-          "dependsOn": []
+          "dependsOn": [],
+          "duration": "10 мин"
         },
         {
           "id": "editorial-step-2",
@@ -7282,7 +7302,8 @@
           "action": "cook",
           "dependsOn": [
             "editorial-step-1"
-          ]
+          ],
+          "duration": "5 мин"
         },
         {
           "id": "editorial-step-3",
@@ -8055,7 +8076,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",
@@ -8255,7 +8277,8 @@
           "action": "portion",
           "dependsOn": [
             "editorial-step-2"
-          ]
+          ],
+          "duration": "6–8 ч"
         }
       ],
       "proceduralStatus": "ready",

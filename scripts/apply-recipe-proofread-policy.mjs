@@ -209,7 +209,7 @@ function repairSandwich(candidate) {
     return setIngredientLists({
       ...candidate,
       paraphrasedInstructionDraft: [
-        { id: "editorial-step-1", action: "grill", dependsOn: [], ingredientIds: ["source-ingredient-2", "source-ingredient-3", "source-ingredient-10", "source-ingredient-11"], text: "Разогрейте сковороду-гриль. Натрите куриную грудку маслом, посолите и поперчите; жарьте примерно по 7 минут с каждой стороны, до 74 °C в центре. Дайте мясу отдохнуть и нарежьте ломтиками." },
+        { id: "editorial-step-1", action: "grill", dependsOn: [], ingredientIds: ["source-ingredient-2", "source-ingredient-3", "source-ingredient-10", "source-ingredient-11"], text: "Разогрейте сковороду-гриль. Натрите куриную грудку маслом, посолите и поперчите; жарьте примерно по 7 минут с каждой стороны, до 74 °C в центре. Дайте мясу отдохнуть и нарежьте ломтиками.", duration: "около 7 мин с каждой стороны" },
         { id: "editorial-step-2", action: "mix", dependsOn: ["editorial-step-1"], ingredientIds: ["source-ingredient-4", "source-ingredient-5", "source-ingredient-7", "source-ingredient-8", "source-ingredient-9", "source-ingredient-10", "source-ingredient-11"], text: "Смешайте йогурт, тёртый пармезан, лимонный сок, каперсы и раздавленный чеснок. Посолите и поперчите." },
         { id: "editorial-step-3", action: "toast", dependsOn: ["editorial-step-2"], ingredientIds: ["source-ingredient-1"], text: "Подсушите хлеб на сухой сковороде." },
         { id: "editorial-step-4", action: "portion", dependsOn: ["editorial-step-3"], ingredientIds: ["source-ingredient-1", "source-ingredient-2", "source-ingredient-4", "source-ingredient-5", "source-ingredient-6", "source-ingredient-7", "source-ingredient-8", "source-ingredient-9"], text: "Выложите на хлеб салат, курицу и соус; сверху добавьте оставшийся пармезан. Соберите непосредственно перед едой." },
@@ -234,7 +234,7 @@ function repairSandwich(candidate) {
       ...candidate,
       paraphrasedInstructionDraft: [
         { id: "editorial-step-1", action: "prepare", dependsOn: [], ingredientIds: ["source-ingredient-2"], text: "Разрежьте куриную грудку вдоль на две тонкие части и слегка отбейте до толщины около 1 см." },
-        { id: "editorial-step-2", action: "grill", dependsOn: ["editorial-step-1"], ingredientIds: ["source-ingredient-2", "source-ingredient-3", "source-ingredient-4", "source-ingredient-5", "source-ingredient-9", "source-ingredient-10"], text: "Полейте курицу лимонным соком, посыпьте копчёной паприкой, посолите, поперчите и смажьте маслом. Жарьте на горячем гриле по 3–4 минуты с каждой стороны, до 74 °C в центре." },
+        { id: "editorial-step-2", action: "grill", dependsOn: ["editorial-step-1"], ingredientIds: ["source-ingredient-2", "source-ingredient-3", "source-ingredient-4", "source-ingredient-5", "source-ingredient-9", "source-ingredient-10"], text: "Полейте курицу лимонным соком, посыпьте копчёной паприкой, посолите, поперчите и смажьте маслом. Жарьте на горячем гриле по 3–4 минуты с каждой стороны, до 74 °C в центре.", duration: "3–4 мин с каждой стороны" },
         { id: "editorial-step-3", action: "toast", dependsOn: ["editorial-step-2"], ingredientIds: ["source-ingredient-1"], text: "Разрежьте чиабатту и подсушите срезом вниз на сковороде около минуты." },
         { id: "editorial-step-4", action: "portion", dependsOn: ["editorial-step-3"], ingredientIds: ["source-ingredient-1", "source-ingredient-2", "source-ingredient-6", "source-ingredient-7", "source-ingredient-8"], text: "Смешайте чеснок с майонезом, намажьте чиабатту, добавьте салат и готовую курицу. Соберите непосредственно перед едой." },
       ],
@@ -576,14 +576,34 @@ function applyGoodFoodChefCorrections(candidate) {
 }
 
 /* Строка без явного id получает продукт из таблицы алиасов движка — так же, как
-   при расчёте карточки. */
-function currentCanonicalId(item) {
-  if (item.id) return item.id;
+   при расчёте карточки. Неучтённая в КБЖУ строка (приправа, вода) продукта не
+   имеет: у неё `canonicalIngredientId` null и статус ignored_*. */
+function currentMapping(item) {
+  if (item.id) return { canonicalIngredientId: item.id, status: "mapped" };
   const draft = normalizeRawRecipeCandidate(
     { id: "ingredient-identity-rule", sourceUrl: "", ingredients: [item] },
     { publisher: "", accessedAt: "" },
   );
-  return draft.ingredientMappings[0]?.canonicalIngredientId ?? null;
+  const mapping = draft.ingredientMappings[0];
+  return { canonicalIngredientId: mapping?.canonicalIngredientId ?? null, status: mapping?.status ?? "unresolved" };
+}
+
+/* Правило со `fromCanonicalIngredientId: null` переводит строку, которую движок
+   сейчас не считает продуктом (`fromStatus`: ignored_microcomponent или
+   ignored_noncaloric), например «115 g pepper» пеперонаты, принятые за
+   чёрный перец. Такая строка должна быть измерена, иначе её нельзя посчитать. */
+const identityRuleUncountedStatuses = new Set(["ignored_microcomponent", "ignored_noncaloric"]);
+
+function identityRuleMatches(item, rule) {
+  const mapping = currentMapping(item);
+  if (rule.fromCanonicalIngredientId === null) {
+    return mapping.canonicalIngredientId === null && mapping.status === rule.fromStatus;
+  }
+  return mapping.canonicalIngredientId === rule.fromCanonicalIngredientId;
+}
+
+function identityRuleSource(rule) {
+  return rule.fromCanonicalIngredientId === null ? `uncounted ${rule.fromStatus}` : rule.fromCanonicalIngredientId;
 }
 
 /* Карточка называет конкретный продукт («Цельнозерновой хлеб»), а в составе он
@@ -599,12 +619,15 @@ function applyIngredientIdentityRules(candidate, policy) {
     const remap = (list) => {
       let matches = 0;
       const mapped = list.map((item) => {
-        if (normalizedSourceName(item) !== sourceName || currentCanonicalId(item) !== rule.fromCanonicalIngredientId) return item;
+        if (normalizedSourceName(item) !== sourceName || !identityRuleMatches(item, rule)) return item;
+        if (rule.fromCanonicalIngredientId === null && !(Number(item.amountMetric) > 0)) {
+          throw new Error(`${next.id}: «${rule.sourceName}» has no measured amount and cannot become ${rule.canonicalIngredientId}.`);
+        }
         matches += 1;
         return { ...item, id: rule.canonicalIngredientId };
       });
       if (matches !== 1) {
-        throw new Error(`${next.id}: expected one «${rule.sourceName}» mapped to ${rule.fromCanonicalIngredientId}, found ${matches}.`);
+        throw new Error(`${next.id}: expected one «${rule.sourceName}» mapped to ${identityRuleSource(rule)}, found ${matches}.`);
       }
       return mapped;
     };
@@ -692,11 +715,15 @@ export async function applyRecipeProofreadPolicy({ documents }) {
       !Array.isArray(rule.recipeIds) ||
       !rule.recipeIds.length ||
       new Set(rule.recipeIds).size !== rule.recipeIds.length ||
-      ![rule.sourceName, rule.fromCanonicalIngredientId, rule.canonicalIngredientId, rule.reviewedAt, rule.note].every((value) => typeof value === "string" && value.trim())
+      ![rule.sourceName, rule.canonicalIngredientId, rule.reviewedAt, rule.note].every((value) => typeof value === "string" && value.trim()) ||
+      !(
+        (typeof rule.fromCanonicalIngredientId === "string" && rule.fromCanonicalIngredientId.trim() && rule.fromStatus === undefined) ||
+        (rule.fromCanonicalIngredientId === null && identityRuleUncountedStatuses.has(rule.fromStatus))
+      )
     ) {
       throw new Error("Recipe proofread ingredient identity rule is incomplete.");
     }
-    for (const id of [rule.fromCanonicalIngredientId, rule.canonicalIngredientId]) {
+    for (const id of [rule.fromCanonicalIngredientId, rule.canonicalIngredientId].filter((value) => value !== null)) {
       if (!canonicalIngredients[id]) throw new Error(`Recipe proofread ingredient identity rule names an unknown product ${id}.`);
     }
   }

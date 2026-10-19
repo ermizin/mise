@@ -123,7 +123,14 @@ export async function checkEditorialSteps({ cwd = process.cwd(), ids }) {
       result.warnings.push(`${id}: release verdict is ${verdicts.get(id) ?? "missing"}; по брифу карточки не в ready не трогаем.`);
     }
     if (chefDraftReplacementRecipeIds.includes(id)) {
-      result.errors.push(`${id}: драфт этой карточки целиком заменяет поварская правка в scripts/apply-recipe-proofread-policy.mjs — текст карточки до runtime не доходит, правьте шаги там.`);
+      // Ошибка — только если текст карточки правили: он до runtime не дойдёт.
+      // Неизменённая карточка проверяется по шагам после поварской правки.
+      const edited = cardEntry &&
+        JSON.stringify(cardEntry.card.paraphrasedInstructionDraft) !==
+          JSON.stringify(editorialCandidates[cardEntry.order].paraphrasedInstructionDraft);
+      const message = `${id}: драфт этой карточки целиком заменяет поварская правка в scripts/apply-recipe-proofread-policy.mjs — текст карточки до runtime не доходит, правьте шаги там.`;
+      if (edited) result.errors.push(message);
+      else result.warnings.push(`${message} Ниже проверены шаги после поварской правки.`);
     }
     if (positionalStepOverlayRecipeIds.includes(id)) {
       result.warnings.push(`${id}: оверлей в scripts/recipe-corpus-overlay.mjs переписывает текст шагов 1–2 по позиции; при разбиении шагов поправьте и его.`);

@@ -156,6 +156,18 @@
       "canonicalIngredientId": "wholegrain_pasta_raw",
       "reviewedAt": "2026-10-14",
       "note": "Источник называет цельнозерновые пенне, а считались белые макароны (FDC 169736, клетчатка 3,2 г на 100 г). Цельнозерновые макароны — FDC 169738: 352 ккал, Б 13,9, Ж 2,93, У 73,4, клетчатка 9,2 г на 100 г. Алиас «wholewheat penne» не меняется: им же названа паста в goodfood-salmon-pasta-salad-lemon-capers, исключённой владельцем."
+    },
+    {
+      "recipeIds": [
+        "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+        "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads"
+      ],
+      "sourceName": "pepper",
+      "fromCanonicalIngredientId": null,
+      "fromStatus": "ignored_microcomponent",
+      "canonicalIngredientId": "pepper_raw",
+      "reviewedAt": "2026-10-19",
+      "note": "«115 g pepper» — сладкий перец пеперонаты: в исходной карточке goodfood-peperonata это «3 finely sliced peppers». Когда пеперонату расписали по продуктам внутри блюда, строка стала просто «pepper», и движок принял её за молотый чёрный перец «по вкусу» — без КБЖУ и без строки в покупках. Сладкий перец — FDC 170108 (Peppers, sweet, red, raw), тот же профиль «Сладкий перец», что у остальных карточек."
     }
   ],
   "glossary": {

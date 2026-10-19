@@ -10845,20 +10845,12 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 435.3,
-        "protein": 13.8,
-        "fat": 20.4,
-        "carbs": 49.9
+        "kcal": 440.3,
+        "protein": 14,
+        "fat": 20.5,
+        "carbs": 51
       },
       "reasons": [
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pepper"
-          }
-        },
         {
           "gate": "nutrition",
           "code": "ignored_component_not_calculable",
@@ -11685,10 +11677,10 @@
       "editorialVerdict": "ready",
       "nutritionVerdict": "ready",
       "calculatedNutrition": {
-        "kcal": 684.1,
-        "protein": 16.7,
+        "kcal": 690.1,
+        "protein": 16.9,
         "fat": 29.6,
-        "carbs": 88.3
+        "carbs": 89.7
       },
       "reasons": [
         {
@@ -11705,14 +11697,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "pepper"
           }
         },
         {
