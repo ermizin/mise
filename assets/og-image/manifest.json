@@ -12,10 +12,10 @@
   },
   "screens": {
     "capturedAt": "2026-10-19",
-    "capturedFrom": "branch claude/redesign-c-brand on a62ed50 (redesign C v2.2), local dev server with local D1",
+    "capturedFrom": "branch claude/redesign-c-og on 06502e2 (redesign C v2.2 with the round-2 copy, logic, photos and qa packages), local dev server with local D1",
     "viewport": "390×844, deviceScaleFactor 2, headless Chrome via CDP",
-    "flow": "wizard: 7 days from 19 Oct, lunch + dinner, «Простые», one adult with default goals, manual menu choice of Mise-generated dishes (simple-generated-d08, simple-generated-d13); «Сохранить план» → plan-ready.png; «Открыть план», lunch marked eaten → week.png",
-    "imageRights": "Dish photos in week.png are Mise-generated simple-pack images (data/simple-recipe-images.json, origin: generated); background photo is the pre-blurred public/bg/week.jpg already shipped in the app"
+    "flow": "wizard: 7 days from 19 Oct, lunch + dinner, «Простые», one unnamed adult (age, height and weight are no longer prefilled: entered 30 years, 178 cm, 78 kg; default 3–4 workouts a week and «Снижать»), default batches of 3 days with the tail joined (3 + 4 days, 2 cooks), manual menu choice of Mise-generated dishes (simple-generated-d08, simple-generated-d13); «Сохранить план» → plan-ready.png; «Открыть неделю», lunch marked eaten → week.png",
+    "imageRights": "Dish photos in week.png and its backdrop (the pre-blurred 48 px thumbnail /recipe-images/blur/simple-generated-d08.jpg over /bg/week.jpg) are Mise-generated simple-pack images (data/simple-recipe-images.json, origin: generated); the plan-ready.png backdrop and the og-image background are the pre-blurred public/bg/week.jpg already shipped in the app"
   },
   "files": [
     {
@@ -60,18 +60,18 @@
     },
     {
       "path": "assets/og-image/screens/plan-ready.png",
-      "bytes": 612513,
-      "sha256": "4e790e419b9b2c5e4ac62123686904d7956bd4482654131bde124ff25526ff94"
+      "bytes": 613918,
+      "sha256": "f8609769edc2b156c8df1bc64b973f33c810b3e2aed68d7f2023d6b83836a6b2"
     },
     {
       "path": "assets/og-image/screens/week.png",
-      "bytes": 562819,
-      "sha256": "f9afd0e0ef2a31e231956bd858a2c9ef34dad90786d813e7ea2aef213d1fccbf"
+      "bytes": 563612,
+      "sha256": "fa3c9c58331be65a9946aced2bdc6494ef518d685aebcdd3ac6f4a571919ffd5"
     },
     {
       "path": "public/og-image.png",
-      "bytes": 562624,
-      "sha256": "494d49cfb73d9cb2f67a95a48b3c9f044a779196f9a5e750fbad63deb2deeb34"
+      "bytes": 561443,
+      "sha256": "4a9d96896e5ca1e789dc7cc45cc4658372bc7ff553b69bfc8105dc451d159855"
     }
   ]
 }
