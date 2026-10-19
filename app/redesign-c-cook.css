@@ -790,3 +790,50 @@
 .cooking-batch-shell .cooking-step-tools > button {
   white-space: nowrap;
 }
+
+/* ============================================================
+   Пакет «qa» (раунд 2): раскладка по контейнерам и узкие экраны
+   ============================================================ */
+
+/* Шапка по макету: «назад» слева, пилюля справа, заголовок по левому краю.
+   globals.css центрирует .cooking-batch-header > div — снимаем. */
+.cooking-batch-shell .cooking-batch-header {
+  align-items: stretch;
+}
+.cooking-batch-shell .cooking-batch-header > div {
+  text-align: start;
+}
+.cooking-remaining-pill.is-batch .icon {
+  color: var(--terracotta);
+}
+
+/* Сегмент блюд: таблетка по ширине названия (не «Морко…»), лишнее — прокруткой */
+.portion-dish-segment button {
+  flex: 1 0 auto;
+  min-width: 0;
+  max-width: 78%;
+}
+
+/* CTA раскладки — одна строка с многоточием, а не обрезка с двух сторон */
+.cooking-batch-shell .cooking-action-bar.is-portioning .primary-button {
+  display: block;
+  padding-block: 0;
+  line-height: var(--hit-primary);
+  text-align: center;
+}
+
+/* Этикетки: две колонки, пока в колонке помещается ≈ 10 знаков кегля
+   (320 px или крупный текст — одна колонка, без переноса «547 / г») */
+.container-label-list {
+  grid-template-columns: repeat(auto-fit, minmax(max(10em, calc((100% - 8px) / 2)), 1fr));
+}
+
+/* Accessory на 320 px: шаг получает место для пары слов */
+@media (max-width: 359px) {
+  .cooking-batch-shell .cooking-accessory {
+    gap: 6px;
+  }
+  .cooking-batch-shell .cooking-accessory .cooking-next-button {
+    padding: 0 14px;
+  }
+}

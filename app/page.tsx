@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
+  type FocusEvent as ReactFocusEvent,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type UIEvent as ReactUIEvent,
@@ -16652,6 +16653,15 @@ function BatchCookingSessionView({
     try { localStorage.setItem(progressKey, JSON.stringify(draft)); } catch { /* Session remains usable without device storage. */ }
   }, [signature, progressKey, currentStep, portioning, completedPhase, cookedWeights, remainingSeconds, timerRunning, timerEndsAt]);
   const wakeLockRef = useRef<{ release: () => Promise<void> } | null>(null);
+  const portionSegmentRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    /* Сегмент блюд прокручивается вбок и пересоздаётся при смене блюда:
+       активная таблетка должна оставаться видимой (третье блюдо и дальше). */
+    const segment = portionSegmentRef.current;
+    const active = segment?.querySelector<HTMLElement>('[aria-pressed="true"]');
+    if (!segment || !active) return;
+    segment.scrollLeft = Math.max(0, active.offsetLeft - (segment.clientWidth - active.offsetWidth) / 2);
+  }, [portioning, portionDishIndex]);
   const backRef = useRef(onClose);
   useEffect(() => {
     backRef.current = onClose;
@@ -16844,6 +16854,27 @@ function BatchCookingSessionView({
     replayCookingMotion(index < portionDishIndex ? -1 : 1);
     setPortionDishIndex(index);
   }
+  function revealWeightField(event: ReactFocusEvent<HTMLInputElement>) {
+    /* Поле веса не должно прятаться под нижней панелью или клавиатурой iOS:
+       видимая область — до верха панели и до низа visualViewport. */
+    const input = event.currentTarget;
+    const reveal = () => {
+      const bar = document.querySelector(".cooking-batch-shell .cooking-action-bar");
+      const viewport = window.visualViewport;
+      const visibleBottom = Math.min(
+        viewport ? viewport.offsetTop + viewport.height : window.innerHeight,
+        bar ? bar.getBoundingClientRect().top : Number.POSITIVE_INFINITY,
+      ) - 12;
+      const overlap = input.getBoundingClientRect().bottom - visibleBottom;
+      if (overlap > 0)
+        window.scrollBy({
+          top: overlap,
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        });
+    };
+    reveal();
+    window.setTimeout(reveal, 350);
+  }
   function weightFields(dish: CookingDish) {
     const key = dishKeyOf(dish);
     const weights = cookedWeights[key] ?? {};
@@ -16861,6 +16892,7 @@ function BatchCookingSessionView({
               inputMode="numeric"
               min="1"
               value={weights.total || ""}
+              onFocus={revealWeightField}
               onChange={(event) => {
                 markEditing();
                 setCookedWeights((current) => ({
@@ -16886,6 +16918,7 @@ function BatchCookingSessionView({
                 inputMode="numeric"
                 min="1"
                 value={weights[item.id] || ""}
+                onFocus={revealWeightField}
                 onChange={(event) => {
                   markEditing();
                   setCookedWeights((current) => ({
@@ -16937,7 +16970,7 @@ function BatchCookingSessionView({
             id: `${key}:${allocation.personId}:${day}`,
             label: allocation.label,
             day,
-            grams: `${grams} г`,
+            grams: `${grams}\u00a0г`,
           })),
         )
       : component
@@ -16947,7 +16980,7 @@ function BatchCookingSessionView({
               label: person.label,
               day,
               grams: component.components
-                .map((item) => `${item.label.toLowerCase()} ${item.allocations.find((entry) => entry.personId === person.personId)?.perContainerG[day] ?? 0} г`)
+                .map((item) => `${item.label.toLowerCase()} ${item.allocations.find((entry) => entry.personId === person.personId)?.perContainerG[day] ?? 0}\u00a0г`)
                 .join(" + "),
             })),
           )
@@ -16997,6 +17030,12 @@ function BatchCookingSessionView({
             <span className="cooking-remaining-pill">
               <Icon name="clock" size={16} />
               Осталось ≈ {remainingMinutes} мин
+            </span>
+          )}
+          {portioning && (
+            <span className="cooking-remaining-pill is-batch">
+              <Icon name="container" size={16} />
+              Партия {batch.index + 1} из {plan.batches.length}
             </span>
           )}
         </div>
@@ -17141,7 +17180,7 @@ function BatchCookingSessionView({
           >
             <p className="batch-portioning-lead">Взвесьте каждое готовое блюдо один раз. Mise рассчитает граммы и готовые подписи.</p>
             {model.dishes.length > 1 && (
-              <div className="portion-dish-segment" role="group" aria-label={`Блюда партии ${batch.index + 1}`}>
+              <div className="portion-dish-segment" ref={portionSegmentRef} role="group" aria-label={`Блюда партии ${batch.index + 1}`}>
                 {model.dishes.map((dish, index) => (
                   <button
                     type="button"
