@@ -106,5 +106,6 @@ test("an impossible body estimate blocks the people step instead of keeping the 
 
 test("people added after the first one do not start on a calorie deficit", () => {
   const factory = page.slice(page.indexOf("function newPerson("), page.indexOf("function macrosEqual("));
-  assert.match(factory, /index === 0\s*\? \{ \.\.\.defaultNutritionEstimate \}\s*: \{ \.\.\.defaultNutritionEstimate, goal: "maintenance" \}/);
+  // С 2026-10-19 параметры тела пустые (blankBodyEstimate), цель — как раньше.
+  assert.match(factory, /index === 0\s*\? \{ \.\.\.blankBodyEstimate \}\s*: \{ \.\.\.blankBodyEstimate, goal: "maintenance" \}/);
 });

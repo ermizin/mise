@@ -21,6 +21,10 @@ const productionRecipesById = new Map(
 );
 
 const macroCalorieTolerance = 5;
+/* Хвост периода может присоединиться к последней партии (решение владельца
+   от 2026-10-19): только последняя партия бывает длиннее ритма, не длиннее
+   4 дней и короче двух ритмов. Повторяет `joinedTailMaxDays` из app/page.tsx. */
+const joinedTailMaxDays = 4;
 const adultCalorieRange = [1_200, 5_000] as const;
 
 /* Повторяет `personCalorieRange` из domain/nutrition.ts (модуль сервера не
@@ -155,12 +159,14 @@ export function validatePlanForPersistence(value: unknown): PlanValidationResult
       return { valid: false, error: "plan has an invalid cooking batch", status: 400 };
     }
     const normalizedBatch = batch as { id: string; index: number; start: string; end: string; days: number };
-    if (normalizedBatch.end !== addDays(normalizedBatch.start, normalizedBatch.days - 1) || normalizedBatch.days > value.cookEveryDays) return { valid: false, error: "plan has an invalid cooking batch", status: 400 };
+    if (normalizedBatch.end !== addDays(normalizedBatch.start, normalizedBatch.days - 1) || (normalizedBatch.days > value.cookEveryDays && normalizedBatch.days > joinedTailMaxDays)) return { valid: false, error: "plan has an invalid cooking batch", status: 400 };
     batchIds.add(normalizedBatch.id);
     batches.push(normalizedBatch);
   }
   const orderedBatches = [...batches].sort((left, right) => left.index - right.index);
   if (orderedBatches.some((batch, index) => batch.index !== index || batch.start !== (index ? addDays(orderedBatches[index - 1].end, 1) : value.start)) || orderedBatches.at(-1)?.end !== value.end) return { valid: false, error: "plan has an invalid cooking batch", status: 400 };
+  const cookEveryDays = value.cookEveryDays as number;
+  if (orderedBatches.some((batch, index) => batch.days > cookEveryDays && (index !== orderedBatches.length - 1 || batch.days >= cookEveryDays * 2))) return { valid: false, error: "plan has an invalid cooking batch", status: 400 };
   const validSelectionKeys = new Set([...batchIds].flatMap((batchId) => planMealSlots.map((slot) => `${batchId}:${slot}`)));
   for (const [key, recipeId] of Object.entries(value.selections)) {
     if (!validSelectionKeys.has(key)) return { valid: false, error: "plan has an invalid recipe slot", status: 400 };

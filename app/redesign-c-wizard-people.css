@@ -1092,3 +1092,16 @@
 .limits-sheet:focus {
   outline: none;
 }
+
+/* ---------- Пакет «logic» (2026-10-19): параметры тела без предзаполнения ----------
+   Пока возраст, рост и вес не заполнены, карточка нормы просит их ввести. */
+.norm-card .norm-body-note {
+  margin: 12px 0 0;
+  color: var(--ink-body);
+  font-size: var(--text-link);
+  font-weight: var(--weight-semibold);
+}
+/* «например, 170» помещается в узкое поле рядом с единицей. */
+.person-body-grid input::placeholder {
+  font-size: var(--text-link);
+}

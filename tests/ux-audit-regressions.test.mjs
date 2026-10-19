@@ -16,8 +16,11 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
   assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
   assert.match(page, /const visibleChatTurns = historyExpanded \? completedChatTurns : \[\]/);
   assert.match(page, /Предыдущие шаги · /);
-  // Остаток периода по умолчанию готовится отдельно и не блокирует шаг «Готовка».
-  assert.match(page, /const tailDecision = remainderDecision \?\? "separate";/);
+  // Остаток периода решается без вопроса и не блокирует шаг «Готовка»: с
+  // 2026-10-19 хвост присоединяется к последней партии до 4 дней, иначе
+  // готовится отдельной мини-партией.
+  assert.match(page, /const autoTail: TailDecision =\s*tailJoinable && joinedTailGaps\.length === 0 \? "join" : "separate";/);
+  assert.match(page, /remainderDecision \?\? autoTail;/);
   assert.doesNotMatch(page, /Выберите, что делать с остатком дней/);
   assert.match(page, /id="builder-composer-status" role="status" aria-live="polite"/);
   assert.match(page, /function formatMacro\(value: number\)/);

@@ -332,7 +332,7 @@ test("redesign C copy: one verb for the next plan, no empty chips, no stray «Я
   // Следующий план: «Собрать…» везде, событие календаря прежнее.
   const sheet = slice("function NextPlanSheet(", "function RecipesScreen(");
   assert.match(sheet, /<h2 id="next-plan-title">Следующий план<\/h2>/);
-  assert.match(sheet, />\s*Повторить этот план\s*</);
+  assert.match(sheet, /Повторить этот план с \{formatDate\(repeatStart\)\}/);
   assert.match(sheet, />\s*Собрать новый план\s*</);
   assert.match(sheet, />\s*Изменить людей и цели\s*</);
   assert.match(sheet, /Событие «Собрать следующий план»/);
