@@ -97,6 +97,7 @@
 | `data/simple-home-runtime-approval.json` | Точный одобренный состав пакета «Простые и домашние». |
 | `data/recipe-image-manifest.json` | Связь карточки, source URL, локального фото, MIME и checksum. |
 | `data/recipe-image-corrections.json` | Исправленные фото: импортированный и правильный адрес, доказательство, решение владельца о риске публикации и SHA-256. |
+| `data/recipe-blur-thumbs.json` | Предразмытые миниатюры 48 px для фона карточки рецепта и «Недели» (`public/recipe-images/blur/`): производные уже одобренных локальных фото, не новые фото. Имя исходного файла → SHA-256 исходника; после замены или добавления фото — `pnpm recipes:images:blur` (нужен `sips` macOS), иначе падает `tests/recipe-blur-thumbs.test.mjs`. |
 | `data/recipe-release-audit.json` | Единственный источник текущего verdict. |
 | `data/recipe-equipment.json` | Адресная разметка необходимой утвари, исходных маршрутов и legacy-способов; разогрев не считается отдельным способом. |
 | `data/recipe-runtime-catalog.json` | Generated runtime-проекция; руками не редактируется. |
