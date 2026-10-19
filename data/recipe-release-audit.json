@@ -15048,7 +15048,7 @@
           "code": "ignored_component_not_calculable",
           "severity": "info",
           "detail": {
-            "sourceName": "paprika"
+            "sourceName": "any other seasoning you like is optional"
           }
         },
         {
@@ -15108,14 +15108,6 @@
           "severity": "info",
           "detail": {
             "sourceName": "salt"
-          }
-        },
-        {
-          "gate": "nutrition",
-          "code": "ignored_component_not_calculable",
-          "severity": "info",
-          "detail": {
-            "sourceName": "paprika"
           }
         },
         {

@@ -118,7 +118,8 @@
     { "sourceName": "chipotle paste", "displayNameRu": "Паста чипотле" },
     { "sourceName": "chipotle paste (optional)", "displayNameRu": "Паста чипотле (необязательно)" },
     { "sourceContains": "cheddar", "displayNameRu": "Сыр чеддер" },
-    { "sourceContains": "zero-соус", "displayNameRu": "Низкокалорийный соус без сахара" }
+    { "sourceContains": "zero-соус", "displayNameRu": "Низкокалорийный соус без сахара" },
+    { "sourceName": "any other seasoning you like is optional", "displayNameRu": "Любимая приправа" }
   ],
   "ingredientIdentityRules": [
     {

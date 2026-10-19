@@ -36,6 +36,13 @@ const categoryGroups = {
   fat: "Масла и соусы",
 };
 
+/* Русское название неизмеряемой в покупках позиции (специи, вода, соль) по
+   английскому названию источника. Это настоящий продукт, как его ищут в
+   магазине: обобщения вроде «Смесь специй по рецепту» или «Приправа по вкусу»
+   прятали гарам масалу, сумах или итальянские травы. Первое совпадение
+   выигрывает; позиция без совпадения останавливает проекцию карточки
+   (`unnamed_procedure_ingredient`), и ей нужно название — строка таблицы или
+   правило `ingredientDisplayRules` в data/recipe-proofread-policy.json. */
 const pantryNameRu = [
   [/garlic powder/i, "Сушёный чеснок"],
   [/onion powder/i, "Сушёный лук"],
@@ -64,20 +71,31 @@ const pantryNameRu = [
   [/lemon zest|zest(?: of)?\s*(?:1\s*)?lemon/i, "Цедра лимона"],
   [/orange zest/i, "Цедра апельсина"],
   [/dill pickle/i, "Маринованные огурцы"],
-  [/garam masala|ras el hanout|sumac|fenugreek|fennel|curry powder|italian seasoning|pumpkin pie spice|mixed herbs|marjoram/i, "Смесь специй по рецепту"],
+  [/garam masala/i, "Гарам масала"],
+  [/ras el hanout/i, "Рас-эль-ханут"],
+  [/sumac/i, "Сумах"],
+  [/fenugreek seeds?/i, "Семена пажитника"],
+  [/fenugreek/i, "Пажитник молотый"],
+  [/fennel seeds?/i, "Семена фенхеля"],
+  [/curry powder/i, "Карри (порошок)"],
+  [/italian seasoning/i, "Итальянские травы"],
+  [/pumpkin pie spice/i, "Смесь специй для тыквенного пирога"],
+  [/mixed (?:dried )?herbs/i, "Смесь сушёных трав"],
+  [/marjoram/i, "Майоран сушёный"],
+  [/everything bagel/i, "Приправа «всё и сразу» (кунжут, мак, чеснок, лук)"],
   [/msg/i, "Глутамат натрия"],
   [/tartlet tins/i, "Формочки для тарталеток"],
   [/saffron/i, "Шафран"],
   [/garlic granules/i, "Гранулированный чеснок"],
   [/milk or beaten egg/i, "Молоко или яйцо для смазывания"],
   [/oil spray/i, "Кулинарный спрей"],
+  // «Salt and pepper to taste» — две приправы в одной строке источника.
+  [/salt and pepper/i, "Соль и чёрный перец"],
   [/salt/i, "Соль"],
   [/pepper/i, "Перец"],
   [/water/i, "Вода"],
   [/cooking spray/i, "Кулинарный спрей"],
   [/garnish/i, "Для подачи"],
-  [/seasoning|spice/i, "Приправа по вкусу"],
-  [/herbs?/i, "Зелень по вкусу"],
 ];
 
 function round(value, precision = 1) {
@@ -103,8 +121,16 @@ function groupFor(canonical) {
 }
 
 function russianPantryName(sourceName) {
-  const entry = pantryNameRu.find(([pattern]) => pattern.test(sourceName));
-  return entry?.[1] ?? "Дополнение по рецепту";
+  return pantryNameRu.find(([pattern]) => pattern.test(sourceName))?.[1] ?? null;
+}
+
+/* Неизмеренная позиция, которую источник прямо называет необязательной
+   («any other seasoning you like is optional», «по желанию»), показывается со
+   статусом «по желанию», а не «по вкусу». Измеренные позиции сохраняют своё
+   количество и прежнюю классификацию. */
+function optionalUnmeasuredProcedureIngredient(sourceIngredient, measurement) {
+  if (measurement.quantityPerServing !== undefined) return false;
+  return /\boptional\b|по желанию/iu.test(`${sourceIngredient?.name ?? ""} ${sourceIngredient?.original ?? ""}`);
 }
 
 function procedureAllergens(sourceName) {
@@ -527,15 +553,23 @@ function projectReadyCard(releaseCard, entry, recipeImages, cuisines) {
     }
     // A source ingredient must still be visible when it is intentionally
     // excluded from nutrition and shopping (water, salt, to-taste garnish).
+    const nameRu = sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName);
+    if (!nameRu) {
+      failures.push(["unnamed_procedure_ingredient", `${mapping.sourceName} has no Russian product name.`]);
+      return;
+    }
+    const measurement = procedureMeasurement(sourceIngredient, servings);
     procedureIngredients.push({
       sourceIngredientIndex: index + 1,
       sourceIngredientId: `source-ingredient-${index + 1}`,
-      nameRu: sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName),
+      nameRu,
       sourceName: mapping.sourceName,
-      classification: mapping.status === "ignored_noncaloric" ? "pantry" : "to_taste",
+      classification: optionalUnmeasuredProcedureIngredient(sourceIngredient, measurement)
+        ? "optional_serving"
+        : mapping.status === "ignored_noncaloric" ? "pantry" : "to_taste",
       allergens: procedureAllergens(mapping.sourceName),
       reason: mapping.reason ?? "Редакционное примечание к приготовлению.",
-      ...procedureMeasurement(sourceIngredient, servings),
+      ...measurement,
     });
   });
 

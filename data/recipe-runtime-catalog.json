@@ -60055,7 +60055,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -67005,7 +67005,7 @@
         {
           "sourceIngredientIndex": 16,
           "sourceIngredientId": "source-ingredient-16",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -70470,7 +70470,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Итальянские травы",
           "sourceName": "Italian seasoning",
           "classification": "to_taste",
           "allergens": [],
@@ -71448,7 +71448,7 @@
         {
           "sourceIngredientIndex": 2,
           "sourceIngredientId": "source-ingredient-2",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Семена фенхеля",
           "sourceName": "fennel seeds",
           "classification": "to_taste",
           "allergens": [],
@@ -72448,7 +72448,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -73464,7 +73464,7 @@
         {
           "sourceIngredientIndex": 23,
           "sourceIngredientId": "source-ingredient-23",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -75138,7 +75138,7 @@
         {
           "sourceIngredientIndex": 17,
           "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -76195,7 +76195,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -76204,7 +76204,7 @@
         {
           "sourceIngredientIndex": 18,
           "sourceIngredientId": "source-ingredient-18",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -79085,7 +79085,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Карри (порошок)",
           "sourceName": "curry powder",
           "classification": "to_taste",
           "allergens": [],
@@ -79145,7 +79145,7 @@
         {
           "sourceIngredientIndex": 17,
           "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -80128,7 +80128,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -81010,7 +81010,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Смесь специй для тыквенного пирога",
           "sourceName": "pumpkin pie spice",
           "classification": "to_taste",
           "allergens": [],
@@ -82876,7 +82876,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "Salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -84028,7 +84028,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -86056,7 +86056,7 @@
         {
           "sourceIngredientIndex": 20,
           "sourceIngredientId": "source-ingredient-20",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -87880,7 +87880,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Карри (порошок)",
           "sourceName": "curry powder",
           "classification": "to_taste",
           "allergens": [],
@@ -87892,7 +87892,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Гарам масала",
           "sourceName": "garam masala",
           "classification": "to_taste",
           "allergens": [],
@@ -87904,7 +87904,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "Salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -89031,7 +89031,7 @@
         {
           "sourceIngredientIndex": 23,
           "sourceIngredientId": "source-ingredient-23",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -92892,7 +92892,7 @@
         {
           "sourceIngredientIndex": 18,
           "sourceIngredientId": "source-ingredient-18",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -94697,7 +94697,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -99447,7 +99447,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -99456,7 +99456,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Приправа по вкусу",
+          "nameRu": "Приправа «всё и сразу» (кунжут, мак, чеснок, лук)",
           "sourceName": "everything bagel seasoning",
           "classification": "to_taste",
           "allergens": [],
@@ -101092,7 +101092,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -102040,7 +102040,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -102049,7 +102049,7 @@
         {
           "sourceIngredientIndex": 19,
           "sourceIngredientId": "source-ingredient-19",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -105091,7 +105091,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Карри (порошок)",
           "sourceName": "curry powder",
           "classification": "to_taste",
           "allergens": [],
@@ -105103,7 +105103,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Гарам масала",
           "sourceName": "garam masala",
           "classification": "to_taste",
           "allergens": [],
@@ -105151,7 +105151,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -105184,7 +105184,7 @@
         {
           "sourceIngredientIndex": 20,
           "sourceIngredientId": "source-ingredient-20",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -106051,7 +106051,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -106060,7 +106060,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -107981,7 +107981,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -108674,7 +108674,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -108707,7 +108707,7 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -109778,7 +109778,7 @@
         {
           "sourceIngredientIndex": 16,
           "sourceIngredientId": "source-ingredient-16",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "Salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -113628,7 +113628,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Гарам масала",
           "sourceName": "garam masala",
           "classification": "to_taste",
           "allergens": [],
@@ -113640,7 +113640,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Пажитник молотый",
           "sourceName": "fenugreek powder",
           "classification": "to_taste",
           "allergens": [],
@@ -113676,7 +113676,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Гарам масала",
           "sourceName": "garam masala",
           "classification": "to_taste",
           "allergens": [],
@@ -118557,7 +118557,7 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -122069,7 +122069,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -122078,7 +122078,7 @@
         {
           "sourceIngredientIndex": 18,
           "sourceIngredientId": "source-ingredient-18",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -122891,7 +122891,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -122900,9 +122900,9 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Приправа по вкусу",
+          "nameRu": "Любимая приправа",
           "sourceName": "any other seasoning you like is optional",
-          "classification": "to_taste",
+          "classification": "optional_serving",
           "allergens": [],
           "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ."
         }
@@ -124679,7 +124679,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -125764,7 +125764,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -127794,7 +127794,7 @@
         {
           "sourceIngredientIndex": 17,
           "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -128831,7 +128831,7 @@
         {
           "sourceIngredientIndex": 17,
           "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -131140,7 +131140,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "Salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -131161,7 +131161,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "Salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -134137,7 +134137,7 @@
         {
           "sourceIngredientIndex": 2,
           "sourceIngredientId": "source-ingredient-2",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -134146,7 +134146,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -134188,7 +134188,7 @@
         {
           "sourceIngredientIndex": 23,
           "sourceIngredientId": "source-ingredient-23",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -135905,7 +135905,7 @@
         {
           "sourceIngredientIndex": 16,
           "sourceIngredientId": "source-ingredient-16",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -141311,7 +141311,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -144180,7 +144180,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -145625,7 +145625,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -146372,7 +146372,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -147000,7 +147000,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -147718,7 +147718,7 @@
         {
           "sourceIngredientIndex": 13,
           "sourceIngredientId": "source-ingredient-13",
-          "nameRu": "Соль",
+          "nameRu": "Соль и чёрный перец",
           "sourceName": "salt and pepper to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -154100,7 +154100,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Гарам масала",
           "sourceName": "garam masala",
           "classification": "to_taste",
           "allergens": [],
@@ -157395,7 +157395,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Смесь сушёных трав",
           "sourceName": "dried mixed herbs",
           "classification": "to_taste",
           "allergens": [],
@@ -168080,7 +168080,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Смесь сушёных трав",
           "sourceName": "mixed herbs",
           "classification": "to_taste",
           "allergens": [],
@@ -174080,7 +174080,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Гарам масала",
           "sourceName": "garam masala",
           "classification": "to_taste",
           "allergens": [],
@@ -191231,7 +191231,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Рас-эль-ханут",
           "sourceName": "ras el hanout",
           "classification": "to_taste",
           "allergens": [],
@@ -195873,7 +195873,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Рас-эль-ханут",
           "sourceName": "ras el hanout",
           "classification": "to_taste",
           "allergens": [],
@@ -197507,7 +197507,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Зелень по вкусу",
+          "nameRu": "Смесь сушёных трав",
           "sourceName": "mixed dried herbs",
           "classification": "to_taste",
           "allergens": [],
@@ -211375,7 +211375,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Смесь специй по рецепту",
+          "nameRu": "Сумах",
           "sourceName": "sumac",
           "classification": "to_taste",
           "allergens": [],
@@ -233975,9 +233975,9 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Специи",
-          "sourceName": "paprika",
-          "classification": "to_taste",
+          "nameRu": "Любимая приправа",
+          "sourceName": "any other seasoning you like is optional",
+          "classification": "optional_serving",
           "allergens": [],
           "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ."
         },
@@ -234745,15 +234745,6 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Специи",
-          "sourceName": "paprika",
-          "classification": "to_taste",
-          "allergens": [],
-          "reason": "Редакционный микрокомпонент: вклад мал, но не объявляется нулевым; компонент сохранён в source audit и исключён из вариативной части КБЖУ."
-        },
-        {
-          "sourceIngredientIndex": 8,
-          "sourceIngredientId": "source-ingredient-8",
           "nameRu": "Ваниль",
           "sourceName": "vanilla",
           "classification": "to_taste",
@@ -234789,8 +234780,7 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-7"
           ],
           "estimated": true
         },
@@ -234806,8 +234796,7 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-7"
           ],
           "estimated": true
         },
@@ -234823,8 +234812,7 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-7"
           ],
           "estimated": true
         }
@@ -235019,7 +235007,7 @@
           "ingredientMapping": {
             "source": "raw_candidate",
             "reviewedAt": "2026-08-31T18:18:12+03:00",
-            "sourceIngredientCount": 8,
+            "sourceIngredientCount": 7,
             "sourceSlug": "foodru-blogger-cottage-waffles"
           },
           "nutrition": {
@@ -235056,8 +235044,7 @@
               "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
-              "source-ingredient-7",
-              "source-ingredient-8"
+              "source-ingredient-7"
             ],
             "action": "cook",
             "dependsOn": [
@@ -235074,8 +235061,7 @@
               "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
-              "source-ingredient-7",
-              "source-ingredient-8"
+              "source-ingredient-7"
             ],
             "action": "cook",
             "dependsOn": [
@@ -235092,8 +235078,7 @@
               "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
-              "source-ingredient-7",
-              "source-ingredient-8"
+              "source-ingredient-7"
             ],
             "action": "portion",
             "dependsOn": [

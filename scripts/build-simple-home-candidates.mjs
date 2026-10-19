@@ -17,7 +17,9 @@ const microNames = new Map([
   ["Паприка", "paprika"], ["Корица", "cinnamon"], ["Укроп", "dill"], ["Зелень", "dill"],
   ["Тимьян", "thyme"], ["Шалфей", "sage"], ["Розмарин", "rosemary"], ["Базилик", "basil"],
   ["Лавровый лист", "bay leaf"], ["Хмели-сунели", "khmeli suneli"], ["Кавказские травы", "Caucasian herbs"],
-  ["Мускатный орех", "nutmeg"], ["Перец чили", "chilli powder"], ["Ваниль", "vanilla"], ["Специи", "paprika"],
+  ["Мускатный орех", "nutmeg"], ["Перец чили", "chilli powder"], ["Ваниль", "vanilla"],
+  // Источник «бомбочек»: в соус «можно добавить любые специи по желанию».
+  ["Любимая приправа", "any other seasoning you like is optional"],
 ]);
 const micro = (displayNameRu, original = "по вкусу") => ({
   name: microNames.get(displayNameRu) ?? displayNameRu,
@@ -124,7 +126,11 @@ const configs = [
     ["foodru-blogger-stuffed-pepper", "Фаршированный перец «Чистые ручки»", 4, 55, [gram("pepper_raw", "Болгарский перец", 650), gram("beef_mince_raw", "Говяжий фарш", 200), gram("chicken_raw", "Куриная грудка", 250), gram("chicken_thigh_raw", "Куриное бедро без кожи", 150), gram("rice_raw", "Рис", 100), gram("onion_raw", "Лук", 120), gram("tomato_paste_processed", "Томатная паста", 40)], "Выход сокращён до 4 порций, а мясная начинка увеличена до 150 г на порцию."],
     ["foodru-blogger-cottage-waffles", "Творожные вафли с яблоком", 4, 30, [gram("cottage_processed", "Творог 4–5%", 500), gram("protein_powder_processed", "Протеин", 60), gram("cornmeal_raw", "Кукурузная мука", 60), gram("egg_raw", "Яйца", 120), gram("apple_raw", "Яблоко", 150)], "Выход сокращён до 4 порций; добавлено 60 г протеина на партию."],
   ].map(([id, titleRu, servings, totalMinutes, ingredients, adaptation]) => ({
-    id, titleRu, slot: id.includes("waffles") ? "breakfast" : "dinner", servings, totalMinutes, ingredients: [...ingredients, micro("Соль"), micro("Специи")],
+    // Раньше всем трём карточкам дописывалась строка «Специи» (ключ paprika).
+    // Паприки нет ни в одном источнике: у «бомбочек» источник разрешает любые
+    // специи в соус по желанию, у творожных вафель специй нет вовсе.
+    id, titleRu, slot: id.includes("waffles") ? "breakfast" : "dinner", servings, totalMinutes,
+    ingredients: [...ingredients, micro("Соль"), ...(id === "foodru-blogger-chicken-bombs" ? [micro("Любимая приправа", "по желанию")] : [])],
     steps: id.includes("waffles")
       ? ["Пробейте творог, яйца и протеин до однородности.", "Вмешайте кукурузную муку и мелко нарезанное яблоко.", "Выпекайте в разогретой вафельнице до устойчивой золотистой корочки."]
       : ["Подготовьте овощи, крупу и мясную начинку по указанным массам.", "Соберите порционные заготовки, равномерно распределяя мясо и гарнир.", "Доведите блюдо под крышкой или в духовке до 74°C в центре курицы и мягкости крупы.", "Остудите и разделите на равные контейнеры."],

@@ -7472,9 +7472,9 @@
           "original": "по вкусу"
         },
         {
-          "name": "paprika",
-          "displayNameRu": "Специи",
-          "original": "по вкусу"
+          "name": "any other seasoning you like is optional",
+          "displayNameRu": "Любимая приправа",
+          "original": "по желанию"
         },
         {
           "name": "black pepper",
@@ -7749,11 +7749,6 @@
           "original": "по вкусу"
         },
         {
-          "name": "paprika",
-          "displayNameRu": "Специи",
-          "original": "по вкусу"
-        },
-        {
           "name": "vanilla",
           "displayNameRu": "Ваниль",
           "original": "по вкусу"
@@ -7802,8 +7797,7 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-7"
           ],
           "action": "cook",
           "dependsOn": []
@@ -7818,8 +7812,7 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-7"
           ],
           "action": "cook",
           "dependsOn": [
@@ -7836,8 +7829,7 @@
             "source-ingredient-4",
             "source-ingredient-5",
             "source-ingredient-6",
-            "source-ingredient-7",
-            "source-ingredient-8"
+            "source-ingredient-7"
           ],
           "action": "portion",
           "dependsOn": [

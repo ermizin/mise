@@ -53,6 +53,75 @@ test("step granularity does not get worse than the 2026-10-19 baseline", () => {
   }
 });
 
+function ingredientLines(recipe) {
+  return [...(recipe.shoppingIngredients ?? []), ...(recipe.procedureIngredients ?? [])];
+}
+
+const allRuntimeRecipes = [...catalog.recipes, ...catalog.simpleRecipes, ...catalog.extensionRecipes];
+
+test("ingredient lines name a real product instead of a placeholder", () => {
+  const placeholders = [
+    /по рецепту/iu,
+    /^специи$/iu,
+    /^приправа по вкусу$/iu,
+    /^зелень по вкусу$/iu,
+    /^дополнение/iu,
+  ];
+  for (const recipe of allRuntimeRecipes) {
+    for (const line of ingredientLines(recipe)) {
+      for (const pattern of placeholders) {
+        assert.doesNotMatch(String(line.nameRu ?? ""), pattern, `${recipe.id}: «${line.nameRu}»`);
+      }
+    }
+  }
+});
+
+test("source salt and pepper keeps both seasonings in the line name", () => {
+  const lines = catalog.recipes.flatMap((recipe) =>
+    recipe.procedureIngredients.filter((line) => /salt and pepper/iu.test(line.sourceName)).map((line) => ({ recipe, line })),
+  );
+  assert.ok(lines.length >= 40);
+  for (const { recipe, line } of lines) assert.equal(line.nameRu, "Соль и чёрный перец", recipe.id);
+});
+
+test("named spices keep the measured source amount", () => {
+  const line = (id, index) => catalog.recipes.find((recipe) => recipe.id === id)
+    .procedureIngredients.find((item) => item.sourceIngredientIndex === index);
+  const expectations = [
+    ["tmpm-27328", 15, "Итальянские травы", 0.2, "g"],
+    ["tmpm-27306", 2, "Семена фенхеля", 0.8, "g"],
+    ["tmpm-26358", 4, "Карри (порошок)", 4.8, "g"],
+    ["tmpm-26358", 5, "Гарам масала", 3.2, "g"],
+    ["tmpm-26647", 9, "Смесь специй для тыквенного пирога", 0.6667, "g"],
+    ["tmpm-23797", 5, "Пажитник молотый", 0.8, "g"],
+    ["tmpm-25006-avocado-bean-rice-cakes", 6, "Приправа «всё и сразу» (кунжут, мак, чеснок, лук)", 4, "g"],
+    ["goodfood-lentil-kofta-orzo-feta", 4, "Рас-эль-ханут", 3.75, "ml"],
+    ["goodfood-pork-with-cucumber-apricot-couscous", 3, "Сумах", 2.5, "ml"],
+    ["goodfood-big-batch-bolognese", 7, "Смесь сушёных трав", 2.5, "ml"],
+    ["goodfood-sausage-egg-muffins", 4, "Смесь сушёных трав", 0.8333, "ml"],
+  ];
+  for (const [id, index, nameRu, quantityPerServing, unit] of expectations) {
+    const item = line(id, index);
+    assert.equal(item.nameRu, nameRu, `${id}#${index}`);
+    assert.equal(item.quantityPerServing, quantityPerServing, `${id}#${index}`);
+    assert.equal(item.unit, unit, `${id}#${index}`);
+    assert.equal(item.classification, "to_taste", `${id}#${index}`);
+  }
+});
+
+test("an optional seasoning of choice is shown as optional, not as a vague spice", () => {
+  for (const [id, index] of [["tmpm-23261", 10], ["foodru-blogger-chicken-bombs", 10]]) {
+    const item = catalog.recipes.find((recipe) => recipe.id === id)
+      .procedureIngredients.find((line) => line.sourceIngredientIndex === index);
+    assert.equal(item.nameRu, "Любимая приправа", id);
+    assert.equal(item.classification, "optional_serving", id);
+    assert.equal(item.quantityPerServing, undefined, id);
+  }
+  // В источнике творожных вафель специй нет: только ваниль, соль и сахар.
+  const waffles = catalog.recipes.find((recipe) => recipe.id === "foodru-blogger-cottage-waffles");
+  assert.deepEqual(waffles.procedureIngredients.map((line) => line.nameRu), ["Соль", "Ваниль"]);
+});
+
 test("chef patches find their step by text, so a sentence-boundary split keeps them", async () => {
   const { findStepByAnchor } = await import("../scripts/apply-recipe-proofread-policy.mjs");
   const { loadRecipeCorpusWithOverlays, recipeCorpusDatasetPaths } = await import("../scripts/recipe-corpus-overlay.mjs");
