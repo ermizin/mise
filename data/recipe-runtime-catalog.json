@@ -61838,7 +61838,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -61862,7 +61862,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -66021,7 +66021,7 @@
       "steps": [
         "Для соуса оставьте 60 г мирина; если его нет, смешайте 45 г воды и 15 г сахара. Несколько капель рисового уксуса можно добавить по вкусу, но не заменять им основную жидкость. Промойте и сварите указанное в составе количество сухого риса по инструкции на упаковке.",
         "Разогрейте духовку до 220 °C; нарежьте брокколи на соцветия, батат крупными кусочками. В маленьком сотейнике соедините компоненты терияки и чеснок.",
-        "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
+        "Покройте курицу смесью масла, соевого соуса, чесночного порошка и, по желанию, белого перца. Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
         "Батат готовьте отдельно 10 минут, добавьте брокколи и запекайте ещё 8–10 минут.",
         "Соус доведите до слабого кипения и томите 8–10 минут, взбивая до лёгкого загустения.",
         "Нарежьте курицу, покройте двумя третями соуса и подрумяньте под грилем 3–6 минут, следя, чтобы не сгорела. Разложите с рисом и овощами на 5 порций."
@@ -66067,7 +66067,7 @@
           "estimated": true
         },
         {
-          "text": "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
+          "text": "Покройте курицу смесью масла, соевого соуса, чесночного порошка и, по желанию, белого перца. Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
           "minutes": 25,
           "hands": false,
           "at": 14,
@@ -66507,7 +66507,7 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
+            "text": "Покройте курицу смесью масла, соевого соуса, чесночного порошка и, по желанию, белого перца. Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -66992,7 +66992,7 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -68140,7 +68140,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -68164,7 +68164,7 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -69304,7 +69304,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -69340,7 +69340,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -70505,7 +70505,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -71567,7 +71567,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -71579,7 +71579,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "red pepper flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -73379,7 +73379,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -75113,7 +75113,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -77330,7 +77330,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -79266,7 +79266,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -79311,7 +79311,6 @@
       ],
       "steps": [
         "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
-        "Охладите готовый рис в холодильнике ночь.",
         "Смешайте масло, лимонный сок, йогурт, чесночный порошок, карри, паприку, кориандр, кумин и соль. Нарежьте бёдра тонкими полосками, покройте маринадом. Нарежьте лук, красный перец и кабачок; измельчите чеснок.",
         "На сильном огне обжарьте курицу партиями в сковороде до румяных краёв и полной готовности, отложите.",
         "Добавьте оставшееся масло, лук и перец на 2–3 минуты, затем кабачок на несколько минут.",
@@ -79331,17 +79330,7 @@
       "instructions": [
         {
           "text": "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
-          "minutes": 12,
-          "hands": false,
-          "at": 0,
-          "ingredientIds": [
-            "source-ingredient-11"
-          ],
-          "estimated": true
-        },
-        {
-          "text": "Охладите готовый рис в холодильнике ночь.",
-          "minutes": 12,
+          "minutes": 18,
           "hands": false,
           "at": 0,
           "ingredientIds": [
@@ -79351,9 +79340,9 @@
         },
         {
           "text": "Смешайте масло, лимонный сок, йогурт, чесночный порошок, карри, паприку, кориандр, кумин и соль. Нарежьте бёдра тонкими полосками, покройте маринадом. Нарежьте лук, красный перец и кабачок; измельчите чеснок.",
-          "minutes": 12,
+          "minutes": 18,
           "hands": false,
-          "at": 12,
+          "at": 0,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -79376,7 +79365,7 @@
           "text": "На сильном огне обжарьте курицу партиями в сковороде до румяных краёв и полной готовности, отложите.",
           "minutes": 6,
           "hands": true,
-          "at": 24,
+          "at": 18,
           "ingredientIds": [
             "source-ingredient-1"
           ],
@@ -79386,7 +79375,7 @@
           "text": "Добавьте оставшееся масло, лук и перец на 2–3 минуты, затем кабачок на несколько минут.",
           "minutes": 3,
           "hands": true,
-          "at": 30,
+          "at": 24,
           "ingredientIds": [
             "source-ingredient-12",
             "source-ingredient-13",
@@ -79398,7 +79387,7 @@
           "text": "Внесите чеснок и томатную пасту, прогрейте до аромата, добавьте рис и верните курицу с соками. Посолите, поперчите и посыпьте кинзой.",
           "minutes": 5,
           "hands": true,
-          "at": 33,
+          "at": 27,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-11",
@@ -79433,7 +79422,7 @@
       "effort": {
         "level": "medium",
         "knifeActions": 1,
-        "cookware": 3,
+        "cookware": 2,
         "activeActions": 4,
         "activeMinutes": 14,
         "parallelProcesses": 2,
@@ -79772,21 +79761,6 @@
           },
           {
             "id": "editorial-step-1",
-            "text": "Охладите готовый рис в холодильнике ночь.",
-            "ingredientIds": [
-              "source-ingredient-11"
-            ],
-            "action": "cool",
-            "duration": "рис охладить на ночь",
-            "equipment": [
-              "refrigerator"
-            ],
-            "dependsOn": [
-              "mise-rice-dry-prep"
-            ]
-          },
-          {
-            "id": "editorial-step-2",
             "text": "Смешайте масло, лимонный сок, йогурт, чесночный порошок, карри, паприку, кориандр, кумин и соль. Нарежьте бёдра тонкими полосками, покройте маринадом. Нарежьте лук, красный перец и кабачок; измельчите чеснок.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -79810,11 +79784,11 @@
               "mixing_bowl"
             ],
             "dependsOn": [
-              "editorial-step-1"
+              "mise-rice-dry-prep"
             ]
           },
           {
-            "id": "editorial-step-3",
+            "id": "editorial-step-2",
             "text": "На сильном огне обжарьте курицу партиями в сковороде до румяных краёв и полной готовности, отложите.",
             "ingredientIds": [
               "source-ingredient-1"
@@ -79825,11 +79799,11 @@
             ],
             "donenessCue": "курица непрозрачна внутри",
             "dependsOn": [
-              "editorial-step-2"
+              "editorial-step-1"
             ]
           },
           {
-            "id": "editorial-step-4",
+            "id": "editorial-step-3",
             "text": "Добавьте оставшееся масло, лук и перец на 2–3 минуты, затем кабачок на несколько минут.",
             "ingredientIds": [
               "source-ingredient-12",
@@ -79843,11 +79817,11 @@
               "large_frying_pan"
             ],
             "dependsOn": [
-              "editorial-step-3"
+              "editorial-step-2"
             ]
           },
           {
-            "id": "editorial-step-5",
+            "id": "editorial-step-4",
             "text": "Внесите чеснок и томатную пасту, прогрейте до аромата, добавьте рис и верните курицу с соками. Посолите, поперчите и посыпьте кинзой.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -79863,7 +79837,7 @@
             ],
             "donenessCue": "рис прогрет и сухой",
             "dependsOn": [
-              "editorial-step-4"
+              "editorial-step-3"
             ]
           }
         ],
@@ -82192,7 +82166,7 @@
         {
           "sourceIngredientIndex": 13,
           "sourceIngredientId": "source-ingredient-13",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -83235,7 +83209,7 @@
         {
           "sourceIngredientIndex": 18,
           "sourceIngredientId": "source-ingredient-18",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -83249,7 +83223,7 @@
         "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
         "Разогрейте духовку до 200 °C. Нарежьте картофель крупными кубиками, перемешайте с маслом, чесночным порошком, солью и перцем.",
         "Запекайте на двух свободно разложенных противнях 25 минут, переверните и готовьте ещё 8–10 минут до румяной хрустящей корочки.",
-        "На сковороде обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, готовьте до мягкости.",
+        "Разогрейте на сковороде оливковое масло и обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, измельчённый чеснок и готовьте до мягкости; посолите и поперчите по вкусу.",
         "Смешайте горчицу, вустерширский соус, кетчуп, бульон и крахмал, влейте и прогрейте до загустения.",
         "Разложите с рисом и картофелем, накройте проволоне и добавьте кетчуп."
       ],
@@ -83269,7 +83243,7 @@
       "instructions": [
         {
           "text": "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
-          "minutes": 3,
+          "minutes": 1,
           "hands": false,
           "at": 0,
           "ingredientIds": [
@@ -83279,7 +83253,7 @@
         },
         {
           "text": "Разогрейте духовку до 200 °C. Нарежьте картофель крупными кубиками, перемешайте с маслом, чесночным порошком, солью и перцем.",
-          "minutes": 5,
+          "minutes": 7,
           "hands": true,
           "at": 0,
           "ingredientIds": [
@@ -83295,7 +83269,7 @@
           "text": "Запекайте на двух свободно разложенных противнях 25 минут, переверните и готовьте ещё 8–10 минут до румяной хрустящей корочки.",
           "minutes": 35,
           "hands": false,
-          "at": 5,
+          "at": 7,
           "ingredientIds": [
             "source-ingredient-14",
             "source-ingredient-15",
@@ -83305,10 +83279,10 @@
           ]
         },
         {
-          "text": "На сковороде обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, готовьте до мягкости.",
-          "minutes": 5,
+          "text": "Разогрейте на сковороде оливковое масло и обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, измельчённый чеснок и готовьте до мягкости; посолите и поперчите по вкусу.",
+          "minutes": 6,
           "hands": true,
-          "at": 40,
+          "at": 42,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -83321,9 +83295,9 @@
         },
         {
           "text": "Смешайте горчицу, вустерширский соус, кетчуп, бульон и крахмал, влейте и прогрейте до загустения.",
-          "minutes": 3,
+          "minutes": 1,
           "hands": false,
-          "at": 45,
+          "at": 48,
           "ingredientIds": [
             "source-ingredient-5",
             "source-ingredient-6",
@@ -83335,9 +83309,9 @@
         },
         {
           "text": "Разложите с рисом и картофелем, накройте проволоне и добавьте кетчуп.",
-          "minutes": 4,
+          "minutes": 6,
           "hands": true,
-          "at": 48,
+          "at": 49,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-11",
@@ -83370,10 +83344,10 @@
       },
       "effort": {
         "level": "medium",
-        "knifeActions": 1,
+        "knifeActions": 2,
         "cookware": 4,
-        "activeActions": 4,
-        "activeMinutes": 14,
+        "activeActions": 5,
+        "activeMinutes": 19,
         "parallelProcesses": 2,
         "difficulty": 2
       },
@@ -83799,7 +83773,7 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "На сковороде обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, готовьте до мягкости.",
+            "text": "Разогрейте на сковороде оливковое масло и обжарьте фарш до изменения цвета. Добавьте тонко нарезанные лук и перцы, измельчённый чеснок и готовьте до мягкости; посолите и поперчите по вкусу.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -85110,10 +85084,10 @@
       "title": "Индейка стир-фрай с арахисом",
       "cuisine": "asian",
       "macros": {
-        "kcal": 697.3,
+        "kcal": 706.7,
         "protein": 44.5,
         "fat": 26.9,
-        "carbs": 69.3
+        "carbs": 71.7
       },
       "timeMinutes": 30,
       "menuTags": [
@@ -85399,8 +85373,8 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "canonicalIngredientId": "red_wine_processed",
-          "nameRu": "Красное сухое вино",
+          "canonicalIngredientId": "mirin_processed",
+          "nameRu": "Китайское рисовое вино (шаосин)",
           "group": "Соусы и специи",
           "quantityGrams": 30,
           "sourceMeasurement": {
@@ -85420,7 +85394,7 @@
             {
               "sourceIngredientIndex": 8,
               "sourceIngredientId": "source-ingredient-8",
-              "nameRu": "Красное сухое вино",
+              "nameRu": "Китайское рисовое вино (шаосин)",
               "quantityGrams": 30,
               "sourceMeasurement": {
                 "amount": 30,
@@ -85471,7 +85445,7 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "red pepper flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -85749,14 +85723,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-8",
-            "canonicalIngredientId": "red_wine_processed",
-            "baseAmount": 6.0606060606060606,
+            "canonicalIngredientId": "mirin_processed",
+            "baseAmount": 5.7142857142857135,
             "unit": "ml",
             "role": "sauce",
-            "minAmount": 3.0303030303030303,
-            "preferredMin": 4.848484848484849,
-            "preferredMax": 7.575757575757576,
-            "maxAmount": 9.696969696969697,
+            "minAmount": 2.8571428571428568,
+            "preferredMin": 4.571428571428571,
+            "preferredMax": 7.142857142857142,
+            "maxAmount": 9.142857142857142,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -85779,8 +85753,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 508,
-        "maxViableCalories": 1146,
+        "minViableCalories": 516,
+        "maxViableCalories": 1156,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -85802,18 +85776,18 @@
           "carbs": 57
         },
         "miseCalculatedNutrition": {
-          "kcal": 697.3,
+          "kcal": 706.7,
           "protein": 44.5,
           "fat": 26.9,
-          "carbs": 69.3
+          "carbs": 71.7
         },
         "nutritionDelta": {
-          "kcal": 65.3,
+          "kcal": 74.7,
           "protein": 2.5,
           "fat": 0.9,
-          "carbs": 12.3
+          "carbs": 14.7
         },
-        "nutritionDeltaKcal": 65.3,
+        "nutritionDeltaKcal": 74.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
@@ -89714,7 +89688,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -91644,7 +91618,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -93794,7 +93768,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -93830,7 +93804,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -93854,7 +93828,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -93875,7 +93849,6 @@
       ],
       "steps": [
         "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
-        "Охладите готовый рис ночь.",
         "Смешайте масло, сок лайма, чесночный порошок, орегано, кориандр, кумин, паприку, чили, соль и перец. Нарежьте куриные бёдра тонкими полосками, покройте маринадом. Нарежьте лук и оба перца полосками, измельчите чеснок; кинзу порубите для подачи.",
         "На сильном огне обжарьте курицу партиями в части масла до румяности и полной готовности, отложите.",
         "Добавьте оставшееся масло, готовьте лук и перцы 3–5 минут, затем чеснок до аромата.",
@@ -93895,17 +93868,7 @@
       "instructions": [
         {
           "text": "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
-          "minutes": 12,
-          "hands": false,
-          "at": 0,
-          "ingredientIds": [
-            "source-ingredient-12"
-          ],
-          "estimated": true
-        },
-        {
-          "text": "Охладите готовый рис ночь.",
-          "minutes": 12,
+          "minutes": 18,
           "hands": false,
           "at": 0,
           "ingredientIds": [
@@ -93915,9 +93878,9 @@
         },
         {
           "text": "Смешайте масло, сок лайма, чесночный порошок, орегано, кориандр, кумин, паприку, чили, соль и перец. Нарежьте куриные бёдра тонкими полосками, покройте маринадом. Нарежьте лук и оба перца полосками, измельчите чеснок; кинзу порубите для подачи.",
-          "minutes": 12,
+          "minutes": 18,
           "hands": false,
-          "at": 12,
+          "at": 0,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-2",
@@ -93942,7 +93905,7 @@
           "text": "На сильном огне обжарьте курицу партиями в части масла до румяности и полной готовности, отложите.",
           "minutes": 5,
           "hands": true,
-          "at": 24,
+          "at": 18,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-19"
@@ -93953,7 +93916,7 @@
           "text": "Добавьте оставшееся масло, готовьте лук и перцы 3–5 минут, затем чеснок до аромата.",
           "minutes": 5,
           "hands": true,
-          "at": 29,
+          "at": 23,
           "ingredientIds": [
             "source-ingredient-13",
             "source-ingredient-14",
@@ -93966,7 +93929,7 @@
           "text": "Вмешайте рис, сок лайма, курицу с соками, отрегулируйте соль и перец. Посыпьте кинзой и подайте с долькой лайма.",
           "minutes": 4,
           "hands": true,
-          "at": 34,
+          "at": 28,
           "ingredientIds": [
             "source-ingredient-1",
             "source-ingredient-12",
@@ -94001,7 +93964,7 @@
       "effort": {
         "level": "medium",
         "knifeActions": 1,
-        "cookware": 3,
+        "cookware": 2,
         "activeActions": 4,
         "activeMinutes": 14,
         "parallelProcesses": 2,
@@ -94340,21 +94303,6 @@
           },
           {
             "id": "editorial-step-1",
-            "text": "Охладите готовый рис ночь.",
-            "ingredientIds": [
-              "source-ingredient-12"
-            ],
-            "action": "cool",
-            "duration": "рис охладить на ночь",
-            "equipment": [
-              "refrigerator"
-            ],
-            "dependsOn": [
-              "mise-rice-dry-prep"
-            ]
-          },
-          {
-            "id": "editorial-step-2",
             "text": "Смешайте масло, сок лайма, чесночный порошок, орегано, кориандр, кумин, паприку, чили, соль и перец. Нарежьте куриные бёдра тонкими полосками, покройте маринадом. Нарежьте лук и оба перца полосками, измельчите чеснок; кинзу порубите для подачи.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -94379,11 +94327,11 @@
               "mixing_bowl"
             ],
             "dependsOn": [
-              "editorial-step-1"
+              "mise-rice-dry-prep"
             ]
           },
           {
-            "id": "editorial-step-3",
+            "id": "editorial-step-2",
             "text": "На сильном огне обжарьте курицу партиями в части масла до румяности и полной готовности, отложите.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -94395,11 +94343,11 @@
             ],
             "donenessCue": "курица непрозрачна внутри",
             "dependsOn": [
-              "editorial-step-2"
+              "editorial-step-1"
             ]
           },
           {
-            "id": "editorial-step-4",
+            "id": "editorial-step-3",
             "text": "Добавьте оставшееся масло, готовьте лук и перцы 3–5 минут, затем чеснок до аромата.",
             "ingredientIds": [
               "source-ingredient-13",
@@ -94415,11 +94363,11 @@
             ],
             "donenessCue": "перцы слегка подрумянились",
             "dependsOn": [
-              "editorial-step-3"
+              "editorial-step-2"
             ]
           },
           {
-            "id": "editorial-step-5",
+            "id": "editorial-step-4",
             "text": "Вмешайте рис, сок лайма, курицу с соками, отрегулируйте соль и перец. Посыпьте кинзой и подайте с долькой лайма.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -94434,7 +94382,7 @@
               "large_frying_pan"
             ],
             "dependsOn": [
-              "editorial-step-4"
+              "editorial-step-3"
             ]
           }
         ],
@@ -97126,7 +97074,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -97859,7 +97807,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -102201,7 +102149,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -103125,7 +103073,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -106248,7 +106196,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -107214,7 +107162,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "dried coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -107238,7 +107186,7 @@
         {
           "sourceIngredientIndex": 17,
           "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "red pepper flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -108147,7 +108095,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -108171,7 +108119,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -109042,7 +108990,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -110876,7 +110824,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили анчо молотый",
           "sourceName": "ancho chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -111912,7 +111860,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -111948,7 +111896,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -112613,7 +112561,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Острый перец",
+          "nameRu": "Халапеньо",
           "sourceName": "jalapeños",
           "classification": "to_taste",
           "allergens": [],
@@ -112649,7 +112597,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -113598,7 +113546,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -113658,7 +113606,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -113672,7 +113620,7 @@
         "Заранее промойте и сварите указанное Mise количество сухого риса по инструкции на упаковке. Если дальше нужен холодный рис, быстро охладите его и держите в холодильнике до этого шага.",
         "Разогрейте духовку до 215 °C. Смешайте йогурт, чили, луковый и чесночный порошок, соль и лимонный сок; тщательно покройте этим маринадом бёдра.",
         "Разложите на противне и запекайте 10–12 минут, затем под верхним нагревом готовьте по 3–5 минут с каждой стороны до нужной румяности. Дайте мясу отдохнуть и нарежьте крупным кубиком.",
-        "Подготовьте готовый рис. Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
+        "Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
         "На среднем огне разогрейте масло, обжарьте перец и лук 3–5 минут, добавьте капусту с чесноком ещё на 1–2 минуты. Вмешайте томатный соус и готовьте 3–5 минут, чтобы убрать сырой вкус.",
         "Добавьте рис, лимонный сок и курицу, прогрейте и перемешайте. При подаче добавьте томат и кинзу; острый перец используйте по желанию."
       ],
@@ -113726,12 +113674,11 @@
           ]
         },
         {
-          "text": "Подготовьте готовый рис. Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
+          "text": "Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
           "minutes": 11,
           "hands": true,
           "at": 24,
           "ingredientIds": [
-            "source-ingredient-1",
             "source-ingredient-9",
             "source-ingredient-10",
             "source-ingredient-11",
@@ -114205,9 +114152,8 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "Подготовьте готовый рис. Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
+            "text": "Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
             "ingredientIds": [
-              "source-ingredient-1",
               "source-ingredient-9",
               "source-ingredient-10",
               "source-ingredient-11",
@@ -114794,7 +114740,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Острый перец",
+          "nameRu": "Кашмирский чили молотый",
           "sourceName": "kashmiri chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -114878,7 +114824,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Острый перец",
+          "nameRu": "Кашмирский чили молотый",
           "sourceName": "kashmiri chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -116218,7 +116164,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -116254,7 +116200,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -123688,7 +123634,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "ground coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -125397,7 +125343,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Халапеньо",
           "sourceName": "jalapeño pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -125433,7 +125379,7 @@
         {
           "sourceIngredientIndex": 11,
           "sourceIngredientId": "source-ingredient-11",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -125445,7 +125391,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -127675,7 +127621,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -128700,7 +128646,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -128712,7 +128658,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -132608,7 +132554,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -133486,7 +133432,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -133540,7 +133486,7 @@
         {
           "sourceIngredientIndex": 15,
           "sourceIngredientId": "source-ingredient-15",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили молотый",
           "sourceName": "chili powder",
           "classification": "to_taste",
           "allergens": [],
@@ -133564,7 +133510,7 @@
         {
           "sourceIngredientIndex": 20,
           "sourceIngredientId": "source-ingredient-20",
-          "nameRu": "Острый перец",
+          "nameRu": "Халапеньо",
           "sourceName": "jalapeños",
           "classification": "to_taste",
           "allergens": [],
@@ -135539,7 +135485,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "red pepper flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -137635,7 +137581,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -137671,7 +137617,7 @@
         {
           "sourceIngredientIndex": 7,
           "sourceIngredientId": "source-ingredient-7",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -140678,7 +140624,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Перец",
+          "nameRu": "Чёрный перец молотый",
           "sourceName": "pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -142398,7 +142344,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "crushed red pepper flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -143395,7 +143341,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "crushed red pepper flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -146487,7 +146433,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили кочукару",
           "sourceName": "gochugaru",
           "classification": "to_taste",
           "allergens": [],
@@ -147465,7 +147411,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Острый перец",
+          "nameRu": "Кайенский перец",
           "sourceName": "cayenne pepper",
           "classification": "to_taste",
           "allergens": [],
@@ -156294,7 +156240,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Хлопья чили",
           "sourceName": "chilli flakes",
           "classification": "to_taste",
           "allergens": [],
@@ -158133,7 +158079,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Острый перец",
+          "nameRu": "Чили свежий или сушёный",
           "sourceName": "fresh or dried chilli to taste",
           "classification": "to_taste",
           "allergens": [],
@@ -158145,7 +158091,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "ground coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -168510,7 +168456,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "ground coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -169376,7 +169322,7 @@
         {
           "sourceIngredientIndex": 9,
           "sourceIngredientId": "source-ingredient-9",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "coriander roughly chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -176955,7 +176901,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "small bunch coriander chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -178875,7 +178821,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "ground coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -190839,7 +190785,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий красный чили",
           "sourceName": "red chilli deseeded and finely chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -190851,7 +190797,7 @@
         {
           "sourceIngredientIndex": 10,
           "sourceIngredientId": "source-ingredient-10",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -190887,7 +190833,7 @@
         {
           "sourceIngredientIndex": 27,
           "sourceIngredientId": "source-ingredient-27",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "small handful of coriander leaves picked",
           "classification": "to_taste",
           "allergens": [],
@@ -192748,7 +192694,7 @@
         {
           "sourceIngredientIndex": 23,
           "sourceIngredientId": "source-ingredient-23",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий красный чили",
           "sourceName": "red chilli deseeded if you like, finely sliced",
           "classification": "to_taste",
           "allergens": [],
@@ -196259,7 +196205,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Острый чили молотый",
           "sourceName": "hot chilli powder",
           "classification": "to_taste",
           "allergens": [],
@@ -199123,7 +199069,7 @@
         {
           "sourceIngredientIndex": 12,
           "sourceIngredientId": "source-ingredient-12",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -208394,7 +208340,7 @@
         {
           "sourceIngredientIndex": 14,
           "sourceIngredientId": "source-ingredient-14",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий красный чили",
           "sourceName": "red chilli finely shredded",
           "classification": "to_taste",
           "allergens": [],
@@ -208406,7 +208352,7 @@
         {
           "sourceIngredientIndex": 16,
           "sourceIngredientId": "source-ingredient-16",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "handful of coriander finely chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -212053,7 +211999,7 @@
         {
           "sourceIngredientIndex": 5,
           "sourceIngredientId": "source-ingredient-5",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий красный чили",
           "sourceName": "red chilli deseeded and finely chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -212065,7 +212011,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "small handful coriander roughly chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -213489,7 +213435,7 @@
         {
           "sourceIngredientIndex": 3,
           "sourceIngredientId": "source-ingredient-3",
-          "nameRu": "Кориандр",
+          "nameRu": "Кориандр молотый",
           "sourceName": "ground coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -214404,7 +214350,7 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий зелёный чили",
           "sourceName": "green chillies deseeded and finely chopped",
           "classification": "to_taste",
           "allergens": [],
@@ -215321,7 +215267,7 @@
         {
           "sourceIngredientIndex": 4,
           "sourceIngredientId": "source-ingredient-4",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий красный чили",
           "sourceName": "red chillies deseeded and sliced",
           "classification": "to_taste",
           "allergens": [],
@@ -215369,7 +215315,7 @@
         {
           "sourceIngredientIndex": 13,
           "sourceIngredientId": "source-ingredient-13",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "coriander plus extra to serve",
           "classification": "to_taste",
           "allergens": [],
@@ -217212,7 +217158,7 @@
         {
           "sourceIngredientIndex": 1,
           "sourceIngredientId": "source-ingredient-1",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "fresh coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -218312,7 +218258,7 @@
         {
           "sourceIngredientIndex": 17,
           "sourceIngredientId": "source-ingredient-17",
-          "nameRu": "Кориандр",
+          "nameRu": "Кинза",
           "sourceName": "chopped coriander",
           "classification": "to_taste",
           "allergens": [],
@@ -219157,7 +219103,7 @@
         {
           "sourceIngredientIndex": 6,
           "sourceIngredientId": "source-ingredient-6",
-          "nameRu": "Острый перец",
+          "nameRu": "Свежий чили",
           "sourceName": "fresh chillies deseeded and finely chopped",
           "classification": "to_taste",
           "allergens": [],
