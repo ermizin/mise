@@ -945,12 +945,54 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Нарежьте морковь лентами и залейте рассолом из воды, уксуса, соли и сахара минимум на 30 минут. Залейте стеклянную лапшу кипятком. Выровненную куриную грудку смажьте маслом и готовьте в аэрогриле при 204°C по 4–5 минут с каждой стороны, затем дайте отдохнуть и нарежьте. Смешайте ингредиенты заправки, разложите лапшу, курицу и овощи по 5 контейнерам, отдельно добавьте заправку.",
+        "text": "Нарежьте морковь лентами и залейте рассолом из воды, уксуса, соли и сахара минимум на 30 минут.",
+        "ingredientIds": [
+          "source-ingredient-9",
+          "source-ingredient-16",
+          "source-ingredient-17",
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20"
+        ],
+        "action": "marinate",
+        "dependsOn": [],
+        "duration": "от 30 мин",
+        "equipment": [
+          "mixing_bowl"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Залейте стеклянную лапшу кипятком.",
+        "ingredientIds": [
+          "source-ingredient-5"
+        ],
+        "action": "prepare",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Выровненную куриную грудку смажьте маслом и готовьте в аэрогриле при 204°C по 4–5 минут с каждой стороны, затем дайте отдохнуть и нарежьте.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4",
+          "source-ingredient-4"
+        ],
+        "action": "air_fry",
+        "dependsOn": [],
+        "temperature": "204°C",
+        "duration": "4–5 мин с каждой стороны",
+        "equipment": [
+          "air_fryer"
+        ],
+        "donenessCue": "курица полностью готова"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Смешайте ингредиенты заправки, разложите лапшу, курицу и овощи по 5 контейнерам, отдельно добавьте заправку.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-5",
           "source-ingredient-6",
           "source-ingredient-7",
@@ -961,22 +1003,17 @@
           "source-ingredient-12",
           "source-ingredient-13",
           "source-ingredient-14",
-          "source-ingredient-15",
-          "source-ingredient-16",
-          "source-ingredient-17",
-          "source-ingredient-18",
-          "source-ingredient-19",
-          "source-ingredient-20"
+          "source-ingredient-15"
         ],
-        "action": "air_fry",
-        "dependsOn": [],
-        "temperature": "204°C",
-        "duration": "4–5 мин с каждой стороны; морковь от 30 мин",
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-1",
+          "editorial-step-2",
+          "editorial-step-3"
+        ],
         "equipment": [
-          "air_fryer",
           "mixing_bowl"
-        ],
-        "donenessCue": "курица полностью готова"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -988,33 +1025,73 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма. Обжарьте говядину до румяности. В той же сковороде готовьте лук и перец 4–5 минут, затем капусту ещё 3–5 минут до мягкости. Верните говядину, смешайте с рисом и лаймом, разделите на 5 порций; сальса-верде хранится отдельно.",
+        "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4",
+          "source-ingredient-4"
+        ],
+        "action": "cook",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Обжарьте говядину до румяности.",
+        "ingredientIds": [
           "source-ingredient-5",
-          "source-ingredient-6",
-          "source-ingredient-7",
-          "source-ingredient-8",
           "source-ingredient-9",
           "source-ingredient-10",
           "source-ingredient-11",
           "source-ingredient-12",
           "source-ingredient-13",
-          "source-ingredient-14",
-          "source-ingredient-15",
-          "source-ingredient-16",
-          "source-ingredient-17"
+          "source-ingredient-15"
+        ],
+        "action": "brown",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "skillet"
+        ],
+        "donenessCue": "говядина румяная"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "В той же сковороде готовьте лук и перец 4–5 минут, затем капусту ещё 3–5 минут до мягкости.",
+        "ingredientIds": [
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9"
         ],
         "action": "saute",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "duration": "4–5 мин; затем 3–5 мин",
         "equipment": [
           "skillet"
         ],
-        "donenessCue": "овощи мягкие, говядина румяная"
+        "donenessCue": "овощи мягкие"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Верните говядину, смешайте с рисом и лаймом, разделите на 5 порций; сальса-верде хранится отдельно.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-5",
+          "source-ingredient-14",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "skillet"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1026,7 +1103,7 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Смешайте индейку с приправами и коричневым сахаром, обжарьте до готовности. Отдельно приготовьте перец, лук, хэшбрауны и шпинат, затем яйца. Соедините начинку с индейкой, дайте остыть, распределите по тортильям с сыром и сверните. Для заморозки заморозьте буррито в один слой, затем упакуйте; разогревайте во влажном бумажном полотенце 60–75 секунд до горячей середины.",
+        "text": "Смешайте индейку с приправами и коричневым сахаром, обжарьте до готовности.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
@@ -1038,7 +1115,18 @@
           "source-ingredient-8",
           "source-ingredient-9",
           "source-ingredient-10",
-          "source-ingredient-11",
+          "source-ingredient-11"
+        ],
+        "action": "fry",
+        "dependsOn": [],
+        "equipment": [
+          "skillet"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Отдельно приготовьте перец, лук, хэшбрауны и шпинат, затем яйца.",
+        "ingredientIds": [
           "source-ingredient-12",
           "source-ingredient-13",
           "source-ingredient-14",
@@ -1046,17 +1134,43 @@
           "source-ingredient-16",
           "source-ingredient-17",
           "source-ingredient-18",
-          "source-ingredient-19",
+          "source-ingredient-19"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "skillet"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Соедините начинку с индейкой, дайте остыть, распределите по тортильям с сыром и сверните.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-20",
           "source-ingredient-21"
         ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Для заморозки заморозьте буррито в один слой, затем упакуйте; разогревайте во влажном бумажном полотенце 60–75 секунд до горячей середины.",
+        "ingredientIds": [
+          "source-ingredient-21"
+        ],
         "action": "reheat",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-3"
+        ],
         "duration": "60–75 сек",
         "equipment": [
-          "skillet",
-          "microwave",
-          "baking_sheet"
+          "baking_sheet",
+          "microwave"
         ],
         "donenessCue": "середина горячая"
       }
@@ -1070,33 +1184,75 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Обжарьте говядину и отложите, сохранив жир. В этом жире готовьте лук, морковь, сельдерей и чеснок 8–10 минут до мягкости. Верните мясо, добавьте приправы, пасту, томатные продукты и жидкость; доведите до слабого кипения, накройте и готовьте 10–15 минут до мягкости пасты. Вмешайте сыры и шпинат до увядания.",
+        "text": "Обжарьте говядину и отложите, сохранив жир.",
         "ingredientIds": [
           "source-ingredient-1",
+          "source-ingredient-5"
+        ],
+        "action": "brown",
+        "dependsOn": [],
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "В этом жире готовьте лук, морковь, сельдерей и чеснок 8–10 минут до мягкости.",
+        "ingredientIds": [
           "source-ingredient-2",
           "source-ingredient-3",
           "source-ingredient-4",
-          "source-ingredient-5",
+          "source-ingredient-9"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "8–10 мин",
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Верните мясо, добавьте приправы, пасту, томатные продукты и жидкость; доведите до слабого кипения, накройте и готовьте 10–15 минут до мягкости пасты.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-6",
           "source-ingredient-7",
-          "source-ingredient-8",
-          "source-ingredient-9",
           "source-ingredient-10",
           "source-ingredient-11",
-          "source-ingredient-12",
-          "source-ingredient-13",
           "source-ingredient-14",
           "source-ingredient-15",
           "source-ingredient-16",
           "source-ingredient-17"
         ],
         "action": "simmer",
-        "dependsOn": [],
-        "duration": "8–10 мин; затем 10–15 мин",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "10–15 мин",
         "equipment": [
           "pot"
         ],
-        "donenessCue": "паста мягкая, шпинат увял"
+        "donenessCue": "паста мягкая"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Вмешайте сыры и шпинат до увядания.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-12",
+          "source-ingredient-13"
+        ],
+        "action": "stir",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "шпинат увял"
       }
     ],
     "proceduralStatus": "ready",
@@ -1108,33 +1264,74 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Обжарьте говядину и отложите, оставив жир в кастрюле. Приготовьте в нём лук, морковь, сельдерей и чеснок 8–10 минут. Верните мясо, добавьте картофель, пасту, томатные продукты и жидкость; после закипания накройте и готовьте 10–15 минут, пока картофель не станет мягким, а паста не приготовится. Вмешайте сыры и шпинат.",
+        "text": "Обжарьте говядину и отложите, оставив жир в кастрюле.",
         "ingredientIds": [
-          "source-ingredient-1",
+          "source-ingredient-1"
+        ],
+        "action": "brown",
+        "dependsOn": [],
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Приготовьте в нём лук, морковь, сельдерей и чеснок 8–10 минут.",
+        "ingredientIds": [
           "source-ingredient-2",
           "source-ingredient-3",
           "source-ingredient-4",
+          "source-ingredient-9"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "8–10 мин",
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Верните мясо, добавьте картофель, пасту, томатные продукты и жидкость; после закипания накройте и готовьте 10–15 минут, пока картофель не станет мягким, а паста не приготовится.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-5",
           "source-ingredient-6",
           "source-ingredient-7",
-          "source-ingredient-8",
-          "source-ingredient-9",
           "source-ingredient-10",
           "source-ingredient-11",
-          "source-ingredient-12",
-          "source-ingredient-13",
           "source-ingredient-14",
           "source-ingredient-15",
           "source-ingredient-16",
           "source-ingredient-17"
         ],
         "action": "simmer",
-        "dependsOn": [],
-        "duration": "8–10 мин; затем 10–15 мин",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "duration": "10–15 мин",
         "equipment": [
           "pot"
         ],
         "donenessCue": "картофель легко прокалывается вилкой, паста мягкая"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Вмешайте сыры и шпинат.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-12",
+          "source-ingredient-13"
+        ],
+        "action": "stir",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "pot"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1146,7 +1343,22 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте духовку до 191°C. Натрите морковь и цедру, подготовьте очищенные дольки мандарина. Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, апельсиновый сок, масло, морковь и мандарины. Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с ванилью и сахаром и выпекайте 35–45 минут. Разделите на 6 порций.",
+        "text": "Разогрейте духовку до 191°C. Натрите морковь и цедру, подготовьте очищенные дольки мандарина.",
+        "ingredientIds": [
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "temperature": "191°C",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, апельсиновый сок, масло, морковь и мандарины.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
@@ -1157,13 +1369,26 @@
           "source-ingredient-7",
           "source-ingredient-8",
           "source-ingredient-9",
-          "source-ingredient-10",
+          "source-ingredient-10"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с ванилью и сахаром и выпекайте 35–45 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-11",
           "source-ingredient-12",
           "source-ingredient-13"
         ],
         "action": "bake",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "temperature": "191°C",
         "duration": "35–45 мин",
         "equipment": [
@@ -1171,6 +1396,17 @@
           "baking_dish"
         ],
         "donenessCue": "овсянка схватилась"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Разделите на 6 порций.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-3"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1281,7 +1517,7 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте духовку до 204°C. Смешайте куриный фарш с овсянкой, яйцами и приправами. Сформуйте фрикадельки ложкой и разложите на застеленных противнях. Запекайте 17–20 минут, остудите и при необходимости заморозьте в один слой перед упаковкой. Для разогрева готовьте в аэрогриле при 204°C около 5 минут.",
+        "text": "Разогрейте духовку до 204°C. Смешайте куриный фарш с овсянкой, яйцами и приправами.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
@@ -1289,19 +1525,63 @@
           "source-ingredient-4",
           "source-ingredient-5",
           "source-ingredient-6",
-          "source-ingredient-7",
-          "source-ingredient-8"
+          "source-ingredient-7"
         ],
-        "action": "bake",
+        "action": "mix",
         "dependsOn": [],
         "temperature": "204°C",
-        "duration": "17–20 мин; разогрев около 5 мин",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Сформуйте фрикадельки ложкой и разложите на застеленных противнях.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-8"
+        ],
+        "action": "form",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "baking_sheet"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Запекайте 17–20 минут, остудите и при необходимости заморозьте в один слой перед упаковкой.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "bake",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "temperature": "204°C",
+        "duration": "17–20 мин",
         "equipment": [
           "oven",
-          "baking_sheet",
-          "air_fryer"
+          "baking_sheet"
         ],
         "donenessCue": "фрикадельки полностью готовы"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Для разогрева готовьте в аэрогриле при 204°C около 5 минут.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "reheat",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "temperature": "204°C",
+        "duration": "разогрев около 5 мин",
+        "equipment": [
+          "air_fryer"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1313,7 +1593,45 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Приготовьте рис. Для сальсы в аэрогриле при 204°C запеките лук, халапеньо, томаты и чеснок 8–10 минут, переворачивая; пробейте с кинзой и соком лайма. Обжарьте овощи, затем куриный фарш; когда он почти готов, добавьте приправы. Разделите рис, фарш и овощи на 5 порций, сальсу храните отдельно.",
+        "text": "Приготовьте рис.",
+        "ingredientIds": [
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15",
+          "source-ingredient-16",
+          "source-ingredient-17"
+        ],
+        "action": "cook",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Для сальсы в аэрогриле при 204°C запеките лук, халапеньо, томаты и чеснок 8–10 минут, переворачивая; пробейте с кинзой и соком лайма.",
+        "ingredientIds": [
+          "source-ingredient-18",
+          "source-ingredient-19",
+          "source-ingredient-20",
+          "source-ingredient-21",
+          "source-ingredient-22",
+          "source-ingredient-23",
+          "source-ingredient-24",
+          "source-ingredient-25"
+        ],
+        "action": "air_fry",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "204°C",
+        "duration": "8–10 мин",
+        "equipment": [
+          "air_fryer",
+          "blender"
+        ],
+        "donenessCue": "томаты и лук мягкие и подрумянились"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Обжарьте овощи, затем куриный фарш; когда он почти готов, добавьте приправы.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
@@ -1326,31 +1644,29 @@
           "source-ingredient-9",
           "source-ingredient-10",
           "source-ingredient-11",
-          "source-ingredient-12",
-          "source-ingredient-13",
-          "source-ingredient-14",
-          "source-ingredient-15",
-          "source-ingredient-16",
-          "source-ingredient-17",
-          "source-ingredient-18",
-          "source-ingredient-19",
-          "source-ingredient-20",
-          "source-ingredient-21",
-          "source-ingredient-22",
-          "source-ingredient-23",
-          "source-ingredient-24",
-          "source-ingredient-25"
+          "source-ingredient-12"
         ],
-        "action": "air_fry",
-        "dependsOn": [],
-        "temperature": "204°C",
-        "duration": "8–10 мин",
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "equipment": [
-          "air_fryer",
-          "skillet",
-          "blender"
+          "skillet"
         ],
-        "donenessCue": "томаты и лук мягкие и подрумянились, фарш готов"
+        "donenessCue": "фарш готов"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Разделите рис, фарш и овощи на 5 порций, сальсу храните отдельно.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-9",
+          "source-ingredient-13"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-3"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1362,31 +1678,73 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Для джема уварите замороженную клубнику с подсластителем и пектином 10–15 минут при слабом кипении, затем охладите. Разогрейте духовку до 177°C, смешайте овсянку, протеин и разрыхлитель с белками, молоком, сиропом и частью джема. Переложите в форму 23×33 см, распределите джем ножом и выпекайте 35–40 минут. Растопите арахисовую пасту и нанесите сверху; разделите на 6 порций.",
+        "text": "Для джема уварите замороженную клубнику с подсластителем и пектином 10–15 минут при слабом кипении, затем охладите.",
+        "ingredientIds": [
+          "source-ingredient-8",
+          "source-ingredient-9",
+          "source-ingredient-10"
+        ],
+        "action": "simmer",
+        "dependsOn": [],
+        "duration": "10–15 мин",
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте духовку до 177°C, смешайте овсянку, протеин и разрыхлитель с белками, молоком, сиропом и частью джема.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4",
           "source-ingredient-5",
           "source-ingredient-6",
           "source-ingredient-7",
-          "source-ingredient-8",
-          "source-ingredient-9",
-          "source-ingredient-10",
-          "source-ingredient-11"
+          "source-ingredient-8"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "177°C",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Переложите в форму 23×33 см, распределите джем ножом и выпекайте 35–40 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-8"
         ],
         "action": "bake",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "temperature": "177°C",
-        "duration": "джем 10–15 мин; овсянка 35–40 мин",
+        "duration": "35–40 мин",
         "equipment": [
-          "pot",
           "oven",
-          "baking_dish",
-          "microwave"
+          "baking_dish"
         ],
         "donenessCue": "овсянка пропеклась"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Растопите арахисовую пасту и нанесите сверху; разделите на 6 порций.",
+        "ingredientIds": [
+          "source-ingredient-4",
+          "source-ingredient-11"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "microwave"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1398,33 +1756,72 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Приготовьте рис. Смешайте половинки брюссельской капусты с маслом и готовьте в аэрогриле при 204°C 5–8 минут до мягкости и румяности. Обжарьте лук и перец, затем говядину. Смешайте мёд, острый соус, уксус и крахмал; когда говядина почти готова, добавьте капусту и соус, прогрейте до загустения. Разделите на 5 порций.",
+        "text": "Приготовьте рис.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "cook",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте половинки брюссельской капусты с маслом и готовьте в аэрогриле при 204°C 5–8 минут до мягкости и румяности.",
+        "ingredientIds": [
+          "source-ingredient-3",
+          "source-ingredient-10"
+        ],
+        "action": "air_fry",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "204°C",
+        "duration": "5–8 мин",
+        "equipment": [
+          "air_fryer"
+        ],
+        "donenessCue": "капуста мягкая и румяная"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Обжарьте лук и перец, затем говядину.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7"
+        ],
+        "action": "saute",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "skillet"
+        ]
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Смешайте мёд, острый соус, уксус и крахмал; когда говядина почти готова, добавьте капусту и соус, прогрейте до загустения. Разделите на 5 порций.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4",
-          "source-ingredient-5",
-          "source-ingredient-6",
-          "source-ingredient-7",
           "source-ingredient-8",
           "source-ingredient-9",
-          "source-ingredient-10",
           "source-ingredient-11",
           "source-ingredient-12",
           "source-ingredient-13",
           "source-ingredient-14",
           "source-ingredient-15"
         ],
-        "action": "air_fry",
-        "dependsOn": [],
-        "temperature": "204°C",
-        "duration": "5–8 мин",
+        "action": "combine",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
         "equipment": [
-          "air_fryer",
           "skillet"
         ],
-        "donenessCue": "капуста мягкая и румяная, соус загустел"
+        "donenessCue": "соус загустел"
       }
     ],
     "proceduralStatus": "ready",
@@ -1436,19 +1833,8 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Сделайте соус: растопите масло, вмешайте муку, постепенно влейте бульон и загустите; остудите, затем на среднем огне вмешайте молоко и йогурт. Сварите курицу 15–20 минут и разберите на волокна. Картофель готовьте в аэрогриле при 204°C 20–25 минут, встряхивая; овощи обжарьте. Смешайте курицу, овощи и соус в форме, посыпьте сыром и подрумяньте под грилем 5–10 минут.",
+        "text": "Сделайте соус: растопите масло, вмешайте муку, постепенно влейте бульон и загустите; остудите, затем на среднем огне вмешайте молоко и йогурт.",
         "ingredientIds": [
-          "source-ingredient-1",
-          "source-ingredient-2",
-          "source-ingredient-3",
-          "source-ingredient-4",
-          "source-ingredient-5",
-          "source-ingredient-6",
-          "source-ingredient-7",
-          "source-ingredient-8",
-          "source-ingredient-9",
-          "source-ingredient-10",
-          "source-ingredient-11",
           "source-ingredient-12",
           "source-ingredient-13",
           "source-ingredient-14",
@@ -1457,23 +1843,81 @@
           "source-ingredient-17",
           "source-ingredient-18",
           "source-ingredient-19",
-          "source-ingredient-20",
+          "source-ingredient-20"
+        ],
+        "action": "make_sauce",
+        "dependsOn": [],
+        "equipment": [
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Сварите курицу 15–20 минут и разберите на волокна.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2"
+        ],
+        "action": "boil",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "15–20 мин",
+        "equipment": [
+          "pot"
+        ],
+        "donenessCue": "курица готова"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Картофель готовьте в аэрогриле при 204°C 20–25 минут, встряхивая; овощи обжарьте.",
+        "ingredientIds": [
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-8",
+          "source-ingredient-9",
           "source-ingredient-21",
           "source-ingredient-22",
           "source-ingredient-23"
         ],
         "action": "air_fry",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "temperature": "204°C",
-        "duration": "курица 15–20 мин; картофель 20–25 мин; гриль 5–10 мин",
+        "duration": "20–25 мин",
         "equipment": [
-          "pot",
           "air_fryer",
-          "skillet",
+          "skillet"
+        ],
+        "donenessCue": "картофель румяный"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Смешайте курицу, овощи и соус в форме, посыпьте сыром и подрумяньте под грилем 5–10 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-3",
+          "source-ingredient-4",
+          "source-ingredient-5",
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "grill",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "duration": "5–10 мин",
+        "equipment": [
           "oven",
           "baking_dish"
         ],
-        "donenessCue": "курица готова, картофель и сыр румяные"
+        "donenessCue": "сыр румяный"
       }
     ],
     "proceduralStatus": "ready",

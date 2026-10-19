@@ -4894,7 +4894,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Смешайте индейку с приправами и коричневым сахаром, обжарьте до готовности. Отдельно приготовьте перец, лук, хэшбрауны и шпинат, затем яйца. Соедините начинку с индейкой, дайте остыть, распределите по тортильям с сыром и сверните. Для заморозки заморозьте буррито в один слой, затем упакуйте; разогревайте во влажном бумажном полотенце 60–75 секунд до горячей середины.",
+            "text": "Смешайте индейку с приправами и коричневым сахаром, обжарьте до готовности.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -4906,7 +4906,18 @@
               "source-ingredient-8",
               "source-ingredient-9",
               "source-ingredient-10",
-              "source-ingredient-11",
+              "source-ingredient-11"
+            ],
+            "action": "fry",
+            "dependsOn": [],
+            "equipment": [
+              "skillet"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Отдельно приготовьте перец, лук, хэшбрауны и шпинат, затем яйца.",
+            "ingredientIds": [
               "source-ingredient-12",
               "source-ingredient-13",
               "source-ingredient-14",
@@ -4914,17 +4925,43 @@
               "source-ingredient-16",
               "source-ingredient-17",
               "source-ingredient-18",
-              "source-ingredient-19",
+              "source-ingredient-19"
+            ],
+            "action": "saute",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "equipment": [
+              "skillet"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Соедините начинку с индейкой, дайте остыть, распределите по тортильям с сыром и сверните.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-20",
               "source-ingredient-21"
             ],
+            "action": "assemble",
+            "dependsOn": [
+              "editorial-step-2"
+            ]
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Для заморозки заморозьте буррито в один слой, затем упакуйте; разогревайте во влажном бумажном полотенце 60–75 секунд до горячей середины.",
+            "ingredientIds": [
+              "source-ingredient-21"
+            ],
             "action": "reheat",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-3"
+            ],
             "duration": "60–75 сек",
             "equipment": [
-              "skillet",
-              "microwave",
-              "baking_sheet"
+              "baking_sheet",
+              "microwave"
             ],
             "donenessCue": "середина горячая"
           }
@@ -4954,7 +4991,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Смешайте индейку с приправами и коричневым сахаром, обжарьте до готовности. Отдельно приготовьте перец, лук, хэшбрауны и шпинат, затем яйца. Соедините начинку с индейкой, дайте остыть, распределите по тортильям с сыром и сверните. Для заморозки заморозьте буррито в один слой, затем упакуйте; разогревайте во влажном бумажном полотенце 60–75 секунд до горячей середины.",
+            "text": "Смешайте индейку с приправами и коричневым сахаром, обжарьте до готовности.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -4966,7 +5003,18 @@
               "source-ingredient-8",
               "source-ingredient-9",
               "source-ingredient-10",
-              "source-ingredient-11",
+              "source-ingredient-11"
+            ],
+            "action": "fry",
+            "dependsOn": [],
+            "equipment": [
+              "skillet"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Отдельно приготовьте перец, лук, хэшбрауны и шпинат, затем яйца.",
+            "ingredientIds": [
               "source-ingredient-12",
               "source-ingredient-13",
               "source-ingredient-14",
@@ -4974,17 +5022,43 @@
               "source-ingredient-16",
               "source-ingredient-17",
               "source-ingredient-18",
-              "source-ingredient-19",
+              "source-ingredient-19"
+            ],
+            "action": "saute",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "equipment": [
+              "skillet"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Соедините начинку с индейкой, дайте остыть, распределите по тортильям с сыром и сверните.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-20",
               "source-ingredient-21"
             ],
+            "action": "assemble",
+            "dependsOn": [
+              "editorial-step-2"
+            ]
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Для заморозки заморозьте буррито в один слой, затем упакуйте; разогревайте во влажном бумажном полотенце 60–75 секунд до горячей середины.",
+            "ingredientIds": [
+              "source-ingredient-21"
+            ],
             "action": "reheat",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-3"
+            ],
             "duration": "60–75 сек",
             "equipment": [
-              "skillet",
-              "microwave",
-              "baking_sheet"
+              "baking_sheet",
+              "microwave"
             ],
             "donenessCue": "середина горячая"
           }
@@ -5231,7 +5305,22 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Разогрейте духовку до 191°C. Натрите морковь и цедру, подготовьте очищенные дольки мандарина. Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, апельсиновый сок, масло, морковь и мандарины. Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с ванилью и сахаром и выпекайте 35–45 минут. Разделите на 6 порций.",
+            "text": "Разогрейте духовку до 191°C. Натрите морковь и цедру, подготовьте очищенные дольки мандарина.",
+            "ingredientIds": [
+              "source-ingredient-4",
+              "source-ingredient-5",
+              "source-ingredient-6"
+            ],
+            "action": "prepare",
+            "dependsOn": [],
+            "temperature": "191°C",
+            "equipment": [
+              "oven"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, апельсиновый сок, масло, морковь и мандарины.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -5242,13 +5331,26 @@
               "source-ingredient-7",
               "source-ingredient-8",
               "source-ingredient-9",
-              "source-ingredient-10",
+              "source-ingredient-10"
+            ],
+            "action": "mix",
+            "dependsOn": [
+              "editorial-step-1"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с ванилью и сахаром и выпекайте 35–45 минут.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13"
             ],
             "action": "bake",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-2"
+            ],
             "temperature": "191°C",
             "duration": "35–45 мин",
             "equipment": [
@@ -5256,6 +5358,17 @@
               "baking_dish"
             ],
             "donenessCue": "овсянка схватилась"
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Разделите на 6 порций.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "divide",
+            "dependsOn": [
+              "editorial-step-3"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -5283,7 +5396,22 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Разогрейте духовку до 191°C. Натрите морковь и цедру, подготовьте очищенные дольки мандарина. Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, апельсиновый сок, масло, морковь и мандарины. Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с ванилью и сахаром и выпекайте 35–45 минут. Разделите на 6 порций.",
+            "text": "Разогрейте духовку до 191°C. Натрите морковь и цедру, подготовьте очищенные дольки мандарина.",
+            "ingredientIds": [
+              "source-ingredient-4",
+              "source-ingredient-5",
+              "source-ingredient-6"
+            ],
+            "action": "prepare",
+            "dependsOn": [],
+            "temperature": "191°C",
+            "equipment": [
+              "oven"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, апельсиновый сок, масло, морковь и мандарины.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -5294,13 +5422,26 @@
               "source-ingredient-7",
               "source-ingredient-8",
               "source-ingredient-9",
-              "source-ingredient-10",
+              "source-ingredient-10"
+            ],
+            "action": "mix",
+            "dependsOn": [
+              "editorial-step-1"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с ванилью и сахаром и выпекайте 35–45 минут.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13"
             ],
             "action": "bake",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-2"
+            ],
             "temperature": "191°C",
             "duration": "35–45 мин",
             "equipment": [
@@ -5308,6 +5449,17 @@
               "baking_dish"
             ],
             "donenessCue": "овсянка схватилась"
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Разделите на 6 порций.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "divide",
+            "dependsOn": [
+              "editorial-step-3"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -5591,31 +5743,73 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Для джема уварите замороженную клубнику с подсластителем и пектином 10–15 минут при слабом кипении, затем охладите. Разогрейте духовку до 177°C, смешайте овсянку, протеин и разрыхлитель с белками, молоком, сиропом и частью джема. Переложите в форму 23×33 см, распределите джем ножом и выпекайте 35–40 минут. Растопите арахисовую пасту и нанесите сверху; разделите на 6 порций.",
+            "text": "Для джема уварите замороженную клубнику с подсластителем и пектином 10–15 минут при слабом кипении, затем охладите.",
+            "ingredientIds": [
+              "source-ingredient-8",
+              "source-ingredient-9",
+              "source-ingredient-10"
+            ],
+            "action": "simmer",
+            "dependsOn": [],
+            "duration": "10–15 мин",
+            "equipment": [
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Разогрейте духовку до 177°C, смешайте овсянку, протеин и разрыхлитель с белками, молоком, сиропом и частью джема.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
               "source-ingredient-3",
-              "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
               "source-ingredient-7",
-              "source-ingredient-8",
-              "source-ingredient-9",
-              "source-ingredient-10",
-              "source-ingredient-11"
+              "source-ingredient-8"
+            ],
+            "action": "mix",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "temperature": "177°C",
+            "equipment": [
+              "oven"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Переложите в форму 23×33 см, распределите джем ножом и выпекайте 35–40 минут.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-8"
             ],
             "action": "bake",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-2"
+            ],
             "temperature": "177°C",
-            "duration": "джем 10–15 мин; овсянка 35–40 мин",
+            "duration": "35–40 мин",
             "equipment": [
-              "pot",
               "oven",
-              "baking_dish",
-              "microwave"
+              "baking_dish"
             ],
             "donenessCue": "овсянка пропеклась"
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Растопите арахисовую пасту и нанесите сверху; разделите на 6 порций.",
+            "ingredientIds": [
+              "source-ingredient-4",
+              "source-ingredient-11"
+            ],
+            "action": "assemble",
+            "dependsOn": [
+              "editorial-step-3"
+            ],
+            "equipment": [
+              "microwave"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -5643,31 +5837,73 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Для джема уварите замороженную клубнику с подсластителем и пектином 10–15 минут при слабом кипении, затем охладите. Разогрейте духовку до 177°C, смешайте овсянку, протеин и разрыхлитель с белками, молоком, сиропом и частью джема. Переложите в форму 23×33 см, распределите джем ножом и выпекайте 35–40 минут. Растопите арахисовую пасту и нанесите сверху; разделите на 6 порций.",
+            "text": "Для джема уварите замороженную клубнику с подсластителем и пектином 10–15 минут при слабом кипении, затем охладите.",
+            "ingredientIds": [
+              "source-ingredient-8",
+              "source-ingredient-9",
+              "source-ingredient-10"
+            ],
+            "action": "simmer",
+            "dependsOn": [],
+            "duration": "10–15 мин",
+            "equipment": [
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Разогрейте духовку до 177°C, смешайте овсянку, протеин и разрыхлитель с белками, молоком, сиропом и частью джема.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
               "source-ingredient-3",
-              "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
               "source-ingredient-7",
-              "source-ingredient-8",
-              "source-ingredient-9",
-              "source-ingredient-10",
-              "source-ingredient-11"
+              "source-ingredient-8"
+            ],
+            "action": "mix",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "temperature": "177°C",
+            "equipment": [
+              "oven"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Переложите в форму 23×33 см, распределите джем ножом и выпекайте 35–40 минут.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-8"
             ],
             "action": "bake",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-2"
+            ],
             "temperature": "177°C",
-            "duration": "джем 10–15 мин; овсянка 35–40 мин",
+            "duration": "35–40 мин",
             "equipment": [
-              "pot",
               "oven",
-              "baking_dish",
-              "microwave"
+              "baking_dish"
             ],
             "donenessCue": "овсянка пропеклась"
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Растопите арахисовую пасту и нанесите сверху; разделите на 6 порций.",
+            "ingredientIds": [
+              "source-ingredient-4",
+              "source-ingredient-11"
+            ],
+            "action": "assemble",
+            "dependsOn": [
+              "editorial-step-3"
+            ],
+            "equipment": [
+              "microwave"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -27490,33 +27726,73 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма. Обжарьте говядину до румяности. В той же сковороде готовьте лук и перец 4–5 минут, затем капусту ещё 3–5 минут до мягкости. Верните говядину, смешайте с рисом и лаймом, разделите на 5 порций; сальса-верде хранится отдельно.",
+            "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
               "source-ingredient-3",
-              "source-ingredient-4",
+              "source-ingredient-4"
+            ],
+            "action": "cook",
+            "dependsOn": []
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Обжарьте говядину до румяности.",
+            "ingredientIds": [
               "source-ingredient-5",
-              "source-ingredient-6",
-              "source-ingredient-7",
-              "source-ingredient-8",
               "source-ingredient-9",
               "source-ingredient-10",
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13",
-              "source-ingredient-14",
-              "source-ingredient-15",
-              "source-ingredient-16",
-              "source-ingredient-17"
+              "source-ingredient-15"
+            ],
+            "action": "brown",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "equipment": [
+              "skillet"
+            ],
+            "donenessCue": "говядина румяная"
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "В той же сковороде готовьте лук и перец 4–5 минут, затем капусту ещё 3–5 минут до мягкости.",
+            "ingredientIds": [
+              "source-ingredient-6",
+              "source-ingredient-7",
+              "source-ingredient-8",
+              "source-ingredient-9"
             ],
             "action": "saute",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-2"
+            ],
             "duration": "4–5 мин; затем 3–5 мин",
             "equipment": [
               "skillet"
             ],
-            "donenessCue": "овощи мягкие, говядина румяная"
+            "donenessCue": "овощи мягкие"
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Верните говядину, смешайте с рисом и лаймом, разделите на 5 порций; сальса-верде хранится отдельно.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-5",
+              "source-ingredient-14",
+              "source-ingredient-16",
+              "source-ingredient-17"
+            ],
+            "action": "divide",
+            "dependsOn": [
+              "editorial-step-3"
+            ],
+            "equipment": [
+              "skillet"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -27544,33 +27820,73 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма. Обжарьте говядину до румяности. В той же сковороде готовьте лук и перец 4–5 минут, затем капусту ещё 3–5 минут до мягкости. Верните говядину, смешайте с рисом и лаймом, разделите на 5 порций; сальса-верде хранится отдельно.",
+            "text": "Приготовьте рис и вмешайте в него кинзу и сок лайма.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
               "source-ingredient-3",
-              "source-ingredient-4",
+              "source-ingredient-4"
+            ],
+            "action": "cook",
+            "dependsOn": []
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Обжарьте говядину до румяности.",
+            "ingredientIds": [
               "source-ingredient-5",
-              "source-ingredient-6",
-              "source-ingredient-7",
-              "source-ingredient-8",
               "source-ingredient-9",
               "source-ingredient-10",
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13",
-              "source-ingredient-14",
-              "source-ingredient-15",
-              "source-ingredient-16",
-              "source-ingredient-17"
+              "source-ingredient-15"
+            ],
+            "action": "brown",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "equipment": [
+              "skillet"
+            ],
+            "donenessCue": "говядина румяная"
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "В той же сковороде готовьте лук и перец 4–5 минут, затем капусту ещё 3–5 минут до мягкости.",
+            "ingredientIds": [
+              "source-ingredient-6",
+              "source-ingredient-7",
+              "source-ingredient-8",
+              "source-ingredient-9"
             ],
             "action": "saute",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-2"
+            ],
             "duration": "4–5 мин; затем 3–5 мин",
             "equipment": [
               "skillet"
             ],
-            "donenessCue": "овощи мягкие, говядина румяная"
+            "donenessCue": "овощи мягкие"
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Верните говядину, смешайте с рисом и лаймом, разделите на 5 порций; сальса-верде хранится отдельно.",
+            "ingredientIds": [
+              "source-ingredient-1",
+              "source-ingredient-5",
+              "source-ingredient-14",
+              "source-ingredient-16",
+              "source-ingredient-17"
+            ],
+            "action": "divide",
+            "dependsOn": [
+              "editorial-step-3"
+            ],
+            "equipment": [
+              "skillet"
+            ]
           }
         ],
         "proceduralStatus": "ready",
