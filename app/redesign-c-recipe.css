@@ -626,3 +626,32 @@
   white-space: nowrap;
   font-size: var(--text-link);
 }
+
+/* ============================================================
+   Пакет «photos»: фон карточки рецепта из предразмытой миниатюры
+   ============================================================ */
+
+/* Слой 1 без runtime blur: миниатюра 48 px (public/recipe-images/blur,
+   scripts/build-recipe-blur-thumbs.mjs), растянутая на экран, уже размыта.
+   Saturate остаётся из кита (C-KIT §4) — это цветовая матрица, не размытие.
+   Под миниатюрой прежний /bg/recipe.jpg: он виден, если миниатюры нет. */
+.recipe-detail.has-hero-photo .recipe-backdrop {
+  background: var(--bg-photo) center / cover no-repeat, var(--bg-base);
+}
+.recipe-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--recipe-thumb, none) center / cover no-repeat;
+  image-rendering: auto;
+  filter: saturate(1.5);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .recipe-detail.has-hero-photo .recipe-backdrop {
+    background: #f3d9c6;
+  }
+  .recipe-backdrop::before {
+    display: none;
+  }
+}

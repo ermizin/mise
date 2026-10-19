@@ -811,3 +811,55 @@
     height: 48px;
   }
 }
+
+/* ---------- Пакет «photos»: фон «Недели» из блюда дня ----------
+   Предразмытая миниатюра первого блюда с фото у выбранного дня лежит над
+   общей подложкой .app-bg (/bg/week.jpg) и под панелью вкладок. Слой — та же
+   формула, что --app-bg: мятное пятно, тёплая заливка, фото. Новый слой
+   проявляется поверх прежнего, прежний гаснет мгновенно после этого — фон не
+   мигает и не просвечивает. Без фото у дня слои плавно гаснут до /bg/week.jpg. */
+.week-photo-backdrop {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  animation: mise-week-photo-in 420ms var(--motion-settled) both;
+}
+.week-photo-layer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background:
+    radial-gradient(60% 42% at 86% -4%, rgba(216, 238, 226, 0.95), transparent 68%),
+    var(--app-wash),
+    var(--week-thumb) center / cover no-repeat;
+  image-rendering: auto;
+  transition: opacity 0s linear 420ms;
+}
+.week-photo-layer.is-active {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 420ms var(--motion-settled);
+}
+.week-photo-backdrop.is-empty .week-photo-layer {
+  transition: opacity 420ms var(--motion-settled);
+}
+@keyframes mise-week-photo-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .week-photo-backdrop,
+  .week-photo-layer,
+  .week-photo-layer.is-active,
+  .week-photo-backdrop.is-empty .week-photo-layer {
+    animation: none;
+    transition: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .week-photo-backdrop {
+    display: none;
+  }
+}

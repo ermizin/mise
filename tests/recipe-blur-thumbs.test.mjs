@@ -89,3 +89,38 @@ test("the blur manifest has no orphaned thumbnails", async () => {
     await stat(new URL(`public${blurThumbPath(`/recipe-images/${name}`)}`, root));
   }
 });
+
+test("the recipe and week backgrounds use the thumbnail instead of a runtime blur", async () => {
+  const page = await readFile(new URL("app/page.tsx", root), "utf8");
+  const recipeCss = await readFile(new URL("app/redesign-c-recipe.css", root), "utf8");
+  const weekCss = await readFile(new URL("app/redesign-c-week.css", root), "utf8");
+
+  // Миниатюра выводится из пути локального фото так же, как в скрипте.
+  assert.match(page, /return match \? `\/recipe-images\/blur\/\$\{match\[1\]\}\.jpg` : null;/);
+  // Фон карточки рецепта — CSS-слой с миниатюрой, без <img> под filter: blur().
+  const backdrop = page.slice(page.indexOf('className="recipe-backdrop"'), page.indexOf('<div className="recipe-hero-photo">'));
+  assert.match(backdrop, /"--recipe-thumb": `url\("\$\{heroThumb\}"\)`/);
+  assert.doesNotMatch(backdrop, /<img/);
+  const photosRecipe = recipeCss.slice(recipeCss.indexOf("Пакет «photos»"));
+  assert.match(photosRecipe, /\.recipe-backdrop::before \{[^}]*var\(--recipe-thumb, none\) center \/ cover no-repeat/);
+  assert.doesNotMatch(photosRecipe, /blur\(/);
+  // Без миниатюры остаётся прежний /bg/recipe.jpg.
+  assert.match(recipeCss, /--bg-photo: url\("\/bg\/recipe\.jpg"\)/);
+  assert.match(photosRecipe, /\.recipe-detail\.has-hero-photo \.recipe-backdrop \{\s*background: var\(--bg-photo\) center \/ cover no-repeat, var\(--bg-base\);/);
+
+  // «Неделя»: слои миниатюр сменяются прозрачностью, без размытия.
+  const photosWeek = weekCss.slice(weekCss.indexOf("Пакет «photos»"));
+  assert.match(photosWeek, /\.week-photo-layer\.is-active \{[^}]*opacity: 1;[^}]*transition: opacity/);
+  assert.doesNotMatch(photosWeek, /blur\(/);
+  assert.match(page, /\{tab === "week" && <WeekPhotoBackdrop backdrop=\{weekBackdrop\} \/>\}/);
+});
+
+test("showcases pick photographed dishes deterministically", async () => {
+  const page = await readFile(new URL("app/page.tsx", root), "utf8");
+  const showcase = page.slice(page.indexOf("function deckDishes("), page.indexOf("function currentBatchLabel("));
+  assert.doesNotMatch(showcase, /Math\.random/);
+  assert.match(showcase, /function onboardingPhotoRecipes\(count: number\) \{\s*const withPhoto = showcaseOrder\(newMenuRecipes\)\.filter\(hasLocalPhoto\);/);
+  assert.match(showcase, /ownShowcase\.find\(\(item\) => fits\(item\) && hasLocalPhoto\(item\)\) \?\?\s*catalogShowcase\.find\(\(item\) => fits\(item\) && hasLocalPhoto\(item\)\)/);
+  // Каталог: «сначала те, где меньше докупать» остаётся главным ключом, фото — только при равенстве.
+  assert.match(page, /return diff \|\| photoDifference \|\| timeDifference;/);
+});
