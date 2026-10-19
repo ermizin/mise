@@ -81,7 +81,8 @@ test("committed icon assets regenerate byte-for-byte on macOS", { skip: process.
       env: { ...process.env, CLANG_MODULE_CACHE_PATH: path.join(tmpdir(), "mise-swift-module-cache") },
       stdio: "pipe",
     });
-    for (const [name] of expected) {
+    // og-image.png is rendered from assets/og-image by scripts/render-og-image.mjs (see og-image-assets.test.mjs).
+    for (const [name] of expected.filter(([name]) => name !== "og-image.png")) {
       const [committed, regenerated] = await Promise.all([
         readFile(new URL(`../public/${name}`, import.meta.url)),
         readFile(path.join(directory, name)),

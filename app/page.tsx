@@ -9625,7 +9625,15 @@ function WeekScreen({
         aria-busy="true"
         aria-label="Загружаем Mise"
       >
-        <span className="app-boot-mark" aria-hidden>M</span>
+        <span className="app-boot-mark" aria-hidden>
+          {/* Знак иконки приложения (scripts/generate-app-icons.swift): сплэш совпадает с иконкой на экране «Домой». */}
+          <svg viewBox="0 0 240 240" focusable="false">
+            <rect x="38" y="62" width="164" height="116" rx="26" fill="#FFF1E6" />
+            <rect x="48" y="72" width="75" height="96" rx="17" fill="#C9400D" />
+            <rect x="132" y="72" width="60" height="96" rx="17" fill="#FFD2B8" />
+            <rect x="62" y="46" width="116" height="9" rx="5" fill="#FFF1E6" fillOpacity={0.2} />
+          </svg>
+        </span>
         <h1>Mise</h1>
         <p>Готовим приложение…</p>
         <span className="app-boot-progress" aria-hidden>
