@@ -2966,123 +2966,128 @@ type RawEdibleFatOverride = {
  * source cards do not have enough usage metadata to infer that an oil is used
  * once for the whole cook: it may be a sauce, batter, topping or marinade.
  * Those fats therefore remain edible and retain their source-serving basis.
+ *
+ * `instructionId` is the editorial step (`editorial-step-N`) where the fat goes
+ * into the sauce, mash or dough; tests/recipe-fat-scaling.test.mjs checks that
+ * the step exists and uses that source row. The ids were moved to the new
+ * numbering after the editorial step split of 2026-10-19.
  */
-const rawEdibleFatOverrides: Readonly<
+export const rawEdibleFatOverrides: Readonly<
   Record<string, Readonly<Record<string, RawEdibleFatOverride>>>
 > = Object.freeze({
   "tmpm-28584": {
-    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is the base of the béchamel that is mixed into the rice." },
+    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is the base of the béchamel that is mixed into the rice." },
   },
   "tmpm-28504": {
-    "source-ingredient-3": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is stirred into the finished rice." },
+    "source-ingredient-3": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is stirred into the finished rice." },
   },
   "tmpm-26872": {
-    "source-ingredient-13": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mashed into the potato garnish." },
+    "source-ingredient-13": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is mashed into the potato garnish." },
   },
   "tmpm-26660": {
-    "source-ingredient-11": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-3", evidence: "Butter is stirred into the cooked rice." },
+    "source-ingredient-11": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-4", evidence: "Butter is stirred into the cooked rice." },
   },
   "tmpm-26441": {
-    "source-ingredient-7": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Peanut butter is mixed into the finished sauce." },
-    "source-ingredient-9": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1-part-2", evidence: "Sesame oil is mixed into the finished sauce." },
+    "source-ingredient-7": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is mixed into the finished sauce." },
+    "source-ingredient-9": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2", evidence: "Sesame oil is mixed into the finished sauce." },
   },
   "tmpm-25290": {
-    "source-ingredient-9": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Melted butter is mixed into the oat-bake batter." },
-    "source-ingredient-12": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2-part-2", evidence: "Peanut butter is the oat-bake topping." },
+    "source-ingredient-9": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Melted butter is mixed into the oat-bake batter." },
+    "source-ingredient-12": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is the oat-bake topping." },
   },
   "tmpm-24949": {
-    "source-ingredient-2": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Peanut butter is mixed into the sauce." },
-    "source-ingredient-7": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2-part-1", evidence: "Sesame oil is mixed into the sauce." },
+    "source-ingredient-2": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is mixed into the sauce." },
+    "source-ingredient-7": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2", evidence: "Sesame oil is mixed into the sauce." },
   },
   "tmpm-23797": {
-    "source-ingredient-20": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is blended into the curry sauce." },
-    "source-ingredient-21": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Peanut butter is blended into the curry sauce." },
+    "source-ingredient-20": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is blended into the curry sauce." },
+    "source-ingredient-21": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is blended into the curry sauce." },
   },
   "tmpm-23545": {
-    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Melted butter is mixed into the oat-bake batter." },
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Melted butter is mixed into the oat-bake batter." },
   },
   "tmpm-23462": {
-    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mixed into the oat-bake batter." },
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is mixed into the oat-bake batter." },
   },
   "tmpm-23316": {
-    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mixed into the oat-bake batter." },
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is mixed into the oat-bake batter." },
   },
   "tmpm-22922": {
-    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is mixed into the oat-bake batter." },
+    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is mixed into the oat-bake batter." },
   },
   "tmpm-22428": {
-    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-1", evidence: "Butter is the base of the white sauce." },
+    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is the base of the white sauce." },
   },
   "tmpm-21976": {
-    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Butter is mixed into the oat-bake batter." },
+    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is mixed into the oat-bake batter." },
   },
   "tmpm-16046": {
-    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is mixed into the oat-bake batter." },
+    "source-ingredient-6": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is mixed into the oat-bake batter." },
   },
   "tmpm-23501": {
-    "source-ingredient-14": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1-part-3", evidence: "Sesame oil is a component of the noodle sauce." },
+    "source-ingredient-14": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-3", evidence: "Sesame oil is a component of the noodle sauce." },
   },
   "tmpm-22531": {
-    "source-ingredient-4": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-4", evidence: "Peanut butter is melted and applied as topping." },
-    "source-ingredient-11": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-4", evidence: "Peanut butter is melted and applied as topping." },
+    "source-ingredient-4": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-4", evidence: "Peanut butter is melted and applied as topping." },
+    "source-ingredient-11": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-4", evidence: "Peanut butter is melted and applied as topping." },
   },
   "tmpm-22144": {
-    "source-ingredient-12": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-4", evidence: "Peanut butter is stirred into curry." },
+    "source-ingredient-12": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-3", evidence: "Peanut butter is stirred into curry." },
   },
   "tmpm-16850": {
-    "source-ingredient-6": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1-part-2", evidence: "Sesame oil is a chicken marinade component." },
+    "source-ingredient-6": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-1", evidence: "Sesame oil is a chicken marinade component." },
   },
   "goodfood-satay-sweet-potato-curry": {
-    "source-ingredient-6": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-2", evidence: "Peanut butter is stirred into curry." },
+    "source-ingredient-6": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is stirred into curry." },
   },
   "goodfood-vegan-breakfast-muffins": {
-    "source-ingredient-8": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Peanut butter is mixed into muffin batter." },
+    "source-ingredient-8": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is mixed into muffin batter." },
   },
   "goodfood-chicken-sweet-potato-peanut-stew": {
-    "source-ingredient-8": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Peanut butter thickens the stew." },
+    "source-ingredient-8": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter thickens the stew." },
   },
   "goodfood-prawn-rice-mango-jar-salad": {
-    "source-ingredient-8": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2-part-1", evidence: "Sesame oil is whisked into jar dressing." },
+    "source-ingredient-8": { canonicalIngredientId: "sesame_oil_processed", instructionId: "editorial-step-2", evidence: "Sesame oil is whisked into jar dressing." },
   },
   "goodfood-veggie-nuggets-with-summer-slaw": {
-    "source-ingredient-6": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Peanut butter is mixed into nugget batter." },
+    "source-ingredient-6": { canonicalIngredientId: "peanut_butter_processed", instructionId: "editorial-step-2", evidence: "Peanut butter is mixed into nugget batter." },
   },
   "goodfood-veggie-shepherds-pie-sweet-potato-mash": {
-    "source-ingredient-10": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is mashed into the sweet-potato topping." },
+    "source-ingredient-10": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3", evidence: "Butter is mashed into the sweet-potato topping." },
   },
   "goodfood-tuna-pasta-bake": {
-    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-3", evidence: "Butter is the base of the white sauce." },
+    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is the base of the white sauce." },
   },
   "goodfood-courgette-tomato-soup": {
-    "source-ingredient-1": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-1", evidence: "Butter is incorporated into the soup base." },
+    "source-ingredient-1": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is incorporated into the soup base." },
   },
   "goodfood-creamy-chicken-sweetcorn-soup": {
-    "source-ingredient-8": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1-part-1", evidence: "Butter is the base of the soup's roux." },
+    "source-ingredient-8": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-1", evidence: "Butter is the base of the soup's roux." },
   },
   "goodfood-family-meals-easy-beef-stew-sweet-potato-topping": {
-    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is mashed into the sweet-potato topping." },
+    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3", evidence: "Butter is mashed into the sweet-potato topping." },
   },
   "goodfood-beef-red-wine-potato-pie": {
-    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is worked into the pastry dough." },
-    "source-ingredient-15": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-2", evidence: "Butter is mixed with the potato filling." },
+    "source-ingredient-12": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-5", evidence: "Melted butter is mixed into the par-boiled potato layer." },
+    "source-ingredient-15": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-4", evidence: "Cold butter is worked into the pastry dough." },
   },
   "goodfood-roasted-tomato-pancetta-picnic-quiches": {
-    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is worked into the pastry dough." },
+    "source-ingredient-2": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is worked into the pastry dough." },
   },
   "new-home-cutlets-mash": {
-    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is mashed into the edible potato garnish." },
+    "source-ingredient-7": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3", evidence: "Butter is mashed into the edible potato garnish." },
   },
   "foodru-oblomov-meatballs": {
-    "source-ingredient-15": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is cooked into the tomato sauce." },
+    "source-ingredient-15": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3", evidence: "Butter is cooked into the tomato sauce." },
   },
   "foodru-oblomov-pepper-beef": {
-    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is worked into the thickened gravy." },
+    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3", evidence: "Butter is worked into the thickened gravy." },
   },
   "foodru-oblomov-pepper-chicken": {
-    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3-part-1", evidence: "Butter is worked into the thickened gravy." },
+    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-3", evidence: "Butter is worked into the thickened gravy." },
   },
   "foodru-oblomov-seabass": {
-    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2-part-1", evidence: "Butter is layered into the baked fish and potato dish." },
+    "source-ingredient-4": { canonicalIngredientId: "butter_processed", instructionId: "editorial-step-2", evidence: "Butter is layered into the baked fish and potato dish." },
   },
 });
 
