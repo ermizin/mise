@@ -75,6 +75,22 @@ test("ingredient identity rules reach every listed card and leave no old mapping
       );
       assert.ok(canonicalIds(recipe).includes(rule.canonicalIngredientId), `${id}: the Recipe Family uses ${rule.canonicalIngredientId}`);
       assert.equal(canonicalIds(recipe).includes(rule.fromCanonicalIngredientId), false, `${id}: ${rule.fromCanonicalIngredientId} is gone`);
+      // Строка, которую движок не считал продуктом (приправа «по вкусу»), уходит
+      // из списка процедуры, а не остаётся там второй раз.
+      assert.equal(
+        recipe.procedureIngredients.some((ingredient) => ingredient.sourceIngredientIndex === row),
+        false,
+        `${id}: «${rule.sourceName}» is not also a seasoning line`,
+      );
+    }
+  }
+  // Правило для неучтённой строки называет её статус и требует измеренного количества.
+  for (const rule of policy.ingredientIdentityRules.filter((item) => item.fromCanonicalIngredientId === null)) {
+    assert.ok(["ignored_microcomponent", "ignored_noncaloric"].includes(rule.fromStatus), rule.sourceName);
+    for (const id of rule.recipeIds) {
+      const candidate = candidates.get(id);
+      const item = (candidate.sourceIngredients ?? candidate.ingredients).find((row) => String(row.name).trim().toLowerCase() === rule.sourceName.toLowerCase());
+      assert.ok(Number(item.amountMetric) > 0, `${id}: «${rule.sourceName}» is measured`);
     }
   }
   // Quarantined cards that name wholegrain penne keep the profile they had.

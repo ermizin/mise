@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
+import { TIMED_STEP_TEXT } from "../scripts/recipe-editorial-steps.mjs";
 
 const root = new URL("../", import.meta.url);
 const read = (path) => readFile(new URL(path, root), "utf8");
@@ -34,7 +35,7 @@ test("14A projects timed recipe instructions and preserves their timeline order"
       previousAt = step.at;
     }
     const explicitTimes = recipe.recipeFamily.miseInstructions.filter(
-      (step) => /\d+(?:[.,]\d+)?(?:\s*(?:–|-|до)\s*\d+(?:[.,]\d+)?)?\s*(?:сек|мин|ч(?:ас)?)/iu.test(step.text),
+      (step) => TIMED_STEP_TEXT.test(step.text),
     );
     if (explicitTimes.length > 0) {
       assert.ok(

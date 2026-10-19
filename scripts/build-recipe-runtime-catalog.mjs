@@ -1,4 +1,5 @@
 import { recipeEquipmentFor, equipmentCoverage } from "./recipe-equipment.mjs";
+import { recipeEffortBlocks } from "./recipe-effort-blocks.mjs";
 import { auditRecipeRelease } from "./audit-recipe-release.mjs";
 import { buildSimpleRecipeCatalog } from "./build-simple-recipe-catalog.mjs";
 import { buildExtensionRecipeCatalog } from "./build-extension-recipe-catalog.mjs";
@@ -36,6 +37,18 @@ const categoryGroups = {
   fat: "Масла и соусы",
 };
 
+const mealPrepManualPublisher = "The Meal Prep Manual";
+const goodFoodPublisher = "Good Food — Meal prep ideas";
+
+/* Русское название неизмеряемой в покупках позиции (специи, вода, соль) по
+   английскому названию источника. Это настоящий продукт, как его ищут в
+   магазине: обобщения вроде «Смесь специй по рецепту» или «Приправа по вкусу»
+   прятали гарам масалу, сумах или итальянские травы. Первое совпадение
+   выигрывает; позиция без совпадения останавливает проекцию карточки
+   (`unnamed_procedure_ingredient`), и ей нужно название — строка таблицы или
+   правило `ingredientDisplayRules` в data/recipe-proofread-policy.json.
+   Если одно и то же слово источника в разных корпусах значит разные продукты,
+   вместо названия стоит функция от корпуса (`publisher`). */
 const pantryNameRu = [
   [/garlic powder/i, "Сушёный чеснок"],
   [/onion powder/i, "Сушёный лук"],
@@ -43,11 +56,38 @@ const pantryNameRu = [
   [/baking soda/i, "Пищевая сода"],
   [/smoked paprika|sweet smoked paprika/i, "Копчёная паприка"],
   [/paprika/i, "Паприка"],
-  [/gochugaru|chilli|chili|cayenne|red pepper flakes|jalape(?:ñ|n)o/i, "Острый перец"],
+  // Острый перец называется по форме продукта: молотый, хлопья или свежий
+  // стручок. Раньше все 13 видов были «Острым перцем», и покупатель не знал,
+  // что брать. Новые названия по-прежнему ловит правило острого
+  // /остр|чили|кайен|халап/ в app/page.tsx и domain/mobile.ts — это проверяет
+  // tests/recipe-step-structure.test.mjs. Строка, не попавшая ни в одно
+  // правило, останавливает проекцию: ей нужно своё название.
+  [/gochugaru/i, "Хлопья чили кочукару"],
+  [/red pepper flakes|chill?i flakes/i, "Хлопья чили"],
+  [/ancho chill?i powder/i, "Чили анчо молотый"],
+  [/kashmiri chill?i powder/i, "Кашмирский чили молотый"],
+  [/hot chill?i powder/i, "Острый чили молотый"],
+  [/chill?i powder/i, "Чили молотый"],
+  [/cayenne/i, "Кайенский перец"],
+  [/jalape(?:ñ|n)o/i, "Халапеньо"],
+  [/fresh or dried chill?i/i, "Чили свежий или сушёный"],
+  [/green chill?i/i, "Свежий зелёный чили"],
+  [/red chill?i/i, "Свежий красный чили"],
+  [/fresh chill?i/i, "Свежий чили"],
   [/cumin/i, "Кумин"],
   [/oregano/i, "Орегано"],
   [/cinnamon/i, "Корица"],
-  [/coriander/i, "Кориандр"],
+  // Кориандр молотый и кинза — разные покупки: по одному «Кориандру» легко
+  // купить семена вместо зелени. Строка без формы («coriander») у Meal Prep
+  // Manual — чайная ложка специи в маринаде, у Good Food — свежая зелень
+  // (пучок, горсть, «для подачи»); в другом корпусе её нужно назвать явно.
+  [/coriander seeds?/i, "Семена кориандра"],
+  [/(?:ground|dried) coriander/i, "Кориандр молотый"],
+  [/cilantro/i, "Кинза"],
+  [/coriander/i, ({ publisher }) => ({
+    [mealPrepManualPublisher]: "Кориандр молотый",
+    [goodFoodPublisher]: "Кинза",
+  })[publisher] ?? null],
   [/ginger/i, "Имбирь"],
   [/turmeric/i, "Куркума"],
   [/vanilla/i, "Ваниль"],
@@ -55,6 +95,8 @@ const pantryNameRu = [
   [/sage/i, "Шалфей"],
   [/basil/i, "Базилик"],
   [/parsley/i, "Петрушка"],
+  // Раньше `dill` стояло выше и «dill pickles» становились укропом.
+  [/dill pickle/i, "Маринованные огурцы"],
   [/dill/i, "Укроп"],
   [/mint/i, "Мята"],
   [/thyme/i, "Тимьян"],
@@ -63,21 +105,34 @@ const pantryNameRu = [
   [/nutmeg/i, "Мускатный орех"],
   [/lemon zest|zest(?: of)?\s*(?:1\s*)?lemon/i, "Цедра лимона"],
   [/orange zest/i, "Цедра апельсина"],
-  [/dill pickle/i, "Маринованные огурцы"],
-  [/garam masala|ras el hanout|sumac|fenugreek|fennel|curry powder|italian seasoning|pumpkin pie spice|mixed herbs|marjoram/i, "Смесь специй по рецепту"],
+  [/garam masala/i, "Гарам масала"],
+  [/ras el hanout/i, "Рас-эль-ханут"],
+  [/sumac/i, "Сумах"],
+  [/fenugreek seeds?/i, "Семена пажитника"],
+  [/fenugreek/i, "Пажитник молотый"],
+  [/fennel seeds?/i, "Семена фенхеля"],
+  [/curry powder/i, "Карри (порошок)"],
+  [/italian seasoning/i, "Итальянские травы"],
+  [/pumpkin pie spice/i, "Смесь специй для тыквенного пирога"],
+  [/mixed (?:dried )?herbs/i, "Смесь сушёных трав"],
+  [/marjoram/i, "Майоран сушёный"],
+  [/everything bagel/i, "Приправа «всё и сразу» (кунжут, мак, чеснок, лук)"],
   [/msg/i, "Глутамат натрия"],
   [/tartlet tins/i, "Формочки для тарталеток"],
   [/saffron/i, "Шафран"],
   [/garlic granules/i, "Гранулированный чеснок"],
   [/milk or beaten egg/i, "Молоко или яйцо для смазывания"],
   [/oil spray/i, "Кулинарный спрей"],
+  // «Salt and pepper to taste» — две приправы в одной строке источника.
+  [/salt and pepper/i, "Соль и чёрный перец"],
   [/salt/i, "Соль"],
-  [/pepper/i, "Перец"],
+  [/white pepper/i, "Белый перец"],
+  // «1 tsp pepper» рядом с солью — молотый чёрный перец, а не просто «Перец».
+  // Другой «pepper» без уточнения не угадывается и останавливает проекцию.
+  [/^(?:freshly )?(?:ground )?(?:black )?pepper$/i, "Чёрный перец молотый"],
   [/water/i, "Вода"],
   [/cooking spray/i, "Кулинарный спрей"],
   [/garnish/i, "Для подачи"],
-  [/seasoning|spice/i, "Приправа по вкусу"],
-  [/herbs?/i, "Зелень по вкусу"],
 ];
 
 function round(value, precision = 1) {
@@ -102,10 +157,26 @@ function groupFor(canonical) {
   return categoryGroups[canonical.category] ?? "Бакалея";
 }
 
-function russianPantryName(sourceName) {
-  const entry = pantryNameRu.find(([pattern]) => pattern.test(sourceName));
-  return entry?.[1] ?? "Дополнение по рецепту";
+function russianPantryName(sourceName, context = {}) {
+  const name = pantryNameRu.find(([pattern]) => pattern.test(sourceName))?.[1];
+  return (typeof name === "function" ? name(context) : name) ?? null;
 }
+
+/* Неизмеренная позиция, которую источник прямо называет необязательной
+   («any other seasoning you like is optional», «по желанию»), показывается со
+   статусом «по желанию», а не «по вкусу». Измеренные позиции сохраняют своё
+   количество и прежнюю классификацию. */
+function optionalUnmeasuredProcedureIngredient(sourceIngredient, measurement) {
+  if (measurement.quantityPerServing !== undefined) return false;
+  return /\boptional\b|по желанию/iu.test(`${sourceIngredient?.name ?? ""} ${sourceIngredient?.original ?? ""}`);
+}
+
+/* Аллергены неизмеряемой позиции — по названию источника. Смеси называют
+   кунжут не словом sesame: приправа everything bagel (кунжут, мак, чеснок,
+   лук), тахини, фурикаке, заатар, дукка и гомасио содержат кунжут. Без этого
+   хлебцы с авокадо (`tmpm-25006-avocado-bean-rice-cakes`) предлагались при
+   аллергии на кунжут, а сервер принимал такой план. */
+const sesameProcedurePattern = /\b(?:sesame|tahini|tahina|everything bagel|furikake|za'?atar|dukkah|gomasio)\b/;
 
 function procedureAllergens(sourceName) {
   const normalized = sourceName.toLowerCase();
@@ -114,7 +185,7 @@ function procedureAllergens(sourceName) {
   if (/\begg\b/.test(normalized)) allergens.push("egg");
   if (/\b(?:peanut|groundnut)\b/.test(normalized)) allergens.push("peanuts");
   if (/\b(?:almond|walnut|cashew|hazelnut|pistachio|nuts?)\b/.test(normalized)) allergens.push("nuts");
-  if (/\bsesame\b/.test(normalized)) allergens.push("sesame");
+  if (sesameProcedurePattern.test(normalized)) allergens.push("sesame");
   if (/\bsoy\b/.test(normalized)) allergens.push("soy");
   return [...new Set(allergens)];
 }
@@ -258,7 +329,13 @@ function releaseTags(macros, costTier) {
   return tags;
 }
 
-function effortFor(candidate, steps) {
+/* Оценка считается по блокам работы, а не по шагам (scripts/recipe-effort-blocks.mjs):
+   3 минуты на блок и ещё 2 на блок, где режут, трут или измельчают. Посуда —
+   объединение утвари всех шагов. Разбиение шага по предложениям не меняет ни
+   блоки, ни утварь, поэтому не меняет оценку. */
+const knifeWorkPattern = /нареж|измельч|натр|поруб/i;
+
+export function effortFor(candidate, steps) {
   const total = Number(candidate.time?.totalMinutes ?? 0);
   // Even a no-cook snack needs one working vessel or serving container. Keep
   // the effort indicator honest without showing an impossible “0 посуды”.
@@ -266,8 +343,11 @@ function effortFor(candidate, steps) {
     1,
     new Set(steps.flatMap((step) => step.equipment ?? [])).size,
   );
-  const knifeActions = steps.filter((step) => /нареж|измельч|натр|поруб/i.test(step.text ?? "")).length;
-  const activeActions = steps.length + knifeActions;
+  const blocks = recipeEffortBlocks(candidate.id, steps);
+  const knifeActions = blocks.filter((block) =>
+    knifeWorkPattern.test(block.map((step) => step.text ?? "").join(" ")),
+  ).length;
+  const activeActions = blocks.length + knifeActions;
   const activeMinutes = Math.min(total, Math.max(3, activeActions * 3 + knifeActions * 2));
   const instructions = recipeStepsFromInstructions(steps);
   const parallelProcesses = parallelRecipeProcesses(instructions);
@@ -527,15 +607,23 @@ function projectReadyCard(releaseCard, entry, recipeImages, cuisines) {
     }
     // A source ingredient must still be visible when it is intentionally
     // excluded from nutrition and shopping (water, salt, to-taste garnish).
+    const nameRu = sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName, { publisher: dataset.source });
+    if (!nameRu) {
+      failures.push(["unnamed_procedure_ingredient", `${mapping.sourceName} has no Russian product name.`]);
+      return;
+    }
+    const measurement = procedureMeasurement(sourceIngredient, servings);
     procedureIngredients.push({
       sourceIngredientIndex: index + 1,
       sourceIngredientId: `source-ingredient-${index + 1}`,
-      nameRu: sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName),
+      nameRu,
       sourceName: mapping.sourceName,
-      classification: mapping.status === "ignored_noncaloric" ? "pantry" : "to_taste",
+      classification: optionalUnmeasuredProcedureIngredient(sourceIngredient, measurement)
+        ? "optional_serving"
+        : mapping.status === "ignored_noncaloric" ? "pantry" : "to_taste",
       allergens: procedureAllergens(mapping.sourceName),
       reason: mapping.reason ?? "Редакционное примечание к приготовлению.",
-      ...procedureMeasurement(sourceIngredient, servings),
+      ...measurement,
     });
   });
 

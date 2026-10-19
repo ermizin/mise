@@ -1,5 +1,6 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname, basename, resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import {
   instructionFacts,
   schemaInstructionTexts,
@@ -177,7 +178,7 @@ function cliOptions(argv) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   if (process.argv.includes("--help")) {
     console.log("Usage: node scripts/enrich-recipe-corpus.mjs [--write] [--allow-partial] [--output-dir DIR] [--concurrency N] [--retries N] [--timeout-ms N]");
     process.exit(0);

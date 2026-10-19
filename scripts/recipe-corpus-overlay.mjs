@@ -2,11 +2,16 @@ import { readFile } from "node:fs/promises";
 import { applyGoodFoodRehabilitation } from "./apply-goodfood-rehabilitation.mjs";
 import { applyRecipeProofreadPolicy } from "./apply-recipe-proofread-policy.mjs";
 
-const datasets = [
+export const recipeCorpusDatasetPaths = Object.freeze([
   "data/mealprepmanual-candidates.json",
   "data/goodfood-candidates.json",
   "data/simple-home-candidates.json",
-];
+]);
+const datasets = recipeCorpusDatasetPaths;
+
+/* Оверлей, который переписывает текст шагов по их позиции в драфте, а не по
+   содержимому: редакционное разбиение таких шагов требует правки здесь. */
+export const positionalStepOverlayRecipeIds = Object.freeze(["goodfood-banana-overnight-oats"]);
 
 const cookedRicePattern = /\bcooked\s+(?:brown\s+|brown basmati\s+|basmati\s+)?rice\b/iu;
 
@@ -224,6 +229,8 @@ async function applyGroupedReviewResolutions({ document }) {
           {
             ...candidate.paraphrasedInstructionDraft[1],
             text: "Накройте и оставьте в холодильнике на 6–8 часов. Утром перемешайте, разделите на порции, добавьте ломтики оставшегося банана, миндаль и щепотку корицы.",
+            // Карточка говорит «на ночь» без числа; время шага появляется только здесь.
+            duration: "6–8 ч",
           },
         ],
         miseGroupedReview: {
@@ -313,10 +320,14 @@ async function applyMealPrepOwnerDecisions({ document }) {
  * place where the reviewed Good Food rehabilitation overlay is applied before
  * an audit or runtime projection sees the cards.
  */
-export async function loadRecipeCorpusWithOverlays({ cwd = process.cwd() } = {}) {
-  const documents = await Promise.all(
-    datasets.map(async (path) => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"))),
-  );
+export async function loadRecipeCorpusWithOverlays({ cwd = process.cwd(), rawDocuments } = {}) {
+  // `rawDocuments` lets a dry check run the same overlays on an edited copy of
+  // the corpus (same order as `recipeCorpusDatasetPaths`) without writing it.
+  const documents = rawDocuments
+    ? structuredClone(rawDocuments)
+    : await Promise.all(
+        datasets.map(async (path) => JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"))),
+      );
   const mealPrepIndex = documents.findIndex((document) => document.source === "The Meal Prep Manual");
   if (mealPrepIndex < 0) throw new Error("Meal Prep Manual corpus document is missing.");
   documents[mealPrepIndex] = await applyMealPrepOwnerDecisions({ document: documents[mealPrepIndex] });

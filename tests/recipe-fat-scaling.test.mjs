@@ -135,3 +135,30 @@ test("structural eggs are rounded once for the physical cook, never above a serv
   );
   assert.equal(engine.physicalBatchAmountsViable([repeatedEgg], 2, 1, [2, 2]), true);
 });
+
+test("every edible-fat override points at an existing step that uses that ingredient", () => {
+  // Ссылки `instructionId` — доказательство, где жир входит в соус, пюре или
+  // тесто. После разбиения шагов 2026-10-19 прежние `editorial-step-1-part-N`
+  // перестали существовать; ссылка на несуществующий шаг теперь ловится здесь.
+  const recipes = new Map(
+    [...runtime.recipes, ...runtime.simpleRecipes, ...runtime.extensionRecipes].map((recipe) => [recipe.id, recipe]),
+  );
+  let checked = 0;
+  for (const [recipeId, rows] of Object.entries(engine.rawEdibleFatOverrides)) {
+    const recipe = recipes.get(recipeId);
+    assert.ok(recipe, `${recipeId}: edible-fat override for a recipe outside the runtime catalog`);
+    for (const [sourceIngredientId, override] of Object.entries(rows)) {
+      const step = recipe.recipeFamily.miseInstructions.find((item) => item.id === override.instructionId);
+      assert.ok(step, `${recipeId}/${sourceIngredientId}: step ${override.instructionId} does not exist`);
+      assert.ok(
+        step.ingredientIds.includes(sourceIngredientId),
+        `${recipeId}/${override.instructionId}: step does not use ${sourceIngredientId}`,
+      );
+      const familyIngredient = recipe.recipeFamily.ingredients.find((item) => item.sourceIngredientId === sourceIngredientId);
+      assert.equal(familyIngredient?.canonicalIngredientId, override.canonicalIngredientId, `${recipeId}/${sourceIngredientId}`);
+      assert.equal(familyIngredient?.role, "fat", `${recipeId}/${sourceIngredientId}: override applies`);
+      checked += 1;
+    }
+  }
+  assert.ok(checked >= 40, `${checked} overrides checked`);
+});

@@ -7,6 +7,7 @@ import {
   buildRecipeRuntimeCatalog,
 } from "../scripts/build-recipe-runtime-catalog.mjs";
 import { AUDIT_REASON, auditRecipeCorpus } from "../scripts/audit-recipe-corpus.mjs";
+import { TIMED_STEP_TEXT } from "../scripts/recipe-editorial-steps.mjs";
 
 const catalog = await buildRecipeRuntimeCatalog();
 const audit = await auditRecipeCorpus();
@@ -113,7 +114,7 @@ test("timeline inference distinguishes active work from passive waiting", () => 
   assert.ok(steps.some((step) => step.minutes > 0), "source durations reach the runtime timeline");
   for (const recipe of catalog.recipes) {
     const timedTextSteps = recipe.recipeFamily.miseInstructions.filter(
-      (step) => /\d+(?:[.,]\d+)?(?:\s*(?:–|-|до)\s*\d+(?:[.,]\d+)?)?\s*(?:сек|мин|ч(?:ас)?)/iu.test(step.text),
+      (step) => TIMED_STEP_TEXT.test(step.text),
     );
     const projectedTimedSteps = recipe.instructions.filter((step) => step.minutes > 0);
     assert.ok(

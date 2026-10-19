@@ -1,5 +1,6 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 const DATASET_PATHS = [
   "data/mealprepmanual-candidates.json",
@@ -66,7 +67,7 @@ function editorialPacking(candidate, card) {
   };
 }
 
-function validateCard(card, candidate) {
+export function validateCard(card, candidate) {
   if (!card || card.id !== candidate.id) throw new Error(`Editorial order mismatch: expected ${candidate.id}, got ${card?.id ?? "missing"}`);
   if (typeof card.titleRu !== "string" || !cyrillic.test(card.titleRu)) throw new Error(`${card.id}: Russian title is required`);
   if (!Array.isArray(card.paraphrasedInstructionDraft)) throw new Error(`${card.id}: draft must be an array`);
@@ -138,7 +139,7 @@ export async function applyRecipeEditorialCards({ cwd = process.cwd(), write = f
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const report = await applyRecipeEditorialCards({ write: process.argv.includes("--write") });
   process.stdout.write(`${JSON.stringify(report)}\n`);
 }

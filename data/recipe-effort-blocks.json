@@ -1,0 +1,649 @@
+{
+  "schemaVersion": 1,
+  "about": [
+    "Блоки работы для оценки усилий (effort) runtime-карточек; читает scripts/recipe-effort-blocks.mjs.",
+    "Оценка активного времени откалибрована на редакционных шагах до вычитки 2026-10-19: 3 минуты на блок и ещё 2 минуты на блок с ножом. Разбиение шага по границам предложений работы не прибавляет, поэтому шаги одного блока считаются вместе.",
+    "blockStarts — начала предложений, с шага которых начинается каждый блок (первая строка — в первом шаге); остальные шаги относятся к предыдущему блоку. Карточка без записи считает каждый шаг блоком.",
+    "Записи 2026-10-19 восстанавливают границы шагов runtime main f314660 у карточек, которые редакторы разбили; значения закреплены снимком data/recipe-effort-baseline.json в tests/recipe-step-structure.test.mjs. У tmpm-26583, tmpm-24542, tmpm-26676 и tmpm-25244 якоря выбраны так, чтобы находить свой шаг и после правок текста пакета R4: охлаждение риса относится к блоку варки риса."
+  ],
+  "recipes": [
+    {
+      "recipeId": "tmpm-28247",
+      "blockStarts": [
+        "Для соуса оставьте",
+        "Куриные бёдра на",
+        "Нарежьте курицу, покройте"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26689",
+      "blockStarts": [
+        "Разогрейте духовку до",
+        "Аккуратно соедините блендерную"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26676",
+      "blockStarts": [
+        "Заранее промойте и",
+        "Смешайте масло, лимонный",
+        "На сильном огне"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26660",
+      "blockStarts": [
+        "Разморозьте цветную капусту",
+        "Нарежьте куриное филе"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26583",
+      "blockStarts": [
+        "Заранее промойте и",
+        "Разогрейте духовку до",
+        "Добавьте тонко нарезанные"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26528",
+      "blockStarts": [
+        "Разогрейте духовку до",
+        "На второй сковороде"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26441",
+      "blockStarts": [
+        "Промойте и сварите",
+        "Разогрейте масло на"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26429",
+      "blockStarts": [
+        "Промойте и сварите",
+        "Нарежьте батат крупными"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26414",
+      "blockStarts": [
+        "На одну порцию",
+        "Взбейте белки или"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26358",
+      "blockStarts": [
+        "Промойте и сварите",
+        "Постепенно влейте говяжий"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26232",
+      "blockStarts": [
+        "Отварите макароны чуть",
+        "Смешайте куриные бёдра"
+      ]
+    },
+    {
+      "recipeId": "tmpm-26138",
+      "blockStarts": [
+        "Промойте и сварите",
+        "В большой сковороде"
+      ]
+    },
+    {
+      "recipeId": "tmpm-25304",
+      "blockStarts": [
+        "Разогрейте духовку до",
+        "Запекайте при 205"
+      ]
+    },
+    {
+      "recipeId": "tmpm-25244",
+      "blockStarts": [
+        "Заранее промойте и",
+        "Смешайте масло, сок",
+        "На сильном огне"
+      ]
+    },
+    {
+      "recipeId": "tmpm-25175",
+      "blockStarts": [
+        "Промойте и сварите",
+        "В большой сковороде"
+      ]
+    },
+    {
+      "recipeId": "tmpm-24542",
+      "blockStarts": [
+        "Заранее промойте и",
+        "Разогрейте духовку до",
+        "Нарежьте перец и",
+        "Добавьте рис, лимонный"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23797",
+      "blockStarts": [
+        "Заранее промойте и",
+        "Смешайте йогурт со"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23554",
+      "blockStarts": [
+        "Обжарьте говядину в"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23545",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23544",
+      "blockStarts": [
+        "Заранее промойте и",
+        "Подготовьте 5 порций"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23518",
+      "blockStarts": [
+        "Смешайте сухие ингредиенты"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23501",
+      "blockStarts": [
+        "Залейте лапшу горячей"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23462",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23431",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23316",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23306",
+      "blockStarts": [
+        "Сварите киноа. Приготовьте"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23261",
+      "blockStarts": [
+        "Запеките морковь и"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23228",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23194",
+      "blockStarts": [
+        "Нарежьте морковь лентами"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23113",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-23090",
+      "blockStarts": [
+        "Смешайте индейку с"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22980",
+      "blockStarts": [
+        "Обжарьте говядину и"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22968",
+      "blockStarts": [
+        "Обжарьте говядину и"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22922",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22550",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22571",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22531",
+      "blockStarts": [
+        "Для джема уварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22442",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22428",
+      "blockStarts": [
+        "Сделайте соус: растопите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22331",
+      "blockStarts": [
+        "Нарежьте курицу кубиками"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22278",
+      "blockStarts": [
+        "Смешайте мёд, соевый"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22144",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-22181",
+      "blockStarts": [
+        "Разморозьте брокколи, мелко"
+      ]
+    },
+    {
+      "recipeId": "tmpm-21976",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-21841",
+      "blockStarts": [
+        "Обжарьте говядину в"
+      ]
+    },
+    {
+      "recipeId": "tmpm-21839",
+      "blockStarts": [
+        "Обжарьте говядину и"
+      ]
+    },
+    {
+      "recipeId": "tmpm-19895",
+      "blockStarts": [
+        "Нарежьте овощи, картофель"
+      ]
+    },
+    {
+      "recipeId": "tmpm-18874",
+      "blockStarts": [
+        "Замочите рисовую лапшу"
+      ]
+    },
+    {
+      "recipeId": "tmpm-18557",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-17591",
+      "blockStarts": [
+        "Разделите куриные грудки"
+      ]
+    },
+    {
+      "recipeId": "tmpm-17393",
+      "blockStarts": [
+        "Разогрейте готовые кусочки"
+      ]
+    },
+    {
+      "recipeId": "tmpm-17381",
+      "blockStarts": [
+        "Разогрейте готовые кусочки"
+      ]
+    },
+    {
+      "recipeId": "tmpm-17115",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16850",
+      "blockStarts": [
+        "Промойте и сварите"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16479",
+      "blockStarts": [
+        "Нарежьте курицу полосками,"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16454",
+      "blockStarts": [
+        "Обжарьте говядину с"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16300",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16283",
+      "blockStarts": [
+        "Разморозьте хашбрауны в"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16249",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "tmpm-16046",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+      "blockStarts": [
+        "Обжарьте лук до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-chicken-pasta-bake",
+      "blockStarts": [
+        "Обжарьте лук на"
+      ]
+    },
+    {
+      "recipeId": "goodfood-satay-sweet-potato-curry",
+      "blockStarts": [
+        "На среднем огне",
+        "Промойте сухой рис,"
+      ]
+    },
+    {
+      "recipeId": "goodfood-kadala-curry",
+      "blockStarts": [
+        "Обжарьте часть лука",
+        "Промойте сухой рис,"
+      ]
+    },
+    {
+      "recipeId": "goodfood-sausage-leek-mash-pie",
+      "blockStarts": [
+        "Отварите картофель 12"
+      ]
+    },
+    {
+      "recipeId": "goodfood-10minute-couscous-salad",
+      "blockStarts": [
+        "Залейте кускус горячим"
+      ]
+    },
+    {
+      "recipeId": "goodfood-big-batch-bolognese",
+      "blockStarts": [
+        "В большой кастрюле"
+      ]
+    },
+    {
+      "recipeId": "goodfood-slow-cooker-beef-bourguignon",
+      "blockStarts": [
+        "Разогрейте медленноварку на"
+      ]
+    },
+    {
+      "recipeId": "goodfood-tuna-pasta-bake",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-vegan-shepherds-pie",
+      "blockStarts": [
+        "Отварите картофель в"
+      ]
+    },
+    {
+      "recipeId": "goodfood-vegetarian-bolognese",
+      "blockStarts": [
+        "В кастрюле обжарьте"
+      ]
+    },
+    {
+      "recipeId": "goodfood-slow-cooker-sausage-casserole",
+      "blockStarts": [
+        "На слабом огне"
+      ]
+    },
+    {
+      "recipeId": "goodfood-italian-vegetable-soup",
+      "blockStarts": [
+        "В большой кастрюле"
+      ]
+    },
+    {
+      "recipeId": "goodfood-aubergine-tomato-halloumi-pie",
+      "blockStarts": [
+        "Обжарьте ломтики баклажана"
+      ]
+    },
+    {
+      "recipeId": "goodfood-mini-lentil-shepherds-pies",
+      "blockStarts": [
+        "В большой кастрюле",
+        "Влейте вино, если",
+        "Одновременно сварите картофель"
+      ]
+    },
+    {
+      "recipeId": "goodfood-quinoa-salad-with-shredded-greens-raisins",
+      "blockStarts": [
+        "Промойте киноа в",
+        "В большой миске"
+      ]
+    },
+    {
+      "recipeId": "goodfood-big-batch-pressure-cooker-bolognese",
+      "blockStarts": [
+        "Разогрейте масло в",
+        "Добавьте сухие травы,",
+        "Безопасно стравите давление."
+      ]
+    },
+    {
+      "recipeId": "goodfood-creamy-chicken-sweetcorn-soup",
+      "blockStarts": [
+        "В кастрюле растопите",
+        "На антипригарной сковороде",
+        "В отдельной кастрюле"
+      ]
+    },
+    {
+      "recipeId": "goodfood-beef-red-wine-potato-pie",
+      "blockStarts": [
+        "По желанию залейте",
+        "Верните мясо с",
+        "Смешайте муку, горчичный"
+      ]
+    },
+    {
+      "recipeId": "goodfood-vegan-breakfast-muffins",
+      "blockStarts": [
+        "Разогрейте духовку до",
+        "Смешайте оставшиеся мюсли"
+      ]
+    },
+    {
+      "recipeId": "goodfood-family-meals-easy-fish-cakes",
+      "blockStarts": [
+        "Сварите картофель до",
+        "Положите рыбную смесь,",
+        "Аккуратно соедините рыбу",
+        "Разогрейте в большой"
+      ]
+    },
+    {
+      "recipeId": "goodfood-steak-broccoli-protein-pots",
+      "blockStarts": [
+        "Промойте и сварите",
+        "Брокколи и белую",
+        "На хорошо разогретой"
+      ]
+    },
+    {
+      "recipeId": "goodfood-sausage-egg-muffins",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-mushroom-lentil-beef-ragu",
+      "blockStarts": [
+        "Залейте сухие грибы"
+      ]
+    },
+    {
+      "recipeId": "goodfood-black-bean-spicy-beef-pasta",
+      "blockStarts": [
+        "Для рагу замочите",
+        "Отварите пасту на"
+      ]
+    },
+    {
+      "recipeId": "goodfood-harissa-beef-tomato-bulgur",
+      "blockStarts": [
+        "Для рагу замочите",
+        "На среднем огне"
+      ]
+    },
+    {
+      "recipeId": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+      "blockStarts": [
+        "Разотрите муку с"
+      ]
+    },
+    {
+      "recipeId": "goodfood-orange-oregano-pulled-pork",
+      "blockStarts": [
+        "Выложите лук на",
+        "Промойте сухой рис,"
+      ]
+    },
+    {
+      "recipeId": "goodfood-tomato-pepper-bean-one-pot",
+      "blockStarts": [
+        "В большой кастрюле"
+      ]
+    },
+    {
+      "recipeId": "goodfood-scandi-beetroot-salmon-pasta",
+      "blockStarts": [
+        "Сварите фузилли по"
+      ]
+    },
+    {
+      "recipeId": "goodfood-chicken-squash-pesto-lasagne",
+      "blockStarts": [
+        "В большой жаропрочной"
+      ]
+    },
+    {
+      "recipeId": "goodfood-orange-dark-chocolate-yogurt-bowls",
+      "blockStarts": [
+        "В небольшой кастрюле"
+      ]
+    },
+    {
+      "recipeId": "goodfood-black-bean-soup-with-chunky-raita",
+      "blockStarts": [
+        "На среднем огне"
+      ]
+    },
+    {
+      "recipeId": "goodfood-wild-salmon-with-radish-orange-slaw",
+      "blockStarts": [
+        "Смешайте паприку, семена"
+      ]
+    },
+    {
+      "recipeId": "goodfood-fragrant-biryani-with-coriander-cod",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-pork-with-cucumber-apricot-couscous",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    },
+    {
+      "recipeId": "goodfood-veggie-nuggets-with-summer-slaw",
+      "blockStarts": [
+        "Сварите киноа по"
+      ]
+    },
+    {
+      "recipeId": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+      "blockStarts": [
+        "Разогрейте духовку до"
+      ]
+    }
+  ]
+}

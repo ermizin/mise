@@ -4,6 +4,8 @@ import {
 } from "../domain/recipe-engine.ts";
 import { sourceAmount } from "./recipe-corpus-normalize.mjs";
 import { loadMealPrepReleasePolicy } from "./mealprep-release-policy.mjs";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 
 
 /**
@@ -325,7 +327,7 @@ export async function auditRecipeNutritionCorpus() {
   };
 }
 
-if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   auditRecipeNutritionCorpus()
     .then((report) => process.stdout.write(`${JSON.stringify(report)}\n`))
     .catch((error) => {

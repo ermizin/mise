@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import vm from "node:vm";
 import ts from "typescript";
 import { hasDocumentedLocalization, loadMealPrepReleasePolicy } from "./mealprep-release-policy.mjs";
@@ -234,6 +235,6 @@ export async function auditRecipeCorpus() {
   return { schemaVersion: 1, total: verdicts.length, counts, verdicts };
 }
 
-if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   process.stdout.write(`${JSON.stringify(await auditRecipeCorpus(), null, 2)}\n`);
 }

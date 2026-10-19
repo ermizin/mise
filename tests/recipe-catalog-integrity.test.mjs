@@ -228,6 +228,46 @@ test("wholegrain pasta, flour and giant couscous carry their own macros and fibe
   }
 });
 
+test("peperonata pepper is a sweet pepper that is counted and bought", () => {
+  // «115 g pepper» в двух карточках с пеперонатой — сладкий перец: в исходной
+  // карточке goodfood-peperonata это «3 finely sliced peppers». Раньше строка
+  // считалась чёрным перцем «по вкусу» и не входила ни в КБЖУ, ни в покупки.
+  // На базовую порцию: 19,2 и 23 г перца по FDC 170108, +5 и +6 ккал.
+  const expected = {
+    "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata": [19.2, { kcal: 440.3, protein: 14, fat: 20.5, carbs: 51 }, 4.1],
+    "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads": [23, { kcal: 690.1, protein: 16.9, fat: 29.6, carbs: 89.7 }, 6],
+  };
+  for (const [id, [grams, macros, fiber]] of Object.entries(expected)) {
+    const recipe = app.recipesById[id];
+    const peppers = recipe.ingredients.filter((item) => item.canonicalIngredientId === "pepper_raw");
+    assert.deepEqual(peppers.map((item) => [item.name, item.quantity, item.unit]), [["Сладкий перец", grams, "г"]], id);
+    assert.ok(app.newMenuRecipes.some((item) => item.id === id), `${id}: still offered`);
+    assert.deepEqual(
+      (recipe.procedureIngredients ?? []).filter((item) => /^перец$/iu.test(item.name)),
+      [],
+      `${id}: no pepper «по вкусу» line`,
+    );
+    assert.deepEqual({ ...recipe.macros }, macros, id);
+    assert.equal(engine.fiberForFamily(app.recipeFamilyFor(recipe)), fiber, id);
+  }
+});
+
+test("Chinese cooking wine is a rice wine in the card and in the shopping list", () => {
+  // «2 tbsp Chinese cooking wine» в tmpm-26441 считалось красным сухим вином, и
+  // список покупок предлагал купить его. Профиля шаосина в каталоге нет;
+  // строка считается по ближайшему — мирину (правило ingredientIdentityRules).
+  // На базовую порцию 5,7 мл: +9,4 ккал и +2,4 г углеводов.
+  const recipe = app.recipesById["tmpm-26441"];
+  const wine = recipe.ingredients.filter((item) => ["mirin_processed", "red_wine_processed"].includes(item.canonicalIngredientId));
+  assert.deepEqual(
+    wine.map((item) => [item.name, item.canonicalIngredientId, item.quantity, item.unit]),
+    [["Китайское рисовое вино (шаосин)", "mirin_processed", 5.7, "мл"]],
+  );
+  assert.equal(app.canonicalShoppingIngredient(wine[0]).canonicalName, "Мирин");
+  assert.ok(recipe.allergens.includes("alcohol"), "the dish still contains alcohol");
+  assert.deepEqual({ ...recipe.macros }, { kcal: 706.7, protein: 44.5, fat: 26.9, carbs: 71.7 });
+});
+
 test("the recipe card weighs what the shopping list weighs", async () => {
   const { readFile } = await import("node:fs/promises");
   const { runInNewContext } = await import("node:vm");

@@ -6150,7 +6150,9 @@
     {
       "id": "tmpm-25006-avocado-bean-rice-cakes",
       "slot": "snack1",
-      "allergens": [],
+      "allergens": [
+        "sesame"
+      ],
       "storageDays": 3,
       "freezable": false,
       "equipmentOptions": [
