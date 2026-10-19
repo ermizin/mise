@@ -119,7 +119,8 @@
     { "sourceName": "chipotle paste (optional)", "displayNameRu": "Паста чипотле (необязательно)" },
     { "sourceContains": "cheddar", "displayNameRu": "Сыр чеддер" },
     { "sourceContains": "zero-соус", "displayNameRu": "Низкокалорийный соус без сахара" },
-    { "sourceName": "any other seasoning you like is optional", "displayNameRu": "Любимая приправа" }
+    { "sourceName": "any other seasoning you like is optional", "displayNameRu": "Любимая приправа" },
+    { "sourceName": "chinese cooking wine", "displayNameRu": "Китайское рисовое вино (шаосин)" }
   ],
   "ingredientIdentityRules": [
     {
@@ -168,6 +169,16 @@
       "canonicalIngredientId": "pepper_raw",
       "reviewedAt": "2026-10-19",
       "note": "«115 g pepper» — сладкий перец пеперонаты: в исходной карточке goodfood-peperonata это «3 finely sliced peppers». Когда пеперонату расписали по продуктам внутри блюда, строка стала просто «pepper», и движок принял её за молотый чёрный перец «по вкусу» — без КБЖУ и без строки в покупках. Сладкий перец — FDC 170108 (Peppers, sweet, red, raw), тот же профиль «Сладкий перец», что у остальных карточек."
+    },
+    {
+      "recipeIds": [
+        "tmpm-26441"
+      ],
+      "sourceName": "Chinese cooking wine",
+      "fromCanonicalIngredientId": "red_wine_processed",
+      "canonicalIngredientId": "mirin_processed",
+      "reviewedAt": "2026-10-19",
+      "note": "«2 tbsp (30 g) Chinese cooking wine» — китайское рисовое вино шаосин для соуса стир-фрая. Алиас движка вёл его к красному сухому вину (FDC 173190), и список покупок предлагал купить красное вино. Отдельного профиля рисового вина в каталоге нет; ближайший продукт каталога — мирин, тоже рисовое вино для соусов и обычная замена шаосину. Средний профиль мирина слаще шаосина: 241 ккал и 43 г углеводов на 100 г против 85 ккал и 2,6 г у красного вина. Аллерген «алкоголь» сохраняется. Алиас «chinese cooking wine» не меняется: правило ограничено одной карточкой."
     }
   ],
   "glossary": {

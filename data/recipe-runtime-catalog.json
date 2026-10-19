@@ -85110,10 +85110,10 @@
       "title": "Индейка стир-фрай с арахисом",
       "cuisine": "asian",
       "macros": {
-        "kcal": 697.3,
+        "kcal": 706.7,
         "protein": 44.5,
         "fat": 26.9,
-        "carbs": 69.3
+        "carbs": 71.7
       },
       "timeMinutes": 30,
       "menuTags": [
@@ -85399,8 +85399,8 @@
         {
           "sourceIngredientIndex": 8,
           "sourceIngredientId": "source-ingredient-8",
-          "canonicalIngredientId": "red_wine_processed",
-          "nameRu": "Красное сухое вино",
+          "canonicalIngredientId": "mirin_processed",
+          "nameRu": "Китайское рисовое вино (шаосин)",
           "group": "Соусы и специи",
           "quantityGrams": 30,
           "sourceMeasurement": {
@@ -85420,7 +85420,7 @@
             {
               "sourceIngredientIndex": 8,
               "sourceIngredientId": "source-ingredient-8",
-              "nameRu": "Красное сухое вино",
+              "nameRu": "Китайское рисовое вино (шаосин)",
               "quantityGrams": 30,
               "sourceMeasurement": {
                 "amount": 30,
@@ -85749,14 +85749,14 @@
           },
           {
             "sourceIngredientId": "source-ingredient-8",
-            "canonicalIngredientId": "red_wine_processed",
-            "baseAmount": 6.0606060606060606,
+            "canonicalIngredientId": "mirin_processed",
+            "baseAmount": 5.7142857142857135,
             "unit": "ml",
             "role": "sauce",
-            "minAmount": 3.0303030303030303,
-            "preferredMin": 4.848484848484849,
-            "preferredMax": 7.575757575757576,
-            "maxAmount": 9.696969696969697,
+            "minAmount": 2.8571428571428568,
+            "preferredMin": 4.571428571428571,
+            "preferredMax": 7.142857142857142,
+            "maxAmount": 9.142857142857142,
             "scalable": true,
             "scalingPriority": 3,
             "substitutions": [],
@@ -85779,8 +85779,8 @@
             "optional": false
           }
         ],
-        "minViableCalories": 508,
-        "maxViableCalories": 1146,
+        "minViableCalories": 516,
+        "maxViableCalories": 1156,
         "geometryLockedMax": 5,
         "minimumProtein": 0,
         "sourceNutrition": {
@@ -85802,18 +85802,18 @@
           "carbs": 57
         },
         "miseCalculatedNutrition": {
-          "kcal": 697.3,
+          "kcal": 706.7,
           "protein": 44.5,
           "fat": 26.9,
-          "carbs": 69.3
+          "carbs": 71.7
         },
         "nutritionDelta": {
-          "kcal": 65.3,
+          "kcal": 74.7,
           "protein": 2.5,
           "fat": 0.9,
-          "carbs": 12.3
+          "carbs": 14.7
         },
-        "nutritionDeltaKcal": 65.3,
+        "nutritionDeltaKcal": 74.7,
         "editorialAudit": {
           "ingredientMapping": {
             "source": "raw_candidate",
