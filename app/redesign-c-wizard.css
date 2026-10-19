@@ -1403,3 +1403,48 @@
 .builder-chat-composer.has-menu-choice .builder-chat-send .icon {
   display: none;
 }
+
+/* ============================================================
+   Пакет «qa» (раунд 2): капсула мастера на 320 px и крупном тексте
+   ============================================================ */
+
+/* Подпись главной кнопки переносится на вторую строку, а не обрезается
+   с обеих сторон («льше: собрать меню») */
+.builder-chat-send {
+  white-space: normal;
+  line-height: 1.15;
+  text-align: center;
+}
+/* Шаг «Выбор меню»: «Выбрать вручную» и «Дальше: проверка» делят место поровну */
+.builder-chat-composer.has-menu-choice .builder-chat-alternative {
+  flex: 1 1 0;
+  white-space: normal;
+  line-height: 1.15;
+}
+@media (max-width: 359px) {
+  .builder-chat-back {
+    width: 84px;
+  }
+  .builder-chat-send {
+    padding-inline: 12px;
+  }
+}
+/* Чипы длительности: одна строка, пока помещаются целиком; при крупном
+   тексте переносятся, а не наезжают друг на друга */
+.builder-shell .quick-periods {
+  flex-wrap: wrap;
+}
+.builder-shell .quick-periods button {
+  min-width: max-content;
+}
+/* Счётчик людей в кнопке шага 4 дублирует «Едоки · N» над плитками
+   (в aria-label он остаётся): на 320 px прячем, при крупном тексте ужимаем отступы */
+.builder-chat-send:has(.builder-chat-send-count) {
+  gap: 5px;
+  padding-inline: 12px;
+}
+@media (max-width: 359px) {
+  .builder-chat-send-count {
+    display: none;
+  }
+}

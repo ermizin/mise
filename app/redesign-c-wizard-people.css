@@ -1092,3 +1092,32 @@
 .limits-sheet:focus {
   outline: none;
 }
+
+/* ============================================================
+   Пакет «qa» (раунд 2): 320 px и крупный текст
+   ============================================================ */
+
+/* Сводка меню: «продуктов» не наезжает на «порций» */
+.menu-summary .summary-tile b {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+@media (max-width: 359px) {
+  .menu-summary .summary-tile {
+    padding: 0 6px;
+  }
+  .menu-summary .summary-tile b {
+    font-size: var(--text-body);
+  }
+}
+
+/* Пол + возраст: сегмент «Мужчина / Женщина» шире половины строки на 375 px
+   и меньше — тогда он занимает всю строку, поля чисел идут ниже по два */
+.person-card .person-body-grid {
+  container-type: inline-size;
+}
+@container (max-width: 19.9em) {
+  .person-card .person-body-grid > .field:first-child {
+    grid-column: 1 / -1;
+  }
+}
