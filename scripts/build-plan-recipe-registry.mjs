@@ -107,7 +107,7 @@ export async function writePlanRecipeRegistry(outputPath = new URL("../data/plan
   return registry;
 }
 
-if (process.argv[1] && new URL(`file://${process.argv[1]}`).href === import.meta.url) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const outputIndex = process.argv.indexOf("--output");
   const output = outputIndex >= 0 ? pathToFileURL(resolve(process.argv[outputIndex + 1])) : undefined;
   const registry = await writePlanRecipeRegistry(output);

@@ -9,39 +9,48 @@ if (entries.size !== manifest.recipes.length) throw new Error("Duplicate recipe 
 
 const historicalPackingText = "Разделите готовый выход по числу рассчитанных контейнеров, подпишите имя, приём пищи и дату, затем уберите на хранение.";
 
-function fingerprint(steps) {
+export function instructionFingerprint(steps) {
   return createHash("sha256").update(JSON.stringify(steps)).digest("hex");
 }
 
-function historicalSplitTexts(steps) {
-  const expanded = [];
-  for (const step of steps) {
-    const parts = String(step)
-      .split(/(?<=[.!?])\s+(?=[А-ЯЁ])/u)
-      .map((part) => part.trim())
-      .filter(Boolean);
-    const merged = [];
-    for (const part of parts) {
-      if (part.length < 20 && merged.length) merged[merged.length - 1] += ` ${part}`;
-      else merged.push(part);
-    }
-    if (merged.length > 1 && merged[0].length < 20) {
-      merged.splice(0, 2, `${merged[0]} ${merged[1]}`);
-    }
-    expanded.push(...merged);
+/* Предложения одного шага так, как их видит equipment gate: граница — точка,
+   «!» или «?» перед заглавной буквой; обрывок короче 20 знаков приклеивается к
+   соседнему предложению. Этой же функцией считают предложения аудит и
+   проверка редакционных шагов. */
+export function splitInstructionSentences(step) {
+  const parts = String(step)
+    .split(/(?<=[.!?])\s+(?=[А-ЯЁ])/u)
+    .map((part) => part.trim())
+    .filter(Boolean);
+  const merged = [];
+  for (const part of parts) {
+    if (part.length < 20 && merged.length) merged[merged.length - 1] += ` ${part}`;
+    else merged.push(part);
   }
-  return expanded;
+  if (merged.length > 1 && merged[0].length < 20) {
+    merged.splice(0, 2, `${merged[0]} ${merged[1]}`);
+  }
+  return merged;
+}
+
+export function historicalSplitTexts(steps) {
+  return steps.flatMap((step) => splitInstructionSentences(step));
+}
+
+export function recipeEquipmentEntry(id) {
+  const entry = entries.get(id);
+  return entry ? structuredClone(entry) : undefined;
 }
 
 export function matchesEquipmentInstructionFingerprint(expectedFingerprint, steps) {
-  if (expectedFingerprint === fingerprint(steps)) return true;
+  if (expectedFingerprint === instructionFingerprint(steps)) return true;
   const historical = historicalSplitTexts(steps);
-  if (expectedFingerprint === fingerprint(historical)) return true;
+  if (expectedFingerprint === instructionFingerprint(historical)) return true;
   // This is the only historical generated text accepted by the gate. It was
   // appended solely when the old splitter produced one instruction and is not
   // part of the grouped editorial source now.
   return historical.length === 1 &&
-    expectedFingerprint === fingerprint([...historical, historicalPackingText]);
+    expectedFingerprint === instructionFingerprint([...historical, historicalPackingText]);
 }
 
 export function recipeEquipmentFor(id, title, steps) {

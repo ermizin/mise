@@ -107,7 +107,7 @@ export function renderRecipeMenuCatalog({ menus, cuisineLabels, totalRecipes }) 
   return `${lines.join("\n").trimEnd()}\n`;
 }
 
-if (process.argv[1] && new URL(`file://${process.argv[1]}`).href === import.meta.url) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const outputIndex = process.argv.indexOf("--output");
   const output = outputIndex >= 0 ? pathToFileURL(resolve(process.argv[outputIndex + 1])) : new URL("../docs/recipe-catalog.md", import.meta.url);
   const catalog = await buildRecipeMenuCatalog();

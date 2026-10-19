@@ -9,6 +9,8 @@
  * To compare two variants, run it on both code states and compare the summary.
  */
 import { readFile, writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { pathToFileURL } from "node:url";
 import { buildMobileBootstrap } from "../domain/mobile.ts";
 import { calculateChildNutritionTarget, calculateMealPlanTargets, macrosForCalories } from "../domain/nutrition.ts";
 import { generateMobilePlan } from "../domain/plan-generator.ts";
@@ -152,7 +154,7 @@ export function summarizeMobileMenuMatrix(results) {
   };
 }
 
-if (import.meta.url === new URL(`file://${process.argv[1]}`).href) {
+if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {
   const bootstrap = await loadMobileBootstrap();
   const results = mobileMenuScenarios().map((scenario) => runMobileMenuScenario(bootstrap, scenario));
   const jsonIndex = process.argv.indexOf("--json");

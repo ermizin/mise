@@ -244,14 +244,42 @@ function repairSandwich(candidate) {
   return candidate;
 }
 
-function updateStep(candidate, stepId, updater) {
+/* Поварская правка шага ищет шаг не по номеру («editorial-step-2»), а по
+   уникальной подстроке его текста. Редактор может разбить составной шаг на
+   несколько по границам предложений и перенумеровать драфт; правка должна
+   попасть в шаг с нужным предложением, а не молча промахнуться. Если подстрока
+   не найдена или найдена в нескольких шагах, сборка останавливается. */
+export function findStepByAnchor(draft, anchor, recipeId) {
+  const matches = (draft ?? []).filter((step) => String(step.text ?? "").includes(anchor));
+  if (matches.length !== 1) {
+    throw new Error(`${recipeId}: chef patch anchor «${anchor}» matches ${matches.length} steps; expected exactly one.`);
+  }
+  return matches[0];
+}
+
+function updateStepByAnchor(candidate, anchor, updater) {
+  const draft = candidate.paraphrasedInstructionDraft ?? [];
+  const target = findStepByAnchor(draft, anchor, candidate.id);
   return {
     ...candidate,
-    paraphrasedInstructionDraft: (candidate.paraphrasedInstructionDraft ?? []).map((step) =>
-      step.id === stepId ? updater({ ...step }) : step,
-    ),
+    paraphrasedInstructionDraft: draft.map((step) => step === target ? updater({ ...step }) : step),
   };
 }
+
+/* Замена подстроки в шаге, где она стоит; сама подстрока служит якорем. */
+function replaceInAnchoredStep(candidate, from, to) {
+  return updateStepByAnchor(candidate, from, (step) => ({ ...step, text: step.text.replace(from, to) }));
+}
+
+/* Карточки, чей драфт поварская правка заменяет целиком: текст редакционной
+   карточки до runtime не доходит, шаги правятся здесь. */
+export const chefDraftReplacementRecipeIds = Object.freeze([
+  "new-sandwich-caesar",
+  "new-sandwich-paprika",
+  "tmpm-25006-strawberry-lime-sorbet",
+  "goodfood-steak-broccoli-protein-pots",
+  "goodfood-prawn-rice-mango-jar-salad",
+]);
 
 function appendIngredient(candidate, item) {
   return {
@@ -346,11 +374,9 @@ function applyChefCorrections(candidate) {
         ...explicitDryConversion,
       },
       paraphrasedInstructionDraft: next.paraphrasedInstructionDraft
-        .filter((step) => step.id !== "mise-rice-dry-prep")
-        .map((step) => step.id === "editorial-step-2"
-          ? { ...step, text: step.text.replace("Вмешайте в готовый рис", "Примерно за час до конца сварите 360 г сухого риса; вмешайте в него") }
-          : step),
+        .filter((step) => step.id !== "mise-rice-dry-prep"),
     };
+    next = replaceInAnchoredStep(next, "Вмешайте в готовый рис", "Примерно за час до конца сварите 360 г сухого риса; вмешайте в него");
   }
   if (["goodfood-slow-cooker-lamb-curry", "goodfood-mini-lentil-shepherds-pies"].includes(next.id)) {
     next = {
@@ -367,26 +393,23 @@ function applyChefCorrections(candidate) {
   if (next.id === "new-home-cutlets-mash") {
     const sourceCount = (next.sourceIngredients ?? next.ingredients ?? []).length;
     next = appendIngredient(next, ingredient("sunflower_oil_processed", "Подсолнечное масло", 17, "17 г · источник"));
-    next = updateStep(next, "editorial-step-2", (step) => ({
+    next = updateStepByAnchor(next, "Обжарьте по 3–4 минуты с каждой стороны", (step) => ({
       ...step,
       text: `Разогрейте 17 г подсолнечного масла. ${step.text}`,
       ingredientIds: [...step.ingredientIds, `source-ingredient-${sourceCount + 1}`],
     }));
   }
   if (["new-sandwich-boiled-chicken", "new-sandwich-turkey-ham"].includes(next.id)) {
-    next = updateStep(next, "editorial-step-2", (step) => ({
-      ...step,
-      text: step.text.replace("овощи и всю белковую порцию", "овощи, сыр и всю мясную порцию"),
-    }));
+    next = replaceInAnchoredStep(next, "овощи и всю белковую порцию", "овощи, сыр и всю мясную порцию");
   }
   if (next.id === "foodru-oblomov-chashushuli") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
+    next = updateStepByAnchor(next, "Обжарьте говядину партиями до румяной корочки", (step) => ({
       ...step,
       text: "На половине сливочного масла обжарьте говядину партиями до румяной корочки; на оставшемся масле обжарьте лук и сладкий перец.",
     }));
   }
   if (next.id === "foodru-oblomov-sandwich") {
-    next = updateStep(next, "editorial-step-2", (step) => ({
+    next = updateStepByAnchor(next, "Обжарьте курицу до 74°C в центре", (step) => ({
       ...step,
       text: "Разогрейте 10 г растительного масла и обжарьте курицу до 74 °C в центре; дайте отдохнуть 5 минут.",
     }));
@@ -396,7 +419,7 @@ function applyChefCorrections(candidate) {
       ...next,
       time: { ...next.time, totalMinutes: 125 },
     };
-    next = updateStep(next, "editorial-step-3", (step) => ({
+    next = updateStepByAnchor(next, "Сформуйте куриные «бомбочки»", (step) => ({
       ...step,
       text: "Сформуйте куриные «бомбочки» с грибной начинкой и охладите 60–90 минут, чтобы они держали форму. Разогрейте духовку до 180 °C и запекайте около 40 минут, до 74 °C внутри; отдельно приготовьте сухой рис.",
       duration: "охлаждение 60–90 мин; выпекание около 40 мин",
@@ -404,21 +427,21 @@ function applyChefCorrections(candidate) {
     }));
   }
   if (next.id === "tmpm-26489") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
+    next = updateStepByAnchor(next, "запекайте 20–30 минут", (step) => ({
       ...step,
       text: step.text.replace("запекайте 20–30 минут", "запекайте 20–30 минут, до 74 °C в центре"),
       donenessCue: "курица достигла 74 °C, паста упругая",
     }));
   }
   if (next.id === "tmpm-25159") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
+    next = updateStepByAnchor(next, "На среднем-сильном огне обжарьте", (step) => ({
       ...step,
       text: step.text.replace("На среднем-сильном огне обжарьте", "Разогрейте масло на среднем-сильном огне и обжарьте"),
       ingredientIds: [...step.ingredientIds, "source-ingredient-13"],
     }));
   }
   if (next.id === "goodfood-banana-overnight-oats") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
+    next = updateStepByAnchor(next, "протеинового порошка", (step) => ({
       ...step,
       ingredientIds: step.ingredientIds.includes("source-ingredient-9")
         ? step.ingredientIds
@@ -433,19 +456,18 @@ function applyGoodFoodChefCorrections(candidate) {
   let next = candidate;
 
   if (next.id === "goodfood-sausage-leek-mash-pie") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
-      ...step,
-      text: step.text.replace(
-        "В глубокой сковороде обжарьте колбасный фарш",
-        "Снимите оболочку с сосисок и выдавите фарш. В глубокой сковороде обжарьте его",
-      ),
-    }));
+    next = replaceInAnchoredStep(
+      next,
+      "В глубокой сковороде обжарьте колбасный фарш",
+      "Снимите оболочку с сосисок и выдавите фарш. В глубокой сковороде обжарьте его",
+    );
   }
   if (next.id === "goodfood-slow-cooker-beef-bourguignon") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
+    // Картофель дописывается к шагу с последним этапом рагу «за 35 минут до подачи».
+    next = updateStepByAnchor(next, "За 35 минут до подачи", (step) => ({
       ...step,
       text: `${step.text} За 25 минут до подачи очистите картофель, нарежьте равными кусками, сварите 15–20 минут до мягкости, слейте воду и разомните с небольшим количеством отвара; подайте с рагу.`,
-      duration: `${step.duration}; картофель 15–20 мин`,
+      duration: [step.duration, "картофель 15–20 мин"].filter(Boolean).join("; "),
     }));
   }
   if (next.id === "goodfood-vegetarian-bolognese") {
@@ -458,22 +480,18 @@ function applyGoodFoodChefCorrections(candidate) {
       unitMetric: "g",
       original: "250 г сухих спагетти по массе из источника",
     } : item);
-    next = updateStep(next, "editorial-step-1", (step) => ({
-      ...step,
-      text: step.text.replace(
-        " и подайте с пастой.",
-        ". Пока соус томится, сварите 250 г сухих спагетти до аль денте по инструкции на упаковке, слейте воду и подайте с соусом.",
-      ),
-    }));
+    next = replaceInAnchoredStep(
+      next,
+      " и подайте с пастой.",
+      ". Пока соус томится, сварите 250 г сухих спагетти до аль денте по инструкции на упаковке, слейте воду и подайте с соусом.",
+    );
   }
   if (next.id === "goodfood-family-meals-easy-fish-cakes") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
-      ...step,
-      text: step.text.replace("Разомните с небольшим количеством сливочного масла", "Разомните в сухое однородное пюре"),
-    }));
+    next = replaceInAnchoredStep(next, "Разомните с небольшим количеством сливочного масла", "Разомните в сухое однородное пюре");
   }
   if (next.id === "goodfood-roasted-tomato-pancetta-picnic-quiches") {
     const dropEquipment = (list) => list.filter((_, index) => index !== 10).map((item) => ({ ...item }));
+    next = replaceInAnchoredStep(next, "выложите в формы", "выложите в 10 форм для тарталеток диаметром около 7,5 см");
     next = {
       ...next,
       ingredients: dropEquipment(next.ingredients ?? []),
@@ -481,9 +499,6 @@ function applyGoodFoodChefCorrections(candidate) {
       paraphrasedInstructionDraft: next.paraphrasedInstructionDraft.map((step) => ({
         ...step,
         ingredientIds: (step.ingredientIds ?? []).filter((id) => id !== "source-ingredient-11"),
-        text: step.id === "editorial-step-2"
-          ? step.text.replace("выложите в формы", "выложите в 10 форм для тарталеток диаметром около 7,5 см")
-          : step.text,
       })),
       storage: {
         ...next.storage,
@@ -509,13 +524,11 @@ function applyGoodFoodChefCorrections(candidate) {
     };
   }
   if (next.id === "goodfood-black-bean-soup-with-chunky-raita") {
-    next = updateStep(next, "editorial-step-1", (step) => ({
-      ...step,
-      text: step.text.replace(
-        "Отдельно смешайте компоненты райты.",
-        "Отдельно смешайте нарезанные авокадо и черри с зелёным луком, лимонным соком, йогуртом и кинзой — это райта.",
-      ),
-    }));
+    next = replaceInAnchoredStep(
+      next,
+      "Отдельно смешайте компоненты райты.",
+      "Отдельно смешайте нарезанные авокадо и черри с зелёным луком, лимонным соком, йогуртом и кинзой — это райта.",
+    );
   }
   if (next.id === "goodfood-prawn-rice-mango-jar-salad") {
     next = repairPrawnRiceJar(next);
@@ -531,7 +544,7 @@ function applyGoodFoodChefCorrections(candidate) {
       ...next,
       time: { prepMinutes: 30, cookMinutes: 50, totalMinutes: 200 },
     };
-    next = updateStep(next, "editorial-step-3", (step) => ({
+    next = updateStepByAnchor(next, "щепоткой кайенского перца", (step) => ({
       ...step,
       ingredientIds: [...step.ingredientIds, "source-ingredient-26", "source-ingredient-27", "source-ingredient-28"],
     }));
