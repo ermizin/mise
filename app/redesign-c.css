@@ -184,3 +184,17 @@
 .week-kcal-linear .macro-bar i {
   background: var(--macro-kcal);
 }
+
+/* ============================================================
+   Пакет brand (раунд 2): размеры иконок набора
+   ============================================================ */
+/* Иконки из app/ui/icon.tsx получают класс .icon (22 px); здесь они заменили
+   встроенные SVG прежних размеров. */
+.catalog-kicker > .icon {
+  width: 16px;
+  height: 16px;
+}
+.cooking-timer-toggle .icon {
+  width: 18px;
+  height: 18px;
+}
