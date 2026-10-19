@@ -1,4 +1,4 @@
-const CACHE_NAME = "mise-shell-v4";
+const CACHE_NAME = "mise-shell-v5"; // v5: редизайн C — новые шрифты, стили и фоны
 const PLAN_CACHE_NAME = "mise-plan-v3";
 const SHELL = [
   "/",

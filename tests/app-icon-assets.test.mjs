@@ -61,8 +61,8 @@ test("manifest, metadata and push notifications use the complete icon set", asyn
     readFile(new URL("../public/sw.js", import.meta.url), "utf8"),
   ]);
   const manifest = JSON.parse(manifestText);
-  assert.equal(manifest.background_color, "#FDF6EE");
-  assert.equal(manifest.theme_color, "#FBF3EA");
+  assert.equal(manifest.background_color, "#FFF1E6");
+  assert.equal(manifest.theme_color, "#FFF1E6");
   assert.deepEqual(manifest.icons.map(({ src, sizes, purpose }) => [src, sizes, purpose]), [
     ["/icon-192.png", "192x192", "any"],
     ["/icon-512.png", "512x512", "any"],
