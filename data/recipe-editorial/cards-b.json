@@ -1575,35 +1575,71 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разделите куриные грудки на 8 кусков, отбейте до толщины около 1,2 см и приправьте. Подготовьте панировку из измельчённых кукурузных хлопьев, специй и яичной смеси; обваляйте курицу. Готовьте в аэрогриле при 204°C по 4–5 минут с каждой стороны, сбрызгивая маслом. Подрумяньте булочки на сковороде, соберите с курицей, томатом, салатом, огурцами и майонезом.",
+        "text": "Разделите куриные грудки на 8 кусков, отбейте до толщины около 1,2 см и приправьте.",
         "ingredientIds": [
           "source-ingredient-1",
+          "source-ingredient-7"
+        ],
+        "action": "prepare",
+        "dependsOn": []
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Подготовьте панировку из измельчённых кукурузных хлопьев, специй и яичной смеси; обваляйте курицу.",
+        "ingredientIds": [
           "source-ingredient-2",
           "source-ingredient-3",
           "source-ingredient-4",
           "source-ingredient-5",
           "source-ingredient-6",
-          "source-ingredient-7",
           "source-ingredient-8",
-          "source-ingredient-9",
-          "source-ingredient-10",
-          "source-ingredient-11",
-          "source-ingredient-12",
-          "source-ingredient-13",
-          "source-ingredient-14",
-          "source-ingredient-15",
-          "source-ingredient-16"
+          "source-ingredient-9"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "food_processor"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Готовьте в аэрогриле при 204°C по 4–5 минут с каждой стороны, сбрызгивая маслом.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-10"
         ],
         "action": "air_fry",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "temperature": "204°C",
         "duration": "4–5 мин с каждой стороны",
         "equipment": [
-          "air_fryer",
-          "skillet",
-          "food_processor"
+          "air_fryer"
         ],
         "donenessCue": "курица полностью готова, панировка румяная"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Подрумяньте булочки на сковороде, соберите с курицей, томатом, салатом, огурцами и майонезом.",
+        "ingredientIds": [
+          "source-ingredient-11",
+          "source-ingredient-12",
+          "source-ingredient-1",
+          "source-ingredient-14",
+          "source-ingredient-16",
+          "source-ingredient-15",
+          "source-ingredient-13"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "skillet"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1638,20 +1674,33 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте готовые кусочки курицы в аэрогриле при 204°C несколько минут до горячей середины. Переложите в миску, добавьте острый соус и перемешайте до равномерного покрытия.",
+        "text": "Разогрейте готовые кусочки курицы в аэрогриле при 204°C несколько минут до горячей середины.",
         "ingredientIds": [
-          "source-ingredient-1",
-          "source-ingredient-2"
+          "source-ingredient-1"
         ],
         "action": "air_fry",
         "dependsOn": [],
         "temperature": "204°C",
         "duration": "несколько минут",
         "equipment": [
-          "air_fryer",
-          "mixing_bowl"
+          "air_fryer"
         ],
         "donenessCue": "курица горячая в центре"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Переложите в миску, добавьте острый соус и перемешайте до равномерного покрытия.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-2"
+        ],
+        "action": "toss",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "mixing_bowl"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1663,21 +1712,34 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте готовые кусочки курицы в аэрогриле при 204°C несколько минут до горячей середины. Смешайте кленовый сироп и шрирачу, добавьте курицу и перемешайте до равномерного покрытия.",
+        "text": "Разогрейте готовые кусочки курицы в аэрогриле при 204°C несколько минут до горячей середины.",
         "ingredientIds": [
-          "source-ingredient-1",
-          "source-ingredient-2",
-          "source-ingredient-3"
+          "source-ingredient-1"
         ],
         "action": "air_fry",
         "dependsOn": [],
         "temperature": "204°C",
         "duration": "несколько минут",
         "equipment": [
-          "air_fryer",
-          "mixing_bowl"
+          "air_fryer"
         ],
         "donenessCue": "курица горячая в центре"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте кленовый сироп и шрирачу, добавьте курицу и перемешайте до равномерного покрытия.",
+        "ingredientIds": [
+          "source-ingredient-2",
+          "source-ingredient-3",
+          "source-ingredient-1"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "equipment": [
+          "mixing_bowl"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1689,26 +1751,72 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте духовку до 218°C. Нарежьте лук, батат и перец средним кубиком, колбаски — тонкими ломтиками. Смешайте лук и батат с маслом и запекайте 12–14 минут, переверните и готовьте ещё 12–14 минут. На втором противне готовьте колбаски и перец 8–10 минут, переверните и готовьте ещё 5–8 минут. Приготовьте стручковую фасоль в микроволновой печи и обсушите; разделите на 6 порций.",
+        "text": "Разогрейте духовку до 218°C. Нарежьте лук, батат и перец средним кубиком, колбаски — тонкими ломтиками.",
         "ingredientIds": [
-          "source-ingredient-1",
-          "source-ingredient-2",
           "source-ingredient-3",
+          "source-ingredient-2",
           "source-ingredient-4",
-          "source-ingredient-5",
+          "source-ingredient-1"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "temperature": "218°C",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте лук и батат с маслом и запекайте 12–14 минут, переверните и готовьте ещё 12–14 минут.",
+        "ingredientIds": [
+          "source-ingredient-3",
+          "source-ingredient-2",
           "source-ingredient-6",
           "source-ingredient-7"
         ],
         "action": "bake",
-        "dependsOn": [],
-        "temperature": "218°C",
-        "duration": "12–14 мин + 12–14 мин; 8–10 мин + 5–8 мин",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "12–14 мин + 12–14 мин",
         "equipment": [
           "oven",
-          "baking_sheet",
-          "microwave"
+          "baking_sheet"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "На втором противне готовьте колбаски и перец 8–10 минут, переверните и готовьте ещё 5–8 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-4",
+          "source-ingredient-7"
+        ],
+        "action": "bake",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "duration": "8–10 мин + 5–8 мин",
+        "equipment": [
+          "oven",
+          "baking_sheet"
         ],
         "donenessCue": "батат и колбаски румяные"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Приготовьте стручковую фасоль в микроволновой печи и обсушите; разделите на 6 порций.",
+        "ingredientIds": [
+          "source-ingredient-5"
+        ],
+        "action": "microwave",
+        "dependsOn": [
+          "editorial-step-2",
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "microwave"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1745,30 +1853,54 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Приготовьте рис. Смешайте устричный соус, мёд, соевый соус, кунжутное масло, шрирачу и чеснок, покройте курицу и маринуйте минимум 30 минут. Готовьте курицу в аэрогриле при 204°C около 12 минут, перевернув в середине; либо запеките при 218°C 10–12 минут и подрумяньте под грилем 5–10 минут вместе с луком. Приготовьте брокколи, затем разделите курицу, брокколи и рис на 5 порций.",
+        "text": "Приготовьте рис. Смешайте устричный соус, мёд, соевый соус, кунжутное масло, шрирачу и чеснок, покройте курицу и маринуйте минимум 30 минут.",
         "ingredientIds": [
-          "source-ingredient-1",
+          "source-ingredient-9",
           "source-ingredient-2",
           "source-ingredient-3",
           "source-ingredient-4",
-          "source-ingredient-5",
           "source-ingredient-6",
           "source-ingredient-7",
-          "source-ingredient-8",
-          "source-ingredient-9",
-          "source-ingredient-10",
+          "source-ingredient-5",
+          "source-ingredient-1",
           "source-ingredient-11"
         ],
-        "action": "air_fry",
+        "action": "marinate",
         "dependsOn": [],
+        "duration": "маринование от 30 мин"
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Готовьте курицу в аэрогриле при 204°C около 12 минут, перевернув в середине; либо запеките при 218°C 10–12 минут и подрумяньте под грилем 5–10 минут вместе с луком.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-8"
+        ],
+        "action": "air_fry",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
         "temperature": "204°C",
-        "duration": "маринование от 30 мин; около 12 мин",
+        "duration": "около 12 мин",
         "equipment": [
           "air_fryer",
           "oven",
           "baking_sheet"
         ],
         "donenessCue": "курица румяная и готова"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Приготовьте брокколи, затем разделите курицу, брокколи и рис на 5 порций.",
+        "ingredientIds": [
+          "source-ingredient-10",
+          "source-ingredient-1",
+          "source-ingredient-9"
+        ],
+        "action": "divide",
+        "dependsOn": [
+          "editorial-step-2"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1821,26 +1953,55 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Нарежьте курицу полосками, приправьте. Подготовьте три ёмкости: крахмал, взбитые с водой яйца и измельчённые кукурузные хлопья. Обваляйте курицу последовательно в крахмале, яйце и панировке. Готовьте в аэрогриле при 204°C 7–8 минут, переверните, сбрызните маслом и готовьте ещё 5–6 минут до золотистой корочки. Остудите; разогревайте при 204°C 7–10 минут.",
+        "text": "Нарежьте курицу полосками, приправьте. Подготовьте три ёмкости: крахмал, взбитые с водой яйца и измельчённые кукурузные хлопья. Обваляйте курицу последовательно в крахмале, яйце и панировке.",
         "ingredientIds": [
           "source-ingredient-1",
-          "source-ingredient-2",
+          "source-ingredient-6",
           "source-ingredient-3",
           "source-ingredient-4",
           "source-ingredient-5",
-          "source-ingredient-6",
+          "source-ingredient-2"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "equipment": [
+          "food_processor"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Готовьте в аэрогриле при 204°C 7–8 минут, переверните, сбрызните маслом и готовьте ещё 5–6 минут до золотистой корочки.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-7"
         ],
         "action": "air_fry",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-1"
+        ],
         "temperature": "204°C",
-        "duration": "7–8 мин + 5–6 мин; разогрев 7–10 мин",
+        "duration": "7–8 мин + 5–6 мин",
         "equipment": [
-          "air_fryer",
-          "food_processor",
-          "baking_sheet"
+          "air_fryer"
         ],
         "donenessCue": "панировка золотистая, курица готова"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Остудите; разогревайте при 204°C 7–10 минут.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "reheat",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "temperature": "204°C",
+        "duration": "разогрев 7–10 мин",
+        "equipment": [
+          "baking_sheet",
+          "air_fryer"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1852,28 +2013,71 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Обжарьте говядину с луком и чесноком, добавьте томаты и травы и кипятите 10–20 минут. Вмешайте шпинат до увядания. Разогрейте духовку до 204°C и отварите пенне. Соедините пасту с соусом, выложите половину в форму, добавьте рикотту, накройте второй половиной, посыпьте сырами. Запекайте 30 минут, при необходимости накрыв фольгой, и дайте постоять перед нарезкой.",
+        "text": "Обжарьте говядину с луком и чесноком, добавьте томаты и травы и кипятите 10–20 минут. Вмешайте шпинат до увядания.",
         "ingredientIds": [
-          "source-ingredient-1",
           "source-ingredient-2",
-          "source-ingredient-3",
-          "source-ingredient-4",
           "source-ingredient-5",
           "source-ingredient-6",
+          "source-ingredient-3",
+          "source-ingredient-4",
           "source-ingredient-7",
           "source-ingredient-8",
-          "source-ingredient-9",
-          "source-ingredient-10",
-          "source-ingredient-11",
           "source-ingredient-12",
           "source-ingredient-13"
         ],
-        "action": "bake",
+        "action": "simmer",
         "dependsOn": [],
-        "temperature": "204°C",
-        "duration": "соус 10–20 мин; запекание 30 мин",
+        "duration": "10–20 мин",
         "equipment": [
-          "pot",
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Разогрейте духовку до 204°C и отварите пенне.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "boil",
+        "dependsOn": [
+          "editorial-step-1"
+        ],
+        "temperature": "204°C",
+        "equipment": [
+          "oven",
+          "pot"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Соедините пасту с соусом, выложите половину в форму, добавьте рикотту, накройте второй половиной, посыпьте сырами.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-9",
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "baking_dish"
+        ]
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Запекайте 30 минут, при необходимости накрыв фольгой, и дайте постоять перед нарезкой.",
+        "ingredientIds": [
+          "source-ingredient-10",
+          "source-ingredient-11"
+        ],
+        "action": "bake",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "duration": "30 мин",
+        "equipment": [
           "oven",
           "baking_dish",
           "baking_sheet"
@@ -1890,24 +2094,49 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте духовку до 177°C. При желании слегка подсластите чернику и разморозьте. Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, сироп и прочие жидкие компоненты. Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с сахаром и выпекайте 35–40 минут. Разделите на 6 порций.",
+        "text": "Разогрейте духовку до 177°C. При желании слегка подсластите чернику и разморозьте.",
+        "ingredientIds": [
+          "source-ingredient-4",
+          "source-ingredient-12"
+        ],
+        "action": "prepare",
+        "dependsOn": [],
+        "temperature": "177°C",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте овсянку, протеин и разрыхлитель, затем белки, молоко, сироп и прочие жидкие компоненты.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4",
-          "source-ingredient-5",
-          "source-ingredient-6",
           "source-ingredient-7",
           "source-ingredient-8",
+          "source-ingredient-5",
           "source-ingredient-9",
+          "source-ingredient-6",
+          "source-ingredient-13",
+          "source-ingredient-4"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Переложите в смазанную форму 23×33 см, распределите сверху размягчённый сливочный сыр с сахаром и выпекайте 35–40 минут. Разделите на 6 порций.",
+        "ingredientIds": [
           "source-ingredient-10",
-          "source-ingredient-11",
-          "source-ingredient-12",
-          "source-ingredient-13"
+          "source-ingredient-11"
         ],
         "action": "bake",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "temperature": "177°C",
         "duration": "35–40 мин",
         "equipment": [
@@ -1926,26 +2155,64 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разморозьте хэшбрауны в микроволновой печи 5–6 минут. Смешайте с крахмалом, приправленной солью, перцем, луком, ветчиной и сыром. Плотно сформуйте порции примерно по 60 г, заморозьте их в один слой и упакуйте. Готовьте в аэрогриле при 204°C 12–15 минут, перевернув и сбрызнув маслом в середине; так же разогревайте замороженные изделия.",
+        "text": "Разморозьте хэшбрауны в микроволновой печи 5–6 минут.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "thaw",
+        "dependsOn": [],
+        "duration": "5–6 мин",
+        "equipment": [
+          "microwave"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Смешайте с крахмалом, приправленной солью, перцем, луком, ветчиной и сыром.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
+          "source-ingredient-6",
           "source-ingredient-4",
           "source-ingredient-5",
-          "source-ingredient-6",
           "source-ingredient-7",
-          "source-ingredient-8",
+          "source-ingredient-8"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Плотно сформуйте порции примерно по 60 г, заморозьте их в один слой и упакуйте.",
+        "ingredientIds": [
+          "source-ingredient-1"
+        ],
+        "action": "form",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "baking_sheet"
+        ]
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Готовьте в аэрогриле при 204°C 12–15 минут, перевернув и сбрызнув маслом в середине; так же разогревайте замороженные изделия.",
+        "ingredientIds": [
+          "source-ingredient-1",
           "source-ingredient-9"
         ],
         "action": "air_fry",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-3"
+        ],
         "temperature": "204°C",
-        "duration": "разморозка 5–6 мин; готовка 12–15 мин",
+        "duration": "12–15 мин",
         "equipment": [
-          "microwave",
-          "air_fryer",
-          "baking_sheet"
+          "air_fryer"
         ],
         "donenessCue": "рёшти румяные и хрустящие"
       }
@@ -1959,27 +2226,57 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте духовку до 163°C. Смешайте сухие ингредиенты без комков, затем введите воду, белки и шоколадные капли. Заполните смазанные ячейки мини-формы наполовину и выпекайте 9–10 минут. Полностью остудите, заморозьте в пакете; перед подачей разогрейте в микроволновой печи.",
+        "text": "Разогрейте духовку до 163°C. Смешайте сухие ингредиенты без комков, затем введите воду, белки и шоколадные капли.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
           "source-ingredient-3",
-          "source-ingredient-4",
-          "source-ingredient-5",
           "source-ingredient-6",
           "source-ingredient-7",
-          "source-ingredient-8"
+          "source-ingredient-8",
+          "source-ingredient-4",
+          "source-ingredient-5"
+        ],
+        "action": "mix",
+        "dependsOn": [],
+        "temperature": "163°C",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Заполните смазанные ячейки мини-формы наполовину и выпекайте 9–10 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-4",
+          "source-ingredient-5"
         ],
         "action": "bake",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-1"
+        ],
         "temperature": "163°C",
         "duration": "9–10 мин",
         "equipment": [
           "oven",
-          "baking_dish",
-          "microwave"
+          "baking_dish"
         ],
         "donenessCue": "боллы пропеклись"
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Полностью остудите, заморозьте в пакете; перед подачей разогрейте в микроволновой печи.",
+        "ingredientIds": [
+          "source-ingredient-5"
+        ],
+        "action": "freeze",
+        "dependsOn": [
+          "editorial-step-2"
+        ],
+        "equipment": [
+          "microwave"
+        ]
       }
     ],
     "proceduralStatus": "ready",
@@ -1991,34 +2288,72 @@
     "paraphrasedInstructionDraft": [
       {
         "id": "editorial-step-1",
-        "text": "Разогрейте духовку до 177°C. Смешайте овсянку, протеин, специи и разрыхлитель. Натрите морковь, соедините с коричневым сахаром, маслом, белками, сиропом и молоком, затем вмешайте сухую смесь. Равномерно распределите в смазанной форме 23×33 см и выпекайте 30–35 минут. Растопите сливочный сыр, смешайте с йогуртом и подсластителем, нанесите сверху; разделите на 6 порций.",
+        "text": "Разогрейте духовку до 177°C. Смешайте овсянку, протеин, специи и разрыхлитель.",
         "ingredientIds": [
           "source-ingredient-1",
           "source-ingredient-2",
-          "source-ingredient-3",
-          "source-ingredient-4",
-          "source-ingredient-5",
-          "source-ingredient-6",
-          "source-ingredient-7",
-          "source-ingredient-8",
           "source-ingredient-9",
           "source-ingredient-10",
           "source-ingredient-11",
+          "source-ingredient-3"
+        ],
+        "action": "mix",
+        "dependsOn": [],
+        "temperature": "177°C",
+        "equipment": [
+          "oven"
+        ]
+      },
+      {
+        "id": "editorial-step-2",
+        "text": "Натрите морковь, соедините с коричневым сахаром, маслом, белками, сиропом и молоком, затем вмешайте сухую смесь.",
+        "ingredientIds": [
+          "source-ingredient-4",
           "source-ingredient-12",
-          "source-ingredient-13",
-          "source-ingredient-14",
-          "source-ingredient-15"
+          "source-ingredient-6",
+          "source-ingredient-7",
+          "source-ingredient-5",
+          "source-ingredient-8"
+        ],
+        "action": "mix",
+        "dependsOn": [
+          "editorial-step-1"
+        ]
+      },
+      {
+        "id": "editorial-step-3",
+        "text": "Равномерно распределите в смазанной форме 23×33 см и выпекайте 30–35 минут.",
+        "ingredientIds": [
+          "source-ingredient-1",
+          "source-ingredient-4"
         ],
         "action": "bake",
-        "dependsOn": [],
+        "dependsOn": [
+          "editorial-step-2"
+        ],
         "temperature": "177°C",
         "duration": "30–35 мин",
         "equipment": [
           "oven",
-          "baking_dish",
-          "microwave"
+          "baking_dish"
         ],
         "donenessCue": "овсянка пропеклась"
+      },
+      {
+        "id": "editorial-step-4",
+        "text": "Растопите сливочный сыр, смешайте с йогуртом и подсластителем, нанесите сверху; разделите на 6 порций.",
+        "ingredientIds": [
+          "source-ingredient-13",
+          "source-ingredient-14",
+          "source-ingredient-15"
+        ],
+        "action": "assemble",
+        "dependsOn": [
+          "editorial-step-3"
+        ],
+        "equipment": [
+          "microwave"
+        ]
       }
     ],
     "proceduralStatus": "ready",
