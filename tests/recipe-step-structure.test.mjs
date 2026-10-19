@@ -135,8 +135,10 @@ test("chef patches find their step by text, so a sentence-boundary split keeps t
   const rawDocuments = await Promise.all(recipeCorpusDatasetPaths.map(async (path) =>
     JSON.parse(await readFile(new URL(`../${path}`, import.meta.url), "utf8"))));
   const candidate = rawDocuments.flatMap((document) => document.candidates).find((item) => item.id === id);
+  // Regroup from the sentences of the whole draft, so the check holds both
+  // before and after the editorial split of this card (cards-b, 2026-10-19).
   const [step] = candidate.paraphrasedInstructionDraft;
-  const sentences = splitInstructionSentences(step.text);
+  const sentences = candidate.paraphrasedInstructionDraft.flatMap((item) => splitInstructionSentences(item.text));
   assert.equal(sentences.length, 5);
   candidate.paraphrasedInstructionDraft = [[0, 1], [2], [3], [4]].map((group, index) => ({
     ...step,
