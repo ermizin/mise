@@ -37,3 +37,25 @@ test("server recipe registry exactly follows the client production predicate", a
     "review-required legacy cards cannot be saved through the server",
   );
 });
+
+test("every ingredient line with sesame makes the dish a sesame dish for the server", async () => {
+  // Приправа «всё и сразу» (everything bagel) — кунжут, мак, чеснок и лук, но
+  // слова sesame в названии нет. Хлебцы с авокадо и фасолью проходили с
+  // аллергией на кунжут: и автосборка, и сервер видели пустой список аллергенов.
+  const runtime = JSON.parse(
+    await readFile(new URL("../data/recipe-runtime-catalog.json", import.meta.url), "utf8"),
+  );
+  const registryById = new Map(checkedIn.recipes.map((recipe) => [recipe.id, recipe]));
+  assert.deepEqual(registryById.get("tmpm-25006-avocado-bean-rice-cakes").allergens, ["sesame"]);
+  const sesameWords = /кунжут|тахини|хумус|sesame|tahini|tahina|hummus|everything bagel|furikake|za'?atar|dukkah|gomasio/iu;
+  let sesameLines = 0;
+  for (const record of [...runtime.recipes, ...runtime.simpleRecipes, ...runtime.extensionRecipes]) {
+    for (const line of [...record.shoppingIngredients, ...record.procedureIngredients]) {
+      if (!sesameWords.test(`${line.nameRu} ${line.sourceName ?? ""} ${line.canonicalIngredientId ?? ""}`)) continue;
+      sesameLines += 1;
+      assert.ok(line.allergens?.includes("sesame"), `${record.id}: «${line.nameRu}» carries sesame`);
+      assert.ok(registryById.get(record.id)?.allergens.includes("sesame"), `${record.id}: the server refuses it for a sesame allergy`);
+    }
+  }
+  assert.ok(sesameLines >= 14, `${sesameLines} sesame lines`);
+});

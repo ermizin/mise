@@ -228,6 +228,30 @@ test("wholegrain pasta, flour and giant couscous carry their own macros and fibe
   }
 });
 
+test("peperonata pepper is a sweet pepper that is counted and bought", () => {
+  // «115 g pepper» в двух карточках с пеперонатой — сладкий перец: в исходной
+  // карточке goodfood-peperonata это «3 finely sliced peppers». Раньше строка
+  // считалась чёрным перцем «по вкусу» и не входила ни в КБЖУ, ни в покупки.
+  // На базовую порцию: 19,2 и 23 г перца по FDC 170108, +5 и +6 ккал.
+  const expected = {
+    "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata": [19.2, { kcal: 440.3, protein: 14, fat: 20.5, carbs: 51 }, 4.1],
+    "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads": [23, { kcal: 690.1, protein: 16.9, fat: 29.6, carbs: 89.7 }, 6],
+  };
+  for (const [id, [grams, macros, fiber]] of Object.entries(expected)) {
+    const recipe = app.recipesById[id];
+    const peppers = recipe.ingredients.filter((item) => item.canonicalIngredientId === "pepper_raw");
+    assert.deepEqual(peppers.map((item) => [item.name, item.quantity, item.unit]), [["Сладкий перец", grams, "г"]], id);
+    assert.ok(app.newMenuRecipes.some((item) => item.id === id), `${id}: still offered`);
+    assert.deepEqual(
+      (recipe.procedureIngredients ?? []).filter((item) => /^перец$/iu.test(item.name)),
+      [],
+      `${id}: no pepper «по вкусу» line`,
+    );
+    assert.deepEqual({ ...recipe.macros }, macros, id);
+    assert.equal(engine.fiberForFamily(app.recipeFamilyFor(recipe)), fiber, id);
+  }
+});
+
 test("the recipe card weighs what the shopping list weighs", async () => {
   const { readFile } = await import("node:fs/promises");
   const { runInNewContext } = await import("node:vm");

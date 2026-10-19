@@ -133,6 +133,13 @@ function optionalUnmeasuredProcedureIngredient(sourceIngredient, measurement) {
   return /\boptional\b|по желанию/iu.test(`${sourceIngredient?.name ?? ""} ${sourceIngredient?.original ?? ""}`);
 }
 
+/* Аллергены неизмеряемой позиции — по названию источника. Смеси называют
+   кунжут не словом sesame: приправа everything bagel (кунжут, мак, чеснок,
+   лук), тахини, фурикаке, заатар, дукка и гомасио содержат кунжут. Без этого
+   хлебцы с авокадо (`tmpm-25006-avocado-bean-rice-cakes`) предлагались при
+   аллергии на кунжут, а сервер принимал такой план. */
+const sesameProcedurePattern = /\b(?:sesame|tahini|tahina|everything bagel|furikake|za'?atar|dukkah|gomasio)\b/;
+
 function procedureAllergens(sourceName) {
   const normalized = sourceName.toLowerCase();
   const allergens = [];
@@ -140,7 +147,7 @@ function procedureAllergens(sourceName) {
   if (/\begg\b/.test(normalized)) allergens.push("egg");
   if (/\b(?:peanut|groundnut)\b/.test(normalized)) allergens.push("peanuts");
   if (/\b(?:almond|walnut|cashew|hazelnut|pistachio|nuts?)\b/.test(normalized)) allergens.push("nuts");
-  if (/\bsesame\b/.test(normalized)) allergens.push("sesame");
+  if (sesameProcedurePattern.test(normalized)) allergens.push("sesame");
   if (/\bsoy\b/.test(normalized)) allergens.push("soy");
   return [...new Set(allergens)];
 }

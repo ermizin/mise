@@ -103,6 +103,8 @@ test("a recipe's allergens are the ones the server checks, alcohol and procedure
     "tmpm-28247",
   ]);
   assert.ok(bootstrap.recipes.every((recipe) => recipe.ingredients.every((ingredient) => ingredient.allergens.every((code) => recipe.allergens.includes(code)))));
+  // Кунжут приправы «всё и сразу» — строка процедуры, а не продукт солвера.
+  assert.deepEqual(bootstrap.recipes.find((recipe) => recipe.id === "tmpm-25006-avocado-bean-rice-cakes").allergens, ["sesame"]);
   const spicy = bootstrap.recipes.filter((recipe) => recipe.spicy);
   assert.ok(spicy.length >= 30 && spicy.length < bootstrap.recipes.length / 2, `${spicy.length} spicy recipes`);
 });
