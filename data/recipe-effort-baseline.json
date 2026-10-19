@@ -1,0 +1,2448 @@
+{
+  "schemaVersion": 1,
+  "about": [
+    "Оценка усилий и общее время ready-карточек runtime до разбиения шагов 2026-10-19 (вычитка рецептов).",
+    "Сгенерирован scripts/build-recipe-effort-baseline.mjs из data/recipe-runtime-catalog.json указанного коммита; руками не правится.",
+    "tests/recipe-step-structure.test.mjs сравнивает с ним текущий runtime: effort совпадает (activeMinutes ±1), timeMinutes — кроме перечисленных в тесте карточек с объяснением."
+  ],
+  "source": {
+    "commit": "f3146602d53271be9ba54d8fc78035578469cc94",
+    "path": "data/recipe-runtime-catalog.json",
+    "command": "node scripts/build-recipe-effort-baseline.mjs --ref f314660 --output data/recipe-effort-baseline.json"
+  },
+  "fields": [
+    "timeMinutes",
+    "effort.level",
+    "effort.activeMinutes",
+    "effort.knifeActions",
+    "effort.activeActions",
+    "effort.cookware",
+    "effort.difficulty"
+  ],
+  "recipes": [
+    {
+      "id": "tmpm-28584",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28572",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28533",
+      "timeMinutes": 80,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28513",
+      "timeMinutes": 246,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28504",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28499",
+      "timeMinutes": 585,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28302",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28247",
+      "timeMinutes": 62,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 19,
+        "knifeActions": 2,
+        "activeActions": 5,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-28083",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-27802",
+      "timeMinutes": 72,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 24,
+        "knifeActions": 3,
+        "activeActions": 6,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-27343",
+      "timeMinutes": 77,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-27328",
+      "timeMinutes": 61,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-27306",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-27287",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26996",
+      "timeMinutes": 65,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26965",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26920",
+      "timeMinutes": 90,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 7,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26872",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 24,
+        "knifeActions": 3,
+        "activeActions": 6,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26720",
+      "timeMinutes": 644,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26689",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 6,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26676",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26660",
+      "timeMinutes": 375,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26647",
+      "timeMinutes": 66,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26617",
+      "timeMinutes": 215,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 19,
+        "knifeActions": 2,
+        "activeActions": 5,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26583",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26528",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 6,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26441",
+      "timeMinutes": 30,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26429",
+      "timeMinutes": 65,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26414",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26358",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-26232",
+      "timeMinutes": 65,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 16,
+        "knifeActions": 2,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-26138",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25453",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25304",
+      "timeMinutes": 23,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25290",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25244",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25175",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25159",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25092",
+      "timeMinutes": 10,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-25082",
+      "timeMinutes": 65,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25071",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25044",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25030",
+      "timeMinutes": 87,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-25006-hash-brown-breakfast-bowl",
+      "timeMinutes": 5,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 5,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-25006-avocado-bean-rice-cakes",
+      "timeMinutes": 5,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 5,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-25006-breakfast-quesadilla",
+      "timeMinutes": 5,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 5,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-25006-apple-yogurt-granola",
+      "timeMinutes": 5,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 5,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-24974",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24968",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24949",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24917",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24909",
+      "timeMinutes": 47,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24899",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24851",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 6,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24799",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24729",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 19,
+        "knifeActions": 2,
+        "activeActions": 5,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24619",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 22,
+        "knifeActions": 2,
+        "activeActions": 6,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24608",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24579",
+      "timeMinutes": 221,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-24542",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 22,
+        "knifeActions": 2,
+        "activeActions": 6,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23797",
+      "timeMinutes": 65,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23554",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23545",
+      "timeMinutes": 48,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23544",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-23518",
+      "timeMinutes": 37,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23501",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-23462",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23431",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23316",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23306",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23261",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23228",
+      "timeMinutes": 90,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23194",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-23113",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-23090",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22980",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-22968",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-22922",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22550",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22571",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22531",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22442",
+      "timeMinutes": 40,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22428",
+      "timeMinutes": 90,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22331",
+      "timeMinutes": 90,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22278",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-22144",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-22181",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-21976",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-21841",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-21839",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-19895",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "tmpm-18874",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-18557",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-17591",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-17393",
+      "timeMinutes": 10,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-17381",
+      "timeMinutes": 10,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-17115",
+      "timeMinutes": 46,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16850",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16479",
+      "timeMinutes": 90,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16454",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16300",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16283",
+      "timeMinutes": 35,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16249",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "tmpm-16046",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-veggie-shepherds-pie-sweet-potato-mash",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-chicken-pasta-bake",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-satay-sweet-potato-curry",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-kadala-curry",
+      "timeMinutes": 40,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-slow-cooker-lamb-curry",
+      "timeMinutes": 724,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-sausage-leek-mash-pie",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-10minute-couscous-salad",
+      "timeMinutes": 10,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-big-batch-bolognese",
+      "timeMinutes": 115,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-slow-cooker-beef-bourguignon",
+      "timeMinutes": 544,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-tuna-pasta-bake",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-vegan-shepherds-pie",
+      "timeMinutes": 110,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-vegetarian-bolognese",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-slow-cooker-sausage-casserole",
+      "timeMinutes": 725,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-italian-vegetable-soup",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-aubergine-tomato-halloumi-pie",
+      "timeMinutes": 85,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-fajita-chicken-rice-bowl-with-burnt-lime",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-mini-lentil-shepherds-pies",
+      "timeMinutes": 124,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-family-meals-chicken-veg-casserole",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-quinoa-salad-with-shredded-greens-raisins",
+      "timeMinutes": 31,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-big-batch-pressure-cooker-bolognese",
+      "timeMinutes": 120,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-creamy-bean-kale-pasta",
+      "timeMinutes": 26,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-courgette-tomato-soup",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-banana-overnight-oats",
+      "timeMinutes": 481,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 5,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-creamy-chicken-sweetcorn-soup",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-smoky-black-bean-chilli",
+      "timeMinutes": 190,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-family-meals-easy-beef-stew-sweet-potato-topping",
+      "timeMinutes": 165,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-family-meals-mild-chicken-curry",
+      "timeMinutes": 90,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-beef-red-wine-potato-pie",
+      "timeMinutes": 1567,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 6,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-vegan-breakfast-muffins",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-tuna-nicoise-protein-pots",
+      "timeMinutes": 22,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-chickpea-spinach-gratin-with-salsa-verde",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-marinated-chicken-with-orzo-tomato-feta",
+      "timeMinutes": 217,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 20,
+        "knifeActions": 1,
+        "activeActions": 6,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-family-meals-easy-fish-cakes",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 8,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-lemon-orzo-with-trout-spiced-broccoli-peperonata",
+      "timeMinutes": 92,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 21,
+        "knifeActions": 0,
+        "activeActions": 7,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-steak-broccoli-protein-pots",
+      "timeMinutes": 38,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-roasted-tomato-pancetta-picnic-quiches",
+      "timeMinutes": 135,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 6,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-vegan-ragu",
+      "timeMinutes": 80,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-summery-beans-herby-green-aioli",
+      "timeMinutes": 170,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 21,
+        "knifeActions": 0,
+        "activeActions": 7,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-roasted-lemony-broccoli-mascarpone-flatbreads",
+      "timeMinutes": 242,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 18,
+        "knifeActions": 0,
+        "activeActions": 6,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-bulgur-quinoa-lunch-bowls",
+      "timeMinutes": 30,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-vegan-paella",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-spiced-lentil-butternut-squash-soup",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-pork-harissa-meatballs",
+      "timeMinutes": 115,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-crunchy-broccoli-cranberry-salad",
+      "timeMinutes": 21,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 11,
+        "knifeActions": 1,
+        "activeActions": 3,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-chicken-sweet-potato-peanut-stew",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-mozzarella-pepper-aubergine-calzone",
+      "timeMinutes": 50,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-lentil-kofta-orzo-feta",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-apple-penne-slaw-walnuts",
+      "timeMinutes": 27,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-sausage-egg-muffins",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-mushroom-lentil-beef-ragu",
+      "timeMinutes": 255,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-black-bean-spicy-beef-pasta",
+      "timeMinutes": 230,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-harissa-beef-tomato-bulgur",
+      "timeMinutes": 230,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-wholemeal-wraps-minty-pea-hummus-beetroot",
+      "timeMinutes": 16,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-orange-oregano-pulled-pork",
+      "timeMinutes": 1454,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 6,
+        "knifeActions": 0,
+        "activeActions": 2,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-tomato-pepper-bean-one-pot",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "goodfood-scandi-beetroot-salmon-pasta",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-chicken-squash-pesto-lasagne",
+      "timeMinutes": 85,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-prawn-rice-mango-jar-salad",
+      "timeMinutes": 129,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-orange-dark-chocolate-yogurt-bowls",
+      "timeMinutes": 18,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 2,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-black-bean-soup-with-chunky-raita",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-wild-salmon-with-radish-orange-slaw",
+      "timeMinutes": 40,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-fragrant-biryani-with-coriander-cod",
+      "timeMinutes": 95,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 5,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-quinoa-with-roast-asparagus-eggs-capers",
+      "timeMinutes": 57,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-pork-with-cucumber-apricot-couscous",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-veggie-nuggets-with-summer-slaw",
+      "timeMinutes": 75,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 3,
+        "knifeActions": 0,
+        "activeActions": 1,
+        "cookware": 3,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "goodfood-sweet-potato-gnocchi-with-tomato-sauce",
+      "timeMinutes": 110,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 8,
+        "knifeActions": 1,
+        "activeActions": 2,
+        "cookware": 4,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "new-home-buckwheat-legs",
+      "timeMinutes": 80,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-home-cutlets-mash",
+      "timeMinutes": 45,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-home-merchant-buckwheat",
+      "timeMinutes": 40,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-home-simple-buckwheat",
+      "timeMinutes": 40,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-home-stewed-cabbage",
+      "timeMinutes": 65,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-oats-banana-blueberry",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-oats-chocolate",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-oats-apple",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-oats-carrot",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-oats-blueberry-almond",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-oats-cinnamon-raisin",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-sandwich-boiled-chicken",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-sandwich-smoked-chicken",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-sandwich-turkey-ham",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-sandwich-balyk",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "new-sandwich-caesar",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 1,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "new-sandwich-paprika",
+      "timeMinutes": 20,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oblomov-potato-mushroom",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 1,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "foodru-oblomov-meatballs",
+      "timeMinutes": 55,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oblomov-beef-veg",
+      "timeMinutes": 160,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 1,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "foodru-oblomov-chashushuli",
+      "timeMinutes": 200,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oblomov-borscht",
+      "timeMinutes": 120,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oblomov-pepper-beef",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 1,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "foodru-oblomov-pepper-chicken",
+      "timeMinutes": 60,
+      "effort": {
+        "level": "medium",
+        "activeMinutes": 17,
+        "knifeActions": 1,
+        "activeActions": 5,
+        "cookware": 1,
+        "difficulty": 2
+      }
+    },
+    {
+      "id": "foodru-oblomov-seabass",
+      "timeMinutes": 70,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 14,
+        "knifeActions": 1,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oblomov-sandwich",
+      "timeMinutes": 25,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-blogger-chicken-bombs",
+      "timeMinutes": 142,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 12,
+        "knifeActions": 0,
+        "activeActions": 4,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-blogger-cottage-waffles",
+      "timeMinutes": 30,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oats-chocolate-shell",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oats-no-cook",
+      "timeMinutes": 485,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    },
+    {
+      "id": "foodru-oats-tomato",
+      "timeMinutes": 30,
+      "effort": {
+        "level": "low",
+        "activeMinutes": 9,
+        "knifeActions": 0,
+        "activeActions": 3,
+        "cookware": 1,
+        "difficulty": 1
+      }
+    }
+  ]
+}

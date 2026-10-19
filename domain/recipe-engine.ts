@@ -227,32 +227,83 @@ export function recipeEffortDifficulty(
   return level === "low" ? 1 : level === "medium" ? 2 : 3;
 }
 
-function minutesFromInstructionText(value?: string): number {
-  if (!value?.trim()) return 0;
-  const normalized = value.replaceAll(",", ".").replaceAll("−", "–");
-  const expressions = normalized.matchAll(
-    /(\d+(?:\.\d+)?)(?:\s*(?:–|-|до)\s*(\d+(?:\.\d+)?))?\s*(сек(?:унд[аы]?)?|мин(?:ут[аы]?)?|ч(?:ас(?:а|ов)?)?)/giu,
-  );
-  let minutes = 0;
-  for (const match of expressions) {
-    const upper = Number(match[2] ?? match[1]);
-    if (!Number.isFinite(upper)) continue;
-    const unit = match[3].toLowerCase();
-    minutes += unit.startsWith("ч")
-      ? upper * 60
-      : unit.startsWith("сек")
-        ? upper / 60
-        : upper;
+/* Время в тексте шага: число или диапазон и единица — секунды, минуты или
+   часы. После единицы не может идти буква, поэтому «разрежьте на 12 частей» и
+   «2 чашки» — не время (так же разбирает `domain/cooking-duration.ts`). */
+const instructionTimeUnit = String.raw`(сек(?:унд\p{L}*)?|мин(?:ут\p{L}*)?|ч(?:ас(?:а|ов|у|ам|ами)?)?)(?!\p{L})`;
+const instructionTimeRange = String.raw`(\d+(?:[.,]\d+)?)(?:\s*(?:–|-|до)\s*(\d+(?:[.,]\d+)?))?\s*`;
+
+/** Text that names a cooking time; the same rule the timeline parser uses. */
+export const recipeInstructionTimePattern = new RegExp(
+  instructionTimeRange + instructionTimeUnit,
+  "iu",
+);
+
+const alternativeTimeConnector = /(?<!\p{L})(?:или|либо)(?!\p{L})/iu;
+const optionalTimeClause = /(?<!\p{L})(?:по\s+желанию|при\s+желании|по\s+возможности)(?!\p{L})/iu;
+const overlappingTimeClause = /(?<!\p{L})последн\p{L}*/iu;
+
+export type RecipeInstructionTimes = {
+  /** Minutes the step itself takes. */
+  required: number;
+  /** Minutes the text names only as optional (marinating «по желанию»). */
+  optional: number;
+};
+
+/* Минуты по тексту шага или его `duration`. Части через «;», «!», «?» или
+   точку в конце предложения идут друг за другом и складываются. Внутри части время после «или»/«либо»
+   — другой вариант того же действия («4 ч на сильном или 8 ч на слабом»,
+   «20 минут сразу либо 40 минут из холодильника»): берётся первый вариант.
+   Часть «по желанию», «при желании» или «по возможности» необязательна и в
+   время шага не входит; «последние 30 мин» — часть предыдущего времени. */
+export function recipeInstructionTimes(value?: string): RecipeInstructionTimes {
+  const times = { required: 0, optional: 0 };
+  if (!value?.trim()) return times;
+  const normalized = value
+    .replace(/(\d),(\d)/gu, "$1.$2")
+    .replaceAll("−", "–");
+  for (const clause of normalized.split(/[;!?]|\.(?=\s+[А-ЯЁA-Z]|\s*$)/u)) {
+    if (overlappingTimeClause.test(clause)) continue;
+    const optional = optionalTimeClause.test(clause);
+    let previousEnd = -1;
+    for (const match of clause.matchAll(new RegExp(instructionTimeRange + instructionTimeUnit, "giu"))) {
+      const start = match.index ?? 0;
+      if (previousEnd >= 0 && alternativeTimeConnector.test(clause.slice(previousEnd, start))) break;
+      const upper = Number(match[2] ?? match[1]);
+      if (!Number.isFinite(upper)) continue;
+      const unit = match[3].toLowerCase();
+      const minutes = unit.startsWith("ч")
+        ? upper * 60
+        : unit.startsWith("сек")
+          ? upper / 60
+          : upper;
+      if (optional) times.optional += minutes;
+      else times.required += minutes;
+      previousEnd = start + match[0].length;
+    }
   }
+  return times;
+}
+
+function wholeMinutes(minutes: number): number {
   return minutes > 0 ? Math.max(1, Math.round(minutes)) : 0;
+}
+
+function minutesFromInstructionText(value?: string): number {
+  return wholeMinutes(recipeInstructionTimes(value).required);
 }
 
 export function recipeInstructionMinutes(
   duration?: string,
   instructionText?: string,
 ): number {
+  const text = recipeInstructionTimes(instructionText);
+  // A step whose text names its time only as optional («по желанию
+  // маринуйте 24 часа») does not lengthen the recipe, even when the
+  // structured duration repeats that time.
+  if (text.required === 0 && text.optional > 0) return 0;
   const structuredMinutes = minutesFromInstructionText(duration);
-  return structuredMinutes || minutesFromInstructionText(instructionText);
+  return structuredMinutes || wholeMinutes(text.required);
 }
 
 export function recipeInstructionHands(
@@ -277,7 +328,7 @@ export function recipeStepsFromInstructions(
       instruction.text,
     ),
   }));
-  const inferredMinutes = (hands: boolean) => {
+  const inferredMinutes = (hands: boolean, target: number) => {
     const unknown = projected.filter(
       (step) => step.hands === hands && step.minutes === 0,
     );
@@ -285,12 +336,6 @@ export function recipeStepsFromInstructions(
     const explicit = projected
       .filter((step) => step.hands === hands)
       .reduce((sum, step) => sum + step.minutes, 0);
-    const target = hands
-      ? Number(budget.activeMinutes ?? 0)
-      : Math.max(
-          0,
-          Number(budget.totalMinutes ?? 0) - Number(budget.activeMinutes ?? 0),
-        );
     const remaining = Math.max(unknown.length, Math.round(target) - explicit);
     const base = Math.floor(remaining / unknown.length);
     const remainder = remaining % unknown.length;
@@ -301,8 +346,20 @@ export function recipeStepsFromInstructions(
       ]),
     );
   };
-  const inferredHands = inferredMinutes(true);
-  const inferredPassive = inferredMinutes(false);
+  const activeBudget = Number(budget?.activeMinutes ?? 0);
+  const inferredHands = inferredMinutes(true, activeBudget);
+  // Waiting without a stated time fills what is left of the total after all
+  // hands-on work. When the explicit hands-on minutes already exceed the
+  // active estimate, the overflow comes out of the waiting budget instead of
+  // pushing the timeline past the total: a step split into several sentences
+  // with their own times must not lengthen the recipe.
+  const handsMinutes = projected
+    .filter((step) => step.hands)
+    .reduce((sum, step) => sum + (step.minutes || inferredHands.get(step.instruction) || 0), 0);
+  const inferredPassive = inferredMinutes(
+    false,
+    Math.max(0, Number(budget?.totalMinutes ?? 0) - Math.max(activeBudget, handsMinutes)),
+  );
   const scheduled = new Map<string, RecipeStep>();
   const indexed = projected.map(({ instruction, hands, minutes: explicitMinutes }, index) => {
     const inferred = hands

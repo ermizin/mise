@@ -13,12 +13,15 @@
    - шаг не короче 20 знаков, action из словаря карточек;
    - поварские правки на якорях находят ровно один свой шаг;
    - equipment gate: шаги совпадают с проверенными как есть или по
-     предложениям; иначе печатается, какие предложения изменились, и новый sha.
+     предложениям; иначе печатается, какие предложения изменились, и новый sha;
+   - оценка усилий (effort) прежняя: блоки работы из data/recipe-effort-blocks.json
+     находят свои шаги, а разбиение шага не прибавляет активных минут.
    Exit 1 при любой ошибке. Предупреждения (длинные шаги и т. п.) код не меняют. */
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { normalizeRawRecipeCandidate, recipeInstructionMinutes } from "../domain/recipe-engine.ts";
+import { normalizeRawRecipeCandidate, recipeInstructionMinutes, recipeInstructionTimes } from "../domain/recipe-engine.ts";
 import { validateCard } from "./apply-recipe-editorial-cards.mjs";
+import { effortFor } from "./build-recipe-runtime-catalog.mjs";
 import { auditIngredientStepGate } from "./audit-recipe-corpus.mjs";
 import { chefDraftReplacementRecipeIds } from "./apply-recipe-proofread-policy.mjs";
 import {
@@ -187,7 +190,11 @@ export async function checkEditorialSteps({ cwd = process.cwd(), ids }) {
         if (text.length < MIN_STEP_LENGTH) result.errors.push(`${id}/${step.id}: шаг короче ${MIN_STEP_LENGTH} знаков.`);
         if (TIMED_STEP_TEXT.test(text)) {
           if (!step.duration) result.errors.push(`${id}/${step.id}: в тексте есть время, но нет duration.`);
-          if (!(recipeInstructionMinutes(step.duration, text) > 0)) result.errors.push(`${id}/${step.id}: время из текста не доходит до таймлайна.`);
+          // Время, названное только как необязательное («по желанию маринуйте
+          // 24 часа»), в таймлайн намеренно не входит.
+          if (recipeInstructionTimes(text).required > 0 && !(recipeInstructionMinutes(step.duration, text) > 0)) {
+            result.errors.push(`${id}/${step.id}: время из текста не доходит до таймлайна.`);
+          }
         }
       }
       const steps = draft.map((step) => step.text).filter(Boolean);
@@ -198,6 +205,22 @@ export async function checkEditorialSteps({ cwd = process.cwd(), ids }) {
         const equipment = equipmentReport(id, String(candidate.titleRu ?? "").trim(), steps, runtimeById.get(id)?.steps);
         result.errors.push(...equipment.errors);
         result.notes.push(...equipment.notes);
+        // Оценка усилий считается по блокам работы, а не по шагам: разбиение
+        // шага по предложениям не должно её менять.
+        const previous = runtimeById.get(id)?.effort;
+        try {
+          const effort = effortFor(candidate, draft);
+          if (previous && (effort.activeMinutes !== previous.activeMinutes || effort.level !== previous.level)) {
+            result.errors.push(
+              `${id}: оценка усилий меняется: ${previous.activeMinutes} → ${effort.activeMinutes} активных минут, уровень ${previous.level} → ${effort.level}. ` +
+                "Если шаг только разбит по предложениям, работы не прибавилось: задайте начала блоков в data/recipe-effort-blocks.json (scripts/recipe-effort-blocks.mjs).",
+            );
+          } else if (previous) {
+            result.notes.push(`оценка усилий: прежняя (${effort.activeMinutes} активных минут, блоков ${effort.activeActions - effort.knifeActions})`);
+          }
+        } catch (error) {
+          result.errors.push(`effort blocks: ${error.message}`);
+        }
       }
     }
   }
