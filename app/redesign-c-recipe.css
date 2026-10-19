@@ -655,3 +655,31 @@
     display: none;
   }
 }
+
+   Пакет «qa» (раунд 2): название блюда не обрезается
+   ============================================================ */
+
+/* На 320 px и крупном тексте три строки обрезали название многоточием */
+.recipe-detail .detail-hero h1 {
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
+/* «Заменить» на 320 px и крупном тексте не упирается в главную кнопку:
+   первая колонка — по ширине подписи */
+.recipe-detail-actions {
+  grid-template-columns: minmax(92px, max-content) minmax(0, 1fr);
+}
+.recipe-detail-actions .secondary-button {
+  padding-inline: 16px;
+}
+@media (max-width: 359px) {
+  .recipe-detail-actions .secondary-button {
+    padding-inline: 12px;
+    font-size: var(--text-link);
+  }
+  .recipe-detail-actions .primary-button {
+    padding-inline: 12px;
+  }
+}
