@@ -166,5 +166,5 @@ test("visual release blockers and high-impact P1 regressions stay fixed", async 
   );
   assert.match(page, /className="screen app-boot-loading"/);
   assert.match(page, /Готовим приложение…/);
-  assert.match(icons, /snowflake: \[[\s\S]*?M22 12h-6\.5L14 15/);
+  assert.match(icons, /snowflake: \[[\s\S]*?"M20\.2 7\.2 3\.8 16\.8"[\s\S]*?"m4 10\.2 3\.3-\.9-\.9-3\.3"/, "six-armed snowflake with a chevron on every arm");
 });

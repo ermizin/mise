@@ -133,7 +133,7 @@ const primaryTabs: {
   icon: IconName;
 }[] = [
   { id: "week", label: "Неделя", full: "План на неделю", icon: "calendar" },
-  { id: "recipes", label: "Рецепты", full: "Рецепты", icon: "pot" },
+  { id: "recipes", label: "Рецепты", full: "Рецепты", icon: "book" },
   { id: "shopping", label: "Покупки", full: "Покупки", icon: "basket" },
   { id: "profile", label: "Профиль", full: "Профиль", icon: "person" },
 ];
@@ -8097,27 +8097,6 @@ function deckDishes(plan: ActivePlan | null) {
   });
 }
 
-/* Огонь из кита C §4.5: в наборе иконок «flame» нарисован колпаком повара,
-   а онбордингу нужен именно огонь готовки. */
-function FireGlyph({ size }: { size: number }) {
-  return (
-    <svg
-      className="icon"
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3 1-6 1-9z" />
-    </svg>
-  );
-}
-
 /* Витрины (колода и иллюстрации онбординга) показывают блюда с локальным
    фото. Фото исходного рецепта идут раньше иллюстраций, созданных для Mise:
    их пометку («Изображение создано для Mise») показывает только карточка
@@ -8550,7 +8529,7 @@ function OnboardingBatches({
           <RecipeMedia recipe={photos[0]} eager />
         </span>
         <span className="batch-hero-fire" aria-hidden>
-          <FireGlyph size={20} />
+          <Icon name="flame" size={20} />
         </span>
         <span className="batch-sticker batch-sticker-cook">
           СР · готовим 90 мин
@@ -8586,7 +8565,7 @@ function OnboardingBatches({
                 />
                 {day.cook && (
                   <i className="batch-day-badge is-fire">
-                    <FireGlyph size={11} />
+                    <Icon name="flame" size={11} />
                   </i>
                 )}
                 {day.frost && (
@@ -8610,7 +8589,7 @@ function OnboardingBatches({
         <div className="batch-legend">
           <span>
             <i className="is-fire">
-              <FireGlyph size={11} />
+              <Icon name="flame" size={11} />
             </i>
             день готовки
           </span>
@@ -8971,11 +8950,7 @@ function OnboardingReminders({
             }
           >
             <span className={`toggle-row-icon is-${row.tone}`} aria-hidden>
-              {row.icon === "flame" ? (
-                <FireGlyph size={18} />
-              ) : (
-                <Icon name={row.icon} size={18} />
-              )}
+              <Icon name={row.icon} size={18} />
             </span>
             <span>
               <b>{row.title}</b>
@@ -9778,7 +9753,15 @@ function WeekScreen({
         aria-busy="true"
         aria-label="Загружаем Mise"
       >
-        <span className="app-boot-mark" aria-hidden>M</span>
+        <span className="app-boot-mark" aria-hidden>
+          {/* Знак иконки приложения (scripts/generate-app-icons.swift): сплэш совпадает с иконкой на экране «Домой». */}
+          <svg viewBox="0 0 240 240" focusable="false">
+            <rect x="38" y="62" width="164" height="116" rx="26" fill="#FFF1E6" />
+            <rect x="48" y="72" width="75" height="96" rx="17" fill="#C9400D" />
+            <rect x="132" y="72" width="60" height="96" rx="17" fill="#FFD2B8" />
+            <rect x="62" y="46" width="116" height="9" rx="5" fill="#FFF1E6" fillOpacity={0.2} />
+          </svg>
+        </span>
         <h1>Mise</h1>
         <p>Готовим приложение…</p>
         <span className="app-boot-progress" aria-hidden>
@@ -11080,21 +11063,7 @@ function RecipesScreen({
         <MiseWordmark />
         <div className="catalog-top-row">
           <p className="catalog-kicker">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden
-              focusable="false"
-            >
-              <path d="M4 5a2 2 0 0 1 2-2h14v16H6a2 2 0 0 0-2 2z" />
-              <path d="M4 21a2 2 0 0 1 2-2h14" />
-            </svg>
+            <Icon name="book" size={16} />
             <span>
               {withPlural(newMenuRecipes.length, FORMS.recipe)}
               {fromYourProducts === null
@@ -17435,11 +17404,7 @@ function BatchCookingSessionView({
             disabled={!timerRunning && remainingSeconds <= 0}
             onClick={toggleTimer}
           >
-            {timerRunning ? (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false"><rect x="6" y="5" width="4" height="14" rx="1" /><rect x="14" y="5" width="4" height="14" rx="1" /></svg>
-            ) : (
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden focusable="false"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" /></svg>
-            )}
+            <Icon name={timerRunning ? "pause" : "play"} size={18} />
           </button>
           <span className="cooking-timer-value" role="timer">{formatTimer(remainingSeconds)}</span>
           <span className="cooking-timer-step">{currentStep.title}</span>

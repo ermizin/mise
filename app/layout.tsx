@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Mise — милпреп без суеты",
     description: "План питания, индивидуальные порции и покупки в одном понятном сценарии.",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Mise · одна готовка на неделю" }],
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Mise · Готовим раз — едим всю неделю: экраны «Неделя» и «План готов!»" }],
   },
   twitter: {
     card: "summary_large_image",

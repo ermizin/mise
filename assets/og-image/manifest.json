@@ -1,0 +1,77 @@
+{
+  "purpose": "Open Graph / Twitter preview for https://mise.ermizinm.ru (layout.tsx metadata)",
+  "output": {
+    "path": "public/og-image.png",
+    "width": 1200,
+    "height": 630,
+    "colorType": 2
+  },
+  "renderer": {
+    "command": "node scripts/render-og-image.mjs",
+    "chrome": "Google Chrome 155.0.8059.82"
+  },
+  "screens": {
+    "capturedAt": "2026-10-19",
+    "capturedFrom": "branch claude/redesign-c-brand on a62ed50 (redesign C v2.2), local dev server with local D1",
+    "viewport": "390×844, deviceScaleFactor 2, headless Chrome via CDP",
+    "flow": "wizard: 7 days from 19 Oct, lunch + dinner, «Простые», one adult with default goals, manual menu choice of Mise-generated dishes (simple-generated-d08, simple-generated-d13); «Сохранить план» → plan-ready.png; «Открыть план», lunch marked eaten → week.png",
+    "imageRights": "Dish photos in week.png are Mise-generated simple-pack images (data/simple-recipe-images.json, origin: generated); background photo is the pre-blurred public/bg/week.jpg already shipped in the app"
+  },
+  "files": [
+    {
+      "path": "assets/og-image/og-image.html",
+      "bytes": 6078,
+      "sha256": "c6ab14b68a68fe264e6b144cc211a902be96577aac9e3f4c1be62baf9a7c4370"
+    },
+    {
+      "path": "public/fonts/WixMadeforDisplay-800-cyrillic.woff2",
+      "bytes": 13792,
+      "sha256": "c54a0fc890f9cbaf295a1bbcf745351b099182bf87b149cf6eeec856f46750bf"
+    },
+    {
+      "path": "public/fonts/WixMadeforDisplay-800-latin.woff2",
+      "bytes": 20144,
+      "sha256": "fd4c8e65080adbaf0cc819eb67b08ed9300e9274dd0069b382d286b93b9544a0"
+    },
+    {
+      "path": "public/fonts/WixMadeforText-600-cyrillic.woff2",
+      "bytes": 14208,
+      "sha256": "f9f3ef432e3dfedd96d0ae9449a8283a5dab8a4552773f2678f3865c63ce76de"
+    },
+    {
+      "path": "public/fonts/WixMadeforText-600-latin.woff2",
+      "bytes": 20320,
+      "sha256": "4d1e9ffda308f709db183c9132d5ee5c5afb7d932ff9a32b0b54b52f998836f2"
+    },
+    {
+      "path": "public/fonts/WixMadeforText-700-cyrillic.woff2",
+      "bytes": 14208,
+      "sha256": "f9f3ef432e3dfedd96d0ae9449a8283a5dab8a4552773f2678f3865c63ce76de"
+    },
+    {
+      "path": "public/fonts/WixMadeforText-700-latin.woff2",
+      "bytes": 20320,
+      "sha256": "4d1e9ffda308f709db183c9132d5ee5c5afb7d932ff9a32b0b54b52f998836f2"
+    },
+    {
+      "path": "public/bg/week.jpg",
+      "bytes": 26882,
+      "sha256": "f37cadef8350a303383828bcb6ca828de78765a97e3c76dd70df363d7d6171be"
+    },
+    {
+      "path": "assets/og-image/screens/plan-ready.png",
+      "bytes": 612513,
+      "sha256": "4e790e419b9b2c5e4ac62123686904d7956bd4482654131bde124ff25526ff94"
+    },
+    {
+      "path": "assets/og-image/screens/week.png",
+      "bytes": 562819,
+      "sha256": "f9afd0e0ef2a31e231956bd858a2c9ef34dad90786d813e7ea2aef213d1fccbf"
+    },
+    {
+      "path": "public/og-image.png",
+      "bytes": 562624,
+      "sha256": "494d49cfb73d9cb2f67a95a48b3c9f044a779196f9a5e750fbad63deb2deeb34"
+    }
+  ]
+}
