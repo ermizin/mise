@@ -811,3 +811,67 @@
     height: 48px;
   }
 }
+
+/* ============================================================
+   Пакет «qa» (раунд 2): таб-бар на 320 px, сайдбар ≥ 1100 по киту
+   ============================================================ */
+
+/* Подписи вкладок не рвутся посередине слова («Покупк / и») */
+.app-workspace .bottom-nav button small {
+  overflow: hidden;
+  overflow-wrap: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@media (max-width: 359px) {
+  .app-workspace .app-navigation {
+    gap: 6px;
+  }
+  .app-workspace .app-navigation .bottom-nav {
+    padding: 4px;
+  }
+  .app-workspace .app-navigation .compose-fab {
+    width: 54px;
+    min-width: 54px;
+    height: 54px;
+    min-height: 54px;
+    align-self: center;
+  }
+  .app-workspace .bottom-nav button small {
+    letter-spacing: -0.3px;
+  }
+}
+
+/* Сайдбар: белая таблетка активной строки (как в таб-баре), подписи Text 15,
+   слоган — Display. Без перестройки колонки. */
+@media (min-width: 1100px) {
+  .app-workspace .liquid-nav-layer {
+    display: none;
+  }
+  .app-workspace .bottom-nav button {
+    border-radius: var(--r-pill);
+    color: var(--ink-body);
+  }
+  .app-workspace .bottom-nav button.is-active {
+    color: var(--accent-text);
+    background: #fff;
+    box-shadow: var(--shadow-s), var(--glint);
+  }
+  .app-workspace .bottom-nav-indicator {
+    border-radius: var(--r-pill);
+  }
+  .app-workspace .bottom-nav button small {
+    font-size: var(--text-body);
+    font-weight: var(--weight-semibold);
+  }
+  .app-workspace .bottom-nav button.is-active small {
+    font-weight: var(--weight-bold);
+  }
+  .desktop-tagline {
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    font-weight: var(--weight-bold);
+    line-height: 1.3;
+  }
+}

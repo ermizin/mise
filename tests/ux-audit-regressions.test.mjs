@@ -76,7 +76,8 @@ test("audit accessibility and daily-use regressions stay fixed", async () => {
     read("app/ui/icon.tsx"),
   ]);
   assert.match(css, /\.primary-button \{[\s\S]*?background: var\(--button-grad\)/);
-  assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, person\.daily\.kcal\)/);
+  assert.match(page, /eatenMacros\.kcal \/ Math\.max\(1, balanceTarget\.kcal\)/);
+  assert.match(page, /const ringProgress = balanceProgress;/, "the desktop ring counts eaten food against the plan, like the mobile bar");
   assert.match(page, /setUnassignedConfirmOpen\(true\)/);
   assert.match(page, /Mise не будет удалять их молча/);
   assert.match(page, /timerEndsAt - Date\.now\(\)/);

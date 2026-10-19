@@ -9782,11 +9782,6 @@ function WeekScreen({
     fat: Math.max(0, person.daily.fat - eatenMacros.fat),
     carbs: Math.max(0, person.daily.carbs - eatenMacros.carbs),
   };
-  const ringCircumference = 2 * Math.PI * 44;
-  const ringProgress = Math.min(
-    1,
-    eatenMacros.kcal / Math.max(1, person.daily.kcal),
-  );
   const contactWarnings = crossContactWarnings(plan, batch);
   const planEnded = today > plan.end;
   const notStarted = today < plan.start;
@@ -9848,6 +9843,10 @@ function WeekScreen({
     1,
     eatenMacros.kcal / Math.max(1, balanceTarget.kcal),
   );
+  /* Кольцо на десктопе — тот же смысл, что полоса на узком экране:
+     съедено из запланированного, остаток дня — строкой «вне плана». */
+  const ringCircumference = 2 * Math.PI * 44;
+  const ringProgress = balanceProgress;
   const outsideKcal = Math.max(0, round(person.daily.kcal - plannedMacros.kcal));
   const outsideSlots = outsidePlanSlotsPhrase(
     allMealSlots.filter(
@@ -10268,8 +10267,7 @@ function WeekScreen({
                 <small>
                   партия {nextCook.index + 1} ·{" "}
                   {withPlural(nextCookRecipes.length, FORMS.dish)} ·{" "}
-                  {withPlural(nextCookPortions, FORMS.portion)} · ≈&nbsp;{nextCookMinutes}{" "}
-                  мин
+                  {withPlural(nextCookPortions, FORMS.portion)} · ≈&nbsp;{nextCookMinutes}&nbsp;мин
                 </small>
               </span>
               <Icon name="chevron" className="entry-chevron" />
@@ -10301,7 +10299,7 @@ function WeekScreen({
               <i style={{ width: `${balanceProgress * 100}%` }} />
             </span>
           </div>
-          <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${person.daily.kcal} килокалорий`}>
+          <div className="week-kcal-ring" aria-label={`${eatenMacros.kcal} из ${balanceTarget.kcal} килокалорий ${balanceByPlan ? "по плану" : "за день"}`}>
             <svg viewBox="0 0 100 100" aria-hidden>
               <circle className="week-ring-track" cx="50" cy="50" r="44" />
               <circle
@@ -10315,7 +10313,7 @@ function WeekScreen({
             </svg>
             <div>
               <b><AnimatedNumber value={eatenMacros.kcal} /></b>
-              <small>из {person.daily.kcal.toLocaleString("ru-RU")} ккал</small>
+              <small>из {balanceTarget.kcal.toLocaleString("ru-RU")} ккал {balanceByPlan ? "по плану" : "за день"}</small>
             </div>
           </div>
           <div className="week-macro-bars">
