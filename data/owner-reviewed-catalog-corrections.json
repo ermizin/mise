@@ -6122,7 +6122,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Разогрейте духовку до 191°C. Нарежьте вишню, смешайте овсянку, протеин и разрыхлитель, затем вмешайте белки, молоко, сироп, масло, вишню и часть шоколада. Переложите в смазанную форму 23×33 см и выпекайте 35–40 минут. Растопите оставшийся шоколад, нанесите сверху и разделите на 6 порций.",
+            "text": "Разогрейте духовку до 191°C. Нарежьте вишню, смешайте овсянку, протеин и разрыхлитель, затем вмешайте белки, молоко, сироп, масло, вишню и часть шоколада.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -6133,20 +6133,47 @@
               "source-ingredient-7",
               "source-ingredient-8",
               "source-ingredient-9",
-              "source-ingredient-10",
-              "source-ingredient-11",
-              "source-ingredient-12"
+              "source-ingredient-10"
+            ],
+            "action": "mix",
+            "dependsOn": [],
+            "temperature": "191°C",
+            "equipment": [
+              "oven"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Переложите в смазанную форму 23×33 см и выпекайте 35–40 минут.",
+            "ingredientIds": [
+              "source-ingredient-1"
             ],
             "action": "bake",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-1"
+            ],
             "temperature": "191°C",
             "duration": "35–40 мин",
             "equipment": [
               "oven",
-              "baking_dish",
-              "microwave"
+              "baking_dish"
             ],
             "donenessCue": "овсянка пропеклась"
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Растопите оставшийся шоколад, нанесите сверху и разделите на 6 порций.",
+            "ingredientIds": [
+              "source-ingredient-11",
+              "source-ingredient-12"
+            ],
+            "action": "assemble",
+            "dependsOn": [
+              "editorial-step-2"
+            ],
+            "equipment": [
+              "microwave"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -6174,7 +6201,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Разогрейте духовку до 191°C. Нарежьте вишню, смешайте овсянку, протеин и разрыхлитель, затем вмешайте белки, молоко, сироп, масло, вишню и часть шоколада. Переложите в смазанную форму 23×33 см и выпекайте 35–40 минут. Растопите оставшийся шоколад, нанесите сверху и разделите на 6 порций.",
+            "text": "Разогрейте духовку до 191°C. Нарежьте вишню, смешайте овсянку, протеин и разрыхлитель, затем вмешайте белки, молоко, сироп, масло, вишню и часть шоколада.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -6185,20 +6212,47 @@
               "source-ingredient-7",
               "source-ingredient-8",
               "source-ingredient-9",
-              "source-ingredient-10",
-              "source-ingredient-11",
-              "source-ingredient-12"
+              "source-ingredient-10"
+            ],
+            "action": "mix",
+            "dependsOn": [],
+            "temperature": "191°C",
+            "equipment": [
+              "oven"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Переложите в смазанную форму 23×33 см и выпекайте 35–40 минут.",
+            "ingredientIds": [
+              "source-ingredient-1"
             ],
             "action": "bake",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-1"
+            ],
             "temperature": "191°C",
             "duration": "35–40 мин",
             "equipment": [
               "oven",
-              "baking_dish",
-              "microwave"
+              "baking_dish"
             ],
             "donenessCue": "овсянка пропеклась"
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Растопите оставшийся шоколад, нанесите сверху и разделите на 6 порций.",
+            "ingredientIds": [
+              "source-ingredient-11",
+              "source-ingredient-12"
+            ],
+            "action": "assemble",
+            "dependsOn": [
+              "editorial-step-2"
+            ],
+            "equipment": [
+              "microwave"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -7649,7 +7703,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Разморозьте брокколи, мелко порубите её вместе с луком и смешайте с приправами, кукурузной мукой и водой до липкой массы. Плотно распределите тонким слоем 3–6 мм на застеленном противне и заморозьте до твёрдого состояния. Нарежьте на 48 кусочков и храните замороженными. Готовьте в аэрогриле при 204°C 16–20 минут, перевернув в середине.",
+            "text": "Разморозьте брокколи, мелко порубите её вместе с луком и смешайте с приправами, кукурузной мукой и водой до липкой массы.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -7657,17 +7711,54 @@
               "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
-              "source-ingredient-7",
+              "source-ingredient-7"
+            ],
+            "action": "mix",
+            "dependsOn": [],
+            "equipment": [
+              "microwave",
+              "food_processor"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Плотно распределите тонким слоем 3–6 мм на застеленном противне и заморозьте до твёрдого состояния.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "freeze",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "equipment": [
+              "baking_sheet"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Нарежьте на 48 кусочков и храните замороженными.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "slice",
+            "dependsOn": [
+              "editorial-step-2"
+            ]
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Готовьте в аэрогриле при 204°C 16–20 минут, перевернув в середине.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-8"
             ],
             "action": "air_fry",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-3"
+            ],
             "temperature": "204°C",
             "duration": "16–20 мин",
             "equipment": [
-              "microwave",
-              "food_processor",
-              "baking_sheet",
               "air_fryer"
             ],
             "donenessCue": "кусочки хрустящие"
@@ -7708,7 +7799,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Разморозьте брокколи, мелко порубите её вместе с луком и смешайте с приправами, кукурузной мукой и водой до липкой массы. Плотно распределите тонким слоем 3–6 мм на застеленном противне и заморозьте до твёрдого состояния. Нарежьте на 48 кусочков и храните замороженными. Готовьте в аэрогриле при 204°C 16–20 минут, перевернув в середине.",
+            "text": "Разморозьте брокколи, мелко порубите её вместе с луком и смешайте с приправами, кукурузной мукой и водой до липкой массы.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -7716,17 +7807,54 @@
               "source-ingredient-4",
               "source-ingredient-5",
               "source-ingredient-6",
-              "source-ingredient-7",
+              "source-ingredient-7"
+            ],
+            "action": "mix",
+            "dependsOn": [],
+            "equipment": [
+              "microwave",
+              "food_processor"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Плотно распределите тонким слоем 3–6 мм на застеленном противне и заморозьте до твёрдого состояния.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "freeze",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "equipment": [
+              "baking_sheet"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Нарежьте на 48 кусочков и храните замороженными.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "slice",
+            "dependsOn": [
+              "editorial-step-2"
+            ]
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Готовьте в аэрогриле при 204°C 16–20 минут, перевернув в середине.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-8"
             ],
             "action": "air_fry",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-3"
+            ],
             "temperature": "204°C",
             "duration": "16–20 мин",
             "equipment": [
-              "microwave",
-              "food_processor",
-              "baking_sheet",
               "air_fryer"
             ],
             "donenessCue": "кусочки хрустящие"
@@ -28598,7 +28726,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Нарежьте курицу кубиками 2,5–4 см, обваляйте в крахмале, затем в яйце и смеси измельчённых кукурузных хлопьев со специями. Готовьте в аэрогриле при 204°C 8–10 минут в один слой, встряхнув корзину в середине. Остудите на решётке; для заморозки сначала заморозьте кусочки в один слой. Разогревайте при 204°C 3–8 минут.",
+            "text": "Нарежьте курицу кубиками 2,5–4 см, обваляйте в крахмале, затем в яйце и смеси измельчённых кукурузных хлопьев со специями.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -28608,19 +28736,48 @@
               "source-ingredient-6",
               "source-ingredient-7",
               "source-ingredient-8",
-              "source-ingredient-9",
+              "source-ingredient-9"
+            ],
+            "action": "prepare",
+            "dependsOn": [],
+            "equipment": [
+              "food_processor"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Готовьте в аэрогриле при 204°C 8–10 минут в один слой, встряхнув корзину в середине.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-10"
             ],
             "action": "air_fry",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-1"
+            ],
             "temperature": "204°C",
-            "duration": "8–10 мин; разогрев 3–8 мин",
+            "duration": "8–10 мин",
             "equipment": [
-              "air_fryer",
-              "food_processor",
-              "baking_sheet"
+              "air_fryer"
             ],
             "donenessCue": "панировка золотистая, курица готова"
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Остудите на решётке; для заморозки сначала заморозьте кусочки в один слой. Разогревайте при 204°C 3–8 минут.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "freeze",
+            "dependsOn": [
+              "editorial-step-2"
+            ],
+            "temperature": "204°C",
+            "duration": "разогрев 3–8 мин",
+            "equipment": [
+              "baking_sheet",
+              "air_fryer"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -28648,7 +28805,7 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Нарежьте курицу кубиками 2,5–4 см, обваляйте в крахмале, затем в яйце и смеси измельчённых кукурузных хлопьев со специями. Готовьте в аэрогриле при 204°C 8–10 минут в один слой, встряхнув корзину в середине. Остудите на решётке; для заморозки сначала заморозьте кусочки в один слой. Разогревайте при 204°C 3–8 минут.",
+            "text": "Нарежьте курицу кубиками 2,5–4 см, обваляйте в крахмале, затем в яйце и смеси измельчённых кукурузных хлопьев со специями.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -28658,19 +28815,48 @@
               "source-ingredient-6",
               "source-ingredient-7",
               "source-ingredient-8",
-              "source-ingredient-9",
+              "source-ingredient-9"
+            ],
+            "action": "prepare",
+            "dependsOn": [],
+            "equipment": [
+              "food_processor"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "Готовьте в аэрогриле при 204°C 8–10 минут в один слой, встряхнув корзину в середине.",
+            "ingredientIds": [
+              "source-ingredient-1",
               "source-ingredient-10"
             ],
             "action": "air_fry",
-            "dependsOn": [],
+            "dependsOn": [
+              "editorial-step-1"
+            ],
             "temperature": "204°C",
-            "duration": "8–10 мин; разогрев 3–8 мин",
+            "duration": "8–10 мин",
             "equipment": [
-              "air_fryer",
-              "food_processor",
-              "baking_sheet"
+              "air_fryer"
             ],
             "donenessCue": "панировка золотистая, курица готова"
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Остудите на решётке; для заморозки сначала заморозьте кусочки в один слой. Разогревайте при 204°C 3–8 минут.",
+            "ingredientIds": [
+              "source-ingredient-1"
+            ],
+            "action": "freeze",
+            "dependsOn": [
+              "editorial-step-2"
+            ],
+            "temperature": "204°C",
+            "duration": "разогрев 3–8 мин",
+            "equipment": [
+              "baking_sheet",
+              "air_fryer"
+            ]
           }
         ],
         "proceduralStatus": "ready",
@@ -28974,9 +29160,20 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Приготовьте рис. В большой кастрюле обжарьте зелёный лук, морковь, картофель, сельдерей и имбирь 5–7 минут, добавьте чеснок. Подрумяньте курицу 3–4 минуты. Смешайте соевый соус, мёд, кочуджан и кочугару, влейте с бульоном; накройте и томите на среднем-слабом огне 20 минут. Проверьте мягкость картофеля и при необходимости уварите без крышки.",
+            "text": "Приготовьте рис.",
             "ingredientIds": [
-              "source-ingredient-1",
+              "source-ingredient-1"
+            ],
+            "action": "cook",
+            "dependsOn": [],
+            "equipment": [
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "В большой кастрюле обжарьте зелёный лук, морковь, картофель, сельдерей и имбирь 5–7 минут, добавьте чеснок. Подрумяньте курицу 3–4 минуты.",
+            "ingredientIds": [
               "source-ingredient-2",
               "source-ingredient-3",
               "source-ingredient-4",
@@ -28984,20 +29181,50 @@
               "source-ingredient-6",
               "source-ingredient-7",
               "source-ingredient-8",
+              "source-ingredient-10"
+            ],
+            "action": "saute",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "duration": "5–7 мин; 3–4 мин",
+            "equipment": [
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Смешайте соевый соус, мёд, кочуджан и кочугару, влейте с бульоном; накройте и томите на среднем-слабом огне 20 минут.",
+            "ingredientIds": [
               "source-ingredient-9",
-              "source-ingredient-10",
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13",
-              "source-ingredient-14",
-              "source-ingredient-15"
+              "source-ingredient-14"
             ],
             "action": "simmer",
-            "dependsOn": [],
-            "duration": "5–7 мин; 3–4 мин; затем 20 мин",
+            "dependsOn": [
+              "editorial-step-2"
+            ],
+            "duration": "20 мин",
             "equipment": [
               "pot",
               "mixing_bowl"
+            ]
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Проверьте мягкость картофеля и при необходимости уварите без крышки.",
+            "ingredientIds": [
+              "source-ingredient-5",
+              "source-ingredient-15"
+            ],
+            "action": "simmer",
+            "dependsOn": [
+              "editorial-step-3"
+            ],
+            "equipment": [
+              "pot"
             ],
             "donenessCue": "картофель мягкий, курица готова"
           }
@@ -29027,9 +29254,20 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Приготовьте рис. В большой кастрюле обжарьте зелёный лук, морковь, картофель, сельдерей и имбирь 5–7 минут, добавьте чеснок. Подрумяньте курицу 3–4 минуты. Смешайте соевый соус, мёд, кочуджан и кочугару, влейте с бульоном; накройте и томите на среднем-слабом огне 20 минут. Проверьте мягкость картофеля и при необходимости уварите без крышки.",
+            "text": "Приготовьте рис.",
             "ingredientIds": [
-              "source-ingredient-1",
+              "source-ingredient-1"
+            ],
+            "action": "cook",
+            "dependsOn": [],
+            "equipment": [
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-2",
+            "text": "В большой кастрюле обжарьте зелёный лук, морковь, картофель, сельдерей и имбирь 5–7 минут, добавьте чеснок. Подрумяньте курицу 3–4 минуты.",
+            "ingredientIds": [
               "source-ingredient-2",
               "source-ingredient-3",
               "source-ingredient-4",
@@ -29037,20 +29275,50 @@
               "source-ingredient-6",
               "source-ingredient-7",
               "source-ingredient-8",
+              "source-ingredient-10"
+            ],
+            "action": "saute",
+            "dependsOn": [
+              "editorial-step-1"
+            ],
+            "duration": "5–7 мин; 3–4 мин",
+            "equipment": [
+              "pot"
+            ]
+          },
+          {
+            "id": "editorial-step-3",
+            "text": "Смешайте соевый соус, мёд, кочуджан и кочугару, влейте с бульоном; накройте и томите на среднем-слабом огне 20 минут.",
+            "ingredientIds": [
               "source-ingredient-9",
-              "source-ingredient-10",
               "source-ingredient-11",
               "source-ingredient-12",
               "source-ingredient-13",
-              "source-ingredient-14",
-              "source-ingredient-15"
+              "source-ingredient-14"
             ],
             "action": "simmer",
-            "dependsOn": [],
-            "duration": "5–7 мин; 3–4 мин; затем 20 мин",
+            "dependsOn": [
+              "editorial-step-2"
+            ],
+            "duration": "20 мин",
             "equipment": [
               "pot",
               "mixing_bowl"
+            ]
+          },
+          {
+            "id": "editorial-step-4",
+            "text": "Проверьте мягкость картофеля и при необходимости уварите без крышки.",
+            "ingredientIds": [
+              "source-ingredient-5",
+              "source-ingredient-15"
+            ],
+            "action": "simmer",
+            "dependsOn": [
+              "editorial-step-3"
+            ],
+            "equipment": [
+              "pot"
             ],
             "donenessCue": "картофель мягкий, курица готова"
           }
