@@ -14420,19 +14420,6 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Охладите готовый рис в холодильнике ночь.",
-            "ingredientIds": [
-              "source-ingredient-11"
-            ],
-            "action": "cool",
-            "duration": "рис охладить на ночь",
-            "equipment": [
-              "refrigerator"
-            ],
-            "dependsOn": []
-          },
-          {
-            "id": "editorial-step-2",
             "text": "Смешайте масло, лимонный сок, йогурт, чесночный порошок, карри, паприку, кориандр, кумин и соль. Нарежьте бёдра тонкими полосками, покройте маринадом. Нарежьте лук, красный перец и кабачок; измельчите чеснок.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -14455,12 +14442,10 @@
             "equipment": [
               "mixing_bowl"
             ],
-            "dependsOn": [
-              "editorial-step-1"
-            ]
+            "dependsOn": []
           },
           {
-            "id": "editorial-step-3",
+            "id": "editorial-step-2",
             "text": "На сильном огне обжарьте курицу партиями в сковороде до румяных краёв и полной готовности, отложите.",
             "ingredientIds": [
               "source-ingredient-1"
@@ -14471,11 +14456,11 @@
             ],
             "donenessCue": "курица непрозрачна внутри",
             "dependsOn": [
-              "editorial-step-2"
+              "editorial-step-1"
             ]
           },
           {
-            "id": "editorial-step-4",
+            "id": "editorial-step-3",
             "text": "Добавьте оставшееся масло, лук и перец на 2–3 минуты, затем кабачок на несколько минут.",
             "ingredientIds": [
               "source-ingredient-12",
@@ -14489,11 +14474,11 @@
               "large_frying_pan"
             ],
             "dependsOn": [
-              "editorial-step-3"
+              "editorial-step-2"
             ]
           },
           {
-            "id": "editorial-step-5",
+            "id": "editorial-step-4",
             "text": "Внесите чеснок и томатную пасту, прогрейте до аромата, добавьте рис и верните курицу с соками. Посолите, поперчите и посыпьте кинзой.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -14509,7 +14494,7 @@
             ],
             "donenessCue": "рис прогрет и сухой",
             "dependsOn": [
-              "editorial-step-4"
+              "editorial-step-3"
             ]
           }
         ],
@@ -14538,19 +14523,6 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Охладите готовый рис в холодильнике ночь.",
-            "ingredientIds": [
-              "source-ingredient-11"
-            ],
-            "action": "cool",
-            "duration": "рис охладить на ночь",
-            "equipment": [
-              "refrigerator"
-            ],
-            "dependsOn": []
-          },
-          {
-            "id": "editorial-step-2",
             "text": "Смешайте масло, лимонный сок, йогурт, чесночный порошок, карри, паприку, кориандр, кумин и соль. Нарежьте бёдра тонкими полосками, покройте маринадом. Нарежьте лук, красный перец и кабачок; измельчите чеснок.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -14573,12 +14545,10 @@
             "equipment": [
               "mixing_bowl"
             ],
-            "dependsOn": [
-              "editorial-step-1"
-            ]
+            "dependsOn": []
           },
           {
-            "id": "editorial-step-3",
+            "id": "editorial-step-2",
             "text": "На сильном огне обжарьте курицу партиями в сковороде до румяных краёв и полной готовности, отложите.",
             "ingredientIds": [
               "source-ingredient-1"
@@ -14589,11 +14559,11 @@
             ],
             "donenessCue": "курица непрозрачна внутри",
             "dependsOn": [
-              "editorial-step-2"
+              "editorial-step-1"
             ]
           },
           {
-            "id": "editorial-step-4",
+            "id": "editorial-step-3",
             "text": "Добавьте оставшееся масло, лук и перец на 2–3 минуты, затем кабачок на несколько минут.",
             "ingredientIds": [
               "source-ingredient-12",
@@ -14607,11 +14577,11 @@
               "large_frying_pan"
             ],
             "dependsOn": [
-              "editorial-step-3"
+              "editorial-step-2"
             ]
           },
           {
-            "id": "editorial-step-5",
+            "id": "editorial-step-4",
             "text": "Внесите чеснок и томатную пасту, прогрейте до аромата, добавьте рис и верните курицу с соками. Посолите, поперчите и посыпьте кинзой.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -14627,7 +14597,7 @@
             ],
             "donenessCue": "рис прогрет и сухой",
             "dependsOn": [
-              "editorial-step-4"
+              "editorial-step-3"
             ]
           }
         ],
@@ -17435,19 +17405,6 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Охладите готовый рис ночь.",
-            "ingredientIds": [
-              "source-ingredient-12"
-            ],
-            "action": "cool",
-            "duration": "рис охладить на ночь",
-            "equipment": [
-              "refrigerator"
-            ],
-            "dependsOn": []
-          },
-          {
-            "id": "editorial-step-2",
             "text": "Смешайте масло, сок лайма, чесночный порошок, орегано, кориандр, кумин, паприку, чили, соль и перец. Нарежьте куриные бёдра тонкими полосками, покройте маринадом. Нарежьте лук и оба перца полосками, измельчите чеснок; кинзу порубите для подачи.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -17471,12 +17428,10 @@
             "equipment": [
               "mixing_bowl"
             ],
-            "dependsOn": [
-              "editorial-step-1"
-            ]
+            "dependsOn": []
           },
           {
-            "id": "editorial-step-3",
+            "id": "editorial-step-2",
             "text": "На сильном огне обжарьте курицу партиями в части масла до румяности и полной готовности, отложите.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -17488,11 +17443,11 @@
             ],
             "donenessCue": "курица непрозрачна внутри",
             "dependsOn": [
-              "editorial-step-2"
+              "editorial-step-1"
             ]
           },
           {
-            "id": "editorial-step-4",
+            "id": "editorial-step-3",
             "text": "Добавьте оставшееся масло, готовьте лук и перцы 3–5 минут, затем чеснок до аромата.",
             "ingredientIds": [
               "source-ingredient-13",
@@ -17508,11 +17463,11 @@
             ],
             "donenessCue": "перцы слегка подрумянились",
             "dependsOn": [
-              "editorial-step-3"
+              "editorial-step-2"
             ]
           },
           {
-            "id": "editorial-step-5",
+            "id": "editorial-step-4",
             "text": "Вмешайте рис, сок лайма, курицу с соками, отрегулируйте соль и перец. Посыпьте кинзой и подайте с долькой лайма.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -17527,7 +17482,7 @@
               "large_frying_pan"
             ],
             "dependsOn": [
-              "editorial-step-4"
+              "editorial-step-3"
             ]
           }
         ],
@@ -17556,19 +17511,6 @@
         "paraphrasedInstructionDraft": [
           {
             "id": "editorial-step-1",
-            "text": "Охладите готовый рис ночь.",
-            "ingredientIds": [
-              "source-ingredient-12"
-            ],
-            "action": "cool",
-            "duration": "рис охладить на ночь",
-            "equipment": [
-              "refrigerator"
-            ],
-            "dependsOn": []
-          },
-          {
-            "id": "editorial-step-2",
             "text": "Смешайте масло, сок лайма, чесночный порошок, орегано, кориандр, кумин, паприку, чили, соль и перец. Нарежьте куриные бёдра тонкими полосками, покройте маринадом. Нарежьте лук и оба перца полосками, измельчите чеснок; кинзу порубите для подачи.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -17592,12 +17534,10 @@
             "equipment": [
               "mixing_bowl"
             ],
-            "dependsOn": [
-              "editorial-step-1"
-            ]
+            "dependsOn": []
           },
           {
-            "id": "editorial-step-3",
+            "id": "editorial-step-2",
             "text": "На сильном огне обжарьте курицу партиями в части масла до румяности и полной готовности, отложите.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -17609,11 +17549,11 @@
             ],
             "donenessCue": "курица непрозрачна внутри",
             "dependsOn": [
-              "editorial-step-2"
+              "editorial-step-1"
             ]
           },
           {
-            "id": "editorial-step-4",
+            "id": "editorial-step-3",
             "text": "Добавьте оставшееся масло, готовьте лук и перцы 3–5 минут, затем чеснок до аромата.",
             "ingredientIds": [
               "source-ingredient-13",
@@ -17629,11 +17569,11 @@
             ],
             "donenessCue": "перцы слегка подрумянились",
             "dependsOn": [
-              "editorial-step-3"
+              "editorial-step-2"
             ]
           },
           {
-            "id": "editorial-step-5",
+            "id": "editorial-step-4",
             "text": "Вмешайте рис, сок лайма, курицу с соками, отрегулируйте соль и перец. Посыпьте кинзой и подайте с долькой лайма.",
             "ingredientIds": [
               "source-ingredient-1",
@@ -17648,7 +17588,7 @@
               "large_frying_pan"
             ],
             "dependsOn": [
-              "editorial-step-4"
+              "editorial-step-3"
             ]
           }
         ],
@@ -19310,9 +19250,8 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "Подготовьте готовый рис. Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
+            "text": "Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
             "ingredientIds": [
-              "source-ingredient-1",
               "source-ingredient-9",
               "source-ingredient-10",
               "source-ingredient-11",
@@ -19430,9 +19369,8 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "Подготовьте готовый рис. Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
+            "text": "Нарежьте перец и лук средним кубиком, измельчите чеснок; капусту тонко нашинкуйте.",
             "ingredientIds": [
-              "source-ingredient-1",
               "source-ingredient-9",
               "source-ingredient-10",
               "source-ingredient-11",
@@ -21200,7 +21138,7 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
+            "text": "Покройте курицу смесью масла, соевого соуса, чесночного порошка и, по желанию, белого перца. Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",
@@ -21348,7 +21286,7 @@
           },
           {
             "id": "editorial-step-3",
-            "text": "Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
+            "text": "Покройте курицу смесью масла, соевого соуса, чесночного порошка и, по желанию, белого перца. Куриные бёдра на фольгированном противне запекайте на нижней полке 25 минут.",
             "ingredientIds": [
               "source-ingredient-1",
               "source-ingredient-2",

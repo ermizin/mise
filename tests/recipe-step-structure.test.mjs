@@ -130,6 +130,79 @@ test("named spices keep the measured source amount", () => {
   }
 });
 
+test("chili, coriander and pepper are named by the product the source line buys", () => {
+  // 2026-10-19: «Острый перец» стоял на 13 разных продуктах, «Кориандр» — и на
+  // молотой специи, и на свежей кинзе, «Перец» — на молотом чёрном перце.
+  // Название идёт от строки источника; количество и статус «по вкусу» прежние.
+  const line = (id, index) => catalog.recipes.find((recipe) => recipe.id === id)
+    .procedureIngredients.find((item) => item.sourceIngredientIndex === index);
+  const expectations = [
+    ["tmpm-28083", 10, "chili powder", "Чили молотый", 3.6, "g"],
+    ["tmpm-17591", 6, "cayenne pepper", "Кайенский перец", 0.75, "g"],
+    ["tmpm-22442", 7, "red pepper flakes", "Хлопья чили", 1.2, "g"],
+    ["goodfood-chicken-pasta-bake", 4, "chilli flakes", "Хлопья чили", 0.2083, "ml"],
+    ["tmpm-18557", 12, "gochugaru", "Хлопья чили кочукару", 2, "g"],
+    ["tmpm-24619", 7, "ancho chili powder", "Чили анчо молотый", 1.2, "g"],
+    ["tmpm-23797", 3, "kashmiri chili powder", "Кашмирский чили молотый", 1.2, "g"],
+    ["goodfood-spiced-lentil-butternut-squash-soup", 4, "hot chilli powder", "Острый чили молотый", 0.3125, "ml"],
+    ["tmpm-22571", 20, "jalapeños", "Халапеньо", 12, "g"],
+    ["goodfood-prawn-rice-mango-jar-salad", 5, "red chilli deseeded and finely chopped", "Свежий красный чили", 0.5, "piece"],
+    ["goodfood-wild-salmon-with-radish-orange-slaw", 8, "green chillies deseeded and finely chopped", "Свежий зелёный чили", 0.25, "piece"],
+    ["goodfood-kadala-curry", 3, "fresh or dried chilli to taste", "Чили свежий или сушёный", 1.25, "ml"],
+    // «coriander» без формы: Meal Prep Manual — ложка специи в маринаде,
+    // Good Food — свежая зелень (здесь её пробивают в пасту карри).
+    ["tmpm-26676", 8, "coriander", "Кориандр молотый", 0.6, "g"],
+    ["goodfood-kadala-curry", 6, "ground coriander", "Кориандр молотый", 3.75, "ml"],
+    ["goodfood-meatball-chickpea-yellow-coconut-curry-with-rice-pickled-red-cabbage", 10, "coriander", "Кинза", 2.86, "g"],
+    ["goodfood-pork-with-cucumber-apricot-couscous", 1, "fresh coriander", "Кинза", 7.5, "g"],
+    ["tmpm-25453", 7, "pepper", "Чёрный перец молотый", 0.3529, "g"],
+    ["tmpm-26583", 18, "pepper", "Чёрный перец молотый", 1.2, "g"],
+  ];
+  for (const [id, index, sourceName, nameRu, quantityPerServing, unit] of expectations) {
+    const item = line(id, index);
+    assert.equal(item.sourceName, sourceName, `${id}#${index}`);
+    assert.equal(item.nameRu, nameRu, `${id}#${index}`);
+    assert.equal(item.quantityPerServing, quantityPerServing, `${id}#${index}`);
+    assert.equal(item.unit, unit, `${id}#${index}`);
+    assert.equal(item.classification, "to_taste", `${id}#${index}`);
+  }
+  // Карточки Mise (simpleRecipes, extensionRecipes) пишутся вручную и в эту
+  // таблицу не входят.
+  for (const recipe of catalog.recipes) {
+    for (const item of recipe.procedureIngredients) {
+      assert.doesNotMatch(String(item.nameRu), /^(?:острый перец|кориандр|перец)$/iu, `${recipe.id}: «${item.nameRu}»`);
+    }
+  }
+});
+
+test("the spicy rule still recognises every chili name", async () => {
+  // «Острое» в PWA и в нативном приложении ищет перец по названию строки
+  // процедуры. Каждое новое название острого перца должно ему попадаться, а
+  // кориандр и чёрный перец — нет.
+  const sources = await Promise.all(["../app/page.tsx", "../domain/mobile.ts"].map((path) =>
+    readFile(new URL(path, import.meta.url), "utf8")));
+  const patterns = [
+    sources[0].match(/const chiliNamePattern = \/(.+?)\/(\w*);/u),
+    sources[1].match(/const chiliName = \/(.+?)\/(\w*);/u),
+  ].map((match) => {
+    assert.ok(match, "the spicy name rule is present");
+    return new RegExp(match[1], match[2]);
+  });
+  const chiliSource = /chil+i|chile|cayenne|jalape|gochugaru|red pepper flakes/iu;
+  const chiliNames = new Set();
+  for (const recipe of catalog.recipes) {
+    for (const item of recipe.procedureIngredients) {
+      if (!chiliSource.test(item.sourceName ?? "")) continue;
+      chiliNames.add(item.nameRu);
+      for (const pattern of patterns) assert.match(item.nameRu, pattern, `${recipe.id}#${item.sourceIngredientIndex}`);
+    }
+  }
+  assert.ok(chiliNames.size >= 12, [...chiliNames].join(", "));
+  for (const name of ["Кориандр молотый", "Кинза", "Чёрный перец молотый", "Соль и чёрный перец", "Паприка"]) {
+    for (const pattern of patterns) assert.doesNotMatch(name, pattern, name);
+  }
+});
+
 test("an optional seasoning of choice is shown as optional, not as a vague spice", () => {
   for (const [id, index] of [["tmpm-23261", 10], ["foodru-blogger-chicken-bombs", 10]]) {
     const item = catalog.recipes.find((recipe) => recipe.id === id)

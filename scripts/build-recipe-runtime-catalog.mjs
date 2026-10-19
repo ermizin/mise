@@ -36,13 +36,18 @@ const categoryGroups = {
   fat: "Масла и соусы",
 };
 
+const mealPrepManualPublisher = "The Meal Prep Manual";
+const goodFoodPublisher = "Good Food — Meal prep ideas";
+
 /* Русское название неизмеряемой в покупках позиции (специи, вода, соль) по
    английскому названию источника. Это настоящий продукт, как его ищут в
    магазине: обобщения вроде «Смесь специй по рецепту» или «Приправа по вкусу»
    прятали гарам масалу, сумах или итальянские травы. Первое совпадение
    выигрывает; позиция без совпадения останавливает проекцию карточки
    (`unnamed_procedure_ingredient`), и ей нужно название — строка таблицы или
-   правило `ingredientDisplayRules` в data/recipe-proofread-policy.json. */
+   правило `ingredientDisplayRules` в data/recipe-proofread-policy.json.
+   Если одно и то же слово источника в разных корпусах значит разные продукты,
+   вместо названия стоит функция от корпуса (`publisher`). */
 const pantryNameRu = [
   [/garlic powder/i, "Сушёный чеснок"],
   [/onion powder/i, "Сушёный лук"],
@@ -50,11 +55,38 @@ const pantryNameRu = [
   [/baking soda/i, "Пищевая сода"],
   [/smoked paprika|sweet smoked paprika/i, "Копчёная паприка"],
   [/paprika/i, "Паприка"],
-  [/gochugaru|chilli|chili|cayenne|red pepper flakes|jalape(?:ñ|n)o/i, "Острый перец"],
+  // Острый перец называется по форме продукта: молотый, хлопья или свежий
+  // стручок. Раньше все 13 видов были «Острым перцем», и покупатель не знал,
+  // что брать. Новые названия по-прежнему ловит правило острого
+  // /остр|чили|кайен|халап/ в app/page.tsx и domain/mobile.ts — это проверяет
+  // tests/recipe-step-structure.test.mjs. Строка, не попавшая ни в одно
+  // правило, останавливает проекцию: ей нужно своё название.
+  [/gochugaru/i, "Хлопья чили кочукару"],
+  [/red pepper flakes|chill?i flakes/i, "Хлопья чили"],
+  [/ancho chill?i powder/i, "Чили анчо молотый"],
+  [/kashmiri chill?i powder/i, "Кашмирский чили молотый"],
+  [/hot chill?i powder/i, "Острый чили молотый"],
+  [/chill?i powder/i, "Чили молотый"],
+  [/cayenne/i, "Кайенский перец"],
+  [/jalape(?:ñ|n)o/i, "Халапеньо"],
+  [/fresh or dried chill?i/i, "Чили свежий или сушёный"],
+  [/green chill?i/i, "Свежий зелёный чили"],
+  [/red chill?i/i, "Свежий красный чили"],
+  [/fresh chill?i/i, "Свежий чили"],
   [/cumin/i, "Кумин"],
   [/oregano/i, "Орегано"],
   [/cinnamon/i, "Корица"],
-  [/coriander/i, "Кориандр"],
+  // Кориандр молотый и кинза — разные покупки: по одному «Кориандру» легко
+  // купить семена вместо зелени. Строка без формы («coriander») у Meal Prep
+  // Manual — чайная ложка специи в маринаде, у Good Food — свежая зелень
+  // (пучок, горсть, «для подачи»); в другом корпусе её нужно назвать явно.
+  [/coriander seeds?/i, "Семена кориандра"],
+  [/(?:ground|dried) coriander/i, "Кориандр молотый"],
+  [/cilantro/i, "Кинза"],
+  [/coriander/i, ({ publisher }) => ({
+    [mealPrepManualPublisher]: "Кориандр молотый",
+    [goodFoodPublisher]: "Кинза",
+  })[publisher] ?? null],
   [/ginger/i, "Имбирь"],
   [/turmeric/i, "Куркума"],
   [/vanilla/i, "Ваниль"],
@@ -94,7 +126,9 @@ const pantryNameRu = [
   [/salt and pepper/i, "Соль и чёрный перец"],
   [/salt/i, "Соль"],
   [/white pepper/i, "Белый перец"],
-  [/pepper/i, "Перец"],
+  // «1 tsp pepper» рядом с солью — молотый чёрный перец, а не просто «Перец».
+  // Другой «pepper» без уточнения не угадывается и останавливает проекцию.
+  [/^(?:freshly )?(?:ground )?(?:black )?pepper$/i, "Чёрный перец молотый"],
   [/water/i, "Вода"],
   [/cooking spray/i, "Кулинарный спрей"],
   [/garnish/i, "Для подачи"],
@@ -122,8 +156,9 @@ function groupFor(canonical) {
   return categoryGroups[canonical.category] ?? "Бакалея";
 }
 
-function russianPantryName(sourceName) {
-  return pantryNameRu.find(([pattern]) => pattern.test(sourceName))?.[1] ?? null;
+function russianPantryName(sourceName, context = {}) {
+  const name = pantryNameRu.find(([pattern]) => pattern.test(sourceName))?.[1];
+  return (typeof name === "function" ? name(context) : name) ?? null;
 }
 
 /* Неизмеренная позиция, которую источник прямо называет необязательной
@@ -562,7 +597,7 @@ function projectReadyCard(releaseCard, entry, recipeImages, cuisines) {
     }
     // A source ingredient must still be visible when it is intentionally
     // excluded from nutrition and shopping (water, salt, to-taste garnish).
-    const nameRu = sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName);
+    const nameRu = sourceIngredient.displayNameRu?.trim() || russianPantryName(mapping.sourceName, { publisher: dataset.source });
     if (!nameRu) {
       failures.push(["unnamed_procedure_ingredient", `${mapping.sourceName} has no Russian product name.`]);
       return;

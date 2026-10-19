@@ -164,7 +164,7 @@
     {
       "recipeId": "tmpm-28247",
       "title": "Курица терияки с овощами на противне",
-      "sourceStepsSha256": "e16d87bd01ac3949972c8120891b3e5430f0c5b0aa14ccd1c8caaeb29b4e6618",
+      "sourceStepsSha256": "f8ccb43f14eda3d7cb42af30f471fe11797966d790fcca22242a396ce7fbb838",
       "methods": [
         {
           "id": "original",
@@ -441,7 +441,7 @@
     {
       "recipeId": "tmpm-26676",
       "title": "Жареный рис с курицей и карри",
-      "sourceStepsSha256": "83b609fac4428c4130f1f76f54665ef1850a8ba0f9d400c598a2c94890d17d75",
+      "sourceStepsSha256": "6142b0a0d862a160e62b3db53134484c9dab69f05e2cee3b91118e280fcd3560",
       "methods": [
         {
           "id": "original",
@@ -529,7 +529,7 @@
     {
       "recipeId": "tmpm-26583",
       "title": "Боулы «небрежный Джо» с чизстейком",
-      "sourceStepsSha256": "f838e7b9d1d79be05e779ddd594128405dcde6f4b9a8d378c2c659f2b3d98b07",
+      "sourceStepsSha256": "66b0477016d31996e956fbd9a156951bbf73fa65c4b462091aa9281f849325bd",
       "methods": [
         {
           "id": "original",
@@ -771,7 +771,7 @@
     {
       "recipeId": "tmpm-25244",
       "title": "Жареный рис с курицей фахитас",
-      "sourceStepsSha256": "d5921ab17eb4ace6cdf34254d4bcb155c73f23a0c5dc5a4423e9071b4ee25d28",
+      "sourceStepsSha256": "4c10c2fc3bd565951f108c5ddc0c29ce2cc341ddd6163a8582d8f09632709bf1",
       "methods": [
         {
           "id": "original",
@@ -1261,7 +1261,7 @@
     {
       "recipeId": "tmpm-24542",
       "title": "Рисовые боулы с чили и лимоном",
-      "sourceStepsSha256": "7a9b9d17dc782117becc9b4381d5ccdec409cfe153cb87dccb5bd7f6e7bd3727",
+      "sourceStepsSha256": "6004838c99db744f4cf07297f96a6d5c104f33aba3eedb82e6842827332264b8",
       "methods": [
         {
           "id": "original",
