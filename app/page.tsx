@@ -9433,6 +9433,19 @@ function BottomNav({
           );
         })}
       </div>
+      {/* На десктопе круга «+» нет: лист «Следующий план» открывает чернильная
+          таблетка под разделами сайдбара (на узком экране она скрыта). */}
+      {!showCompose && circle === "next-plan" && onNextPlan && (
+        <button
+          type="button"
+          className="sidebar-next-plan"
+          onClick={onNextPlan}
+          aria-haspopup="dialog"
+        >
+          <Icon name="plus" size={18} />
+          <span>Следующий план</span>
+        </button>
+      )}
       <p className="desktop-tagline">Готовим раз —<br />едим всю неделю</p>
     </nav>
   );

@@ -76,8 +76,8 @@
 }
 .app-workspace .week-today-button { grid-column: 1 / -1; }
 .app-workspace .bottom-nav { bottom: max(8px, env(safe-area-inset-bottom)); }
-.app-workspace .liquid-nav-layer { z-index: 0; opacity: .07; }
-.app-workspace .liquid-nav-layer .bottom-nav-indicator { background: transparent; box-shadow: none; }
+.app-workspace .liquid-nav-layer { z-index: 0; }
+.app-workspace .liquid-nav-layer .bottom-nav-indicator { background: transparent; }
 .compose-plan-glow {
   position: fixed;
   z-index: 21;

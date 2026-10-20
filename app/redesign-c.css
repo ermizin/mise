@@ -158,9 +158,21 @@
   padding: 5px;
   border-radius: var(--r-pill);
 }
+/* Пакет «css»: активная вкладка — белая таблетка с тенью кита (§4.4), подпись
+   12/700 терракотой, неактивные — 12/600 --ink-body. Жидкий индикатор рисует
+   ту же таблетку белым (app/ui/library-effects.tsx), тень несёт его <span>. */
 .app-workspace .bottom-nav-indicator {
   background: #fff;
-  box-shadow: var(--shadow-s);
+  box-shadow: 0 2px 8px rgba(120, 50, 10, 0.18);
+}
+.app-workspace .liquid-nav-layer .bottom-nav-indicator {
+  box-shadow: 0 2px 8px rgba(120, 50, 10, 0.18);
+}
+.app-workspace .bottom-nav button {
+  color: var(--ink-body);
+}
+.app-workspace .bottom-nav button.is-active {
+  color: var(--accent-text);
 }
 .app-workspace .bottom-nav button small {
   font-size: var(--text-min);
@@ -168,6 +180,37 @@
 }
 .app-workspace .bottom-nav button.is-active small {
   font-weight: var(--weight-bold);
+}
+
+/* Пакет «css»: на десктопе (≥ 1100) лист «Следующий план» открывает чернильная
+   таблетка под разделами сайдбара — круга «+» там нет. */
+.sidebar-next-plan {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .app-workspace .sidebar-next-plan {
+    width: 100%;
+    min-height: var(--hit-primary);
+    margin-top: -14px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: var(--r-pill);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+    color: var(--button-fg);
+    background: var(--button-grad);
+    box-shadow: var(--shadow-accent);
+    font-size: var(--text-body);
+    font-weight: var(--weight-bold);
+  }
+  .app-workspace .sidebar-next-plan .icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 /* Шкала калорий остаётся оранжевой, когда кнопки стали чернильными */
