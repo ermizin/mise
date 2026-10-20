@@ -11102,11 +11102,14 @@ function RecipesScreen({
 
   /* Шапка фиксированная, и её высота зависит от длины чисел и от того, сколько
      чипов активно. Считать её руками — тот самый способ уронить первую строку
-     под блюр, поэтому отступ скролла ведёт ResizeObserver. */
-  useEffect(() => {
+     под блюр, поэтому отступ скролла ведёт ResizeObserver. Первый отступ
+     ставится до отрисовки (layout effect): иначе первый кадр рисует сетку под
+     шапкой с нулевым отступом, и она съезжает вниз на высоту шапки (CLS ≈ 0,4). */
+  useLayoutEffect(() => {
     const header = headerRef.current;
     const scroll = scrollRef.current;
     if (!header || !scroll) return;
+    scroll.style.paddingTop = `${header.getBoundingClientRect().height + 8}px`;
     const observer = new ResizeObserver(([entry]) => {
       /* Именно border-box: у шапки большой собственный padding, и contentRect
          из сниппета хэндофа занижает высоту на него — контент уезжает под блюр. */
