@@ -1109,3 +1109,103 @@
 .tab-pill-row > :last-child {
   margin-left: auto;
 }
+
+/* ============================================================
+   Пакет «css» (раунд 2): «Готовка партиями» на невысоких экранах.
+   Заголовок и абзац должны быть видны над нижней капсулой без
+   прокрутки, поэтому иллюстрация ужимается по высоте ступенями;
+   кегли подписей не уменьшаются, порядок блоков и стаггер те же.
+   ============================================================ */
+@media (max-height: 880px) {
+  .onboarding-shell .batch-hero {
+    height: 186px;
+  }
+  .onboarding-shell .batch-hero-pan {
+    top: 30px;
+    width: 116px;
+    height: 116px;
+  }
+  .onboarding-shell .batch-hero-fire {
+    left: 86px;
+    top: 112px;
+  }
+  .onboarding-shell .batch-fan {
+    width: 88px;
+    height: 88px;
+  }
+  .onboarding-shell .batch-fan-0 {
+    top: 40px;
+  }
+  .onboarding-shell .batch-fan-1 {
+    left: calc(42% + 44px);
+    top: 26px;
+  }
+  .onboarding-shell .batch-fan-2 {
+    left: calc(42% + 88px);
+    top: 40px;
+  }
+  .onboarding-shell .batch-sticker-sum {
+    top: 138px;
+  }
+}
+@media (max-height: 820px) {
+  .onboarding-shell .batch-hero {
+    height: 160px;
+  }
+  .onboarding-shell .batch-hero-pan {
+    top: 28px;
+    width: 100px;
+    height: 100px;
+  }
+  .onboarding-shell .batch-hero-fire {
+    left: 72px;
+    top: 96px;
+  }
+  .onboarding-shell .batch-fan {
+    width: 76px;
+    height: 76px;
+  }
+  .onboarding-shell .batch-fan-0 {
+    top: 34px;
+  }
+  .onboarding-shell .batch-fan-1 {
+    left: calc(42% + 38px);
+    top: 22px;
+  }
+  .onboarding-shell .batch-fan-2 {
+    left: calc(42% + 76px);
+    top: 34px;
+  }
+  .onboarding-shell .batch-sticker-sum {
+    top: 116px;
+  }
+}
+/* Ниже 700 px высоты сковорода и веер не помещаются вместе с неделей:
+   остаётся карточка недели, она объясняет то же самое. */
+@media (max-height: 700px) {
+  .onboarding-shell .batch-hero {
+    display: none;
+  }
+}
+/* 320 × 568: на первом экране уходит колода блюд (обещания остаются),
+   на втором карточка недели становится плотнее и теряет легенду значков. */
+@media (max-height: 600px) {
+  .onboarding-shell .dish-deck {
+    display: none;
+  }
+  .onboarding-shell .batch-week-card {
+    padding-block: 12px;
+  }
+  .onboarding-shell .batch-bars {
+    margin-top: 8px;
+  }
+  .onboarding-shell .batch-brackets {
+    margin-top: 6px;
+  }
+  .onboarding-shell .batch-legend {
+    display: none;
+  }
+  .onboarding-shell .batch-week-card ~ .onboarding-title {
+    margin-top: 12px;
+  }
+}
