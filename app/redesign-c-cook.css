@@ -60,11 +60,7 @@
   display: grid;
   place-items: center;
   flex: none;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
 }
 .cooking-back-button::before {
   content: "";
@@ -81,11 +77,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
   white-space: nowrap;
@@ -104,9 +96,6 @@
   margin: 0;
 }
 .cooking-batch-title h1 {
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--weight-heavy);
   line-height: 1.05;
   letter-spacing: var(--tracking-h1);
   text-wrap: balance;
@@ -196,10 +185,6 @@
   padding: 0 12px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-size: var(--text-link);
   white-space: nowrap;
 }
@@ -274,9 +259,6 @@
 .batch-step-list .batch-step-number {
   grid-row: span 2;
   color: var(--accent-text);
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: var(--weight-heavy);
   line-height: 1;
   letter-spacing: -0.04em;
 }
@@ -294,8 +276,6 @@
   display: inline-flex;
   align-items: center;
   border-radius: var(--r-pill);
-  color: var(--amber-text);
-  background: var(--tint-amber);
   font-size: var(--text-min);
   font-weight: var(--weight-semibold);
 }
@@ -381,8 +361,6 @@
   display: inline-flex;
   align-items: center;
   border-radius: var(--r-pill);
-  color: var(--amber-text);
-  background: var(--tint-amber);
   box-shadow: 0 1px 3px rgba(120, 50, 10, 0.14);
   font-size: var(--text-min);
   font-weight: var(--weight-semibold);
@@ -408,8 +386,6 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-chip-sq);
-  color: var(--mint-text);
-  background: var(--tint-mint-flat);
 }
 .cooking-weigh-head b,
 .cooking-weigh-head small {
@@ -422,10 +398,7 @@
 }
 .cooking-weigh-head small {
   margin-top: 2px;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
   font-weight: var(--weight-regular);
-  line-height: 1.3;
 }
 .cooking-batch-shell .cooked-weight-field {
   min-height: 0;
@@ -567,10 +540,6 @@
   display: flex;
   gap: 2px;
   overflow-x: auto;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   scrollbar-width: none;
 }
 .portion-dish-segment::-webkit-scrollbar {
@@ -602,8 +571,6 @@
   font-size: var(--text-link);
 }
 .portion-dish-segment button[aria-pressed="true"] {
-  color: var(--button-fg);
-  background: var(--button-grad);
   box-shadow: var(--shadow-accent-s);
   font-weight: var(--weight-bold);
 }
@@ -649,8 +616,6 @@
 .portion-weighed-badge {
   padding: 1px 8px;
   border-radius: var(--r-pill);
-  color: var(--mint-text);
-  background: var(--tint-mint-flat);
   font-weight: var(--weight-bold);
 }
 .portion-weighed button,
@@ -695,10 +660,7 @@
   flex-direction: column;
   justify-content: space-between;
   gap: 6px;
-  border: 1px solid var(--glass-2-border);
   border-radius: var(--r-nested);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
   cursor: pointer;
 }
 .container-label-card input {
@@ -749,16 +711,9 @@
   font-weight: var(--weight-semibold);
   line-height: 1.25;
 }
-.container-label-when {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
-}
 .container-label-when i {
   padding: 1px 7px;
   border-radius: var(--r-pill);
-  color: var(--accent-text);
-  background: var(--tint-terracotta);
   font-style: normal;
   font-weight: var(--weight-bold);
   white-space: nowrap;

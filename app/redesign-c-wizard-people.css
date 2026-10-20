@@ -15,9 +15,6 @@
 .builder-shell .builder-content .menu-summary,
 .builder-shell .builder-content .manual-menu-option,
 .builder-shell .builder-content .manual-menu-more {
-  border: 1px solid var(--glass-2-border);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
@@ -84,8 +81,6 @@
   border-width: 1px;
   border-color: var(--ink-strong);
   outline: none;
-  background: var(--ink-strong);
-  color: var(--button-fg);
   box-shadow: var(--shadow-accent);
 }
 .eater-tile-avatar {
@@ -153,15 +148,6 @@
   gap: 10px;
   padding: 14px;
   border-radius: var(--r-card);
-}
-.person-card .field-label,
-.norm-card .field-label,
-.limits-sheet .field-label {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0;
-  text-transform: none;
 }
 .person-card .field,
 .norm-card .field {
@@ -341,11 +327,6 @@
   font-weight: var(--weight-semibold);
   line-height: 1.15;
 }
-.chip-check::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
-}
 .chip-check-mark {
   width: 28px;
   height: 28px;
@@ -364,8 +345,6 @@
 .chip-check[aria-checked="true"],
 .chip-check[aria-checked="true"]:not(:disabled):hover {
   border-color: var(--ink-strong);
-  background: var(--ink-strong);
-  color: var(--button-fg);
   font-weight: var(--weight-semibold);
   box-shadow: var(--shadow-accent-s);
 }
@@ -378,8 +357,6 @@
 .chip-check.is-hard[aria-checked="true"],
 .chip-check.is-hard[aria-checked="true"]:not(:disabled):hover {
   border-color: var(--tint-terracotta);
-  background: var(--tint-terracotta);
-  color: var(--accent-text);
   font-weight: var(--weight-bold);
   box-shadow: var(--glint), var(--shadow-s);
 }
@@ -474,8 +451,6 @@
 }
 .norm-card .chip-row[role="radiogroup"] .chip[aria-checked="true"] {
   border-color: var(--ink-strong);
-  background: var(--ink-strong);
-  color: var(--button-fg);
   box-shadow: var(--shadow-accent-s);
 }
 .norm-card .norm-manual-row {
@@ -517,20 +492,6 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-pill);
-  background: var(--tint-terracotta);
-  color: var(--terracotta);
-}
-.limits-row-copy {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-.limits-row-copy b {
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .limits-row-copy small {
   color: var(--ink-muted);
@@ -570,9 +531,6 @@
 }
 .limits-sheet-head h2 {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--weight-heavy);
   line-height: 1.05;
   letter-spacing: var(--tracking-h1);
 }
@@ -609,10 +567,7 @@
   clear: both;
   margin: 0;
   padding-top: 4px;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
   font-weight: var(--weight-semibold);
-  line-height: 1.3;
 }
 .limits-card .chip-row {
   margin-top: 12px;
@@ -637,10 +592,7 @@
   font-weight: var(--weight-semibold);
 }
 .switch-row-copy small {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
   font-weight: var(--weight-semibold);
-  line-height: 1.3;
 }
 .limits-child-note {
   margin: 0 4px;
@@ -662,8 +614,6 @@
   display: grid;
   place-items: center;
   border-radius: var(--r-chip-sq);
-  background: var(--tint-amber);
-  color: var(--amber-text);
 }
 .limits-contact-note p {
   margin: 0;
@@ -698,9 +648,6 @@
   border-left: 0;
 }
 .menu-summary .summary-tile b {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
   line-height: 1.2;
   letter-spacing: 0;
 }
@@ -735,11 +682,6 @@
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
 }
-.menu-review-actions .chip::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
-}
 
 /* Карточка партии */
 .builder-shell .builder-content .batch-menu {
@@ -762,8 +704,6 @@
   display: inline-block;
   padding: 0 8px;
   border-radius: var(--r-pill);
-  background: var(--tint-terracotta);
-  color: var(--accent-text);
   font-size: var(--text-min);
   font-weight: var(--weight-bold);
   line-height: 18px;
@@ -825,9 +765,6 @@
 }
 .batch-menu .menu-row b {
   margin: 0;
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .batch-menu .menu-row small,
 .batch-menu .menu-row.is-pinned small {
@@ -841,8 +778,6 @@
   padding: 1px 8px;
   box-sizing: border-box;
   border-radius: var(--r-pill);
-  background: var(--tint-terracotta);
-  color: var(--accent-text);
   font-size: var(--text-min);
   font-weight: var(--weight-bold);
   line-height: 18px;
@@ -851,10 +786,6 @@
   width: 32px;
   height: 32px;
   margin: 0;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   color: var(--ink);
 }
 .batch-menu .menu-swap::after {
@@ -903,9 +834,6 @@
 }
 .manual-slot-heading h2 {
   margin: 4px 0;
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--weight-heavy);
   line-height: 1.05;
   letter-spacing: var(--tracking-h1);
   text-wrap: balance;
@@ -960,11 +888,6 @@
   flex-direction: column;
   align-items: flex-start;
   gap: 2px;
-}
-.manual-menu-option b {
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .manual-menu-option small {
   margin-top: 0;
@@ -1025,15 +948,8 @@
     background-color 260ms linear,
     border-color 260ms linear;
 }
-.manual-menu-select::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
-}
 .manual-menu-option.is-selected .manual-menu-select {
   border-color: var(--ink-strong);
-  background: var(--ink-strong);
-  color: var(--button-fg);
   box-shadow: var(--shadow-accent-s);
 }
 .manual-menu-select i,

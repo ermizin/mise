@@ -88,11 +88,6 @@
   height: 40px;
   border-radius: var(--r-pill);
 }
-.recipe-detail .detail-header .icon-button::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
-}
 .recipe-detail .detail-header > span {
   min-height: 40px;
   padding: 6px 14px;
@@ -118,9 +113,6 @@
 .recipe-detail .detail-hero h1 {
   margin: 0;
   color: var(--button-fg);
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--weight-heavy);
   line-height: 1.05;
   letter-spacing: var(--tracking-h1);
 }
@@ -169,10 +161,6 @@
   margin: 0 16px;
   padding: 4px;
   gap: 2px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
 }
@@ -184,8 +172,6 @@
   font-weight: var(--weight-semibold);
 }
 .recipe-detail > .detail-tabs button.selected {
-  color: var(--button-fg);
-  background: var(--ink-strong);
   box-shadow: var(--shadow-accent-s);
   font-weight: var(--weight-bold);
 }
@@ -210,13 +196,6 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-}
-.recipe-difficulty-head .kicker {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0;
-  text-transform: none;
 }
 .recipe-detail .recipe-difficulty-head h2 {
   margin: 2px 0 0;
@@ -265,9 +244,6 @@
 }
 .recipe-detail .recipe-difficulty dd {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
 }
 /* Утварь — живой текст, бывает длинным: плитка на всю ширину. */
 .recipe-detail .recipe-difficulty dl > .recipe-difficulty-gear {
@@ -412,10 +388,6 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   color: var(--ink);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
@@ -433,10 +405,6 @@
 .catalog-header .catalog-sort-button {
   width: 40px;
   height: 40px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   color: var(--ink);
 }
 .catalog-header .catalog-head-row {
@@ -445,9 +413,6 @@
 }
 .catalog-header h1 {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: var(--weight-heavy);
   line-height: 1.02;
   letter-spacing: var(--tracking-hero);
   text-wrap: balance;
@@ -484,28 +449,15 @@
   position: relative;
   min-height: 36px;
   padding: 0 12px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   color: var(--ink);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
-}
-.catalog-header .catalog-filter-button::before,
-.catalog-header .cuisine-menu-trigger::before,
-.catalog-header .catalog-chips .chip::before {
-  content: "";
-  position: absolute;
-  inset: -4px 0;
 }
 .catalog-header .catalog-filter-button.is-active,
 .catalog-header .cuisine-menu-trigger.is-active,
 .catalog-header .catalog-chips .chip[aria-checked="true"] {
   border-color: var(--ink-strong);
-  background: var(--ink-strong);
   box-shadow: var(--shadow-accent-s);
-  color: var(--button-fg);
   font-weight: var(--weight-bold);
 }
 .catalog-header .catalog-chips {
@@ -576,14 +528,6 @@
   font-weight: var(--weight-bold);
 }
 /* Мята — «в плане», терракота — «докупить N». */
-.catalog-grid .recipe-batch-badge {
-  background: var(--tint-mint-flat);
-  color: var(--mint-text);
-}
-.catalog-grid .missing-badge.is-short {
-  background: var(--tint-terracotta);
-  color: var(--accent-text);
-}
 .catalog-grid .recipe-chip {
   background: var(--glass-3-bg);
   color: var(--ink-muted);

@@ -133,12 +133,12 @@ test("14A follows the supplied visual reference without adding pantry states", a
   const { page } = await recipeSources();
   const recipeView = page.slice(page.indexOf("function RecipeView("));
   // Оранжевая вкладка из globals.css перекрывалась чернильной из редизайна C
-  // (v2.2: активные вкладки чернильные); пакет css убрал мёртвое правило,
-  // поэтому проверяется действующее.
-  const recipeCss = await read("app/redesign-c-recipe.css");
+  // (v2.2: активные вкладки чернильные). Пакет css убрал мёртвое правило и
+  // собрал чернила выбранного в общую роль redesign-c.css.
+  const sharedCss = await read("app/redesign-c.css");
   assert.match(
-    recipeCss,
-    /\.recipe-detail\s*>\s*\.detail-tabs button\.selected\s*\{[^}]*color:\s*var\(--button-fg\);[^}]*background:\s*var\(--ink-strong\)/s,
+    sharedCss,
+    /\.recipe-detail\s*>\s*\.detail-tabs button\.selected[^{]*\{[^}]*color:\s*var\(--button-fg\);[^}]*background:\s*var\(--ink-strong\)/s,
   );
   assert.match(recipeView, /<p className="kicker">По порядку<\/p>/);
   assert.match(recipeView, /<ol className="cooking-steps">/);
