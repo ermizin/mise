@@ -468,3 +468,11 @@ button.tab-pill::before {
   letter-spacing: 0;
   text-transform: none;
 }
+/* Нижняя капсула мастера и панель действий рецепта: стекло L1 (одна из трёх поверхностей с blur на экране) */
+.recipe-detail .recipe-detail-actions,
+.builder-chat-composer {
+  background: var(--glass-1-bg);
+  -webkit-backdrop-filter: var(--glass-1-blur);
+  backdrop-filter: var(--glass-1-blur);
+  box-shadow: var(--shadow-chrome), var(--glint);
+}

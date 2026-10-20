@@ -347,11 +347,7 @@
 
 /* Нижняя панель действий — единственное стекло карточки. */
 .recipe-detail .recipe-detail-actions {
-  background: var(--glass-1-bg);
   border-color: var(--glass-1-border);
-  box-shadow: var(--shadow-chrome), var(--glint);
-  -webkit-backdrop-filter: var(--glass-1-blur);
-  backdrop-filter: var(--glass-1-blur);
 }
 
 @media (prefers-reduced-transparency: reduce) {

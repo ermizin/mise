@@ -240,10 +240,6 @@
   gap: 6px;
   border: 1px solid var(--glass-1-border);
   border-radius: var(--r-pill);
-  background: var(--glass-1-bg);
-  -webkit-backdrop-filter: var(--glass-1-blur);
-  backdrop-filter: var(--glass-1-blur);
-  box-shadow: var(--shadow-chrome), var(--glint);
 }
 .builder-chat-back {
   flex: none;
