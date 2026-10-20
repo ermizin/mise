@@ -866,3 +866,53 @@
     line-height: 1.3;
   }
 }
+
+/* ============================================================
+   Пакет «css» (раунд 2): раскрывашки «Раскладка и помощь» и «Оценка
+   плана» — строка кита вместо браузерного маркера ▶: 15/600, шеврон
+   справа поворачивается вниз, когда блок открыт; разделитель как у
+   строк «Что дальше».
+   ============================================================ */
+.week-cooking-details,
+.week-nutrition-details {
+  border-top: 1px solid var(--ink-track);
+}
+.week-cooking-details > summary,
+.week-nutrition-details > summary {
+  min-height: var(--hit-min);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  list-style: none;
+  cursor: pointer;
+  color: var(--ink-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+}
+.week-cooking-details > summary::-webkit-details-marker,
+.week-nutrition-details > summary::-webkit-details-marker {
+  display: none;
+}
+.week-cooking-details > summary::after,
+.week-nutrition-details > summary::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-right: 2px solid var(--ink-muted);
+  border-bottom: 2px solid var(--ink-muted);
+  transform: rotate(-45deg);
+  transition: transform 200ms var(--motion-settled);
+}
+.week-cooking-details[open] > summary::after,
+.week-nutrition-details[open] > summary::after {
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .week-cooking-details > summary::after,
+  .week-nutrition-details > summary::after {
+    transition: none;
+  }
+}
