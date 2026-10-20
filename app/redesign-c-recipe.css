@@ -14,7 +14,7 @@
   background: var(--bg-base);
 }
 
-/* Слой 1: размытая копия фото на весь экран + тёплая заливка.
+/* Слой 1: предразмытая миниатюра фото (::before, пакет «photos») + тёплая заливка.
    Без фото — предразмытый /bg/recipe.jpg. */
 .recipe-backdrop {
   position: fixed;
@@ -23,16 +23,6 @@
   overflow: hidden;
   pointer-events: none;
   background: var(--bg-photo) center / cover no-repeat, var(--bg-base);
-}
-.recipe-backdrop img {
-  position: absolute;
-  top: -70px;
-  left: -70px;
-  width: calc(100% + 140px);
-  max-width: none;
-  height: calc(100% + 140px);
-  object-fit: cover;
-  filter: blur(30px) saturate(1.5);
 }
 .recipe-backdrop::after {
   content: "";
@@ -393,7 +383,6 @@
   .recipe-detail.has-hero-photo .recipe-backdrop {
     background: #f3d9c6;
   }
-  .recipe-backdrop img,
   .recipe-backdrop::after,
   .recipe-detail .recipe-hero-photo > img.recipe-hero-soft {
     display: none;
