@@ -343,8 +343,11 @@ test("splitting a step inside a work block does not change the effort estimate",
   const { entries } = await loadRecipeCorpusEntries();
   const candidates = new Map(entries.map((entry) => [entry.candidate.id, entry]));
   const runtimeIds = new Set(catalog.recipes.map((recipe) => recipe.id));
+  /* parallelProcesses растёт там, где редакторы сделали шаги параллельными;
+     в критерии приёмки это поле не входит. */
   const comparable = (effort) => {
-    const { parallelProcesses, ...rest } = effort;
+    const rest = { ...effort };
+    delete rest.parallelProcesses;
     return rest;
   };
   assert.ok(effortBlockRecipeIds.length >= 99);
