@@ -13,7 +13,10 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
 
   assert.match(css, /--button-grad: var\(--ink-strong\)/);
   assert.match(css, /\.builder-chat-history \.chat-bubble\.is-user \{[\s\S]*?background: var\(--button-grad\)/);
-  assert.match(css, /\.builder-shell::before \{[\s\S]*?rgba\(251, 248, 241, 0\.99\)/);
+  // Подложка шапки мастера: плотная заливка из globals.css перекрывалась
+  // тёплым градиентом редизайна C; пакет css убрал мёртвую заливку.
+  assert.match(css, /\.builder-shell::before \{[^}]*content: "";[^}]*pointer-events: none;/);
+  assert.match(await read("app/redesign-c-wizard.css"), /\.builder-shell::before \{[^}]*rgba\(255, 240, 228, 0\.94\) 0%/);
   assert.match(page, /const visibleChatTurns = historyExpanded \? completedChatTurns : \[\]/);
   assert.match(page, /Предыдущие шаги · /);
   // Остаток периода решается без вопроса и не блокирует шаг «Готовка»: с
@@ -28,7 +31,9 @@ test("the 2026-08-31 audit fixes keep the core flow compact and legible", async 
   assert.match(page, /genitiveAfterNumber\([\s\S]{0,100}\["порции", "порций"\]/);
   assert.match(page, /className="screen app-boot-loading"/);
   assert.match(page, /className=\{loadedPhoto === photo \? "is-loaded" : "is-loading"\}/);
-  assert.match(css, /\.cooking-batch-shell \{[\s\S]*?padding: 0 18px calc\(176px \+ env\(safe-area-inset-bottom\)\)/);
+  // Нижний отступ готовки под accessory задаёт redesign-c-cook.css; прежние
+  // 176 px из globals.css перекрывались и удалены пакетом css.
+  assert.match(await read("app/redesign-c-cook.css"), /\.cooking-batch-shell \{[^}]*padding: calc\(12px \+ env\(safe-area-inset-top\)\)[^;]*calc\(112px \+ env\(safe-area-inset-bottom\)\)/);
   assert.match(page, /система в установленном приложении/);
   assert.doesNotMatch(page, /className="install-kicker"/);
   assert.ok(page.indexOf("Открыть неделю") < page.indexOf("Настроить напоминания"));
@@ -135,16 +140,9 @@ test("visual release blockers and high-impact P1 regressions stay fixed", async 
     /\.style-card \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\) 30px;/,
     "menu-style copy owns the flexible column instead of the old 48px icon column",
   );
-  assert.match(
-    css,
-    /@media \(max-width: 430px\) \{[\s\S]*?\.date-fields \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\) minmax\(0, 1fr\);[\s\S]*?\.date-fields > \.icon \{[\s\S]*?display: none;/,
-    "both period fields remain visible through the widest phone breakpoint",
-  );
-  assert.match(
-    css,
-    /@media \(max-width: 360px\) \{[\s\S]*?\.date-fields \{[\s\S]*?grid-template-columns: minmax\(0, 1fr\);/,
-    "the narrowest supported screen gives each full date its own row",
-  );
+  // Поля периода .date-fields ушли из мастера вместе с прежним шагом «Период»
+  // (класс не встречается в page.tsx); их правила удалены как мёртвые (пакет css).
+  assert.doesNotMatch(page, /date-fields/);
   assert.match(css, /\.person-dot \{[\s\S]*?display: grid;[\s\S]*?place-items: center;/);
   assert.match(layout, /viewportFit: "cover"/, "safe-area CSS receives real iOS insets");
   assert.match(layout, /content="width=device-width, initial-scale=1, viewport-fit=cover"/);

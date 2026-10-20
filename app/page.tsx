@@ -9433,6 +9433,19 @@ function BottomNav({
           );
         })}
       </div>
+      {/* На десктопе круга «+» нет: лист «Следующий план» открывает чернильная
+          таблетка под разделами сайдбара (на узком экране она скрыта). */}
+      {!showCompose && circle === "next-plan" && onNextPlan && (
+        <button
+          type="button"
+          className="sidebar-next-plan"
+          onClick={onNextPlan}
+          aria-haspopup="dialog"
+        >
+          <Icon name="plus" size={18} />
+          <span>Следующий план</span>
+        </button>
+      )}
       <p className="desktop-tagline">Готовим раз —<br />едим всю неделю</p>
     </nav>
   );
@@ -11101,11 +11114,14 @@ function RecipesScreen({
 
   /* Шапка фиксированная, и её высота зависит от длины чисел и от того, сколько
      чипов активно. Считать её руками — тот самый способ уронить первую строку
-     под блюр, поэтому отступ скролла ведёт ResizeObserver. */
-  useEffect(() => {
+     под блюр, поэтому отступ скролла ведёт ResizeObserver. Первый отступ
+     ставится до отрисовки (layout effect): иначе первый кадр рисует сетку под
+     шапкой с нулевым отступом, и она съезжает вниз на высоту шапки (CLS ≈ 0,4). */
+  useLayoutEffect(() => {
     const header = headerRef.current;
     const scroll = scrollRef.current;
     if (!header || !scroll) return;
+    scroll.style.paddingTop = `${header.getBoundingClientRect().height + 8}px`;
     const observer = new ResizeObserver(([entry]) => {
       /* Именно border-box: у шапки большой собственный padding, и contentRect
          из сниппета хэндофа занижает высоту на него — контент уезжает под блюр. */
@@ -13419,8 +13435,6 @@ function PlanBuilder({
     <main
       className={`app-shell builder-shell${showManualMenuChoice ? " has-menu-choice" : ""}${composerBlocker && !showManualMenuChoice ? " has-composer-blocker" : ""}`}
     >
-      <div className="ambient ambient-one" />
-      <div className="ambient ambient-two" />
       {/* Хром мастера C: сверху только пилюля «Шаг N из 7» и полоса из семи
           сегментов; «Назад» живёт в нижней панели. */}
       <header

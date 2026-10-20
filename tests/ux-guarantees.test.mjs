@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
@@ -308,8 +308,13 @@ test("profile presents the real household goals and keeps its actions connected"
 
 test("the interface stays legible", async () => {
   const [page, css, layout] = await Promise.all([read("app/page.tsx"), read("app/globals.css"), read("app/layout.tsx")]);
-  const tiny = [...css.matchAll(/font-size: (\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
-  assert.deepEqual(tiny, [], "nothing is smaller than 12px");
+  // Пол кегля 12 px — на всех слоях стилей, включая шорткод font: (пакет «css»).
+  const cssFiles = (await readdir(new URL("../app/", import.meta.url))).filter((name) => name.endsWith(".css"));
+  for (const name of cssFiles) {
+    const text = await read(`app/${name}`);
+    const tiny = [...text.matchAll(/(?:font-size:|(?:^|[;{\s])font:[^;]*?)\s(\d+(?:\.\d+)?)px/g)].map((match) => Number(match[1])).filter((size) => size < 12);
+    assert.deepEqual(tiny, [], `${name}: nothing is smaller than 12px`);
+  }
   // Decorative accents stay light while text-bearing actions use an AA ramp.
   assert.match(css, /--accent-grad-a: #ff8143/);
   assert.match(css, /--accent-grad-b: #ee4c13/);

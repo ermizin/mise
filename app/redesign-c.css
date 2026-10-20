@@ -91,16 +91,6 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-.app-workspace .week-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--glass-2-border);
-  color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
-  font-family: var(--font-display);
-}
 
 /* ---------- Строки порций: карточка, круглое фото, круглый чекбокс ---------- */
 .app-workspace .week-execution-list {
@@ -168,9 +158,21 @@
   padding: 5px;
   border-radius: var(--r-pill);
 }
+/* Пакет «css»: активная вкладка — белая таблетка с тенью кита (§4.4), подпись
+   12/700 терракотой, неактивные — 12/600 --ink-body. Жидкий индикатор рисует
+   ту же таблетку белым (app/ui/library-effects.tsx), тень несёт его <span>. */
 .app-workspace .bottom-nav-indicator {
   background: #fff;
-  box-shadow: var(--shadow-s);
+  box-shadow: 0 2px 8px rgba(120, 50, 10, 0.18);
+}
+.app-workspace .liquid-nav-layer .bottom-nav-indicator {
+  box-shadow: 0 2px 8px rgba(120, 50, 10, 0.18);
+}
+.app-workspace .bottom-nav button {
+  color: var(--ink-body);
+}
+.app-workspace .bottom-nav button.is-active {
+  color: var(--accent-text);
 }
 .app-workspace .bottom-nav button small {
   font-size: var(--text-min);
@@ -178,6 +180,37 @@
 }
 .app-workspace .bottom-nav button.is-active small {
   font-weight: var(--weight-bold);
+}
+
+/* Пакет «css»: на десктопе (≥ 1100) лист «Следующий план» открывает чернильная
+   таблетка под разделами сайдбара — круга «+» там нет. */
+.sidebar-next-plan {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .app-workspace .sidebar-next-plan {
+    width: 100%;
+    min-height: var(--hit-primary);
+    margin-top: -14px;
+    padding: 0 8px;
+    border: 0;
+    border-radius: var(--r-pill);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+    color: var(--button-fg);
+    background: var(--button-grad);
+    box-shadow: var(--shadow-accent);
+    font-size: var(--text-body);
+    font-weight: var(--weight-bold);
+  }
+  .app-workspace .sidebar-next-plan .icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+  }
 }
 
 /* Шкала калорий остаётся оранжевой, когда кнопки стали чернильными */
@@ -211,4 +244,278 @@
 .cooking-timer-toggle .icon {
   width: 18px;
   height: 18px;
+}
+
+/* ============================================================
+   Пакет «css» (раунд 2): общие роли кита. Поверхность, цвет смысла и
+   подписи собраны сюда из файлов экранов; раскладка остаётся у экрана.
+   ============================================================ */
+/* Карточка L2: непрозрачная тонированная поверхность */
+.week-next-card,
+.week-state-card,
+.next-plan-stats,
+.container-label-card,
+.builder-shell .builder-content .glass-card,
+.builder-shell .builder-content .person-card,
+.builder-shell .builder-content .norm-card,
+.builder-shell .builder-content .limits-row,
+.builder-shell .builder-content .batch-menu,
+.builder-shell .builder-content .menu-summary,
+.builder-shell .builder-content .manual-menu-option,
+.builder-shell .builder-content .manual-menu-more,
+.onboarding-shell .onboarding-card,
+.onboarding-shell .promise-grid,
+.onboarding-shell .onb-rows,
+.onboarding-shell .rule-card,
+.app-workspace .shopping-screen > .undo-bar {
+  border: 1px solid var(--glass-2-border);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-m), var(--glint);
+}
+/* Пилюля: та же поверхность, капсула и малая тень */
+.week-batch-pill,
+.app-workspace .week-screen-header .week-person-trigger,
+.app-workspace .week-screen-header > .week-person-current,
+.week-header-pill,
+.next-plan-sheet .secondary-button,
+.cooking-batch-shell .cooking-batch-header .cooking-back-button,
+.cooking-remaining-pill,
+.cooking-now-count,
+.cooking-now-photo .cooking-all-button,
+.portion-dish-segment,
+.recipe-detail > .detail-tabs,
+.catalog-header .catalog-kicker,
+.catalog-header .catalog-sort-button,
+.catalog-header .catalog-filter-button,
+.catalog-header .cuisine-menu-trigger,
+.catalog-header .catalog-chips .chip,
+.builder-step-pill,
+.builder-chat-typing,
+.builder-menu-assembly,
+.builder-chat-back,
+.builder-chat-alternative,
+.batch-menu .menu-swap,
+.onboarding-brand,
+.onboarding-shell .pill-button,
+.onboarding-top .text-link,
+.onboarding-shell .install-action-row .btn,
+.tab-pill {
+  border: 1px solid var(--glass-2-border);
+  border-radius: var(--r-pill);
+  background: var(--glass-2-bg);
+  box-shadow: var(--shadow-s), var(--glint);
+}
+/* Мята: сделано, куплено, в плане, весы */
+.week-next-tile.is-mint,
+.cooking-weigh-icon,
+.portion-weighed-badge,
+.catalog-grid .recipe-batch-badge,
+.cooking-feasible > span,
+.batch-day-badge.is-frost,
+.batch-legend i.is-frost,
+.onboarding-shell .rule-card.tone-mint .rule-num,
+.onboarding-shell .batch-legend span i.is-frost {
+  background: var(--tint-mint-flat);
+  color: var(--mint-text);
+}
+/* Амбер: огонь, время, напоминания, ингредиенты */
+.cooking-now-card:not(.is-all) .batch-step-list li > .batch-step-duration,
+.cooking-batch-shell .cooking-step-products span,
+.builder-shell .choice-card[data-slot="breakfast"] .meal-choice-icon,
+.builder-shell .choice-card[data-slot="lunch"] .meal-choice-icon,
+.limits-contact-note > span,
+.onboarding-shell .onb-num.is-amber,
+.toggle-row-icon,
+.app-workspace .tutorial-entry > span.setting-tile.is-amber {
+  background: var(--tint-amber);
+  color: var(--amber-text);
+}
+/* Терракота-плитка: план, дни, контейнеры, люди */
+.builder-shell .remainder-sheet > button > .icon,
+.limits-row-icon,
+.onboarding-shell .onb-num,
+.install-step-tile,
+.onboarding-shell .install-android-fallback > span.install-step-tile,
+.onboarding-shell .rule-num,
+.setting-tile,
+.app-workspace .tutorial-entry > span.setting-tile {
+  background: var(--tint-terracotta);
+  color: var(--terracotta);
+}
+/* Терракота-бейдж с текстом: инициалы, даты, «докупить» */
+.container-label-when i,
+.catalog-grid .missing-badge.is-short,
+.batch-timeline li > span,
+.review-person-initial,
+.chip-check.is-hard[aria-checked="true"],
+.chip-check.is-hard[aria-checked="true"]:not(:disabled):hover,
+.batch-menu-date,
+.menu-row-badge,
+.app-workspace .profile-person-avatar {
+  background: var(--tint-terracotta);
+  color: var(--accent-text);
+}
+/* H1 вложенных экранов: Display 30/800 */
+.cooking-batch-title h1,
+.recipe-detail .detail-hero h1,
+.builder-chat-question h1,
+.builder-chat-question h2,
+.builder-chat-menu-ready h1,
+.builder-chat-menu-ready h2,
+.limits-sheet-head h2,
+.manual-slot-heading h2,
+.onboarding-title {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: var(--weight-heavy);
+}
+/* Hero корневых вкладок: Display 38/800 */
+.app-workspace .app-header.is-week h1,
+.batch-step-list .batch-step-number,
+.catalog-header h1,
+.success-sheet > h2,
+.app-workspace .shopping-header h1,
+.app-workspace .profile-header h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: var(--weight-heavy);
+}
+/* Выбранное нажимаемое: чернила */
+.recipe-detail > .detail-tabs button.selected,
+.catalog-header .catalog-filter-button.is-active,
+.catalog-header .cuisine-menu-trigger.is-active,
+.catalog-header .catalog-chips .chip[aria-checked="true"],
+.builder-shell .builder-content .eater-tile.is-active,
+.chip-check[aria-checked="true"],
+.chip-check[aria-checked="true"]:not(:disabled):hover,
+.norm-card .chip-row[role="radiogroup"] .chip[aria-checked="true"],
+.manual-menu-option.is-selected .manual-menu-select,
+.install-step-num {
+  color: var(--button-fg);
+  background: var(--ink-strong);
+}
+/* Выбранное нажимаемое через токен кнопки */
+.portion-dish-segment button[aria-pressed="true"],
+.builder-chat-send,
+.builder-shell .kitchen-equipment-choice.is-selected {
+  color: var(--button-fg);
+  background: var(--button-grad);
+}
+/* Кнопка «назад», чипы и сегменты: зона касания 44 вокруг видимых 36–40 px */
+.builder-shell .quick-periods button::before,
+.builder-shell .kitchen-equipment-choice::before,
+.chip-check::before,
+.menu-review-actions .chip::before,
+.manual-menu-select::before,
+.app-workspace .shopping-screen > .undo-bar .text-button::before,
+.app-workspace .profile-edit::before {
+  content: "";
+  position: absolute;
+  inset: -4px -2px;
+}
+/* Круглые кнопки 40 px: зона касания 44 */
+.app-workspace .week-screen-header .week-person-trigger::before,
+.recipe-detail .detail-header .icon-button::before,
+.builder-chat-history-toggle::before,
+.onboarding-shell .pill-button::before,
+.onboarding-top .text-link::before,
+button.tab-pill::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+}
+/* Чипы фильтров: зона касания 44 по вертикали */
+.catalog-header .catalog-filter-button::before,
+.catalog-header .cuisine-menu-trigger::before,
+.catalog-header .catalog-chips .chip::before,
+.app-workspace .shopping-filter-row button::before {
+  content: "";
+  position: absolute;
+  inset: -4px 0;
+}
+/* Мета строки: 12, приглушённый */
+.week-next-text small,
+.next-plan-stats small,
+.cooking-weigh-head small,
+.container-label-when,
+.step-intro > p:last-child,
+.period-hint,
+.period-summary small,
+.meal-shares-note,
+.builder-shell .style-card p,
+.builder-shell .style-card small,
+.cooking-feasible small,
+.review-people li small,
+.review-people-note,
+.success-next small,
+.success-reminders small,
+.limits-card-note,
+.switch-row-copy small,
+.onboarding-shell .promise-text {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  line-height: 1.3;
+}
+/* Название строки: 15/600 */
+.builder-shell .choice-card .meal-choice-copy b,
+.builder-shell .style-card h3,
+.review-people li b,
+.builder-shell .shopping-preview p span,
+.success-next b,
+.success-reminders b,
+.limits-row-copy b,
+.batch-menu .menu-row b,
+.manual-menu-option b,
+.onboarding-shell .onb-row b,
+.onboarding-shell .toggle-row b {
+  font-size: var(--text-body);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+/* Колонка текста строки */
+.week-next-text,
+.meal-choice-copy,
+.success-next button > span:not(.success-next-icon),
+.success-reminders > span:not(.success-next-icon),
+.limits-row-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 1px;
+  min-width: 0;
+}
+/* Числа и подписи разделов: Display 17/700 */
+.app-workspace .week-macro-card .week-balance-total b,
+.week-state-card h2,
+.next-plan-stats b,
+.recipe-detail .recipe-difficulty dd,
+.builder-chat-header.settings-header h1,
+.period-days b,
+.review-person-initial,
+.menu-summary .summary-tile b,
+.onboarding-shell .rule-card h2,
+.app-workspace .group-title h3,
+.app-workspace .profile-person-avatar {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+}
+/* Подпись поля: 12/600 без капса */
+.recipe-difficulty-head .kicker,
+.person-card .field-label,
+.norm-card .field-label,
+.limits-sheet .field-label {
+  color: var(--ink-muted);
+  font-size: var(--text-min);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* Нижняя капсула мастера и панель действий рецепта: стекло L1 (одна из трёх поверхностей с blur на экране) */
+.recipe-detail .recipe-detail-actions,
+.builder-chat-composer {
+  background: var(--glass-1-bg);
+  -webkit-backdrop-filter: var(--glass-1-blur);
+  backdrop-filter: var(--glass-1-blur);
+  box-shadow: var(--shadow-chrome), var(--glint);
 }

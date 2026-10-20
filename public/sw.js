@@ -1,4 +1,4 @@
-const CACHE_NAME = "mise-shell-v5"; // v5: редизайн C — новые шрифты, стили и фоны
+const CACHE_NAME = "mise-shell-v6"; // v6: шрифты и фоны редизайна C в предкеше, по одному файлу шрифта на подмножество
 const PLAN_CACHE_NAME = "mise-plan-v3";
 const SHELL = [
   "/",
@@ -11,6 +11,16 @@ const SHELL = [
   "/icon-maskable-512.png",
   "/apple-touch-icon.png",
   "/badge-96.png",
+  // Wix Madefor: вариативные woff2, один файл на семейство и подмножество.
+  "/fonts/WixMadeforDisplay-cyrillic.woff2",
+  "/fonts/WixMadeforDisplay-latin.woff2",
+  "/fonts/WixMadeforText-cyrillic.woff2",
+  "/fonts/WixMadeforText-latin.woff2",
+  // Предразмытые фоны экранов (--bg-photo).
+  "/bg/cook.jpg",
+  "/bg/plan.jpg",
+  "/bg/recipe.jpg",
+  "/bg/week.jpg",
 ];
 
 self.addEventListener("install", (event) => {

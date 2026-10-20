@@ -55,11 +55,7 @@
   padding: 0 14px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
   white-space: nowrap;
@@ -73,9 +69,6 @@
   padding: 0 4px;
 }
 .builder-chat-header.settings-header h1 {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
   letter-spacing: 0;
 }
 .builder-chat-header.settings-header .kicker {
@@ -121,8 +114,6 @@
 }
 .builder-chat-history-toggle {
   justify-self: start;
-  min-height: var(--hit-min);
-  padding: 8px 14px;
   border: 1px solid var(--glass-2-border);
   color: var(--ink);
   background: var(--glass-2-bg);
@@ -188,9 +179,6 @@
 .builder-chat-menu-ready h2 {
   margin: 0;
   color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--weight-heavy);
   line-height: 1.05;
   letter-spacing: var(--tracking-h1);
   text-wrap: balance;
@@ -211,13 +199,6 @@
   font-weight: var(--weight-semibold);
   line-height: 1.35;
 }
-.builder-chat-typing,
-.builder-menu-assembly {
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
-}
 .builder-menu-assembly {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -231,11 +212,6 @@
 }
 
 /* Карточки мастера — непрозрачные .glass-2 (кит §4), без blur. */
-.builder-shell .builder-content .glass-card {
-  border: 1px solid var(--glass-2-border);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
-}
 .builder-chat-response.is-step-0,
 .builder-chat-response.is-step-1,
 .builder-chat-response.is-step-2,
@@ -264,10 +240,6 @@
   gap: 6px;
   border: 1px solid var(--glass-1-border);
   border-radius: var(--r-pill);
-  background: var(--glass-1-bg);
-  -webkit-backdrop-filter: var(--glass-1-blur);
-  backdrop-filter: var(--glass-1-blur);
-  box-shadow: var(--shadow-chrome), var(--glint);
 }
 .builder-chat-back {
   flex: none;
@@ -277,11 +249,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-size: var(--text-body);
   font-weight: var(--weight-bold);
 }
@@ -304,8 +272,6 @@
   padding-inline: 16px;
   border: 0;
   border-radius: var(--r-pill);
-  color: var(--button-fg);
-  background: var(--button-grad);
   box-shadow: var(--shadow-accent);
   font-size: var(--text-body);
   font-weight: var(--weight-bold);
@@ -327,11 +293,7 @@
   flex: none;
   min-height: 54px;
   padding-inline: 14px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-size: var(--text-link);
   font-weight: var(--weight-bold);
 }
@@ -393,9 +355,6 @@
 }
 .step-intro > p:last-child {
   margin: 2px 0 0;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
 }
 
 /* ---------- Общие подписи полей карточек ---------- */
@@ -466,23 +425,17 @@
 }
 .period-hint {
   margin: 6px 0 0;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
   text-wrap: balance;
 }
 .builder-shell .quick-periods {
   margin: 0;
   display: flex;
-  flex-wrap: wrap;
   gap: 6px;
 }
 .builder-shell .quick-periods button {
   position: relative;
   flex: 1 1 0;
-  min-width: max-content;
   min-height: 36px;
-  padding: 3px 10px;
   border: 1px solid var(--surface-control-border);
   border-radius: var(--r-pill);
   color: var(--ink);
@@ -490,11 +443,6 @@
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
   line-height: 1.15;
-}
-.builder-shell .quick-periods button::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
 }
 .builder-shell .quick-periods button.selected {
   border-color: var(--ink);
@@ -516,9 +464,6 @@
 .period-summary small {
   display: block;
   margin-top: 2px;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
   text-wrap: balance;
 }
 .period-summary .note {
@@ -573,9 +518,6 @@
   font-weight: var(--weight-bold);
 }
 .period-days b {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
   line-height: 20px;
 }
 .period-days li i,
@@ -621,11 +563,6 @@
   border: 0;
   border-radius: 50%;
 }
-.builder-shell .choice-card[data-slot="breakfast"] .meal-choice-icon,
-.builder-shell .choice-card[data-slot="lunch"] .meal-choice-icon {
-  color: var(--amber-text);
-  background: var(--tint-amber);
-}
 .builder-shell .choice-card[data-slot="snack1"] .meal-choice-icon,
 .builder-shell .choice-card[data-slot="snack2"] .meal-choice-icon {
   color: var(--mint-text);
@@ -635,18 +572,8 @@
   color: var(--terracotta);
   background: var(--tint-terracotta);
 }
-.meal-choice-copy {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
 .builder-shell .choice-card .meal-choice-copy b {
   margin: 0;
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .builder-shell .builder-content .choice-card .meal-choice-copy small {
   margin: 0;
@@ -707,9 +634,6 @@
 }
 .meal-shares-note {
   margin: 2px 0 0;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
   text-wrap: balance;
 }
 
@@ -727,15 +651,9 @@
 }
 .builder-shell .style-card h3 {
   margin: 0 0 2px;
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .builder-shell .style-card p,
 .builder-shell .style-card small {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
   text-wrap: balance;
 }
 .builder-shell .style-card i,
@@ -844,8 +762,6 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--accent-text);
-  background: var(--tint-terracotta);
   font-size: var(--text-min);
   font-weight: var(--weight-bold);
 }
@@ -896,8 +812,6 @@
   padding: 8px;
   box-sizing: border-box;
   border-radius: 50%;
-  color: var(--terracotta);
-  background: var(--tint-terracotta);
 }
 .builder-shell .remainder-sheet b {
   font-size: var(--text-link);
@@ -924,8 +838,6 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--mint-text);
-  background: var(--tint-mint-flat);
 }
 .cooking-feasible p {
   margin: 0;
@@ -937,11 +849,6 @@
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
   line-height: 1.25;
-}
-.cooking-feasible small {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
 }
 .builder-shell .kitchen-equipment-grid {
   margin-top: 10px;
@@ -961,11 +868,6 @@
   color: var(--ink);
   background: var(--surface-control-bg);
 }
-.builder-shell .kitchen-equipment-choice::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
-}
 .builder-shell .kitchen-equipment-choice b {
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
@@ -982,8 +884,6 @@
 }
 .builder-shell .kitchen-equipment-choice.is-selected {
   border-color: var(--ink);
-  color: var(--button-fg);
-  background: var(--button-grad);
   box-shadow: var(--shadow-accent-s);
 }
 .builder-shell .kitchen-equipment-choice.is-selected .kitchen-equipment-check {
@@ -1067,11 +967,6 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--accent-text);
-  background: var(--tint-terracotta);
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
 }
 .review-people li p {
   min-width: 0;
@@ -1079,17 +974,6 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-}
-.review-people li b {
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
-}
-.review-people li small,
-.review-people-note {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
 }
 .review-people-note {
   margin: 6px 0 0;
@@ -1117,9 +1001,6 @@
 }
 .builder-shell .shopping-preview p span {
   min-width: 0;
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .builder-shell .shopping-preview p b {
   flex: none;
@@ -1224,9 +1105,6 @@
 .success-sheet > h2 {
   margin: 40px 4px 0;
   color: var(--ink);
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: var(--weight-heavy);
   line-height: 1.02;
   letter-spacing: var(--tracking-hero);
   text-wrap: balance;
@@ -1304,26 +1182,9 @@
   background: var(--glass-2-bg);
   box-shadow: var(--shadow-m), var(--glint);
 }
-.success-next button > span:not(.success-next-icon),
-.success-reminders > span:not(.success-next-icon) {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
 .success-next b,
 .success-reminders b {
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
   text-wrap: balance;
-}
-.success-next small,
-.success-reminders small {
-  color: var(--ink-muted);
-  font-size: var(--text-min);
-  line-height: 1.3;
 }
 .success-next button > .icon,
 .success-reminders > .icon {
@@ -1365,20 +1226,12 @@
   mask-image: linear-gradient(180deg, transparent 0, #000 18px);
 }
 /* Пять чипов длительности в одну строку на 390. */
-.builder-shell .quick-periods {
-  flex-wrap: nowrap;
-}
 .builder-shell .quick-periods button {
-  min-width: 0;
   padding: 3px 4px;
   white-space: nowrap;
 }
 @media (max-width: 360px) {
-  .builder-shell .quick-periods {
-    flex-wrap: wrap;
-  }
   .builder-shell .quick-periods button {
-    min-width: max-content;
     padding: 3px 10px;
   }
 }
@@ -1394,7 +1247,6 @@
   font-size: var(--text-link);
 }
 .builder-chat-composer.has-menu-choice .builder-chat-alternative {
-  flex: 0 1 auto;
   min-width: 0;
 }
 .builder-chat-composer.has-menu-choice .builder-chat-send {
@@ -1420,11 +1272,6 @@
   font-weight: var(--weight-semibold);
   line-height: 1;
   white-space: nowrap;
-}
-.builder-chat-history-toggle::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
 }
 .builder-chat-history-toggle .icon {
   flex: none;

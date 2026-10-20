@@ -38,21 +38,11 @@
   padding: 0 16px;
   display: inline-flex;
   align-items: center;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-family: var(--font-ui);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
   text-decoration: none;
-}
-.onboarding-shell .pill-button::before,
-.onboarding-top .text-link::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
 }
 .onboarding-brand {
   font-family: var(--font-display);
@@ -63,9 +53,6 @@
 /* H1 Display 30/800 по центру, лид 15/400 */
 .onboarding-title {
   margin: 28px 4px 0;
-  font-family: var(--font-display);
-  font-size: var(--text-h1);
-  font-weight: var(--weight-heavy);
   line-height: 1.06;
   letter-spacing: var(--tracking-h1);
   text-align: center;
@@ -110,10 +97,7 @@
 .onboarding-shell .onboarding-card {
   margin-top: 20px;
   padding: 16px;
-  border: 1px solid var(--glass-2-border);
   border-radius: var(--r-card);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
 }
 .onboarding-shell .note {
   margin-top: 12px;
@@ -190,10 +174,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0;
-  border: 1px solid var(--glass-2-border);
   border-radius: var(--r-card);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
 }
 .onboarding-shell .promise-tile {
   padding: 10px 12px;
@@ -221,10 +202,7 @@
 }
 .onboarding-shell .promise-text {
   margin-top: 2px;
-  color: var(--ink-muted);
-  font-size: var(--text-min);
   font-weight: var(--weight-semibold);
-  line-height: 1.3;
   text-wrap: balance;
 }
 
@@ -409,11 +387,6 @@
   right: -5px;
   top: -5px;
 }
-.batch-day-badge.is-frost,
-.batch-legend i.is-frost {
-  color: var(--mint-text);
-  background: var(--tint-mint-flat);
-}
 .batch-day-badge .icon,
 .batch-legend i .icon {
   width: 11px;
@@ -427,7 +400,6 @@
   text-transform: uppercase;
 }
 .onboarding-shell .batch-day.is-cook > small {
-  color: var(--ink);
   font-weight: var(--weight-bold);
 }
 .batch-brackets {
@@ -479,10 +451,7 @@
   margin-top: 20px;
   padding: 4px 16px;
   gap: 0;
-  border: 1px solid var(--glass-2-border);
   border-radius: var(--r-card);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
 }
 .onboarding-shell .onb-row {
   min-height: 56px;
@@ -501,16 +470,10 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  color: var(--terracotta);
-  background: var(--tint-terracotta);
   box-shadow: none;
   font-family: var(--font-display);
   font-size: var(--text-body);
   font-weight: var(--weight-bold);
-}
-.onboarding-shell .onb-num.is-amber {
-  color: var(--amber-text);
-  background: var(--tint-amber);
 }
 .onboarding-shell .onb-num.is-mint {
   color: var(--mint-text);
@@ -519,12 +482,6 @@
 .onboarding-shell .onb-num .icon {
   width: 18px;
   height: 18px;
-}
-.onboarding-shell .onb-row b,
-.onboarding-shell .toggle-row b {
-  font-size: var(--text-body);
-  font-weight: var(--weight-semibold);
-  line-height: 1.2;
 }
 .onboarding-shell .onb-row small,
 .onboarding-shell .toggle-row small {
@@ -559,8 +516,6 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--amber-text);
-  background: var(--tint-amber);
 }
 .toggle-row-icon.is-mint {
   color: var(--mint-text);
@@ -642,8 +597,6 @@
   display: grid;
   place-items: center;
   border-radius: 50%;
-  color: var(--button-fg);
-  background: var(--ink-strong);
   font-family: var(--font-display);
   font-size: var(--text-body);
   font-weight: var(--weight-bold);
@@ -670,8 +623,6 @@
   place-items: center;
   vertical-align: middle;
   border-radius: var(--r-chip-sq);
-  color: var(--terracotta);
-  background: var(--tint-terracotta);
 }
 .onboarding-shell .install-android-fallback > span.install-step-tile {
   flex: none;
@@ -687,11 +638,7 @@
 }
 .onboarding-shell .install-action-row .btn {
   min-height: 46px;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
 }
@@ -701,31 +648,17 @@
    ============================================================ */
 
 .onboarding-shell .rule-card {
-  border: 1px solid var(--glass-2-border);
   border-radius: var(--r-card);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
 }
 .onboarding-shell .rule-num {
   border-radius: 50%;
-  color: var(--terracotta);
-  background: var(--tint-terracotta);
   font-family: var(--font-display);
   font-size: var(--text-body);
-}
-.onboarding-shell .rule-card.tone-mint .rule-num {
-  color: var(--mint-text);
-  background: var(--tint-mint-flat);
 }
 .onboarding-shell .rule-card.tone-amber .rule-num,
 .onboarding-shell .rule-card.tone-lilac .rule-num {
   color: var(--amber-text);
   background: var(--tint-amber);
-}
-.onboarding-shell .rule-card h2 {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
 }
 .onboarding-shell .rule-card p {
   font-size: var(--text-body);
@@ -761,20 +694,11 @@
   align-items: center;
   gap: 8px;
   flex: none;
-  border: 1px solid var(--glass-2-border);
-  border-radius: var(--r-pill);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-s), var(--glint);
   font-family: var(--font-ui);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
   white-space: nowrap;
-}
-button.tab-pill::before {
-  content: "";
-  position: absolute;
-  inset: -2px;
 }
 .tab-pill > .icon {
   width: 16px;
@@ -792,9 +716,6 @@ button.tab-pill::before {
 .app-workspace .shopping-header h1,
 .app-workspace .profile-header h1 {
   margin: 12px 4px 0;
-  font-family: var(--font-display);
-  font-size: var(--text-hero);
-  font-weight: var(--weight-heavy);
   line-height: 1.02;
   letter-spacing: var(--tracking-hero);
   text-wrap: balance;
@@ -878,11 +799,6 @@ button.tab-pill::before {
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
 }
-.app-workspace .shopping-filter-row button::before {
-  content: "";
-  position: absolute;
-  inset: -4px 0;
-}
 .app-workspace .shopping-filter-row button.selected {
   border-color: var(--ink-strong);
   color: var(--button-fg);
@@ -909,11 +825,6 @@ button.tab-pill::before {
   margin: 0;
   padding: 0 16px 4px;
   align-items: baseline;
-}
-.app-workspace .group-title h3 {
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
 }
 .app-workspace .group-title > span {
   color: var(--ink-muted);
@@ -970,11 +881,8 @@ button.tab-pill::before {
   min-height: 48px;
   margin: 12px 0 0;
   padding: 0 6px 0 18px;
-  border: 1px solid var(--glass-2-border);
   border-radius: var(--r-row);
   color: var(--ink);
-  background: var(--glass-2-bg);
-  box-shadow: var(--shadow-m), var(--glint);
   font-size: var(--text-link);
   font-weight: var(--weight-semibold);
 }
@@ -989,11 +897,6 @@ button.tab-pill::before {
   box-shadow: 0 1px 3px rgba(120, 50, 10, 0.18);
   font-size: var(--text-link);
   font-weight: var(--weight-bold);
-}
-.app-workspace .shopping-screen > .undo-bar .text-button::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
 }
 
 /* ============================================================
@@ -1026,11 +929,6 @@ button.tab-pill::before {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  color: var(--accent-text);
-  background: var(--tint-terracotta);
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: var(--weight-bold);
 }
 .app-workspace .profile-person-copy h3 {
   font-family: var(--font-ui);
@@ -1052,11 +950,6 @@ button.tab-pill::before {
   background: #fff;
   box-shadow: 0 1px 3px rgba(120, 50, 10, 0.18);
   font-size: var(--text-link);
-}
-.app-workspace .profile-edit::before {
-  content: "";
-  position: absolute;
-  inset: -4px -2px;
 }
 .app-workspace .profile-kcal-linear b {
   color: var(--accent-text);
@@ -1105,12 +998,6 @@ button.tab-pill::before {
   display: grid;
   place-items: center;
   border-radius: var(--r-tile);
-  color: var(--terracotta);
-  background: var(--tint-terracotta);
-}
-.app-workspace .tutorial-entry > span.setting-tile.is-amber {
-  color: var(--amber-text);
-  background: var(--tint-amber);
 }
 .app-workspace .tutorial-entry > span.setting-tile.is-mint {
   color: var(--mint-text);
@@ -1201,10 +1088,6 @@ button.tab-pill::before {
   color: var(--amber-text);
   background: #f6e3c9;
 }
-.onboarding-shell .batch-legend span i.is-frost {
-  color: var(--mint-text);
-  background: var(--tint-mint-flat);
-}
 
 /* Десктоп: таб-бар уходит в сайдбар, тосту не нужно подниматься над ним */
 @media (min-width: 1100px) {
@@ -1225,4 +1108,104 @@ button.tab-pill::before {
 }
 .tab-pill-row > :last-child {
   margin-left: auto;
+}
+
+/* ============================================================
+   Пакет «css» (раунд 2): «Готовка партиями» на невысоких экранах.
+   Заголовок и абзац должны быть видны над нижней капсулой без
+   прокрутки, поэтому иллюстрация ужимается по высоте ступенями;
+   кегли подписей не уменьшаются, порядок блоков и стаггер те же.
+   ============================================================ */
+@media (max-height: 880px) {
+  .onboarding-shell .batch-hero {
+    height: 186px;
+  }
+  .onboarding-shell .batch-hero-pan {
+    top: 30px;
+    width: 116px;
+    height: 116px;
+  }
+  .onboarding-shell .batch-hero-fire {
+    left: 86px;
+    top: 112px;
+  }
+  .onboarding-shell .batch-fan {
+    width: 88px;
+    height: 88px;
+  }
+  .onboarding-shell .batch-fan-0 {
+    top: 40px;
+  }
+  .onboarding-shell .batch-fan-1 {
+    left: calc(42% + 44px);
+    top: 26px;
+  }
+  .onboarding-shell .batch-fan-2 {
+    left: calc(42% + 88px);
+    top: 40px;
+  }
+  .onboarding-shell .batch-sticker-sum {
+    top: 138px;
+  }
+}
+@media (max-height: 820px) {
+  .onboarding-shell .batch-hero {
+    height: 160px;
+  }
+  .onboarding-shell .batch-hero-pan {
+    top: 28px;
+    width: 100px;
+    height: 100px;
+  }
+  .onboarding-shell .batch-hero-fire {
+    left: 72px;
+    top: 96px;
+  }
+  .onboarding-shell .batch-fan {
+    width: 76px;
+    height: 76px;
+  }
+  .onboarding-shell .batch-fan-0 {
+    top: 34px;
+  }
+  .onboarding-shell .batch-fan-1 {
+    left: calc(42% + 38px);
+    top: 22px;
+  }
+  .onboarding-shell .batch-fan-2 {
+    left: calc(42% + 76px);
+    top: 34px;
+  }
+  .onboarding-shell .batch-sticker-sum {
+    top: 116px;
+  }
+}
+/* Ниже 700 px высоты сковорода и веер не помещаются вместе с неделей:
+   остаётся карточка недели, она объясняет то же самое. */
+@media (max-height: 700px) {
+  .onboarding-shell .batch-hero {
+    display: none;
+  }
+}
+/* 320 × 568: на первом экране уходит колода блюд (обещания остаются),
+   на втором карточка недели становится плотнее и теряет легенду значков. */
+@media (max-height: 600px) {
+  .onboarding-shell .dish-deck {
+    display: none;
+  }
+  .onboarding-shell .batch-week-card {
+    padding-block: 12px;
+  }
+  .onboarding-shell .batch-bars {
+    margin-top: 8px;
+  }
+  .onboarding-shell .batch-brackets {
+    margin-top: 6px;
+  }
+  .onboarding-shell .batch-legend {
+    display: none;
+  }
+  .onboarding-shell .batch-week-card ~ .onboarding-title {
+    margin-top: 12px;
+  }
 }

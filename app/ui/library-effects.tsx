@@ -34,10 +34,12 @@ export function LiquidNavIndicator({ enabled = true }: { enabled?: boolean }) {
   if (!animate || !enabled) {
     return <span className="bottom-nav-indicator" aria-hidden="true" />;
   }
+  /* Кит C §4.4: активная вкладка — белая таблетка; жидкость рисуется белым
+     без прозрачности, тень — у <span> индикатора (redesign-c.css). */
   return (
     <Liquid
       className="liquid-nav-layer"
-      fill="#f2571a"
+      fill="#ffffff"
       blur={6}
       contrast={18}
       aria-hidden="true"

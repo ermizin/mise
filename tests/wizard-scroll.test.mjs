@@ -37,9 +37,11 @@ test("wizard keeps its chat history in a touch-scrollable viewport", async () =>
   assert.match(page, /const showManualMenuChoice =/);
   assert.match(page, /className="builder-chat-alternative"/);
   assert.match(page, />\s*Выбрать вручную\s*<\/button>/);
+  // Капсула действий мастера C: высота кнопок задаётся в redesign-c-wizard.css;
+  // прежние 56 px из globals.css перекрывались и удалены пакетом css.
   assert.match(
-    css,
-    /\.builder-chat-alternative \{[\s\S]*?min-height: 56px;/,
+    await read("app/redesign-c-wizard.css"),
+    /\.builder-chat-alternative \{[^}]*min-height: 54px;/,
   );
   const menuReview = page.slice(
     page.indexOf("function MenuReviewStep("),
