@@ -262,7 +262,7 @@
   /* ---------- Motion handoff ---------- */
   --motion-base: 420ms;
   --motion-press: 130ms;
-  --motion-screen: 588ms;
+  --motion-screen: 224ms; /* вход экрана онбординга: весь вход ≤ 320 мс (пакет «css») */
   --motion-settled: cubic-bezier(0.22, 0.9, 0.28, 1);
   --motion-spring: cubic-bezier(0.34, 1.3, 0.5, 1);
   --motion-segment: cubic-bezier(0.34, 1.28, 0.5, 1);
@@ -6751,102 +6751,102 @@ p {
   animation: mise-onb-screen-left var(--motion-screen) var(--motion-settled) both;
 }
 .onboarding-shell:not(.is-guide) .onboarding-top {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) both;
+  animation: mise-onb-rise 160ms var(--motion-settled) both;
 }
 .onboarding-shell:not(.is-guide) .onboarding-title {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 45ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 17ms both;
 }
 .onboarding-shell:not(.is-guide) .onboarding-lead {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 90ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 34ms both;
 }
 .onboarding-shell:not(.is-guide) > .action-bar-slot {
-  animation: mise-onb-panel 483ms var(--motion-settled) 72ms both;
+  animation: mise-onb-panel 184ms var(--motion-settled) 27ms both;
 }
 .onboarding-shell:not(.is-guide) .action-dots span.is-current {
-  animation: mise-onb-dot 378ms var(--motion-spring) 135ms both;
+  animation: mise-onb-dot 144ms var(--motion-spring) 51ms both;
 }
 .onboarding-shell:not(.is-guide) .deck-main {
-  animation: mise-onb-deck-main 504ms var(--motion-spring) 153ms both;
+  animation: mise-onb-deck-main 192ms var(--motion-spring) 58ms both;
 }
 .onboarding-shell:not(.is-guide) .deck-left {
-  animation: mise-onb-deck-left 483ms var(--motion-spring) 198ms both;
+  animation: mise-onb-deck-left 184ms var(--motion-spring) 75ms both;
 }
 .onboarding-shell:not(.is-guide) .deck-right {
-  animation: mise-onb-deck-right 483ms var(--motion-spring) 221ms both;
+  animation: mise-onb-deck-right 184ms var(--motion-spring) 84ms both;
 }
 .onboarding-shell:not(.is-guide) .promise-tile {
-  animation: mise-onb-rise-small var(--motion-base) var(--motion-spring) both;
+  animation: mise-onb-rise-small 160ms var(--motion-spring) both;
 }
-.onboarding-shell:not(.is-guide) .promise-tile:nth-child(1) { animation-delay: 270ms; }
-.onboarding-shell:not(.is-guide) .promise-tile:nth-child(2) { animation-delay: 302ms; }
-.onboarding-shell:not(.is-guide) .promise-tile:nth-child(3) { animation-delay: 333ms; }
-.onboarding-shell:not(.is-guide) .promise-tile:nth-child(4) { animation-delay: 365ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(1) { animation-delay: 103ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(2) { animation-delay: 115ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(3) { animation-delay: 127ms; }
+.onboarding-shell:not(.is-guide) .promise-tile:nth-child(4) { animation-delay: 139ms; }
 .onboarding-shell:not(.is-guide) .promise-grid + * {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 405ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 154ms both;
 }
 .onboarding-shell:not(.is-guide) .onboarding-card {
-  animation: mise-onb-rise-small 462ms var(--motion-settled) 135ms both;
+  animation: mise-onb-rise-small 176ms var(--motion-settled) 51ms both;
 }
 .onboarding-shell:not(.is-guide) .batch-day > span {
   transform-origin: bottom;
-  animation: mise-onb-bar var(--motion-base) var(--motion-spring) both;
+  animation: mise-onb-bar 160ms var(--motion-spring) both;
 }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(1) > span { animation-delay: 180ms; }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(2) > span { animation-delay: 198ms; }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(3) > span { animation-delay: 216ms; }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(4) > span { animation-delay: 234ms; }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(5) > span { animation-delay: 252ms; }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(6) > span { animation-delay: 270ms; }
-.onboarding-shell:not(.is-guide) .batch-day:nth-child(7) > span { animation-delay: 288ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(1) > span { animation-delay: 68ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(2) > span { animation-delay: 75ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(3) > span { animation-delay: 82ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(4) > span { animation-delay: 89ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(5) > span { animation-delay: 96ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(6) > span { animation-delay: 103ms; }
+.onboarding-shell:not(.is-guide) .batch-day:nth-child(7) > span { animation-delay: 109ms; }
 .onboarding-shell:not(.is-guide) .onb-row {
-  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) both;
+  animation: mise-onb-rise-small 160ms var(--motion-settled) both;
 }
-.onboarding-shell:not(.is-guide) .onb-row:nth-child(1) { animation-delay: 315ms; }
-.onboarding-shell:not(.is-guide) .onb-row:nth-child(2) { animation-delay: 342ms; }
-.onboarding-shell:not(.is-guide) .onb-row:nth-child(3) { animation-delay: 369ms; }
+.onboarding-shell:not(.is-guide) .onb-row:nth-child(1) { animation-delay: 120ms; }
+.onboarding-shell:not(.is-guide) .onb-row:nth-child(2) { animation-delay: 130ms; }
+.onboarding-shell:not(.is-guide) .onb-row:nth-child(3) { animation-delay: 140ms; }
 .onboarding-shell:not(.is-guide) .push-card {
-  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) both;
+  animation: mise-onb-rise-small 160ms var(--motion-settled) both;
 }
-.onboarding-shell:not(.is-guide) .push-card:nth-child(1) { animation-delay: 198ms; }
-.onboarding-shell:not(.is-guide) .push-card:nth-child(2) { animation-delay: 234ms; }
+.onboarding-shell:not(.is-guide) .push-card:nth-child(1) { animation-delay: 75ms; }
+.onboarding-shell:not(.is-guide) .push-card:nth-child(2) { animation-delay: 89ms; }
 .onboarding-shell:not(.is-guide) .toggle-list {
-  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) 270ms both;
+  animation: mise-onb-rise-small 160ms var(--motion-settled) 103ms both;
 }
 .onboarding-shell:not(.is-guide) .toggle-row:nth-child(1)[aria-checked="true"] .toggle::after {
-  animation: mise-onb-toggle 365ms var(--motion-spring) 333ms both;
+  animation: mise-onb-toggle 139ms var(--motion-spring) 127ms both;
 }
 .onboarding-shell:not(.is-guide) .toggle-row:nth-child(2)[aria-checked="true"] .toggle::after {
-  animation: mise-onb-toggle 365ms var(--motion-spring) 365ms both;
+  animation: mise-onb-toggle 139ms var(--motion-spring) 139ms both;
 }
 .onboarding-shell:not(.is-guide) .onboarding-fineprint {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 387ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 147ms both;
 }
 .onboarding-shell.is-guide .onboarding-title {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 45ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 17ms both;
 }
 .onboarding-shell.is-guide .onboarding-lead {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 90ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 34ms both;
 }
 .onboarding-shell.is-guide .rule-card {
-  animation: mise-onb-rise-small var(--motion-base) var(--motion-settled) both;
+  animation: mise-onb-rise-small 160ms var(--motion-settled) both;
 }
-.onboarding-shell.is-guide .rule-card:nth-child(1) { animation-delay: 135ms; }
-.onboarding-shell.is-guide .rule-card:nth-child(2) { animation-delay: 180ms; }
-.onboarding-shell.is-guide .rule-card:nth-child(3) { animation-delay: 225ms; }
-.onboarding-shell.is-guide .rule-card:nth-child(4) { animation-delay: 270ms; }
-.onboarding-shell.is-guide .rule-card:nth-child(5) { animation-delay: 315ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(1) { animation-delay: 51ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(2) { animation-delay: 68ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(3) { animation-delay: 86ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(4) { animation-delay: 103ms; }
+.onboarding-shell.is-guide .rule-card:nth-child(5) { animation-delay: 120ms; }
 .onboarding-shell.is-guide .onboarding-card {
-  animation: mise-onb-rise-small 462ms var(--motion-settled) 135ms both;
+  animation: mise-onb-rise-small 176ms var(--motion-settled) 51ms both;
 }
 .onboarding-shell.is-guide .kit-list {
-  animation: mise-onb-rise-small 462ms var(--motion-settled) 225ms both;
+  animation: mise-onb-rise-small 176ms var(--motion-settled) 86ms both;
 }
 .onboarding-shell.is-guide .note,
 .onboarding-shell.is-guide .onboarding-fineprint {
-  animation: mise-onb-rise var(--motion-base) var(--motion-settled) 315ms both;
+  animation: mise-onb-rise 160ms var(--motion-settled) 120ms both;
 }
 .onboarding-shell.is-guide > .action-bar-slot {
-  animation: mise-onb-panel 483ms var(--motion-settled) 72ms both;
+  animation: mise-onb-panel 184ms var(--motion-settled) 27ms both;
 }
 .onboarding-shell .btn,
 .onboarding-shell .primary-button,
@@ -6933,14 +6933,14 @@ p {
   .tab-panel
   > .has-stable-tab-header
   > .tab-panel-body {
-  animation: mise-tab-forward 320ms var(--motion-settled) both;
+  animation: mise-tab-forward 180ms var(--motion-settled) both;
 }
 .app-shell.is-tab-backward .tab-panel > :not(.has-stable-tab-header),
 .app-shell.is-tab-backward
   .tab-panel
   > .has-stable-tab-header
   > .tab-panel-body {
-  animation: mise-tab-backward 320ms var(--motion-settled) both;
+  animation: mise-tab-backward 180ms var(--motion-settled) both;
 }
 
 .catalog-sort-row.has-grid-effect-a {
@@ -7109,8 +7109,9 @@ p {
 @keyframes mise-builder-step-left { from { opacity: 0.3; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
 @keyframes mise-nav-icon-a { 0% { transform: translateY(0); } 40% { transform: translateY(-4px) scale(1.1); } 100% { transform: translateY(0); } }
 @keyframes mise-nav-icon-b { 0% { transform: translateY(0); } 40% { transform: translateY(-4px) scale(1.1); } 100% { transform: translateY(0); } }
-@keyframes mise-tab-forward { from { opacity: 0.25; transform: translateX(34px); } to { opacity: 1; transform: none; } }
-@keyframes mise-tab-backward { from { opacity: 0.25; transform: translateX(-34px); } to { opacity: 1; transform: none; } }
+/* Смена вкладки: короткое проявление со сдвигом 6 px по направлению (пакет «css»). */
+@keyframes mise-tab-forward { from { opacity: 0; transform: translateX(6px); } to { opacity: 1; transform: none; } }
+@keyframes mise-tab-backward { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
 @keyframes mise-fab-in { from { opacity: 0; transform: translateY(10px) scale(0.94); } to { opacity: 1; transform: none; } }
 @keyframes mise-catalog-filter-count { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: none; } }
 @keyframes mise-catalog-result-a { from { opacity: 0.35; } to { opacity: 1; } }
@@ -7302,7 +7303,11 @@ p {
 
   .app-boot-progress i,
   img.is-loading,
-  .onboarding-motion-bg i {
+  .onboarding-motion-bg i,
+  .app-shell.is-tab-forward .tab-panel > :not(.has-stable-tab-header),
+  .app-shell.is-tab-forward .tab-panel > .has-stable-tab-header > .tab-panel-body,
+  .app-shell.is-tab-backward .tab-panel > :not(.has-stable-tab-header),
+  .app-shell.is-tab-backward .tab-panel > .has-stable-tab-header > .tab-panel-body {
     animation: none !important;
   }
   .onboarding-shell.motion-enter-right .onboarding-scroll,
@@ -7338,16 +7343,6 @@ p {
   .manual-menu-option.is-motion-card,
   .manual-menu-option.is-selecting .manual-menu-select i svg,
   .manual-menu-option.is-deselecting .manual-menu-select i svg,
-  .app-shell.is-tab-forward .tab-panel > :not(.has-stable-tab-header),
-  .app-shell.is-tab-forward
-    .tab-panel
-    > .has-stable-tab-header
-    > .tab-panel-body,
-  .app-shell.is-tab-backward .tab-panel > :not(.has-stable-tab-header),
-  .app-shell.is-tab-backward
-    .tab-panel
-    > .has-stable-tab-header
-    > .tab-panel-body,
   .compose-fab,
   .catalog-sort-row.has-grid-effect-a,
   .catalog-sort-row.has-grid-effect-b,

@@ -13,11 +13,33 @@ test("onboarding follows the supplied directional and staggered motion", async (
   assert.match(page, /motion-enter-left/);
   assert.match(page, /motion-enter-right/);
   assert.match(page, /className="onboarding-motion-bg"/);
-  assert.match(css, /--motion-screen: 588ms/);
+  // Пакет «css»: вход онбординга ускорен в ≈2,6 раза при той же очерёдности
+  // элементов — экран со всеми задержками укладывается в 320 мс.
+  assert.match(css, /--motion-screen: 224ms/);
   assert.doesNotMatch(css, /--motion-stagger:/);
-  assert.match(css, /mise-onb-deck-main 504ms/);
-  assert.match(css, /mise-onb-panel 483ms/);
+  assert.match(css, /mise-onb-deck-main 192ms/);
+  assert.match(css, /mise-onb-panel 184ms/);
   assert.match(css, /mise-onb-breathe-a 13s/);
+  const entrance = css.slice(
+    css.indexOf(".onboarding-shell.motion-enter-right .onboarding-scroll {"),
+    css.indexOf(".onboarding-shell .btn,"),
+  );
+  const delays = new Map();
+  for (const [, selector, delay] of entrance.matchAll(/([^{}\n]+) \{ animation-delay: (\d+)ms; \}/g)) delays.set(selector.trim(), Number(delay));
+  const screen = Number(css.match(/--motion-screen: (\d+)ms/)[1]);
+  const ends = [];
+  for (const [, selector, body] of entrance.matchAll(/([^{}]+)\{([^}]*animation: mise-onb-(?!breathe)[^}]*)\}/g)) {
+    const [, duration, delay = "0"] = body.match(/animation: mise-onb-[\w-]+ (\d+ms|var\(--motion-screen\)) [^;]*?(?:(\d+)ms )?both/) ?? [];
+    assert.ok(duration, `the entrance of ${selector.trim()} has a duration`);
+    ends.push((duration.endsWith("ms") ? Number(duration.slice(0, -2)) : screen) + Number(delay));
+  }
+  for (const [selector, delay] of delays) {
+    const base = entrance.match(new RegExp(`${selector.replace(/:nth-child\(\d\)/, "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} \\{\\s*(?:transform-origin: [^;]+;\\s*)?animation: mise-onb-[\\w-]+ (\\d+)ms`));
+    assert.ok(base, `${selector} staggers a known entrance`);
+    ends.push(Number(base[1]) + delay);
+  }
+  assert.ok(ends.length > 20, "the entrance rules are found");
+  assert.ok(Math.max(...ends) <= 320, `the onboarding entrance ends by 320 ms (now ${Math.max(...ends)} ms)`);
 });
 
 test("week execution animates the remaining optimistic eating action", async () => {
@@ -61,7 +83,11 @@ test("catalog and tab navigation replay their supplied transitions", async () =>
   assert.match(css, /bottom-nav-indicator[\s\S]*?280ms var\(--motion-segment\)/);
   assert.match(css, /transform: translateX\(calc\(var\(--tab\) \* 100%\)\)/);
   assert.match(css, /transition: color 200ms linear/);
-  assert.match(css, /mise-tab-forward 320ms/);
+  // Смена вкладки: проявление со сдвигом 6 px за 180 мс (пакет «css»).
+  assert.match(css, /mise-tab-forward 180ms var\(--motion-settled\)/);
+  assert.match(css, /mise-tab-backward 180ms var\(--motion-settled\)/);
+  assert.match(css, /@keyframes mise-tab-forward \{ from \{ opacity: 0; transform: translateX\(6px\); \}/);
+  assert.match(css, /@keyframes mise-tab-backward \{ from \{ opacity: 0; transform: translateX\(-6px\); \}/);
   assert.match(css, /mise-fab-in 380ms var\(--motion-spring\) 120ms backwards/);
   assert.match(css, /compose-fab:active[\s\S]*?scale\(0\.965\)/);
   assert.match(css, /mise-catalog-grid-a 320ms/);
@@ -161,6 +187,8 @@ test("reduced motion keeps change visible without spatial movement", async () =>
   assert.match(reduced, /bottom-nav-indicator[\s\S]*?transition: none !important/);
   assert.match(reduced, /bottom-nav button\.has-nav-effect-a[\s\S]*?animation: none !important/);
   assert.match(reduced, /app-boot-progress i[\s\S]*?animation: none !important/);
+  // Вкладки при reduced motion меняются без анимации.
+  assert.match(reduced, /\.app-shell\.is-tab-forward \.tab-panel > :not\(\.has-stable-tab-header\),[^{]*\{\s*animation: none !important/);
   // Скелет «Недели» (.week-loading-*) не рендерится с редизайна C, его
   // переливание и правило background-image: none ушли вместе с ним (пакет css).
   assert.doesNotMatch(reduced, /mise-skeleton-breathe/);
