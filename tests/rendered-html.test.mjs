@@ -34,6 +34,15 @@ test("server-renders the Russian Mise shell and navigation", async () => {
     />\s*Добавить план\s*</,
     "the redesign keeps Compose as a separate action, not the old add-plan button",
   );
+  // Над сгибом нужны Display 800 и Text 600 — оба из кириллических файлов.
+  for (const file of ["WixMadeforDisplay-cyrillic", "WixMadeforText-cyrillic"]) {
+    assert.match(
+      html,
+      new RegExp(`<link rel="preload" href="/fonts/${file}\\.woff2" as="font" type="font/woff2" crossorigin="anonymous"/>`),
+      `${file} is preloaded`,
+    );
+  }
+  assert.equal((html.match(/rel="preload"[^>]*as="font"/g) ?? []).length, 2, "only the two above-the-fold fonts are preloaded");
 });
 
 test("includes the complete plan-builder and private persistence model", async () => {

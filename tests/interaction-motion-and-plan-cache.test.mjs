@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
 import vm from "node:vm";
 
@@ -192,4 +192,18 @@ test("goal calculator follows motion_wizard_1 card 9d", async () => {
   assert.match(reduced, /seg-indicator[\s\S]*?transition: background-color 160ms linear !important/);
   assert.match(reduced, /norm-updated-chip[\s\S]*?transition-duration: 0ms !important/);
   assert.match(reduced, /norm-macro-tile \.macro-bar i[\s\S]*?transition-duration: 0ms !important/);
+});
+
+test("the shell cache precaches the redesign fonts and backgrounds", async () => {
+  const worker = await read("public/sw.js");
+  // v6 (пакет «css»): шрифты и фоны редизайна C — в предкеше; имя кэша
+  // меняется вместе с составом, чтобы старый кэш с копиями шрифтов удалился.
+  assert.match(worker, /const CACHE_NAME = "mise-shell-v6";/);
+  const shell = worker.slice(worker.indexOf("const SHELL = ["), worker.indexOf("];", worker.indexOf("const SHELL = [")));
+  for (const dir of ["fonts", "bg"]) {
+    const files = (await readdir(new URL(`../public/${dir}/`, import.meta.url))).filter((name) => /\.(woff2|jpg)$/.test(name));
+    assert.ok(files.length >= 4, `public/${dir} has its files`);
+    for (const name of files) assert.match(shell, new RegExp(`"/${dir}/${name.replace(".", "\\.")}"`), `${dir}/${name} is precached`);
+  }
+  assert.equal((shell.match(/"\/fonts\//g) ?? []).length, 4, "one precached file per font family and subset");
 });

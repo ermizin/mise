@@ -20,36 +20,26 @@
   "files": [
     {
       "path": "assets/og-image/og-image.html",
-      "bytes": 6078,
-      "sha256": "c6ab14b68a68fe264e6b144cc211a902be96577aac9e3f4c1be62baf9a7c4370"
+      "bytes": 6054,
+      "sha256": "a3029b32549fb3a4d511334c6633d7daed05a75a3d58b086e1c8d6f6b9ed9ef6"
     },
     {
-      "path": "public/fonts/WixMadeforDisplay-800-cyrillic.woff2",
+      "path": "public/fonts/WixMadeforDisplay-cyrillic.woff2",
       "bytes": 13792,
       "sha256": "c54a0fc890f9cbaf295a1bbcf745351b099182bf87b149cf6eeec856f46750bf"
     },
     {
-      "path": "public/fonts/WixMadeforDisplay-800-latin.woff2",
+      "path": "public/fonts/WixMadeforDisplay-latin.woff2",
       "bytes": 20144,
       "sha256": "fd4c8e65080adbaf0cc819eb67b08ed9300e9274dd0069b382d286b93b9544a0"
     },
     {
-      "path": "public/fonts/WixMadeforText-600-cyrillic.woff2",
+      "path": "public/fonts/WixMadeforText-cyrillic.woff2",
       "bytes": 14208,
       "sha256": "f9f3ef432e3dfedd96d0ae9449a8283a5dab8a4552773f2678f3865c63ce76de"
     },
     {
-      "path": "public/fonts/WixMadeforText-600-latin.woff2",
-      "bytes": 20320,
-      "sha256": "4d1e9ffda308f709db183c9132d5ee5c5afb7d932ff9a32b0b54b52f998836f2"
-    },
-    {
-      "path": "public/fonts/WixMadeforText-700-cyrillic.woff2",
-      "bytes": 14208,
-      "sha256": "f9f3ef432e3dfedd96d0ae9449a8283a5dab8a4552773f2678f3865c63ce76de"
-    },
-    {
-      "path": "public/fonts/WixMadeforText-700-latin.woff2",
+      "path": "public/fonts/WixMadeforText-latin.woff2",
       "bytes": 20320,
       "sha256": "4d1e9ffda308f709db183c9132d5ee5c5afb7d932ff9a32b0b54b52f998836f2"
     },

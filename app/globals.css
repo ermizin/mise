@@ -12,56 +12,34 @@
    ============================================================ */
 
 /* ---------- Шрифты ----------
-   Дизайн нарисован на system-ui (San Francisco) с весами 590/600/700
-   и 'SF Mono' на числах. На Apple это рендерится один в один.
-   Instrument Sans и IBM Plex Mono — самохостинг, гарантированный фолбэк
-   для Android / Windows; вес 590 там схлопывается в 600.
-   Файлы: public/fonts/, latin + cyrillic, variable woff2. */
-
-@font-face {
-  font-family: "Instrument Sans";
-  src: url("/fonts/instrument-sans-var.woff2") format("woff2");
-  font-weight: 400 700;
-  font-style: normal;
-  font-display: swap;
-}
-/* Wix Madefor — основная гарнитура редизайна C (SIL OFL), latin + cyrillic.
-   Display 700/800 — заголовки и числа, Text 400/600/700 — всё остальное. */
+   Wix Madefor (SIL OFL) — гарнитура редизайна C: Display — заголовки и числа,
+   Text — всё остальное. Файлы в public/fonts — вариативные woff2, по одному
+   на семейство и подмножество (latin, cyrillic); браузер скачивает каждый
+   один раз (пакет «css»: раньше на каждое начертание был свой файл-копия).
+   Диапазоны весов повторяют прежний подбор начертаний один в один:
+   Display — 700…800 (любой запрошенный вес прижимается к 700 или 800);
+   Text — отдельно 400 и 600…700, чтобы вес 500 по-прежнему брал 400.
+   Instrument Sans и IBM Plex Mono убраны: Wix Madefor покрывает латиницу и
+   кириллицу, а на Android фолбэк Instrument Sans скачивался впустую. */
 @font-face {
   font-family: "Wix Madefor Display";
-  src: url("/fonts/WixMadeforDisplay-700-cyrillic.woff2") format("woff2");
-  font-weight: 700;
+  src: url("/fonts/WixMadeforDisplay-cyrillic.woff2") format("woff2");
+  font-weight: 700 800;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 @font-face {
   font-family: "Wix Madefor Display";
-  src: url("/fonts/WixMadeforDisplay-700-latin.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "Wix Madefor Display";
-  src: url("/fonts/WixMadeforDisplay-800-cyrillic.woff2") format("woff2");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-@font-face {
-  font-family: "Wix Madefor Display";
-  src: url("/fonts/WixMadeforDisplay-800-latin.woff2") format("woff2");
-  font-weight: 800;
+  src: url("/fonts/WixMadeforDisplay-latin.woff2") format("woff2");
+  font-weight: 700 800;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 @font-face {
   font-family: "Wix Madefor Text";
-  src: url("/fonts/WixMadeforText-400-cyrillic.woff2") format("woff2");
+  src: url("/fonts/WixMadeforText-cyrillic.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -69,7 +47,7 @@
 }
 @font-face {
   font-family: "Wix Madefor Text";
-  src: url("/fonts/WixMadeforText-400-latin.woff2") format("woff2");
+  src: url("/fonts/WixMadeforText-latin.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -77,51 +55,28 @@
 }
 @font-face {
   font-family: "Wix Madefor Text";
-  src: url("/fonts/WixMadeforText-600-cyrillic.woff2") format("woff2");
-  font-weight: 600;
+  src: url("/fonts/WixMadeforText-cyrillic.woff2") format("woff2");
+  font-weight: 600 700;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 @font-face {
   font-family: "Wix Madefor Text";
-  src: url("/fonts/WixMadeforText-600-latin.woff2") format("woff2");
-  font-weight: 600;
+  src: url("/fonts/WixMadeforText-latin.woff2") format("woff2");
+  font-weight: 600 700;
   font-style: normal;
   font-display: swap;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "Wix Madefor Text";
-  src: url("/fonts/WixMadeforText-700-cyrillic.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
-}
-@font-face {
-  font-family: "Wix Madefor Text";
-  src: url("/fonts/WixMadeforText-700-latin.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: "IBM Plex Mono";
-  src: url("/fonts/ibm-plex-mono-500.woff2") format("woff2");
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
 }
 
 :root {
   color-scheme: light;
 
   /* ---------- Семейства ---------- */
-  --font-ui: "Wix Madefor Text", -apple-system, BlinkMacSystemFont, "Instrument Sans", "Segoe UI", sans-serif;
-  --font-display: "Wix Madefor Display", -apple-system, BlinkMacSystemFont, "Instrument Sans", sans-serif;
-  --font-num: "Wix Madefor Display", -apple-system, BlinkMacSystemFont, "Instrument Sans", sans-serif;
+  --font-ui: "Wix Madefor Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Wix Madefor Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-num: "Wix Madefor Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   /* ---------- Чернила ----------
      Альфа — не декоративная величина, а контраст. См. README §Контраст.

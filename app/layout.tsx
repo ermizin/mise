@@ -51,6 +51,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           name="viewport"
           content="width=device-width, initial-scale=1, viewport-fit=cover"
         />
+        {/* Над сгибом нужны Display 800 (заголовки) и Text 600 (строки, кнопки) — оба
+            из кириллических вариативных файлов; латиница и остальные веса догрузятся. */}
+        <link rel="preload" href="/fonts/WixMadeforDisplay-cyrillic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/fonts/WixMadeforText-cyrillic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       </head>
       <body>{children}</body>
     </html>
