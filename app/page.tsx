@@ -13924,7 +13924,7 @@ function PlanBuilder({
           >
             {saveState === "saving"
               ? "Сохраняем…"
-              : initialPlan
+              : initialPlan && !startsNewPlan
                 ? "Сохранить изменения"
                 : "Сохранить план"}
             <Icon name="chevron" size={16} />

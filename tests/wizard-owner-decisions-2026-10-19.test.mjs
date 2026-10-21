@@ -214,6 +214,8 @@ test("the «+» circle and the next-plan sheet send the same events as the old e
   for (const field of ["selections", "selectionAssignments", "pinnedSelectionKeys"])
     assert.match(builder, new RegExp(`useState[^;]*\\(\\s*menuSource\\?\\.${field} \\?\\? (\\{\\}|\\[\\])`), `${field} of a new plan start empty`);
   assert.match(builder, /id: startsNewPlan \? crypto\.randomUUID\(\) : \(initialPlan\?\.id \?\? crypto\.randomUUID\(\)\)/);
+  // Новый план сохраняется как план, а не как «изменения» прошлого.
+  assert.match(builder, /: initialPlan && !startsNewPlan\s*\? "Сохранить изменения"\s*: "Сохранить план"/);
   assert.match(builder, /\{ seed: `\$\{seed\}:\$\{key\}`, previousRecipeIds \}/, "the assembly avoids the previous plan's dishes");
   // «Изменить людей и цели» правит текущий план, как «Изменить» в профиле: без событий нового плана.
   assert.match(sheetWiring, /onEditPeople=\{\(\) => \{\s*setNextPlanOpen\(false\);\s*editPeople\(\);/);
