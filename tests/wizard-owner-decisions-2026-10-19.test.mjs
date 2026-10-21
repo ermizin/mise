@@ -90,7 +90,7 @@ test("the leftover is decided without a question, the old choices stay behind «
   assert.equal(R.savedTailDecision({ cookEveryDays: 3, periodDays: 7, batches: [{ days: 3 }, { days: 4 }] }), "join");
   assert.equal(R.savedTailDecision({ cookEveryDays: 3, periodDays: 7, batches: [{ days: 3 }, { days: 3 }, { days: 1 }] }), "separate");
   assert.equal(R.savedTailDecision({ cookEveryDays: 3, periodDays: 6, batches: [{ days: 3 }, { days: 3 }] }), null);
-  assert.match(page, /initialPlan && !repeat \? savedTailDecision\(initialPlan\) : null/);
+  assert.match(page, /initialPlan && !startsNewPlan \? savedTailDecision\(initialPlan\) : null/);
 });
 
 function sevenDayPlan(cookEveryDays, days) {
@@ -184,7 +184,9 @@ test("repeating a plan starts after the current one ends", () => {
   assert.equal(R.nextPlanStart(null, "2026-10-19"), "2026-10-19");
   const builder = between("function PlanBuilder(", "function StepIntro(");
   assert.match(builder, /const repeatStart = nextPlanStart\(initialPlan, today\);/);
-  assert.match(builder, /repeat \? repeatStart : \(initialPlan\?\.start \?\? today\)/);
+  // «Собрать новый план» начинается там же, где повтор (решение 2026-10-21).
+  assert.match(builder, /const startsNewPlan = repeat \|\| isNextPlan;/);
+  assert.match(builder, /startsNewPlan \? repeatStart : \(initialPlan\?\.start \?\? today\)/);
   assert.match(builder, /addDays\(repeatStart, Math\.max\(0, \(initialPlan\?\.periodDays \?\? 7\) - 1\)\)/);
   const sheet = between("function NextPlanSheet(", "/* Каталог «Рецепты»");
   assert.match(sheet, /const repeatStart = nextPlanStart\(plan, today\);/);
@@ -205,6 +207,14 @@ test("the «+» circle and the next-plan sheet send the same events as the old e
   const sheetWiring = between("<NextPlanSheet", "<BottomNav");
   assert.match(sheetWiring, /onRepeat=\{\(\) => \{\s*setNextPlanOpen\(false\);\s*repeatPlan\(\);/);
   assert.match(sheetWiring, /onBuild=\{\(\) => \{\s*setNextPlanOpen\(false\);\s*startPlanFlow\(false\);/);
+  // «Собрать новый план» — новый план с пустым меню: блюда, закрепления и id
+  // текущего плана в него не переходят (2026-10-21), «Повторить» их сохраняет.
+  const builder = between("function PlanBuilder(", "function StepIntro(");
+  assert.match(builder, /const menuSource = isNextPlan && !repeat \? null : initialPlan;/);
+  for (const field of ["selections", "selectionAssignments", "pinnedSelectionKeys"])
+    assert.match(builder, new RegExp(`useState[^;]*\\(\\s*menuSource\\?\\.${field} \\?\\? (\\{\\}|\\[\\])`), `${field} of a new plan start empty`);
+  assert.match(builder, /id: startsNewPlan \? crypto\.randomUUID\(\) : \(initialPlan\?\.id \?\? crypto\.randomUUID\(\)\)/);
+  assert.match(builder, /\{ seed: `\$\{seed\}:\$\{key\}`, previousRecipeIds \}/, "the assembly avoids the previous plan's dishes");
   // «Изменить людей и цели» правит текущий план, как «Изменить» в профиле: без событий нового плана.
   assert.match(sheetWiring, /onEditPeople=\{\(\) => \{\s*setNextPlanOpen\(false\);\s*editPeople\(\);/);
   // Календарь из листа — тот же компонент, что отправляет calendar_exported.

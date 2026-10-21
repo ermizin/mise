@@ -131,7 +131,7 @@ test("manual menu choice stays available as a separate bottom action", async () 
   );
   assert.doesNotMatch(builder, /scrollIntoView\(/);
   assert.match(builder, /builder-chat-current\$\{chatTransition\?\.kind === "menu"/);
-  assert.match(builder, /startMenuAssemblyTask\(assembleMenuSteps\(mode\)/);
+  assert.match(builder, /startMenuAssemblyTask\(assembleMenuSteps\(mode, seed\)/);
   assert.match(builder, /onSlow: \(\) => setChatTransition/);
   assert.match(builder, /<ThinkingOrb state="solving" size=\{20\} theme="light" aria-hidden="true" \/>/);
   assert.match(builder, /const questionDelay = 240/);

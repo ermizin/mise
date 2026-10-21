@@ -256,7 +256,8 @@ test("includes the complete plan-builder and private persistence model", async (
   // Заменённое вручную переживает пересборку.
   assert.match(page, /if \(pinned\.includes\(key\)\) continue;/);
   assert.match(page, /pinnedSelectionKeys\?: string\[\]/);
-  assert.match(page, /initialPlan\?\.pinnedSelectionKeys \?\? \[\]/);
+  // Правка плана берёт его закрепления; «Собрать новый план» начинает без них.
+  assert.match(page, /menuSource\?\.pinnedSelectionKeys \?\? \[\]/);
   assert.match(page, /draft\.pinnedSelectionKeys \?\?/);
   assert.match(page, /pinnedSelectionKeys: validPinned/);
   // «Собрать заново» обязано дать другое меню, а не то же самое.

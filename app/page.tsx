@@ -496,6 +496,7 @@ type BuilderDraft = {
   selections: Record<string, string>;
   selectionAssignments?: Record<string, RecipeAssignment[]>;
   pinnedSelectionKeys?: string[];
+  menuSeed?: string;
 };
 type OnboardingStep =
   | "welcome"
@@ -6632,6 +6633,49 @@ function sameBatchMainRecipeIds(assignments: Record<string, RecipeAssignment[]>,
    творожных завтраков 31 из 90 вместо 52, белок не ниже цели. */
 const fitGapAllowance = 5;
 const fitGapPenaltyPerPoint = 20;
+/* Одинаковые настройки давали одинаковое меню (2026-10-21). Порядок
+   кандидатов детерминирован: человек по умолчанию, человек на 1500 ккал и
+   пара получали 7–9 одних и тех же блюд из 9, а каждый новый план — меню
+   прошлого. Теперь среди блюд, чей счёт отстаёт от лучшего не больше чем на
+   menuChoiceMargin, выбирает ключ сборки (menuSeed) позиции: черновик и
+   правка плана при каждом заходе собираются одинаково, новый план — по-своему.
+   Допуск меньше любого штрафа за повтор (120–240), поэтому разнообразие
+   внутри плана сохраняется, а к прежнему размену попадания в КБЖУ он
+   добавляет не больше 2 пунктов (40 очков при 20 за пункт). На сетке из
+   48 сценариев среднее попадание 95,6 против 95,7, минимальное то же. */
+const menuChoiceMargin = 40;
+/* Блюда прошлого плана в новом понижаются, как повтор основы завтрака:
+   вернуться они могут, только если остальные заметно хуже по КБЖУ. */
+const previousPlanPenalty = 120;
+type MenuChoiceOptions = {
+  /** Ключ сборки позиции: план (или поток мастера) и позиция в нём. */
+  seed?: string;
+  /** Блюда плана, после которого собирается этот. */
+  previousRecipeIds?: Set<string>;
+};
+function menuChoiceHash(seed: string, recipeId: string) {
+  let hash = 0x811c9dc5;
+  for (const char of `${seed}|${recipeId}`) {
+    hash ^= char.codePointAt(0) ?? 0;
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return hash >>> 0;
+}
+function pickMenuChoice<T extends { recipe: Recipe; score: number }>(scored: T[], seed?: string) {
+  const sorted = [...scored].sort(
+    (left, right) =>
+      right.score - left.score || left.recipe.id.localeCompare(right.recipe.id),
+  );
+  const best = sorted[0];
+  if (!best || !seed) return best;
+  return sorted
+    .filter((item) => item.score >= best.score - menuChoiceMargin)
+    .sort(
+      (left, right) =>
+        menuChoiceHash(seed, left.recipe.id) - menuChoiceHash(seed, right.recipe.id) ||
+        left.recipe.id.localeCompare(right.recipe.id),
+    )[0];
+}
 function chooseMenuCandidate(
   options: Recipe[],
   used: Set<string>,
@@ -6640,14 +6684,15 @@ function chooseMenuCandidate(
   slot: MealSlot,
   mainRecipes: Recipe[],
   fits?: Map<string, number>,
+  choice: MenuChoiceOptions = {},
 ) {
   // Отставание считается от лучшего блюда, которое можно выбрать: иначе
   // попадание блюда из отказа («Собрать заново», то же блюдо в партии)
   // штрафовало все альтернативы сильнее, чем сам отказ.
   const choosable = options.filter((recipe) => !avoid.has(recipe.id));
   const bestFit = fits?.size ? Math.max(0, ...(choosable.length ? choosable : options).map((recipe) => fits.get(recipe.id) ?? 0)) : 0;
-  return [...options]
-    .map((recipe, index) => ({
+  return pickMenuChoice(
+    options.map((recipe, index) => ({
       recipe,
       score:
         -index * 8 -
@@ -6655,13 +6700,12 @@ function chooseMenuCandidate(
         combinationBonus(recipe, selectedRecipes) -
         menuVarietyPenalty(recipe, slot, mainRecipes) -
         morningVarietyPenalty(recipe, slot, selectedRecipes) -
+        (choice.previousRecipeIds?.has(recipe.id) ? previousPlanPenalty : 0) -
         (used.has(recipe.id) ? 240 : 0) -
         (avoid.has(recipe.id) ? 1_000 : 0),
-    }))
-    .sort(
-      (left, right) =>
-        right.score - left.score || left.recipe.id.localeCompare(right.recipe.id),
-    )[0]?.recipe;
+    })),
+    choice.seed,
+  )?.recipe;
 }
 function automaticAssignmentsFor(
   slot: MealSlot,
@@ -6674,6 +6718,7 @@ function automaticAssignmentsFor(
   kitchenEquipment?: KitchenEquipment[],
   mainRecipes: Recipe[] = [],
   sameBatchMainIds: Set<string> = new Set(),
+  choice: MenuChoiceOptions = {},
 ) {
   const eaters = relevantPeople(people, slot);
   if (!eaters.length) return [];
@@ -6697,6 +6742,7 @@ function automaticAssignmentsFor(
     slot,
     mainRecipes,
     sharedFits,
+    choice,
   );
   if (shared)
     return [{ recipeId: shared.id, personIds: eaters.map((person) => person.id) }];
@@ -6733,39 +6779,29 @@ function automaticAssignmentsFor(
         candidates.set(recipe.id, current);
       }
     }
-    const picked = [...candidates.values()].sort((left, right) => {
-      const leftScore =
-        left.personIds.length * 1_000 -
-        left.rank * 8 +
-        combinationBonus(left.recipe, [
-          ...selectedRecipes,
-          ...assignments.flatMap((assignment) =>
-            recipesById[assignment.recipeId]
-              ? [recipesById[assignment.recipeId]]
-              : [],
-          ),
-        ]) -
-        menuVarietyPenalty(left.recipe, slot, mainRecipes) -
-        morningVarietyPenalty(left.recipe, slot, selectedRecipes) -
-        (used.has(left.recipe.id) ? 240 : 0) -
-        (avoid.has(left.recipe.id) ? 1_000 : 0);
-      const rightScore =
-        right.personIds.length * 1_000 -
-        right.rank * 8 +
-        combinationBonus(right.recipe, [
-          ...selectedRecipes,
-          ...assignments.flatMap((assignment) =>
-            recipesById[assignment.recipeId]
-              ? [recipesById[assignment.recipeId]]
-              : [],
-          ),
-        ]) -
-        menuVarietyPenalty(right.recipe, slot, mainRecipes) -
-        morningVarietyPenalty(right.recipe, slot, selectedRecipes) -
-        (used.has(right.recipe.id) ? 240 : 0) -
-        (avoid.has(right.recipe.id) ? 1_000 : 0);
-      return rightScore - leftScore || left.recipe.id.localeCompare(right.recipe.id);
-    })[0];
+    const chosenRecipes = [
+      ...selectedRecipes,
+      ...assignments.flatMap((assignment) =>
+        recipesById[assignment.recipeId]
+          ? [recipesById[assignment.recipeId]]
+          : [],
+      ),
+    ];
+    const picked = pickMenuChoice(
+      [...candidates.values()].map((candidate) => ({
+        ...candidate,
+        score:
+          candidate.personIds.length * 1_000 -
+          candidate.rank * 8 +
+          combinationBonus(candidate.recipe, chosenRecipes) -
+          menuVarietyPenalty(candidate.recipe, slot, mainRecipes) -
+          morningVarietyPenalty(candidate.recipe, slot, selectedRecipes) -
+          (choice.previousRecipeIds?.has(candidate.recipe.id) ? previousPlanPenalty : 0) -
+          (used.has(candidate.recipe.id) ? 240 : 0) -
+          (avoid.has(candidate.recipe.id) ? 1_000 : 0),
+      })),
+      choice.seed,
+    );
     if (!picked) return [];
     assignments.push({
       recipeId: picked.recipe.id,
@@ -12246,12 +12282,30 @@ function PlanBuilder({
       : 0;
   const today = isoDate(new Date());
   const repeatStart = nextPlanStart(initialPlan, today);
+  /* «Повторить этот план» и «Собрать новый план» начинают новый план после
+     текущего. «Собрать новый» до 2026-10-21 открывал текущий план с его
+     датами и блюдами и сохранял поверх него, поэтому меню не менялось. Теперь
+     он начинает с пустого меню, а блюда прошлого плана понижаются в очереди. */
+  const startsNewPlan = repeat || isNextPlan;
+  const menuSource = isNextPlan && !repeat ? null : initialPlan;
+  const previousRecipeIds = useMemo(
+    () =>
+      isNextPlan && !repeat && initialPlan
+        ? new Set([
+            ...Object.values(initialPlan.selections),
+            ...Object.values(initialPlan.selectionAssignments ?? {}).flatMap(
+              (assignments) => assignments.map((assignment) => assignment.recipeId),
+            ),
+          ])
+        : undefined,
+    [isNextPlan, repeat, initialPlan],
+  );
   const [step, setStep] = useState(initialStep);
   const [start, setStart] = useState(
-    repeat ? repeatStart : (initialPlan?.start ?? today),
+    startsNewPlan ? repeatStart : (initialPlan?.start ?? today),
   );
   const [end, setEnd] = useState(
-    repeat
+    startsNewPlan
       ? addDays(repeatStart, Math.max(0, (initialPlan?.periodDays ?? 7) - 1))
       : (initialPlan?.end ?? addDays(today, 6)),
   );
@@ -12280,15 +12334,20 @@ function PlanBuilder({
   /* Правка сохранённого плана сохраняет его партии; новый план и повтор
      решают хвост по правилу tailJoinAllowed. */
   const initialRemainderDecision =
-    initialPlan && !repeat ? savedTailDecision(initialPlan) : null;
+    initialPlan && !startsNewPlan ? savedTailDecision(initialPlan) : null;
   const [remainderDecision, setRemainderDecision] =
     useState<TailDecision | null>(initialRemainderDecision);
   const [selections, setSelections] = useState<Record<string, string>>(
-    initialPlan?.selections ?? {},
+    menuSource?.selections ?? {},
   );
   const [selectionAssignments, setSelectionAssignments] = useState<
     Record<string, RecipeAssignment[]>
-  >(initialPlan?.selectionAssignments ?? {});
+  >(menuSource?.selectionAssignments ?? {});
+  /* Ключ автосборки: поток мастера для нового плана, id плана для правки.
+     Хранится в черновике; «Собрать заново» берёт новый ключ. */
+  const [menuSeed, setMenuSeed] = useState(
+    () => flowId ?? initialPlan?.id ?? crypto.randomUUID(),
+  );
   const [menuMode, setMenuMode] = useState<MenuBuildMode>("auto");
   const [choiceIndex, setChoiceIndex] = useState(initialChoiceIndex);
   const [manualCuisineFilter, setManualCuisineFilter] =
@@ -12298,7 +12357,7 @@ function PlanBuilder({
   /* Ключи позиций, где блюдо выбрано вручную. Автосборка их не трогает —
      источник сохраняется вместе с планом и черновиком. */
   const [pinned, setPinned] = useState<string[]>(
-    initialPlan?.pinnedSelectionKeys ?? [],
+    menuSource?.pinnedSelectionKeys ?? [],
   );
   const [saveState, setSaveState] = useState<"idle" | "saving" | "error">(
     "idle",
@@ -12393,9 +12452,9 @@ function PlanBuilder({
     clearDraft();
     setDraftRestored(false);
     changeStep(initialStep, "replace");
-    setStart(repeat ? repeatStart : (initialPlan?.start ?? today));
+    setStart(startsNewPlan ? repeatStart : (initialPlan?.start ?? today));
     setEnd(
-      repeat
+      startsNewPlan
         ? addDays(repeatStart, Math.max(0, (initialPlan?.periodDays ?? 7) - 1))
         : (initialPlan?.end ?? addDays(today, 6)),
     );
@@ -12410,10 +12469,10 @@ function PlanBuilder({
     setRecipeMethods(normalizeRecipeMethods(initialPlan?.recipeMethods));
     setCookEveryDays(initialPlan?.cookEveryDays ?? 3);
     setRemainderDecision(initialRemainderDecision);
-    setSelections(initialPlan?.selections ?? {});
-    setSelectionAssignments(initialPlan?.selectionAssignments ?? {});
+    setSelections(menuSource?.selections ?? {});
+    setSelectionAssignments(menuSource?.selectionAssignments ?? {});
     setMenuMode("auto");
-    setPinned(initialPlan?.pinnedSelectionKeys ?? []);
+    setPinned(menuSource?.pinnedSelectionKeys ?? []);
     setChoiceIndex(initialChoiceIndex);
     setManualCuisineFilter(null);
   }
@@ -12441,8 +12500,9 @@ function PlanBuilder({
           setSelectionAssignments(draft.selectionAssignments ?? {});
           setMenuMode(draft.menuMode ?? "auto");
           setPinned(
-            draft.pinnedSelectionKeys ?? initialPlan?.pinnedSelectionKeys ?? [],
+            draft.pinnedSelectionKeys ?? menuSource?.pinnedSelectionKeys ?? [],
           );
+          if (draft.menuSeed) setMenuSeed(draft.menuSeed);
           // Черновик, сохранённый до проверки параметров людей (2026-10-12),
           // мог уйти дальше «Кто ест» с недопустимым возрастом — возвращаем туда.
           const peopleInvalid = restoredPeople.some((item) => automaticEstimateIssue(item) || !personCaloriesValid(item));
@@ -12691,6 +12751,7 @@ function PlanBuilder({
       selections,
       selectionAssignments,
       pinnedSelectionKeys: pinned,
+      menuSeed,
     };
     try {
       localStorage.setItem(activeBuilderDraftKey, JSON.stringify(draft));
@@ -12713,6 +12774,7 @@ function PlanBuilder({
     selections,
     selectionAssignments,
     pinned,
+    menuSeed,
     successPlan,
     initialPlan,
     mode,
@@ -13054,7 +13116,7 @@ function PlanBuilder({
   /* Меню собирается целиком: по каждой позиции берётся лучший по fitScore
      кандидат, уже отфильтрованный по жёстким исключениям и сроку хранения.
      Внутри одного приёма пищи блюда по партиям стараемся не повторять. */
-  function* assembleMenuSteps(mode: "fill" | "reset" = "fill") {
+  function* assembleMenuSteps(mode: "fill" | "reset" = "fill", seed = menuSeed) {
     const updatedSelections = { ...validSelections };
     const updatedAssignments = Object.fromEntries(
       Object.entries(validSelectionAssignments).map(([key, assignments]) => [
@@ -13111,6 +13173,7 @@ function PlanBuilder({
         kitchenEquipment,
         mainMenuRecipes(updatedAssignments, key),
         sameBatchMainRecipeIds(updatedAssignments, key),
+        { seed: `${seed}:${key}`, previousRecipeIds },
       );
       if (!assignmentCoverageComplete(people, slot, assignments)) {
         yield;
@@ -13135,11 +13198,14 @@ function PlanBuilder({
   ) {
     if (menuTaskRef.current) return;
     const answer = mode === "reset" ? "Собрать заново" : builderChatTurns[step]?.answer ?? "Собрать меню";
+    // Новый ключ, чтобы повторное «Собрать заново» не возвращало первое меню.
+    const seed = mode === "reset" ? crypto.randomUUID() : menuSeed;
     setChatTransition({ answer, thinking: false, kind: "menu" });
-    menuTaskRef.current = startMenuAssemblyTask(assembleMenuSteps(mode), {
+    menuTaskRef.current = startMenuAssemblyTask(assembleMenuSteps(mode, seed), {
       onSlow: () => setChatTransition({ answer, thinking: true, kind: "menu" }),
       onComplete: (result) => {
         menuTaskRef.current = null;
+        setMenuSeed(seed);
         setSelections(result.selections);
         setSelectionAssignments(result.assignments);
         setChatTransition(null);
@@ -13248,6 +13314,8 @@ function PlanBuilder({
       selectedRecipes,
       kitchenEquipment,
       mainMenuRecipes(validSelectionAssignments, key),
+      undefined,
+      { seed: `${menuSeed}:${key}`, previousRecipeIds },
     );
     if (!assignmentCoverageComplete(people, position.slot, assignments))
       return false;
@@ -13324,9 +13392,9 @@ function PlanBuilder({
     }
     const plan: ActivePlan = {
       ...draftPlan,
-      id: repeat ? crypto.randomUUID() : (initialPlan?.id ?? crypto.randomUUID()),
+      id: startsNewPlan ? crypto.randomUUID() : (initialPlan?.id ?? crypto.randomUUID()),
       createdAt:
-        repeat || !initialPlan
+        startsNewPlan || !initialPlan
           ? new Date().toISOString()
           : initialPlan.createdAt,
     };
