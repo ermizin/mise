@@ -18,7 +18,7 @@ async function menuRuntime() {
   const start = source.indexOf("const mealMeta");
   const end = source.indexOf("export default function Home");
   const output = ts.transpileModule(
-    `${source.slice(start, end)}\nglobalThis.__runtime = { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, menuVarietyOf, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession };`,
+    `${source.slice(start, end)}\nglobalThis.__runtime = { menuHistoryAges, withMenuHistoryEntry, menuHistoryLimit, automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, menuVarietyOf, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById, recipeCookingSession, fitScoreForSession };`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } },
   ).outputText;
   const sandbox = {
@@ -42,7 +42,7 @@ const runtime = await menuRuntime();
 
 /* Та же последовательность, что у автосборки мастера: позиции по партиям,
    общие продукты считаются по всему плану, разнообразие — по обедам и ужинам. */
-function assemble(days, cookEveryDays, { seed, previousRecipeIds } = {}) {
+function assemble(days, cookEveryDays, { seed, previousRecipeIds, recentRecipeAges, avoidBySlot, style = "protein" } = {}) {
   const { automaticAssignmentsFor, mainMenuRecipes, sameBatchMainRecipeIds, buildBatches, selectionKey, newPerson, defaultKitchenEquipment, recipesById } = runtime;
   const people = [newPerson(0)];
   const slots = ["breakfast", "lunch", "dinner"];
@@ -54,8 +54,8 @@ function assemble(days, cookEveryDays, { seed, previousRecipeIds } = {}) {
       const key = selectionKey(batch, slot);
       const selected = Object.values(assignments).flatMap((items) => items.map((item) => recipesById[item.recipeId]));
       // Ключ позиции — как в мастере: ключ сборки плана и позиция.
-      const choice = seed === undefined ? {} : { seed: `${seed}:${key}`, previousRecipeIds };
-      const picked = automaticAssignmentsFor(slot, "protein", people, batch.days, used.get(slot), new Set(), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key), sameBatchMainRecipeIds(assignments, key), choice);
+      const choice = seed === undefined ? {} : { seed: `${seed}:${key}`, previousRecipeIds, recentRecipeAges };
+      const picked = automaticAssignmentsFor(slot, style, people, batch.days, used.get(slot), new Set(avoidBySlot?.[slot] ?? []), selected, [...defaultKitchenEquipment], mainMenuRecipes(assignments, key), sameBatchMainRecipeIds(assignments, key), choice);
       assert.ok(picked.length, `${key} gets a dish`);
       assignments[key] = picked;
       picked.forEach((item) => used.get(slot).add(item.recipeId));
@@ -130,6 +130,96 @@ test("a new plan after the last one changes most of its dishes", () => {
     const repeated = next.filter((id) => previousRecipeIds.has(id));
     assert.ok(repeated.length <= 2, `${seed} after ${previousSeed} repeats ${repeated.length} of ${next.length}: ${repeated.join(", ")}`);
   }
+});
+
+/* «Повторяющееся меню до сих пор повторяется, как будто стало меньше блюд»
+   (2026-11-12). Штраф видел только прошлый план: план через один возвращал
+   блюда позапрошлого, а «Собрать заново» ходило по кругу. Теперь устройство
+   помнит последние показанные меню. */
+function planChain(length, style, run) {
+  const { menuHistoryAges, withMenuHistoryEntry } = runtime;
+  let history = [];
+  const plans = [];
+  for (let index = 0; index < length; index++) {
+    const key = `${style}-${run}-plan-${index}`;
+    const menu = assemble(7, 3, { seed: key, style, recentRecipeAges: menuHistoryAges(history, key) });
+    plans.push(menu);
+    history = withMenuHistoryEntry(history, key, ids(menu));
+  }
+  return plans;
+}
+
+test("the plan after next does not bring back the dishes of the plan before last", () => {
+  for (const style of ["protein", "budget"])
+    for (const run of ["a", "b", "c"]) {
+      const plans = planChain(6, style, run);
+      const perPlan = plans[0].length;
+      for (let index = 2; index < plans.length; index++) {
+        const earlier = new Set(ids(plans[index - 2]));
+        const repeated = ids(plans[index]).filter((id) => earlier.has(id));
+        assert.ok(repeated.length <= 3, `${style} ${run}: plan ${index + 1} repeats ${repeated.length} of ${perPlan} dishes of plan ${index - 1}: ${repeated.join(", ")}`);
+      }
+      // Шесть планов — 54 позиции; до правки в них было около 30 блюд (высокобелковое) и 24 (бюджетное).
+      const distinct = new Set(plans.flatMap(ids));
+      assert.ok(distinct.size >= (style === "protein" ? 38 : 34), `${style} ${run}: ${distinct.size} different dishes in ${plans.length * perPlan} positions`);
+    }
+});
+
+test("remembering recent menus does not trade away the macro fit or the variety rules", () => {
+  for (const style of ["protein", "budget"]) {
+    const plans = planChain(6, style, "fit");
+    for (const [index, menu] of plans.entries()) {
+      for (const item of menu) assert.ok(item.fit >= 84, `${style} plan ${index + 1}: ${item.slot} «${item.recipe.title}» fits only ${item.fit}`);
+      for (const batch of new Set(menu.map((item) => item.batch))) {
+        const [lunch, dinner] = ["lunch", "dinner"].map((slot) => menu.find((item) => item.batch === batch && item.slot === slot).recipe.id);
+        assert.notEqual(lunch, dinner, `${style} plan ${index + 1}: batch ${batch + 1} repeats ${lunch}`);
+      }
+      for (const slot of ["breakfast", "lunch", "dinner"]) {
+        const slotIds = menu.filter((item) => item.slot === slot).map((item) => item.recipe.id);
+        assert.equal(new Set(slotIds).size, slotIds.length, `${style} plan ${index + 1}: ${slot} repeats a dish across batches`);
+      }
+    }
+  }
+});
+
+test("«Собрать заново» does not walk in a circle of two or three menus", () => {
+  const { menuHistoryAges, withMenuHistoryEntry } = runtime;
+  let history = [];
+  let avoidBySlot;
+  const menus = [];
+  for (let index = 0; index < 6; index++) {
+    const key = `reset-${index}`;
+    const menu = assemble(7, 3, { seed: key, avoidBySlot, recentRecipeAges: menuHistoryAges(history, key) });
+    menus.push(menu);
+    history = withMenuHistoryEntry(history, key, ids(menu));
+    avoidBySlot = {};
+    for (const item of menu) (avoidBySlot[item.slot] ??= []).push(item.recipe.id);
+  }
+  const distinct = new Set(menus.flatMap(ids));
+  // До правки шесть пересборок давали около 25 блюд на 54 позиции.
+  assert.ok(distinct.size >= 38, `${distinct.size} different dishes in ${menus.length * menus[0].length} positions`);
+  for (const menu of menus) for (const item of menu) assert.ok(item.fit >= 85, `${item.slot} «${item.recipe.title}» fits only ${item.fit}`);
+});
+
+test("the device remembers a bounded list of menus and skips the draft being assembled", () => {
+  const { menuHistoryAges, withMenuHistoryEntry, menuHistoryLimit } = runtime;
+  let history = [];
+  for (let index = 0; index < menuHistoryLimit + 3; index++) history = withMenuHistoryEntry(history, `plan-${index}`, [`dish-${index}`, "staple"]);
+  assert.equal(history.length, menuHistoryLimit);
+  assert.equal(history[0].key, `plan-${menuHistoryLimit + 2}`, "the latest menu comes first");
+  const ages = menuHistoryAges(history);
+  assert.equal(ages.get("staple"), 0, "a dish keeps the age of its latest menu");
+  assert.equal(ages.get(`dish-${menuHistoryLimit + 1}`), 1);
+  assert.equal(ages.has("dish-0"), false, "menus beyond the limit are forgotten");
+  // Тот же ключ заменяет запись и не занимает второе место в истории.
+  const replaced = withMenuHistoryEntry(history, history[2].key, ["other"]);
+  assert.equal(replaced.length, menuHistoryLimit);
+  assert.equal(replaced[0].key, history[2].key);
+  assert.deepEqual([...replaced[0].recipeIds], ["other"]);
+  // Досборка черновика не считает его собственное меню показанным раньше.
+  assert.equal(menuHistoryAges(history, history[0].key).get("staple"), 0);
+  assert.equal(menuHistoryAges(history, history[0].key).has(`dish-${menuHistoryLimit + 2}`), false);
+  assert.equal(withMenuHistoryEntry(history, "empty", []), history, "an empty menu is not recorded");
 });
 
 test("variety is read from canonical products, not from the title", () => {

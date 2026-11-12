@@ -6647,12 +6647,95 @@ const menuChoiceMargin = 40;
 /* Блюда прошлого плана в новом понижаются, как повтор основы завтрака:
    вернуться они могут, только если остальные заметно хуже по КБЖУ. */
 const previousPlanPenalty = 120;
+/* Меню всё равно повторялось (2026-11-12). Штраф видел только прошлый план,
+   поэтому план через один возвращал блюда позапрошлого: в бюджетном меню
+   6,5 блюда из 9, а «Собрать заново» ходило по кругу из двух-трёх меню. Место
+   в очереди стоило 8 очков за позицию без предела, и выбор не уходил глубже
+   первых пяти-шести блюд позиции, хотя по КБЖУ подходят 15–30.
+   Теперь устройство помнит menuHistoryLimit последних показанных меню
+   (собранных, пересобранных и сохранённых). Блюдо из них понижается тем
+   сильнее, чем позже его показывали, а среди почти равных по счёту первым
+   идёт блюдо, которого в этих меню не было, затем самое давнее. Цена места
+   в очереди ограничена menuRankCap позициями: дальше блюда различает только
+   попадание в КБЖУ (20 очков за пункт). Самый слабый штраф истории (64)
+   больше предела цены места (56), поэтому новое блюдо с тем же попаданием
+   обходит показанное, а показанное возвращается, когда остальные заметно
+   хуже по КБЖУ или каталог позиции исчерпан. */
+const menuHistoryLimit = 8;
+const menuHistoryPenaltyStep = 8;
+const menuRankCap = 7;
+/* История выбирает только между блюдами с близким попаданием в КБЖУ. Блюдо,
+   которое отстаёт от лучшего больше чем на menuHistoryFitAllowance пунктов,
+   получает полный штраф истории, как показанное последним: иначе штрафы
+   истории и повтора складывались, и в бюджетном меню выбиралось блюдо с
+   попаданием 74 при лучшем 97. */
+const menuHistoryFitAllowance = 8;
+const menuHistoryStorageKey = "mise-menu-history-v1";
+type MenuHistoryEntry = { key: string; recipeIds: string[] };
 type MenuChoiceOptions = {
   /** Ключ сборки позиции: план (или поток мастера) и позиция в нём. */
   seed?: string;
   /** Блюда плана, после которого собирается этот. */
   previousRecipeIds?: Set<string>;
+  /** Блюда недавних меню: id → давность, 0 — последнее показанное. */
+  recentRecipeAges?: Map<string, number>;
 };
+function menuHistoryAge(choice: MenuChoiceOptions, recipeId: string) {
+  if (choice.previousRecipeIds?.has(recipeId)) return 0;
+  return choice.recentRecipeAges?.get(recipeId);
+}
+function menuHistoryPenalty(age: number | undefined) {
+  if (age === undefined) return 0;
+  return previousPlanPenalty - Math.min(age, menuHistoryLimit - 1) * menuHistoryPenaltyStep;
+}
+function readMenuHistory(): MenuHistoryEntry[] {
+  try {
+    const parsed: unknown = JSON.parse(
+      (typeof window === "undefined" ? null : localStorage.getItem(menuHistoryStorageKey)) ?? "[]",
+    );
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(
+        (entry): entry is MenuHistoryEntry =>
+          typeof entry?.key === "string" &&
+          Array.isArray(entry.recipeIds) &&
+          entry.recipeIds.every((id: unknown) => typeof id === "string"),
+      )
+      .slice(0, menuHistoryLimit);
+  } catch {
+    return [];
+  }
+}
+/** Меню с тем же ключом заменяется и становится последним показанным. */
+function withMenuHistoryEntry(history: MenuHistoryEntry[], key: string, recipeIds: string[]) {
+  const ids = [...new Set(recipeIds)];
+  if (!ids.length) return history;
+  return [{ key, recipeIds: ids }, ...history.filter((entry) => entry.key !== key)].slice(0, menuHistoryLimit);
+}
+function recordMenuHistory(key: string, recipeIds: string[]) {
+  try {
+    localStorage.setItem(
+      menuHistoryStorageKey,
+      JSON.stringify(withMenuHistoryEntry(readMenuHistory(), key, recipeIds)),
+    );
+  } catch {
+    /* Без памяти устройства меню собирается как раньше. */
+  }
+}
+function menuHistoryRecipeIds(assignments: Record<string, RecipeAssignment[]>) {
+  return Object.values(assignments).flatMap((items) => items.map((item) => item.recipeId));
+}
+/** Давность блюд по истории; меню с ключом exceptKey (текущий черновик или
+    план) не считается, чтобы его досборка оставалась прежней. */
+function menuHistoryAges(history: MenuHistoryEntry[], exceptKey?: string) {
+  const ages = new Map<string, number>();
+  history
+    .filter((entry) => entry.key !== exceptKey)
+    .forEach((entry, age) => {
+      for (const id of entry.recipeIds) if (!ages.has(id)) ages.set(id, age);
+    });
+  return ages;
+}
 function menuChoiceHash(seed: string, recipeId: string) {
   let hash = 0x811c9dc5;
   for (const char of `${seed}|${recipeId}`) {
@@ -6661,17 +6744,24 @@ function menuChoiceHash(seed: string, recipeId: string) {
   }
   return hash >>> 0;
 }
-function pickMenuChoice<T extends { recipe: Recipe; score: number }>(scored: T[], seed?: string) {
+function pickMenuChoice<T extends { recipe: Recipe; score: number }>(
+  scored: T[],
+  seed?: string,
+  choice: MenuChoiceOptions = {},
+) {
   const sorted = [...scored].sort(
     (left, right) =>
       right.score - left.score || left.recipe.id.localeCompare(right.recipe.id),
   );
   const best = sorted[0];
   if (!best || !seed) return best;
+  // Не показанное недавно — первым, затем самое давнее, затем по ключу сборки.
+  const staleness = (item: T) => menuHistoryAge(choice, item.recipe.id) ?? Number.POSITIVE_INFINITY;
   return sorted
     .filter((item) => item.score >= best.score - menuChoiceMargin)
     .sort(
       (left, right) =>
+        (staleness(left) === staleness(right) ? 0 : staleness(right) > staleness(left) ? 1 : -1) ||
         menuChoiceHash(seed, left.recipe.id) - menuChoiceHash(seed, right.recipe.id) ||
         left.recipe.id.localeCompare(right.recipe.id),
     )[0];
@@ -6691,20 +6781,29 @@ function chooseMenuCandidate(
   // штрафовало все альтернативы сильнее, чем сам отказ.
   const choosable = options.filter((recipe) => !avoid.has(recipe.id));
   const bestFit = fits?.size ? Math.max(0, ...(choosable.length ? choosable : options).map((recipe) => fits.get(recipe.id) ?? 0)) : 0;
+  const hasHistory = Boolean(choice.previousRecipeIds?.size || choice.recentRecipeAges?.size);
+  const historyPenaltyFor = (recipe: Recipe) => {
+    if (!hasHistory) return 0;
+    const fit = fits?.get(recipe.id);
+    return fit !== undefined && bestFit - fit > menuHistoryFitAllowance
+      ? previousPlanPenalty
+      : menuHistoryPenalty(menuHistoryAge(choice, recipe.id));
+  };
   return pickMenuChoice(
     options.map((recipe, index) => ({
       recipe,
       score:
-        -index * 8 -
+        -Math.min(index, menuRankCap) * 8 -
         (fits?.has(recipe.id) ? Math.max(0, bestFit - fits.get(recipe.id)! - fitGapAllowance) * fitGapPenaltyPerPoint : 0) +
         combinationBonus(recipe, selectedRecipes) -
         menuVarietyPenalty(recipe, slot, mainRecipes) -
         morningVarietyPenalty(recipe, slot, selectedRecipes) -
-        (choice.previousRecipeIds?.has(recipe.id) ? previousPlanPenalty : 0) -
+        historyPenaltyFor(recipe) -
         (used.has(recipe.id) ? 240 : 0) -
         (avoid.has(recipe.id) ? 1_000 : 0),
     })),
     choice.seed,
+    choice,
   )?.recipe;
 }
 function automaticAssignmentsFor(
@@ -6796,11 +6895,12 @@ function automaticAssignmentsFor(
           combinationBonus(candidate.recipe, chosenRecipes) -
           menuVarietyPenalty(candidate.recipe, slot, mainRecipes) -
           morningVarietyPenalty(candidate.recipe, slot, selectedRecipes) -
-          (choice.previousRecipeIds?.has(candidate.recipe.id) ? previousPlanPenalty : 0) -
+          menuHistoryPenalty(menuHistoryAge(choice, candidate.recipe.id)) -
           (used.has(candidate.recipe.id) ? 240 : 0) -
           (avoid.has(candidate.recipe.id) ? 1_000 : 0),
       })),
       choice.seed,
+      choice,
     );
     if (!picked) return [];
     assignments.push({
@@ -7658,6 +7758,7 @@ export default function Home() {
         }
       }
       localStorage.removeItem(builderDraftKey);
+      localStorage.removeItem(menuHistoryStorageKey);
       localStorage.removeItem(localPlanKey(id));
       localStorage.removeItem(pendingPlanKey(id));
       setNotificationSetupOpen(false);
@@ -13131,6 +13232,8 @@ function PlanBuilder({
     /* «Собрать заново» должно давать другое меню, а не то же самое:
        прошлый выбор уходит в отказ, следующий берётся по убыванию fitScore. */
     const avoidPerSlot = new Map<MealSlot, Set<string>>();
+    // Недавно показанные меню этого устройства, кроме самого этого черновика.
+    const recentRecipeAges = menuHistoryAges(readMenuHistory(), seed);
     for (const slot of mealSlots) {
       usedPerSlot.set(slot, new Set());
       avoidPerSlot.set(slot, new Set());
@@ -13173,7 +13276,7 @@ function PlanBuilder({
         kitchenEquipment,
         mainMenuRecipes(updatedAssignments, key),
         sameBatchMainRecipeIds(updatedAssignments, key),
-        { seed: `${seed}:${key}`, previousRecipeIds },
+        { seed: `${seed}:${key}`, previousRecipeIds, recentRecipeAges },
       );
       if (!assignmentCoverageComplete(people, slot, assignments)) {
         yield;
@@ -13206,6 +13309,7 @@ function PlanBuilder({
       onComplete: (result) => {
         menuTaskRef.current = null;
         setMenuSeed(seed);
+        recordMenuHistory(seed, menuHistoryRecipeIds(result.assignments));
         setSelections(result.selections);
         setSelectionAssignments(result.assignments);
         setChatTransition(null);
@@ -13315,7 +13419,11 @@ function PlanBuilder({
       kitchenEquipment,
       mainMenuRecipes(validSelectionAssignments, key),
       undefined,
-      { seed: `${menuSeed}:${key}`, previousRecipeIds },
+      {
+        seed: `${menuSeed}:${key}`,
+        previousRecipeIds,
+        recentRecipeAges: menuHistoryAges(readMenuHistory(), menuSeed),
+      },
     );
     if (!assignmentCoverageComplete(people, position.slot, assignments))
       return false;
@@ -13409,6 +13517,11 @@ function PlanBuilder({
     setSaveMessage("");
     try {
       await persistPlan(plan);
+      // Сохранённое меню с ручными заменами — последнее показанное.
+      recordMenuHistory(menuSeed, [
+        ...Object.values(plan.selections),
+        ...menuHistoryRecipeIds(plan.selectionAssignments ?? {}),
+      ]);
       if (flowIdRef.current) {
         const analyticsFields = {
           flowId: flowIdRef.current,

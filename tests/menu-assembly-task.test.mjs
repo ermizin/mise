@@ -101,6 +101,8 @@ test("production menu generator returns the same fill and reset result when yiel
       kitchenEquipment: ["stove"],
       menuSeed: "flow-seed",
       previousRecipeIds: undefined,
+      readMenuHistory: () => [],
+      menuHistoryAges: () => new Map(),
       recipesById,
       selectionKey: (batch, slot) => `${batch.id}::${slot}`,
       assignmentCoverageComplete: (_people, _slot, assignments) => assignments.some((item) => item.personIds.includes("one")),
