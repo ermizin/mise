@@ -52,6 +52,7 @@ import {
 import { MacroNumberInput } from "@/components/macro-number-input";
 import runtimeRecipeCatalogJson from "@/data/recipe-runtime-catalog.json";
 import legacyRecipeImageDownloadSourcesJson from "@/data/legacy-recipe-image-download-sources.json";
+import recipePhotoCoversJson from "@/data/recipe-photo-covers.json";
 import {
   allocateComponentDish,
   allocateMixedDish,
@@ -8348,6 +8349,22 @@ function recipeBlurThumbUrl(recipe: Recipe | undefined) {
   return match ? `/recipe-images/blur/${match[1]}.jpg` : null;
 }
 
+/* Уменьшенные фото из scripts/build-recipe-card-thumbs.mjs (2026-11-12,
+   «медленно грузятся фотки»): карточки грузили исходник шириной до 2000 px и
+   весом до 1,3 МБ. Фото для карточки (до 640 px) есть у каждого локального
+   фото; обложка (до 1080 px) — только у тяжёлых исходников, остальные
+   показывают исходник (tests/recipe-card-thumbs). */
+const localRecipePhotoPattern = /^\/recipe-images\/([a-z0-9-]+)\.(?:jpg|png|webp|avif)$/u;
+const recipePhotoCovers = new Set<string>(recipePhotoCoversJson);
+function recipeCardPhotoUrl(photo: string | undefined) {
+  const match = photo?.match(localRecipePhotoPattern);
+  return match ? `/recipe-images/card/${match[1]}.webp` : photo;
+}
+function recipeCoverPhotoUrl(photo: string | undefined) {
+  const match = photo?.match(localRecipePhotoPattern);
+  return match && recipePhotoCovers.has(match[1]) ? `/recipe-images/cover/${match[1]}.webp` : photo;
+}
+
 /* Фото для иллюстраций онбординга: настоящие карточки каталога с фото.
    Без фото RecipeMedia сама покажет заглушку, поэтому список не пустеет. */
 function onboardingPhotoRecipes(count: number) {
@@ -8372,15 +8389,21 @@ function currentBatchLabel(plan: ActivePlan | null) {
 function RecipeMedia({
   recipe,
   eager = false,
+  cover = false,
 }: {
   recipe: Recipe;
   eager?: boolean;
+  /** Обложка открытого рецепта; карточки берут уменьшенное фото. */
+  cover?: boolean;
 }) {
-  const photo =
-    recipe.provenance.imageUrl;
+  const original = recipe.provenance.imageUrl;
+  const sized = cover ? recipeCoverPhotoUrl(original) : recipeCardPhotoUrl(original);
   const [failedPhoto, setFailedPhoto] = useState<string | null>(null);
+  const [failedOriginal, setFailedOriginal] = useState<string | null>(null);
   const [loadedPhoto, setLoadedPhoto] = useState<string | null>(null);
-  if (!photo || failedPhoto === photo)
+  // Если уменьшенный файл не загрузился, показываем исходник, затем заглушку.
+  const photo = sized && failedPhoto === sized ? original : sized;
+  if (!photo || (photo === original && (failedOriginal === original || failedPhoto === original)))
     return (
       <span className="recipe-media-fallback" aria-hidden>
         {recipe.emoji}
@@ -8399,9 +8422,10 @@ function RecipeMedia({
       }
       className={loadedPhoto === photo ? "is-loaded" : "is-loading"}
       loading={eager ? "eager" : "lazy"}
+      decoding="async"
       referrerPolicy="no-referrer"
       onLoad={() => setLoadedPhoto(photo)}
-      onError={() => setFailedPhoto(photo)}
+      onError={() => (photo === original ? setFailedOriginal(photo) : setFailedPhoto(photo))}
     />
   );
 }
@@ -10424,8 +10448,7 @@ function WeekScreen({
         {mealRows.map((row, index) => {
           const portion = portionForRow(row);
           const eaten = rowIsEaten(row);
-          const photo =
-            row.recipe.provenance.imageUrl;
+          const photo = recipeCardPhotoUrl(row.recipe.provenance.imageUrl);
           const frozen =
             row.recipe.freezable &&
             daysInclusive(row.sourceBatch.start, selectedDate) - 1 >=
@@ -10473,6 +10496,7 @@ function WeekScreen({
                     src={photo}
                     alt=""
                     loading="lazy"
+                    decoding="async"
                     referrerPolicy="no-referrer"
                   />
                 ) : (
@@ -17948,6 +17972,8 @@ function RecipeView({
   const [failedHeroPhoto, setFailedHeroPhoto] = useState<string | null>(null);
   const heroPhoto =
     heroPhotoUrl && failedHeroPhoto !== heroPhotoUrl ? heroPhotoUrl : null;
+  // Мягкий переход под снимком — тот же файл, что у резкой обложки: один запрос.
+  const heroSoftPhoto = recipeCoverPhotoUrl(heroPhoto ?? undefined);
   const heroThumb = heroPhoto ? recipeBlurThumbUrl(recipe) : null;
   const photoTouchStart = useRef<number | null>(null);
   const stepsRef = useRef<HTMLElement | null>(null);
@@ -18257,13 +18283,13 @@ function RecipeView({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             className="recipe-hero-soft"
-            src={heroPhoto}
+            src={heroSoftPhoto}
             alt=""
             aria-hidden
             referrerPolicy="no-referrer"
             onError={() => setFailedHeroPhoto(heroPhoto)}
           />
-          <RecipeMedia recipe={recipe} eager />
+          <RecipeMedia recipe={recipe} eager cover />
           <span className="recipe-cover-shade" aria-hidden />
         </div>
       )}
@@ -18295,7 +18321,7 @@ function RecipeView({
             : " · базовая порция"}
         </p>
         <h1>{recipe.title}</h1>
-        {recipe.id.startsWith("simple-") && <small>{recipe.provenance.kind === "generated" ? "Изображение создано для Mise; размер порции на фото условный." : "Фото исходного рецепта. Гарнир и подача могут отличаться; рассчитанный состав указан ниже."}</small>}
+        {(recipe.id.startsWith("simple-") || (isExtensionRecipe(recipe) && hasLocalPhoto(recipe))) && <small>{recipe.provenance.kind === "generated" ? "Изображение создано для Mise; размер порции на фото условный." : "Фото исходного рецепта. Гарнир и подача могут отличаться; рассчитанный состав указан ниже."}</small>}
       </section>
       {childNotes.map((note) => (
         <p key={note} className="recipe-child-note">{note}</p>

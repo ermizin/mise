@@ -39,7 +39,7 @@ test("the checked-in catalog is exactly what the extension source builds", async
     byMenu: { simple: 25, protein: 44, budget: 52, vegan: 24, paleo: 24 },
     bySlot: { breakfast: 26, lunch: 36, dinner: 0, snack1: 27 },
     freezable: 64,
-    withoutPhoto: 89,
+    withoutPhoto: 0,
   });
 });
 
@@ -141,7 +141,7 @@ test("a card's numbers are the sum of its products, nothing else", () => {
     assert.deepEqual(plain(recipe.recipeFamily.miseCalculatedNutrition), plain(recipe.macros));
     const appRecipe = app.recipesById[recipe.id];
     assert.deepEqual(plain(appRecipe.macros), plain(recipe.macros), `${recipe.id}: the app shows the calculated numbers`);
-    assert.equal(appRecipe.provenance.imageUrl ?? null, null, `${recipe.id}: no photo is claimed`);
+    assert.equal(appRecipe.provenance.imageUrl, `/recipe-images/${recipe.id}.webp`, `${recipe.id}: the app shows the image generated for this card`);
   }
 });
 

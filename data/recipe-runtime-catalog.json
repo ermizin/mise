@@ -21428,10 +21428,10 @@
         "sourceQuery": "Ночная овсянка на соевом молоке с бананом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-overnight-oats-banana.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -21450,17 +21450,20 @@
           "sourceQuery": "Ночная овсянка на соевом молоке с бананом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-overnight-oats-banana.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-overnight-oats-banana.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -21863,10 +21866,10 @@
         "sourceQuery": "Скрэмбл из тофу с томатами и шпинатом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-tofu-scramble.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -21885,17 +21888,20 @@
           "sourceQuery": "Скрэмбл из тофу с томатами и шпинатом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-tofu-scramble.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-tofu-scramble.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -22329,10 +22335,10 @@
         "sourceQuery": "Запечённая овсянка с яблоком и грецким орехом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-baked-oatmeal-apple.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -22351,17 +22357,20 @@
           "sourceQuery": "Запечённая овсянка с яблоком и грецким орехом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-baked-oatmeal-apple.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-baked-oatmeal-apple.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -22788,10 +22797,10 @@
         "sourceQuery": "Гречневая каша с грибами и семечками",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-buckwheat-mushrooms.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -22810,17 +22819,20 @@
           "sourceQuery": "Гречневая каша с грибами и семечками",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-buckwheat-mushrooms.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-buckwheat-mushrooms.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -23269,10 +23281,10 @@
         "sourceQuery": "Дал из красной чечевицы с рисом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-red-lentil-dal.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -23292,17 +23304,20 @@
           "sourceQuery": "Дал из красной чечевицы с рисом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-red-lentil-dal.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-red-lentil-dal.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -23813,10 +23828,10 @@
         "sourceQuery": "Чили из красной фасоли с рисом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-bean-chili.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -23836,17 +23851,20 @@
           "sourceQuery": "Чили из красной фасоли с рисом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-bean-chili.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-bean-chili.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -24335,10 +24353,10 @@
         "sourceQuery": "Карри из нута с тыквой и шпинатом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-chickpea-pumpkin-curry.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -24358,17 +24376,20 @@
           "sourceQuery": "Карри из нута с тыквой и шпинатом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-chickpea-pumpkin-curry.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-chickpea-pumpkin-curry.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -24825,10 +24846,10 @@
         "sourceQuery": "Тофу с гречкой и брокколи в соевом соусе",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-tofu-buckwheat-broccoli.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -24848,17 +24869,20 @@
           "sourceQuery": "Тофу с гречкой и брокколи в соевом соусе",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-tofu-buckwheat-broccoli.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-tofu-buckwheat-broccoli.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -25316,10 +25340,10 @@
         "sourceQuery": "Овощное рагу с белой фасолью и картофелем",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-bean-potato-stew.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -25339,17 +25363,20 @@
           "sourceQuery": "Овощное рагу с белой фасолью и картофелем",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-bean-potato-stew.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-bean-potato-stew.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -25805,10 +25832,10 @@
         "sourceQuery": "Паста с чечевичным соусом болоньезе",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-lentil-bolognese.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -25828,17 +25855,20 @@
           "sourceQuery": "Паста с чечевичным соусом болоньезе",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-lentil-bolognese.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-lentil-bolognese.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -26292,10 +26322,10 @@
         "sourceQuery": "Плов с нутом и морковью",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-chickpea-pilaf.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -26315,17 +26345,20 @@
           "sourceQuery": "Плов с нутом и морковью",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-chickpea-pilaf.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-chickpea-pilaf.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -26775,10 +26808,10 @@
         "sourceQuery": "Перловка с грибами и фасолью",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-barley-mushroom-beans.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -26798,17 +26831,20 @@
           "sourceQuery": "Перловка с грибами и фасолью",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-barley-mushroom-beans.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-barley-mushroom-beans.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -27245,10 +27281,10 @@
         "sourceQuery": "Суп-пюре из красной чечевицы и моркови",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-lentil-carrot-soup.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -27268,17 +27304,20 @@
           "sourceQuery": "Суп-пюре из красной чечевицы и моркови",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-lentil-carrot-soup.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-lentil-carrot-soup.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -27714,10 +27753,10 @@
         "sourceQuery": "Запечённый батат с чёрной фасолью и кукурузой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-sweet-potato-black-beans.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -27737,17 +27776,20 @@
           "sourceQuery": "Запечённый батат с чёрной фасолью и кукурузой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-sweet-potato-black-beans.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-sweet-potato-black-beans.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -28111,10 +28153,10 @@
         "sourceQuery": "Хумус с морковными палочками",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-hummus-carrot.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -28134,17 +28176,20 @@
           "sourceQuery": "Хумус с морковными палочками",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-hummus-carrot.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-hummus-carrot.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -28454,10 +28499,10 @@
         "sourceQuery": "Хрустящий запечённый нут со специями",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-roasted-chickpeas.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -28477,17 +28522,20 @@
           "sourceQuery": "Хрустящий запечённый нут со специями",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-roasted-chickpeas.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-roasted-chickpeas.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -28806,10 +28854,10 @@
         "sourceQuery": "Финиково-овсяные шарики с какао",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-date-oat-balls.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -28829,17 +28877,20 @@
           "sourceQuery": "Финиково-овсяные шарики с какао",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-date-oat-balls.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-date-oat-balls.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -29173,10 +29224,10 @@
         "sourceQuery": "Чиа-пудинг на соевом молоке с ягодами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-chia-pudding-berries.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -29196,17 +29247,20 @@
           "sourceQuery": "Чиа-пудинг на соевом молоке с ягодами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-chia-pudding-berries.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-chia-pudding-berries.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -29528,10 +29582,10 @@
         "sourceQuery": "Яблочные дольки с арахисовой пастой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-apple-peanut-butter.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -29551,17 +29605,20 @@
           "sourceQuery": "Яблочные дольки с арахисовой пастой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-apple-peanut-butter.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-apple-peanut-butter.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -29900,10 +29957,10 @@
         "sourceQuery": "Фриттата с индейкой и шпинатом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-turkey-spinach-frittata.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -29922,17 +29979,20 @@
           "sourceQuery": "Фриттата с индейкой и шпинатом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-turkey-spinach-frittata.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-turkey-spinach-frittata.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -30328,10 +30388,10 @@
         "sourceQuery": "Батат с яйцом и авокадо",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-sweet-potato-eggs.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -30350,17 +30410,20 @@
           "sourceQuery": "Батат с яйцом и авокадо",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-sweet-potato-eggs.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-sweet-potato-eggs.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -30725,10 +30788,10 @@
         "sourceQuery": "Банановые оладьи на миндальной муке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-banana-almond-pancakes.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -30747,17 +30810,20 @@
           "sourceQuery": "Банановые оладьи на миндальной муке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-banana-almond-pancakes.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-banana-almond-pancakes.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -31124,10 +31190,10 @@
         "sourceQuery": "Чиа-пудинг на кокосовом молоке с ягодами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-coconut-chia-pudding.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -31146,17 +31212,20 @@
           "sourceQuery": "Чиа-пудинг на кокосовом молоке с ягодами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-coconut-chia-pudding.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-coconut-chia-pudding.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -31543,10 +31612,10 @@
         "sourceQuery": "Куриные бёдра с бататом и брокколи на противне",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-chicken-thigh-sweet-potato.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -31566,17 +31635,20 @@
           "sourceQuery": "Куриные бёдра с бататом и брокколи на противне",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-chicken-thigh-sweet-potato.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-chicken-thigh-sweet-potato.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -32005,10 +32077,10 @@
         "sourceQuery": "Говяжьи тефтели в томатном соусе с кабачком",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-beef-meatballs-zucchini.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -32028,17 +32100,20 @@
           "sourceQuery": "Говяжьи тефтели в томатном соусе с кабачком",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-beef-meatballs-zucchini.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-beef-meatballs-zucchini.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -32481,10 +32556,10 @@
         "sourceQuery": "Лосось с овощами на противне",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-salmon-vegetables.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -32504,17 +32579,20 @@
           "sourceQuery": "Лосось с овощами на противне",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-salmon-vegetables.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-salmon-vegetables.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -32956,10 +33034,10 @@
         "sourceQuery": "Индейка с тыквой и цветной капустой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-turkey-pumpkin-stew.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -32979,17 +33057,20 @@
           "sourceQuery": "Индейка с тыквой и цветной капустой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-turkey-pumpkin-stew.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-turkey-pumpkin-stew.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -33451,10 +33532,10 @@
         "sourceQuery": "Тушёная говядина с морковью и грибами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-beef-carrot-mushroom-stew.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -33474,17 +33555,20 @@
           "sourceQuery": "Тушёная говядина с морковью и грибами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-beef-carrot-mushroom-stew.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-beef-carrot-mushroom-stew.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -33927,10 +34011,10 @@
         "sourceQuery": "Минтай, запечённый с овощами и бататом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-pollock-vegetables.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -33950,17 +34034,20 @@
           "sourceQuery": "Минтай, запечённый с овощами и бататом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-pollock-vegetables.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-pollock-vegetables.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -34396,10 +34483,10 @@
         "sourceQuery": "Котлеты из индейки с пюре из цветной капусты",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-turkey-cutlets-cauliflower.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -34419,17 +34506,20 @@
           "sourceQuery": "Котлеты из индейки с пюре из цветной капусты",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-turkey-cutlets-cauliflower.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-turkey-cutlets-cauliflower.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -34898,10 +34988,10 @@
         "sourceQuery": "Курица с «рисом» из цветной капусты и овощами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-chicken-cauliflower-rice.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -34921,17 +35011,20 @@
           "sourceQuery": "Курица с «рисом» из цветной капусты и овощами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-chicken-cauliflower-rice.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-chicken-cauliflower-rice.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -35418,10 +35511,10 @@
         "sourceQuery": "Свинина с тушёной капустой и яблоком",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-pork-apple-cabbage.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -35441,17 +35534,20 @@
           "sourceQuery": "Свинина с тушёной капустой и яблоком",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-pork-apple-cabbage.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-pork-apple-cabbage.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -35863,10 +35959,10 @@
         "sourceQuery": "Куриная печень с луком, яблоком и пюре из батата",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-chicken-liver-apple.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -35886,17 +35982,20 @@
           "sourceQuery": "Куриная печень с луком, яблоком и пюре из батата",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-chicken-liver-apple.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-chicken-liver-apple.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -36268,10 +36367,10 @@
         "sourceQuery": "Яйца вкрутую с огурцом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-boiled-eggs-cucumber.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -36291,17 +36390,20 @@
           "sourceQuery": "Яйца вкрутую с огурцом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-boiled-eggs-cucumber.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-boiled-eggs-cucumber.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -36593,10 +36695,10 @@
         "sourceQuery": "Яблоко с миндалём",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-apple-almonds.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -36616,17 +36718,20 @@
           "sourceQuery": "Яблоко с миндалём",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-apple-almonds.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-apple-almonds.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -36936,10 +37041,10 @@
         "sourceQuery": "Куриные мини-котлеты с кабачком",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-chicken-mini-cutlets.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -36959,17 +37064,20 @@
           "sourceQuery": "Куриные мини-котлеты с кабачком",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-chicken-mini-cutlets.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-chicken-mini-cutlets.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -37274,10 +37382,10 @@
         "sourceQuery": "Финиково-ореховые шарики",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-date-walnut-balls.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -37297,17 +37405,20 @@
           "sourceQuery": "Финиково-ореховые шарики",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-date-walnut-balls.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-date-walnut-balls.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -37627,10 +37738,10 @@
         "sourceQuery": "Гуакамоле с морковью и сельдереем",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-guacamole-vegetables.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -37650,17 +37761,20 @@
           "sourceQuery": "Гуакамоле с морковью и сельдереем",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-guacamole-vegetables.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-guacamole-vegetables.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -38013,10 +38127,10 @@
         "sourceQuery": "Куриная грудка с гречкой и брокколи",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-chicken-buckwheat-broccoli.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -38036,17 +38150,20 @@
           "sourceQuery": "Куриная грудка с гречкой и брокколи",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-chicken-buckwheat-broccoli.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-chicken-buckwheat-broccoli.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -38450,10 +38567,10 @@
         "sourceQuery": "Тефтели из индейки в томатном соусе с рисом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-turkey-meatballs-rice.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -38473,17 +38590,20 @@
           "sourceQuery": "Тефтели из индейки в томатном соусе с рисом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-turkey-meatballs-rice.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-turkey-meatballs-rice.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -38942,10 +39062,10 @@
         "sourceQuery": "Говядина, тушённая с перловкой и овощами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-beef-barley-stew.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -38965,17 +39085,20 @@
           "sourceQuery": "Говядина, тушённая с перловкой и овощами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-beef-barley-stew.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-beef-barley-stew.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -39420,10 +39543,10 @@
         "sourceQuery": "Минтай под томатным маринадом с рисом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-pollock-tomato-rice.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -39443,17 +39566,20 @@
           "sourceQuery": "Минтай под томатным маринадом с рисом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-pollock-tomato-rice.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-pollock-tomato-rice.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -39895,10 +40021,10 @@
         "sourceQuery": "Куриные котлеты с пшённой кашей",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-chicken-cutlets-millet.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -39918,17 +40044,20 @@
           "sourceQuery": "Куриные котлеты с пшённой кашей",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-chicken-cutlets-millet.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-chicken-cutlets-millet.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -40361,10 +40490,10 @@
         "sourceQuery": "Рагу из индейки с чечевицей",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-turkey-lentil-stew.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -40384,17 +40513,20 @@
           "sourceQuery": "Рагу из индейки с чечевицей",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-turkey-lentil-stew.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-turkey-lentil-stew.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -40827,10 +40959,10 @@
         "sourceQuery": "Плов с куриной грудкой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-chicken-pilaf.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -40850,17 +40982,20 @@
           "sourceQuery": "Плов с куриной грудкой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-chicken-pilaf.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-chicken-pilaf.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -41289,10 +41424,10 @@
         "sourceQuery": "Куриная печень с гречкой и луком",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-chicken-liver-buckwheat.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -41312,17 +41447,20 @@
           "sourceQuery": "Куриная печень с гречкой и луком",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-chicken-liver-buckwheat.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-chicken-liver-buckwheat.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -41710,10 +41848,10 @@
         "sourceQuery": "Творожная запеканка с яблоком и овсяными хлопьями",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-tvorog-casserole-apple.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -41732,17 +41870,20 @@
           "sourceQuery": "Творожная запеканка с яблоком и овсяными хлопьями",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-tvorog-casserole-apple.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-tvorog-casserole-apple.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -42168,10 +42309,10 @@
         "sourceQuery": "Омлетные маффины с индейкой и перцем",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-egg-turkey-muffins.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -42190,17 +42331,20 @@
           "sourceQuery": "Омлетные маффины с индейкой и перцем",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-egg-turkey-muffins.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-egg-turkey-muffins.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -42633,10 +42777,10 @@
         "sourceQuery": "Ночная овсянка с йогуртом и протеином",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-overnight-oats-yogurt.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -42655,17 +42799,20 @@
           "sourceQuery": "Ночная овсянка с йогуртом и протеином",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-overnight-oats-yogurt.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-overnight-oats-yogurt.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -43007,10 +43154,10 @@
         "sourceQuery": "Творог с ягодами и мёдом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-tvorog-berries.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -43030,17 +43177,20 @@
           "sourceQuery": "Творог с ягодами и мёдом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-tvorog-berries.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-tvorog-berries.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -43366,10 +43516,10 @@
         "sourceQuery": "Запечённые куриные наггетсы в сухарях",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-baked-chicken-nuggets.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -43389,17 +43539,20 @@
           "sourceQuery": "Запечённые куриные наггетсы в сухарях",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-baked-chicken-nuggets.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-baked-chicken-nuggets.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -43753,10 +43906,10 @@
         "sourceQuery": "Мини-сырники из духовки",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-mini-syrniki-baked.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -43776,17 +43929,20 @@
           "sourceQuery": "Мини-сырники из духовки",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-mini-syrniki-baked.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-mini-syrniki-baked.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -44141,10 +44297,10 @@
         "sourceQuery": "Овсяные шарики с протеином и арахисовой пастой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-oat-protein-balls.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -44164,17 +44320,20 @@
           "sourceQuery": "Овсяные шарики с протеином и арахисовой пастой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-oat-protein-balls.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-oat-protein-balls.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -44547,10 +44706,10 @@
         "sourceQuery": "Тунец с огурцом и йогуртом на хлебцах",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-tuna-cucumber-crispbread.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -44570,17 +44729,20 @@
           "sourceQuery": "Тунец с огурцом и йогуртом на хлебцах",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-tuna-cucumber-crispbread.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-tuna-cucumber-crispbread.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -44944,10 +45106,10 @@
         "sourceQuery": "Запечённая овсянка с бананом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-baked-oatmeal-banana.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -44966,17 +45128,20 @@
           "sourceQuery": "Запечённая овсянка с бананом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-baked-oatmeal-banana.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-baked-oatmeal-banana.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -45397,10 +45562,10 @@
         "sourceQuery": "Творожная запеканка классическая",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-tvorog-casserole.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -45419,17 +45584,20 @@
           "sourceQuery": "Творожная запеканка классическая",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-tvorog-casserole.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-tvorog-casserole.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -45853,10 +46021,10 @@
         "sourceQuery": "Сырники в духовке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-syrniki-oven.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -45875,17 +46043,20 @@
           "sourceQuery": "Сырники в духовке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-syrniki-oven.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-syrniki-oven.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -46285,10 +46456,10 @@
         "sourceQuery": "Пшённая каша с тыквой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-millet-pumpkin-porridge.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -46307,17 +46478,20 @@
           "sourceQuery": "Пшённая каша с тыквой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-millet-pumpkin-porridge.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-millet-pumpkin-porridge.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -46684,10 +46858,10 @@
         "sourceQuery": "Пышный омлет в духовке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-oven-omelette.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -46706,17 +46880,20 @@
           "sourceQuery": "Пышный омлет в духовке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-oven-omelette.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-oven-omelette.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -47095,10 +47272,10 @@
         "sourceQuery": "Курица с рисом в мультиварке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-multicooker-chicken-rice.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -47118,17 +47295,20 @@
           "sourceQuery": "Курица с рисом в мультиварке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-multicooker-chicken-rice.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-multicooker-chicken-rice.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -47548,10 +47728,10 @@
         "sourceQuery": "Тушёная капуста с курицей и картофелем в мультиварке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-multicooker-chicken-cabbage.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -47571,17 +47751,20 @@
           "sourceQuery": "Тушёная капуста с курицей и картофелем в мультиварке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-multicooker-chicken-cabbage.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-multicooker-chicken-cabbage.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -48009,10 +48192,10 @@
         "sourceQuery": "Куриные бёдра с картофелем в духовке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-oven-chicken-potato.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -48032,17 +48215,20 @@
           "sourceQuery": "Куриные бёдра с картофелем в духовке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-oven-chicken-potato.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-oven-chicken-potato.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -48464,10 +48650,10 @@
         "sourceQuery": "Куриный суп с лапшой и картофелем",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-chicken-noodle-soup.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -48487,17 +48673,20 @@
           "sourceQuery": "Куриный суп с лапшой и картофелем",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-chicken-noodle-soup.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-chicken-noodle-soup.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -48890,10 +49079,10 @@
         "sourceQuery": "Овсяное печенье с бананом и изюмом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-oat-banana-cookies.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -48913,17 +49102,20 @@
           "sourceQuery": "Овсяное печенье с бананом и изюмом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-oat-banana-cookies.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-oat-banana-cookies.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -49289,10 +49481,10 @@
         "sourceQuery": "Творожные кексы с изюмом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-tvorog-muffins.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -49312,17 +49504,20 @@
           "sourceQuery": "Творожные кексы с изюмом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-tvorog-muffins.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-tvorog-muffins.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -49672,10 +49867,10 @@
         "sourceQuery": "Яйцо вкрутую с хлебом и огурцом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-egg-bread-cucumber.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -49695,17 +49890,20 @@
           "sourceQuery": "Яйцо вкрутую с хлебом и огурцом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-egg-bread-cucumber.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-egg-bread-cucumber.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -50000,10 +50198,10 @@
         "sourceQuery": "Йогурт с бананом и овсяными хлопьями",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-yogurt-banana-oats.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -50023,17 +50221,20 @@
           "sourceQuery": "Йогурт с бананом и овсяными хлопьями",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-yogurt-banana-oats.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-yogurt-banana-oats.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -50339,10 +50540,10 @@
         "sourceQuery": "Печёное яблоко с творогом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-baked-apple-tvorog.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -50362,17 +50563,20 @@
           "sourceQuery": "Печёное яблоко с творогом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-baked-apple-tvorog.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-baked-apple-tvorog.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -50738,10 +50942,10 @@
         "sourceQuery": "Овсяные маффины с бананом и орехами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-oat-banana-muffins.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -50761,17 +50965,20 @@
           "sourceQuery": "Овсяные маффины с бананом и орехами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-oat-banana-muffins.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-oat-banana-muffins.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -51141,10 +51348,10 @@
         "sourceQuery": "Овсяное печенье с курагой и семечками",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-oat-apricot-cookies.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -51164,17 +51371,20 @@
           "sourceQuery": "Овсяное печенье с курагой и семечками",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-oat-apricot-cookies.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-oat-apricot-cookies.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -51564,10 +51774,10 @@
         "sourceQuery": "Оладьи на соевом молоке с бананом и ягодами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-banana-pancakes.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -51586,17 +51796,20 @@
           "sourceQuery": "Оладьи на соевом молоке с бананом и ягодами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-banana-pancakes.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-banana-pancakes.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -52010,10 +52223,10 @@
         "sourceQuery": "Пшённая каша на соевом молоке с курагой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-millet-apricot-porridge.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -52032,17 +52245,20 @@
           "sourceQuery": "Пшённая каша на соевом молоке с курагой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-millet-apricot-porridge.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-millet-apricot-porridge.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -52381,10 +52597,10 @@
         "sourceQuery": "Банановые кексы на миндальной муке",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-banana-almond-muffins.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -52404,17 +52620,20 @@
           "sourceQuery": "Банановые кексы на миндальной муке",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-banana-almond-muffins.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-banana-almond-muffins.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -52739,10 +52958,10 @@
         "sourceQuery": "Фрикадельки из индейки с морковью",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-turkey-carrot-meatballs.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -52762,17 +52981,20 @@
           "sourceQuery": "Фрикадельки из индейки с морковью",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-turkey-carrot-meatballs.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-turkey-carrot-meatballs.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -53126,10 +53348,10 @@
         "sourceQuery": "Запеканка из батата с индейкой и яйцом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-sweet-potato-turkey-bake.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -53148,17 +53370,20 @@
           "sourceQuery": "Запеканка из батата с индейкой и яйцом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-sweet-potato-turkey-bake.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-sweet-potato-turkey-bake.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -53580,10 +53805,10 @@
         "sourceQuery": "Яичные маффины с курицей и овощами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-egg-chicken-muffins.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -53602,17 +53827,20 @@
           "sourceQuery": "Яичные маффины с курицей и овощами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-egg-chicken-muffins.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-egg-chicken-muffins.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -54044,10 +54272,10 @@
         "sourceQuery": "Оладьи из кабачков с сыром",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-zucchini-fritters.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -54067,17 +54295,20 @@
           "sourceQuery": "Оладьи из кабачков с сыром",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-zucchini-fritters.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-zucchini-fritters.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -54492,10 +54723,10 @@
         "sourceQuery": "Салат с тунцом, белой фасолью и овощами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-protein-tuna-bean-salad.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -54515,17 +54746,20 @@
           "sourceQuery": "Салат с тунцом, белой фасолью и овощами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-protein-tuna-bean-salad.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-protein-tuna-bean-salad.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -54984,10 +55218,10 @@
         "sourceQuery": "Салат с нутом, овощами и тахини",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥗"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-vegan-chickpea-tahini-salad.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -55007,17 +55241,20 @@
           "sourceQuery": "Салат с нутом, овощами и тахини",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥗"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-vegan-chickpea-tahini-salad.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-vegan-chickpea-tahini-salad.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -55471,10 +55708,10 @@
         "sourceQuery": "Салат с тунцом, авокадо и кешью",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-paleo-tuna-avocado-salad.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -55494,17 +55731,20 @@
           "sourceQuery": "Салат с тунцом, авокадо и кешью",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-paleo-tuna-avocado-salad.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-paleo-tuna-avocado-salad.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -55963,10 +56203,10 @@
         "sourceQuery": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-carrot-tvorog-oat-bake.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -55985,17 +56225,20 @@
           "sourceQuery": "Морковно-творожная запеканка с овсяными хлопьями и курагой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-carrot-tvorog-oat-bake.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-carrot-tvorog-oat-bake.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -56431,10 +56674,10 @@
         "sourceQuery": "Творожная запеканка с гречкой и яблоком",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-buckwheat-tvorog-bake.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -56453,17 +56696,20 @@
           "sourceQuery": "Творожная запеканка с гречкой и яблоком",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-buckwheat-tvorog-bake.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-buckwheat-tvorog-bake.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -56892,10 +57138,10 @@
         "sourceQuery": "Тыквенно-творожная запеканка с пшеном",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-millet-tvorog-pumpkin-bake.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -56914,17 +57160,20 @@
           "sourceQuery": "Тыквенно-творожная запеканка с пшеном",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-millet-tvorog-pumpkin-bake.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-millet-tvorog-pumpkin-bake.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -57348,10 +57597,10 @@
         "sourceQuery": "Запечённая овсянка с йогуртом и черникой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-baked-oats-yogurt-blueberry.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -57370,17 +57619,20 @@
           "sourceQuery": "Запечённая овсянка с йогуртом и черникой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-baked-oats-yogurt-blueberry.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-baked-oats-yogurt-blueberry.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -57780,10 +58032,10 @@
         "sourceQuery": "Ночная овсянка с йогуртом, яблоком и морковью",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-overnight-oats-apple-carrot.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -57802,17 +58054,20 @@
           "sourceQuery": "Ночная овсянка с йогуртом, яблоком и морковью",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-overnight-oats-apple-carrot.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-overnight-oats-apple-carrot.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -58193,10 +58448,10 @@
         "sourceQuery": "Запеканка из брокколи и зелёного горошка с яйцом",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🥣"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-broccoli-pea-egg-bake.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -58215,17 +58470,20 @@
           "sourceQuery": "Запеканка из брокколи и зелёного горошка с яйцом",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🥣"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-broccoli-pea-egg-bake.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-broccoli-pea-egg-bake.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -58655,10 +58913,10 @@
         "sourceQuery": "Лобио из красной фасоли с грецкими орехами",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍲"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-lobio.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -58678,17 +58936,20 @@
           "sourceQuery": "Лобио из красной фасоли с грецкими орехами",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍲"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-lobio.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-lobio.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -59089,10 +59350,10 @@
         "sourceQuery": "Чиа-пудинг на греческом йогурте с черникой",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-yogurt-chia-blueberry.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -59112,17 +59373,20 @@
           "sourceQuery": "Чиа-пудинг на греческом йогурте с черникой",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-yogurt-chia-blueberry.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-yogurt-chia-blueberry.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -59425,10 +59689,10 @@
         "sourceQuery": "Творожная паста с морковью и огуречными палочками",
         "adaptation": "",
         "preview": {
-          "kind": "graphic_fallback",
-          "emoji": "🍏"
+          "kind": "generated_preview",
+          "imageUrl": "/recipe-images/mise-simple-tvorog-carrot-spread-cucumber.webp"
         },
-        "imageOrigin": "none",
+        "imageOrigin": "generated",
         "editoriallyApproved": true
       },
       "visualFallback": {
@@ -59448,17 +59712,20 @@
           "sourceQuery": "Творожная паста с морковью и огуречными палочками",
           "adaptation": "",
           "preview": {
-            "kind": "graphic_fallback",
-            "emoji": "🍏"
+            "kind": "generated_preview",
+            "imageUrl": "/recipe-images/mise-simple-tvorog-carrot-spread-cucumber.webp"
           },
-          "imageOrigin": "none",
+          "imageOrigin": "generated",
           "editoriallyApproved": true
         },
         "image": {
-          "usageStatus": "unknown",
-          "confidenceMatch": 0,
+          "imageUrl": "/recipe-images/mise-simple-tvorog-carrot-spread-cucumber.webp",
+          "source": "Mise",
+          "sourceUrl": "",
+          "usageStatus": "owned",
+          "confidenceMatch": 1,
           "manuallyApproved": false,
-          "photoType": "fallback"
+          "photoType": "generated"
         },
         "ingredients": [
           {
@@ -59662,7 +59929,7 @@
       "snack1": 27
     },
     "freezable": 64,
-    "withoutPhoto": 89
+    "withoutPhoto": 0
   },
   "schemaVersion": 3,
   "generatedFrom": "audit-ready editorial cards only",

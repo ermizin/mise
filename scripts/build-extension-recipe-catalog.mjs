@@ -55,7 +55,8 @@ function emojiFor(card) {
   return card.menus.includes("vegan") ? "🥗" : "🍲";
 }
 
-export function projectExtensionRecipe(card) {
+/** `media` is the card's entry of data/extension-recipe-images.json, if it has one. */
+export function projectExtensionRecipe(card, media) {
   requireValue(/^mise-(?:vegan|paleo|protein|simple)-[a-z0-9-]+$/.test(card.id), `${card.id}: id`);
   requireValue(Array.isArray(card.menus) && card.menus.length > 0 && card.menus.every((menu) => menus.includes(menu)) && new Set(card.menus).size === card.menus.length, `${card.id}: menus`);
   requireValue(card.menus.includes(card.id.split("-")[1]), `${card.id}: the id names a direction the card is not in`);
@@ -163,17 +164,27 @@ export function projectExtensionRecipe(card) {
     sourceUrl: "",
     sourceQuery: card.title,
     adaptation: card.adaptation ?? "",
-    // No photograph yet: the card is drawn with the neutral fallback, and says so.
-    preview: { kind: "graphic_fallback", emoji },
-    imageOrigin: "none",
+    // An image generated for Mise (owner decision of 2026-11-12) when the manifest
+    // has one; otherwise the card is drawn with the neutral fallback, and says so.
+    preview: media
+      ? { kind: "generated_preview", imageUrl: media.localPath }
+      : { kind: "graphic_fallback", emoji },
+    imageOrigin: media ? "generated" : "none",
     editoriallyApproved: true,
   };
+  if (media) {
+    requireValue(media.id === card.id && media.localPath === `/recipe-images/${card.id}.webp`, `${card.id}: image path`);
+    requireValue(media.origin === "generated" && media.rightsStatus && /^[0-9a-f]{64}$/u.test(media.sha256 ?? ""), `${card.id}: image provenance, rights decision and checksum`);
+    requireValue(media.visualReview && media.visualReview !== "pending", `${card.id}: the image is compared with the card before it is shown`);
+  }
   const mealSlots = card.slot === "lunch" || card.slot === "dinner"
     ? ["lunch", "dinner"]
     : card.slot === "snack1" ? ["snack1", "snack2"] : [card.slot];
   const recipeFamily = {
     id: card.id, title: card.title, mealSlots, provenance,
-    image: { usageStatus: "unknown", confidenceMatch: 0, manuallyApproved: false, photoType: "fallback" },
+    image: media
+      ? { imageUrl: media.localPath, source: "Mise", sourceUrl: "", usageStatus: "owned", confidenceMatch: 1, manuallyApproved: false, photoType: "generated" }
+      : { usageStatus: "unknown", confidenceMatch: 0, manuallyApproved: false, photoType: "fallback" },
     ingredients,
     minViableCalories: Math.ceil(reach.minKcal),
     maxViableCalories: Math.floor(reach.maxKcal / 0.9),
@@ -249,7 +260,12 @@ export async function buildExtensionRecipeCatalog() {
   requireValue(source.schemaVersion === 1 && Array.isArray(source.recipes) && source.recipes.length > 0, "source document");
   requireValue(new Set(source.recipes.map((card) => card.id)).size === source.recipes.length, "recipe ids are unique");
   requireValue(new Set(source.recipes.map((card) => card.title.toLowerCase())).size === source.recipes.length, "recipe titles are unique");
-  const recipes = source.recipes.map(projectExtensionRecipe);
+  const images = JSON.parse(await readFile(new URL("../data/extension-recipe-images.json", import.meta.url), "utf8"));
+  requireValue(images.schemaVersion === 1 && images.ownerDecision?.decisionMaker === "project_owner", "image manifest records the owner's decision");
+  const mediaById = new Map(images.images.map((image) => [image.id, image]));
+  requireValue(mediaById.size === images.images.length, "one image per card");
+  requireValue(images.images.every((image) => source.recipes.some((card) => card.id === image.id)), "every image belongs to a card of the package");
+  const recipes = source.recipes.map((card) => projectExtensionRecipe(card, mediaById.get(card.id)));
   const count = (predicate) => recipes.filter(predicate).length;
   return {
     schemaVersion: 1,
