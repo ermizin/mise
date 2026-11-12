@@ -190,7 +190,9 @@ test("recipe card 14A keeps inline products and dish data actionable", async () 
     read("app/globals.css"),
   ]);
   assert.match(page, /function RecipeMedia/, "one media component owns the photo fallback");
-  assert.match(page, /onError=\{\(\) => setFailedPhoto\(photo\)\}/, "a failed source photo falls back instead of leaving a blank card");
+  // Уменьшенное фото, затем исходник, затем заглушка (2026-11-12).
+  assert.match(page, /onError=\{\(\) => \(photo === original \? setFailedOriginal\(photo\) : setFailedPhoto\(photo\)\)\}/, "a failed photo falls back instead of leaving a blank card");
+  assert.match(page, /if \(!photo \|\| \(photo === original && \(failedOriginal === original \|\| failedPhoto === original\)\)\)\s*return \(\s*<span className="recipe-media-fallback" aria-hidden>/, "a failed source photo shows the fallback tile");
   assert.match(page, /<RecipeMedia recipe=\{recipe\} eager \/>/, "the opened recipe uses its photo too");
   assert.match(
     css,

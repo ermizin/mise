@@ -12,7 +12,7 @@
     "https://www.paleorunningmomma.com/20-paleo-freezer-meals-whole30/",
     "https://www.cookunity.com/blog/high-protein-low-calorie-snacks"
   ],
-  "photos": "Фотографий у карточек пакета пока нет: показывается нейтральная заглушка. Собственные изображения добавляются отдельным решением.",
+  "photos": "С 2026-11-12 у каждой карточки пакета есть изображение, созданное для Mise по решению владельца: data/extension-recipe-images.json, генератор scripts/generate-extension-recipe-images.mjs. Это не фотография приготовленной порции; карточка без записи в манифесте показывает нейтральную заглушку.",
   "recipes": [
     {
       "editorialStatus": "authored_and_calculated_2026-09-30",

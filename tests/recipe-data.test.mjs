@@ -224,8 +224,9 @@ test("source photos and localization notes remain attached to legacy imported re
   assert.ok(withPhotos.length > 0);
   assert.ok(withPhotos.length < recipes.filter((item) => item.provenance.kind === "parsed").length, "non-runtime legacy records may still lack assets");
   assert.ok(withPhotos.every((item) => item.provenance.imageAlt && item.provenance.sourceUrl));
-  // Карточки пакета расширения написаны редакцией без фото: у них нет чужого
-  // снимка, который можно было бы выдать за свой, и они показывают заглушку.
+  // Карточки пакета расширения написаны редакцией: чужого снимка у них нет.
+  // С 2026-11-12 каждая показывает своё изображение, созданное для Mise
+  // (tests/extension-recipe-images), а не фото другого блюда или источника.
   const extensionCards = productionRecipes.filter((item) => item.id.startsWith("mise-"));
   assert.ok(extensionCards.length >= 89, "the extension package is part of the production catalog");
   assert.ok(
@@ -233,7 +234,7 @@ test("source photos and localization notes remain attached to legacy imported re
       (item) =>
         item.provenance.kind === "generated" &&
         item.provenance.editoriallyApproved === true &&
-        !item.provenance.imageUrl,
+        item.provenance.imageUrl === `/recipe-images/${item.id}.webp`,
     ),
     "an extension card is reviewed and never borrows a photo",
   );
