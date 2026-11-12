@@ -179,6 +179,11 @@ test("remembering recent menus does not trade away the macro fit or the variety 
         assert.equal(new Set(slotIds).size, slotIds.length, `${style} plan ${index + 1}: ${slot} repeats a dish across batches`);
       }
     }
+    // История не подталкивает к повтору внутри плана: блюдо, которое уже стоит
+    // в плане, получает полный штраф истории. Без этого после нескольких
+    // пересборок одно блюдо вставало на ужин одной партии и обед другой.
+    const twice = plans.reduce((sum, menu) => sum + menu.length - new Set(ids(menu)).size, 0);
+    assert.ok(twice <= 1, `${style}: ${twice} dishes stand twice in one plan over ${plans.length} plans`);
   }
 });
 

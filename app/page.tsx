@@ -6783,10 +6783,14 @@ function chooseMenuCandidate(
   const choosable = options.filter((recipe) => !avoid.has(recipe.id));
   const bestFit = fits?.size ? Math.max(0, ...(choosable.length ? choosable : options).map((recipe) => fits.get(recipe.id) ?? 0)) : 0;
   const hasHistory = Boolean(choice.previousRecipeIds?.size || choice.recentRecipeAges?.size);
+  // Блюдо, которое уже стоит в этом плане, история тоже не поддерживает: иначе после
+  // нескольких пересборок «Простых» одно блюдо вставало на ужин первой партии и
+  // обед второй — повтор (240) выходил дешевле показанного блюда с той же основой.
+  const inThisPlan = new Set([...used, ...selectedRecipes.map((recipe) => recipe.id), ...mainRecipes.map((recipe) => recipe.id)]);
   const historyPenaltyFor = (recipe: Recipe) => {
     if (!hasHistory) return 0;
     const fit = fits?.get(recipe.id);
-    return fit !== undefined && bestFit - fit > menuHistoryFitAllowance
+    return inThisPlan.has(recipe.id) || (fit !== undefined && bestFit - fit > menuHistoryFitAllowance)
       ? previousPlanPenalty
       : menuHistoryPenalty(menuHistoryAge(choice, recipe.id));
   };
